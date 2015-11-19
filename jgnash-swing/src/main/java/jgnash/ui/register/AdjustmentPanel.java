@@ -97,7 +97,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         convertButton.setEnabled(true);
     }
 
-    void newTransaction(final Transaction t) {
+    private void newTransaction(final Transaction t) {
         TransactionEntry entry = t.getTransactionEntries().get(0);
 
         memoField.setText(entry.getMemo());

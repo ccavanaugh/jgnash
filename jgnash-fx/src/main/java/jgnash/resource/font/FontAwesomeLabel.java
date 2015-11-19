@@ -42,7 +42,7 @@ import jgnash.uifx.views.main.MainApplication;
  */
 public class FontAwesomeLabel extends Label {
 
-    static final double DEFAULT_SIZE = 16.0;
+    private static final double DEFAULT_SIZE = 16.0;
 
     private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
 
@@ -117,7 +117,7 @@ public class FontAwesomeLabel extends Label {
         return size.getValue();
     }
 
-    Character getGlyphChar(final String string) {
+    private Character getGlyphChar(final String string) {
         return FontAwesomeIcon.valueOf(string).getChar();
     }
 }

@@ -138,7 +138,7 @@ public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPan
                 priceField.getDecimal(), quantityField.getDecimal(), datePanel.getLocalDate(), memoField.getText());
     }
 
-    void updateTotalField() {
+    private void updateTotalField() {
         BigDecimal quantity = quantityField.getDecimal();
         BigDecimal price = priceField.getDecimal();
         totalField.setDecimal(quantity.multiply(price));

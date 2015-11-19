@@ -302,7 +302,7 @@ public class AmortizeObject implements Serializable {
      *
      * @return effective interest rate
      */
-    double getEffectiveInterestRate() {
+    private double getEffectiveInterestRate() {
         if (interestRate != null && numPayments > 0 && numCompPeriods > 0) {
             double i = interestRate.doubleValue() / 100.0;
             return StrictMath.pow(1.0 + i / numCompPeriods, (double) numCompPeriods / (double) numPayments) - 1.0;
@@ -316,7 +316,7 @@ public class AmortizeObject implements Serializable {
      *
      * @return periodic interest rate
      */
-    double getDailyPeriodicInterestRate() {
+    private double getDailyPeriodicInterestRate() {
         if (interestRate != null && numPayments > 0 && numCompPeriods > 0 && daysPerYear != null) {
             double rate = getEffectiveInterestRate();
             rate = rate * numPayments;
@@ -346,7 +346,7 @@ public class AmortizeObject implements Serializable {
      *
      * @return P and I
      */
-    double getPIPayment() {
+    private double getPIPayment() {
 
         // zero interest loan
         if ((interestRate == null || interestRate.compareTo(BigDecimal.ZERO) == 0) && length > 0 && numPayments > 0

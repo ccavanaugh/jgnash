@@ -287,7 +287,7 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
         dlg.setVisible(true);
     }
 
-    void toggleAccountVisibility() {
+    private void toggleAccountVisibility() {
         if (getSelectedAccount() != null) {
             getEngine().toggleAccountVisibility(accountPane.getSelectedAccount());
         }

@@ -193,7 +193,7 @@ class FontRegistry {
      * Register fonts in known directories.
      */
     @SuppressFBWarnings({"DMI_HARDCODED_ABSOLUTE_FILENAME"})
-    void registerFontDirectories() {
+    private void registerFontDirectories() {
         if (OS.isSystemWindows()) {
             registerFontDirectory("c:/windows/fonts");
             registerFontDirectory("c:/winnt/fonts");

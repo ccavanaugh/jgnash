@@ -35,7 +35,6 @@ import javax.swing.KeyStroke;
  * Static Dialog Utilities
  *
  * @author Craig Cavanaugh
- *
  */
 public class DialogUtils {
 
@@ -118,12 +117,12 @@ public class DialogUtils {
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
-    public static String encodeRectangle(final Rectangle bounds) {
+    private static String encodeRectangle(final Rectangle bounds) {
         return String.valueOf(bounds.x) + COMMA_DELIMITER + bounds.y + COMMA_DELIMITER + bounds.width
                 + COMMA_DELIMITER + bounds.height;
     }
 
-    public static Rectangle decodeRectangle(final String bounds) {
+    private static Rectangle decodeRectangle(final String bounds) {
         if (bounds == null) {
             return null;
         }

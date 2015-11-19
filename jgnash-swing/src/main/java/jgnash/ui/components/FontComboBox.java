@@ -54,7 +54,7 @@ public final class FontComboBox extends JComboBox<String> {
      * 
      * @param font The name of the font to select
      */
-    void setSelectedFont(String font) {
+    private void setSelectedFont(String font) {
         setSelectedItem(font);
     }
 }
