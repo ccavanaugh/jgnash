@@ -495,6 +495,11 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
+    /**
+     * Required by XStream for proper initialization
+     *
+     * @return Properly initialized SecurityNode
+     */
     protected Object readResolve() {
         postLoad();
         return this;

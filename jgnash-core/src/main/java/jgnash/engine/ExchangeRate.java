@@ -251,6 +251,12 @@ public class ExchangeRate extends StoredObject {
         return super.hashCode() * 67 + rateId.hashCode();
     }
 
+    /**
+     * Required by XStream for proper initialization
+     *
+     * @return Properly initialized ExchangeRate
+     */
+    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

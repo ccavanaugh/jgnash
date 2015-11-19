@@ -636,6 +636,12 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         return tran;
     }
 
+    /**
+     * Required by XStream for proper initialization
+     *
+     * @return Properly initialized Transaction
+     */
+    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

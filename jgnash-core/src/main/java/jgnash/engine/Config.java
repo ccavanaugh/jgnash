@@ -252,10 +252,11 @@ public class Config extends StoredObject {
     }
 
     /**
-     * Needed by XStream for proper initialization
+     * Required by XStream for proper initialization
      *
      * @return Properly initialized Config object
      */
+    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

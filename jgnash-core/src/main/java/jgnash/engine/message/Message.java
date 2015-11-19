@@ -32,7 +32,7 @@ import jgnash.engine.StoredObject;
 
 /**
  * Message object
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class Message implements Serializable, Cloneable {
@@ -53,7 +53,7 @@ public class Message implements Serializable, Cloneable {
     /**
      * No argument constructor for reflection purposes.<br>
      * <b>Do not use to create new instances</b>
-     * 
+     *
      * @deprecated
      */
     @Deprecated
@@ -80,8 +80,8 @@ public class Message implements Serializable, Cloneable {
 
     /**
      * Sets a message property. The value must be reachable by the engine or and exception will be thrown.
-     * 
-     * @param key property key
+     *
+     * @param key   property key
      * @param value message value
      * @throws NullPointerException throws an exception if value is null
      */
@@ -91,6 +91,7 @@ public class Message implements Serializable, Cloneable {
 
     /**
      * Returns a {@code StoredObject} given a property key
+     *
      * @param key {@code MessageProperty} to search for
      * @param <T> instance of {@code StoredObject}
      * @return object if found, {@code null} otherwise
@@ -114,12 +115,13 @@ public class Message implements Serializable, Cloneable {
 
     /**
      * Write message out to ObjectOutputStream.
-     * 
+     *
      * @param s stream
      * @throws IOException io exception
      * @serialData Write serializable fields, if any exist. Write out the integer count of properties. Write out key and
-     *             value of each property
+     * value of each property
      */
+    @SuppressWarnings("unused")
     private void writeObject(final ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
 
@@ -138,14 +140,14 @@ public class Message implements Serializable, Cloneable {
 
     /**
      * Read a Message from an ObjectInputStream
-     * 
+     *
      * @param s input stream
-     * @throws java.io.IOException io exception
+     * @throws java.io.IOException    io exception
      * @throws ClassNotFoundException thrown is class is not found
      * @serialData Read serializable fields, if any exist. Read the integer count of properties. Read the key and value
-     *             of each property
+     * of each property
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "unused"})
     private void readObject(final ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
 
@@ -180,9 +182,9 @@ public class Message implements Serializable, Cloneable {
 
     /**
      * Returns the event and channel for this message
-     * 
-     * @see java.lang.Object#toString()
+     *
      * @return event and channel information
+     * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {

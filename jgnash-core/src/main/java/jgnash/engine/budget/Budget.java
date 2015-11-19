@@ -297,6 +297,12 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
         return getName();
     }
 
+    /**
+     * Required by XStream for proper initialization
+     *
+     * @return Properly initialized Budget
+     */
+    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

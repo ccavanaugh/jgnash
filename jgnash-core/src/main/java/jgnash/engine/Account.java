@@ -1527,10 +1527,11 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Needed by XStream for proper initialization
+     * Required by XStream for proper initialization
      *
      * @return Properly initialized Account
      */
+    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;
