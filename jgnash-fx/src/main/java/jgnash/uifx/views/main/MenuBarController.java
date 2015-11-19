@@ -120,9 +120,9 @@ public class MenuBarController implements MessageListener {
         importOfxMenuItem.disableProperty().bind(disabled);
         importQifMenuItem.disableProperty().bind(disabled);
 
-        windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
+        windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageList().emptyProperty()));
 
-        RegisterStage.registerStageListProperty().addListener((ListChangeListener<RegisterStage>) c -> {
+        RegisterStage.registerStageList().addListener((ListChangeListener<RegisterStage>) c -> {
             while (c.next()) {
                 if (c.wasAdded()) {
                     c.getAddedSubList().forEach(MenuBarController.this::addWindowMenuItem);
@@ -230,7 +230,7 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void closeAllWindows() {
         // create a copy to avoid concurrent modification issues
-        final ArrayList<RegisterStage> registerStages = new ArrayList<>(RegisterStage.registerStageListProperty().get());
+        final ArrayList<RegisterStage> registerStages = new ArrayList<>(RegisterStage.registerStageList().get());
 
         registerStages.forEach(RegisterStage::close);
     }

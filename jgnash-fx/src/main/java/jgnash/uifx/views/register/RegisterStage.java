@@ -118,7 +118,7 @@ public class RegisterStage extends Stage {
         return accountProperty.getReadOnlyProperty();
     }
 
-    public static ListProperty<RegisterStage> registerStageListProperty() {
+    public static ListProperty<RegisterStage> registerStageList() {
         return registerStageListProperty;
     }
 
