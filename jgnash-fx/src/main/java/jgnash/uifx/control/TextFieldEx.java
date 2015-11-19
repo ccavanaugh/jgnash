@@ -50,7 +50,7 @@ public class TextFieldEx extends TextField {
     }
 
     public TextFieldEx() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("TextFieldEx.fxml"));
+        final FXMLLoader loader = new FXMLLoader(TextFieldEx.class.getResource("TextFieldEx.fxml"));
         loader.setRoot(this);
         loader.setController(this);
 
