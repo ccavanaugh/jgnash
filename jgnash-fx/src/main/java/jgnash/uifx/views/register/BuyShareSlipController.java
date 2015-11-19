@@ -75,7 +75,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
-        if (transaction.getTransactionType() != TransactionType.BUYSHARE) {
+        if (transaction.getTransactionType() != TransactionType.BUYSHARE || !(transaction instanceof InvestmentTransaction)) {
             throw new IllegalArgumentException(resources.getString("Message.Error.InvalidTransactionType"));
         }
         clearForm();
