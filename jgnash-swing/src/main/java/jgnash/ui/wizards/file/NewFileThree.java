@@ -19,8 +19,6 @@ package jgnash.ui.wizards.file;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -82,14 +80,6 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
         helpPane.setEditorKit(new StyledEditorKit());
         helpPane.setBackground(getBackground());
         helpPane.setText(TextResource.getString("NewFileThree.txt"));
-
-        addComponentListener(new ComponentAdapter() {
-
-            @Override
-            public void componentHidden(ComponentEvent evt) {
-                isPageValid();
-            }
-        });
 
         addButton.addActionListener(this);
         removeButton.addActionListener(this);
