@@ -64,10 +64,10 @@ public class Mt940Parser {
      * @param reader reader
      * @return Mt940File instance
      * @throws IOException    An IO exception occurred
-     * @throws ParseException parse error occurred reading text
+     * @throws DateTimeParseException parse error occurred reading text
      */
-    public Mt940File parse(final LineNumberReader reader) throws IOException, ParseException {
-        final Mt940File retval = new Mt940File();
+    public Mt940File parse(final LineNumberReader reader) throws IOException, DateTimeParseException {
+        final Mt940File mt940File = new Mt940File();
 
         List<String> recordLines = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class Mt940Parser {
         while (currentLine != null) {
             if (currentLine.startsWith("-")) {
                 // Parse this record and add it to the file
-                retval.getRecords().add(parseRecord(recordLines));
+                mt940File.getRecords().add(parseRecord(recordLines));
 
                 // Clear recordLines to start on the next record
                 recordLines = new ArrayList<>();
@@ -86,9 +86,9 @@ public class Mt940Parser {
         }
 
         // A file might not end with a trailing '-' (e.g. from Rabobank):
-        retval.getRecords().add(parseRecord(recordLines));
+        mt940File.getRecords().add(parseRecord(recordLines));
 
-        return retval;
+        return mt940File;
     }
 
     /**
@@ -134,10 +134,10 @@ public class Mt940Parser {
      *
      * @param recordLines the List of MT940 records to parse
      * @return and generate Mt940 Record
-     * @throws ParseException parse error occurred reading text
+     * @throws DateTimeParseException parse error occurred reading text
      */
-    private static Mt940Record parseRecord(final List<String> recordLines) throws ParseException {
-        Mt940Record retval = new Mt940Record();
+    private static Mt940Record parseRecord(final List<String> recordLines) throws DateTimeParseException {
+        Mt940Record mt940Record = new Mt940Record();
 
         // Merge 'lines' that span multiple actual lines.
         List<String> mergedLines = mergeLines(recordLines);
@@ -145,7 +145,7 @@ public class Mt940Parser {
         Mt940Entry currentEntry = null;
         for (String line : mergedLines) {
             if (line.startsWith(":61:")) {
-                currentEntry = nextEntry(retval.getEntries(), currentEntry);
+                currentEntry = nextEntry(mt940Record.getEntries(), currentEntry);
 
                 line = line.substring(4);
                 line = parseDatumJJMMTT(currentEntry, line);
@@ -163,9 +163,9 @@ public class Mt940Parser {
         }
 
         // add the last one:
-        nextEntry(retval.getEntries(), currentEntry);
+        nextEntry(mt940Record.getEntries(), currentEntry);
 
-        return retval;
+        return mt940Record;
     }
 
     /**
