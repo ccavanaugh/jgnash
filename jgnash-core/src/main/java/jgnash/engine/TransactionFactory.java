@@ -20,9 +20,7 @@ package jgnash.engine;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -32,20 +30,20 @@ import jgnash.util.ResourceUtils;
 
 /**
  * Transaction Factory
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class TransactionFactory {
 
     /**
      * Create an AddX investment transaction
-     * 
+     *
      * @param investmentAccount Investment account
-     * @param node Security to add
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param date Transaction date
-     * @param memo Transaction memo
+     * @param node              Security to add
+     * @param price             Price of each share
+     * @param quantity          Number of shares
+     * @param date              Transaction date
+     * @param memo              Transaction memo
      * @return new Investment Transaction
      */
     public static InvestmentTransaction generateAddXTransaction(final Account investmentAccount,
@@ -74,53 +72,17 @@ public class TransactionFactory {
     }
 
     /**
-     * Import a jGnash 1.x buy security transaction. <b>Should not be used for new transactions.</b>
-     * 
-     * @param account Account to buy against (can be the same investment account)
-     * @param investmentAccount Investment account
-     * @param node Security to buy
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param exchangeRate Exchange rate (Can be BigDecimal.ONE, cannot be null)
-     * @param fee Purchase fee
-     * @param date Transaction date
-     * @param memo Transaction memo
-     * @return new Transaction
-     */
-    public static InvestmentTransaction import1xBuyXTransaction(final Account account, final Account investmentAccount,
-                                                                final SecurityNode node, final BigDecimal price,
-                                                                final BigDecimal quantity, final BigDecimal exchangeRate,
-                                                                final BigDecimal fee, final LocalDate date, final String memo) {
-
-        assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
-        assert exchangeRate != null && fee != null && date != null && memo != null;
-
-        List<TransactionEntry> fees = new ArrayList<>();
-
-        // fees are charged against cash balance of the investment account
-        if (fee.compareTo(BigDecimal.ZERO) > 0) {
-            TransactionEntry e = new TransactionEntry(investmentAccount, fee.negate());
-            e.setMemo(memo);
-            e.setTransactionTag(TransactionTag.INVESTMENT_FEE);
-
-            fees.add(e);
-        }
-
-        return generateBuyXTransaction(account, investmentAccount, node, price, quantity, exchangeRate, date, memo, fees);
-    }
-
-    /**
      * Create a buy security transaction
-     * 
-     * @param account Account to buy against (can be the same investment account)
+     *
+     * @param account           Account to buy against (can be the same investment account)
      * @param investmentAccount Investment account
-     * @param node Security to buy
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param exchangeRate Exchange rate (Can be BigDecimal.ONE, cannot be null)
-     * @param date Transaction date
-     * @param memo Transaction memo
-     * @param fees List of transaction fees
+     * @param node              Security to buy
+     * @param price             Price of each share
+     * @param quantity          Number of shares
+     * @param exchangeRate      Exchange rate (Can be BigDecimal.ONE, cannot be null)
+     * @param date              Transaction date
+     * @param memo              Transaction memo
+     * @param fees              List of transaction fees
      * @return new Transaction
      */
     public static InvestmentTransaction generateBuyXTransaction(final Account account, final Account investmentAccount,
@@ -185,9 +147,6 @@ public class TransactionFactory {
             }
         }
 
-        //ReconcileManager.reconcileTransaction(account, transaction, reconciled);
-        //ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-
         Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
         return transaction;
@@ -195,16 +154,16 @@ public class TransactionFactory {
 
     /**
      * Create a Dividend transaction
-     * 
-     * @param incomeAccount Income source account for the cash dividend
-     * @param investmentAccount Investment account
-     * @param cashAccount The account receiving the cash dividend. May be the same investment account.
-     * @param node Security for dividend
-     * @param dividend Cash dividend
+     *
+     * @param incomeAccount         Income source account for the cash dividend
+     * @param investmentAccount     Investment account
+     * @param cashAccount           The account receiving the cash dividend. May be the same investment account.
+     * @param node                  Security for dividend
+     * @param dividend              Cash dividend
      * @param incomeExchangedAmount Income account exchanged amount (Can be the same as dividend, cannot be null)
-     * @param cashExchangedAmount The exchanged amount for the cash account (Can be the same as dividend, cannot be null)
-     * @param date Transaction date
-     * @param memo Transaction memo
+     * @param cashExchangedAmount   The exchanged amount for the cash account (Can be the same as dividend, cannot be null)
+     * @param date                  Transaction date
+     * @param memo                  Transaction memo
      * @return new InvestmentTransaction
      */
     public static InvestmentTransaction generateDividendXTransaction(final Account incomeAccount,
@@ -247,26 +206,22 @@ public class TransactionFactory {
             transaction.addTransactionEntry(tran);
         }
 
-        //ReconcileManager.reconcileTransaction(incomeAccount, transaction, reconciled);
-        //ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-        //ReconcileManager.reconcileTransaction(cashAccount, transaction, reconciled);
-
         return transaction;
     }
 
     /**
      * Create a Return of Capital transaction
-     * 
-     * @param incomeAccount Income source account for the cash dividend
-     * @param investmentAccount Investment account
-     * @param cashAccount The account receiving the cash dividend. May be the same investment account.
-     * @param node Security for dividend
-     * @param dividend Cash dividend
+     *
+     * @param incomeAccount         Income source account for the cash dividend
+     * @param investmentAccount     Investment account
+     * @param cashAccount           The account receiving the cash dividend. May be the same investment account.
+     * @param node                  Security for dividend
+     * @param dividend              Cash dividend
      * @param incomeExchangedAmount Income account exchanged amount (Can be the same as dividend, cannot be null)
-     * @param cashExchangedAmount The exchanged amount for the cash account (Can be the same as dividend, cannot be
-     *        null)
-     * @param date Transaction date
-     * @param memo Transaction memo
+     * @param cashExchangedAmount   The exchanged amount for the cash account (Can be the same as dividend, cannot be
+     *                              null)
+     * @param date                  Transaction date
+     * @param memo                  Transaction memo
      * @return new InvestmentTransaction
      */
     public static InvestmentTransaction generateRocXTransaction(final Account incomeAccount,
@@ -312,24 +267,20 @@ public class TransactionFactory {
             transaction.addTransactionEntry(tran);
         }
 
-        // ReconcileManager.reconcileTransaction(incomeAccount, transaction, reconciled);
-        // ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-        // ReconcileManager.reconcileTransaction(cashAccount, transaction, reconciled);
-
         return transaction;
     }
 
     /**
      * Generate a double entry transaction with exchange rate
-     * 
+     *
      * @param creditAccount Credit account
-     * @param debitAccount Debit account
-     * @param creditAmount Transaction credit amount
-     * @param debitAmount Transaction credit amount
-     * @param date Transaction date
-     * @param memo Transaction memo
-     * @param payee Transaction payee
-     * @param number Transaction number
+     * @param debitAccount  Debit account
+     * @param creditAmount  Transaction credit amount
+     * @param debitAmount   Transaction credit amount
+     * @param date          Transaction date
+     * @param memo          Transaction memo
+     * @param payee         Transaction payee
+     * @param number        Transaction number
      * @return new Transaction
      */
     public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount,
@@ -360,14 +311,14 @@ public class TransactionFactory {
 
     /**
      * Generate a double entry transaction
-     * 
+     *
      * @param creditAccount Credit account
-     * @param debitAccount Debit account
-     * @param amount Transaction amount
-     * @param date Transaction date
-     * @param memo Transaction memo
-     * @param payee Transaction payee
-     * @param number Transaction number
+     * @param debitAccount  Debit account
+     * @param amount        Transaction amount
+     * @param date          Transaction date
+     * @param memo          Transaction memo
+     * @param payee         Transaction payee
+     * @param number        Transaction number
      * @return new Transaction
      */
     public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount,
@@ -397,13 +348,13 @@ public class TransactionFactory {
 
     /**
      * Create a Split investment transaction
-     * 
+     *
      * @param investmentAccount Investment account
-     * @param node Security that merged
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param date Transaction date
-     * @param memo Transaction memo
+     * @param node              Security that merged
+     * @param price             Price of each share
+     * @param quantity          Number of shares
+     * @param date              Transaction date
+     * @param memo              Transaction memo
      * @return new Investment Transaction
      */
     public static InvestmentTransaction generateMergeXTransaction(final Account investmentAccount,
@@ -433,15 +384,15 @@ public class TransactionFactory {
 
     /**
      * Create a Reinvested Dividend transaction
-     * 
+     *
      * @param investmentAccount Investment account
-     * @param node Security for dividend
-     * @param price Share price
-     * @param quantity Quantity of shares reinvested
-     * @param date Date of transaction
-     * @param memo Transaction memo
-     * @param fees Fee entry(s)
-     * @param gains Gain/Loss entry(s)
+     * @param node              Security for dividend
+     * @param price             Share price
+     * @param quantity          Quantity of shares reinvested
+     * @param date              Date of transaction
+     * @param memo              Transaction memo
+     * @param fees              Fee entry(s)
+     * @param gains             Gain/Loss entry(s)
      * @return new InvestmentTransaction
      */
     public static InvestmentTransaction generateReinvestDividendXTransaction(final Account investmentAccount,
@@ -531,13 +482,13 @@ public class TransactionFactory {
 
     /**
      * Create a RemoveX investment transaction
-     * 
+     *
      * @param investmentAccount Investment account
-     * @param node Security to remove
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param date Transaction date
-     * @param memo Transaction memo
+     * @param node              Security to remove
+     * @param price             Price of each share
+     * @param quantity          Number of shares
+     * @param date              Transaction date
+     * @param memo              Transaction memo
      * @return new Investment Transaction
      */
     public static InvestmentTransaction generateRemoveXTransaction(final Account investmentAccount,
@@ -566,61 +517,18 @@ public class TransactionFactory {
     }
 
     /**
-     * Import a jGnash 1.x a sell security transaction <b>Should not be used for new transactions.</b>
-     * 
-     * @param account Account to buy against (can be the same investment account)
-     * @param investmentAccount Investment account
-     * @param node Security to sell
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param exchange Exchange rate (Can be BigDecimal.ONE, cannot be null)
-     * @param fee Purchase fee
-     * @param date Transaction date
-     * @param memo Transaction memo
-     * @return new Transaction
-     */
-    public static InvestmentTransaction import1xSellXTransaction(final Account account, final Account investmentAccount,
-                                                                 final SecurityNode node, final BigDecimal price,
-                                                                 final BigDecimal quantity, final BigDecimal exchange,
-                                                                 final BigDecimal fee, final LocalDate date, final String memo) {
-        Objects.requireNonNull(account);
-        Objects.requireNonNull(investmentAccount);
-        Objects.requireNonNull(node);
-        Objects.requireNonNull(price);
-        Objects.requireNonNull(quantity);
-        Objects.requireNonNull(exchange);
-        Objects.requireNonNull(fee);
-        Objects.requireNonNull(date);
-        Objects.requireNonNull(memo);
-
-        List<TransactionEntry> fees = new ArrayList<>();
-
-        // fees are charged against cash balance of the investment account
-        if (fee.compareTo(BigDecimal.ZERO) > 0) {
-            TransactionEntry e = new TransactionEntry(investmentAccount, fee.negate());
-            e.setMemo(memo);
-            e.setTransactionTag(TransactionTag.INVESTMENT_FEE);
-
-            fees.add(e);
-        }
-
-        return generateSellXTransaction(account, investmentAccount, node, price, quantity, exchange, date, memo, fees,
-                new ArrayList<>());
-    }
-
-    /**
      * Create a sell security transaction
-     * 
-     * @param account Account receive sale profits or loss. May be the same as the investment account (Cash balance)
+     *
+     * @param account           Account receive sale profits or loss. May be the same as the investment account (Cash balance)
      * @param investmentAccount Investment account
-     * @param node Security to sell
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param exchangeRate Exchanged amount (cannot be null)
-     * @param date Transaction date
-     * @param memo Transaction memo
-     * @param fees Purchase fee
-     * @param gains Gains/Loss entries
+     * @param node              Security to sell
+     * @param price             Price of each share
+     * @param quantity          Number of shares
+     * @param exchangeRate      Exchanged amount (cannot be null)
+     * @param date              Transaction date
+     * @param memo              Transaction memo
+     * @param fees              Purchase fee
+     * @param gains             Gains/Loss entries
      * @return new Transaction
      */
     public static InvestmentTransaction generateSellXTransaction(final Account account, final Account investmentAccount,
@@ -710,9 +618,6 @@ public class TransactionFactory {
             transaction.addTransactionEntry(gainsOffsetEntry);
         }
 
-        //ReconcileManager.reconcileTransaction(account, transaction, reconciled);
-        //ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-
         Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
         return transaction;
@@ -720,13 +625,13 @@ public class TransactionFactory {
 
     /**
      * Create a single entry transaction
-     * 
+     *
      * @param account Destination account
-     * @param amount Transaction amount
-     * @param date Transaction date
-     * @param memo Transaction memo
-     * @param payee Transaction payee
-     * @param number Transaction number
+     * @param amount  Transaction amount
+     * @param date    Transaction date
+     * @param memo    Transaction memo
+     * @param payee   Transaction payee
+     * @param number  Transaction number
      * @return new Transaction
      */
     public static Transaction generateSingleEntryTransaction(final Account account, final BigDecimal amount,
@@ -755,13 +660,13 @@ public class TransactionFactory {
 
     /**
      * Create a Split investment transaction
-     * 
+     *
      * @param investmentAccount Investment account
-     * @param node Security that split
-     * @param price Price of each share
-     * @param quantity Number of shares
-     * @param date Transaction date
-     * @param memo Transaction memo
+     * @param node              Security that split
+     * @param price             Price of each share
+     * @param quantity          Number of shares
+     * @param date              Transaction date
+     * @param memo              Transaction memo
      * @return new Investment Transaction
      */
     public static InvestmentTransaction generateSplitXTransaction(final Account investmentAccount,
