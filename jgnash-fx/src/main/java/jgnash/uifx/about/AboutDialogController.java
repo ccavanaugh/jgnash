@@ -18,6 +18,7 @@
 package jgnash.uifx.about;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -180,6 +181,26 @@ public class AboutDialogController {
         @Override
         public int compareTo(@NotNull final SystemProperty o) {
             return keyProperty().get().compareTo(o.keyProperty().get());
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+
+            final SystemProperty that = (SystemProperty) obj;
+
+            return Objects.equals(key, that.key) && Objects.equals(value, that.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key, value);
         }
     }
 }

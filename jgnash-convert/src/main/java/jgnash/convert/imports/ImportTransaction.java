@@ -20,6 +20,7 @@ package jgnash.convert.imports;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import jgnash.engine.Account;
 import jgnash.util.NotNull;
@@ -33,6 +34,8 @@ import jgnash.util.Nullable;
  * @author Nicolas Bouillon
  */
 public class ImportTransaction implements Comparable<ImportTransaction> {
+
+    private final String uuid = UUID.randomUUID().toString();
 
     private Account account;
 
@@ -170,4 +173,21 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         return Integer.compare(hashCode(), importTransaction.hashCode());
     }
 
+    @Override
+    public boolean equals(final Object that) {
+        if (this == that) {
+            return true;
+        }
+
+        if (that == null || getClass() != that.getClass()) {
+            return false;
+        }
+
+        return Objects.equals(uuid, ((ImportTransaction) that).uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
+    }
 }
