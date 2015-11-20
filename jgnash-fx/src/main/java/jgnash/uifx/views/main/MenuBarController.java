@@ -18,7 +18,6 @@
 package jgnash.uifx.views.main;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -230,9 +229,12 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void closeAllWindows() {
         // create a copy to avoid concurrent modification issues
-        final ArrayList<RegisterStage> registerStages = new ArrayList<>(RegisterStage.registerStageList().get());
+        final RegisterStage[] stages = RegisterStage.registerStageList()
+                .toArray(new RegisterStage[RegisterStage.registerStageList().size()]);
 
-        registerStages.forEach(RegisterStage::close);
+        for (final RegisterStage stage : stages) {
+            stage.close();
+        }
     }
 
     @FXML
