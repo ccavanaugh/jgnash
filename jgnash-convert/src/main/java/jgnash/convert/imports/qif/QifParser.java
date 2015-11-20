@@ -565,7 +565,7 @@ public final class QifParser {
                 if (line.startsWith("K")) {
                     // munch until all of them are gone
                     line = in.readLine();
-                    if (line.charAt(0) == '^') {
+                    if (line != null && line.charAt(0) == '^') {
                         String peek = in.peekLine();
                         if (peek == null) {
                             return;
