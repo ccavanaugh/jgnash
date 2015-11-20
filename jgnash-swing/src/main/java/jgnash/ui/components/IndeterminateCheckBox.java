@@ -140,7 +140,7 @@ public final class IndeterminateCheckBox extends JCheckBox {
 
         private SelectionState state = SelectionState.DESELECTED;
         private final IndeterminateCheckBox indeterminateCheckBox;
-        private final Icon icon;
+        private transient final Icon icon;
         private final boolean original;
 
         public ButtonModelEx(final SelectionState initialState, final IndeterminateCheckBox indeterminateCheckBox,
