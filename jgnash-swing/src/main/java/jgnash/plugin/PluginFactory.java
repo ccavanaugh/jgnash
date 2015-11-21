@@ -40,37 +40,26 @@ import java.util.logging.Logger;
  */
 public final class PluginFactory {
 
-    private String pluginDirectory = null;
+    private static String pluginDirectory = null;
     private final static String PLUGIN_DIRECTORY_NAME = "plugins";
     private final static BigDecimal INTERFACE_VERSION = new BigDecimal("2.5");
     private static final Logger logger = Logger.getLogger(PluginFactory.class.getName());
 
-    /* Singleton */
-    private static final PluginFactory factory;
-    private static final List<Plugin> plugins;
+    private static final List<Plugin> plugins = new ArrayList<>();
     private static boolean pluginsStarted = false;
     private static boolean pluginsLoaded = false;
 
-    static {
-        factory = new PluginFactory();
-        plugins = new ArrayList<>();
-    }
-
     private PluginFactory() {
         pluginDirectory = getPluginDirectory();
-    }
-
-    public static PluginFactory get() {
-        return factory;
     }
 
     public static List<Plugin> getPlugins() {
         return Collections.unmodifiableList(plugins);
     }
 
-    private synchronized String getPluginDirectory() {
+    private static synchronized String getPluginDirectory() {
         if (pluginDirectory == null) {
-            pluginDirectory = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+            pluginDirectory = PluginFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
             // decode to correctly handle spaces, etc. in the returned path
             try {
@@ -111,15 +100,14 @@ public final class PluginFactory {
         }
     }
 
-    public void loadPlugins() {
-
+    public static void loadPlugins() {
         if (!pluginsLoaded) {
-            String[] paths = getPluginPaths();
+            final String[] paths = getPluginPaths();
 
             if (paths != null) {
-                for (String plugin : paths) {
+                for (final String plugin : paths) {
                     try {
-                        Plugin p = loadPlugin(plugin);
+                        final Plugin p = loadPlugin(plugin);
                         if (p != null) {
                             plugins.add(p);
                         }
@@ -135,12 +123,12 @@ public final class PluginFactory {
         }
     }
 
-    private String[] getPluginPaths() {
-        File dir = new File(getPluginDirectory());        
+    private static String[] getPluginPaths() {
+        final File dir = new File(getPluginDirectory());
         return dir.list(new PluginFilenameFilter());
     }
 
-    private Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+    private static Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
 
         // If classLoader is closed, the plugin is not able to load new classes...
         @SuppressWarnings("resource")

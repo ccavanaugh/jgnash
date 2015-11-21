@@ -249,19 +249,19 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void loadPlugins() {
-        PluginFactory.get().loadPlugins();
+        PluginFactory.loadPlugins();
         PluginFactory.startPlugins();
 
-        for (Plugin plugin : PluginFactory.getPlugins()) {
+        for (final Plugin plugin : PluginFactory.getPlugins()) {
 
-            JMenuItem[] menuItems = plugin.getMenuItems();
+            final JMenuItem[] menuItems = plugin.getMenuItems();
 
             if (menuItems != null) {
                 for (JMenuItem menuItem : menuItems) {
-                    Object precedingIdref = menuItem.getClientProperty(Plugin.PRECEDINGMENUIDREF);
+                    final Object precedingId = menuItem.getClientProperty(Plugin.PRECEDINGMENUIDREF);
 
-                    if (precedingIdref != null && precedingIdref instanceof String) {
-                        addMenuItem((String) precedingIdref, menuItem);
+                    if (precedingId != null && precedingId instanceof String) {
+                        addMenuItem((String) precedingId, menuItem);
                     }
                 }
             }
@@ -317,25 +317,25 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
     }
 
-    private void addMenuItem(final String precedingMenuIdref, final JMenuItem newMenuItem) {
+    private void addMenuItem(final String precedingMenuId, final JMenuItem newMenuItem) {
         for (Component component : menuBar.getComponents()) {
             if (component instanceof JMenu) {
-                addJMenuItem((JMenu) component, precedingMenuIdref, newMenuItem);
+                addJMenuItem((JMenu) component, precedingMenuId, newMenuItem);
             }
         }
     }
 
-    private void addJMenuItem(final JMenu menu, final String precedingMenuIdref, final JMenuItem newMenuItem) {
+    private void addJMenuItem(final JMenu menu, final String precedingMenuId, final JMenuItem newMenuItem) {
 
-        Component[] components = menu.getMenuComponents();
+        final Component[] components = menu.getMenuComponents();
 
         for (int i = 0; i < components.length; i++) {
             if (components[i] instanceof JMenu) {
-                addJMenuItem((JMenu) components[i], precedingMenuIdref, newMenuItem);
+                addJMenuItem((JMenu) components[i], precedingMenuId, newMenuItem);
             } else if (components[i] instanceof JMenuItem) {
                 JMenuItem item = (JMenuItem) components[i];
 
-                if (precedingMenuIdref.equals(item.getClientProperty(ActionParser.ID_REF_ATTRIBUTE))) {
+                if (precedingMenuId.equals(item.getClientProperty(ActionParser.ID_REF_ATTRIBUTE))) {
                     menu.add(newMenuItem, i + 1);
                     return;
                 }
