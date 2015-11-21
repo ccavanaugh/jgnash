@@ -22,6 +22,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -67,7 +68,8 @@ public class TextInputDialog {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
         dialog = FXMLUtils.loadFXML(this, "TextInputDialog.fxml", resources);
-        textField.setText(defaultValue);
+
+        Platform.runLater(() -> textField.setText(defaultValue));
 
         setGraphic(new FontAwesomeLabel(FontAwesomeIcon.QUESTION_CIRCLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER));
