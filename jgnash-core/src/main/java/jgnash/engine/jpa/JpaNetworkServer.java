@@ -17,8 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -79,7 +77,6 @@ public class JpaNetworkServer {
 
     private static final String SERVER_ENGINE = "server";
 
-    @SuppressFBWarnings({"DM_EXIT"})
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
         File file = new File(fileName);
@@ -116,10 +113,11 @@ public class JpaNetworkServer {
     private boolean run(final DataStoreType dataStoreType, final String fileName, final int port, final char[] password) {
         boolean result = false;
 
-        DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
+        final DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
         final boolean lockServerStarted = distributedLockServer.startServer(password);
 
-        AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3, AttachmentUtils.getAttachmentDirectory(Paths.get(fileName)));
+        final AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3,
+                AttachmentUtils.getAttachmentDirectory(Paths.get(fileName)));
         final boolean attachmentServerStarted = attachmentTransferServer.startServer(password);
 
         if (attachmentServerStarted && lockServerStarted) {
@@ -128,12 +126,13 @@ public class JpaNetworkServer {
             if (engine != null) {
 
                 // Start the message bus and pass the file name so it can be reported to the client
-                MessageBusServer messageBusServer = new MessageBusServer(port + 1);
+                final MessageBusServer messageBusServer = new MessageBusServer(port + 1);
                 result = messageBusServer.startServer(dataStoreType, fileName, password);
 
                 if (result) { // don't continue if the server is not started successfully
                     // Start the backup thread that ensures an XML backup is created at set intervals
-                    ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+                    final ScheduledExecutorService backupExecutor
+                            = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
 
                     // run commit every backup period after startup
                     backupExecutor.scheduleWithFixedDelay(() -> {
@@ -144,7 +143,7 @@ public class JpaNetworkServer {
                         }
                     }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
 
-                    LocalServerListener listener = event -> {
+                    final LocalServerListener listener = event -> {
 
                         // look for a remote request to stop the server
                         if (event.startsWith(STOP_SERVER_MESSAGE)) {

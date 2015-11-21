@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<!--
+  This file contains some false positive bugs detected by Findbugs. Their
+  false positive nature has been analyzed individually and they have been
+  put here to instruct Findbugs it must ignore them.
+-->
+<FindBugsFilter>
+
+    <Match>
+        <Class name="jgnash.uifx.views.main.ConsoleDialogController"/>
+        <Method name="handleForceGarbageCollection"/>
+        <Bug pattern="DM_GC"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.ui.report.FontRegistry"/>
+        <Method name="registerFontDirectories"/>
+        <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.ui.MainFrame"/>
+        <Method name="performControlledShutdown"/>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.engine.jpa.JpaNetworkServer"/>
+        <Method name="startServer"/>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.engine.jpa.AbstractJpaDataStore"/>
+        <Method name="initEmptyDatabase"/>
+        <Bug pattern="DMI_EMPTY_DB_PASSWORD"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.engine.concurrent.DistributedLockManager"/>
+        <Method name="changeLockState"/>
+        <Bug pattern="JLM_JSR166_UTILCONCURRENT_MONITORENTER"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.convert.imports.qif.QifParser"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.convert.imports.qif.QifTransaction"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+
+    <Match>
+        <Class name="com.jidesoft.swing.JideScrollPane"/>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED"/>
+    </Match>
+
+    <Match>
+        <Class name="com.jidesoft.swing.JideSwingUtilities"/>
+        <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+    </Match>
+
+
+</FindBugsFilter>

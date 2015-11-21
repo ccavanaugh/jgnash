@@ -48,7 +48,6 @@
         <opencsv.version>2.3</opencsv.version>
         <netty.version>4.0.33.Final</netty.version>
         <controlsfx.version>8.40.10</controlsfx.version>
-        <findbugs-annotations.version>3.0.0</findbugs-annotations.version>
         <fontawesomefx.version>8.6</fontawesomefx.version>
 
     </properties>

@@ -17,7 +17,6 @@
  */
 package jgnash.engine.concurrent;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -209,7 +208,6 @@ public class DistributedLockManager implements LockManager {
         changeLockState(lockId, type, DistributedLockServer.UNLOCK);
     }
 
-    @SuppressFBWarnings({"JLM_JSR166_UTILCONCURRENT_MONITORENTER"})
     private void changeLockState(final String lockId, final String type, final String lockState) {
         final String threadId = uuid + '-' + Thread.currentThread().getId();
         final String lockMessage = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);

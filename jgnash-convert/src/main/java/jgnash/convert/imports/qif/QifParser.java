@@ -28,8 +28,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import jgnash.convert.imports.DateFormat;
 import jgnash.util.NotNull;
 
@@ -53,7 +51,6 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-@SuppressFBWarnings({"URF_UNREAD_FIELD"})
 public final class QifParser {
 
     private DateFormat dateFormat = DateFormat.US;

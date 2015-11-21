@@ -17,8 +17,6 @@
  */
 package jgnash.convert.imports.qif;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +32,6 @@ import jgnash.convert.imports.ImportTransaction;
  *
  * @author Craig Cavanaugh
  */
-@SuppressFBWarnings({"URF_UNREAD_FIELD"})
 public class QifTransaction extends ImportTransaction {
 
     public static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("/|'|\\.|-");

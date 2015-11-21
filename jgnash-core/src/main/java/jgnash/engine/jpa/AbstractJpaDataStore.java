@@ -17,8 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -239,7 +237,6 @@ public abstract class AbstractJpaDataStore implements DataStore {
         return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + "." + getFileExt()));
     }
 
-    @SuppressFBWarnings({"DMI_EMPTY_DB_PASSWORD"})
     boolean initEmptyDatabase(final String fileName) {
         boolean result = false;
 

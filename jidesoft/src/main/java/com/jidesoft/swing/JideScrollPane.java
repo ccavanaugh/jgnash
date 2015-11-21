@@ -9,8 +9,6 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 /**
  * {@code JideScrollPane} is an enhanced version of {@code JScrollPane}. In {@code JScrollPane}, you can
  * have rowHeader and columnHeader. However you can't have rowFooter and columnFooter. However rowFooter and
@@ -363,7 +361,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      *
      * @see #setCorner(String, java.awt.Component)
      */
-    @SuppressFBWarnings({"RV_RETURN_VALUE_IGNORED"})
     public Component getScrollBarCorner(String key) {
         boolean isLeftToRight = getComponentOrientation().isLeftToRight();
         if (key.equals(HORIZONTAL_LEADING)) {

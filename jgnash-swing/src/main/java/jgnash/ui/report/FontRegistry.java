@@ -29,7 +29,6 @@ import jgnash.util.OS;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -192,7 +191,6 @@ class FontRegistry {
     /**
      * Register fonts in known directories.
      */
-    @SuppressFBWarnings({"DMI_HARDCODED_ABSOLUTE_FILENAME"})
     private void registerFontDirectories() {
         if (OS.isSystemWindows()) {
             registerFontDirectory("c:/windows/fonts");
