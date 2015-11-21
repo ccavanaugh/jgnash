@@ -47,7 +47,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     static final ReentrantLock emLock = new ReentrantLock();
 
     /**
-     * Shared entity manager
+     * Entity manager reference
      */
     final EntityManager em;
 
