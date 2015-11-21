@@ -162,6 +162,10 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
      */
     @Override
     public Dimension preferredLayoutSize(Container parent) {
+        if (!(parent instanceof JideScrollPane)) {
+            throw new IllegalArgumentException();
+        }
+
         /* Sync the (now obsolete) policy fields with the
          * JScrollPane.
          */
@@ -338,6 +342,10 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
      */
     @Override
     public Dimension minimumLayoutSize(Container parent) {
+        if (!(parent instanceof JideScrollPane)) {
+            throw new IllegalArgumentException();
+        }
+
         /* Sync the (now obsolete) policy fields with the
          * JScrollPane.
          */
@@ -482,6 +490,10 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
     @SuppressWarnings("ConstantConditions")
     @Override
     public void layoutContainer(Container parent) {
+        if (!(parent instanceof JideScrollPane)) {
+            throw new IllegalArgumentException();
+        }
+
         /* Sync the (now obsolete) policy fields with the
          * JScrollPane.
          */

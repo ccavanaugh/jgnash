@@ -60,7 +60,8 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
 
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
-        if (!(transaction.getTransactionType() == TransactionType.SPLITSHARE ||
+        if (!(transaction instanceof InvestmentTransaction) ||
+                !(transaction.getTransactionType() == TransactionType.SPLITSHARE ||
                 transaction.getTransactionType() == TransactionType.MERGESHARE)) {
             throw new IllegalArgumentException(resources.getString("Message.Error.InvalidTransactionType"));
         }
