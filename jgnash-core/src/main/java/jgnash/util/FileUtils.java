@@ -245,17 +245,18 @@ public final class FileUtils {
      * are found or if the directory is not valid.
      */
     public static List<File> getDirectoryListing(final File directory, final String pattern) {
-        List<File> fileList = new ArrayList<>();
+        final List<File> fileList = new ArrayList<>();
 
         if (directory != null && directory.isDirectory()) {
-
             final Pattern p = SearchUtils.createSearchPattern(pattern, false);
 
-            File[] files = directory.listFiles((dir, name) -> {
+            final File[] files = directory.listFiles((dir, name) -> {
                 return p.matcher(name).matches();
             });
 
-            fileList.addAll(Arrays.asList(files));
+            if (files != null) {
+                fileList.addAll(Arrays.asList(files));
+            }
 
             Collections.sort(fileList); // sort in natural order
         }

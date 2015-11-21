@@ -138,15 +138,16 @@ class AttachmentPanel extends JPanel implements ActionListener {
      * @return chained return of the passed transaction
      */
     Transaction buildTransaction(final Transaction transaction) {
-        if (attachment != null) {
+        if (attachment != null && attachment.getFileName() != null) {
+            final Path path = attachment.getFileName();
+
             if (moveAttachment) {   // move the attachment first
                 if (moveAttachment()) {
-                    transaction.setAttachment(attachment.getFileName().toString());
+                    transaction.setAttachment(path.toString());
                 } else {
                     transaction.setAttachment(null);
 
-                    final String message = ResourceUtils.getString("Message.Error.TransferAttachment",
-                            attachment.getFileName().toString());
+                    final String message = ResourceUtils.getString("Message.Error.TransferAttachment", path.toString());
 
                     StaticUIMethods.displayError(message);
                 }

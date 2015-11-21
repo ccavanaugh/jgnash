@@ -137,14 +137,16 @@ public class AttachmentPane extends GridPane {
      */
     Transaction buildTransaction(final Transaction transaction) {
         if (attachmentProperty.get() != null) {
+
+            final Path path = attachmentProperty.get().getFileName();
+
             if (moveAttachment) {
-                if (moveAttachment()) {
-                    transaction.setAttachment(attachmentProperty.get().getFileName().toString());
-                } else {
+                if (moveAttachment() && path != null) {
+                    transaction.setAttachment(path.toString());
+                } else if (path!= null) {
                     transaction.setAttachment(null);
 
-                    final String message = ResourceUtils.getString("Message.Error.TransferAttachment",
-                            attachmentProperty.get().getFileName().toString());
+                    final String message = ResourceUtils.getString("Message.Error.TransferAttachment", path.toString());
 
                     StaticUIMethods.displayError(message);
                 }
@@ -199,7 +201,10 @@ public class AttachmentPane extends GridPane {
         }
 
         if (attachmentProperty.get() != null) {
-            fileChooser.setInitialFileName(attachmentProperty.get().getFileName().toString());
+            final Path path = attachmentProperty.get().getFileName();
+            if (path != null) {
+                fileChooser.setInitialFileName(path.toString());
+            }
         }
 
         final File selectedFile = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
