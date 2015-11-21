@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -78,21 +77,16 @@ public class ExchangeRate extends StoredObject {
         this.rateId = rateId;
     }
 
-    private synchronized ReadWriteLock getLock() {
-        return lock;
-    }
-
     public boolean contains(final ExchangeRateHistoryNode node) {
 
-        Lock l = getLock().readLock();
-        l.lock();
+        lock.readLock().lock();
 
         boolean result = false;
 
         try {
             result = historyNodes.contains(node);
         } finally {
-            l.unlock();
+            lock.readLock().unlock();
         }
 
         return result;
@@ -129,7 +123,7 @@ public class ExchangeRate extends StoredObject {
     boolean addHistoryNode(final ExchangeRateHistoryNode node) {
         boolean result = false;
 
-        getLock().writeLock().lock();
+        lock.writeLock().lock();
 
         try {
             historyNodes.add(node);
@@ -140,7 +134,7 @@ public class ExchangeRate extends StoredObject {
         } catch (final Exception ex) {
             Logger.getLogger(ExchangeRate.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
-            getLock().writeLock().unlock();
+            lock.writeLock().unlock();
         }
 
         return result;
@@ -169,8 +163,7 @@ public class ExchangeRate extends StoredObject {
 
         boolean result = false;
 
-        Lock l = getLock().writeLock();
-        l.lock();
+        lock.writeLock().lock();
 
         try {
             result = historyNodes.remove(hNode);
@@ -180,7 +173,7 @@ public class ExchangeRate extends StoredObject {
 
             }
         } finally {
-            l.unlock();
+            lock.writeLock().unlock();
         }
 
         return result;
@@ -191,7 +184,7 @@ public class ExchangeRate extends StoredObject {
     }
 
     public BigDecimal getRate() {
-        getLock().readLock().lock();
+        lock.readLock().lock();
 
         try {
             if (lastRate == null) {
@@ -205,7 +198,7 @@ public class ExchangeRate extends StoredObject {
                 }
             }
         } finally {
-            getLock().readLock().unlock();
+            lock.readLock().unlock();
         }
 
         return lastRate;
@@ -220,7 +213,7 @@ public class ExchangeRate extends StoredObject {
      * @return the exchange rate if known, otherwise {@code BigDecimal.ZERO}
      */
     public BigDecimal getRate(final LocalDate localDate) {
-        getLock().readLock().lock();
+        lock.readLock().lock();
 
         BigDecimal rate = BigDecimal.ZERO;
 
@@ -232,7 +225,7 @@ public class ExchangeRate extends StoredObject {
                 }
             }
         } finally {
-            getLock().readLock().unlock();
+            lock.readLock().unlock();
         }
 
         return rate;
