@@ -341,8 +341,10 @@ public class BudgetTableController implements MessageListener {
     /**
      * The table view will lazily create the scrollbars which makes finding them tricky.  We need to check for
      * their existence and try again later if they do not exist.
+     *
+     * Synchronize binding, otherwise the scrollbars get a bit confused and do not respond to a scroll wheel
      */
-    private void bindScrollBars() {
+    private synchronized void bindScrollBars() {
         final Optional<ScrollBar> accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
         final Optional<ScrollBar> vDataScrollBar = JavaFXUtils.findVerticalScrollBar(periodTable);
         final Optional<ScrollBar> accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
@@ -880,10 +882,13 @@ public class BudgetTableController implements MessageListener {
 
     private void handleTransactionUpdate() {
         rateLimitUpdate(() -> {
-            periodTable.refresh();
-            periodSummaryTable.refresh();
-            accountSummaryTable.refresh();
-            accountGroupPeriodSummaryTable.refresh();
+            synchronized (this) {
+                periodTable.refresh();
+                periodSummaryTable.refresh();
+            }
+                accountSummaryTable.refresh();
+                accountGroupPeriodSummaryTable.refresh();
+
 
             optimizeColumnWidths();
 
