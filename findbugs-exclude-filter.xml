@@ -8,6 +8,10 @@
 <FindBugsFilter>
 
     <Match>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+
+    <Match>
         <Class name="jgnash.uifx.views.main.ConsoleDialogController"/>
         <Method name="handleForceGarbageCollection"/>
         <Bug pattern="DM_GC"/>
@@ -17,6 +21,11 @@
         <Class name="jgnash.ui.report.FontRegistry"/>
         <Method name="registerFontDirectories"/>
         <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.ui.register.table.AbstractRegisterTableModel"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
 
     <Match>
@@ -31,6 +40,7 @@
         <Bug pattern="DM_EXIT"/>
     </Match>
 
+    <!-- Empty password is used by default -->
     <Match>
         <Class name="jgnash.engine.jpa.AbstractJpaDataStore"/>
         <Method name="initEmptyDatabase"/>
@@ -49,8 +59,25 @@
     </Match>
 
     <Match>
-        <Class name="jgnash.convert.imports.qif.QifTransaction"/>
+        <Class name="jgnash.convert.imports.qif.QifParser$QifClassItem"/>
         <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+
+    <Match>
+        <Class name="jgnash.convert.imports.qif.QifParser$QifSecurity"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+
+    <!-- Super class uses a UUID for hash and equality -->
+    <Match>
+        <Class name="jgnash.convert.imports.ofx.OfxTransaction"/>
+        <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    </Match>
+
+    <!-- Super class uses a UUID for hash and equality -->
+    <Match>
+        <Class name="jgnash.convert.imports.qif.QifTransaction"/>
+        <Bug pattern="URF_UNREAD_FIELD, EQ_DOESNT_OVERRIDE_EQUALS"/>
     </Match>
 
     <Match>
