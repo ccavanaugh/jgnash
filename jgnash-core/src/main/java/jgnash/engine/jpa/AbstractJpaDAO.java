@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +32,7 @@ import javax.persistence.NoResultException;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Abstract JPA DAO.  Provides basic framework to work with the {@link EntityManager} in a thread safe manner.
@@ -58,21 +60,30 @@ abstract class AbstractJpaDAO extends AbstractDAO {
      * This ExecutorService is to be used whenever the entity manager is
      * accessed because and EntityManager is not thread safe
      */
-    static ExecutorService executorService;
+    static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     AbstractJpaDAO(final EntityManager entityManager, final boolean isRemote) {
         Objects.requireNonNull(entityManager);
 
         this.isRemote = isRemote;
         em = entityManager;
+    }
+
+    static void shutDownExecutor() {
+        // Stop the shared executor server, wait for all tasks to complete
 
         emLock.lock();
 
-        // Regenerate the executor service if needed
         try {
-            if (executorService == null || executorService.isShutdown()) {
-                executorService = Executors.newSingleThreadExecutor();
-            }
+            executorService.shutdown();
+
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+
+            // Regenerate the executor service
+            executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+
+        } catch (InterruptedException e) {
+            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
@@ -82,8 +93,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
      * Merge / Update the object in place
      *
      * @param object {@link StoredObject} to merge
-     * @param <T> the type of the value being merged
-     *
+     * @param <T>    the type of the value being merged
      * @return the merged object or null if an error occurred
      */
     <T extends StoredObject> T merge(final T object) {
@@ -113,7 +123,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
      * Persists an object
      *
      * @param object {@link StoredObject} to persist
-     * @param <T> the type of the value being persisted
+     * @param <T>    the type of the value being persisted
      */
     <T extends StoredObject> void persist(final T object) {
         emLock.lock();
