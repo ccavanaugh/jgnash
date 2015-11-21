@@ -348,14 +348,12 @@ public final class QifParser {
             line = in.readLine();
             while (line != null) {
                 if (startsWith(line, "!Type:")) {
-                    if (startsWith(line, "!Type:Invst") || startsWith(line, "!Type:Invst")) {
-
+                    if (startsWith(line, "!Type:Invst")) {
                         tran.type = line.substring(1);
                     } else if (startsWith(line, "!Type:Memor")) {
                         in.reset();
                         return true;
                     } else {
-
                         tran.type = line.substring(1);
                     }
                 } else if (line.startsWith("D")) {
