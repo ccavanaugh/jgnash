@@ -176,9 +176,9 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     }
 
     void cleanupEntityTrash() {
-        emLock.lock();
-
         logger.info("Checking for entity trash");
+
+        emLock.lock();
 
         try {
             Future<Void> future = executorService.submit(() -> {
