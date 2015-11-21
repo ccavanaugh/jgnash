@@ -64,7 +64,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     public final BigDecimal[] getGoals() {
-        return goals;
+        return goals.clone();   // return a defensive copy
     }
 
     public final void setGoals(final BigDecimal[] goals) {
