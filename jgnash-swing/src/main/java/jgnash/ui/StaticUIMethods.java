@@ -23,6 +23,8 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -94,8 +96,13 @@ public class StaticUIMethods {
             // Oracle Bug #6528430 - provide proper app name on Linux
             try {
                 Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
-                awtAppClassNameField.setAccessible(true);
+
+                AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                    awtAppClassNameField.setAccessible(true);
+                    return null;
+                });
                 awtAppClassNameField.set(toolkit, Version.getAppName());
+
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 Logger.getLogger(StaticUIMethods.class.getName()).log(Level.INFO, ex.getLocalizedMessage(), ex);
             }
