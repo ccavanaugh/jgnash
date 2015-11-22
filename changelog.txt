@@ -40,7 +40,7 @@ Release 2.20.0
 11/10/15 Fixed an error that would occur when creating a new file and the given filename extension did not match the selected file type. (Fx)
 11/10/15 Duplicate tabs were being created and an exception thrown when creating a new file. (Fx)
 11/05/15 Added the ability to change the default date format to something other than the locale default. (Swing, Fx)
-10/31/15 Fixed a file version check bug that was causing asset and liability accounts to loose their budget visibility.
+10/31/15 Fixed a file version check bug that was causing asset and liability accounts to lose their budget visibility.
 10/31/15 Internal test framework should not leave files lying around anymore.
 10/28/15 Fixed a bug with account combos not retaining their initial value. (Fx)
 10/27/15 Improved font appearance by forcing smoothing type to gray. (Fx)
@@ -49,8 +49,8 @@ Release 2.20.0
 10/24/15 Transaction number combo box was not working correctly. (Java Bug JDK-8136838 Fx)
 10/18/15 Improved the column packing speed of the transaction register. (Fx)
 10/17/15 The base font size will need to be reset after some code cleanup. (Fx)
-10/17/15 Avoid extraneous automatic securities price updates during the weekend if at lest one has occurred.
-10/14/15 Fixed a race condition in the account ComboBx resulting in NPE when creating a new account. (Bug #212) (Fx)
+10/17/15 Avoid extraneous automatic securities price updates during the weekend if at least one has occurred.
+10/14/15 Fixed a race condition in the account ComboBox resulting in NPE when creating a new account. (Bug #212) (Fx)
 10/14/15 Increase the darkness of the alternating tabular data row color from 2% to 6%. (Fx)
 10/11/15 Added keyboard accelerators. (Fx)
 
