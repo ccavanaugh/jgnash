@@ -29,6 +29,7 @@ Change the base highlight color for the FX interface
 
 Release 2.20.0
 ----------------------
+11/22/15 Fixed several potential locale specific bugs.
 11/17/15 Added a context menu to the account tree table. (Fx)
 11/16/15 Right aligned decimal values in the account tree table. (Fx)
 11/16/15 Fixed the account code editing behavior from within the account tree table. (Fx)
