@@ -25,12 +25,12 @@ class JideSwingUtilities implements SwingConstants {
 
     private static ChangeListener getViewportSynchronizationChangeListener() {
         if (_viewportSyncListener == null) {
-            _viewportSyncListener = new viewportSynchronizationChangeListener();
+            _viewportSyncListener = new ViewportSynchronizationChangeListener();
         }
         return _viewportSyncListener;
     }
 
-    private static class viewportSynchronizationChangeListener implements ChangeListener {
+    private static class ViewportSynchronizationChangeListener implements ChangeListener {
 
         @SuppressWarnings("rawtypes")
         @Override

@@ -3,8 +3,10 @@
 <!--
   This file contains some false positive bugs detected by Findbugs. Their
   false positive nature has been analyzed individually and they have been
-  put here to instruct Findbugs it must ignore them.
+  put here to instruct Findbugs to ignore them.
 -->
+<!--suppress XmlUnboundNsPrefix -->
+
 <FindBugsFilter>
 
     <Match>
@@ -87,6 +89,11 @@
 
     <Match>
         <Class name="com.jidesoft.swing.JideSwingUtilities"/>
+        <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+    </Match>
+
+    <Match>
+        <Class name="com.jidesoft.swing.JideSwingUtilities$ViewportSynchronizationChangeListener"/>
         <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
     </Match>
 
