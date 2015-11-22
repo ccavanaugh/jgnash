@@ -39,6 +39,7 @@ import java.io.CharArrayWriter;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,6 +86,8 @@ class MessageBusClient {
 
     private final String name;
 
+    private final ReentrantLock channelLock = new ReentrantLock();
+
     static {
         logger.setLevel(Level.INFO);
     }
@@ -127,6 +130,8 @@ class MessageBusClient {
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getConnectionTimeout() * 1000)
                 .option(ChannelOption.SO_KEEPALIVE, true);
 
+        channelLock.lock();
+
         try {
             // Start the connection attempt.
             channel = bootstrap.connect(host, port).sync().channel();
@@ -136,6 +141,8 @@ class MessageBusClient {
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to connect to remote message bus", e);
             disconnectFromServer();
+        } finally {
+            channelLock.unlock();
         }
 
         return result;
@@ -226,10 +233,14 @@ class MessageBusClient {
 
     public void disconnectFromServer() {
 
+        channelLock.lock();
+
         try {
             channel.close().sync();
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            channelLock.unlock();
         }
 
         eventLoopGroup.shutdownGracefully();
@@ -251,7 +262,9 @@ class MessageBusClient {
         sendRemoteMessage(JpaNetworkServer.STOP_SERVER_MESSAGE);
     }
 
-    private synchronized void sendRemoteMessage(final String message) {
+    private void sendRemoteMessage(final String message) {
+        channelLock.lock();
+
         try {
             if (encryptionManager != null) {
                 channel.writeAndFlush(encryptionManager.encrypt(message) + MessageBusServer.EOL_DELIMITER).sync();
@@ -266,6 +279,8 @@ class MessageBusClient {
             }
 
             logger.log(Level.INFO, "Tried to send message: {0} through a null channel", message);
+        } finally {
+            channelLock.unlock();
         }
     }
 
