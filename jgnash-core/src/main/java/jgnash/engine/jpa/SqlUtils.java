@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -73,9 +74,10 @@ public class SqlUtils {
                 String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
-                    try (final Statement statement = connection.createStatement()) {
-                        statement.execute(String.format("SET PASSWORD '%s'", new String(newPassword)));
 
+                    try (final PreparedStatement statement = connection.prepareStatement("SET PASSWORD '?'")) {
+                        statement.setString(1, new String(newPassword));
+                        statement.execute();
                         result = true;
                     }
                 } catch (final SQLException e) {
@@ -197,7 +199,8 @@ public class SqlUtils {
                     
                      try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
                     	 while (resultSet.next()) {
-                             tableNames.add(resultSet.getString(TABLE_NAME).toUpperCase() + "," + resultSet.getString(COLUMN_NAME).toUpperCase());
+                             tableNames.add(resultSet.getString(TABLE_NAME).toUpperCase(Locale.ROOT) + ","
+                                     + resultSet.getString(COLUMN_NAME).toUpperCase(Locale.ROOT));
                          }                    	 
                      }
                                                                             
