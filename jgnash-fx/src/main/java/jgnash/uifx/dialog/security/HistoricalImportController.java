@@ -193,14 +193,14 @@ public class HistoricalImportController {
                 // need to track the total processed count
                 long processedHistory = 0;
 
-                for (final SecurityNode securityNode : historyMap.keySet()) {
+                for (final Map.Entry<SecurityNode, List<SecurityHistoryNode>> entry : historyMap.entrySet()) {
                     if (!requestCancel) {
-                        for (final SecurityHistoryNode historyNode : historyMap.get(securityNode)) {
+                        for (final SecurityHistoryNode historyNode : entry.getValue()) {
                             if (!requestCancel) {
-                                engine.addSecurityHistory(securityNode, historyNode);
+                                engine.addSecurityHistory(entry.getKey(), historyNode);
                                 updateProgress(++processedHistory, historyCount);
 
-                                updateMessage(ResourceUtils.getString("Message.UpdatedPriceDate", securityNode.getSymbol(),
+                                updateMessage(ResourceUtils.getString("Message.UpdatedPriceDate", entry.getKey().getSymbol(),
                                         dateTimeFormatter.format(historyNode.getLocalDate())));
                             }
                         }
