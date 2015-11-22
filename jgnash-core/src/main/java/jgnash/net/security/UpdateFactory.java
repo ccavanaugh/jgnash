@@ -204,7 +204,7 @@ public class UpdateFactory {
 
         final List<SecurityHistoryNode> newSecurityNodes = new ArrayList<>();
 
-        final String s = securityNode.getSymbol().toLowerCase();
+        final String s = securityNode.getSymbol().toLowerCase(Locale.ROOT);
 
         final String a = Integer.toString(startDate.getMonthValue() - 1);
         final String b = Integer.toString(startDate.getDayOfMonth());

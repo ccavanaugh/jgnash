@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
@@ -80,7 +81,7 @@ class FontRegistry {
             }
         }
 
-        return registry.registeredFontMap.get(name.toLowerCase());
+        return registry.registeredFontMap.get(name.toLowerCase(Locale.ROOT));
     }
 
     private static void registerFonts() {
@@ -114,26 +115,26 @@ class FontRegistry {
 
     private void registerFont(final String path) {
         try {
-            if (path.toLowerCase().endsWith(".ttf") || path.toLowerCase().endsWith(".otf")
-                    || path.toLowerCase().indexOf(".ttc,") > 0) {
+            if (path.toLowerCase(Locale.ROOT).endsWith(".ttf") || path.toLowerCase(Locale.ROOT).endsWith(".otf")
+                    || path.toLowerCase(Locale.ROOT).indexOf(".ttc,") > 0) {
                 Object allNames[] = BaseFont.getAllFontNames(path, BaseFont.WINANSI, null);
 
                 String[][] names = (String[][]) allNames[2]; //full name
                 for (String[] name : names) {
-                    registeredFontMap.put(name[3].toLowerCase(), path);
+                    registeredFontMap.put(name[3].toLowerCase(Locale.ROOT), path);
                 }
 
-            } else if (path.toLowerCase().endsWith(".ttc")) {
+            } else if (path.toLowerCase(Locale.ROOT).endsWith(".ttc")) {
                 String[] names = BaseFont.enumerateTTCNames(path);
                 for (int i = 0; i < names.length; i++) {
                     registerFont(path + "," + i);
                 }
-            } else if (path.toLowerCase().endsWith(".afm") || path.toLowerCase().endsWith(".pfm")) {
+            } else if (path.toLowerCase(Locale.ROOT).endsWith(".afm") || path.toLowerCase(Locale.ROOT).endsWith(".pfm")) {
                 BaseFont bf = BaseFont.createFont(path, BaseFont.CP1252, false);
-                String fullName = bf.getFullFontName()[0][3].toLowerCase();
+                String fullName = bf.getFullFontName()[0][3].toLowerCase(Locale.ROOT);
                 registeredFontMap.put(fullName, path);
             }
-        } catch (DocumentException | IOException e) {
+        } catch (final DocumentException | IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -159,7 +160,7 @@ class FontRegistry {
                             registerFontDirectory(file.getAbsolutePath());
                         } else {
                             String name = file.getPath();
-                            String suffix = name.length() < 4 ? null : name.substring(name.length() - 3).toLowerCase();
+                            String suffix = name.length() < 4 ? null : name.substring(name.length() - 3).toLowerCase(Locale.ROOT);
 
                             if (suffix != null) {
                                 switch (suffix) {
@@ -181,7 +182,8 @@ class FontRegistry {
                             }
                         }
                     } catch (Exception e) {
-                        Logger.getLogger(FontRegistry.class.getName()).log(Level.FINEST, MessageFormat.format("Could not find path for {0}", path), e);
+                        Logger.getLogger(FontRegistry.class.getName()).log(Level.FINEST,
+                                MessageFormat.format("Could not find path for {0}", path), e);
                     }
                 }
             }
