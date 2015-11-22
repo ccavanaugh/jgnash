@@ -122,7 +122,7 @@ public class StaticUIMethods {
      * @return {@code} Image or {@code null} if not found
      */
     @Nullable
-    public static Image getApplicationIcon() {
+    public static synchronized Image getApplicationIcon() {
         if (applicationImage == null) {
             try {
                 applicationImage = new Image(StaticUIMethods.class.getResourceAsStream(APP_ICON));

@@ -54,7 +54,7 @@ public class ResourceUtils {
         // Utility class
     }
 
-    public static ResourceBundle getBundle() {
+    public synchronized static ResourceBundle getBundle() {
         if (resourceBundle == null) {
 
             try {
