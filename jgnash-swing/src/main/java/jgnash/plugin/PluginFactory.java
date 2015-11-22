@@ -49,8 +49,12 @@ public final class PluginFactory {
     private static boolean pluginsStarted = false;
     private static boolean pluginsLoaded = false;
 
-    private PluginFactory() {
+    static {
         pluginDirectory = getPluginDirectory();
+    }
+
+    private PluginFactory() {
+        // Utility class
     }
 
     public static List<Plugin> getPlugins() {
