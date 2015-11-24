@@ -19,6 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -38,8 +40,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -47,6 +51,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.util.Callback;
 
@@ -67,6 +72,11 @@ import jgnash.text.CommodityFormat;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
+import jgnash.util.ResourceUtils;
+import jgnash.util.function.MemoPredicate;
+import jgnash.util.function.PayeePredicate;
+import jgnash.util.function.ReconciledPredicate;
+import jgnash.util.function.TransactionAgePredicate;
 
 /**
  * Abstract Register Table with stats controller
@@ -89,6 +99,18 @@ public abstract class RegisterTableController {
     @FXML
     protected ResourceBundle resources;
 
+    @FXML
+    protected ComboBox<ReconciledStateEnum> reconciledStateFilterComboBox;
+
+    @FXML
+    protected ComboBox<AgeEnum> transactionAgeFilterComboBox;
+
+    @FXML
+    protected TextField memoFilterTextField;
+
+    @FXML
+    protected TextField payeeFilterTextField;
+
     /**
      * Active account for the pane
      */
@@ -96,9 +118,21 @@ public abstract class RegisterTableController {
 
     final private ReadOnlyObjectWrapper<Transaction> selectedTransactionProperty = new ReadOnlyObjectWrapper<>();
 
+    /**
+     * This is the master list of transactions
+     */
     private final ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
 
-    final SortedList<Transaction> sortedList = new SortedList<>(observableTransactions);
+    /**
+     * Filters may be applied to this list
+     */
+    private final FilteredList<Transaction> filteredTransactionList
+            = new FilteredList<>(observableTransactions, transaction -> true);
+
+    /**
+     * Sorted list of transactions
+     */
+    final SortedList<Transaction> sortedList = new SortedList<>(filteredTransactionList);
 
     final private MessageBusHandler messageBusHandler = new MessageBusHandler();
 
@@ -110,7 +144,7 @@ public abstract class RegisterTableController {
     final private IntegerProperty selectionSize = new SimpleIntegerProperty(0);
 
     // Used for selection summary tooltip
-    final Tooltip selectionSummaryTooltip = new Tooltip();
+    final private Tooltip selectionSummaryTooltip = new Tooltip();
 
     // Used for formatting of the selection summary tooltip
     private NumberFormat numberFormat = NumberFormat.getNumberInstance();
@@ -165,8 +199,52 @@ public abstract class RegisterTableController {
             tableView.refresh();
         });
 
+        reconciledStateFilterComboBox.getItems().addAll(ReconciledStateEnum.values());
+        reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
+
+        transactionAgeFilterComboBox.getItems().addAll(AgeEnum.values());
+        transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
+
+        reconciledStateFilterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            handleFilterChange();
+        });
+
+        transactionAgeFilterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            handleFilterChange();
+        });
+
+        if (memoFilterTextField != null) {
+            memoFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                handleFilterChange();
+            });
+        }
+
+        if (payeeFilterTextField != null) {
+            payeeFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                handleFilterChange();
+            });
+        }
+
         // Listen for engine events
         MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
+    }
+
+    private void handleFilterChange() {
+
+        Predicate<Transaction> predicate = new ReconciledPredicate(accountProperty.get(),
+                reconciledStateFilterComboBox.valueProperty().get().getReconciledState())
+                .and(new TransactionAgePredicate(transactionAgeFilterComboBox.valueProperty().get().getChronoUnit(),
+                        transactionAgeFilterComboBox.valueProperty().get().getAge()));
+
+        if (memoFilterTextField != null) {
+            predicate = predicate.and(new MemoPredicate(memoFilterTextField.getText()));
+        }
+
+        if (payeeFilterTextField != null) {
+            predicate = predicate.and(new PayeePredicate(payeeFilterTextField.getText()));
+        }
+
+        filteredTransactionList.setPredicate(predicate);
     }
 
     private void loadAccount() {
@@ -380,6 +458,80 @@ public abstract class RegisterTableController {
                     }
                 }
             }
+        }
+    }
+
+    @FXML
+    protected void handleResetFilters() {
+
+        Platform.runLater(() -> {
+            transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
+            reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
+
+            if (memoFilterTextField != null) {
+                memoFilterTextField.setText("");
+            }
+
+            if (payeeFilterTextField != null) {
+                payeeFilterTextField.setText("");
+            }
+        });
+    }
+
+    private enum ReconciledStateEnum {
+        ALL(ResourceUtils.getString("Button.AnyStatus"), null),
+        CLEARED(ResourceUtils.getString("Button.Cleared"), ReconciledState.CLEARED),
+        NOT_RECONCILED(ResourceUtils.getString("Button.NotReconciled"), ReconciledState.NOT_RECONCILED),
+        RECONCILED(ResourceUtils.getString("Button.Reconciled"), ReconciledState.RECONCILED);
+
+        private final String description;
+
+        private final ReconciledState reconciledState;
+
+        ReconciledStateEnum(final String description, final ReconciledState reconciledState) {
+            this.description = description;
+            this.reconciledState = reconciledState;
+        }
+
+        public ReconciledState getReconciledState() {
+            return reconciledState;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
+    }
+
+    private enum AgeEnum {
+        ALL(ResourceUtils.getString("Button.AllDates"), ChronoUnit.FOREVER, 0),
+        Year(ResourceUtils.getString("Button.Last12Months"), ChronoUnit.MONTHS, 12),
+        _120(ResourceUtils.getString("Button.Last120Days"), ChronoUnit.DAYS, 120),
+        _90(ResourceUtils.getString("Button.Last90Days"), ChronoUnit.DAYS, 90),
+        _60(ResourceUtils.getString("Button.Last60Days"), ChronoUnit.DAYS, 60),
+        _30(ResourceUtils.getString("Button.Last30Days"), ChronoUnit.DAYS, 30);
+
+        private final String description;
+        private final int age;
+        private final ChronoUnit chronoUnit;
+
+        AgeEnum(final String description, final ChronoUnit chronoUnit, final int age) {
+            this.description = description;
+            this.chronoUnit = chronoUnit;
+            this.age = age;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public ChronoUnit getChronoUnit() {
+            return chronoUnit;
+        }
+
+        @Override
+        public String toString() {
+            return description;
         }
     }
 }

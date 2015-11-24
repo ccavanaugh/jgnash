@@ -112,19 +112,11 @@
 }
 
 .info-bar {
-    -fx-hgap: 0.333333em;
-	-fx-padding: 0.833333em;
-	-fx-pref-height: 2.0em;
-	-fx-background-color:
-                linear-gradient(to bottom,
-                    derive(-fx-color,-15%) 95%,
-                    derive(-fx-color,-25%) 100%
-                ),
-                -fx-inner-border, -fx-body-color;
-	-fx-font-size: 0.916667em;
+    -fx-hgap: 0.5em;
+    -fx-spacing: 0.5em;
+	-fx-padding: 0.3333em;
     -fx-font-weight: bold;
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 3 3 3 3, 2 2 2 2, 1 1 1 1;
+    -fx-font-size: 0.916667em;
 }
 
 .summary-bar {

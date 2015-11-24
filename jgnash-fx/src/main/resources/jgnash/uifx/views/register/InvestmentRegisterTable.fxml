@@ -3,30 +3,50 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.InvestmentRegisterTableController">
    <top>
-       <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
-           <columnConstraints>
-               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
-               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0"
-                                  prefWidth="100.0"/>
-               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
-               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
-               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0"/>
-               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
-               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
-               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0"/>
-               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
-               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
-           </columnConstraints>
-           <Label fx:id="accountNameLabel" GridPane.hgrow="ALWAYS"/>
-           <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER"/>
-           <Label fx:id="balanceLabel" GridPane.columnIndex="3" GridPane.hgrow="NEVER"/>
-           <Label text="%Label.MarketValue" GridPane.columnIndex="5"/>
-           <Label fx:id="marketValueLabel" GridPane.columnIndex="6"/>
-           <Label text="%Label.CashBalance" GridPane.columnIndex="8"/>
-           <Label fx:id="cashBalanceLabel" GridPane.columnIndex="9"/>
-       </GridPane>
+       <TitledPane collapsible="true" focusTraversable="false" expanded="false">
+           <graphic>
+               <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
+                   <columnConstraints>
+                       <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
+                       <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0"
+                                          prefWidth="100.0"/>
+                       <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+                       <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+                       <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0"/>
+                       <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+                       <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+                       <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0"/>
+                       <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+                       <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+                   </columnConstraints>
+                   <Label fx:id="accountNameLabel" GridPane.hgrow="ALWAYS"/>
+                   <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER"/>
+                   <Label fx:id="balanceLabel" GridPane.columnIndex="3" GridPane.hgrow="NEVER"/>
+                   <Label text="%Label.MarketValue" GridPane.columnIndex="5"/>
+                   <Label fx:id="marketValueLabel" GridPane.columnIndex="6"/>
+                   <Label text="%Label.CashBalance" GridPane.columnIndex="8"/>
+                   <Label fx:id="cashBalanceLabel" GridPane.columnIndex="9"/>
+               </GridPane>
+           </graphic>
+           <ToolBar>
+               <FontAwesomeLabel glyphName="FILTER"/>
+               <ComboBox fx:id="reconciledStateFilterComboBox">
+                   <tooltip>
+                       <Tooltip text="%ToolTip.FilterReconciledState"/>
+                   </tooltip>
+               </ComboBox>
+               <ComboBox fx:id="transactionAgeFilterComboBox">
+                   <tooltip>
+                       <Tooltip text="%ToolTip.FilterTransactionAge"/>
+                   </tooltip>
+               </ComboBox>
+
+               <Button text="%Button.ResetAll" onAction="#handleResetFilters"/>
+           </ToolBar>
+       </TitledPane>
    </top>
    <center>
       <TableView fx:id="tableView"  BorderPane.alignment="CENTER" />

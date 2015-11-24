@@ -3,27 +3,51 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.BasicRegisterTableController">
-   <top>
-       <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
-           <columnConstraints>
-               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
-               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0"
-                                  prefWidth="100.0"/>
-               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
-               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
-               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0"/>
-               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
-               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
-           </columnConstraints>
-           <Label fx:id="accountNameLabel" GridPane.hgrow="ALWAYS"/>
-           <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER"/>
-           <Label fx:id="balanceLabel" GridPane.columnIndex="3" GridPane.hgrow="NEVER"/>
-           <Label text="%Label.ReconciledBalance" GridPane.columnIndex="5"/>
-           <Label fx:id="reconciledBalanceLabel" GridPane.columnIndex="6"/>
-       </GridPane>
-   </top>
-   <center>
-      <TableView fx:id="tableView"  BorderPane.alignment="CENTER" />
-   </center>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.register.BasicRegisterTableController">
+    <top>
+        <TitledPane collapsible="true" focusTraversable="false" expanded="false">
+            <graphic>
+                <GridPane maxWidth="Infinity" styleClass="info-bar">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
+                        <ColumnConstraints fillWidth="false" halignment="LEFT" minWidth="15.0" prefWidth="15.0"/>
+                        <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+                        <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+                        <ColumnConstraints fillWidth="false" halignment="LEFT" minWidth="15.0" prefWidth="15.0"/>
+                        <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+                        <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+                    </columnConstraints>
+                    <Label fx:id="accountNameLabel" maxWidth="Infinity"/>
+                    <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT"/>
+                    <Label fx:id="balanceLabel" GridPane.columnIndex="3"/>
+                    <Label text="%Label.ReconciledBalance" GridPane.columnIndex="5"/>
+                    <Label fx:id="reconciledBalanceLabel" GridPane.columnIndex="6"/>
+                </GridPane>
+            </graphic>
+            <ToolBar>
+                <FontAwesomeLabel glyphName="FILTER"/>
+
+                <ComboBox fx:id="reconciledStateFilterComboBox">
+                    <tooltip>
+                        <Tooltip text="%ToolTip.FilterReconciledState"/>
+                    </tooltip>
+                </ComboBox>
+                <ComboBox fx:id="transactionAgeFilterComboBox">
+                    <tooltip>
+                        <Tooltip text="%ToolTip.FilterTransactionAge"/>
+                    </tooltip>
+                </ComboBox>
+
+                <TextField fx:id="payeeFilterTextField" promptText="%ToolTip.FilterPayee"/>
+                <TextField fx:id="memoFilterTextField" promptText="%ToolTip.FilterMemo"/>
+
+                <Button text="%Button.ResetAll" onAction="#handleResetFilters"/>
+            </ToolBar>
+        </TitledPane>
+    </top>
+    <center>
+        <TableView fx:id="tableView" BorderPane.alignment="CENTER"/>
+    </center>
 </BorderPane>
