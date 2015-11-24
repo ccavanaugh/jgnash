@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.TabPane?>
-
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.Scene?>
 
@@ -12,7 +10,7 @@
         <Scene>
             <BorderPane styleClass="dialog, form">
                 <center>
-                    <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane" VBox.vgrow="NEVER"/>
+                    <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane"/>
                 </center>
             </BorderPane>
         </Scene>
