@@ -23,7 +23,10 @@ Budgeting
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
 Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
+
 Change the base highlight color for the FX interface
+Add last used tab or favorite tab for the transaction register.
+Scroll the budget period so the  active period is visible when first displayed
 
 Release 2.20.0
 ----------------------
