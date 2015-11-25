@@ -70,7 +70,7 @@ public class StageUtils {
         if (bounds != null) { // restore to previous size and position
             final Rectangle rectangle = decodeRectangle(bounds);
 
-            boolean resizable = stage.isResizable();
+            final boolean resizable = stage.isResizable();
 
             // Stage will not reposition if resizable is false... JavaFx bug?
             stage.setResizable(false);
@@ -79,8 +79,13 @@ public class StageUtils {
             stage.setY(rectangle.getY());
 
             if (resizable) { // don't resize if originally false
-                stage.setWidth(rectangle.getWidth());
-                stage.setHeight(rectangle.getHeight());
+                if (stage.getMinWidth() != stage.getMaxWidth()) {   // width may be locked
+                    stage.setWidth(rectangle.getWidth());
+                }
+
+                if (stage.getMinHeight() != stage.getMaxHeight()) { // height may be locked
+                    stage.setHeight(rectangle.getHeight());
+                }
             }
             stage.setResizable(resizable); // restore the resize property
         }
