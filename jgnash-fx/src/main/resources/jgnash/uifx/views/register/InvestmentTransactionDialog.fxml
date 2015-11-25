@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.BorderPane?>
-
 <?import javafx.scene.Scene?>
-
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.ColumnConstraints?>
-
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Button?>
 
-<fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" minWidth="680" minHeight="150">
+<fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+         minWidth="705" minHeight="150">
     <scene>
         <Scene>
             <BorderPane styleClass="dialog, form">
@@ -41,7 +39,7 @@
                             </buttons>
                         </ButtonBar>
                     </GridPane>
-            </bottom>
+                </bottom>
             </BorderPane>
         </Scene>
     </scene>
