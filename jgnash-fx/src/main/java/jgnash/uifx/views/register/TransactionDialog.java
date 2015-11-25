@@ -28,6 +28,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import jgnash.engine.*;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -138,10 +139,10 @@ public class TransactionDialog extends Stage {
         if (!engine.isStored(transaction)) { // must not be a persisted transaction
             if (transaction.getAmount(accountProperty.get()).signum() >= 0) {
                 tabPane.getSelectionModel().select(creditTab);
-                ((SlipController)creditTab.getUserData()).modifyTransaction(transaction);
+                ((SlipController) creditTab.getUserData()).modifyTransaction(transaction);
             } else {
                 tabPane.getSelectionModel().select(debitTab);
-                ((SlipController)debitTab.getUserData()).modifyTransaction(transaction);
+                ((SlipController) debitTab.getUserData()).modifyTransaction(transaction);
             }
         }
     }
@@ -165,7 +166,9 @@ public class TransactionDialog extends Stage {
             });
 
             // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
-            Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth()+1));
+            Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth() + 1));
+
+            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, TransactionDialog.class));
         });
     }
 }
