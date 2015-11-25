@@ -26,12 +26,7 @@ import javafx.stage.Stage;
 import jgnash.convert.exports.csv.CsvExport;
 import jgnash.convert.exports.ofx.OfxExport;
 import jgnash.convert.exports.ssf.AccountExport;
-import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
-import jgnash.engine.Transaction;
+import jgnash.engine.*;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
@@ -116,23 +111,24 @@ public class RegisterActions {
                     }
                 }
 
-                final Optional<Transaction> optional;
-
                 if (transaction instanceof InvestmentTransaction) {
-                    optional = InvestmentTransactionDialog.showAndWait(account, clone);
+                    final Optional<Transaction> optional = InvestmentTransactionDialog.showAndWait(account, clone);
+                    addTransaction(optional);
                 } else {
-                    optional= TransactionDialog.showAndWait(account, clone);
-                }
-
-                if (optional.isPresent()) {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
-
-                    engine.addTransaction(optional.get());
+                    TransactionDialog.showAndWait(account, clone, RegisterActions::addTransaction);
                 }
             } catch (final CloneNotSupportedException e) {
                 Logger.getLogger(RegisterActions.class.getName()).log(Level.SEVERE, e.getMessage(), e);
             }
+        }
+    }
+
+    private static void addTransaction(final Optional<Transaction> optional) {
+        if (optional.isPresent()) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.addTransaction(optional.get());
         }
     }
 

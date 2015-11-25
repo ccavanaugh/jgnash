@@ -17,13 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -32,17 +26,19 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
+import jgnash.engine.*;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A Dialog for creating and editing new transactions
@@ -59,7 +55,7 @@ public class TransactionDialog extends Stage {
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private Optional<Transaction> transactionOptional = Optional.empty();
+    private final ObjectProperty<Consumer<Optional<Transaction>>> transactionConsumer = new SimpleObjectProperty<>();
 
     private Tab creditTab;
     private Tab debitTab;
@@ -70,13 +66,17 @@ public class TransactionDialog extends Stage {
         setTitle(ResourceUtils.getBundle().getString("Title.NewTrans"));
     }
 
-    private ObjectProperty<Account> getAccountProperty() {
+    private ObjectProperty<Account> accountProperty() {
         return accountProperty;
+    }
+
+    private void setTransactionConsumer(final Consumer<Optional<Transaction>> consumer) {
+        transactionConsumer.setValue(consumer);
     }
 
     @FXML
     private void initialize() {
-        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+        accountProperty().addListener((observable, oldValue, newValue) -> {
             buildTabs();
         });
     }
@@ -94,7 +94,7 @@ public class TransactionDialog extends Stage {
             slipController.cancelButton.setOnAction(event -> tabPane.getScene().getWindow().hide());
 
             slipController.setSlipType(slipType);
-            slipController.accountProperty().bind(getAccountProperty());
+            slipController.accountProperty().bind(accountProperty());
 
             final Tab tab = new Tab(tabName);
             tab.setContent(pane);
@@ -108,7 +108,7 @@ public class TransactionDialog extends Stage {
     }
 
     private void buildTabs() {
-        final AccountType accountType = getAccountProperty().get().getAccountType();
+        final AccountType accountType = accountProperty().get().getAccountType();
         final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);
 
         creditTab = buildTab(tabNames[0], SlipType.INCREASE);
@@ -125,13 +125,10 @@ public class TransactionDialog extends Stage {
 
     private void handleEnterAction(final SlipController controller) {
         if (controller.validateForm()) {
-            transactionOptional = Optional.of(controller.buildTransaction());
+            transactionConsumer.get().accept(Optional.of(controller.buildTransaction()));
+
             tabPane.getScene().getWindow().hide();
         }
-    }
-
-    private Optional<Transaction> getTransactionOptional() {
-        return transactionOptional;
     }
 
     private void setTransaction(final Transaction transaction) {
@@ -149,20 +146,24 @@ public class TransactionDialog extends Stage {
         }
     }
 
-    public static Optional<Transaction> showAndWait(@NotNull final Account account, @Nullable final Transaction transaction) {
+    public static void showAndWait(@NotNull final Account account, @Nullable final Transaction transaction, final Consumer<Optional<Transaction>> consumer) {
         final TransactionDialog transactionDialog = new TransactionDialog();
-        transactionDialog.getAccountProperty().setValue(account);
+        transactionDialog.accountProperty().setValue(account);
+        transactionDialog.setTransactionConsumer(consumer);
 
         if (transaction != null) {
             transactionDialog.setTransaction(transaction);
         }
 
-        // Lock the height of the dialog
-        transactionDialog.setMinHeight(transactionDialog.getHeight());
-        transactionDialog.setMaxHeight(transactionDialog.getHeight());
+        Platform.runLater(() -> {
+            transactionDialog.show();
 
-        transactionDialog.showAndWait();
+            // Lock the height of the dialog
+            transactionDialog.setMinHeight(transactionDialog.getHeight());
+            transactionDialog.setMaxHeight(transactionDialog.getHeight());
 
-        return transactionDialog.getTransactionOptional();
+            // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
+            Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth()+1));
+        });
     }
 }

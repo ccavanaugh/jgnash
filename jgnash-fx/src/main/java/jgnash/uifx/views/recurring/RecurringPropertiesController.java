@@ -17,32 +17,16 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
-import jgnash.engine.recurring.DailyReminder;
-import jgnash.engine.recurring.MonthlyReminder;
-import jgnash.engine.recurring.OneTimeReminder;
-import jgnash.engine.recurring.Reminder;
-import jgnash.engine.recurring.WeeklyReminder;
-import jgnash.engine.recurring.YearlyReminder;
+import jgnash.engine.recurring.*;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.IntegerTextField;
@@ -50,6 +34,12 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.register.TransactionDialog;
 import jgnash.util.DateUtils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Controller for creating and modifying a reminder
@@ -203,11 +193,11 @@ public class RecurringPropertiesController {
 
     @FXML
     private void handleEditTransaction() {
-        final Optional<Transaction> optional = TransactionDialog.showAndWait(accountComboBox.getValue(), transaction);
-
-        if (optional.isPresent()) {
-            transaction = optional.get();
-            payeeTextField.setText(transaction.getPayee());
-        }
+        TransactionDialog.showAndWait(accountComboBox.getValue(), transaction, optional -> {
+            if (optional.isPresent()) {
+                transaction = optional.get();
+                payeeTextField.setText(transaction.getPayee());
+            }
+        });
     }
 }
