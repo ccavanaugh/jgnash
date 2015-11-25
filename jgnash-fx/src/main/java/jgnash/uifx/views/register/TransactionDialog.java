@@ -158,9 +158,11 @@ public class TransactionDialog extends Stage {
         Platform.runLater(() -> {
             transactionDialog.show();
 
-            // Lock the height of the dialog
-            transactionDialog.setMinHeight(transactionDialog.getHeight());
-            transactionDialog.setMaxHeight(transactionDialog.getHeight());
+            // Lock the height of the dialog after it has been shown
+            Platform.runLater(() -> {
+                transactionDialog.setMinHeight(transactionDialog.getHeight());
+                transactionDialog.setMaxHeight(transactionDialog.getHeight());
+            });
 
             // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
             Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth()+1));
