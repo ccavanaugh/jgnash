@@ -20,7 +20,9 @@ package jgnash.uifx.views.register;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -34,6 +36,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -60,7 +63,7 @@ class InvestmentTransactionDialog extends Stage {
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private Optional<Transaction> transactionOptional = Optional.empty();
+    private final ObjectProperty<Consumer<Optional<Transaction>>> transactionConsumer = new SimpleObjectProperty<>();
 
     private InvestmentSlipManager investmentSlipManager;
 
@@ -83,12 +86,17 @@ class InvestmentTransactionDialog extends Stage {
         investmentSlipManager.accountProperty().bind(accountProperty());
     }
 
+    private void setTransactionConsumer(final Consumer<Optional<Transaction>> consumer) {
+        transactionConsumer.setValue(consumer);
+    }
+
     @FXML
     private void handleEnterAction() {
         final Slip controller = actionComboBox.getSelectionModel().getSelectedItem().getController();
 
         if (controller.validateForm()) {
-            transactionOptional = Optional.of(controller.buildTransaction());
+            transactionConsumer.get().accept(Optional.of(controller.buildTransaction()));
+
             transactionSlips.getScene().getWindow().hide();
         }
     }
@@ -96,10 +104,6 @@ class InvestmentTransactionDialog extends Stage {
     @FXML
     private void handleCancelAction() {
         transactionSlips.getScene().getWindow().hide();
-    }
-
-    private Optional<Transaction> getTransactionOptional() {
-        return transactionOptional;
     }
 
     private void setTransaction(final Transaction transaction) {
@@ -113,17 +117,26 @@ class InvestmentTransactionDialog extends Stage {
         investmentSlipManager.modifyTransaction(transaction);
     }
 
-    public static Optional<Transaction> showAndWait(final Account account, final Transaction transaction) {
+    public static void showAndWait(final Account account, final Transaction transaction, final Consumer<Optional<Transaction>> consumer) {
         final InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
         transactionDialog.accountProperty().setValue(account);
+        transactionDialog.setTransactionConsumer(consumer);
+
         transactionDialog.setTransaction(transaction);
 
-        // Lock the height of the dialog
-        transactionDialog.setMinHeight(transactionDialog.getHeight());
-        transactionDialog.setMaxHeight(transactionDialog.getHeight());
+        Platform.runLater(() -> {
+            transactionDialog.show();
 
-        transactionDialog.showAndWait();
+            // Lock the height of the dialog after it has been shown
+            Platform.runLater(() -> {
+                transactionDialog.setMinHeight(transactionDialog.getHeight());
+                transactionDialog.setMaxHeight(transactionDialog.getHeight());
+            });
 
-        return transactionDialog.getTransactionOptional();
+            // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
+            Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth() + 1));
+
+            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, InvestmentTransactionDialog.class));
+        });
     }
 }

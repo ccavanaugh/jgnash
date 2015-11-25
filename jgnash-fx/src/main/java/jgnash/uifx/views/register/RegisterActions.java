@@ -112,8 +112,7 @@ public class RegisterActions {
                 }
 
                 if (transaction instanceof InvestmentTransaction) {
-                    final Optional<Transaction> optional = InvestmentTransactionDialog.showAndWait(account, clone);
-                    addTransaction(optional);
+                    InvestmentTransactionDialog.showAndWait(account, clone, RegisterActions::addTransaction);
                 } else {
                     TransactionDialog.showAndWait(account, clone, RegisterActions::addTransaction);
                 }

@@ -17,24 +17,16 @@
  */
 package jgnash.uifx.views.register;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.Transaction;
-import jgnash.engine.TransactionType;
+import jgnash.engine.*;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
+
+import java.util.Objects;
 
 /**
  * Register pane controller
@@ -91,17 +83,16 @@ public class BankRegisterPaneController extends RegisterPaneController {
                 ((Slip) debitTab.getUserData()).modifyTransaction(transaction);
             }
         } else {    // pop a dialog to modify the transaction
+            InvestmentTransactionDialog.showAndWait(((InvestmentTransaction) transaction).getInvestmentAccount(),
+                    transaction, optional -> {
+                if (optional.isPresent()) {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
 
-            final Optional<Transaction> optional = InvestmentTransactionDialog.showAndWait(
-                    ((InvestmentTransaction) transaction).getInvestmentAccount(), transaction);
-
-            if (optional.isPresent()) {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                Objects.requireNonNull(engine);
-
-                engine.removeTransaction(transaction);
-                engine.addTransaction(optional.get());
-            }
+                    engine.removeTransaction(transaction);
+                    engine.addTransaction(optional.get());
+                }
+            });
         }
     }
 
