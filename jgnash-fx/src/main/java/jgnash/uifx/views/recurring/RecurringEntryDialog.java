@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
@@ -41,15 +40,11 @@ public class RecurringEntryDialog {
             controllerProperty.get().showReminder(reminder);
         }
 
-        // Execute after it's shown, force the minimum size
-        Platform.runLater(() -> {
-            stage.setMinHeight(stage.getHeight());
-            stage.setMinWidth(stage.getWidth());
+        stage.setResizable(false);
 
-            StageUtils.addBoundsListener(stage, RecurringEntryDialog.class);
-        });
+        StageUtils.addBoundsListener(stage, RecurringEntryDialog.class);
 
-        stage.showAndWait();
+        stage.show();
     }
 
     public static Optional<Reminder> showAndWait(final Reminder reminder) {
