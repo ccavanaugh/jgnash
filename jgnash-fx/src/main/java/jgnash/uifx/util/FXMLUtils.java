@@ -79,8 +79,6 @@ public class FXMLUtils {
         stage.initStyle(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());
-
-        stage.sizeToScene();    // force a resize, some stages need a push
     }
 
     /**
