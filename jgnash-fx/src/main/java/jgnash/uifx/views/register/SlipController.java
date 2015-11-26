@@ -320,9 +320,10 @@ public class SlipController extends AbstractSlipController {
         splitsDialog.accountProperty().setValue(accountProperty().get());
         splitsDialog.getTransactionEntries().setAll(transactionEntriesProperty);
 
-        splitsDialog.showAndWait(slipType);
-
-        transactionEntriesProperty.setAll(splitsDialog.getTransactionEntries());
-        amountField.setDecimal(splitsDialog.getBalance().abs());
+        // Show the dialog and process the transactions when it closes
+        splitsDialog.show(slipType, () -> {
+            transactionEntriesProperty.setAll(splitsDialog.getTransactionEntries());
+            amountField.setDecimal(splitsDialog.getBalance().abs());
+        });
     }
 }

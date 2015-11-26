@@ -21,7 +21,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
@@ -55,8 +54,8 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
     @Override
     void newAction() {
-        ((SplitTransactionSlipController)creditTab.getUserData()).clearForm();
-        ((SplitTransactionSlipController)debitTab.getUserData()).clearForm();
+        ((SplitTransactionSlipController) creditTab.getUserData()).clearForm();
+        ((SplitTransactionSlipController) debitTab.getUserData()).clearForm();
         tableView.getSelectionModel().clearSelection();
     }
 
@@ -65,7 +64,7 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
         final TransactionEntry entry = tableView.getSelectionModel().getSelectedItem();
         if (entry != null) {
             tableView.getSelectionModel().clearSelection();
-            ((SplitTransactionSlipController)tabPane.getSelectionModel().getSelectedItem().getUserData()).clearForm();
+            ((SplitTransactionSlipController) tabPane.getSelectionModel().getSelectedItem().getUserData()).clearForm();
             getTransactionEntries().remove(entry);
         }
     }
@@ -75,10 +74,10 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
     void modifyTransactionEntry(@NotNull final TransactionEntry transactionEntry) {
         if (transactionEntry.getCreditAccount() == accountProperty().get()) { // this is a credit
             tabPane.getSelectionModel().select(creditTab);
-            ((SplitTransactionSlipController)creditTab.getUserData()).modifyTransactionEntry(transactionEntry);
+            ((SplitTransactionSlipController) creditTab.getUserData()).modifyTransactionEntry(transactionEntry);
         } else {
             tabPane.getSelectionModel().select(debitTab);
-            ((SplitTransactionSlipController)debitTab.getUserData()).modifyTransactionEntry(transactionEntry);
+            ((SplitTransactionSlipController) debitTab.getUserData()).modifyTransactionEntry(transactionEntry);
         }
     }
 
@@ -113,7 +112,7 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
         tabPane.getTabs().addAll(creditTab, debitTab);
     }
 
-    void showAndWait(final SlipType slipType) {
+    void show(final SlipType slipType, final Runnable runnable) {
         switch (slipType) {
             case DECREASE:
                 tabPane.getSelectionModel().select(debitTab);
@@ -123,6 +122,6 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
                 break;
         }
 
-        showAndWait();
+        show(runnable);
     }
 }

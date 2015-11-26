@@ -73,13 +73,13 @@ public class FeePane extends DetailedDecimalTextField {
 
     @Override
     public void show() {
-        feeDialog.showAndWait();
+        feeDialog.show(() -> {
+            setEditable(feeDialog.getTransactionEntries().size() == 0);
 
-        setEditable(feeDialog.getTransactionEntries().size() == 0);
-
-        if (feeDialog.getTransactionEntries().size() != 0) {
-            setDecimal(feeDialog.getBalance().abs());
-        }
+            if (feeDialog.getTransactionEntries().size() != 0) {
+                setDecimal(feeDialog.getBalance().abs());
+            }
+        });
     }
 
     public List<TransactionEntry> getTransactions() {

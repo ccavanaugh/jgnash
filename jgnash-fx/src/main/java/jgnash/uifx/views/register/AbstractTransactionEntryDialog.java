@@ -17,9 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.util.ResourceBundle;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -34,12 +31,15 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.NotNull;
+
+import java.math.BigDecimal;
+import java.util.ResourceBundle;
 
 /**
  * Abstract dialog for split transactions
@@ -77,6 +77,11 @@ abstract class AbstractTransactionEntryDialog extends Stage {
     private final SortedList<TransactionEntry> sortedList = new SortedList<>(transactionEntries);
 
     abstract String getPrefNode();
+
+    /**
+     * This will be called after the dialog is closed
+     */
+    private Runnable closeRunnable;
 
     ObjectProperty<Account> accountProperty() {
         return accountProperty;
@@ -222,6 +227,11 @@ abstract class AbstractTransactionEntryDialog extends Stage {
 
     private void closeAction() {
         closeButton.getScene().getWindow().hide();
+
+        // call the runnable to indicate closure if not null
+        if (closeRunnable != null) {
+            closeRunnable.run();
+        }
     }
 
     private class AccountNameWrapper extends SimpleStringProperty {
@@ -244,5 +254,14 @@ abstract class AbstractTransactionEntryDialog extends Stage {
         }
 
         return getBalanceAt(sortedList.get(sortedList.size() - 1));
+    }
+
+    void show(final Runnable runnable) {
+        closeRunnable = runnable;
+
+        // Reset bounds before showing
+        StageUtils.addBoundsListener(this, getClass());
+
+        super.show();
     }
 }

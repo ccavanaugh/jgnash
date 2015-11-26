@@ -17,16 +17,15 @@
  */
 package jgnash.uifx.views.register;
 
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
-
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
+
+import java.util.ResourceBundle;
 
 /**
  * Fees entry dialog

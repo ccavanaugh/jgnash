@@ -74,13 +74,13 @@ public class GainLossPane extends DetailedDecimalTextField {
 
     @Override
     public void show() {
-        gainLossDialog.showAndWait();
+        gainLossDialog.show(() -> {
+            setEditable(gainLossDialog.getTransactionEntries().size() == 0);
 
-        setEditable(gainLossDialog.getTransactionEntries().size() == 0);
-
-        if (gainLossDialog.getTransactionEntries().size() != 0) {
-           setDecimal(gainLossDialog.getBalance().abs());
-        }
+            if (gainLossDialog.getTransactionEntries().size() != 0) {
+                setDecimal(gainLossDialog.getBalance().abs());
+            }
+        });
     }
 
     public List<TransactionEntry> getTransactions() {
