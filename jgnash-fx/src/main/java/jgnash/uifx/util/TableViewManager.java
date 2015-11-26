@@ -17,6 +17,17 @@
  */
 package jgnash.uifx.util;
 
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableColumnBase;
+import javafx.scene.control.TableView;
+import javafx.util.Callback;
+import jgnash.util.EncodeDecode;
+import jgnash.util.NotNull;
+
 import java.text.Format;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -27,21 +38,9 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TableColumnBase;
-import javafx.scene.control.TableView;
-import javafx.util.Callback;
-
-import jgnash.util.Callable;
-import jgnash.util.EncodeDecode;
-import jgnash.util.NotNull;
 
 /**
  * TableView manager.  Handles persistence of column sizes, visibility and will optimize column widths
@@ -65,7 +64,7 @@ public class TableViewManager<S> {
 
     private final ObjectProperty<Callback<Integer, Double>> columnWeightFactory = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<Callable<String>> preferenceKeyFactory = new SimpleObjectProperty<>();
+    private final ObjectProperty<Supplier<String>> preferenceKeyFactory = new SimpleObjectProperty<>();
 
     private final ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
 
@@ -149,7 +148,7 @@ public class TableViewManager<S> {
 
     private void saveColumnVisibility() {
         if (preferenceKeyFactory.get() != null) {
-            final String uuid = preferenceKeyFactory.get().call();
+            final String uuid = preferenceKeyFactory.get().get();
             final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_VIS);
 
             final boolean[] columnVisibility = new boolean[tableView.getColumns().size()];
@@ -164,7 +163,7 @@ public class TableViewManager<S> {
 
     private void restoreColumnVisibility() {
         if (preferenceKeyFactory.get() != null) {
-            final String uuid = preferenceKeyFactory.get().call();
+            final String uuid = preferenceKeyFactory.get().get();
             final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_VIS);
 
             final String result = preferences.get(uuid, null);
@@ -267,7 +266,7 @@ public class TableViewManager<S> {
         this.columnWeightFactory.set(weightFactory);
     }
 
-    public void setPreferenceKeyFactory(final Callable<String> keyFactory) {
+    public void setPreferenceKeyFactory(final Supplier<String> keyFactory) {
         this.preferenceKeyFactory.set(keyFactory);
     }
 
