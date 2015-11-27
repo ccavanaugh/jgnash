@@ -339,10 +339,10 @@ public class BudgetTableController implements MessageListener {
     }
 
     /**
-     * The table view will lazily create the scrollbars which makes finding them tricky.  We need to check for
+     * The table view will lazily create the ScrollBars which makes finding them tricky.  We need to check for
      * their existence and try again later if they do not exist.
      *
-     * Synchronize binding, otherwise the scrollbars get a bit confused and do not respond to a scroll wheel
+     * Synchronize binding, otherwise the ScrollBars get a bit confused and do not respond to a scroll wheel
      */
     private synchronized void bindScrollBars() {
         final Optional<ScrollBar> accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
@@ -350,7 +350,7 @@ public class BudgetTableController implements MessageListener {
         final Optional<ScrollBar> accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
 
         if (!vDataScrollBar.isPresent() || !accountScrollBar.isPresent() || !accountSumScrollBar.isPresent()) {
-            Platform.runLater(BudgetTableController.this::bindScrollBars);  //respawn on the application thread
+            Platform.runLater(BudgetTableController.this::bindScrollBars);  //re-spawn on the application thread
         } else {    // all here, lets bind then now
             verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.get().minProperty());
             verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.get().maxProperty());
@@ -570,7 +570,6 @@ public class BudgetTableController implements MessageListener {
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         remainingColumn.minWidthProperty().bind(summaryColumnWidthProperty);
-        remainingColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
@@ -579,7 +578,6 @@ public class BudgetTableController implements MessageListener {
 
         // the width the summary table needs extra help to size the containing GridPane
         accountSummaryTable.minWidthProperty().bind(summaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
-        accountSummaryTable.maxWidthProperty().bind(summaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
     }
 
     private TableColumn<Account, BigDecimal> buildAccountPeriodResultsColumn(final int index) {
