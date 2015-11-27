@@ -17,26 +17,16 @@
  */
 package jgnash.uifx.views.budget;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
@@ -48,6 +38,14 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.main.MainApplication;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 /**
  * @author Craig Cavanaugh
@@ -85,7 +83,7 @@ public class BudgetViewController implements MessageListener {
         // push to end of application thread to avoid a race
         Platform.runLater(() -> {
             budgetTableController
-                    = FXMLUtils.loadFXML(o -> borderPane.setCenter((Node) o), "BudgetTable.fxml", resources);
+                    = FXMLUtils.loadFXML(o -> borderPane.setCenter(o), "BudgetTable.fxml", resources);
 
             availableBudgetsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {

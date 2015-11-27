@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import jgnash.engine.TransactionEntry;
@@ -87,7 +86,7 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
         creditTab = new Tab(tabNames[0]);
 
-        final SplitTransactionSlipController creditController = FXMLUtils.loadFXML(o -> creditTab.setContent((Node) o),
+        final SplitTransactionSlipController creditController = FXMLUtils.loadFXML(o -> creditTab.setContent(o),
                 "SplitTransactionSlip.fxml", resources);
 
         creditTab.setUserData(creditController);
@@ -99,7 +98,7 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
         debitTab = new Tab(tabNames[1]);
 
-        final SplitTransactionSlipController debitController = FXMLUtils.loadFXML(o -> debitTab.setContent((Node) o),
+        final SplitTransactionSlipController debitController = FXMLUtils.loadFXML(o -> debitTab.setContent(o),
                 "SplitTransactionSlip.fxml", resources);
 
         debitTab.setUserData(debitController);

@@ -20,7 +20,6 @@ package jgnash.uifx.views.recurring;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -113,7 +112,7 @@ public class RecurringPropertiesController {
         final Tab tab = new Tab();
         tab.setText(resources.getString(name));
 
-        final RecurringTabController controller = FXMLUtils.loadFXML(o -> tab.setContent((Node) o), fxml, resources);
+        final RecurringTabController controller = FXMLUtils.loadFXML(tab::setContent, fxml, resources);
         tab.setUserData(controller);
         tabs.getTabs().addAll(tab);
     }

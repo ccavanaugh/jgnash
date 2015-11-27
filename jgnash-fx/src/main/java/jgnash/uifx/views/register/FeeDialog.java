@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.util.FXMLUtils;
@@ -78,7 +77,7 @@ class FeeDialog extends AbstractTransactionEntryDialog {
 
     @Override
    void initForm() {
-        feeController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll((Node) o),
+        feeController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll(o),
                 "FeeTransactionEntrySlip.fxml", resources);
 
         feeController.accountProperty().bind(accountProperty());

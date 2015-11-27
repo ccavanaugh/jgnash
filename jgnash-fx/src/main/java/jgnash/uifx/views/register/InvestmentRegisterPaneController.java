@@ -54,12 +54,8 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         super.initialize();
 
         // Load the register table
-        registerTableControllerProperty.setValue(FXMLUtils.loadFXML(new Consumer<Node>() {
-            @Override
-            public void accept(final Node node) {
-                registerTablePane.getChildren().add(node);
-            }
-        }, "InvestmentRegisterTable.fxml", resources));
+        registerTableControllerProperty.setValue(FXMLUtils.loadFXML((Consumer<Node>) node ->
+                registerTablePane.getChildren().add(node), "InvestmentRegisterTable.fxml", resources));
 
         investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);
         investmentSlipManager.accountProperty().bind(accountProperty());

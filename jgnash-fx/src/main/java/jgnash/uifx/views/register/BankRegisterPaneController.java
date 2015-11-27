@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -59,7 +58,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
         // Load the register table
         final RegisterTableController controller = FXMLUtils.loadFXML(o -> {
-            registerTablePane.getChildren().add((Node) o);
+            registerTablePane.getChildren().add(o);
         }, "BasicRegisterTable.fxml", resources);
 
         registerTableControllerProperty.setValue(controller);
@@ -117,7 +116,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
     private Tab buildTab(final String tabName, final SlipType slipType) {
         final Tab tab = new Tab(tabName);
-        final SlipController slipController = FXMLUtils.loadFXML(o -> {tab.setContent((Node) o);},
+        final SlipController slipController = FXMLUtils.loadFXML(tab::setContent,
                 "BankSlip.fxml", resources);
 
         slipController.setSlipType(slipType);
@@ -131,8 +130,8 @@ public class BankRegisterPaneController extends RegisterPaneController {
     private Tab buildAdjustTab() {
         final Tab tab = new Tab(resources.getString("Tab.Adjust"));
 
-        final AdjustmentSlipController adjustmentSlipController = FXMLUtils.loadFXML(o -> {tab.setContent((Node) o);
-        }, "AdjustmentSlip.fxml", resources);
+        final AdjustmentSlipController adjustmentSlipController = FXMLUtils.loadFXML(tab::setContent,
+                "AdjustmentSlip.fxml", resources);
 
         adjustmentSlipController.accountProperty().bind(accountProperty());
 
@@ -144,8 +143,8 @@ public class BankRegisterPaneController extends RegisterPaneController {
     private Tab buildTransferTab() {
         final Tab tab = new Tab(resources.getString("Tab.Transfer"));
 
-        final TransferSlipController slipController = FXMLUtils.loadFXML(o -> {tab.setContent((Node) o);
-        }, "TransferSlip.fxml", resources);
+        final TransferSlipController slipController = FXMLUtils.loadFXML(tab::setContent,
+                "TransferSlip.fxml", resources);
 
         slipController.accountProperty().bind(accountProperty());
 

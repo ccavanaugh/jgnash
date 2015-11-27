@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.util.FXMLUtils;
@@ -83,7 +82,7 @@ class GainLossDialog extends AbstractTransactionEntryDialog {
 
     @Override
    void initForm() {
-        gainLossController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll((Node) o),
+        gainLossController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll(o),
                 "GainLossTransactionEntrySlip.fxml", resources);
 
         gainLossController.accountProperty().bind(accountProperty());

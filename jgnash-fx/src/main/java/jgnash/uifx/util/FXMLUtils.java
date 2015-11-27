@@ -17,6 +17,19 @@
  */
 package jgnash.uifx.util;
 
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.NotNull;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
@@ -28,20 +41,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainApplication;
-import jgnash.util.NotNull;
 
 /**
  * FXML Utility methods
@@ -62,7 +61,8 @@ public class FXMLUtils {
      * @param fileName       name of the fxml file.  It's assumed to be in the same package as the stage
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
      */
-    public static void loadFXML(@NotNull final Stage stage, @NotNull final String fileName, @NotNull final ResourceBundle resourceBundle) {
+    public static void loadFXML(@NotNull final Stage stage, @NotNull final String fileName,
+                                @NotNull final ResourceBundle resourceBundle) {
         final FXMLLoader fxmlLoader = new FXMLLoader(stage.getClass().getResource(fileName), resourceBundle);
         fxmlLoader.setRoot(stage);
         fxmlLoader.setController(stage);
@@ -87,11 +87,12 @@ public class FXMLUtils {
      * @param consumer       {@code Consumer to pass to the parent node},
      * @param fileName       name of the fxml file.  It's assumed to be in the same package as the consumer
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
-     * @param <R>            must extend {code Node}
+     * @param <R>            must extend {@code Node}
      * @param <C>            the fxml controller
      * @return the controller for the fxml file
      */
-    public static <R, C> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
+    public static <R extends Node, C> C loadFXML(@NotNull final Consumer<R> consumer, @NotNull final String fileName,
+                                                 @NotNull final ResourceBundle resourceBundle) {
         final URL fxmlUrl = consumer.getClass().getResource(fileName);
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 
@@ -100,12 +101,12 @@ public class FXMLUtils {
             C controller = fxmlLoader.getController();
             consumer.accept(root);
 
-            if (root instanceof Parent) {
-                ((Parent)root).styleProperty().bind(ThemeManager.getStyleProperty());
-            }
+            root.styleProperty().bind(ThemeManager.getStyleProperty());
 
             // Inject the root into the controller
             injectParent(controller, root);
+
+            //root.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
             return controller;
         } catch (final IOException ioe) { // log and throw an unchecked exception
@@ -234,7 +235,7 @@ public class FXMLUtils {
      *
      * @param fxmlUrl        the fxml {@code URL}
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
-     * @param <T> expected return type being loaded
+     * @param <T>            expected return type being loaded
      * @return The loaded object hierarchy.
      * @see FXMLLoader#load()
      */
@@ -260,7 +261,8 @@ public class FXMLUtils {
      * @param <C>            the fxml controller
      * @return new {@code Stage}
      */
-    public static<C> Stage loadFXML(final URL fxmlUrl, final ObjectProperty<C> consumer, final ResourceBundle resourceBundle) {
+    public static <C> Stage loadFXML(@NotNull final URL fxmlUrl, @NotNull final ObjectProperty<C> consumer,
+                                     @NotNull final ResourceBundle resourceBundle) {
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 
         final Stage stage = new Stage(StageStyle.DECORATED);
