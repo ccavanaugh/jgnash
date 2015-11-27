@@ -432,6 +432,8 @@ public class BudgetTableController implements MessageListener {
             updateSparkLines();
 
             Platform.runLater(this::bindScrollBars);
+
+            Platform.runLater(this::focusCurrentPeriod);
         } finally {
             lock.readLock().unlock();
         }
@@ -455,6 +457,23 @@ public class BudgetTableController implements MessageListener {
             columnWidthProperty.setValue(width);
         } finally {
             lock.writeLock().unlock();
+        }
+    }
+
+    private void focusCurrentPeriod() {
+        final LocalDate now = LocalDate.now();
+
+        final List<BudgetPeriodDescriptor> budgetPeriodDescriptorList = budgetResultsModel.getDescriptorList();
+
+        for (int i = 0; i < budgetPeriodDescriptorList.size(); i++) {
+            final BudgetPeriodDescriptor budgetPeriodDescriptor = budgetPeriodDescriptorList.get(i);
+
+            if (budgetPeriodDescriptor.isBetween(now)) {
+                final int index = Math.max(Math.min(i, periodCountProperty.subtract(visibleColumnCountProperty).intValue()), 0);
+
+                Platform.runLater(() -> horizontalScrollBar.setValue(index));
+                break;
+            }
         }
     }
 
