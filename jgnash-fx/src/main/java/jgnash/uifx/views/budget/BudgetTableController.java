@@ -576,6 +576,10 @@ public class BudgetTableController implements MessageListener {
         headerColumn.getColumns().add(remainingColumn);
 
         accountSummaryTable.getColumns().add(headerColumn);
+
+        // the width the summary table needs extra help to size the containing GridPane
+        accountSummaryTable.minWidthProperty().bind(summaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+        accountSummaryTable.maxWidthProperty().bind(summaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
     }
 
     private TableColumn<Account, BigDecimal> buildAccountPeriodResultsColumn(final int index) {

@@ -30,6 +30,8 @@ Scroll the budget period so the  active period is visible when first displayed
 
 Release 2.20.0
 ----------------------
+11/27/15 Improved column sizing for the account summary table within the budget view. (Fx)
+11/26/15 Improved general dialog sizing and positioning behavior. (Fx)
 11/24/15 The transaction register may now be filtered/searched by date, reconciled state, memo, and payee. (Fx only)
 
 Release 2.20.0

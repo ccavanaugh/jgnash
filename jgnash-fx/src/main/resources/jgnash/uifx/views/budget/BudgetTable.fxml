@@ -27,7 +27,7 @@
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
-                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER"/>
             </columnConstraints>
             <rowConstraints>
