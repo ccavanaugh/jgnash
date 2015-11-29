@@ -134,7 +134,7 @@ public class IncomeExpensePieChart {
 
         showEmptyCheck = new JCheckBox(rb.getString("Label.ShowEmptyAccounts"));
 
-        showPercentCheck = new JCheckBox(rb.getString("Label.ShowPercentValues"));
+        showPercentCheck = new JCheckBox(rb.getString("Button.ShowPercentValues"));
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);

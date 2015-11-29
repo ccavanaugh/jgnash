@@ -150,7 +150,7 @@ public class PayeePieChart {
         useFilters = new JCheckBox(rb.getString("Label.UseFilters"));
         useFilters.setSelected(true);
 
-        showPercentCheck = new JCheckBox(rb.getString("Label.ShowPercentValues"));
+        showPercentCheck = new JCheckBox(rb.getString("Button.ShowPercentValues"));
 
         combo = AccountListComboBox.getFullInstance();
 
