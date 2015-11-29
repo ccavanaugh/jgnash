@@ -45,6 +45,13 @@
         </MenuItem>
     </Menu>
 
+    <Menu fx:id="reportMenu" text="%Menu.Reports.Name">
+        <Menu text="%Menu.Charts.Name">
+            <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
+
+        </Menu>
+    </Menu>
+
     <Menu mnemonicParsing="false" text="%Menu.View.Name">
         <Menu fx:id="themesMenu" mnemonicParsing="false" text="%Menu.Themes.Name"/>
         <SeparatorMenuItem mnemonicParsing="false"/>

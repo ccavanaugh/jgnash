@@ -26,11 +26,13 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -53,11 +55,13 @@ import jgnash.uifx.dialog.options.OptionDialogController;
 import jgnash.uifx.dialog.options.TransactionNumberDialogController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
+import jgnash.uifx.report.IncomeExpenseDialogController;
 import jgnash.uifx.skin.BaseColorDialogController;
 import jgnash.uifx.skin.FontSizeDialogController;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
 
@@ -67,6 +71,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private Menu reportMenu;
 
     @FXML
     private MenuItem importQifMenuItem;
@@ -115,6 +122,7 @@ public class MenuBarController implements MessageListener {
         currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
         optionsMenuItem.disableProperty().bind(disabled);
+        reportMenu.disableProperty().bind(disabled);
         transNumberListMenuItem.disableProperty().bind(disabled);
         importOfxMenuItem.disableProperty().bind(disabled);
         importQifMenuItem.disableProperty().bind(disabled);
@@ -243,7 +251,7 @@ public class MenuBarController implements MessageListener {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.CreateModifyCommodities"));
 
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -252,7 +260,7 @@ public class MenuBarController implements MessageListener {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.ModifySecHistory"));
 
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -261,7 +269,7 @@ public class MenuBarController implements MessageListener {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.HistoryImport"));
 
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -270,7 +278,7 @@ public class MenuBarController implements MessageListener {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.AddRemCurr"));
 
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -284,7 +292,7 @@ public class MenuBarController implements MessageListener {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.ModifyCurrencies"));
 
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -300,7 +308,7 @@ public class MenuBarController implements MessageListener {
 
         stage.setResizable(false);
 
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -311,7 +319,7 @@ public class MenuBarController implements MessageListener {
 
         stage.setResizable(false);
 
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -321,7 +329,7 @@ public class MenuBarController implements MessageListener {
 
         stage.setTitle(resources.getString("Title.Options"));
         stage.setResizable(false);
-        stage.showAndWait();
+        stage.show();
     }
 
     @FXML
@@ -352,5 +360,21 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleChangeDateFormat() {
         DefaultDateFormatAction.showAndWait();
+    }
+
+    @FXML
+    private void handleIncomeExpensePieChart() {
+        final Stage stage = FXMLUtils.loadFXML(IncomeExpenseDialogController.class.getResource("IncomeExpenseDialog.fxml"),
+                resources);
+
+        stage.setTitle(resources.getString("Title.IncomeExpenseChart"));
+
+        stage.setOnShown(event -> {
+            stage.setMinHeight(stage.getHeight());
+            stage.setMinWidth(stage.getWidth());
+            StageUtils.addBoundsListener(stage, IncomeExpenseDialogController.class);
+        });
+
+        stage.show();
     }
 }
