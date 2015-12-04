@@ -1,17 +1,26 @@
 package jgnash.uifx.report;
 
+import java.text.NumberFormat;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 
+import jgnash.engine.Account;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
@@ -49,28 +58,60 @@ public class IncomeExpenseDialogController {
 
     @FXML
     public void initialize() {
-        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+        accountComboBox.showPlaceHoldersProperty().set(true);
+
+        startDatePicker.setValue(endDatePicker.getValue().minusYears(1));
+
+        final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateChart();
             }
-        });
+        };
 
-        pieChart.setLegendVisible(false);
+        accountComboBox.valueProperty().addListener(listener);
+        startDatePicker.valueProperty().addListener(listener);
+        endDatePicker.valueProperty().addListener(listener);
+
+        pieChart.setLegendSide(Side.RIGHT);
 
         updateChart();
     }
 
     private void updateChart() {
-        ObservableList<PieChart.Data> pieChartData =
-                FXCollections.observableArrayList(
-                        new PieChart.Data("Grapefruit", 13),
-                        new PieChart.Data("Oranges", 25),
-                        new PieChart.Data("Plums", 10),
-                        new PieChart.Data("Pears", 22),
-                        new PieChart.Data("Apples", 30));
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-        pieChart.setData(pieChartData);
-        pieChart.setTitle(accountComboBox.getValue().getName());
+        Account a = accountComboBox.getValue();
+
+        if (a != null) {
+            final CurrencyNode defaultCurrency = a.getCurrencyNode();
+
+            final NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
+
+            final ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+            double total = a.getTreeBalance(startDatePicker.getValue(), endDatePicker.getValue(), defaultCurrency).doubleValue();
+
+            for (final Account child : a.getChildren()) {
+                double balance = child.getTreeBalance(startDatePicker.getValue(), endDatePicker.getValue(), defaultCurrency).doubleValue();
+
+                if (balance > 0 || balance < 0) {
+                    final String label = child.getName() + " - " + numberFormat.format(balance);
+                    pieChartData.add(new PieChart.Data(label, balance / total * 100));
+                }
+            }
+
+            pieChart.setData(pieChartData);
+            pieChart.setTitle(accountComboBox.getValue().getName() + "\n" + numberFormat.format(total));
+
+            // abs() on all values won't work if children aren't of uniform sign,
+            // then again, this chart is not right to display those trees
+            //boolean negate = total != null && total.signum() < 0;
+        } else {
+            pieChart.setData(FXCollections.emptyObservableList());
+            pieChart.setTitle("No Data");
+        }
     }
 
     @FXML
