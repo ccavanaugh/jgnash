@@ -75,7 +75,7 @@
                         <Label text="%Label.Action" GridPane.rowIndex="1"/>
                         <ComboBox fx:id="actionComboBox" maxWidth="Infinity" minWidth="50"
                                   prefWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-                        <ButtonBar GridPane.rowIndex="1" GridPane.columnIndex="2">
+                        <ButtonBar fx:id="buttonBar" GridPane.rowIndex="1" GridPane.columnIndex="2">
                             <buttons>
                                 <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE"
                                         onAction="#handleEnterAction"/>

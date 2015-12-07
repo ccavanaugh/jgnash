@@ -28,6 +28,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -41,6 +42,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.SecurityNode;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.skin.StyleClass;
@@ -53,6 +55,9 @@ import jgnash.util.Nullable;
  * @author Craig Cavanaugh
  */
 public class AccountPropertiesController {
+
+    @FXML
+    private ButtonBar buttonBar;
 
     private boolean result = false;
 
@@ -111,6 +116,8 @@ public class AccountPropertiesController {
 
     @FXML
     public void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         accountTypeComboBox.setCellFactory(param -> new DisabledListCell());    // set cell factory
         accountTypeComboBox.getItems().addAll(AccountType.values());
         accountTypeComboBox.setValue(AccountType.BANK); // set default value

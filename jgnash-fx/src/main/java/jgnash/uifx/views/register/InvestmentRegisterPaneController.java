@@ -22,12 +22,14 @@ import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.accounts.SelectAccountSecuritiesDialog;
@@ -41,6 +43,9 @@ import jgnash.util.NotNull;
 public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
+    private ButtonBar buttonBar;
+
+    @FXML
     private ComboBox<SlipControllerContainer> actionComboBox;
 
     @FXML
@@ -52,6 +57,8 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     @Override
     public void initialize() {
         super.initialize();
+
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
         // Load the register table
         registerTableControllerProperty.setValue(FXMLUtils.loadFXML((Consumer<Node>) node ->

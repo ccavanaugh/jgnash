@@ -7,18 +7,68 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+
 <VBox fx:controller="jgnash.uifx.dialog.options.GeneralTabController" minHeight="-Infinity"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
+
+    <fx:define>
+        <ToggleGroup fx:id="toggleGroup"/>
+    </fx:define>
 
     <GridPane styleClass="form">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="ALWAYS"/>
         </rowConstraints>
-        <CheckBox text="%Button.SelectText" fx:id="selectOnFocusCheckBox" />
-        <CheckBox text="%Button.AnimationsEnabled" fx:id="animationsEnabledCheckBox" GridPane.rowIndex="1"/>
+
+        <TitledPane text="%Title.Entry" collapsible="false">
+            <GridPane styleClass="form">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="NEVER"/>
+                </rowConstraints>
+                <CheckBox text="%Button.SelectText" fx:id="selectOnFocusCheckBox" />
+            </GridPane>
+        </TitledPane>
+
+        <TitledPane text="%Title.Display" collapsible="false" GridPane.rowIndex="1">
+            <GridPane styleClass="form">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="NEVER"/>
+                </rowConstraints>
+                <CheckBox text="%Button.AnimationsEnabled" fx:id="animationsEnabledCheckBox" />
+            </GridPane>
+        </TitledPane>
+
+        <TitledPane text="%Title.ButtonOrder" GridPane.rowIndex="2" collapsible="false">
+            <GridPane styleClass="form">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="NEVER"/>
+                    <RowConstraints vgrow="NEVER"/>
+                    <RowConstraints vgrow="NEVER"/>
+                </rowConstraints>
+                <RadioButton fx:id="windowsStyleRadioButton" text="%Button.Order.WindowsOS"
+                             toggleGroup="$toggleGroup"/>
+                <RadioButton fx:id="macOSStyleRadioButton" text="%Button.Order.MacOS"
+                             toggleGroup="$toggleGroup" GridPane.rowIndex="1"/>
+                <RadioButton fx:id="linuxStyleRadioButton" text="%Button.Order.LinuxOS"
+                             toggleGroup="$toggleGroup" GridPane.rowIndex="2"/>
+            </GridPane>
+        </TitledPane>
     </GridPane>
 </VBox>

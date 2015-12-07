@@ -18,16 +18,28 @@
 package jgnash.uifx.dialog.options;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 
 import jgnash.uifx.Options;
 
 /**
  * Controller for General Options
  *
- * @author Craig Cavanaguh
+ * @author Craig Cavanaugh
  */
 public class GeneralTabController {
+
+    @FXML
+    private RadioButton windowsStyleRadioButton;
+
+    @FXML
+    private RadioButton macOSStyleRadioButton;
+
+    @FXML
+    private RadioButton linuxStyleRadioButton;
 
     @FXML
     private CheckBox animationsEnabledCheckBox;
@@ -36,8 +48,34 @@ public class GeneralTabController {
     private CheckBox selectOnFocusCheckBox;
 
     @FXML
+    private ToggleGroup toggleGroup;
+
+    @FXML
     private void initialize() {
         selectOnFocusCheckBox.selectedProperty().bindBidirectional(Options.selectOnFocusProperty());
         animationsEnabledCheckBox.selectedProperty().bindBidirectional(Options.animationsEnabledProperty());
+
+        switch (Options.buttonOrderProperty().get()) {
+            case ButtonBar.BUTTON_ORDER_LINUX:
+                linuxStyleRadioButton.setSelected(true);
+                break;
+            case ButtonBar.BUTTON_ORDER_WINDOWS:
+            default:
+                windowsStyleRadioButton.setSelected(true);
+                break;
+            case ButtonBar.BUTTON_ORDER_MAC_OS:
+                macOSStyleRadioButton.setSelected(true);
+                break;
+        }
+
+        toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == linuxStyleRadioButton) {
+                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_LINUX);
+            } else if (newValue == macOSStyleRadioButton) {
+                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_MAC_OS);
+            } else {
+                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_WINDOWS);
+            }
+        });
     }
 }

@@ -59,7 +59,7 @@
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
         <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2"/>
     </GridPane>
-    <ButtonBar GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3">
+    <ButtonBar fx:id="buttonBar" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3">
         <buttons>
             <Button fx:id="enterButton" text="%Button.Enter" ButtonBar.buttonData="OK_DONE"
                     onAction="#handleEnterAction"/>

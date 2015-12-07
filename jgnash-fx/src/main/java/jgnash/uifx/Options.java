@@ -23,7 +23,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.control.ButtonBar;
 
 /**
  * Manages application preferences
@@ -54,6 +57,8 @@ public class Options {
 
     private final static String SELECT_ON_FOCUS = "selectOnFocus";
 
+    private final static String BUTTON_ORDER = "buttonOrder";
+
     private final static String ANIMATIONS_ENABLED = "animationsEnabled";
 
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
@@ -80,9 +85,13 @@ public class Options {
 
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
+    private static final SimpleStringProperty buttonOrder;
+
     private static final ChangeListener<Boolean> booleanChangeListener;
 
     private static final ChangeListener<Number> integerChangeListener;
+
+    private static final ChangeListener<String> stringChangeListener;
 
     static {
         booleanChangeListener = (observable, oldValue, newValue) ->
@@ -90,6 +99,9 @@ public class Options {
 
         integerChangeListener = (observable, oldValue, newValue) ->
                 p.putInt(((SimpleIntegerProperty) observable).getName(), (Integer) newValue);
+
+        stringChangeListener = (observable, oldValue, newValue) ->
+                p.put(((SimpleStringProperty) observable).getName(), (String) newValue);
 
         useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
         confirmDeleteTransaction = createBooleanProperty(CONFIRM_DELETE_TRANSACTION, true);
@@ -103,6 +115,8 @@ public class Options {
         animationsEnabled = createBooleanProperty(ANIMATIONS_ENABLED, true);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
+
+        buttonOrder = createStringProperty(BUTTON_ORDER, new ButtonBar().getButtonOrder());
     }
 
     private Options() {
@@ -119,6 +133,13 @@ public class Options {
     private static SimpleIntegerProperty createIntegerProperty(final String name, final int defaultValue) {
         final SimpleIntegerProperty property = new SimpleIntegerProperty(null, name, p.getInt(name, defaultValue));
         property.addListener(integerChangeListener);
+
+        return property;
+    }
+
+    private static SimpleStringProperty createStringProperty(final String name, final String defaultValue) {
+        final SimpleStringProperty property = new SimpleStringProperty(null, name, p.get(name, defaultValue));
+        property.addListener(stringChangeListener);
 
         return property;
     }
@@ -214,5 +235,9 @@ public class Options {
      */
     public static BooleanProperty animationsEnabledProperty() {
         return animationsEnabled;
+    }
+
+    public static StringProperty buttonOrderProperty() {
+        return buttonOrder;
     }
 }

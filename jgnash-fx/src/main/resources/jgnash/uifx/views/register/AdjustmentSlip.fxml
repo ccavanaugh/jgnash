@@ -56,7 +56,7 @@
     </GridPane>
     <Label text="%Label.Amount" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
     <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-    <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
+    <ButtonBar fx:id="buttonBar" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
         <buttons>
             <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction">
                 <graphic>

@@ -34,6 +34,7 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
 
@@ -85,6 +86,9 @@ abstract class AbstractSlipController implements Slip {
     @FXML
     private CheckBox reconciledButton;
 
+    @FXML
+    private ButtonBar buttonBar;
+
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     /**
@@ -103,6 +107,11 @@ abstract class AbstractSlipController implements Slip {
 
     @FXML
     public void initialize() {
+
+        // May not have a button bar
+        if (buttonBar != null) {
+            buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+        }
 
         // Needed to support tri-state capability
         reconciledButton.setAllowIndeterminate(true);

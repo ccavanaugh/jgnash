@@ -29,6 +29,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
 
@@ -36,6 +37,7 @@ import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
@@ -69,6 +71,9 @@ abstract class AbstractTransactionEntrySlipController {
     AttachmentPane attachmentPane;
 
     @FXML
+    private ButtonBar buttonBar;
+
+    @FXML
     private ResourceBundle resources;
 
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
@@ -81,6 +86,10 @@ abstract class AbstractTransactionEntrySlipController {
 
     @FXML
     private void initialize() {
+        if (buttonBar != null) {
+            buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+        }
+
         reconciledButton.setAllowIndeterminate(true);
 
         // Bind necessary properties to the exchange panel

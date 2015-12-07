@@ -27,12 +27,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.stage.Stage;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
@@ -48,12 +50,17 @@ public class TransactionNumberDialogController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private ButtonBar buttonBar;
+
+    @FXML
     private ListView<String> listView;
 
     private Optional<List<String>> returnValue = Optional.empty();
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 

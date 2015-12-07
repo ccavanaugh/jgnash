@@ -27,6 +27,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -35,6 +36,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.util.ResourceUtils;
@@ -61,6 +63,9 @@ class InvestmentTransactionDialog extends Stage {
     @FXML
     private Button cancelButton;
 
+    @FXML
+    private ButtonBar buttonBar;
+
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Consumer<Optional<Transaction>>> transactionConsumer = new SimpleObjectProperty<>();
@@ -79,6 +84,8 @@ class InvestmentTransactionDialog extends Stage {
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         enterButton.setOnAction(value -> handleEnterAction());
         cancelButton.setOnAction(value -> handleCancelAction());
 
