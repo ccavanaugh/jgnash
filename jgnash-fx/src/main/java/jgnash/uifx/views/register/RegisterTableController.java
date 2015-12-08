@@ -213,13 +213,13 @@ public abstract class RegisterTableController {
             handleFilterChange();
         });
 
-        if (memoFilterTextField != null) {
+        if (memoFilterTextField != null) {  // memo filter may not have been initialized for all register types
             memoFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 handleFilterChange();
             });
         }
 
-        if (payeeFilterTextField != null) {
+        if (payeeFilterTextField != null) { // payee filter may not have been initialized for all register types
             payeeFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 handleFilterChange();
             });
