@@ -124,7 +124,9 @@ class InvestmentTransactionDialog extends Stage {
         investmentSlipManager.modifyTransaction(transaction);
     }
 
-    public static void showAndWait(final Account account, final Transaction transaction, final Consumer<Optional<Transaction>> consumer) {
+    public static void show(final Account account, final Transaction transaction,
+                            final Consumer<Optional<Transaction>> consumer) {
+
         final InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
         transactionDialog.accountProperty().setValue(account);
         transactionDialog.setTransactionConsumer(consumer);

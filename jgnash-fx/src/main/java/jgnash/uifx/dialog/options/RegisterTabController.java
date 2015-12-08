@@ -34,6 +34,9 @@ import jgnash.uifx.Options;
 public class RegisterTabController {
 
     @FXML
+    private CheckBox restoreLastRegisterTab;
+
+    @FXML
     private CheckBox rememberLastTranDateCheckBox;
 
     @FXML
@@ -69,6 +72,8 @@ public class RegisterTabController {
         enableAutoCompleteCheckBox.selectedProperty().bindBidirectional(Options.useAutoCompleteProperty());
         fuzzyMatchCheckBox.selectedProperty().bindBidirectional(Options.useFuzzyMatchForAutoCompleteProperty());
         caseSensitiveCheckBox.selectedProperty().bindBidirectional(Options.autoCompleteIsCaseSensitiveProperty());
+
+        restoreLastRegisterTab.selectedProperty().bindBidirectional(Options.restoreLastTabProperty());
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {

@@ -112,7 +112,7 @@ public class RegisterActions {
                 }
 
                 if (transaction instanceof InvestmentTransaction) {
-                    InvestmentTransactionDialog.showAndWait(account, clone, RegisterActions::addTransaction);
+                    InvestmentTransactionDialog.show(account, clone, RegisterActions::addTransaction);
                 } else {
                     TransactionDialog.showAndWait(account, clone, RegisterActions::addTransaction);
                 }

@@ -17,15 +17,25 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.Objects;
+import java.util.prefs.Preferences;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import jgnash.engine.*;
+
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
+import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
-
-import java.util.Objects;
 
 /**
  * Register pane controller
@@ -33,6 +43,8 @@ import java.util.Objects;
  * @author Craig Cavanaugh
  */
 public class BankRegisterPaneController extends RegisterPaneController {
+
+    private static final String RECENT_TAB = "/jgnash/uifx/register/recent/tab";
 
     @FXML
     protected Button jumpButton;
@@ -82,16 +94,16 @@ public class BankRegisterPaneController extends RegisterPaneController {
                 ((Slip) debitTab.getUserData()).modifyTransaction(transaction);
             }
         } else {    // pop a dialog to modify the transaction
-            InvestmentTransactionDialog.showAndWait(((InvestmentTransaction) transaction).getInvestmentAccount(),
-                    transaction, optional -> {
-                if (optional.isPresent()) {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
+            InvestmentTransactionDialog.show(((InvestmentTransaction) transaction).getInvestmentAccount(), transaction,
+                    optional -> {
+                        if (optional.isPresent()) {
+                            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                            Objects.requireNonNull(engine);
 
-                    engine.removeTransaction(transaction);
-                    engine.addTransaction(optional.get());
-                }
-            });
+                            engine.removeTransaction(transaction);
+                            engine.addTransaction(optional.get());
+                        }
+                    });
         }
     }
 
@@ -102,22 +114,26 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
         creditTab = buildTab(tabNames[0], SlipType.INCREASE);
         debitTab = buildTab(tabNames[1], SlipType.DECREASE);
-        final Tab transferTab = buildTransferTab();
         adjustTab = buildAdjustTab();
 
-        transactionForms.getTabs().addAll(creditTab, debitTab, transferTab, adjustTab);
+        transactionForms.getTabs().addAll(creditTab, debitTab, buildTransferTab(), adjustTab);
 
         if (accountType == AccountType.CHECKING || accountType == AccountType.CREDIT) {
             transactionForms.getSelectionModel().select(debitTab);
         } else if (accountType.getAccountGroup() == AccountGroup.INCOME) {
             transactionForms.getSelectionModel().select(debitTab);
         }
+
+        restoreLastTabUsed();
+
+        transactionForms.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            saveLastTabUsed(newValue.intValue());
+        });
     }
 
     private Tab buildTab(final String tabName, final SlipType slipType) {
         final Tab tab = new Tab(tabName);
-        final SlipController slipController = FXMLUtils.loadFXML(tab::setContent,
-                "BankSlip.fxml", resources);
+        final SlipController slipController = FXMLUtils.loadFXML(tab::setContent, "BankSlip.fxml", resources);
 
         slipController.setSlipType(slipType);
         slipController.accountProperty().bind(accountProperty());
@@ -151,6 +167,22 @@ public class BankRegisterPaneController extends RegisterPaneController {
         tab.setUserData(slipController); // place a reference to the controller here
 
         return tab;
+    }
+
+    private void saveLastTabUsed(final int index) {
+        final Preferences tabPreferences = Preferences.userRoot().node(RECENT_TAB);
+        tabPreferences.putInt(accountProperty().get().getUuid(), index);
+    }
+
+    private void restoreLastTabUsed() {
+        if (Options.restoreLastTabProperty().get()) {
+            Preferences tabPreferences = Preferences.userRoot().node(RECENT_TAB);
+            String id = accountProperty().get().getUuid();
+
+            final int index = tabPreferences.getInt(id, transactionForms.getSelectionModel().getSelectedIndex());
+
+            Platform.runLater(() -> transactionForms.getSelectionModel().select(index));
+        }
     }
 
     @Override

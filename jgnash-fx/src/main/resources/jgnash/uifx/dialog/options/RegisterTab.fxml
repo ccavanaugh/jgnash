@@ -23,10 +23,12 @@
             <rowConstraints>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
             <CheckBox text="%Button.RegDate" fx:id="rememberLastTranDateCheckBox"/>
             <CheckBox text="%Button.ConfirmTransDelete" fx:id="confirmDeleteCheckBox" GridPane.rowIndex="1"/>
+            <CheckBox text="%Button.RestoreLastTranTab" fx:id="restoreLastRegisterTab" GridPane.rowIndex="2"/>
         </GridPane>
     </TitledPane>
 

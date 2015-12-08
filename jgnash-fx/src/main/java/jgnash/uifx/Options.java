@@ -61,6 +61,8 @@ public class Options {
 
     private final static String ANIMATIONS_ENABLED = "animationsEnabled";
 
+    private final static String RESTORE_LAST_TAB = "restoreLastTab";
+
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -82,6 +84,8 @@ public class Options {
     private static final SimpleBooleanProperty openLastEnabled;
 
     private static final SimpleBooleanProperty animationsEnabled;
+
+    private static final SimpleBooleanProperty restoreLastRegisterTab;
 
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
@@ -113,6 +117,7 @@ public class Options {
         openLastEnabled = createBooleanProperty(OPEN_LAST, false);
         selectOnFocusEnabled = createBooleanProperty(SELECT_ON_FOCUS, false);
         animationsEnabled = createBooleanProperty(ANIMATIONS_ENABLED, true);
+        restoreLastRegisterTab = createBooleanProperty(RESTORE_LAST_TAB, true);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
 
@@ -235,6 +240,15 @@ public class Options {
      */
     public static BooleanProperty animationsEnabledProperty() {
         return animationsEnabled;
+    }
+
+    /**
+     * Provides access to the restore last used tab property
+     *
+     * @return {@code BooleanProperty} controlling open last file
+     */
+    public static BooleanProperty restoreLastTabProperty() {
+        return restoreLastRegisterTab;
     }
 
     public static StringProperty buttonOrderProperty() {
