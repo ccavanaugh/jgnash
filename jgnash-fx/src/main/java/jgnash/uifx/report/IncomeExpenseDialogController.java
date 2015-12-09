@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
@@ -39,12 +38,6 @@ public class IncomeExpenseDialogController {
 
     @FXML
     private PieChart pieChart;
-
-    @FXML
-    private CheckBox percentValuesCheckBox;
-
-    @FXML
-    private CheckBox emptyAccountCheckBox;
 
     @FXML
     private DatePickerEx startDatePicker;
