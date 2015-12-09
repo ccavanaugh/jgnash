@@ -14,9 +14,11 @@ import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -103,7 +105,27 @@ public class IncomeExpenseDialogController {
             }
 
             pieChart.setData(pieChartData);
-            pieChart.setTitle(accountComboBox.getValue().getName() + "\n" + numberFormat.format(total));
+
+            final NumberFormat percentFormat = NumberFormat.getPercentInstance();
+            percentFormat.setMaximumFractionDigits(1);
+            percentFormat.setMinimumFractionDigits(1);
+
+            // Install tooltips on the data after it has been added to the chart
+            pieChart.getData().stream().forEach(data ->
+                    Tooltip.install(data.getNode(), new Tooltip(percentFormat.format(data.getPieValue() / 100d))));
+
+            final String title;
+
+            // pick an appropriate title
+            if (a.getAccountType() == AccountType.EXPENSE) {
+                title = resources.getString("Title.PercentExpense");
+            } else if (a.getAccountType() == AccountType.INCOME) {
+                title = resources.getString("Title.PercentIncome");
+            } else {
+                title = resources.getString("Title.PercentDist");
+            }
+
+            pieChart.setTitle(title + " - " + accountComboBox.getValue().getName() + " - " + numberFormat.format(total));
 
             // abs() on all values won't work if children aren't of uniform sign,
             // then again, this chart is not right to display those trees
