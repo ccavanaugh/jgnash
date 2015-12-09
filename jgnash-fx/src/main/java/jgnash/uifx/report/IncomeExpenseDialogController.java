@@ -1,19 +1,28 @@
 package jgnash.uifx.report;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
+import javax.imageio.ImageIO;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.WritableImage;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -22,9 +31,12 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.FileUtils;
 
 /**
  * Income and Expense Pie Chart
@@ -126,6 +138,29 @@ public class IncomeExpenseDialogController {
         } else {
             pieChart.setData(FXCollections.emptyObservableList());
             pieChart.setTitle("No Data");
+        }
+    }
+
+    @FXML
+    private void handleSaveAction() {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(resources.getString("Title.SaveFile"));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+
+        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+
+        if (file != null) {
+            final WritableImage image = pieChart.snapshot(new SnapshotParameters(), null);
+
+            try {
+                final String type = FileUtils.getFileExtension(file.toString().toLowerCase(Locale.ROOT));
+
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), type, file);
+            } catch (final IOException e) {
+                StaticUIMethods.displayException(e);
+            }
         }
     }
 
