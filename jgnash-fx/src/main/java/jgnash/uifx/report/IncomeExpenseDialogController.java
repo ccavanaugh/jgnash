@@ -1,3 +1,20 @@
+/*
+ * jGnash, a personal finance application
+ * Copyright (C) 2001-2015 Craig Cavanaugh
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package jgnash.uifx.report;
 
 import java.io.File;
@@ -17,6 +34,7 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.PieChart;
@@ -30,6 +48,7 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.resource.cursor.CustomCursor;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.AccountComboBox;
@@ -62,6 +81,8 @@ public class IncomeExpenseDialogController {
 
     @FXML
     private ResourceBundle resources;
+
+    private boolean nodeFocused = false;
 
     @FXML
     public void initialize() {
@@ -105,7 +126,14 @@ public class IncomeExpenseDialogController {
 
                 if (balance > 0 || balance < 0) {
                     final String label = child.getName() + " - " + numberFormat.format(balance);
-                    pieChartData.add(new PieChart.Data(label, balance / total * 100));
+                    final PieChart.Data data = new PieChart.Data(label, balance / total * 100);
+
+                    // nodes are created lazily.  Set the user data (Account) after the node is created
+                    data.nodeProperty().addListener((observable, oldValue, newValue) -> {
+                        newValue.setUserData(child);
+                    });
+
+                    pieChartData.add(data);
                 }
             }
 
@@ -119,6 +147,31 @@ public class IncomeExpenseDialogController {
             pieChart.getData().stream().forEach(data ->
                     Tooltip.install(data.getNode(), new Tooltip(percentFormat.format(data.getPieValue() / 100d))));
 
+            // Indicate the node can be clicked on to zoom into the next account level
+            for (final PieChart.Data data : pieChart.getData()) {
+                data.getNode().setOnMouseEntered(event -> {
+                    final Account account = (Account) data.getNode().getUserData();
+                    if (account.isParent()) {
+                        data.getNode().setCursor(CustomCursor.getZoomInCursor());
+                    } else {
+                        data.getNode().setCursor(Cursor.DEFAULT);
+                    }
+
+                    nodeFocused = true;
+                });
+
+                data.getNode().setOnMouseExited(event -> nodeFocused = false);
+
+                // zoom in on click if this is a parent account
+                data.getNode().setOnMouseClicked(event -> {
+                    if (data.getNode().getUserData() != null) {
+                        if (((Account) data.getNode().getUserData()).isParent()) {
+                            accountComboBox.setValue((Account) data.getNode().getUserData());
+                        }
+                    }
+                });
+            }
+
             final String title;
 
             // pick an appropriate title
@@ -131,6 +184,21 @@ public class IncomeExpenseDialogController {
             }
 
             pieChart.setTitle(title + " - " + accountComboBox.getValue().getName() + " - " + numberFormat.format(total));
+
+            accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue!= null && newValue.getParent().getAccountType() != AccountType.ROOT) {
+                    pieChart.setCursor(CustomCursor.getZoomOutCursor());
+                } else {
+                    pieChart.setCursor(Cursor.DEFAULT);
+                }
+            });
+
+            // zoom out
+           pieChart.setOnMouseClicked(event -> {
+                if (!nodeFocused && accountComboBox.getValue().getParent().getAccountType() != AccountType.ROOT) {
+                    accountComboBox.setValue(accountComboBox.getValue().getParent());
+                }
+            });
 
             // abs() on all values won't work if children aren't of uniform sign,
             // then again, this chart is not right to display those trees
