@@ -367,11 +367,10 @@ public class MenuBarController implements MessageListener {
 
         stage.setTitle(resources.getString("Title.IncomeExpenseChart"));
 
-        stage.setOnShown(event -> {
+        stage.setOnShown(event -> Platform.runLater(() -> {
             stage.setMinHeight(stage.getHeight());
             stage.setMinWidth(stage.getWidth());
-            StageUtils.addBoundsListener(stage, IncomeExpenseDialogController.class);
-        });
+        }));
 
         stage.show();
     }
