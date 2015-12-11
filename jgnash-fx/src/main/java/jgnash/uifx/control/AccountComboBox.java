@@ -19,12 +19,14 @@ package jgnash.uifx.control;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.util.StringConverter;
@@ -43,7 +45,7 @@ import jgnash.util.NotNull;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 
 /**
- * ComboBox of available accounts
+ * ComboBox of available accounts.  A Predicate of allowed accounts may be specified
  *
  * @author Craig Cavanaugh
  *
@@ -59,7 +61,18 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     final private SimpleBooleanProperty showPlaceHoldersProperty = new SimpleBooleanProperty(false);
 
+    final private FilteredList<Account> filteredList;
+
+    final private ObservableList<Account> items;
+
     public AccountComboBox() {
+
+        items = getItems();
+
+        filteredList = new FilteredList<>(items, account -> true);
+
+        setItems(filteredList);
+
         loadAccounts();
         registerListeners();
 
@@ -78,7 +91,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
             @Override
             public Account fromString(final String string) {
-                for (final Account account : getItems()) {
+                for (final Account account : filteredList) {
                     if (account.getPathName().equals(string)) {
                         return account;
                     }
@@ -86,6 +99,10 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                 return null;
             }
         });
+    }
+
+    public void setPredicate(final Predicate<Account> predicate) {
+        filteredList.setPredicate(predicate);
     }
 
     public void filterAccount(@NotNull final Account... account) {
@@ -111,13 +128,13 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         accounts.stream().filter(account -> !filteredAccountList.contains(account)).forEach(account -> {
 
             if (account.isVisible() && !account.isPlaceHolder() && !account.isLocked()) {
-                getItems().add(account);
+                items.add(account);
             } else if (account.isPlaceHolder() && showPlaceHoldersProperty().get()) {
-                getItems().add(account);
+                items.add(account);
             } else if (!account.isVisible() && showHiddenAccountsProperty().get()) {
-                getItems().add(account);
+                items.add(account);
             } else if (account.isLocked() && showLockedAccountsProperty().get()) {
-                getItems().add(account);
+                items.add(account);
             }
 
             if (account.getChildCount() > 0) {
@@ -127,7 +144,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     }
 
     private void loadAccounts() {
-        getItems().clear();
+        items.clear();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -135,11 +152,11 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         loadAccounts(engine.getRootAccount().getChildren(Comparators.getAccountByCode()));
 
         // Set a default account
-        if (getItems().size() > 0) {
+        if (items.size() > 0) {
             if (Platform.isFxApplicationThread()) {
-                setValue(getItems().get(0));
+                setValue(items.get(0));
             } else {    // push to the end of the application thread only if needed
-                Platform.runLater(() -> setValue(getItems().get(0)));
+                Platform.runLater(() -> setValue(items.get(0)));
             }
         }
     }
@@ -170,10 +187,10 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
             switch (event.getEvent()) {
                 case FILE_CLOSING:
                     MessageBus.getInstance().unregisterListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
-                    getItems().clear();
+                    items.clear();
                     break;
                 case ACCOUNT_REMOVE:
-                    getItems().removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
+                    items.removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
                     filteredAccountList.removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
                     break;
                 case ACCOUNT_ADD:
