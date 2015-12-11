@@ -93,7 +93,6 @@ public class IncomeExpenseDialogController {
 
         final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseDialogController.class);
 
-        accountComboBox.showPlaceHoldersProperty().set(true);
         accountComboBox.setPredicate(new ParentAccountPredicate());
 
         if (preferences.get(LAST_ACCOUNT, null) != null) {

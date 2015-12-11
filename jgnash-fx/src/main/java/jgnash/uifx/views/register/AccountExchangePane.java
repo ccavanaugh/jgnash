@@ -138,7 +138,7 @@ public class AccountExchangePane extends GridPane {
 
             if (filterBaseAccountProperty().get()) {
                 // Set predicate to filter the base account
-                accountCombo.setPredicate(account -> !account.equals(newValue));
+                accountCombo.setPredicate(AccountComboBox.getDefaultPredicate().and(account -> !account.equals(newValue)));
             }
             baseCurrencyProperty().setValue(newValue.getCurrencyNode());
         });

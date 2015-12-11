@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
@@ -51,12 +50,6 @@ import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
 
-    final private SimpleBooleanProperty showHiddenAccountsProperty = new SimpleBooleanProperty(false);
-
-    final private SimpleBooleanProperty showLockedAccountsProperty = new SimpleBooleanProperty(false);
-
-    final private SimpleBooleanProperty showPlaceHoldersProperty = new SimpleBooleanProperty(false);
-
     final private FilteredList<Account> filteredList;
 
     final private ObservableList<Account> items;
@@ -65,12 +58,14 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         items = getItems();
 
-        filteredList = new FilteredList<>(items, account -> true);
+        // By default only visible accounts that are not locked or placeholders are shown
+        filteredList = new FilteredList<>(items, getDefaultPredicate());
 
         setItems(filteredList);
 
         loadAccounts();
-        registerListeners();
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
 
         // TODO: JDK Bug JDK-8129123 https://bugs.openjdk.java.net/browse/JDK-8129123
         setOnMouseClicked(event -> {
@@ -97,37 +92,24 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         });
     }
 
+    /**
+     * Returns the default Predicate used to determine which Accounts are displayed.
+     *
+     * The default is only visible accounts that are not locked or placeholders are shown.
+     *
+     * @return default Account Predicate
+     */
+    public static Predicate<Account> getDefaultPredicate() {
+        return account -> account.isVisible() && !account.isLocked() && !account.isPlaceHolder();
+    }
+
     public void setPredicate(final Predicate<Account> predicate) {
         filteredList.setPredicate(predicate);
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public SimpleBooleanProperty showHiddenAccountsProperty() {
-        return showHiddenAccountsProperty;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public SimpleBooleanProperty showLockedAccountsProperty() {
-        return showLockedAccountsProperty;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public SimpleBooleanProperty showPlaceHoldersProperty() {
-        return showPlaceHoldersProperty;
-    }
-
     private void loadAccounts(@NotNull final List<Account> accounts) {
         accounts.stream().forEach(account -> {
-
-            if (account.isVisible() && !account.isPlaceHolder() && !account.isLocked()) {
-                items.add(account);
-            } else if (account.isPlaceHolder() && showPlaceHoldersProperty().get()) {
-                items.add(account);
-            } else if (!account.isVisible() && showHiddenAccountsProperty().get()) {
-                items.add(account);
-            } else if (account.isLocked() && showLockedAccountsProperty().get()) {
-                items.add(account);
-            }
+            items.add(account);
 
             if (account.getChildCount() > 0) {
                 loadAccounts(account.getChildren(Comparators.getAccountByCode()));
@@ -151,18 +133,6 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                 Platform.runLater(() -> setValue(items.get(0)));
             }
         }
-    }
-
-    private void registerListeners() {
-        MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
-
-        showPlaceHoldersProperty.addListener((observable, oldValue, newValue) -> {
-            loadAccounts();
-        });
-
-        showHiddenAccountsProperty.addListener((observable, oldValue, newValue) -> {
-            loadAccounts();
-        });
     }
 
     @Override
