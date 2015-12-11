@@ -57,6 +57,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.FileUtils;
+import jgnash.util.function.ParentAccountPredicate;
 
 /**
  * Income and Expense Pie Chart
@@ -93,6 +94,7 @@ public class IncomeExpenseDialogController {
         final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseDialogController.class);
 
         accountComboBox.showPlaceHoldersProperty().set(true);
+        accountComboBox.setPredicate(new ParentAccountPredicate());
 
         if (preferences.get(LAST_ACCOUNT, null) != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
