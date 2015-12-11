@@ -23,8 +23,6 @@ import java.util.function.Predicate;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
@@ -45,15 +43,13 @@ import jgnash.util.NotNull;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 
 /**
- * ComboBox of available accounts.  A Predicate of allowed accounts may be specified
+ * ComboBox of available accounts.  A Predicate for allowed accounts may be specified.
  *
  * @author Craig Cavanaugh
  *
  * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8129123">Bug JDK-8129123</a>
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
-
-    final private ObservableList<Account> filteredAccountList = FXCollections.observableArrayList();
 
     final private SimpleBooleanProperty showHiddenAccountsProperty = new SimpleBooleanProperty(false);
 
@@ -105,10 +101,6 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         filteredList.setPredicate(predicate);
     }
 
-    public void filterAccount(@NotNull final Account... account) {
-        filteredAccountList.addAll(account);
-    }
-
     @SuppressWarnings("WeakerAccess")
     public SimpleBooleanProperty showHiddenAccountsProperty() {
         return showHiddenAccountsProperty;
@@ -125,7 +117,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     }
 
     private void loadAccounts(@NotNull final List<Account> accounts) {
-        accounts.stream().filter(account -> !filteredAccountList.contains(account)).forEach(account -> {
+        accounts.stream().forEach(account -> {
 
             if (account.isVisible() && !account.isPlaceHolder() && !account.isLocked()) {
                 items.add(account);
@@ -164,14 +156,6 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     private void registerListeners() {
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
 
-        filteredAccountList.addListener((ListChangeListener<Account>) c -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    loadAccounts();
-                }
-            }
-        });
-
         showPlaceHoldersProperty.addListener((observable, oldValue, newValue) -> {
             loadAccounts();
         });
@@ -191,7 +175,6 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                     break;
                 case ACCOUNT_REMOVE:
                     items.removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
-                    filteredAccountList.removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
                     break;
                 case ACCOUNT_ADD:
                 case ACCOUNT_MODIFY:
