@@ -136,8 +136,9 @@ public class AccountExchangePane extends GridPane {
                 throw new RuntimeException("baseCurrency does not match baseAccount currency");
             }
 
-            if (filterBaseAccountProperty().get()){
-                accountCombo.filterAccount(newValue);
+            if (filterBaseAccountProperty().get()) {
+                // Set predicate to filter the base account
+                accountCombo.setPredicate(account -> !account.equals(newValue));
             }
             baseCurrencyProperty().setValue(newValue.getCurrencyNode());
         });
