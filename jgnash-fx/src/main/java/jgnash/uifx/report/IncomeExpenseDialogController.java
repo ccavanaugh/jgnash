@@ -23,6 +23,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
@@ -84,16 +85,32 @@ public class IncomeExpenseDialogController {
 
     private boolean nodeFocused = false;
 
+    private static final String LAST_ACCOUNT = "lastAccount";
+
     @FXML
     public void initialize() {
 
+        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseDialogController.class);
+
         accountComboBox.showPlaceHoldersProperty().set(true);
+
+        if (preferences.get(LAST_ACCOUNT, null) != null) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            final Account account = engine.getAccountByUuid(preferences.get(LAST_ACCOUNT, null));
+
+            if (account !=  null) {
+                accountComboBox.setValue(account);
+            }
+        }
 
         startDatePicker.setValue(endDatePicker.getValue().minusYears(1));
 
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateChart();
+                preferences.put(LAST_ACCOUNT, accountComboBox.getValue().getUuid());
             }
         };
 
