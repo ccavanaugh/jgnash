@@ -56,9 +56,11 @@ public class ProfitLossTextReport {
 
     private static final int MAX_NAME_LEN = 30;
 
-    private static final String REPORT_FOOTER = "======================================================";
+    private static final int HEADER_LENGTH = 54;
 
-    private static final String ROW_SEPARATOR = "------------------------------------------------------";
+    private static final String REPORT_FOOTER = new String(new char[HEADER_LENGTH]).replace("\0", "=");
+
+    private static final String ROW_SEPARATOR = new String(new char[HEADER_LENGTH]).replace("\0", "-");
 
     private NumberFormat numberFormat;
 
