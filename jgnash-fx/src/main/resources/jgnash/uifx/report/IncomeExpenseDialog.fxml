@@ -27,6 +27,11 @@
                   <FontAwesomeLabel glyphName="CLIPBOARD"/>
               </graphic>
           </Button>
+          <Button text="%Button.Print" onAction="#handlePrintAction">
+              <graphic>
+                  <FontAwesomeLabel glyphName="PRINT"/>
+              </graphic>
+          </Button>
       </ToolBar>
     </top>
     <center>
