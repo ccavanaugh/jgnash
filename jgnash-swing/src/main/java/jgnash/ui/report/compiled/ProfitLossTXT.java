@@ -24,8 +24,8 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -86,7 +86,8 @@ public class ProfitLossTXT {
         baseCommodity = engine.getDefaultCurrency();
 
         numberFormat = CommodityFormat.getFullNumberFormat(baseCommodity);
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMMMM-yyyy");
+
+        DateTimeFormatter df = DateTimeFormatter.ISO_DATE;
 
         dates = getDates();
 
