@@ -195,7 +195,7 @@ public abstract class RegisterTableController {
         });
 
         // For the table view to refresh itself if the mode changes
-        AccountBalanceDisplayManager.getAccountBalanceDisplayModeProperty().addListener((observable, oldValue, newValue) -> {
+        AccountBalanceDisplayManager.accountBalanceDisplayMode().addListener((observable, oldValue, newValue) -> {
             tableView.refresh();
         });
 

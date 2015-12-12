@@ -19,6 +19,7 @@ package jgnash.uifx.views;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 
@@ -40,11 +41,13 @@ public class AccountBalanceDisplayManager {
 
     private static final String ACCOUNT_BALANCE_DISPLAY_MODE = "accountBalanceDisplayMode";
 
-    private static final ObjectProperty<AccountBalanceDisplayMode> accountBalanceDisplayModeProperty = new SimpleObjectProperty<>();
+    private static final ObjectProperty<AccountBalanceDisplayMode> accountBalanceDisplayModeProperty
+            = new SimpleObjectProperty<>();
 
     static {
         final Preferences p = Preferences.userNodeForPackage(AccountBalanceDisplayManager.class);
-        getAccountBalanceDisplayModeProperty().setValue(AccountBalanceDisplayMode.valueOf(p.get(ACCOUNT_BALANCE_DISPLAY_MODE, AccountBalanceDisplayMode.NONE.name())));
+        accountBalanceDisplayMode().setValue(AccountBalanceDisplayMode.valueOf(p.get(ACCOUNT_BALANCE_DISPLAY_MODE,
+                AccountBalanceDisplayMode.NONE.name())));
     }
 
     private AccountBalanceDisplayManager() {
@@ -52,21 +55,24 @@ public class AccountBalanceDisplayManager {
     }
 
     private static BigDecimal reverseCredit(final AccountType accountType, final BigDecimal balance) {
-        if (accountType.getAccountGroup() == AccountGroup.EQUITY || accountType.getAccountGroup() == AccountGroup.INCOME || accountType.getAccountGroup() == AccountGroup.LIABILITY) {
+        if (accountType.getAccountGroup() == AccountGroup.EQUITY
+                || accountType.getAccountGroup() == AccountGroup.INCOME
+                || accountType.getAccountGroup() == AccountGroup.LIABILITY) {
             return balance.negate();
         }
         return balance;
     }
 
     private static BigDecimal reverseIncomeAndExpense(final AccountType accountType, final BigDecimal balance) {
-        if (accountType.getAccountGroup() == AccountGroup.INCOME || accountType.getAccountGroup() == AccountGroup.EXPENSE) {
+        if (accountType.getAccountGroup() == AccountGroup.INCOME
+                || accountType.getAccountGroup() == AccountGroup.EXPENSE) {
             return balance.negate();
         }
         return balance;
     }
 
     public static BigDecimal convertToSelectedBalanceMode(final AccountType accountType, final BigDecimal balance) {
-        switch (getDisplayMode()) {
+        switch (accountBalanceDisplayModeProperty.get()) {
             case REVERSE_INCOME_EXPENSE:
                 return reverseIncomeAndExpense(accountType, balance);
             case REVERSE_CREDIT:
@@ -78,17 +84,13 @@ public class AccountBalanceDisplayManager {
     }
 
     public static void setDisplayMode(final AccountBalanceDisplayMode newMode) {
-        getAccountBalanceDisplayModeProperty().setValue(newMode);
+        accountBalanceDisplayMode().setValue(newMode);
 
         final Preferences p = Preferences.userNodeForPackage(AccountBalanceDisplayManager.class);
-        p.put(ACCOUNT_BALANCE_DISPLAY_MODE, getAccountBalanceDisplayModeProperty().getValue().name());
+        p.put(ACCOUNT_BALANCE_DISPLAY_MODE, accountBalanceDisplayMode().getValue().name());
     }
 
-    public static AccountBalanceDisplayMode getDisplayMode() {
-        return getAccountBalanceDisplayModeProperty().getValue();
-    }
-
-    public static ObjectProperty<AccountBalanceDisplayMode> getAccountBalanceDisplayModeProperty() {
+    public static ObjectProperty<AccountBalanceDisplayMode> accountBalanceDisplayMode() {
         return accountBalanceDisplayModeProperty;
     }
 }

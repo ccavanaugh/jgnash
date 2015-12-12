@@ -67,7 +67,7 @@ public class AccountTabController {
 
         useAccountingTermsCheckBox.selectedProperty().bindBidirectional(Options.useAccountingTermsProperty());
 
-        switch (AccountBalanceDisplayManager.getDisplayMode()) {
+        switch (AccountBalanceDisplayManager.accountBalanceDisplayMode().get()) {
             case NONE:
                 noAccountsRadioButton.setSelected(true);
                 break;

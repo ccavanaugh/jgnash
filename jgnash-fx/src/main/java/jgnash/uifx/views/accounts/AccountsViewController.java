@@ -115,7 +115,7 @@ public class AccountsViewController implements MessageListener {
 
         modifyButton.disableProperty().bind(selectedAccountProperty.isNull());
 
-        AccountBalanceDisplayManager.getAccountBalanceDisplayModeProperty()
+        AccountBalanceDisplayManager.accountBalanceDisplayMode()
                 .addListener((observable, oldValue, newValue) -> {
             treeTableView.refresh();
         });
