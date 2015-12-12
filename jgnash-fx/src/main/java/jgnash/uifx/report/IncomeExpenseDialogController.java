@@ -195,7 +195,8 @@ public class IncomeExpenseDialogController {
 
             // Install tooltips on the data after it has been added to the chart
             pieChart.getData().stream().forEach(data ->
-                    Tooltip.install(data.getNode(), new Tooltip(percentFormat.format(data.getPieValue() / 100d))));
+                    Tooltip.install(data.getNode(), new Tooltip((((Account) data.getNode().getUserData()).getName()
+                            + " - " + percentFormat.format(data.getPieValue() / 100d)))));
 
             // Indicate the node can be clicked on to zoom into the next account level
             for (final PieChart.Data data : pieChart.getData()) {
