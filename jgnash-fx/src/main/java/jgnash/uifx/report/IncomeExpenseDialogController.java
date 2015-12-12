@@ -17,39 +17,22 @@
  */
 package jgnash.uifx.report;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
-
-import javax.imageio.ImageIO;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.print.PageLayout;
-import javafx.print.PageOrientation;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.transform.Scale;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -60,12 +43,9 @@ import jgnash.engine.EngineFactory;
 import jgnash.resource.cursor.CustomCursor;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
-import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.views.main.MainApplication;
-import jgnash.util.FileUtils;
 import jgnash.util.function.ParentAccountPredicate;
 
 /**
@@ -74,11 +54,6 @@ import jgnash.util.function.ParentAccountPredicate;
  * @author Craig Cavanaugh
  */
 public class IncomeExpenseDialogController {
-
-    /**
-     * Increases scale of captured image.  This could be made user configurable
-     */
-    private static final int SNAPSHOT_SCALE_FACTOR = 4;
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -245,89 +220,19 @@ public class IncomeExpenseDialogController {
         }
     }
 
-    private WritableImage takeSnapshot() {
-        // Need to disable animation for printing
-        pieChart.animatedProperty().setValue(false);
-
-        final SnapshotParameters snapshotParameters = new SnapshotParameters();
-        snapshotParameters.setTransform(new Scale(SNAPSHOT_SCALE_FACTOR, SNAPSHOT_SCALE_FACTOR));
-
-        final WritableImage image = pieChart.snapshot(snapshotParameters, null);
-
-        // Restore animation
-        pieChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
-
-        return image;
-    }
-
     @FXML
     private void handleSaveAction() {
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(resources.getString("Title.SaveFile"));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("PNG", "*.png")
-        );
-
-        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
-
-        if (file != null) {
-            final WritableImage image = takeSnapshot();
-
-            try {
-                final String type = FileUtils.getFileExtension(file.toString().toLowerCase(Locale.ROOT));
-
-                ImageIO.write(SwingFXUtils.fromFXImage(image, null), type, file);
-            } catch (final IOException e) {
-                StaticUIMethods.displayException(e);
-            }
-        }
+        ChartUtilities.saveChart(pieChart);
     }
 
     @FXML
     private void handleCopyToClipboard() {
-        final Clipboard clipboard = Clipboard.getSystemClipboard();
-        final ClipboardContent content = new ClipboardContent();
-
-        content.putImage(takeSnapshot());
-
-        clipboard.setContent(content);
+        ChartUtilities.copyToClipboard(pieChart);
     }
 
     @FXML
     private void handlePrintAction() {
-        // Manipulate a snapshot of the chart instead of the chart itself to avoid visual artifacts when scaling
-        final ImageView imageView = new ImageView(takeSnapshot());
-
-        final PrinterJob job = PrinterJob.createPrinterJob();
-
-        if (job != null) {
-
-            // Get the default page layout
-            final Printer printer = Printer.getDefaultPrinter();
-            PageLayout pageLayout = job.getJobSettings().getPageLayout();
-
-            // Request landscape orientation by default
-            pageLayout = printer.createPageLayout(pageLayout.getPaper(), PageOrientation.LANDSCAPE,
-                    Printer.MarginType.DEFAULT);
-
-            job.getJobSettings().setPageLayout(pageLayout);
-
-            if (job.showPageSetupDialog(MainApplication.getInstance().getPrimaryStage())) {
-                pageLayout = job.getJobSettings().getPageLayout();
-
-                // determine the scaling factor to fit the page
-                double scale = Math.min(pageLayout.getPrintableWidth() / imageView.getBoundsInParent().getWidth(),
-                        pageLayout.getPrintableHeight() / imageView.getBoundsInParent().getHeight());
-
-                imageView.getTransforms().add(new Scale(scale, scale));
-
-                if (job.printPage(imageView)) {
-                    job.endJob();
-                }
-            } else {
-                job.cancelJob();
-            }
-        }
+        ChartUtilities.printChart(pieChart);
     }
 
     @FXML
