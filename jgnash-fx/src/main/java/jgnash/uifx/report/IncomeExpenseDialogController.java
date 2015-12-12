@@ -91,6 +91,14 @@ public class IncomeExpenseDialogController {
     @FXML
     public void initialize() {
 
+        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue.getParent().getAccountType() != AccountType.ROOT) {
+                pieChart.setCursor(CustomCursor.getZoomOutCursor());
+            } else {
+                pieChart.setCursor(Cursor.DEFAULT);
+            }
+        });
+
         final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseDialogController.class);
 
         accountComboBox.setPredicate(new ParentAccountPredicate());
@@ -101,7 +109,7 @@ public class IncomeExpenseDialogController {
 
             final Account account = engine.getAccountByUuid(preferences.get(LAST_ACCOUNT, null));
 
-            if (account !=  null) {
+            if (account != null) {
                 accountComboBox.setValue(account);
             }
         }
@@ -120,6 +128,13 @@ public class IncomeExpenseDialogController {
         endDatePicker.valueProperty().addListener(listener);
 
         pieChart.setLegendSide(Side.RIGHT);
+
+        // zoom out
+        pieChart.setOnMouseClicked(event -> {
+            if (!nodeFocused && accountComboBox.getValue().getParent().getAccountType() != AccountType.ROOT) {
+                accountComboBox.setValue(accountComboBox.getValue().getParent());
+            }
+        });
 
         updateChart();
     }
@@ -202,21 +217,6 @@ public class IncomeExpenseDialogController {
             }
 
             pieChart.setTitle(title + " - " + accountComboBox.getValue().getName() + " - " + numberFormat.format(total));
-
-            accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue!= null && newValue.getParent().getAccountType() != AccountType.ROOT) {
-                    pieChart.setCursor(CustomCursor.getZoomOutCursor());
-                } else {
-                    pieChart.setCursor(Cursor.DEFAULT);
-                }
-            });
-
-            // zoom out
-           pieChart.setOnMouseClicked(event -> {
-                if (!nodeFocused && accountComboBox.getValue().getParent().getAccountType() != AccountType.ROOT) {
-                    accountComboBox.setValue(accountComboBox.getValue().getParent());
-                }
-            });
 
             // abs() on all values won't work if children aren't of uniform sign,
             // then again, this chart is not right to display those trees
