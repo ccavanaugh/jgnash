@@ -41,6 +41,8 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -248,6 +250,16 @@ public class IncomeExpenseDialogController {
                 StaticUIMethods.displayException(e);
             }
         }
+    }
+
+    @FXML
+    private void handleCopyToClipboard() {
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+
+        content.putImage(pieChart.snapshot(new SnapshotParameters(), null));
+
+        clipboard.setContent(content);
     }
 
     @FXML
