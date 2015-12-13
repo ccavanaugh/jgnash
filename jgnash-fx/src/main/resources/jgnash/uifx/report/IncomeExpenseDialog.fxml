@@ -41,7 +41,6 @@
                 <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
-                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
@@ -51,18 +50,17 @@
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
-            <AccountComboBox fx:id="accountComboBox" GridPane.columnSpan="5" maxWidth="Infinity"/>
+            <AccountComboBox fx:id="accountComboBox" GridPane.columnSpan="4" maxWidth="Infinity"/>
 
             <Label text="%Label.StartDate" GridPane.rowIndex="1"/>
             <DatePickerEx fx:id="startDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
             <Label text="%Label.EndDate" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
             <DatePickerEx fx:id="endDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-            <Button text="%Button.Refresh" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
 
-            <PieChart fx:id="pieChart" GridPane.rowIndex="2" GridPane.columnSpan="6"/>
+            <PieChart fx:id="pieChart" GridPane.rowIndex="2" GridPane.columnSpan="5"/>
 
-            <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="6">
+            <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="5">
                 <buttons>
                     <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
                             ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
