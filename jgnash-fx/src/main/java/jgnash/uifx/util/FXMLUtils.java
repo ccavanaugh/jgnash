@@ -107,7 +107,7 @@ public class FXMLUtils {
     }
 
     /**
-     * Reduces boilerplate code to load an fxml file
+     * Reduces boilerplate code to load a fxml file
      *
      * @param consumer       {@code Consumer to pass to the parent node},
      * @param fileName       name of the fxml file.  It's assumed to be in the same package as the consumer
@@ -130,8 +130,6 @@ public class FXMLUtils {
 
             // Inject the root into the controller
             injectParent(controller, root);
-
-            //root.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
             return controller;
         } catch (final IOException ioe) { // log and throw an unchecked exception
