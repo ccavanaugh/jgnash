@@ -10,7 +10,7 @@
 <MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="jgnash.uifx.views.main.MenuBarController">
 
-    <Menu text="%Menu.File.Name" mnemonicParsing="false">
+    <Menu text="%Menu.File.Name">
         <MenuItem onAction="#handleNewAction" text="%Menu.New.Name">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
@@ -27,12 +27,12 @@
                 <FontAwesomeLabel glyphName="FOLDER_OPEN"/>
             </graphic>
         </MenuItem>
-        <SeparatorMenuItem mnemonicParsing="false"/>
+        <SeparatorMenuItem/>
         <Menu text="%Menu.Import.Name">
             <MenuItem text="%Menu.ImportOfx.Name" fx:id="importOfxMenuItem" onAction="#handleImportOFXAction"/>
             <MenuItem text="%Menu.ImportQif.Name" fx:id="importQifMenuItem" onAction="#handleImportQIFAction"/>
         </Menu>
-        <SeparatorMenuItem mnemonicParsing="false"/>
+        <SeparatorMenuItem/>
         <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
@@ -46,53 +46,54 @@
     </Menu>
 
     <Menu fx:id="reportMenu" text="%Menu.Reports.Name">
+        <Menu text="%Menu.Export.Name">
+            <MenuItem text="%Menu.ProfitLossTXT.Name" onAction="#handleExportProfitLoss"/>
+        </Menu>
         <Menu text="%Menu.Charts.Name">
             <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
-
         </Menu>
     </Menu>
 
-    <Menu mnemonicParsing="false" text="%Menu.View.Name">
-        <Menu fx:id="themesMenu" mnemonicParsing="false" text="%Menu.Themes.Name"/>
-        <SeparatorMenuItem mnemonicParsing="false"/>
-        <MenuItem mnemonicParsing="false" text="%Menu.FontSize.Name" onAction="#handleFontSizeAction">
+    <Menu text="%Menu.View.Name">
+        <Menu fx:id="themesMenu" text="%Menu.Themes.Name"/>
+        <SeparatorMenuItem/>
+        <MenuItem text="%Menu.FontSize.Name" onAction="#handleFontSizeAction">
             <graphic>
                 <FontAwesomeLabel glyphName="TEXT_HEIGHT"/>
             </graphic>
         </MenuItem>
-        <MenuItem mnemonicParsing="false" text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
+        <MenuItem text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
     </Menu>
 
-    <Menu text="%Menu.Tools.Name" mnemonicParsing="false">
-        <Menu fx:id="securitiesMenu" mnemonicParsing="false" text="%Menu.Securities.Name">
-            <MenuItem text="%Menu.ModifyCommodity.Name" mnemonicParsing="false"
+    <Menu text="%Menu.Tools.Name">
+        <Menu fx:id="securitiesMenu" text="%Menu.Securities.Name">
+            <MenuItem text="%Menu.ModifyCommodity.Name"
                       onAction="#handleCreateModifySecuritiesAction"/>
-            <MenuItem text="%Menu.HistoryCommodity.Name" mnemonicParsing="false"
+            <MenuItem text="%Menu.HistoryCommodity.Name"
                       onAction="#handleSecuritiesHistoryAction"/>
-            <MenuItem text="%Menu.HistoryImport.Name" mnemonicParsing="false"
+            <MenuItem text="%Menu.HistoryImport.Name"
                       onAction="#handleSecurityHistoryImportAction"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name"
+            <SeparatorMenuItem/>
+            <MenuItem text="%Menu.BackgroundSecurityUpdate.Name"
                       onAction="#updateSecurities">
                 <graphic>
                     <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
                 </graphic>
             </MenuItem>
         </Menu>
-        <Menu fx:id="currenciesMenu" mnemonicParsing="false" text="%Menu.Currency.Name">
+        <Menu fx:id="currenciesMenu" text="%Menu.Currency.Name">
             <MenuItem text="%Menu.AddRemoveCurrency.Name" onAction="#handleAddRemoveCurrenciesAction"/>
             <MenuItem text="%Menu.ModifyCurrency.Name" onAction="#handleModifyCurrenciesAction"/>
             <MenuItem text="%Menu.ModifyExchangeRates.Name" onAction="#handleEditExchangeRatesAction"/>
             <MenuItem text="%Menu.DefaultCurrency.Name" onAction="#handleSetDefaultCurrencyAction"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name"
-                      onAction="#updateCurrencies">
+            <SeparatorMenuItem/>
+            <MenuItem text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
                 <graphic>
                     <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
                 </graphic>
             </MenuItem>
         </Menu>
-        <SeparatorMenuItem mnemonicParsing="false"/>
+        <SeparatorMenuItem/>
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog">
             <graphic>
                 <FontAwesomeLabel glyphName="WRENCH"/>
@@ -126,12 +127,12 @@
         </MenuItem>
     </Menu>
 
-    <Menu fx:id="windowMenu" mnemonicParsing="false" text="%Menu.Window.Name">
-        <SeparatorMenuItem mnemonicParsing="false"/>
+    <Menu fx:id="windowMenu" text="%Menu.Window.Name">
+        <SeparatorMenuItem/>
         <MenuItem text="%Menu.CloseAllWindows.Name" onAction="#closeAllWindows"/>
     </Menu>
 
-    <Menu text="%Menu.Help.Name" mnemonicParsing="false">
+    <Menu text="%Menu.Help.Name">
         <MenuItem text="%Menu.About.Name" onAction="#handleAboutAction">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
@@ -141,7 +142,7 @@
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>
-        <MenuItem mnemonicParsing="false" text="%Menu.Console.Name" onAction="#handleShowConsoleDialog">
+        <MenuItem text="%Menu.Console.Name" onAction="#handleShowConsoleDialog">
             <graphic>
                 <FontAwesomeLabel glyphName="TERMINAL"/>
             </graphic>

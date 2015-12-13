@@ -17,12 +17,25 @@
  */
 package jgnash.uifx.report;
 
+import java.io.File;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.report.ProfitLossTextReport;
+import jgnash.uifx.control.DateRangeDialogController;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.AccountBalanceDisplayManager;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -31,6 +44,8 @@ import jgnash.util.ResourceUtils;
  * @author Craig Cavanaugh
  */
 public class ReportActions {
+
+    private static final String LAST_DIR = "lastDir";
 
     public static void displayIncomeExpensePieChart() {
         ResourceBundle resources = ResourceUtils.getBundle();
@@ -46,5 +61,52 @@ public class ReportActions {
         }));
 
         stage.show();
+    }
+
+    public static void exportProfitLossReport() {
+        ResourceBundle resources = ResourceUtils.getBundle();
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final CurrencyNode baseCommodity = engine.getDefaultCurrency();
+
+        final FXMLUtils.Pair<DateRangeDialogController> pair
+                = FXMLUtils.load(DateRangeDialogController.class.getResource("DateRangeDialog.fxml"));
+
+        pair.getStage().setTitle(resources.getString("Title.ReportOptions"));
+        pair.getStage().setResizable(false);
+        pair.getStage().showAndWait();
+
+        final Optional<LocalDate[]> dates = pair.getController().getDates();
+
+        if (dates.isPresent()) {
+
+            final Preferences preferences = Preferences.userNodeForPackage(ProfitLossTextReport.class);
+
+            final String lastDir = preferences.get(LAST_DIR, null);
+
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle(ResourceUtils.getString("Title.SaveFile"));
+
+            if (lastDir != null) {
+                fileChooser.setInitialDirectory(new File(lastDir));
+            }
+
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("TXT", "*.txt")
+            );
+
+            final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+
+            if (file != null) {
+                preferences.put(LAST_DIR, file.getParent());
+
+                final ProfitLossTextReport report = new ProfitLossTextReport(file.getAbsolutePath(), dates.get()[0],
+                        dates.get()[1], baseCommodity, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
+
+                report.run();
+            }
+        }
     }
 }

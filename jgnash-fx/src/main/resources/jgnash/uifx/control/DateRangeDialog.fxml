@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.DatePickerEx?>
+
+<BorderPane fx:controller="jgnash.uifx.control.DateRangeDialogController"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog">
+    <center>
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Label text="%Label.StartDate"/>
+            <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1"/>
+
+            <Label text="%Label.EndDate" GridPane.rowIndex="1"/>
+            <DatePickerEx fx:id="endDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <ButtonBar fx:id="buttonBar" GridPane.rowIndex="2" GridPane.columnSpan="2">
+                <buttons>
+                    <Button onAction="#handleOkAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+                    <Button onAction="#handleCloseAction" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </center>
+</BorderPane>
+
+

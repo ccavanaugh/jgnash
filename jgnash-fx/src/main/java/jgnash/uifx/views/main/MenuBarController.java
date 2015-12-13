@@ -363,4 +363,9 @@ public class MenuBarController implements MessageListener {
     private void handleIncomeExpensePieChart() {
         ReportActions.displayIncomeExpensePieChart();
     }
+
+    @FXML
+    private void handleExportProfitLoss() {
+        ReportActions.exportProfitLossReport();
+    }
 }

@@ -29,7 +29,8 @@ Add last used tab or favorite tab for the transaction register.
 
 Release 2.20.0
 ----------------------
-12/12/15 Added an Income / Expense PieChart report to the jGnashFx UI. (Fx)
+12/13/15 Added the Profit and Loss text report to the jGnashFx UI. (Fx)
+12/12/15 Added the Income / Expense PieChart report to the jGnashFx UI. (Fx)
 12/12/15 The ProfitLoss text report was failing to execute. (Swing)
 12/08/15 An option to remember the last used transaction tab has been added. (Fx)
 12/07/15 An option to change button order has been added if you do not like the OS default. (Fx)
