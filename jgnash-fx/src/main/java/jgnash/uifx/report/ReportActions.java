@@ -21,10 +21,8 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.CurrencyNode;
@@ -47,27 +45,23 @@ public class ReportActions {
     private static final String LAST_DIR = "lastDir";
 
     public static void displayIncomeExpensePieChart() {
-        ResourceBundle resources = ResourceUtils.getBundle();
-
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(IncomeExpenseDialogController.class.getResource("IncomeExpenseDialog.fxml"));
+                FXMLUtils.load(IncomeExpenseDialogController.class.getResource("IncomeExpenseDialog.fxml"),
+                        ResourceUtils.getString("Title.IncomeExpenseChart"));
 
-        pair.getStage().setTitle(resources.getString("Title.IncomeExpenseChart"));
         pair.getStage().show();
     }
 
     public static void exportProfitLossReport() {
-        ResourceBundle resources = ResourceUtils.getBundle();
-
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
         final CurrencyNode baseCommodity = engine.getDefaultCurrency();
 
         final FXMLUtils.Pair<DateRangeDialogController> pair
-                = FXMLUtils.load(DateRangeDialogController.class.getResource("DateRangeDialog.fxml"));
+                = FXMLUtils.load(DateRangeDialogController.class.getResource("DateRangeDialog.fxml"),
+                ResourceUtils.getString("Title.ReportOptions"));
 
-        pair.getStage().setTitle(resources.getString("Title.ReportOptions"));
         pair.getStage().setResizable(false);
         pair.getStage().showAndWait();
 

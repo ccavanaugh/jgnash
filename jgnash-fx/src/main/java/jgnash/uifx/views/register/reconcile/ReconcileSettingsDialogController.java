@@ -161,12 +161,12 @@ public class ReconcileSettingsDialogController {
         final BigDecimal closingBalance = closingBalanceTextField.getDecimal();
 
         final FXMLUtils.Pair<ReconcileDialogController> pair =
-                FXMLUtils.load(ReconcileDialogController.class.getResource("ReconcileDialog.fxml"));
+                FXMLUtils.load(ReconcileDialogController.class.getResource("ReconcileDialog.fxml"),
+                        ResourceUtils.getString("Button.Reconcile") + " - " + accountProperty.get().getPathName());
 
         pair.getController().initialize(accountProperty.get(), statementDate, openingBalance, closingBalance);
 
         // Override the defaults set by FXMLUtils
-        pair.getStage().setTitle(ResourceUtils.getString("Button.Reconcile") + " - " + accountProperty.get().getPathName());
         pair.getStage().initModality(Modality.NONE);
         pair.getStage().initOwner(null);
 

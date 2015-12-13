@@ -155,9 +155,8 @@ public class BudgetViewController implements MessageListener {
     @FXML
     private void handleManagerAction() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml"));
-
-        pair.getStage().setTitle(resources.getString("Title.BudgetManager"));
+                FXMLUtils.load(BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml"),
+                        resources.getString("Title.BudgetManager"));
 
         pair.getStage().show();
         pair.getStage().setResizable(false);
@@ -166,9 +165,8 @@ public class BudgetViewController implements MessageListener {
     @FXML
     private void handlePropertiesAction() {
         final FXMLUtils.Pair<BudgetPropertiesDialogController> pair =
-                FXMLUtils.load(BudgetPropertiesDialogController.class.getResource("BudgetPropertiesDialog.fxml"));
-
-        pair.getStage().setTitle(resources.getString("Title.BudgetProperties"));
+                FXMLUtils.load(BudgetPropertiesDialogController.class.getResource("BudgetPropertiesDialog.fxml"),
+                        resources.getString("Title.BudgetProperties"));
 
         pair.getController().setBudget(availableBudgetsComboBox.getValue());
 

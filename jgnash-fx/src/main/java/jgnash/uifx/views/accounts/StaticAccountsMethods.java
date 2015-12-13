@@ -139,9 +139,8 @@ public final class StaticAccountsMethods {
 
     public static Optional<Account> selectAccount(@Nullable final Account parentAccount, @Nullable final Account... excluded) {
         final FXMLUtils.Pair<SelectAccountController> pair =
-                FXMLUtils.load(SelectAccountController.class.getResource("SelectAccountForm.fxml"));
-
-        pair.getStage().setTitle(ResourceUtils.getString("Title.ParentAccount"));
+                FXMLUtils.load(SelectAccountController.class.getResource("SelectAccountForm.fxml"),
+                        ResourceUtils.getString("Title.ParentAccount"));
 
         if (parentAccount != null) {
             pair.getController().setSelectedAccount(parentAccount);

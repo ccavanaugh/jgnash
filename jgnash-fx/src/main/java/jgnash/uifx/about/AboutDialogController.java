@@ -146,11 +146,10 @@ public class AboutDialogController {
 
     public static void showAndWait() {
         Platform.runLater(() -> {   // push to EDT to avoid race when loading the html files
-            final FXMLUtils.Pair pair = FXMLUtils.load(AboutDialogController.class.getResource("AboutDialog.fxml"));
+            final FXMLUtils.Pair pair = FXMLUtils.load(AboutDialogController.class.getResource("AboutDialog.fxml"),
+                    ResourceUtils.getString("Title.About"));
 
-            pair.getStage().setTitle(ResourceUtils.getString("Title.About"));
             pair.getStage().setResizable(false);
-
             pair.getStage().show();
         });
     }

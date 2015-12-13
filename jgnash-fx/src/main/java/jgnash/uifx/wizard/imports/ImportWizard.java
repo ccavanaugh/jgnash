@@ -60,12 +60,11 @@ public class ImportWizard {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
         final FXMLUtils.Pair<WizardDialogController<Settings>> pair =
-                FXMLUtils.load(WizardDialogController.class.getResource("WizardDialog.fxml"));
+                FXMLUtils.load(WizardDialogController.class.getResource("WizardDialog.fxml"),
+                        resources.getString("Title.ImportTransactions"));
 
         stage = pair.getStage();
         wizardControllerProperty().setValue(pair.getController());
-
-        stage.setTitle(resources.getString("Title.ImportTransactions"));
 
         final WizardDialogController<Settings> wizardController = wizardControllerProperty().get();
 

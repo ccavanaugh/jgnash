@@ -124,9 +124,9 @@ public class EditExchangeRatesController implements MessageListener {
 
     public static void show() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(EditExchangeRatesController.class.getResource("EditExchangeRates.fxml"));
+                FXMLUtils.load(EditExchangeRatesController.class.getResource("EditExchangeRates.fxml"),
+                        ResourceUtils.getString("Title.EditExchangeRates"));
 
-        pair.getStage().setTitle(ResourceUtils.getString("Title.EditExchangeRates"));
         pair.getStage().show();
     }
 

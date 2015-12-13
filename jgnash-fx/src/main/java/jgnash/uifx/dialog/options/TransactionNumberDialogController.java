@@ -123,9 +123,9 @@ public class TransactionNumberDialogController {
 
     public static void showAndWait() {
         final FXMLUtils.Pair<TransactionNumberDialogController> pair
-                = FXMLUtils.load(TransactionNumberDialogController.class.getResource("TransactionNumberDialog.fxml"));
+                = FXMLUtils.load(TransactionNumberDialogController.class.getResource("TransactionNumberDialog.fxml"),
+                ResourceUtils.getString("Title.DefTranNum"));
 
-        pair.getStage().setTitle(ResourceUtils.getString("Title.DefTranNum"));
         pair.getStage().showAndWait();
 
         final Optional<List<String>> items = pair.getController().returnValue;

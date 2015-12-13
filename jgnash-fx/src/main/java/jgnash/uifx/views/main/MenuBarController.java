@@ -243,8 +243,8 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleCreateModifySecuritiesAction() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml"));
-        pair.getStage().setTitle(resources.getString("Title.CreateModifyCommodities"));
+                FXMLUtils.load(CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml"),
+                        resources.getString("Title.CreateModifyCommodities"));
 
         pair.getStage().show();
     }
@@ -252,8 +252,8 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleSecuritiesHistoryAction() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(SecurityHistoryController.class.getResource("SecurityHistory.fxml"));
-        pair.getStage().setTitle(resources.getString("Title.ModifySecHistory"));
+                FXMLUtils.load(SecurityHistoryController.class.getResource("SecurityHistory.fxml"),
+                        resources.getString("Title.ModifySecHistory"));
 
         pair.getStage().show();
     }
@@ -261,8 +261,8 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleSecurityHistoryImportAction() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(SecurityHistoryController.class.getResource("HistoricalImport.fxml"));
-        pair.getStage().setTitle(resources.getString("Title.HistoryImport"));
+                FXMLUtils.load(SecurityHistoryController.class.getResource("HistoricalImport.fxml"),
+                        resources.getString("Title.HistoryImport"));
 
         pair.getStage().show();
     }
@@ -270,8 +270,8 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleAddRemoveCurrenciesAction() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(AddRemoveCurrencyController.class.getResource("AddRemoveCurrency.fxml"));
-        pair.getStage().setTitle(resources.getString("Title.AddRemCurr"));
+                FXMLUtils.load(AddRemoveCurrencyController.class.getResource("AddRemoveCurrency.fxml"),
+                        resources.getString("Title.AddRemCurr"));
 
         pair.getStage().show();
     }
@@ -283,8 +283,8 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleModifyCurrenciesAction() {
-        final FXMLUtils.Pair pair = FXMLUtils.load(ModifyCurrencyController.class.getResource("ModifyCurrency.fxml"));
-        pair.getStage().setTitle(resources.getString("Title.ModifyCurrencies"));
+        final FXMLUtils.Pair pair = FXMLUtils.load(ModifyCurrencyController.class.getResource("ModifyCurrency.fxml"),
+                resources.getString("Title.ModifyCurrencies"));
 
         pair.getStage().show();
     }
@@ -296,8 +296,8 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleFontSizeAction() {
-        final FXMLUtils.Pair pair = FXMLUtils.load(FontSizeDialogController.class.getResource("FontSizeDialog.fxml"));
-        pair.getStage().setTitle(resources.getString("Title.FontSize"));
+        final FXMLUtils.Pair pair = FXMLUtils.load(FontSizeDialogController.class.getResource("FontSizeDialog.fxml"),
+                resources.getString("Title.FontSize"));
 
         pair.getStage().setResizable(false);
 
@@ -307,8 +307,8 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleBaseColorAction() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(BaseColorDialogController.class.getResource("BaseColorDialog.fxml"));
-        pair.getStage().setTitle(resources.getString("Title.BaseColor"));
+                FXMLUtils.load(BaseColorDialogController.class.getResource("BaseColorDialog.fxml"),
+                        resources.getString("Title.BaseColor"));
 
         pair.getStage().setResizable(false);
 
@@ -317,9 +317,9 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleShowOptionDialog() {
-        final FXMLUtils.Pair pair = FXMLUtils.load(OptionDialogController.class.getResource("OptionDialog.fxml"));
+        final FXMLUtils.Pair pair = FXMLUtils.load(OptionDialogController.class.getResource("OptionDialog.fxml"),
+                resources.getString("Title.Options"));
 
-        pair.getStage().setTitle(resources.getString("Title.Options"));
         pair.getStage().setResizable(false);
         pair.getStage().show();
     }

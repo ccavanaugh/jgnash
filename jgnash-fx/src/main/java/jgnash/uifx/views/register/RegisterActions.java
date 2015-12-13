@@ -135,11 +135,11 @@ public class RegisterActions {
 
     public static void reconcileAccountAction(final Account account) {
         final FXMLUtils.Pair<ReconcileSettingsDialogController> pair =
-                FXMLUtils.load(ReconcileSettingsDialogController.class.getResource("ReconcileSettingsDialog.fxml"));
+                FXMLUtils.load(ReconcileSettingsDialogController.class.getResource("ReconcileSettingsDialog.fxml"),
+                        ResourceUtils.getString("Title.ReconcileSettings"));
 
         pair.getController().accountProperty().setValue(account);
 
-        pair.getStage().setTitle(ResourceUtils.getString("Title.ReconcileSettings"));
         pair.getStage().setResizable(false);
         pair.getStage().showAndWait();
     }

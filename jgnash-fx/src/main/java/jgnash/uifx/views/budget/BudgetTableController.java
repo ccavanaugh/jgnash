@@ -937,9 +937,8 @@ public class BudgetTableController implements MessageListener {
         Objects.requireNonNull(account);
 
         final FXMLUtils.Pair<BudgetGoalsDialogController> pair =
-                FXMLUtils.load(BudgetGoalsDialogController.class.getResource("BudgetGoalsDialog.fxml"));
-
-        pair.getStage().setTitle(resources.getString("Title.BudgetManager") + " - " + account.getName());
+                FXMLUtils.load(BudgetGoalsDialogController.class.getResource("BudgetGoalsDialog.fxml"),
+                        resources.getString("Title.BudgetManager") + " - " + account.getName());
 
         pair.getController().accountProperty().setValue(account);
         pair.getController().workingYearProperty().setValue(yearSpinner.getValue());

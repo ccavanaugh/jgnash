@@ -5,9 +5,7 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.util.Objects;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,19 +23,14 @@ public class RecurringEntryDialog {
     private final ObjectProperty<RecurringPropertiesController> controllerProperty = new SimpleObjectProperty<>();
 
     private RecurringEntryDialog(final Reminder reminder) {
-        final ResourceBundle resources = ResourceUtils.getBundle();
-
         final FXMLUtils.Pair<RecurringPropertiesController> pair =
-                FXMLUtils.load(RecurringPropertiesController.class.getResource("RecurringProperties.fxml"));
+                FXMLUtils.load(RecurringPropertiesController.class.getResource("RecurringProperties.fxml"),
+                        reminder != null ? ResourceUtils.getString("Title.ModifyReminder")
+                                : ResourceUtils.getString("Title.NewReminder"));
 
         controllerProperty.setValue(pair.getController());
 
-        Objects.requireNonNull(controllerProperty.get());
-
-        if (reminder == null) {
-            pair.getStage().setTitle(resources.getString("Title.NewReminder"));
-        } else {
-            pair.getStage().setTitle(resources.getString("Title.ModifyReminder"));
+        if (reminder != null) {
             controllerProperty.get().showReminder(reminder);
         }
 

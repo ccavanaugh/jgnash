@@ -242,10 +242,11 @@ public class FXMLUtils {
      * with the specified fxml {@code URL} as the {@code Scene}.  The default resource bundle is used.
      *
      * @param fxmlUrl the fxml {@code URL}
+     * @param title the Stage title
      * @param <C> the fxml controller type
      * @return Pair containing the Stage and controller
      */
-    public static <C> Pair<C> load(@NotNull final URL fxmlUrl) {
+    public static <C> Pair<C> load(@NotNull final URL fxmlUrl, final String title) {
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, ResourceUtils.getBundle());
 
         final Stage stage = new Stage(StageStyle.DECORATED);
@@ -261,6 +262,7 @@ public class FXMLUtils {
 
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+            stage.setTitle(title);
 
             stage.sizeToScene();    // force a resize, some stages need a push
 

@@ -190,9 +190,8 @@ public class ConsoleDialogController {
             visible.set(true);
 
             final FXMLUtils.Pair pair =
-                    FXMLUtils.load(ConsoleDialogController.class.getResource("ConsoleDialog.fxml"));
-
-            pair.getStage().setTitle(ResourceUtils.getString("Title.Console"));
+                    FXMLUtils.load(ConsoleDialogController.class.getResource("ConsoleDialog.fxml"),
+                            ResourceUtils.getString("Title.Console"));
 
             // Override the defaults set by FXMLUtils
             pair.getStage().initModality(Modality.NONE);
