@@ -25,10 +25,12 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
+import jgnash.util.ResourceUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -51,6 +53,29 @@ public class FXMLUtils {
 
     private FXMLUtils() {
         // Utility class
+    }
+
+    /**
+     * A pair consisting of the Stage and fxml controller
+     *
+     * @param <C> the fxml controller type
+     */
+    public static class Pair<C> {
+        private final C controller;
+        private final Stage stage;
+
+        public Pair(final C controller, final Stage stage) {
+            this.controller = controller;
+            this.stage = stage;
+        }
+
+        public C getController() {
+            return controller;
+        }
+
+        public Stage getStage() {
+            return stage;
+        }
     }
 
     /**
@@ -295,5 +320,47 @@ public class FXMLUtils {
         });
 
         return stage;
+    }
+
+    /**
+     * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
+     * with the specified fxml {@code URL} as the {@code Scene}.  The default resource bundle is used.
+     *
+     * @param fxmlUrl the fxml {@code URL}
+     * @param <C> the fxml controller type
+     * @return Pair containing the Stage and controller
+     */
+    public static <C> Pair<C> load(@NotNull final URL fxmlUrl) {
+        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, ResourceUtils.getBundle());
+
+        final Stage stage = new Stage(StageStyle.DECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+
+        try {
+            final Scene scene = new Scene(fxmlLoader.load());
+            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+            scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+
+            final C controller = fxmlLoader.getController();
+
+            stage.setScene(scene);
+            stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+
+            stage.sizeToScene();    // force a resize, some stages need a push
+
+            // Inject the scene into the controller
+            injectParent(controller, scene);
+
+            stage.setOnShown(event -> Platform.runLater(() -> {
+                stage.setMinHeight(stage.getHeight());
+                stage.setMinWidth(stage.getWidth());
+            }));
+
+            return new Pair<>(controller, stage);
+        } catch (final IOException ioe) { // log and throw an unchecked exception
+            Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
+            throw new UncheckedIOException(ioe);
+        }
     }
 }
