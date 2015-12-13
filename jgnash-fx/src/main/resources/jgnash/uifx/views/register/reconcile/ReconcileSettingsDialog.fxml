@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
+
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
           fx:controller="jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController"
           minHeight="-Infinity" minWidth="-Infinity" styleClass="dialog, form">
@@ -29,7 +30,7 @@
     <DecimalTextField fx:id="openingBalanceTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
     <Label text="%Label.EndingBalance" GridPane.rowIndex="2"/>
     <DecimalTextField fx:id="closingBalanceTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    <ButtonBar GridPane.columnSpan="2" GridPane.rowIndex="3">
+    <ButtonBar fx:id="buttonBar" GridPane.columnSpan="2" GridPane.rowIndex="3">
         <buttons>
             <Button text="%Button.Ok" onAction="#handleOkayAction"/>
             <Button text="%Button.Cancel" onAction="#handleCloseAction"/>

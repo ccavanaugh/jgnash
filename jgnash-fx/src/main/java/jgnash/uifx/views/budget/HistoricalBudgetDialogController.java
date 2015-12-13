@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -34,6 +35,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetFactory;
 import jgnash.engine.budget.BudgetPeriod;
+import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.TextResource;
 
@@ -43,6 +45,9 @@ import jgnash.util.TextResource;
  * @author Craig Cavanaugh
  */
 public class HistoricalBudgetDialogController {
+
+    @FXML
+    private ButtonBar buttonBar;
 
     @FXML
     private TextFlow textFlow;
@@ -64,6 +69,8 @@ public class HistoricalBudgetDialogController {
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         periodComboBox.getItems().addAll(BudgetPeriod.values());
         periodComboBox.setValue(BudgetPeriod.MONTHLY);
 

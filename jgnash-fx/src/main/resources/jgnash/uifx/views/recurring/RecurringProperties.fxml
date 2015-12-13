@@ -100,7 +100,7 @@
 
     </TitledPane>
 
-    <ButtonBar VBox.vgrow="NEVER">
+    <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER">
         <buttons>
             <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
             <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>

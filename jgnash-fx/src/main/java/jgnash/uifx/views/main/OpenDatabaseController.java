@@ -23,6 +23,7 @@ import java.util.prefs.Preferences;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -30,6 +31,7 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import jgnash.engine.EngineFactory;
+import jgnash.uifx.Options;
 import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.tasks.BootEngineTask;
@@ -42,6 +44,9 @@ import jgnash.uifx.tasks.BootEngineTask;
 public class OpenDatabaseController {
 
     private static final String LAST_DIR = "LastDir";
+
+    @FXML
+    protected ButtonBar buttonBar;
 
     @FXML
     private ResourceBundle resources;
@@ -63,6 +68,8 @@ public class OpenDatabaseController {
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         updateControlsState();
 
         setDatabaseField(EngineFactory.getLastDatabase());

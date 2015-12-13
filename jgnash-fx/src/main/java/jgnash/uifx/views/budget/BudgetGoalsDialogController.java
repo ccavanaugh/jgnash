@@ -30,6 +30,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
@@ -47,6 +48,7 @@ import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
 import jgnash.engine.budget.Pattern;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DecimalTextField;
 
@@ -54,6 +56,9 @@ import jgnash.uifx.control.DecimalTextField;
  * @author Craig Cavanaugh
  */
 public class BudgetGoalsDialogController {
+
+    @FXML
+    private ButtonBar buttonBar;
 
     @FXML
     private DecimalTextField fillPatternAmountDecimalTextField;
@@ -97,6 +102,8 @@ public class BudgetGoalsDialogController {
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         endRowSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1));
         startRowSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1));
 

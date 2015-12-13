@@ -12,7 +12,7 @@
 <?import javafx.scene.text.TextFlow?>
 
 <GridPane fx:controller="jgnash.uifx.views.budget.HistoricalBudgetDialogController"
-        xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" styleClass="form, dialog">
+          xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER"/>
         <ColumnConstraints hgrow="ALWAYS"/>
@@ -36,12 +36,10 @@
 
     <CheckBox fx:id="roundupCheckBox" text="%Button.RoundToWhole" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
 
-    <ButtonBar GridPane.rowIndex="4" GridPane.columnSpan="2">
+    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="4" GridPane.columnSpan="2">
         <buttons>
-            <Button fx:id="okButton" onAction="#handleOkAction" text="%Button.Ok"
-                    ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
-            <Button onAction="#handleCancelAction" text="%Button.Cancel"
-                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+            <Button fx:id="okButton" onAction="#handleOkAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+            <Button onAction="#handleCancelAction" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>

@@ -30,11 +30,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.Options;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
@@ -49,6 +51,9 @@ public class TextInputDialog {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private ButtonBar buttonBar;
 
     @FXML
     private Button okButton;
@@ -77,6 +82,8 @@ public class TextInputDialog {
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         okButton.setOnAction(event -> handleOkayAction());
         cancelButton.setOnAction(event -> handleCancelAction());
         okButton.disableProperty().bind(textField.textProperty().isEmpty());
@@ -85,10 +92,6 @@ public class TextInputDialog {
     public void setTitle(final String title) {
         dialog.setTitle(title);
     }
-
-    /*public void initOwner(final Window window) {
-        dialog.initOwner(window);
-    }*/
 
     public void setContentText(final String contentText) {
         message.setText(contentText);

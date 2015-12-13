@@ -19,12 +19,12 @@
     </rowConstraints>
     <Label fx:id="message" text="No Content" wrapText="true" minWidth="150" graphicTextGap="15"/>
     <TextField fx:id="textField" GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="Infinity"/>
-    <ButtonBar GridPane.rowIndex="1" GridPane.columnSpan="2">
+    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="1" GridPane.columnSpan="2">
         <buttons>
             <Button fx:id="okButton" text="%Button.Ok"
-                    ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
+                    ButtonBar.buttonData="OK_DONE"/>
             <Button fx:id="cancelButton" text="%Button.Cancel"
-                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+                    ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>

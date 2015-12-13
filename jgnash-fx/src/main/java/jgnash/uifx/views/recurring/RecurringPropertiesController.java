@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.engine.recurring.*;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.IntegerTextField;
@@ -49,6 +50,9 @@ public class RecurringPropertiesController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private ButtonBar buttonBar;
 
     @FXML
     private ResourceBundle resources;
@@ -93,6 +97,8 @@ public class RecurringPropertiesController {
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         tabMap.put(OneTimeReminder.class, 0);
         tabMap.put(DailyReminder.class, 1);
         tabMap.put(WeeklyReminder.class, 2);

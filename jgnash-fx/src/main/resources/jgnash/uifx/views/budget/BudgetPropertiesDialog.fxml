@@ -49,12 +49,10 @@
         </GridPane>
     </TitledPane>
 
-    <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="2">
+    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="3" GridPane.columnSpan="2">
         <buttons>
-            <Button mnemonicParsing="false" onAction="#handleOkayAction" text="%Button.Ok"
-                    ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
-            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Cancel"
-                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+            <Button onAction="#handleOkayAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+            <Button onAction="#handleCloseAction" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>

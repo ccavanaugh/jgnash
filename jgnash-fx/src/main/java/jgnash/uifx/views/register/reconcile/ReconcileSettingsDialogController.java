@@ -29,6 +29,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -36,6 +37,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.util.FXMLUtils;
@@ -57,6 +59,9 @@ public class ReconcileSettingsDialogController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private ButtonBar buttonBar;
+
+    @FXML
     private DecimalTextField openingBalanceTextField;
 
     @FXML
@@ -69,6 +74,8 @@ public class ReconcileSettingsDialogController {
 
     @FXML
     private void initialize() {
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
         accountProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 determineBalances();

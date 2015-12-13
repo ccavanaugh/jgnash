@@ -33,9 +33,11 @@
     <Label text="%Label.Currency" labelFor="$currencyLabel" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <Label fx:id="currencyLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-    <TableView fx:id="goalTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" prefHeight="200"/>
+    <TableView fx:id="goalTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"
+               prefHeight="200"/>
 
-    <TitledPane text="%Title.SmartFill" collapsible="false" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.rowSpan="3">
+    <TitledPane text="%Title.SmartFill" collapsible="false" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                GridPane.rowSpan="3">
         <GridPane styleClass="form">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER"/>
@@ -53,7 +55,8 @@
                 <RowConstraints vgrow="ALWAYS" valignment="BOTTOM"/>
             </rowConstraints>
 
-            <Button text="%Button.HistoricalFill" onAction="#handleHistoricalFill" GridPane.columnSpan="2" maxWidth="Infinity"/>
+            <Button text="%Button.HistoricalFill" onAction="#handleHistoricalFill" GridPane.columnSpan="2"
+                    maxWidth="Infinity"/>
             <Separator orientation="HORIZONTAL" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
             <GridPane styleClass="form" GridPane.rowIndex="2" GridPane.columnSpan="2">
                 <columnConstraints>
@@ -80,24 +83,22 @@
             <Spinner fx:id="endRowSpinner" GridPane.rowIndex="6" GridPane.columnIndex="1" maxWidth="Infinity"/>
 
             <Label text="%Label.Amount" GridPane.rowIndex="7"/>
-            <DecimalTextField fx:id="fillPatternAmountDecimalTextField" GridPane.rowIndex="7" GridPane.columnIndex="1" maxWidth="Infinity"/>
+            <DecimalTextField fx:id="fillPatternAmountDecimalTextField" GridPane.rowIndex="7" GridPane.columnIndex="1"
+                              maxWidth="Infinity"/>
 
             <ButtonBar GridPane.rowIndex="8" GridPane.columnSpan="2">
                 <buttons>
-                    <Button onAction="#handlePatternFillAction" text="%Button.Enter"
-                            ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
+                    <Button onAction="#handlePatternFillAction" text="%Button.Enter" ButtonBar.buttonData="OK_DONE"/>
                 </buttons>
             </ButtonBar>
 
         </GridPane>
     </TitledPane>
 
-    <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="3">
+    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="3" GridPane.columnSpan="3">
         <buttons>
-            <Button mnemonicParsing="false" onAction="#handleOkayAction" text="%Button.Ok"
-                    ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
-            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Cancel"
-                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+            <Button onAction="#handleOkayAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+            <Button onAction="#handleCloseAction" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>

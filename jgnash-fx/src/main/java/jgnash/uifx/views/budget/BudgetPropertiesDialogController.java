@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -30,11 +31,15 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetPeriod;
+import jgnash.uifx.Options;
 
 /**
  * @author Craig Cavanaugh
  */
 public class BudgetPropertiesDialogController {
+
+    @FXML
+    private ButtonBar buttonBar;
 
     @FXML
     private CheckBox incomeCheckBox;
@@ -63,6 +68,8 @@ public class BudgetPropertiesDialogController {
 
     @FXML
     public void handleOkayAction() {
+
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
         boolean modified = false;
 
