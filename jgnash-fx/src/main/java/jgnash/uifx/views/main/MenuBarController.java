@@ -360,6 +360,11 @@ public class MenuBarController implements MessageListener {
     }
 
     @FXML
+    private void handleIncomeExpenseBarChart() {
+        ReportActions.displayIncomeExpenseBarChart();
+    }
+
+    @FXML
     private void handleExportProfitLoss() {
         ReportActions.exportProfitLossReport();
     }

@@ -52,6 +52,14 @@ public class ReportActions {
         pair.getStage().show();
     }
 
+    public static void displayIncomeExpenseBarChart() {
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(IncomeExpenseBarChartDialogController.class.getResource("IncomeExpenseBarChartDialog.fxml"),
+                        ResourceUtils.getString("Title.IncomeExpenseBarChart"));
+
+        pair.getStage().show();
+    }
+
     public static void exportProfitLossReport() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);

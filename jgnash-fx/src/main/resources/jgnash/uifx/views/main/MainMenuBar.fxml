@@ -50,6 +50,7 @@
             <MenuItem text="%Menu.ProfitLossTXT.Name" onAction="#handleExportProfitLoss"/>
         </Menu>
         <Menu text="%Menu.Charts.Name">
+            <MenuItem text="%Menu.IEBarChart.Name" onAction="#handleIncomeExpenseBarChart"/>
             <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
         </Menu>
     </Menu>
