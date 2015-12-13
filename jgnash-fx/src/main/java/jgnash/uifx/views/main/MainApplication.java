@@ -86,7 +86,7 @@ public class MainApplication extends Application implements MessageListener {
 
     private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
-    private final ResourceBundle rb = ResourceUtils.getBundle();
+    private final ResourceBundle resources = ResourceUtils.getBundle();
 
     private final Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
@@ -135,11 +135,11 @@ public class MainApplication extends Application implements MessageListener {
 
         busyPane = new BusyPane();
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
+        final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), resources);
 
         final MenuBar menuBar = fxmlLoader.load();
 
-        final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), rb);
+        final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), resources);
 
         tabViewPane = new TabViewPane();
 
@@ -192,20 +192,20 @@ public class MainApplication extends Application implements MessageListener {
     private void addViews() {
 
         backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
-                FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"),
-                        ResourceUtils.getBundle()), rb.getString("Tab.Accounts"))));
+                FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"), resources),
+                resources.getString("Tab.Accounts"))));
 
         backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
-                FXMLUtils.load(RegisterViewController.class.getResource("RegisterView.fxml"),
-                        ResourceUtils.getBundle()), rb.getString("Tab.Register"))));
+                FXMLUtils.load(RegisterViewController.class.getResource("RegisterView.fxml"), resources),
+                resources.getString("Tab.Register"))));
 
         backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
-                FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"),
-                        ResourceUtils.getBundle()), rb.getString("Tab.Reminders"))));
+                FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"), resources),
+                resources.getString("Tab.Reminders"))));
 
         backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
-                    FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"),
-                            ResourceUtils.getBundle()), rb.getString("Tab.Budgeting"))));
+                    FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"), resources),
+                resources.getString("Tab.Budgeting"))));
 
         backgroundExecutor.execute(() ->
                 Platform.runLater(() -> {
@@ -288,18 +288,18 @@ public class MainApplication extends Application implements MessageListener {
                 });
                 break;
             case FILE_IO_ERROR:
-                logger.warning(rb.getString("Message.Error.IOError"));
-                StaticUIMethods.displayError(rb.getString("Message.Error.IOError"));
+                logger.warning(resources.getString("Message.Error.IOError"));
+                StaticUIMethods.displayError(resources.getString("Message.Error.IOError"));
                 break;
             case FILE_LOAD_FAILED:
-                logger.warning(rb.getString("Message.Error.LoadingFile"));
-                StaticUIMethods.displayError(rb.getString("Message.Error.LoadingFile"));
+                logger.warning(resources.getString("Message.Error.LoadingFile"));
+                StaticUIMethods.displayError(resources.getString("Message.Error.LoadingFile"));
                 break;
             case FILE_NOT_FOUND:
-                logger.warning(rb.getString("Message.Error.FileNotFound"));
+                logger.warning(resources.getString("Message.Error.FileNotFound"));
                 break;
             case ACCOUNT_REMOVE_FAILED:
-                StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
+                StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
                 break;
             case BACKGROUND_PROCESS_STARTED:
                 setBusyBackground(true);
