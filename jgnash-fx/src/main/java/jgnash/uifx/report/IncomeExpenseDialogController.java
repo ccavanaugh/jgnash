@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -128,7 +129,8 @@ public class IncomeExpenseDialogController {
             }
         });
 
-        updateChart();
+        // Push the initial load to the end of the platform thread for better startup and nicer visual effect
+        Platform.runLater(this::updateChart);
     }
 
     private void updateChart() {
