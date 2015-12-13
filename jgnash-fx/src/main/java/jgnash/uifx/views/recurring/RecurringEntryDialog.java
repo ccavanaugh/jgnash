@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.stage.Stage;
 
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.util.FXMLUtils;
@@ -28,23 +27,25 @@ public class RecurringEntryDialog {
     private RecurringEntryDialog(final Reminder reminder) {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        final Stage stage = FXMLUtils.loadFXML(RecurringPropertiesController.class.getResource("RecurringProperties.fxml")
-                , controllerProperty, ResourceUtils.getBundle());
+        final FXMLUtils.Pair<RecurringPropertiesController> pair =
+                FXMLUtils.load(RecurringPropertiesController.class.getResource("RecurringProperties.fxml"));
+
+        controllerProperty.setValue(pair.getController());
 
         Objects.requireNonNull(controllerProperty.get());
 
         if (reminder == null) {
-            stage.setTitle(resources.getString("Title.NewReminder"));
+            pair.getStage().setTitle(resources.getString("Title.NewReminder"));
         } else {
-            stage.setTitle(resources.getString("Title.ModifyReminder"));
+            pair.getStage().setTitle(resources.getString("Title.ModifyReminder"));
             controllerProperty.get().showReminder(reminder);
         }
 
-        stage.setResizable(false);
+        pair.getStage().setResizable(false);
 
-        StageUtils.addBoundsListener(stage, RecurringEntryDialog.class);
+        StageUtils.addBoundsListener(pair.getStage(), RecurringEntryDialog.class);
 
-        stage.show();
+        pair.getStage().show();
     }
 
     public static Optional<Reminder> showAndWait(final Reminder reminder) {

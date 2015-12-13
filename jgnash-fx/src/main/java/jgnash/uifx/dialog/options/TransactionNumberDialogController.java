@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.dialog.options;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -123,15 +122,13 @@ public class TransactionNumberDialogController {
     }
 
     public static void showAndWait() {
-        final ObjectProperty<TransactionNumberDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
+        final FXMLUtils.Pair<TransactionNumberDialogController> pair
+                = FXMLUtils.load(TransactionNumberDialogController.class.getResource("TransactionNumberDialog.fxml"));
 
-        final URL fxmlUrl = TransactionNumberDialogController.class.getResource("TransactionNumberDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, ResourceUtils.getBundle());
-        stage.setTitle(ResourceUtils.getString("Title.DefTranNum"));
+        pair.getStage().setTitle(ResourceUtils.getString("Title.DefTranNum"));
+        pair.getStage().showAndWait();
 
-        stage.showAndWait();
-
-        final Optional<List<String>> items = controllerObjectProperty.get().returnValue;
+        final Optional<List<String>> items = pair.getController().returnValue;
 
         if (items.isPresent()) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);

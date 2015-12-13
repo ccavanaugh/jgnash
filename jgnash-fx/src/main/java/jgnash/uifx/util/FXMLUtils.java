@@ -278,52 +278,6 @@ public class FXMLUtils {
 
     /**
      * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
-     * with the specified fxml {@code URL} as the {@code Scene}.  The controller is returned via a {@code Consumer}
-     *
-     * @param fxmlUrl        the fxml {@code URL}
-     * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
-     * @param consumer       {@code ObjectProperty} to store the controller in
-     * @param <C>            the fxml controller
-     * @return new {@code Stage}
-     */
-    public static <C> Stage loadFXML(@NotNull final URL fxmlUrl, @NotNull final ObjectProperty<C> consumer,
-                                     @NotNull final ResourceBundle resourceBundle) {
-        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
-
-        final Stage stage = new Stage(StageStyle.DECORATED);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
-
-        try {
-            final Scene scene = new Scene(fxmlLoader.load());
-            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
-            scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
-
-            C controller = fxmlLoader.getController();
-            consumer.setValue(controller);
-
-            stage.setScene(scene);
-            stage.getIcons().add(StaticUIMethods.getApplicationIcon());
-
-            stage.sizeToScene();    // force a resize, some stages need a push
-
-            // Inject the scene into the controller
-            injectParent(controller, scene);
-        } catch (final IOException ioe) { // log and throw an unchecked exception
-            Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
-            throw new UncheckedIOException(ioe);
-        }
-
-        Platform.runLater(() -> {
-            stage.setMinWidth(stage.getWidth());
-            stage.setMinHeight(stage.getHeight());
-        });
-
-        return stage;
-    }
-
-    /**
-     * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
      * with the specified fxml {@code URL} as the {@code Scene}.  The default resource bundle is used.
      *
      * @param fxmlUrl the fxml {@code URL}

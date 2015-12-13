@@ -1,7 +1,6 @@
 package jgnash.uifx.views.budget;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -938,25 +936,24 @@ public class BudgetTableController implements MessageListener {
     private void handleEditAccountGoals(@NotNull final Account account) {
         Objects.requireNonNull(account);
 
-        final ObjectProperty<BudgetGoalsDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
+        final FXMLUtils.Pair<BudgetGoalsDialogController> pair =
+                FXMLUtils.load(BudgetGoalsDialogController.class.getResource("BudgetGoalsDialog.fxml"));
 
-        final URL fxmlUrl = BudgetGoalsDialogController.class.getResource("BudgetGoalsDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, resources);
-        stage.setTitle(resources.getString("Title.BudgetManager") + " - " + account.getName());
+        pair.getStage().setTitle(resources.getString("Title.BudgetManager") + " - " + account.getName());
 
-        controllerObjectProperty.get().accountProperty().setValue(account);
-        controllerObjectProperty.get().workingYearProperty().setValue(yearSpinner.getValue());
+        pair.getController().accountProperty().setValue(account);
+        pair.getController().workingYearProperty().setValue(yearSpinner.getValue());
 
         try {
             final BudgetGoal oldGoal = (BudgetGoal) budgetProperty().get().getBudgetGoal(account).clone();
-            controllerObjectProperty.get().budgetGoalProperty().setValue(oldGoal);
+            pair.getController().budgetGoalProperty().setValue(oldGoal);
         } catch (final CloneNotSupportedException e) {
             Logger.getLogger(BudgetTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
-        stage.showAndWait();
+        pair.getStage().showAndWait();
 
-        final Optional<BudgetGoal> result = controllerObjectProperty.get().getResult();
+        final Optional<BudgetGoal> result = pair.getController().getResult();
 
         if (result.isPresent()) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);

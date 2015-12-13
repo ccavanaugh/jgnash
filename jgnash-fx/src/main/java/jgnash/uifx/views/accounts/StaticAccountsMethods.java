@@ -17,12 +17,9 @@
  */
 package jgnash.uifx.views.accounts;
 
-import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -141,21 +138,20 @@ public final class StaticAccountsMethods {
     }
 
     public static Optional<Account> selectAccount(@Nullable final Account parentAccount, @Nullable final Account... excluded) {
-        final ObjectProperty<SelectAccountController> controllerObjectProperty = new SimpleObjectProperty<>();
+        final FXMLUtils.Pair<SelectAccountController> pair =
+                FXMLUtils.load(SelectAccountController.class.getResource("SelectAccountForm.fxml"));
 
-        final URL fxmlUrl = SelectAccountController.class.getResource("SelectAccountForm.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, ResourceUtils.getBundle());
-        stage.setTitle(ResourceUtils.getString("Title.ParentAccount"));
+        pair.getStage().setTitle(ResourceUtils.getString("Title.ParentAccount"));
 
         if (parentAccount != null) {
-            controllerObjectProperty.get().setSelectedAccount(parentAccount);
+            pair.getController().setSelectedAccount(parentAccount);
         }
 
         // add excluded accounts if any
-        controllerObjectProperty.get().addExcludeAccounts(excluded);
+        pair.getController().addExcludeAccounts(excluded);
 
-        stage.showAndWait();
+        pair.getStage().showAndWait();
 
-        return controllerObjectProperty.get().getSelectedAccount();
+        return pair.getController().getSelectedAccount();
     }
 }

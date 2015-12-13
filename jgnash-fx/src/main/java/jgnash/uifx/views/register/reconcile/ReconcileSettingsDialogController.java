@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register.reconcile;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -161,24 +160,20 @@ public class ReconcileSettingsDialogController {
         final BigDecimal openingBalance = openingBalanceTextField.getDecimal();
         final BigDecimal closingBalance = closingBalanceTextField.getDecimal();
 
-        final ObjectProperty<ReconcileDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
+        final FXMLUtils.Pair<ReconcileDialogController> pair =
+                FXMLUtils.load(ReconcileDialogController.class.getResource("ReconcileDialog.fxml"));
 
-        final URL fxmlUrl = ReconcileDialogController.class.getResource("ReconcileDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, ResourceUtils.getBundle());
-        stage.setTitle(ResourceUtils.getString("Button.Reconcile") + " - " + accountProperty.get().getPathName());
-
-        Objects.requireNonNull(controllerObjectProperty.get());
-
-        controllerObjectProperty.get().initialize(accountProperty.get(), statementDate, openingBalance, closingBalance);
+        pair.getController().initialize(accountProperty.get(), statementDate, openingBalance, closingBalance);
 
         // Override the defaults set by FXMLUtils
-        stage.initModality(Modality.NONE);
-        stage.initOwner(null);
+        pair.getStage().setTitle(ResourceUtils.getString("Button.Reconcile") + " - " + accountProperty.get().getPathName());
+        pair.getStage().initModality(Modality.NONE);
+        pair.getStage().initOwner(null);
 
         Platform.runLater(() -> {
-            stage.show();
-            stage.setMinWidth(stage.getWidth());
-            stage.setMinHeight(stage.getHeight());
+            pair.getStage().show();
+            pair.getStage().setMinWidth(pair.getStage().getWidth());
+            pair.getStage().setMinHeight(pair.getStage().getHeight());
         });
 
         new Thread() { // push account updates outside the UI thread to improve performance

@@ -18,7 +18,6 @@
 package jgnash.uifx.wizard.imports;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,9 +59,12 @@ public class ImportWizard {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        final URL fxmlUrl = WizardDialogController.class.getResource("WizardDialog.fxml");
+        final FXMLUtils.Pair<WizardDialogController<Settings>> pair =
+                FXMLUtils.load(WizardDialogController.class.getResource("WizardDialog.fxml"));
 
-        stage = FXMLUtils.loadFXML(fxmlUrl, wizardControllerProperty(), ResourceUtils.getBundle());
+        stage = pair.getStage();
+        wizardControllerProperty().setValue(pair.getController());
+
         stage.setTitle(resources.getString("Title.ImportTransactions"));
 
         final WizardDialogController<Settings> wizardController = wizardControllerProperty().get();

@@ -18,16 +18,12 @@
 package jgnash.uifx.wizard.file;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.DataStoreType;
@@ -63,17 +59,15 @@ public class NewFileWizard {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        final ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty = new SimpleObjectProperty<>();
+        final FXMLUtils.Pair<WizardDialogController> pair =
+                FXMLUtils.load(WizardDialogController.class.getResource("WizardDialog.fxml"));
 
-        final URL fxmlUrl = WizardDialogController.class.getResource("WizardDialog.fxml");
+        pair.getStage().setTitle(resources.getString("Title.NewFile"));
 
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, wizardControllerProperty, ResourceUtils.getBundle());
-        stage.setTitle(resources.getString("Title.NewFile"));
+        final WizardDialogController<Settings> wizardController = pair.getController();
 
-        wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
-        wizardControllerProperty.get().setSetting(Settings.DEFAULT_CURRENCIES, DefaultCurrencies.generateCurrencies());
-
-        final WizardDialogController<Settings> wizardController =  wizardControllerProperty.get();
+        wizardController.setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
+        wizardController.setSetting(Settings.DEFAULT_CURRENCIES, DefaultCurrencies.generateCurrencies());
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewFileOne.fxml"), resources);
@@ -100,16 +94,15 @@ public class NewFileWizard {
             e.printStackTrace();
         }
 
-        stage.setResizable(false);
-
-        stage.showAndWait();
+        pair.getStage().setResizable(false);
+        pair.getStage().showAndWait();
 
         if (wizardController.validProperty().get()) {
             final String database = (String) wizardController.getSetting(Settings.DATABASE_NAME);
             final Set<CurrencyNode> nodes = (Set<CurrencyNode>) wizardController.getSetting(Settings.CURRENCIES);
             final CurrencyNode defaultCurrency = (CurrencyNode) wizardController.getSetting(Settings.DEFAULT_CURRENCY);
-            final DataStoreType type = (DataStoreType)wizardController.getSetting(Settings.TYPE);
-            final String password = (String)wizardController.getSetting(Settings.PASSWORD);
+            final DataStoreType type = (DataStoreType) wizardController.getSetting(Settings.TYPE);
+            final String password = (String) wizardController.getSetting(Settings.PASSWORD);
             final List<RootAccount> accountList = (List<RootAccount>) wizardController.getSetting(Settings.ACCOUNT_SET);
 
             // Ensure file extension matches data store type

@@ -17,9 +17,15 @@
  */
 package jgnash.uifx.views.budget;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
+
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,6 +33,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
@@ -38,14 +45,6 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.main.MainApplication;
-
-import java.io.File;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 /**
  * @author Craig Cavanaugh
@@ -167,16 +166,15 @@ public class BudgetViewController implements MessageListener {
 
     @FXML
     private void handlePropertiesAction() {
-        final ObjectProperty<BudgetPropertiesDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
+        final FXMLUtils.Pair<BudgetPropertiesDialogController> pair =
+                FXMLUtils.load(BudgetPropertiesDialogController.class.getResource("BudgetPropertiesDialog.fxml"));
 
-        final URL fxmlUrl = BudgetPropertiesDialogController.class.getResource("BudgetPropertiesDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, resources);
-        stage.setTitle(resources.getString("Title.BudgetProperties"));
+        pair.getStage().setTitle(resources.getString("Title.BudgetProperties"));
 
-        controllerObjectProperty.get().setBudget(availableBudgetsComboBox.getValue());
+        pair.getController().setBudget(availableBudgetsComboBox.getValue());
 
-        stage.show();
-        stage.setResizable(false);
+        pair.getStage().show();
+        pair.getStage().setResizable(false);
     }
 
     @Override

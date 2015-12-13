@@ -17,26 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.concurrent.Task;
-import javafx.scene.control.ButtonType;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import jgnash.convert.exports.csv.CsvExport;
-import jgnash.convert.exports.ofx.OfxExport;
-import jgnash.convert.exports.ssf.AccountExport;
-import jgnash.engine.*;
-import jgnash.uifx.Options;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.views.main.MainApplication;
-import jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController;
-import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
-
 import java.io.File;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +26,27 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
+import javafx.concurrent.Task;
+import javafx.scene.control.ButtonType;
+import javafx.stage.FileChooser;
+
+import jgnash.convert.exports.csv.CsvExport;
+import jgnash.convert.exports.ofx.OfxExport;
+import jgnash.convert.exports.ssf.AccountExport;
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.Transaction;
+import jgnash.uifx.Options;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController;
+import jgnash.util.FileUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -132,18 +134,14 @@ public class RegisterActions {
     }
 
     public static void reconcileAccountAction(final Account account) {
-        final ObjectProperty<ReconcileSettingsDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
+        final FXMLUtils.Pair<ReconcileSettingsDialogController> pair =
+                FXMLUtils.load(ReconcileSettingsDialogController.class.getResource("ReconcileSettingsDialog.fxml"));
 
-        final URL fxmlUrl = ReconcileSettingsDialogController.class.getResource("ReconcileSettingsDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, ResourceUtils.getBundle());
-        stage.setTitle(ResourceUtils.getString("Title.ReconcileSettings"));
+        pair.getController().accountProperty().setValue(account);
 
-        Objects.requireNonNull(controllerObjectProperty.get());
-
-        controllerObjectProperty.get().accountProperty().setValue(account);
-
-        stage.setResizable(false);
-        stage.showAndWait();
+        pair.getStage().setTitle(ResourceUtils.getString("Title.ReconcileSettings"));
+        pair.getStage().setResizable(false);
+        pair.getStage().showAndWait();
     }
 
     static void exportTransactions(final Account account, final LocalDate startDate, final LocalDate endDate) {
