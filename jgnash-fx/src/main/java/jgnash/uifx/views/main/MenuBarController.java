@@ -53,7 +53,7 @@ import jgnash.uifx.dialog.options.OptionDialogController;
 import jgnash.uifx.dialog.options.TransactionNumberDialogController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
-import jgnash.uifx.report.IncomeExpenseDialogController;
+import jgnash.uifx.report.ReportActions;
 import jgnash.uifx.skin.BaseColorDialogController;
 import jgnash.uifx.skin.FontSizeDialogController;
 import jgnash.uifx.skin.ThemeManager;
@@ -361,16 +361,6 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleIncomeExpensePieChart() {
-        final Stage stage = FXMLUtils.loadFXML(IncomeExpenseDialogController.class.getResource("IncomeExpenseDialog.fxml"),
-                resources);
-
-        stage.setTitle(resources.getString("Title.IncomeExpenseChart"));
-
-        stage.setOnShown(event -> Platform.runLater(() -> {
-            stage.setMinHeight(stage.getHeight());
-            stage.setMinWidth(stage.getWidth());
-        }));
-
-        stage.show();
+        ReportActions.displayIncomeExpensePieChart();
     }
 }
