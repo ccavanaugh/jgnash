@@ -19,7 +19,6 @@ package jgnash.ui.actions;
 
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -35,10 +34,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.DateUtils;
-import jgnash.util.LocaleObject;
 import jgnash.util.ResourceUtils;
-
-import org.apache.poi.ss.usermodel.DateUtil;
 
 /**
  * UI Action to change the default date format
