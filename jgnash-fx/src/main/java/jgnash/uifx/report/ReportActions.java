@@ -46,7 +46,7 @@ public class ReportActions {
 
     public static void displayIncomeExpensePieChart() {
         final FXMLUtils.Pair pair =
-                FXMLUtils.load(IncomeExpenseDialogController.class.getResource("IncomeExpenseDialog.fxml"),
+                FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePieChartDialog.fxml"),
                         ResourceUtils.getString("Title.IncomeExpenseChart"));
 
         pair.getStage().show();

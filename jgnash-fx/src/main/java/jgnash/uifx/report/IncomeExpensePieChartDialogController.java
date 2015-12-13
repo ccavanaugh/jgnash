@@ -54,7 +54,7 @@ import jgnash.util.function.ParentAccountPredicate;
  *
  * @author Craig Cavanaugh
  */
-public class IncomeExpenseDialogController {
+public class IncomeExpensePieChartDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -92,7 +92,7 @@ public class IncomeExpenseDialogController {
             }
         });
 
-        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseDialogController.class);
+        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpensePieChartDialogController.class);
 
         accountComboBox.setPredicate(new ParentAccountPredicate());
 
