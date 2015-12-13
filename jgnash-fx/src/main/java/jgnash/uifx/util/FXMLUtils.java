@@ -217,45 +217,6 @@ public class FXMLUtils {
     }
 
     /**
-     * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
-     * with the specified fxml {@code URL} as the {@code Scene}.
-     *
-     * @param fxmlUrl        the fxml {@code URL}
-     * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
-     * @return new {@code Stage}
-     */
-    public static Stage loadFXML(final URL fxmlUrl, final ResourceBundle resourceBundle) {
-        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
-
-        final Stage stage = new Stage(StageStyle.DECORATED);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
-
-        try {
-            final Scene scene = new Scene(fxmlLoader.load());
-            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
-            scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
-
-            injectParent(fxmlLoader.getController(), scene);
-
-            stage.setScene(scene);
-            stage.getIcons().add(StaticUIMethods.getApplicationIcon());
-
-            stage.sizeToScene();    // force a resize, some stages need a push
-        } catch (final IOException ioe) { // log and throw an unchecked exception
-            Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
-            throw new UncheckedIOException(ioe);
-        }
-
-        Platform.runLater(() -> {
-            stage.setMinWidth(stage.getWidth());
-            stage.setMinHeight(stage.getHeight());
-        });
-
-        return stage;
-    }
-
-    /**
      * Simple FXML loader that handles exceptions
      *
      * @param fxmlUrl        the fxml {@code URL}

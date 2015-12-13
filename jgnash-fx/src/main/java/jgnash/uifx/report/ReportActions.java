@@ -26,7 +26,6 @@ import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
@@ -50,17 +49,11 @@ public class ReportActions {
     public static void displayIncomeExpensePieChart() {
         ResourceBundle resources = ResourceUtils.getBundle();
 
-        final Stage stage = FXMLUtils.loadFXML(IncomeExpenseDialogController.class.getResource("IncomeExpenseDialog.fxml"),
-                resources);
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(IncomeExpenseDialogController.class.getResource("IncomeExpenseDialog.fxml"));
 
-        stage.setTitle(resources.getString("Title.IncomeExpenseChart"));
-
-        stage.setOnShown(event -> Platform.runLater(() -> {
-            stage.setMinHeight(stage.getHeight());
-            stage.setMinWidth(stage.getWidth());
-        }));
-
-        stage.show();
+        pair.getStage().setTitle(resources.getString("Title.IncomeExpenseChart"));
+        pair.getStage().show();
     }
 
     public static void exportProfitLossReport() {

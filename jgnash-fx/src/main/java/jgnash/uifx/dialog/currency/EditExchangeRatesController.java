@@ -18,7 +18,6 @@
 package jgnash.uifx.dialog.currency;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -123,12 +122,12 @@ public class EditExchangeRatesController implements MessageListener {
 
     private volatile boolean requestCancel = false;
 
-    public static void showAndWait() {
-        final URL fxmlUrl = EditExchangeRatesController.class.getResource("EditExchangeRates.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
-        stage.setTitle(ResourceUtils.getString("Title.EditExchangeRates"));
+    public static void show() {
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(EditExchangeRatesController.class.getResource("EditExchangeRates.fxml"));
 
-        stage.showAndWait();
+        pair.getStage().setTitle(ResourceUtils.getString("Title.EditExchangeRates"));
+        pair.getStage().show();
     }
 
     @FXML

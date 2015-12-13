@@ -20,7 +20,6 @@ package jgnash.uifx.views.main;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Handler;
@@ -190,15 +189,16 @@ public class ConsoleDialogController {
         if (!visible.get()) {
             visible.set(true);
 
-            final URL fxmlUrl = ConsoleDialogController.class.getResource("ConsoleDialog.fxml");
-            final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
-            stage.setTitle(ResourceUtils.getString("Title.Console"));
+            final FXMLUtils.Pair pair =
+                    FXMLUtils.load(ConsoleDialogController.class.getResource("ConsoleDialog.fxml"));
+
+            pair.getStage().setTitle(ResourceUtils.getString("Title.Console"));
 
             // Override the defaults set by FXMLUtils
-            stage.initModality(Modality.NONE);
-            stage.initOwner(null);
+            pair.getStage().initModality(Modality.NONE);
+            pair.getStage().initOwner(null);
 
-            stage.show();
+            pair.getStage().show();
         }
     }
 

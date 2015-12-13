@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.budget;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -133,12 +132,13 @@ public class BudgetManagerDialogController implements MessageListener{
 
     @FXML
     private void handleNewHistoricalAction() {
-        final URL fxmlUrl = HistoricalBudgetDialogController.class.getResource("HistoricalBudgetDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.NewBudget"));
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(HistoricalBudgetDialogController.class.getResource("HistoricalBudgetDialog.fxml"));
 
-        stage.show();
-        stage.setResizable(false);
+        pair.getStage().setTitle(resources.getString("Title.NewBudget"));
+
+        pair.getStage().show();
+        pair.getStage().setResizable(false);
     }
 
     @FXML

@@ -24,7 +24,6 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.stage.Stage;
 
 import jgnash.uifx.control.Alert;
 import jgnash.uifx.control.ExceptionDialog;
@@ -51,14 +50,14 @@ public class StaticUIMethods {
     }
 
     public static void showOpenDialog() {
-        final Stage dialog = FXMLUtils.loadFXML(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
-                ResourceUtils.getBundle());
-        dialog.setTitle(ResourceUtils.getBundle().getString("Title.Open"));
-        dialog.setResizable(false);
+        final FXMLUtils.Pair pair = FXMLUtils.load(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"));
 
-        StageUtils.addBoundsListener(dialog, OpenDatabaseController.class);
+        pair.getStage().setTitle(ResourceUtils.getBundle().getString("Title.Open"));
+        pair.getStage().setResizable(false);
 
-        dialog.showAndWait();
+        StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class);
+
+        pair.getStage().show();
     }
 
     public static void displayError(final String message) {

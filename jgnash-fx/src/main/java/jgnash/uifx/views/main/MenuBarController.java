@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.main;
 
-import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -30,7 +29,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.stage.Stage;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -244,38 +242,38 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleCreateModifySecuritiesAction() {
-        final URL fxmlUrl = CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.CreateModifyCommodities"));
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml"));
+        pair.getStage().setTitle(resources.getString("Title.CreateModifyCommodities"));
 
-        stage.show();
+        pair.getStage().show();
     }
 
     @FXML
     private void handleSecuritiesHistoryAction() {
-        final URL fxmlUrl = SecurityHistoryController.class.getResource("SecurityHistory.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.ModifySecHistory"));
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(SecurityHistoryController.class.getResource("SecurityHistory.fxml"));
+        pair.getStage().setTitle(resources.getString("Title.ModifySecHistory"));
 
-        stage.show();
+        pair.getStage().show();
     }
 
     @FXML
     private void handleSecurityHistoryImportAction() {
-        final URL fxmlUrl = SecurityHistoryController.class.getResource("HistoricalImport.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.HistoryImport"));
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(SecurityHistoryController.class.getResource("HistoricalImport.fxml"));
+        pair.getStage().setTitle(resources.getString("Title.HistoryImport"));
 
-        stage.show();
+        pair.getStage().show();
     }
 
     @FXML
     private void handleAddRemoveCurrenciesAction() {
-        final URL fxmlUrl = AddRemoveCurrencyController.class.getResource("AddRemoveCurrency.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.AddRemCurr"));
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(AddRemoveCurrencyController.class.getResource("AddRemoveCurrency.fxml"));
+        pair.getStage().setTitle(resources.getString("Title.AddRemCurr"));
 
-        stage.show();
+        pair.getStage().show();
     }
 
     @FXML
@@ -285,48 +283,45 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleModifyCurrenciesAction() {
-        final URL fxmlUrl = ModifyCurrencyController.class.getResource("ModifyCurrency.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.ModifyCurrencies"));
+        final FXMLUtils.Pair pair = FXMLUtils.load(ModifyCurrencyController.class.getResource("ModifyCurrency.fxml"));
+        pair.getStage().setTitle(resources.getString("Title.ModifyCurrencies"));
 
-        stage.show();
+        pair.getStage().show();
     }
 
     @FXML
     private void handleEditExchangeRatesAction() {
-        EditExchangeRatesController.showAndWait();
+        EditExchangeRatesController.show();
     }
 
     @FXML
     private void handleFontSizeAction() {
-        final URL fxmlUrl = FontSizeDialogController.class.getResource("FontSizeDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.FontSize"));
+        final FXMLUtils.Pair pair = FXMLUtils.load(FontSizeDialogController.class.getResource("FontSizeDialog.fxml"));
+        pair.getStage().setTitle(resources.getString("Title.FontSize"));
 
-        stage.setResizable(false);
+        pair.getStage().setResizable(false);
 
-        stage.show();
+        pair.getStage().show();
     }
 
     @FXML
     private void handleBaseColorAction() {
-        final URL fxmlUrl = BaseColorDialogController.class.getResource("BaseColorDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.BaseColor"));
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(BaseColorDialogController.class.getResource("BaseColorDialog.fxml"));
+        pair.getStage().setTitle(resources.getString("Title.BaseColor"));
 
-        stage.setResizable(false);
+        pair.getStage().setResizable(false);
 
-        stage.show();
+        pair.getStage().show();
     }
 
     @FXML
     private void handleShowOptionDialog() {
-        final Stage stage = FXMLUtils.loadFXML(OptionDialogController.class.getResource("OptionDialog.fxml"),
-               resources);
+        final FXMLUtils.Pair pair = FXMLUtils.load(OptionDialogController.class.getResource("OptionDialog.fxml"));
 
-        stage.setTitle(resources.getString("Title.Options"));
-        stage.setResizable(false);
-        stage.show();
+        pair.getStage().setTitle(resources.getString("Title.Options"));
+        pair.getStage().setResizable(false);
+        pair.getStage().show();
     }
 
     @FXML

@@ -18,7 +18,6 @@
 package jgnash.uifx.views.budget;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +31,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -156,12 +154,13 @@ public class BudgetViewController implements MessageListener {
 
     @FXML
     private void handleManagerAction() {
-        final URL fxmlUrl = BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(resources.getString("Title.BudgetManager"));
+        final FXMLUtils.Pair pair =
+                FXMLUtils.load(BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml"));
 
-        stage.show();
-        stage.setResizable(false);
+        pair.getStage().setTitle(resources.getString("Title.BudgetManager"));
+
+        pair.getStage().show();
+        pair.getStage().setResizable(false);
     }
 
     @FXML

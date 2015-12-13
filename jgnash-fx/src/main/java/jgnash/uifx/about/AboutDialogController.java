@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.about;
 
-import java.net.URL;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -147,12 +146,12 @@ public class AboutDialogController {
 
     public static void showAndWait() {
         Platform.runLater(() -> {   // push to EDT to avoid race when loading the html files
-            final URL fxmlUrl = AboutDialogController.class.getResource("AboutDialog.fxml");
-            final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
-            stage.setTitle(ResourceUtils.getString("Title.About"));
-            stage.setResizable(false);
+            final FXMLUtils.Pair pair = FXMLUtils.load(AboutDialogController.class.getResource("AboutDialog.fxml"));
 
-            stage.showAndWait();
+            pair.getStage().setTitle(ResourceUtils.getString("Title.About"));
+            pair.getStage().setResizable(false);
+
+            pair.getStage().show();
         });
     }
 
