@@ -215,7 +215,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
                 end = DateUtils.getLastDayOfTheMonth(start);
                 endDates.add(end);
                 int month = start.getMonthValue();
-                dateLabels.add(" " + start.getYear() + (month < 9 ? "/0" + (month + 1) : "/" + (month + 1)));
+                dateLabels.add(" " + start.getYear() + (month < 10 ? "/0" + month : "/" + month));
                 start = end.plusDays(1);
             }
         }

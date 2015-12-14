@@ -29,6 +29,7 @@ Add last used tab or favorite tab for the transaction register.
 
 Release 2.20.0
 ----------------------
+12/13/15 Month labels for tabular reports were off by one. (Swing)
 12/13/15 Added the Profit and Loss text report to the jGnashFx UI. (Fx)
 12/12/15 Added the Income / Expense PieChart report to the jGnashFx UI. (Fx)
 12/12/15 The ProfitLoss text report was failing to execute. (Swing)
