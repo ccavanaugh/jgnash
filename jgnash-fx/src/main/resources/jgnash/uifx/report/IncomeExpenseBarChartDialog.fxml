@@ -14,6 +14,7 @@
 <?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.DatePickerEx?>
 
+<?import javafx.scene.control.ComboBox?>
 <BorderPane fx:controller="jgnash.uifx.report.IncomeExpenseBarChartDialogController" minWidth="850" minHeight="600"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <top>
@@ -42,6 +43,7 @@
                 <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
+                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
@@ -56,8 +58,10 @@
             <Label text="%Label.EndDate"  GridPane.columnIndex="2"/>
             <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3"/>
 
+            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="4"/>
+
             <BarChart fx:id="barChart" title="%Title.IncomeExpenseBarChart" legendSide="RIGHT"
-                      GridPane.rowIndex="1" GridPane.columnSpan="5">
+                      GridPane.rowIndex="1" GridPane.columnSpan="6">
                 <xAxis>
                     <CategoryAxis side="BOTTOM" />
                 </xAxis>
@@ -66,7 +70,7 @@
                 </yAxis>
             </BarChart>
 
-            <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="5">
+            <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="6">
                 <buttons>
                     <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
                             ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>

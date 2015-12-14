@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -32,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
@@ -57,8 +59,17 @@ public class IncomeExpenseBarChartDialogController {
 
     private static final String CHART_CSS = "jgnash/skin/incomeExpenseBarChart.css";
 
+    private static final String REPORT_PERIOD = "reportPeriod";
+
+    private static final int BAR_GAP = 1;
+
+    private static final int PERIOD_GAP = 20;
+
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private ComboBox<ReportPeriod> periodComboBox;
 
     @FXML
     private BarChart<String, Number> barChart;
@@ -79,21 +90,24 @@ public class IncomeExpenseBarChartDialogController {
     @FXML
     public void initialize() {
 
+        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseBarChartDialogController.class);
+
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
+
+        periodComboBox.getItems().addAll(ReportPeriod.values());
+        periodComboBox.setValue(ReportPeriod.values()[preferences.getInt(REPORT_PERIOD, ReportPeriod.MONTHLY.ordinal())]);
 
         defaultCurrency = engine.getDefaultCurrency();
         numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
 
         barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
-        barChart.barGapProperty().set(1);
-        barChart.setCategoryGap(20);
+        barChart.barGapProperty().set(BAR_GAP);
+        barChart.setCategoryGap(PERIOD_GAP);
 
         // Respect animation preference
         barChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
-
-        //final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseBarChartDialogController.class);
 
         startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(11)));
 
@@ -106,7 +120,12 @@ public class IncomeExpenseBarChartDialogController {
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
 
-        // Push the initial load to the end of the platform thread for better startup and nicer visual effect
+        periodComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            preferences.putInt(REPORT_PERIOD, newValue.ordinal());
+            Platform.runLater(this::updateChart);
+        });
+
+        // Push the initial load to the end of the platform thread for better startup and a nicer visual effect
         Platform.runLater(this::updateChart);
     }
 
@@ -120,8 +139,8 @@ public class IncomeExpenseBarChartDialogController {
 
         barChart.getData().clear();
 
-        final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(ReportPeriod.MONTHLY,
-                startDatePicker.getValue(), endDatePicker.getValue());
+        final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
+                periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
 
         // Income Series
         final XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
@@ -158,8 +177,6 @@ public class IncomeExpenseBarChartDialogController {
         for (XYChart.Data<String, Number> data : profitSeries.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
         }
-
-        // TODO, validate results, allow report period selection
     }
 
     private BigDecimal getSum(final List<Account> accounts, final LocalDate statDate, final LocalDate endDate) {
