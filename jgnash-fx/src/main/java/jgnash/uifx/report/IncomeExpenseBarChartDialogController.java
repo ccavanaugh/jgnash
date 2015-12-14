@@ -18,6 +18,7 @@
 package jgnash.uifx.report;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +32,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -40,6 +42,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
@@ -71,6 +74,8 @@ public class IncomeExpenseBarChartDialogController {
 
     private CurrencyNode defaultCurrency;
 
+    private NumberFormat numberFormat;
+
     @FXML
     public void initialize() {
 
@@ -78,6 +83,7 @@ public class IncomeExpenseBarChartDialogController {
         Objects.requireNonNull(engine);
 
         defaultCurrency = engine.getDefaultCurrency();
+        numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
 
         barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
@@ -141,7 +147,19 @@ public class IncomeExpenseBarChartDialogController {
             profitSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income.add(expense)));
         }
 
-        // TODO, add tooltips for sums, validate results, allow report period selection
+        for (XYChart.Data<String, Number> data : incomeSeries.getData()) {
+            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
+        }
+
+        for (XYChart.Data<String, Number> data : expenseSeries.getData()) {
+            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
+        }
+
+        for (XYChart.Data<String, Number> data : profitSeries.getData()) {
+            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
+        }
+
+        // TODO, validate results, allow report period selection
     }
 
     private BigDecimal getSum(final List<Account> accounts, final LocalDate statDate, final LocalDate endDate) {
