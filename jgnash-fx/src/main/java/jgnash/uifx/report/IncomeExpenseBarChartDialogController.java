@@ -52,6 +52,8 @@ import jgnash.util.DateUtils;
  */
 public class IncomeExpenseBarChartDialogController {
 
+    private static final String CHART_CSS = "jgnash/skin/incomeExpenseBarChart.css";
+
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
@@ -77,6 +79,7 @@ public class IncomeExpenseBarChartDialogController {
 
         defaultCurrency = engine.getDefaultCurrency();
 
+        barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
         barChart.barGapProperty().set(1);
         barChart.setCategoryGap(20);
@@ -86,7 +89,7 @@ public class IncomeExpenseBarChartDialogController {
 
         //final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseBarChartDialogController.class);
 
-        startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusYears(1)));
+        startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(11)));
 
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -105,6 +108,10 @@ public class IncomeExpenseBarChartDialogController {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
+        final List<Account> incomeAccounts = engine.getIncomeAccountList();
+
+        final List<Account> expenseAccounts = engine.getExpenseAccountList();
+
         barChart.getData().clear();
 
         final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(ReportPeriod.MONTHLY,
@@ -113,38 +120,28 @@ public class IncomeExpenseBarChartDialogController {
         // Income Series
         final XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
         incomeSeries.setName(AccountType.INCOME.toString());
-
-        final List<Account> incomeAccounts = engine.getIncomeAccountList();
-        for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
-            incomeSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(),
-                    getSum(incomeAccounts, descriptor.getStartDate(), descriptor.getEndDate())));
-        }
         barChart.getData().add(incomeSeries);
 
         // Expense Series
         final XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
         expenseSeries.setName(AccountType.EXPENSE.toString());
-
-        final List<Account> expenseAccounts = engine.getExpenseAccountList();
-        for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
-            expenseSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(),
-                    getSum(expenseAccounts, descriptor.getStartDate(), descriptor.getEndDate())));
-        }
         barChart.getData().add(expenseSeries);
 
-        // TODO, optimize, fix default colors, add tooltips for sums, validate results, allow report period selection
-
-        // Net Profit Series
+        // Profit Series
         final XYChart.Series<String, Number> profitSeries = new XYChart.Series<>();
         profitSeries.setName(resources.getString("Word.NetIncome"));
+        barChart.getData().add(profitSeries);
+
         for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
             final BigDecimal income = getSum(incomeAccounts, descriptor.getStartDate(), descriptor.getEndDate());
             final BigDecimal expense = getSum(expenseAccounts, descriptor.getStartDate(), descriptor.getEndDate());
 
+            incomeSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income));
+            expenseSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), expense));
             profitSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income.add(expense)));
         }
 
-        barChart.getData().add(profitSeries);
+        // TODO, add tooltips for sums, validate results, allow report period selection
     }
 
     private BigDecimal getSum(final List<Account> accounts, final LocalDate statDate, final LocalDate endDate) {
