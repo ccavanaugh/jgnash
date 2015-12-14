@@ -56,7 +56,8 @@
             <Label text="%Label.EndDate"  GridPane.columnIndex="2"/>
             <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3"/>
 
-            <BarChart fx:id="barChart" GridPane.rowIndex="1" GridPane.columnSpan="5">
+            <BarChart fx:id="barChart" title="%Title.IncomeExpenseBarChart" legendSide="RIGHT"
+                      GridPane.rowIndex="1" GridPane.columnSpan="5">
                 <xAxis>
                     <CategoryAxis side="BOTTOM" />
                 </xAxis>

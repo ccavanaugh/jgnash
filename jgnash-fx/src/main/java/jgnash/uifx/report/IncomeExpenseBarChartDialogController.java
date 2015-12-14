@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.report;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -25,17 +28,22 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
-import javafx.scene.layout.StackPane;
+import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
+import jgnash.engine.Account;
+import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.report.ReportPeriod;
+import jgnash.report.ReportPeriodUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.util.DateUtils;
 
 /**
  * Income and Expense Bar Chart
@@ -46,9 +54,6 @@ public class IncomeExpenseBarChartDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
-
-    @FXML
-    private StackPane chartPane;
 
     @FXML
     private BarChart<String, Number> barChart;
@@ -62,15 +67,26 @@ public class IncomeExpenseBarChartDialogController {
     @FXML
     private ResourceBundle resources;
 
+    private CurrencyNode defaultCurrency;
+
     @FXML
     public void initialize() {
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        defaultCurrency = engine.getDefaultCurrency();
+
+        barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
+        barChart.barGapProperty().set(1);
+        barChart.setCategoryGap(20);
 
         // Respect animation preference
         barChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
 
         //final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseBarChartDialogController.class);
 
-        startDatePicker.setValue(endDatePicker.getValue().minusYears(1));
+        startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusYears(1)));
 
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -81,8 +97,6 @@ public class IncomeExpenseBarChartDialogController {
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
 
-        barChart.setLegendSide(Side.RIGHT);
-
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
         Platform.runLater(this::updateChart);
     }
@@ -91,6 +105,56 @@ public class IncomeExpenseBarChartDialogController {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
+        barChart.getData().clear();
+
+        final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(ReportPeriod.MONTHLY,
+                startDatePicker.getValue(), endDatePicker.getValue());
+
+        // Income Series
+        final XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
+        incomeSeries.setName(AccountType.INCOME.toString());
+
+        final List<Account> incomeAccounts = engine.getIncomeAccountList();
+        for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
+            incomeSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(),
+                    getSum(incomeAccounts, descriptor.getStartDate(), descriptor.getEndDate())));
+        }
+        barChart.getData().add(incomeSeries);
+
+        // Expense Series
+        final XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
+        expenseSeries.setName(AccountType.EXPENSE.toString());
+
+        final List<Account> expenseAccounts = engine.getExpenseAccountList();
+        for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
+            expenseSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(),
+                    getSum(expenseAccounts, descriptor.getStartDate(), descriptor.getEndDate())));
+        }
+        barChart.getData().add(expenseSeries);
+
+        // TODO, optimize, fix default colors, add tooltips for sums, validate results, allow report period selection
+
+        // Net Profit Series
+        final XYChart.Series<String, Number> profitSeries = new XYChart.Series<>();
+        profitSeries.setName(resources.getString("Word.NetIncome"));
+        for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
+            final BigDecimal income = getSum(incomeAccounts, descriptor.getStartDate(), descriptor.getEndDate());
+            final BigDecimal expense = getSum(expenseAccounts, descriptor.getStartDate(), descriptor.getEndDate());
+
+            profitSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income.add(expense)));
+        }
+
+        barChart.getData().add(profitSeries);
+    }
+
+    private BigDecimal getSum(final List<Account> accounts, final LocalDate statDate, final LocalDate endDate) {
+        BigDecimal sum = BigDecimal.ZERO;
+
+        for (final Account account : accounts) {
+            sum = sum.add(account.getBalance(statDate, endDate, defaultCurrency));
+        }
+
+        return sum.negate();
     }
 
     @FXML
