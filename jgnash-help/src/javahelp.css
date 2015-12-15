@@ -6,6 +6,7 @@ body {
     margin-right: 5;
 }
 
+/*noinspection ALL*/
 h1,
     h2,
     h3,
@@ -28,6 +29,7 @@ h3,
     font-size: medium;
 }
 
+/*noinspection ALL*/
 table {
     border-width: 1;
     border-style: solid;
@@ -41,6 +43,7 @@ table {
     margin-bottom: 5;
 }
 
+/*noinspection ALL*/
 th,
     td {
     border-width: 1;
@@ -60,6 +63,7 @@ td {
     background-color: white;
 }
 
+/*noinspection ALL*/
 dl {
     margin-top: 10;
     margin-bottom: 5;
@@ -71,40 +75,48 @@ dt {
     margin-bottom: 0;
 }
 
+/*noinspection ALL*/
 dd {
     margin-top: 2;
     margin-left: 24;
 }
 
+/*noinspection ALL*/
 ul,
     ol {
     margin-top: 5;
     margin-bottom: 0;
 }
 
+/*noinspection ALL*/
 ul {
     margin-left: 16;
 }
 
+/*noinspection ALL*/
 ol {
     margin-left: 24;
 }
 
+/*noinspection ALL*/
 li {
     margin-top: 0;
     margin-bottom: 5;
 }
 
+/*noinspection ALL*/
 li p {
     margin-top: 5;
     margin-bottom: 0;
 }
 
+/*noinspection ALL*/
 p {
     margin-top: 5;
     margin-bottom: 5;
 }
 
+/*noinspection ALL*/
 div.sidebar {
     background-color: #F0F0FF;
     border-width: 1;
@@ -120,6 +132,7 @@ div.sidebar {
     margin-right: 20;
 }
 
+/*noinspection ALL*/
 pre.programlisting {
     background-color: #F0F0F0;
     border-width: 1;
@@ -139,5 +152,8 @@ big {
     font-size: medium;
 }
 
+/*noinspection ALL*/
 span.guimenu{ font-weight: bold; }
+
+/*noinspection ALL*/
 span.guimenuitem{ font-weight: bold; }
