@@ -18,6 +18,7 @@
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
+    <!--suppress JavaFxUnresolvedStyleClassReference -->
     <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="floating">
         <Tab text="%Tab.StartupShutdown">
             <fx:include source="StartupShutdownTab.fxml"/>
