@@ -54,7 +54,7 @@ public class JpaTrashEntity {
      * <b>Do not use to create a new instance</b>
      */
     @SuppressWarnings("unused")
-    private JpaTrashEntity() {
+    protected JpaTrashEntity() {
 
     }
 
@@ -76,11 +76,11 @@ public class JpaTrashEntity {
     }
 
     private static long getBasicEntityId(final Object object) {
-        for (Field field : object.getClass().getDeclaredFields()) {
+        for (final Field field : object.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(Id.class)) {
                 try {
                     return field.getLong(object);
-                } catch (IllegalAccessException e) {
+                } catch (final IllegalAccessException e) {
                     Logger.getLogger(JpaTrashEntity.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
             }
