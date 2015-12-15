@@ -59,6 +59,7 @@ import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
+import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
 import com.thoughtworks.xstream.XStream;
@@ -86,6 +87,26 @@ abstract class AbstractXStreamContainer {
 
     AbstractXStreamContainer(final File file) {
         this.file = file;
+    }
+
+    /**
+     * Creates a backup file if it exists.
+     *
+     * @param origFile file to check and backup
+     */
+    protected static void createBackup(final File origFile) {
+        if (origFile.exists()) {
+            File backup = new File(origFile.getAbsolutePath() + ".backup");
+            if (backup.exists()) {
+                if (!backup.delete()) {
+                    Logger.getLogger(AbstractXStreamContainer.class.getName())
+                            .log(Level.WARNING, "Was not able to delete the old backup file: {0}",
+                                    backup.getAbsolutePath());
+                }
+            }
+
+            FileUtils.copyFile(origFile, backup);
+        }
     }
 
     /**

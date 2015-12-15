@@ -97,17 +97,7 @@ class BinaryContainer extends AbstractXStreamContainer {
             logger.info("Created missing directories");
         }
 
-        if (file.exists()) {
-            File backup = new File(file.getAbsolutePath() + ".backup");
-            if (backup.exists()) {
-                if (!backup.delete()) {
-                    logger.log(Level.WARNING, "Was not able to delete the old backup file: {0}",
-                            backup.getAbsolutePath());
-                }
-            }
-
-            FileUtils.copyFile(file, backup);
-        }
+        createBackup(file);
 
         List<StoredObject> list = new ArrayList<>();
 
