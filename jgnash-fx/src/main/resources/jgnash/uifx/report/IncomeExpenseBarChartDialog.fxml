@@ -44,6 +44,7 @@
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
                 <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
@@ -58,10 +59,11 @@
             <Label text="%Label.EndDate"  GridPane.columnIndex="2"/>
             <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3"/>
 
-            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="4"/>
+            <Label text="%Label.Period"  GridPane.columnIndex="4"/>
+            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5"/>
 
             <BarChart fx:id="barChart" title="%Title.IncomeExpenseBarChart" legendSide="RIGHT"
-                      GridPane.rowIndex="1" GridPane.columnSpan="6">
+                      GridPane.rowIndex="1" GridPane.columnSpan="7">
                 <xAxis>
                     <CategoryAxis side="BOTTOM" />
                 </xAxis>
@@ -70,7 +72,7 @@
                 </yAxis>
             </BarChart>
 
-            <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="6">
+            <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="7">
                 <buttons>
                     <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
                             ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
