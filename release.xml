@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <project name="jGnash Release File" default="dist" basedir=".">
   <description>
       Creates a release file.  To be used after a successful Maven build
