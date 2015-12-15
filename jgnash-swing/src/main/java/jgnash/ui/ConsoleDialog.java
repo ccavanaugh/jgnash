@@ -74,10 +74,6 @@ public class ConsoleDialog {
 
     private static final Object consoleLock = new Object();
 
-    private static PrintStream outStream;
-
-    private static PrintStream errStream;
-
     private ConsoleDialog() {
     }
 
@@ -89,50 +85,21 @@ public class ConsoleDialog {
         if (!init) {
             init = true;
 
-            final PrintStream oldOut = System.out;
-            final PrintStream oldErr = System.err;
             try {
-                outStream = new PrintStream(new OutputStream() {
-                    @Override
-                    public void write(int b) {
-                    }
-
-                    @Override
-                    public void write(final @NotNull byte[] b, final int off, final int len) {
-                        oldOut.write(b, off, len);
-                        synchronized (consoleLock) {
-                            if (console != null) {
-                                console.append(new String(b, off, len, Charset.defaultCharset()));
-                            }
-                        }
-                    }
-                }, false, Charset.defaultCharset().name());
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ConsoleDialog.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                errStream = new PrintStream(new OutputStream() {
-                    @Override
-                    public void write(int b) {
-                    }
-
-                    @Override
-                    public void write(final @NotNull byte[] b, final int off, final int len) {
-                        oldErr.write(b, off, len);
-                        synchronized (consoleLock) {
-                            if (console != null) {
-                                console.append(new String(b, off, len, Charset.defaultCharset()));
-                            }
-                        }
-                    }
-                }, false, Charset.defaultCharset().name());
+                final PrintStream oldOut = System.out;
+                PrintStream outStream = new PrintStream(new ConsoleStream(oldOut), false, Charset.defaultCharset().name());
+                System.setOut(outStream);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(ConsoleDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            // set both System.out and System.err to that stream
-            System.setOut(outStream);
-            System.setErr(errStream);
+            try {
+                final PrintStream oldErr = System.err;
+                PrintStream errStream = new PrintStream(new ConsoleStream(oldErr), false, Charset.defaultCharset().name());
+                System.setErr(errStream);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ConsoleDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             // capture the engine log
             Engine.getLogger().addHandler(new Handler() {
@@ -163,13 +130,13 @@ public class ConsoleDialog {
 
         final String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
         final String filesep = System.getProperty("file.separator");
-               
+
         for (int i = 1; i < MAX_DUMP_FILES; i++) {  // no more than 1000 dumps
             final File dumpFile = new File(base + filesep + "jGnashHeapDump" + i + ".bin");
 
             if (!dumpFile.exists()) {
-            	final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-            	
+                final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+
                 try {
                     final HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
 
@@ -179,7 +146,7 @@ public class ConsoleDialog {
                 }
                 break;
             }
-        }        
+        }
     }
 
     public static void show() {
@@ -266,6 +233,29 @@ public class ConsoleDialog {
                 dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
                 dialog = null;
                 console = null;
+            }
+        }
+    }
+
+    private static class ConsoleStream extends OutputStream {
+        final PrintStream stream;
+
+        ConsoleStream(final PrintStream stream) {
+            this.stream = stream;
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+
+        }
+
+        @Override
+        public void write(final @NotNull byte[] b, final int off, final int len) {
+            stream.write(b, off, len);
+            synchronized (consoleLock) {
+                if (console != null) {
+                    console.append(new String(b, off, len, Charset.defaultCharset()));
+                }
             }
         }
     }
