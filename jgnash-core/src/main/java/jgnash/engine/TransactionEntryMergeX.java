@@ -30,7 +30,7 @@ import jgnash.util.ResourceUtils;
  * @author Craig Cavanaugh
  */
 @Entity
-public final class TransactionEntryMergeX extends AbstractInvestmentTransactionEntry {
+public class TransactionEntryMergeX extends AbstractInvestmentTransactionEntry {
 
     /**
      * No argument constructor for reflection purposes.

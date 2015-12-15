@@ -54,7 +54,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     /**
      * Creates a new instance of InvestmentTransactionEntry
      */
-    AbstractInvestmentTransactionEntry() {
+    protected AbstractInvestmentTransactionEntry() {
         setTransactionTag(TransactionTag.INVESTMENT);
     }
 

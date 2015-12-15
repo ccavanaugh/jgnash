@@ -30,7 +30,7 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  */
 @Entity
-public final class TransactionEntryRemoveX extends AbstractInvestmentTransactionEntry {
+public class TransactionEntryRemoveX extends AbstractInvestmentTransactionEntry {
 
     /**
      * No argument constructor for reflection purposes.

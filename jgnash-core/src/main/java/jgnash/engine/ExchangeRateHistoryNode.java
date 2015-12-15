@@ -53,7 +53,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
      * <b>Do not use to create a new instance</b>
      */
     @SuppressWarnings("unused")
-    ExchangeRateHistoryNode() {
+    protected ExchangeRateHistoryNode() {
     }
 
     /**

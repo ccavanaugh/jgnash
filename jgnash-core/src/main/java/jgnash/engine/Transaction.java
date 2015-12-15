@@ -50,6 +50,7 @@ import jgnash.util.Nullable;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name="TRANSACT") // cannot use "Transaction" as the table name or it causes an SQL error!!!!
 public class Transaction extends StoredObject implements Comparable<Transaction> {
