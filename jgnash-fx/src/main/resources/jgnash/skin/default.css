@@ -20,6 +20,7 @@
  */
 .root{
     /* Hushes up Caspian without effecting Modena, the default is 2% */
+    /*noinspection CssInvalidFunction*/
     -fx-control-inner-background-alt: derive(-fx-control-inner-background,-6%);
 }
 
@@ -66,9 +67,10 @@
  */
 .status-label {
     -fx-graphic-text-gap: 0.833333em;
-    -fx-label-padding: 0em 0em 0em 0.25em;
+    -fx-label-padding: 0 0 0 0.25em;
 }
 
+/*noinspection CssUnusedSymbol*/
 .status-bar {
 	-fx-padding: 4px;
 	-fx-pref-height: 30px;
