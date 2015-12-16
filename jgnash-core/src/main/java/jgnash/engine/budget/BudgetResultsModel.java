@@ -263,38 +263,6 @@ public class BudgetResultsModel implements MessageListener {
         }
     }
 
-    /**
-     * Gets results by descriptor and account (per account results)
-     *
-     * @param descriptor BudgetPeriodDescriptor descriptor
-     * @param account    Account
-     * @return cached or newly created BudgetPeriodResults
-     */
-    public BudgetPeriodResults getResults(final BudgetPeriodDescriptor descriptor, final Account account) {
-        cacheLock.lock();
-
-        try {
-
-            Map<Account, BudgetPeriodResults> resultsMap = descriptorAccountResultsCache.get(descriptor);
-
-            if (resultsMap == null) {
-                resultsMap = new HashMap<>();
-                descriptorAccountResultsCache.put(descriptor, resultsMap);
-            }
-
-            BudgetPeriodResults results = resultsMap.get(account);
-
-            if (results == null) {
-                results = buildAccountResults(descriptor, account);
-                resultsMap.put(account, results);
-            }
-
-            return results;
-        } finally {
-            cacheLock.unlock();
-        }
-    }
-
     private void clear(final BudgetPeriodDescriptor descriptor, final Account account) {
         cacheLock.lock();
 
@@ -355,6 +323,37 @@ public class BudgetResultsModel implements MessageListener {
             accountGroupResultsCache.clear();
             descriptorAccountResultsCache.clear();
             descriptorAccountGroupResultsCache.clear();
+        } finally {
+            cacheLock.unlock();
+        }
+    }
+
+    /**
+     * Gets results by descriptor and account (per account results)
+     *
+     * @param descriptor BudgetPeriodDescriptor descriptor
+     * @param account    Account
+     * @return cached or newly created BudgetPeriodResults
+     */
+    public BudgetPeriodResults getResults(final BudgetPeriodDescriptor descriptor, final Account account) {
+        cacheLock.lock();
+
+        try {
+            Map<Account, BudgetPeriodResults> resultsMap = descriptorAccountResultsCache.get(descriptor);
+
+            if (resultsMap == null) {
+                resultsMap = new HashMap<>();
+                descriptorAccountResultsCache.put(descriptor, resultsMap);
+            }
+
+            BudgetPeriodResults results = resultsMap.get(account);
+
+            if (results == null) {
+                results = buildAccountResults(descriptor, account);
+                resultsMap.put(account, results);
+            }
+
+            return results;
         } finally {
             cacheLock.unlock();
         }
