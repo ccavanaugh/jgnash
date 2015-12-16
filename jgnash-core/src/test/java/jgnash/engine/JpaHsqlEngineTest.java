@@ -32,15 +32,12 @@ import jgnash.util.FileUtils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
  * @author Craig Cavanaugh
  */
 public class JpaHsqlEngineTest extends EngineTest {
-
-    private static final float DELTA = .001f;
 
     @Override
     public Engine createEngine() throws Exception {
@@ -69,11 +66,6 @@ public class JpaHsqlEngineTest extends EngineTest {
         }
     }
 
-    /*@After
-    public void cleanup() throws IOException {
-        JpaHsqlDataStore.deleteDatabase(testFile);
-    }*/
-
     @Test
     public void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
@@ -81,26 +73,5 @@ public class JpaHsqlEngineTest extends EngineTest {
         Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
 
         tableNames.forEach(System.out::println);
-    }
-
-    @Test
-    public void testVersion() {
-        try {
-            RootAccount account = e.getRootAccount();
-
-            Account temp = e.getStoredObjectByUuid(RootAccount.class, account.getUuid());
-            assertEquals(account, temp);
-
-            // close and reopen to force check for persistence
-            EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-            float version = EngineFactory.getFileVersion(new File(testFile), PASSWORD);
-
-            System.out.println(version);
-
-            assertEquals(version, Engine.CURRENT_VERSION, DELTA);
-        } catch (final Exception e) {
-            fail(e.getMessage());
-        }
     }
 }

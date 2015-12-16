@@ -48,6 +48,8 @@ import static org.junit.Assert.*;
  */
 public abstract class EngineTest {
 
+    private static final float DELTA = .001f;
+
     Engine e;
 
     String testFile;
@@ -894,4 +896,24 @@ public abstract class EngineTest {
         assertTrue(!e.getUuid().isEmpty());
     }
 
+    @Test
+    public void testVersion() {
+        try {
+            RootAccount account = e.getRootAccount();
+
+            Account temp = e.getStoredObjectByUuid(RootAccount.class, account.getUuid());
+            assertEquals(account, temp);
+
+            // close and reopen to force check for persistence
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+            float version = EngineFactory.getFileVersion(new File(testFile), PASSWORD);
+
+            System.out.println(version);
+
+            assertEquals(version, Engine.CURRENT_VERSION, DELTA);
+        } catch (final Exception e) {
+            fail(e.getMessage());
+        }
+    }
 }

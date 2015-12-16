@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Set;
@@ -29,15 +28,12 @@ import jgnash.engine.jpa.SqlUtils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
  * @author Craig Cavanaugh
  */
 public class JpaH2EngineTest extends EngineTest {
-
-    private static final float DELTA = .001f;
 
     @Override
     public Engine createEngine() throws Exception {
@@ -70,26 +66,5 @@ public class JpaH2EngineTest extends EngineTest {
         Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
 
         tableNames.forEach(System.out::println);
-    }
-
-    @Test
-    public void testVersion() {
-        try {
-            RootAccount account = e.getRootAccount();
-
-            Account temp = e.getStoredObjectByUuid(RootAccount.class, account.getUuid());
-            assertEquals(account, temp);
-
-            // close and reopen to force check for persistence
-            EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-            float version = EngineFactory.getFileVersion(new File(testFile), PASSWORD);
-
-            System.out.println(version);
-
-            assertEquals(version, Engine.CURRENT_VERSION, DELTA);
-        } catch (final Exception e) {
-            fail(e.getMessage());
-        }
     }
 }
