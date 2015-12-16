@@ -147,44 +147,23 @@ public class UpdateFactory {
         return result;
     }
 
-    public static boolean updateOne(final SecurityNode node) {
-        boolean result = false;
-
-        final ExecutorService service = Executors.newSingleThreadExecutor();
-        final Future<Boolean> future = service.submit(new UpdateSecurityNodeCallable(node));
-
-        try {
-            result = future.get(TIMEOUT, TimeUnit.MINUTES);
-            service.shutdown();
-        } catch (final InterruptedException | ExecutionException e) { // intentionally interrupted
-            logger.log(Level.FINEST, e.getLocalizedMessage(), e);
-        } catch (final TimeoutException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
-        return result;
+    public static void updateSecurityEvents(final SecurityNode node) {
+        waitForCallable(new UpdateSecurityNodeEventsCallable(node));
     }
 
-    public static void updateSecurityEvents(final SecurityNode node) {
-
-        final ExecutorService service = Executors.newSingleThreadExecutor();
-        final Future<Boolean> future = service.submit(new UpdateSecurityNodeEventsCallable(node));
-
-        try {
-            future.get(TIMEOUT, TimeUnit.MINUTES);
-            service.shutdown();
-        } catch (final InterruptedException | ExecutionException e) { // intentionally interrupted
-            logger.log(Level.FINEST, e.getLocalizedMessage(), e);
-        } catch (final TimeoutException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+    public static boolean updateOne(final SecurityNode node) {
+        return waitForCallable(new UpdateSecurityNodeCallable(node));
     }
 
     public static boolean importHistory(final SecurityNode securityNode, final LocalDate startDate, final LocalDate endDate) {
+        return waitForCallable(new HistoricalImportCallable(securityNode, startDate, endDate));
+    }
+
+    private static boolean waitForCallable(final Callable<Boolean> callable) {
         boolean result = false;
 
         final ExecutorService service = Executors.newSingleThreadExecutor();
-        final Future<Boolean> future = service.submit(new HistoricalImportCallable(securityNode, startDate, endDate));
+        final Future<Boolean> future = service.submit(callable);
 
         try {
             result = future.get(TIMEOUT, TimeUnit.MINUTES);
