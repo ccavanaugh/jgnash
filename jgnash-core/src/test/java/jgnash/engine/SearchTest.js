@@ -1,4 +1,4 @@
-// http://www.mozilla.org/rhino/ScriptingJava.html
+load("nashorn:mozilla_compat.js");  // Load compatibility script
 
 importPackage(javax.swing);
 importPackage(Packages.jgnash.ui);
@@ -16,7 +16,7 @@ var transactionList = engine.getTransactions();  // get a list of transactions
 
 var searchList = SearchEngine.matchMemo("*cash*", transactionList, true);
 
-for (i = 0; i < searchList.size(); i++)   // loop and print the account names to the console
+for (var i = 0; i < searchList.size(); i++)   // loop and print the account names to the console
 {
     var tran = searchList.get(i);
     debug(tran.getMemo());

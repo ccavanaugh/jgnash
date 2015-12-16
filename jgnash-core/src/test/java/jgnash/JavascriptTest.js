@@ -1,4 +1,4 @@
-// http://www.mozilla.org/rhino/ScriptingJava.html
+load("nashorn:mozilla_compat.js");  // Load compatibility script
 
 importPackage(javax.swing);
 importPackage(Packages.jgnash.ui);
@@ -14,14 +14,14 @@ var engine = EngineFactory.getEngine(EngineFactory.DEFAULT);    // this is how t
 
 var accountList = engine.getAccountList();  // get a list of accounts
 
-for (i = 0; i < accountList.size(); i++)   // loop and print the account names to the console
+for (var i = 0; i < accountList.size(); i++)   // loop and print the account names to the console
 {
     var account = accountList.get(i);
     debug(account.getName());
 }
 
 // just to show how to use swing
-var optionPane = JOptionPane.showMessageDialog(null, 'Hello, world!');
+JOptionPane.showMessageDialog(null, 'Hello, world!');
 
 
 
