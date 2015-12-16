@@ -44,7 +44,6 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
 import com.thoughtworks.xstream.XStream;
