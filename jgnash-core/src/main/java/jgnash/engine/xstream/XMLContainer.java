@@ -50,7 +50,6 @@ import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
 import jgnash.util.FileMagic;
-import jgnash.util.FileUtils;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
