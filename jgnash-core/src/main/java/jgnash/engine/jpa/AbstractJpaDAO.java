@@ -122,29 +122,34 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     /**
      * Persists an object
      *
-     * @param object {@link StoredObject} to persist
-     * @param <T>    the type of the value being persisted
+     * @param objects {@link Object} to persist
      */
-    <T extends StoredObject> void persist(final T object) {
+    boolean persist(final Object... objects ) {
+        boolean result = false;
+
         emLock.lock();
 
         try {
-            final Future<Void> future = executorService.submit(() -> {
-
+            final Future<Boolean> future = executorService.submit(() -> {
                 em.getTransaction().begin();
-                em.persist(object);
+
+                for (final Object object : objects) {
+                    em.persist(object);
+                }
                 em.getTransaction().commit();
 
-                return null;
+                return true;
             });
 
-            future.get();
+            result = future.get();
 
         } catch (final InterruptedException | ExecutionException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
+
+        return result;
     }
 
 

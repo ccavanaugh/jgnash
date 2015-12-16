@@ -146,27 +146,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean addRootAccount(final RootAccount account) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(account);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return persist(account);
     }
 
     /*

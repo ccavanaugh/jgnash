@@ -87,27 +87,7 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
      */
     @Override
     public boolean addReminder(final Reminder reminder) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(reminder);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return persist(reminder);
     }
 
     @Override

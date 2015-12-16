@@ -63,32 +63,15 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public boolean addCommodity(final CommodityNode node) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(node);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return persist(node);
     }
 
     @Override
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
-        boolean result = false;
+
+        return persist(historyNode, node);
+
+        /*boolean result = false;
 
         emLock.lock();
 
@@ -111,12 +94,14 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             emLock.unlock();
         }
 
-        return result;
+        return result;*/
     }
 
     @Override
     public boolean addSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent) {
-        boolean result = false;
+        return persist(historyEvent, node);
+
+        /*boolean result = false;
 
         emLock.lock();
 
@@ -139,14 +124,16 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             emLock.unlock();
         }
 
-        return result;
+        return result;*/
     }
 
 
     @Override
     public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
 
-        boolean result = false;
+        return persist(node, historyNode);
+
+        /*boolean result = false;
 
         emLock.lock();
 
@@ -169,7 +156,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             emLock.unlock();
         }
 
-        return result;
+        return result;*/
     }
 
     @Override
@@ -364,7 +351,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     @Override
     public void addExchangeRate(final ExchangeRate eRate) {
 
-        emLock.lock();
+        persist(eRate);
+        /*emLock.lock();
 
         try {
             Future<Void> future = executorService.submit(() -> {
@@ -379,7 +367,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
-        }
+        }*/
     }
 
     /*

@@ -46,27 +46,7 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     @Override
     public boolean add(final Budget budget) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(budget);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return persist(budget);
     }
 
     @Override
