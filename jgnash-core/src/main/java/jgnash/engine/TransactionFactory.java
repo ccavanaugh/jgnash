@@ -173,13 +173,8 @@ public class TransactionFactory {
 
         transaction.addTransactionEntry(entry);
 
-        if (!cashAccount.equals(investmentAccount)) {
-            final TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
-                    dividend.negate());
-            tran.setMemo(memo);
-            tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
-            transaction.addTransactionEntry(tran);
-        }
+        // Process a cash transfer
+        processCashTransfer(transaction, cashAccount, investmentAccount, memo, dividend, cashExchangedAmount);
 
         return transaction;
     }
@@ -234,13 +229,8 @@ public class TransactionFactory {
 
         transaction.addTransactionEntry(entry);
 
-        if (!cashAccount.equals(investmentAccount)) {
-            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
-                    dividend.negate());
-            tran.setMemo(memo);
-            tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
-            transaction.addTransactionEntry(tran);
-        }
+        // Process a cash transfer
+        processCashTransfer(transaction, cashAccount, investmentAccount, memo, dividend, cashExchangedAmount);
 
         return transaction;
     }
@@ -623,6 +613,20 @@ public class TransactionFactory {
                 + format.format(price);
     }
 
+    private static void processCashTransfer(final Transaction transaction, final Account cashAccount,
+                                            final Account investmentAccount, final String memo,
+                                            final BigDecimal dividend, final BigDecimal cashExchangedAmount) {
+
+        if (!cashAccount.equals(investmentAccount)) {
+            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
+                    dividend.negate());
+
+            tran.setMemo(memo);
+            tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
+            transaction.addTransactionEntry(tran);
+        }
+    }
+
     private static void processFees(final Transaction transaction, final Account account,
                                     final Account investmentAccount, final String memo,
                                     final Collection<TransactionEntry> fees, final BigDecimal exchangeRate) {
@@ -656,7 +660,7 @@ public class TransactionFactory {
     }
 
     private static void processGains(final Transaction transaction, final Account investmentAccount, final String memo,
-                                    final Collection<TransactionEntry> gains) {
+                                     final Collection<TransactionEntry> gains) {
 
         if (!gains.isEmpty()) { // capital gains entered
             BigDecimal totalGains = BigDecimal.ZERO;
