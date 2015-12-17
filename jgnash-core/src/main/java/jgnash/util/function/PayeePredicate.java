@@ -27,7 +27,7 @@ import jgnash.engine.Transaction;
  */
 public class PayeePredicate implements Predicate<Transaction> {
 
-    final String filter;
+    private final String filter;
 
     public PayeePredicate(final String filter) {
         this.filter = filter.toLowerCase(Locale.getDefault());

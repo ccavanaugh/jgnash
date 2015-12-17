@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class EncryptionManagerTest {
 
-    public static final String PASSWORD = RandomStringUtils.random(20);
+    private static final String PASSWORD = RandomStringUtils.random(20);
 
     @Test
     public void test() {

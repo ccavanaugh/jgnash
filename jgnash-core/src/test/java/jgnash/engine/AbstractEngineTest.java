@@ -55,7 +55,7 @@ public abstract class AbstractEngineTest {
 
     SecurityNode securityNode1;
 
-    public static final char[] PASSWORD = new char[]{};
+    protected static final char[] PASSWORD = new char[]{};
 
     protected abstract Engine createEngine() throws IOException;
 

@@ -28,8 +28,8 @@ import jgnash.engine.Transaction;
  */
 public class TransactionAgePredicate implements Predicate<Transaction> {
 
-    final int age;
-    final ChronoUnit chronoUnit;
+    private final int age;
+    private final ChronoUnit chronoUnit;
 
     public TransactionAgePredicate(final ChronoUnit chronoUnit, final int age) {
         this.chronoUnit = chronoUnit;

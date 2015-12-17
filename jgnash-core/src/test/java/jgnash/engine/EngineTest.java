@@ -50,7 +50,7 @@ public abstract class EngineTest {
 
     private static final float DELTA = .001f;
 
-    Engine e;
+    private Engine e;
 
     String testFile;
 
@@ -58,7 +58,7 @@ public abstract class EngineTest {
 
     static final char[] PASSWORD = new char[]{};
 
-    void closeEngine() {
+    private void closeEngine() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 
@@ -833,7 +833,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetTransactions() throws Exception {
+    private void testGetTransactions() throws Exception {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();

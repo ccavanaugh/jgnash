@@ -30,8 +30,8 @@ import jgnash.util.Nullable;
  */
 public class ReconciledPredicate implements Predicate<Transaction> {
 
-    final Account account;
-    final ReconciledState reconciledState;
+    private final Account account;
+    private final ReconciledState reconciledState;
 
     public ReconciledPredicate(@NotNull Account account, @Nullable final ReconciledState reconciledState) {
         this.account = account;

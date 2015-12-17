@@ -378,7 +378,7 @@ public class SecurityNode extends CommodityNode {
         return Collections.unmodifiableSet(securityHistoryEvents);
     }
 
-    public List<SecurityHistoryEvent> getSplitEvents() {
+    private List<SecurityHistoryEvent> getSplitEvents() {
         lock.readLock().lock();
 
         try {

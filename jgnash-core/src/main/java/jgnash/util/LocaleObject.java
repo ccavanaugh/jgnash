@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class LocaleObject implements Comparable<LocaleObject> {
 
-    final Locale locale;
+    private final Locale locale;
 
     private final String display;
 
@@ -67,7 +67,7 @@ public class LocaleObject implements Comparable<LocaleObject> {
         return 47 * hash + this.display.hashCode();
     }
 
-    public boolean equals(final LocaleObject obj) {
+    private boolean equals(final LocaleObject obj) {
         return obj.locale.equals(locale);
     }
 

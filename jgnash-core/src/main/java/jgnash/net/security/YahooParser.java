@@ -112,7 +112,7 @@ public abstract class YahooParser implements SecurityParser {
     /**
      * @param date the date to set
      */
-    void setDate(LocalDate date) {
+    private void setDate(LocalDate date) {
         this.date = date;
     }
 

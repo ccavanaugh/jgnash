@@ -27,7 +27,7 @@ import jgnash.engine.Transaction;
  */
 public class MemoPredicate implements Predicate<Transaction> {
 
-    final String filter;
+    private final String filter;
 
     public MemoPredicate(final String filter) {
         this.filter = filter.toLowerCase(Locale.getDefault());

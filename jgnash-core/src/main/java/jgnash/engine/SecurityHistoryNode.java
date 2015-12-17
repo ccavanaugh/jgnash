@@ -85,19 +85,19 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         setLow(low);
     }
 
-    protected void setHigh(final BigDecimal high) {
+    private void setHigh(final BigDecimal high) {
         if (high != null) {
             this.high = high;
         }
     }
 
-    protected void setLow(final BigDecimal low) {
+    private void setLow(final BigDecimal low) {
         if (low != null) {
             this.low = low;
         }
     }
 
-    protected void setVolume(final long volume) {
+    private void setVolume(final long volume) {
         this.volume = volume;
     }
 
@@ -113,7 +113,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         return volume;
     }
 
-    protected void setDate(final @NotNull LocalDate localDate) {
+    void setDate(final @NotNull LocalDate localDate) {
         Objects.requireNonNull(localDate);
         this.date = localDate;
     }
@@ -122,7 +122,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         return date;
     }
 
-    protected void setPrice(final BigDecimal price) {
+    void setPrice(final BigDecimal price) {
         if (price != null) {
             this.price = price;
         }
