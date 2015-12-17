@@ -168,11 +168,7 @@ public class ControlsTest extends Application {
         CurrencyNode node = engine.getDefaultCurrency();
 
         if (!node.getSymbol().equals("USD")) {
-            CurrencyNode defaultCurrency = DefaultCurrencies.buildNode(Locale.US);
-
-            assertNotNull(defaultCurrency);
-            assertTrue(engine.addCurrency(defaultCurrency));
-            engine.setDefaultCurrency(defaultCurrency);
+            engine.setDefaultCurrency(DefaultCurrencies.buildNode(Locale.US));
         }
 
         node = engine.getCurrency("CAD");
