@@ -120,32 +120,7 @@ public class TransactionFactory {
         transaction.addTransactionEntry(entry);
 
         // process transaction fees
-        if (!fees.isEmpty()) {
-
-            // total of the fees charged against the investment account
-            BigDecimal nonCashBalanceFees = BigDecimal.ZERO;
-
-            // loop through and add investment fees to the transaction
-            for (TransactionEntry fee : fees) {
-                transaction.addTransactionEntry(fee);
-
-                nonCashBalanceFees = nonCashBalanceFees.add(fee.getAmount(investmentAccount).abs());
-            }
-
-            // transfer cash from the account to the cash balance of the investment account to cover fees
-            if (!account.equals(investmentAccount)) {
-
-                byte scale = account.getCurrencyNode().getScale();
-                BigDecimal exchangedAmount = nonCashBalanceFees.abs().multiply(exchangeRate).setScale(scale,
-                        MathConstants.roundingMode);
-
-                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees,
-                        exchangedAmount.negate());
-                tran.setMemo(memo);
-                tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
-                transaction.addTransactionEntry(tran);
-            }
-        }
+        processFees(transaction, account, investmentAccount, memo, fees, exchangeRate);
 
         Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
@@ -457,25 +432,8 @@ public class TransactionFactory {
             transaction.addTransactionEntry(feesOffsetEntry);
         }
 
-        if (!gains.isEmpty()) {
-
-            BigDecimal totalGains = BigDecimal.ZERO;
-
-            // loop through and add gain/loss entries
-            for (final TransactionEntry gain : gains) {
-                transaction.addTransactionEntry(gain);
-                totalGains = totalGains.add(gain.getAmount(investmentAccount));
-            }
-
-            // create a single entry transaction that offsets investment gains or loss
-            final TransactionEntry gainsOffsetEntry = new TransactionEntry(investmentAccount, totalGains.negate());
-            gainsOffsetEntry.setMemo(memo);
-            gainsOffsetEntry.setTransactionTag(TransactionTag.GAINS_OFFSET);
-
-            assert gainsOffsetEntry.isSingleEntry(); // check
-
-            transaction.addTransactionEntry(gainsOffsetEntry);
-        }
+        // process gains
+        processGains(transaction, investmentAccount, memo, gains);
 
         return transaction;
     }
@@ -574,49 +532,10 @@ public class TransactionFactory {
         transaction.addTransactionEntry(entry);
 
         // process transaction fees
-        if (!fees.isEmpty()) {
-            // total of the fees charged against the investment account
-            BigDecimal nonCashBalanceFees = BigDecimal.ZERO;
+        processFees(transaction, account, investmentAccount, memo, fees, exchangeRate);
 
-            // loop through and add investment fees to the transaction
-            for (final TransactionEntry fee : fees) {
-                transaction.addTransactionEntry(fee);
-
-                nonCashBalanceFees = nonCashBalanceFees.add(fee.getAmount(investmentAccount).abs());
-            }
-
-            // transfer cash from the account to the cash balance of the investment account to cover fees
-            if (!account.equals(investmentAccount)) {
-
-                byte scale = account.getCurrencyNode().getScale();
-                BigDecimal exchangedAmount = nonCashBalanceFees.abs().multiply(exchangeRate).setScale(scale, MathConstants.roundingMode);
-
-                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees,
-                        exchangedAmount.negate());
-                tran.setMemo(memo);
-                tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
-                transaction.addTransactionEntry(tran);
-            }
-        }
-
-        if (!gains.isEmpty()) { // capital gains entered
-            BigDecimal totalGains = BigDecimal.ZERO;
-
-            // loop through and add gains/loss entries
-            for (final TransactionEntry gain : gains) {
-                transaction.addTransactionEntry(gain);
-                totalGains = totalGains.add(gain.getAmount(investmentAccount));
-            }
-
-            // create a single entry transaction that offsets investment gains or loss
-            final TransactionEntry gainsOffsetEntry = new TransactionEntry(investmentAccount, totalGains.negate());
-            gainsOffsetEntry.setMemo(memo);
-            gainsOffsetEntry.setTransactionTag(TransactionTag.GAINS_OFFSET);
-
-            assert gainsOffsetEntry.isSingleEntry(); // check
-
-            transaction.addTransactionEntry(gainsOffsetEntry);
-        }
+        // process gains
+        processGains(transaction, investmentAccount, memo, gains);
 
         Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
@@ -702,6 +621,62 @@ public class TransactionFactory {
 
         return ResourceUtils.getString(wordProperty) + " : " + node.getSymbol() + ' ' + quantity.toString() + " @ "
                 + format.format(price);
+    }
+
+    private static void processFees(final Transaction transaction, final Account account,
+                                    final Account investmentAccount, final String memo,
+                                    final Collection<TransactionEntry> fees, final BigDecimal exchangeRate) {
+        // process transaction fees
+        if (!fees.isEmpty()) {
+
+            // total of the fees charged against the investment account
+            BigDecimal nonCashBalanceFees = BigDecimal.ZERO;
+
+            // loop through and add investment fees to the transaction
+            for (TransactionEntry fee : fees) {
+                transaction.addTransactionEntry(fee);
+
+                nonCashBalanceFees = nonCashBalanceFees.add(fee.getAmount(investmentAccount).abs());
+            }
+
+            // transfer cash from the account to the cash balance of the investment account to cover fees
+            if (!account.equals(investmentAccount)) {
+
+                byte scale = account.getCurrencyNode().getScale();
+                BigDecimal exchangedAmount = nonCashBalanceFees.abs().multiply(exchangeRate).setScale(scale,
+                        MathConstants.roundingMode);
+
+                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees,
+                        exchangedAmount.negate());
+                tran.setMemo(memo);
+                tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
+                transaction.addTransactionEntry(tran);
+            }
+        }
+    }
+
+    private static void processGains(final Transaction transaction, final Account investmentAccount, final String memo,
+                                    final Collection<TransactionEntry> gains) {
+
+        if (!gains.isEmpty()) { // capital gains entered
+            BigDecimal totalGains = BigDecimal.ZERO;
+
+            // loop through and add gains/loss entries
+            for (final TransactionEntry gain : gains) {
+                transaction.addTransactionEntry(gain);
+                totalGains = totalGains.add(gain.getAmount(investmentAccount));
+            }
+
+            // create a single entry transaction that offsets investment gains or loss
+            final TransactionEntry gainsOffsetEntry = new TransactionEntry(investmentAccount, totalGains.negate());
+            gainsOffsetEntry.setMemo(memo);
+            gainsOffsetEntry.setTransactionTag(TransactionTag.GAINS_OFFSET);
+
+            assert gainsOffsetEntry.isSingleEntry(); // check
+
+            transaction.addTransactionEntry(gainsOffsetEntry);
+        }
+
     }
 
     private TransactionFactory() {
