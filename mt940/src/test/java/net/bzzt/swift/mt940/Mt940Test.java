@@ -19,6 +19,9 @@ package net.bzzt.swift.mt940;
 import net.bzzt.swift.mt940.exporter.Mt940Exporter;
 import net.bzzt.swift.mt940.parser.Mt940Parser;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -26,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.text.ParseException;
+import java.util.List;
 
 import jgnash.convert.imports.ImportBank;
 
@@ -62,6 +66,59 @@ public class Mt940Test {
             ImportBank bank = Mt940Exporter.convert(file);
             assertEquals(nTransactions, bank.getTransactions().size());
         }
+    }
+    
+    /**
+     * Test that ckontobezeichnung get reads in 
+     * @throws Exception
+     *             throws assert exception
+     */
+    @Test
+    public void testMt940Kontobezeichnung() throws Exception {
+        Mt940Parser parser = new Mt940Parser();
+        InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
+        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream));
+        Mt940File file = parser.parse(reader);
+        List<Mt940Entry> entries = file.getEntries();
+        assertFalse(entries.isEmpty());
+        for (Mt940Entry mt940Entry : entries) {
+        	assertEquals("531848396", mt940Entry.getKontobezeichnung());
+		}
+    }
+    
+    /**
+     * Test that ckontobezeichnung get reads in 
+     * @throws Exception
+     *             throws assert exception
+     */
+    @Test
+    public void testMt940KontobezeichnungRabobank() throws Exception {
+        Mt940Parser parser = new Mt940Parser();
+        InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
+        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream));
+        Mt940File file = parser.parse(reader);
+        List<Mt940Entry> entries = file.getEntries();
+        assertFalse(entries.isEmpty());
+        for (Mt940Entry mt940Entry : entries) {
+        	assertEquals("3xxxxxx.013EUR", mt940Entry.getKontobezeichnung().trim());
+		}
+    }
+    
+    /**
+     * Test that ckontobezeichnung get reads in 
+     * @throws Exception
+     *             throws assert exception
+     */
+    @Test
+    public void testMt940KontobezeichnungMulticash() throws Exception {
+        Mt940Parser parser = new Mt940Parser();
+        InputStream inputStream = this.getClass().getResourceAsStream("/multiaccounts.sta");
+        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream));
+        Mt940File file = parser.parse(reader);
+        List<Mt940Entry> entries = file.getEntries();
+        assertEquals(2, entries.size());
+        assertEquals("531848396", entries.get(0).getKontobezeichnung());
+        assertEquals("3xxxxxx.013EUR", entries.get(1).getKontobezeichnung().trim());
     }
 
     /**
