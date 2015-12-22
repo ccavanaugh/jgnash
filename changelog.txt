@@ -26,7 +26,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Change the base highlight color for the FX interface
 
-Release 2.20.0
+Release 2.21.0
 ----------------------
 12/14/15 Added an Income / Expense Bar Chart report to the jGnashFx UI. (Fx)
 12/13/15 Month labels for tabular reports were off by one. (Swing)
