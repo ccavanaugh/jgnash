@@ -217,14 +217,17 @@ public class BudgetResultsModel implements MessageListener {
         accountLock.writeLock().lock();
 
         try {
-            EnumSet<AccountGroup> accountSet = EnumSet.noneOf(AccountGroup.class);
+            final EnumSet<AccountGroup> accountSet = EnumSet.noneOf(AccountGroup.class);
 
             accountSet.addAll(accounts.stream()
                     .map(account -> account.getAccountType().getAccountGroup()).collect(Collectors.toList()));
 
             // create a list and sort
             List<AccountGroup> groups = new ArrayList<>(accountSet);
-            Collections.sort(groups);
+
+            // Set an explicit sort order
+            Collections.sort(groups, new Comparators.ExplicitComparator<>(AccountGroup.INCOME,
+                    AccountGroup.EXPENSE, AccountGroup.ASSET, AccountGroup.LIABILITY));
 
             accountGroupList = groups;
         } finally {

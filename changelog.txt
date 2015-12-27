@@ -28,6 +28,7 @@ Change the base highlight color for the FX interface
 
 Release 2.21.0
 ----------------------
+12/27/15 Set an explicit and stable sort order for budget account groups. (Swing, Fx)
 12/14/15 Added an Income / Expense Bar Chart report to the jGnashFx UI. (Fx)
 12/13/15 Month labels for tabular reports were off by one. (Swing)
 12/13/15 Added the Profit and Loss text report to the jGnashFx UI. (Fx)
