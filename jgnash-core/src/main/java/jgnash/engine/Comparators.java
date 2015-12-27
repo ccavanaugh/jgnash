@@ -19,7 +19,10 @@ package jgnash.engine;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Utility class consisting of {@code Comparators} useful for sorting lists of {@code StoredObject}
@@ -295,6 +298,26 @@ public class Comparators {
                 return result;
             }
             return o1.compareTo(o2);
+        }
+    }
+
+    /**
+     * Explicit order Comparator
+     *
+     * @param <T> object type that is being sorted
+     */
+    public static class ExplicitComparator<T> implements Comparator<T> {
+
+        final List<T> order = new ArrayList<>();
+
+        @SafeVarargs
+        public ExplicitComparator(final T... objects) {
+            Collections.addAll(order, objects);
+        }
+
+        @Override
+        public int compare(final T t1, final T t2) {
+            return Integer.compare(order.indexOf(t1), order.indexOf(t2));
         }
     }
 
