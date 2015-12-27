@@ -44,6 +44,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import jgnash.convert.common.OfxTags;
+import jgnash.util.FileMagic;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -114,7 +115,7 @@ public class OfxV2Parser implements OfxTags {
         logger.exiting(OfxV2Parser.class.getName(), "parse");
     }
 
-    public void parse(final File file) {
+    private void parseFile(final File file) {
 
         try (InputStream stream = new FileInputStream(file)) {
             parse(stream);
@@ -125,6 +126,27 @@ public class OfxV2Parser implements OfxTags {
 
     public void parse(final String string, final String encoding) throws UnsupportedEncodingException {
         parse(new ByteArrayInputStream(string.getBytes(encoding)), encoding);
+    }
+
+    public static OfxBank parse(final File file) throws Exception {
+
+        final OfxV2Parser parser = new OfxV2Parser();
+
+        if (FileMagic.isOfxV1(file)) {
+            logger.info("Parsing OFX Version 1 file");
+            parser.parse(OfxV1ToV2.convertToXML(file), FileMagic.getOfxV1Encoding(file));
+        } else if (FileMagic.isOfxV2(file)) {
+            logger.info("Parsing OFX Version 2 file");
+            parser.parseFile(file);
+        } else {
+            logger.info("Unknown OFX Version");
+        }
+
+        if (parser.getBank() == null) {
+            throw new Exception("Bank import failed");
+        }
+
+        return parser.getBank();
     }
 
     private void readOfx(final XMLStreamReader reader) throws XMLStreamException {

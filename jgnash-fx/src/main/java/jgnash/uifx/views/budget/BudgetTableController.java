@@ -897,8 +897,6 @@ public class BudgetTableController implements MessageListener {
     }
 
     private void handleBudgetUpdate() {
-        //Platform.runLater(BudgetTableController.this::handleBudgetChange);
-
         rateLimitUpdate(BudgetTableController.this::handleBudgetChange);
     }
 

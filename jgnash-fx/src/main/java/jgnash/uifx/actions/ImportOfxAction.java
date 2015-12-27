@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javafx.concurrent.Task;
@@ -30,7 +29,6 @@ import javafx.stage.FileChooser;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
-import jgnash.convert.imports.ofx.OfxV1ToV2;
 import jgnash.convert.imports.ofx.OfxV2Parser;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -39,7 +37,6 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.uifx.wizard.imports.ImportWizard;
-import jgnash.util.FileMagic;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -84,7 +81,7 @@ public class ImportOfxAction {
         return fileChooser;
     }
 
-    private static class ImportTask extends Task<OfxV2Parser> {
+    private static class ImportTask extends Task<OfxBank> {
 
         private final File file;
 
@@ -97,41 +94,23 @@ public class ImportOfxAction {
         }
 
         @Override
-        protected OfxV2Parser call() throws Exception {
-            final Logger logger = Logger.getLogger(ImportOfxAction.class.getName());
-
-            final OfxV2Parser parser = new OfxV2Parser();
-
-            if (FileMagic.isOfxV1(file)) {
-                logger.info("Parsing OFX Version 1 file");
-
-                String encoding = FileMagic.getOfxV1Encoding(file);
-                parser.parse(OfxV1ToV2.convertToXML(file), encoding);
-            } else if (FileMagic.isOfxV2(file)) {
-                logger.info("Parsing OFX Version 2 file");
-                parser.parse(file);
-            } else {
-                logger.info("Unknown OFX Version");
-            }
-
-            if (parser.getBank() == null) {
-                throw new Exception("Bank import failed");
-            }
+        protected OfxBank call() throws Exception {
+            final OfxBank ofxBank = OfxV2Parser.parse(file);
 
             /* Preset the best match for the downloaded account */
-            final String accountNumber = parser.getBank().accountId;
+            final String accountNumber = ofxBank.accountId;
 
             if (accountNumber != null && !accountNumber.isEmpty()) {
-                match = OfxImport.matchAccount(parser.getBank());
+                match = OfxImport.matchAccount(ofxBank);
             }
 
-            return parser;
+            return ofxBank;
         }
 
         private void onSuccess() {
-            final OfxV2Parser parser = getValue();
+            final OfxBank ofxBank = getValue();
 
-            ImportWizard importWizard = new ImportWizard();
+            final ImportWizard importWizard = new ImportWizard();
 
             WizardDialogController<ImportWizard.Settings> wizardDialogController
                     = importWizard.wizardControllerProperty().get();
@@ -141,19 +120,20 @@ public class ImportOfxAction {
                 wizardDialogController.setSetting(ImportWizard.Settings.ACCOUNT, match);
             }
 
-            wizardDialogController.setSetting(ImportWizard.Settings.BANK, parser.getBank());
+            wizardDialogController.setSetting(ImportWizard.Settings.BANK, ofxBank);
 
             importWizard.showAndWait();
 
             if (wizardDialogController.validProperty().get()) {
                 final Account account = (Account) wizardDialogController.getSetting(ImportWizard.Settings.ACCOUNT);
-                final OfxBank bank = parser.getBank();
 
                 @SuppressWarnings("unchecked")
-                final List<ImportTransaction> transactions = (List<ImportTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
+                final List<ImportTransaction> transactions =
+                        (List<ImportTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
 
                 // import threads in the background
-                ImportTransactionsTask importTransactionsTask = new ImportTransactionsTask(bank, account, transactions);
+                final ImportTransactionsTask importTransactionsTask =
+                        new ImportTransactionsTask(ofxBank, account, transactions);
 
                 new Thread(importTransactionsTask).start();
 

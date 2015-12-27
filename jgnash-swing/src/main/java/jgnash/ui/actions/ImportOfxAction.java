@@ -34,7 +34,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
-import jgnash.convert.imports.ofx.OfxV1ToV2;
 import jgnash.convert.imports.ofx.OfxV2Parser;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -42,14 +41,12 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.ImportDialog;
-import jgnash.util.FileMagic;
 import jgnash.util.ResourceUtils;
 
 /**
  * Import OFX file action
  * 
  * @author Craig Cavanaugh
- *
  */
 @Action("ofximport-command")
 public class ImportOfxAction extends AbstractEnabledAction {
@@ -83,7 +80,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
         }
     }
 
-    final static class Import extends SwingWorker<OfxV2Parser, Void> {
+    final static class Import extends SwingWorker<OfxBank, Void> {
 
         private final File file;
 
@@ -94,45 +91,27 @@ public class ImportOfxAction extends AbstractEnabledAction {
         }
 
         @Override
-        protected OfxV2Parser doInBackground() throws Exception {
-            Logger logger = Logger.getLogger(Import.class.getName());
-
-            OfxV2Parser parser = new OfxV2Parser();
-
-            if (FileMagic.isOfxV1(file)) {
-                logger.info("Parsing OFX Version 1 file");
-
-                String encoding = FileMagic.getOfxV1Encoding(file);
-                parser.parse(OfxV1ToV2.convertToXML(file), encoding);
-            } else if (FileMagic.isOfxV2(file)) {
-                logger.info("Parsing OFX Version 2 file");
-                parser.parse(file);
-            } else {
-                logger.info("Unknown OFX Version");
-            }
-
-            if (parser.getBank() == null) {
-                throw new Exception("Bank import failed");
-            }
+        protected OfxBank doInBackground() throws Exception {
+            final OfxBank ofxBank = OfxV2Parser.parse(file);
 
             /* Preset the best match for the downloaded account */
-            String accountNumber = parser.getBank().accountId;
+            final String accountNumber = ofxBank.accountId;
 
             if (accountNumber != null && !accountNumber.isEmpty()) {
-                match = OfxImport.matchAccount(parser.getBank());
+                match = OfxImport.matchAccount(ofxBank);
             }
 
-            return parser;
+            return ofxBank;
         }
 
         @Override
         protected void done() {
             try {
-                final OfxV2Parser parser = get();
+                final OfxBank ofxBank = get();
 
                 final ImportDialog d = new ImportDialog();
 
-                d.setSetting(ImportDialog.Settings.BANK, parser.getBank());
+                d.setSetting(ImportDialog.Settings.BANK, ofxBank);
 
                 if (match != null) {
                     d.setSetting(ImportDialog.Settings.ACCOUNT, match);
@@ -142,12 +121,13 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
                 if (d.isWizardValid()) {
                     final Account account = (Account) d.getSetting(ImportDialog.Settings.ACCOUNT);
-                    final OfxBank bank = parser.getBank();
+
                     @SuppressWarnings("unchecked")
-                    final List<ImportTransaction> transactions = (List<ImportTransaction>) d.getSetting(ImportDialog.Settings.TRANSACTIONS);
+                    final List<ImportTransaction> transactions =
+                            (List<ImportTransaction>) d.getSetting(ImportDialog.Settings.TRANSACTIONS);
 
                     // import threads in the background
-                    new ImportThread(bank, account, transactions).start();
+                    new ImportThread(ofxBank, account, transactions).start();
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
