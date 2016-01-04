@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,7 +32,6 @@ import org.junit.Test;
  * Test FileMagic
  * 
  * @author Craig Cavanaugh
- *
  */
 public class FileMagicTest {
 
@@ -55,14 +53,6 @@ public class FileMagicTest {
 
         try {
             assertFalse(FileMagic.isdb4o(new File(url.toURI())));
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        url = Object.class.getResource("/emptyfile.yap");
-
-        try {
-            assertEquals(FileMagic.FileType.unknown, FileMagic.magic(new File(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
