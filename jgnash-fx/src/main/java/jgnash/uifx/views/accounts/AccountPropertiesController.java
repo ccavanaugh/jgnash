@@ -158,7 +158,9 @@ public class AccountPropertiesController {
             if (parentAccount != null) {
                 parentAccountButton.setText(parentAccount.getName());
 
-                accountTypeComboBox.setValue(parentAccount.getAccountType());
+                if (parentAccount.getAccountType() != AccountType.ROOT) {   // don't force a root account type
+                    accountTypeComboBox.setValue(parentAccount.getAccountType());
+                }
             }
         });
     }
@@ -209,11 +211,11 @@ public class AccountPropertiesController {
             excludeBudgetCheckBox.setSelected(account.isExcludedFromBudget());
 
             if (baseAccount.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-                securityNodeSet.addAll(baseAccount.getSecurities());
+                securityNodeSet.addAll(account.getSecurities());
                 updateCommodityText();
             }
 
-            accountTypeComboBox.setValue(baseAccount.getAccountType());
+            accountTypeComboBox.setValue(account.getAccountType());
 
             if (baseAccount.getTransactionCount() > 0) {
                 placeholderCheckBox.setDisable(true);

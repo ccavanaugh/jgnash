@@ -28,6 +28,7 @@ Change the base highlight color for the FX interface
 
 Release 2.21.0
 ----------------------
+01/04/16 The Account type was being corrupted for top level accounts when editing properties. (Fx)
 01/04/16 The default account type was not the same as the parent when creating a new account. (Fx)
 12/27/15 Set an explicit and stable sort order for budget account groups. (Swing, Fx)
 12/14/15 Added an Income / Expense Bar Chart report to the jGnashFx UI. (Fx)
