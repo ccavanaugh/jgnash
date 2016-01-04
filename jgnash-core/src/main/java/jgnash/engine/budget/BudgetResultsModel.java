@@ -495,7 +495,7 @@ public class BudgetResultsModel implements MessageListener {
         accountLock.readLock().lock();
 
         try {
-            for (Account account : getAccounts(group)) {
+            for (final Account account : getAccounts(group)) {
 
                 // only sum for the top level accounts within the budget model
                 // top level account if the parent is not included in the budget model
@@ -562,7 +562,7 @@ public class BudgetResultsModel implements MessageListener {
         accountLock.readLock().lock();
 
         try {
-            for (BudgetPeriodDescriptor descriptor : descriptorList) {
+            for (final BudgetPeriodDescriptor descriptor : descriptorList) {
                 final BudgetPeriodResults periodResults = getResults(descriptor, group);
 
                 totalChange = totalChange.add(periodResults.getChange());
