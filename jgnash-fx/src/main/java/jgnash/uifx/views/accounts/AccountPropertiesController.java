@@ -157,6 +157,8 @@ public class AccountPropertiesController {
         Platform.runLater(() -> {
             if (parentAccount != null) {
                 parentAccountButton.setText(parentAccount.getName());
+
+                accountTypeComboBox.setValue(parentAccount.getAccountType());
             }
         });
     }
