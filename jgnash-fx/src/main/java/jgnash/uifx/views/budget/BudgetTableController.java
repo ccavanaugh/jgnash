@@ -258,15 +258,19 @@ public class BudgetTableController implements MessageListener {
 
         // shift the table right and left with the ScrollBar value
         horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-            int newIndex = (int) Math.round(newValue.doubleValue());
 
-            if (newIndex > index) {
-                while (newIndex > index) {
-                    handleShiftRight();
-                }
-            } else if (newIndex < index) {
-                while (newIndex < index) {
-                    handleShiftLeft();
+            // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
+            synchronized (this) {
+                final int newIndex = (int) Math.round(newValue.doubleValue());
+
+                if (newIndex > index) {
+                    while (newIndex > index) {
+                        handleShiftRight();
+                    }
+                } else if (newIndex < index) {
+                    while (newIndex < index) {
+                        handleShiftLeft();
+                    }
                 }
             }
         });
@@ -285,7 +289,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     @FXML
-    private synchronized void handleShiftLeft() {
+    private void handleShiftLeft() {
         lock.writeLock().lock();
 
         try {
@@ -304,7 +308,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     @FXML
-    private synchronized void handleShiftRight() {
+    private void handleShiftRight() {
         lock.writeLock().lock();
 
         try {
@@ -339,7 +343,7 @@ public class BudgetTableController implements MessageListener {
     /**
      * The table view will lazily create the ScrollBars which makes finding them tricky.  We need to check for
      * their existence and try again later if they do not exist.
-     *
+     * <p>
      * Synchronize binding, otherwise the ScrollBars get a bit confused and do not respond to a scroll wheel
      */
     private synchronized void bindScrollBars() {
@@ -906,8 +910,8 @@ public class BudgetTableController implements MessageListener {
                 periodTable.refresh();
                 periodSummaryTable.refresh();
             }
-                accountSummaryTable.refresh();
-                accountGroupPeriodSummaryTable.refresh();
+            accountSummaryTable.refresh();
+            accountGroupPeriodSummaryTable.refresh();
 
 
             optimizeColumnWidths();
