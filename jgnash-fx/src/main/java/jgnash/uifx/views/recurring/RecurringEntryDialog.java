@@ -38,7 +38,7 @@ public class RecurringEntryDialog {
 
         StageUtils.addBoundsListener(pair.getStage(), RecurringEntryDialog.class);
 
-        pair.getStage().show();
+        pair.getStage().showAndWait();  // must block the UI so the return value is generated correctly
     }
 
     public static Optional<Reminder> showAndWait(final Reminder reminder) {
