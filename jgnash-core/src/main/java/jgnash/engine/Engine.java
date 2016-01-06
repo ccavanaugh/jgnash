@@ -1691,7 +1691,7 @@ public class Engine {
                 historyNode = new ExchangeRateHistoryNode(localDate, BigDecimal.ONE.divide(rate, MathConstants.mathContext));
             }
 
-            Message message;
+            final Message message;
 
             boolean result = false;
 
@@ -1718,7 +1718,7 @@ public class Engine {
         commodityLock.writeLock().lock();
 
         try {
-            Message message;
+            final Message message;
 
             boolean result = false;
 
@@ -1783,7 +1783,7 @@ public class Engine {
                 logger.warning("Template object class did not match old object class");
             }
 
-            Message message;
+            final Message message;
 
             if (templateNode instanceof SecurityNode) {
                 if (status) {
@@ -1811,7 +1811,21 @@ public class Engine {
     }
 
     private boolean updateReminder(final Reminder reminder) {
-        return getReminderDAO().updateReminder(reminder);
+        final boolean result = getReminderDAO().updateReminder(reminder);
+
+        final Message message;
+
+        if (result) {
+            message = new Message(MessageChannel.REMINDER, ChannelEvent.REMINDER_UPDATE, this);
+        } else {
+            message = new Message(MessageChannel.REMINDER, ChannelEvent.REMINDER_UPDATE_FAILED, this);
+        }
+
+        message.setObject(MessageProperty.REMINDER, reminder);
+
+        messageBus.fireEvent(message);
+
+        return result;
     }
 
     public String getAccountSeparator() {
