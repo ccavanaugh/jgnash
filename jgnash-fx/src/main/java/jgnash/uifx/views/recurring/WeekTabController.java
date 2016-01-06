@@ -17,16 +17,11 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.time.LocalDate;
-
 import javafx.fxml.FXML;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
 import jgnash.engine.recurring.Reminder;
 import jgnash.engine.recurring.WeeklyReminder;
-import jgnash.uifx.control.DatePickerEx;
 import jgnash.util.NotNull;
 
 /**
@@ -34,44 +29,15 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class WeekTabController implements RecurringTabController {
+public class WeekTabController extends AbstractTabController {
 
     @FXML
-    private RadioButton noEndDateToggleButton;
+    void initialize() {
+        super.initialize();
 
-    @FXML
-    private RadioButton dateToggleButton;
+        reminder = new WeeklyReminder();
 
-    @FXML
-    private DatePickerEx endDatePicker;
-
-    @FXML
-    private Spinner<Integer> numberSpinner;
-
-    private Reminder reminder = new WeeklyReminder();
-
-    @FXML
-    private void initialize() {
         numberSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 1, 1));
-
-        // bind enabled state
-        endDatePicker.disableProperty().bind(noEndDateToggleButton.selectedProperty());
-
-        noEndDateToggleButton.setSelected(true);
-    }
-
-    @Override
-    public Reminder getReminder() {
-        LocalDate endDate = null;
-
-        if (dateToggleButton.isSelected()) {
-            endDate = endDatePicker.getValue();
-        }
-
-        reminder.setIncrement(numberSpinner.getValue());
-        reminder.setEndDate(endDate);
-
-        return reminder;
     }
 
     @Override
@@ -80,13 +46,6 @@ public class WeekTabController implements RecurringTabController {
             throw new RuntimeException("Incorrect Reminder type");
         }
 
-        this.reminder = reminder;
-
-        numberSpinner.getValueFactory().setValue(reminder.getIncrement());
-
-        if (reminder.getEndDate() != null) {
-            endDatePicker.setValue(reminder.getEndDate());
-            dateToggleButton.setSelected(true);
-        }
+        super.setReminder(reminder);
     }
 }

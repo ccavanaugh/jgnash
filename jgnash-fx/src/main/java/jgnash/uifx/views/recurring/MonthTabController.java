@@ -17,18 +17,14 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
 import jgnash.engine.recurring.MonthlyReminder;
 import jgnash.engine.recurring.Reminder;
-import jgnash.uifx.control.DatePickerEx;
 import jgnash.util.NotNull;
 
 /**
@@ -36,7 +32,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class MonthTabController implements RecurringTabController {
+public class MonthTabController extends AbstractTabController {
 
     @FXML
     private ResourceBundle resources;
@@ -45,27 +41,12 @@ public class MonthTabController implements RecurringTabController {
     private ComboBox<String> typeComboBox;
 
     @FXML
-    private RadioButton noEndDateToggleButton;
+    void initialize() {
+        super.initialize();
 
-    @FXML
-    private RadioButton dateToggleButton;
+        reminder = new MonthlyReminder();
 
-    @FXML
-    private DatePickerEx endDatePicker;
-
-    @FXML
-    private Spinner<Integer> numberSpinner;
-
-    private Reminder reminder = new MonthlyReminder();
-
-    @FXML
-    private void initialize() {
         numberSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 1, 1));
-
-        // bind enabled state
-        endDatePicker.disableProperty().bind(noEndDateToggleButton.selectedProperty());
-
-        noEndDateToggleButton.setSelected(true);
 
         typeComboBox.getItems().addAll(resources.getString("Column.Date"), resources.getString("Column.Day"));
         typeComboBox.getSelectionModel().select(0);
@@ -73,18 +54,9 @@ public class MonthTabController implements RecurringTabController {
 
     @Override
     public Reminder getReminder() {
-        LocalDate endDate = null;
-
-        if (dateToggleButton.isSelected()) {
-            endDate = endDatePicker.getValue();
-        }
-
-        reminder.setIncrement(numberSpinner.getValue());
-        reminder.setEndDate(endDate);
-
         ((MonthlyReminder) reminder).setType(typeComboBox.getSelectionModel().getSelectedIndex());
 
-        return reminder;
+        return super.getReminder();
     }
 
     @Override
@@ -93,14 +65,8 @@ public class MonthTabController implements RecurringTabController {
             throw new RuntimeException("Incorrect Reminder type");
         }
 
-        this.reminder = reminder;
+        super.setReminder(reminder);
 
-        numberSpinner.getValueFactory().setValue(reminder.getIncrement());
         typeComboBox.getSelectionModel().select(((MonthlyReminder) reminder).getType());
-
-        if (reminder.getEndDate() != null) {
-            endDatePicker.setValue(reminder.getEndDate());
-            dateToggleButton.setSelected(true);
-        }
     }
 }
