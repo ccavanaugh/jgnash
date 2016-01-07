@@ -32,6 +32,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -160,33 +162,38 @@ public class ReconcileDialogController implements MessageListener {
             }
         });
 
-        // toggle the selection state
-        increaseTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                if (newValue.getReconciledState() == ReconciledState.RECONCILED) {
-                    newValue.setReconciledState(ReconciledState.NOT_RECONCILED);
-                } else {
-                    newValue.setReconciledState(ReconciledState.RECONCILED);
-                }
-                increaseTableView.refresh();
-                Platform.runLater(() -> increaseTableView.getSelectionModel().clearSelection());
-                updateCalculatedValues();
+        // Selection listener that toggles the reconciled state
+        class ToggleStateChangeListener implements ChangeListener<RecTransaction> {
+
+            final TableView tableView;
+
+            ToggleStateChangeListener(final TableView tableView) {
+                this.tableView = tableView;
             }
-        });
+
+            @Override
+            public void changed(final ObservableValue<? extends RecTransaction> observable,
+                                final RecTransaction oldValue, final RecTransaction newValue) {
+                if (newValue != null) {
+                    if (newValue.getReconciledState() == ReconciledState.RECONCILED) {
+                        newValue.setReconciledState(ReconciledState.NOT_RECONCILED);
+                    } else {
+                        newValue.setReconciledState(ReconciledState.RECONCILED);
+                    }
+                    tableView.refresh();
+                    Platform.runLater(() -> tableView.getSelectionModel().clearSelection());
+                    updateCalculatedValues();
+                }
+            }
+        }
 
         // toggle the selection state
-        decreaseTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                if (newValue.getReconciledState() == ReconciledState.RECONCILED) {
-                    newValue.setReconciledState(ReconciledState.NOT_RECONCILED);
-                } else {
-                    newValue.setReconciledState(ReconciledState.RECONCILED);
-                }
-                decreaseTableView.refresh();
-                Platform.runLater(() -> decreaseTableView.getSelectionModel().clearSelection());
-                updateCalculatedValues();
-            }
-        });
+        increaseTableView.getSelectionModel().selectedItemProperty()
+                .addListener(new ToggleStateChangeListener(increaseTableView));
+
+        // toggle the selection state
+        decreaseTableView.getSelectionModel().selectedItemProperty()
+                .addListener(new ToggleStateChangeListener(decreaseTableView));
 
         finishButton.disableProperty().bind(reconciled.not());
     }
