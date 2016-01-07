@@ -19,27 +19,17 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-
-import javafx.scene.control.TableCell;
 
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
-import jgnash.uifx.skin.StyleClass;
 
 /**
  * {@code TableCell} for rendering investment transaction quantities
  *
  * @author Craig Cavanaugh
  */
-class InvestmentTransactionQuantityTableCell extends TableCell<Transaction, BigDecimal> {
-
-    public InvestmentTransactionQuantityTableCell() {
-
-        // Right align
-        setStyle("-fx-alignment: center-right;");
-    }
+class InvestmentTransactionQuantityTableCell extends AbstractTransactionTableCell {
 
     @Override
     protected void updateItem(final BigDecimal amount, final boolean empty) {
@@ -51,33 +41,13 @@ class InvestmentTransactionQuantityTableCell extends TableCell<Transaction, BigD
 
             if (transaction instanceof InvestmentTransaction) {
 
-                final NumberFormat numberFormat
+                final NumberFormat format
                         = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) transaction).getSecurityNode());
 
-                setText(numberFormat.format(amount));
-
-                // Not empty and amount is not null, but tableRow can be null... JavaFx Bug?
-                if (getTableRow() != null && getTableRow().getItem() != null) {
-                    final boolean future = ((Transaction) getTableRow().getItem()).getLocalDate()
-                            .isAfter(LocalDate.now());
-
-                    final boolean negative = amount.signum() < 0;
-
-                    // Set font style
-                    if (future && negative) {
-                        setId(StyleClass.ITALIC_NEGATIVE_CELL_ID);
-                    } else if (future) {
-                        setId(StyleClass.ITALIC_CELL_ID);
-                    } else if (negative) {
-                        setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
-                    } else {
-                        setId(StyleClass.NORMAL_CELL_ID);
-                    }
-                }
+                applyFormat(amount, format);
             } else {
                 setText(null);
             }
-
         } else {
             setText(null);
         }

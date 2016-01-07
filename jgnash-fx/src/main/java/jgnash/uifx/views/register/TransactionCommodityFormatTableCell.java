@@ -19,25 +19,18 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-
-import javafx.scene.control.TableCell;
-
-import jgnash.engine.Transaction;
-import jgnash.uifx.skin.StyleClass;
 
 /**
  * @author Craig Cavanaugh
  */
-class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDecimal> {
+class TransactionCommodityFormatTableCell extends AbstractTransactionTableCell {
 
     private final NumberFormat format;
 
     public TransactionCommodityFormatTableCell(final NumberFormat format) {
-        this.format = format;
+        super();
 
-        // Right align
-        setStyle("-fx-alignment: center-right;");
+        this.format = format;
     }
 
     @Override
@@ -45,25 +38,7 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
         super.updateItem(amount, empty);  // required
 
         if (!empty && amount != null) {
-            setText(format.format(amount));
-
-            // Not empty and amount is not null, but tableRow can be null... JavaFx Bug?
-            if (getTableRow() != null && getTableRow().getItem() != null) {
-                final boolean future = ((Transaction) getTableRow().getItem()).getLocalDate().isAfter(LocalDate.now());
-                final boolean negative = amount.signum() < 0;
-
-                // Set font style
-                if (future && negative) {
-                    setId(StyleClass.ITALIC_NEGATIVE_CELL_ID);
-                } else if (future) {
-                    setId(StyleClass.ITALIC_CELL_ID);
-                } else if (negative) {
-                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
-                } else {
-                    setId(StyleClass.NORMAL_CELL_ID);
-                }
-            }
-
+            applyFormat(amount, format);
         } else {
             setText(null);
         }
