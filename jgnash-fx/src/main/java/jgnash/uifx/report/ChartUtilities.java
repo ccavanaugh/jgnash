@@ -48,7 +48,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class ChartUtilities {
+class ChartUtilities {
 
     private ChartUtilities() {
         // Utility class
@@ -59,7 +59,7 @@ public class ChartUtilities {
      */
     private static final int SNAPSHOT_SCALE_FACTOR = 4;
 
-    public static WritableImage takeSnapshot(final Chart chart) {
+    private static WritableImage takeSnapshot(final Chart chart) {
         // Need to disable animation for printing
         chart.animatedProperty().setValue(false);
 

@@ -104,7 +104,7 @@ public class HistoricalImportController {
 
     private volatile boolean requestCancel = false;
 
-    private BooleanProperty disableUIProperty = new SimpleBooleanProperty();
+    private final BooleanProperty disableUIProperty = new SimpleBooleanProperty();
 
     @FXML
     void initialize() {
