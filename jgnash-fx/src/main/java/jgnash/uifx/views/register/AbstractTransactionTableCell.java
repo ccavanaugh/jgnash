@@ -33,7 +33,7 @@ import jgnash.uifx.skin.StyleClass;
  */
 abstract class AbstractTransactionTableCell extends TableCell<Transaction, BigDecimal> {
 
-    public AbstractTransactionTableCell() {
+    AbstractTransactionTableCell() {
 
         // Right align numeric values
         setStyle("-fx-alignment: center-right;");
