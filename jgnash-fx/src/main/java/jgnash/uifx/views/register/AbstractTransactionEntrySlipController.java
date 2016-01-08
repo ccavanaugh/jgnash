@@ -23,18 +23,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.Options;
@@ -42,15 +38,15 @@ import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.ValidationFactory;
+import jgnash.util.NotNull;
 
 /**
  * Abstract controller for spit transaction entries of various types
  *
  * @author Craig Cavanaugh
  */
-abstract class AbstractTransactionEntrySlipController {
+abstract class AbstractTransactionEntrySlipController implements BaseSlip {
 
     @InjectFXML
     private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
@@ -102,46 +98,14 @@ abstract class AbstractTransactionEntrySlipController {
 
         // Install an event handler when the parent has been set via injection
         parentProperty.addListener((observable, oldValue, newValue) -> {
-            newValue.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-                if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
-                    clearForm();
-                } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
-                    if (validateForm()) {
-                        Platform.runLater(AbstractTransactionEntrySlipController.this::handleEnterAction);
-                    } else {
-                        Platform.runLater(() -> {
-                            if (event.getSource() instanceof Node) {
-                                JavaFXUtils.focusNext((Node) event.getSource());
-                            }
-                        });
-                    }
-                }
-            });
+            installKeyPressedHandler(newValue);
         });
     }
 
-    void setReconciledState(final ReconciledState reconciledState) {
-        switch (reconciledState) {
-            case NOT_RECONCILED:
-                reconciledButton.setIndeterminate(false);
-                reconciledButton.setSelected(false);
-                break;
-            case RECONCILED:
-                reconciledButton.setIndeterminate(false);
-                reconciledButton.setSelected(true);
-                break;
-            case CLEARED:
-                reconciledButton.setIndeterminate(true);
-        }
-    }
-
-    ReconciledState getReconciledState() {
-        if (reconciledButton.isIndeterminate()) {
-            return ReconciledState.CLEARED;
-        } else if (reconciledButton.isSelected()) {
-            return ReconciledState.RECONCILED;
-        }
-        return ReconciledState.NOT_RECONCILED;
+    @Override
+    @NotNull
+    public CheckBox getReconcileButton() {
+        return reconciledButton;
     }
 
     abstract TransactionEntry buildTransactionEntry();
@@ -162,7 +126,7 @@ abstract class AbstractTransactionEntrySlipController {
         return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
 
-    private boolean validateForm() {
+    public boolean validateForm() {
         if (amountField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
             ValidationFactory.showValidationError(amountField, resources.getString("Message.Error.Value"));
             return false;
@@ -171,7 +135,7 @@ abstract class AbstractTransactionEntrySlipController {
         return true;
     }
 
-    void clearForm() {
+    public void clearForm() {
         oldEntry = null;
 
         reconciledButton.setDisable(false);
@@ -184,7 +148,7 @@ abstract class AbstractTransactionEntrySlipController {
     }
 
     @FXML
-    private void handleEnterAction() {
+    public void handleEnterAction() {
         if (validateForm()) {
             final TransactionEntry entry = buildTransactionEntry();
 
@@ -206,7 +170,7 @@ abstract class AbstractTransactionEntrySlipController {
     }
 
     @FXML
-    private void handleCancelAction() {
+    public void handleCancelAction() {
         clearForm();
         memoField.requestFocus();
     }

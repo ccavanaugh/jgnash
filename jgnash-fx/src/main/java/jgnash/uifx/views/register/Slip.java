@@ -17,30 +17,20 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.scene.control.CheckBox;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.util.NotNull;
 
 /**
  * @author Craig Cavanaugh
  */
-public interface Slip {
-
-    void modifyTransaction(@NotNull final Transaction transaction);
-
-    void clearForm();
-
-    void handleCancelAction();
-
-    void handleEnterAction();
+public interface Slip extends BaseSlip {
 
     /**
-     * Validates the form
+     * Loads a {@code Transaction} into the form and sets it up for modification
      *
-     * @return return {@code true} if the form entry is valid, {@code false} otherwise
+     * @param transaction {@code Transaction} to load for modification
      */
-    boolean validateForm();
+    void modifyTransaction(@NotNull final Transaction transaction);
 
     /**
      * Builds and returns a new {@code Transaction} based on form contents
@@ -50,30 +40,4 @@ public interface Slip {
     @NotNull
     Transaction buildTransaction();
 
-    @NotNull
-    CheckBox getReconcileButton();
-
-    default void setReconciledState(final ReconciledState reconciledState) {
-        switch (reconciledState) {
-            case NOT_RECONCILED:
-                getReconcileButton().setIndeterminate(false);
-                getReconcileButton().setSelected(false);
-                break;
-            case RECONCILED:
-                getReconcileButton().setIndeterminate(false);
-                getReconcileButton().setSelected(true);
-                break;
-            case CLEARED:
-                getReconcileButton().setIndeterminate(true);
-        }
-    }
-
-    default ReconciledState getReconciledState() {
-        if (getReconcileButton().isIndeterminate()) {
-            return ReconciledState.CLEARED;
-        } else if (getReconcileButton().isSelected()) {
-            return ReconciledState.RECONCILED;
-        }
-        return ReconciledState.NOT_RECONCILED;
-    }
 }

@@ -26,17 +26,14 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -51,7 +48,6 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
@@ -145,22 +141,7 @@ abstract class AbstractSlipController implements Slip {
 
         // Install an event handler when the parent has been set via injection
         parentProperty.addListener((observable, oldValue, newValue) -> {
-
-            newValue.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-                if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
-                    clearForm();
-                } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
-                    if (validateForm()) {
-                        Platform.runLater(AbstractSlipController.this::handleEnterAction);
-                    } else {
-                        Platform.runLater(() -> {
-                            if (event.getSource() instanceof Node) {
-                                JavaFXUtils.focusNext((Node) event.getSource());
-                            }
-                        });
-                    }
-                }
-            });
+            installKeyPressedHandler(newValue);
         });
     }
 
@@ -180,7 +161,6 @@ abstract class AbstractSlipController implements Slip {
 
     @Override
     public void clearForm() {
-
         modTrans = null;
 
         amountField.setDecimal(BigDecimal.ZERO);

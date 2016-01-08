@@ -17,14 +17,15 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.application.Platform;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.KeyEvent;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
@@ -32,11 +33,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
 import jgnash.engine.Transaction;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
-
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * @author Craig Cavanaugh
@@ -77,21 +74,7 @@ public abstract class AbstractInvSlipController implements Slip {
 
         // Install an event handler when the parent has been set via injection
         parentProperty.addListener((observable, oldValue, newValue) -> {
-            newValue.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-                if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
-                    clearForm();
-                } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
-                    if (validateForm()) {
-                        Platform.runLater(AbstractInvSlipController.this::handleEnterAction);
-                    } else {
-                        Platform.runLater(() -> {
-                            if (event.getSource() instanceof Node) {
-                                JavaFXUtils.focusNext((Node) event.getSource());
-                            }
-                        });
-                    }
-                }
-            });
+            installKeyPressedHandler(newValue);
         });
     }
 
