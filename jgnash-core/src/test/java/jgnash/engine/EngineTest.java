@@ -833,7 +833,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    private void testGetTransactions() throws Exception {
+    public void testGetTransactions() throws Exception {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
