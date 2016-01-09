@@ -564,6 +564,19 @@ public class Engine {
                 fixMarkedRemovalTransactions();
             }
 
+            // fix detached securities caused by a prior JPA relationship bug
+            if (getConfig().getMinorRevision() < 1.8f) {
+                for (Account account : getInvestmentAccountList()) {
+                    account.getSortedTransactionList().stream().filter(transaction
+                            -> transaction instanceof InvestmentTransaction).filter(transaction
+                            -> !account.containsSecurity(((InvestmentTransaction) transaction).getSecurityNode()))
+                            .forEach(transaction -> {
+                                addAccountSecurity(account, ((InvestmentTransaction) transaction).getSecurityNode());
+                                logInfo("Fixed detached security node");
+                            });
+                }
+            }
+
             // if the file version is not current, then update it
             if (!nearlyEquals(getConfig().getFileVersion(), CURRENT_VERSION, EPSILON)) {
                 final Config localConfig = getConfig();
@@ -1544,7 +1557,7 @@ public class Engine {
     /**
      * Remove a {@code SecurityHistoryEvent} from a {@code SecurityNode}
      *
-     * @param node {@code SecurityNode} to remove history from
+     * @param node         {@code SecurityNode} to remove history from
      * @param historyEvent the {@code SecurityHistoryEvent} to remove
      * @return {@code true} if the {@code SecurityHistoryEvent} was found and removed
      */
@@ -2073,7 +2086,7 @@ public class Engine {
      * Changes an Account's code.
      *
      * @param account Account to change
-     * @param code new code
+     * @param code    new code
      * @return true is successful
      */
     public boolean setAccountCode(final Account account, final int code) {
