@@ -17,24 +17,31 @@
  */
 package jgnash.uifx.dialog.currency;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.control.LockedCommodityListCell;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.util.LockedCommodityNode;
 import jgnash.uifx.util.ValidationFactory;
-import jgnash.util.NotNull;
 
 /**
  * @author Craig Cavanaugh
@@ -54,7 +61,7 @@ public class AddRemoveCurrencyController {
     private ListView<CurrencyNode> availableList;
 
     @FXML
-    private ListView<LockedCurrency> selectedList;
+    private ListView<LockedCommodityNode<CurrencyNode>> selectedList;
 
     @FXML
     private ResourceBundle resources;
@@ -64,7 +71,7 @@ public class AddRemoveCurrencyController {
         availableList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        selectedList.setCellFactory(param -> new LockedSecurityListCell());
+        selectedList.setCellFactory(param -> new LockedCommodityListCell());
 
         addButton.disableProperty().bind(newCurrencyTextField.textProperty().isEmpty());
 
@@ -90,13 +97,13 @@ public class AddRemoveCurrencyController {
 
         availableList.getItems().addAll(defaultNodes);
 
-        ArrayList<LockedCurrency> list = new ArrayList<>();
+        final ArrayList<LockedCommodityNode<CurrencyNode>> list = new ArrayList<>();
 
         for (final CurrencyNode node : availNodes) {
             if (activeNodes.contains(node)) {
-                list.add(new LockedCurrency(node, true));
+                list.add(new LockedCommodityNode<>(node, true));
             } else {
-                list.add(new LockedCurrency(node, false));
+                list.add(new LockedCommodityNode<>(node, false));
             }
         }
 
@@ -114,8 +121,8 @@ public class AddRemoveCurrencyController {
         for (final CurrencyNode currencyNode : availableList.getSelectionModel().getSelectedItems()) {
             engine.addCurrency(currencyNode);
 
-            availableList.getItems().removeAll(currencyNode);
-            selectedList.getItems().addAll(new LockedCurrency(currencyNode, false));
+            availableList.getItems().remove(currencyNode);
+            selectedList.getItems().add(new LockedCommodityNode<>(currencyNode, false));
         }
 
         FXCollections.sort(selectedList.getItems());
@@ -129,10 +136,10 @@ public class AddRemoveCurrencyController {
 
         selectedList.getSelectionModel().getSelectedItems().stream()
                 .filter(node -> node != null && !node.isLocked()).forEach(node -> {
-            selectedList.getItems().removeAll(node);
-            availableList.getItems().addAll(node.getCurrencyNode());
+            selectedList.getItems().remove(node);
+            availableList.getItems().add(node.getNode());
 
-            engine.removeCommodity(node.getCurrencyNode());
+            engine.removeCommodity(node.getNode());
         });
 
         FXCollections.sort(availableList.getItems());
@@ -152,7 +159,7 @@ public class AddRemoveCurrencyController {
             // the add could fail if the commodity symbol is a duplicate
             if (engine.addCurrency(node)) {
 
-                selectedList.getItems().addAll(new LockedCurrency(node, false));
+                selectedList.getItems().add(new LockedCommodityNode<>(node, false));
                 FXCollections.sort(selectedList.getItems());
                 newCurrencyTextField.clear();
             }
@@ -162,69 +169,5 @@ public class AddRemoveCurrencyController {
     @FXML
     private void handleCloseAction() {
         ((Stage) parentProperty.get().getWindow()).close();
-    }
-
-    private static class LockedCurrency implements Comparable<LockedCurrency> {
-        private final boolean locked;
-        private final CurrencyNode currencyNode;
-
-        LockedCurrency(@NotNull final CurrencyNode currencyNode, final boolean locked) {
-            this.currencyNode = currencyNode;
-            this.locked = locked;
-        }
-
-        @Override
-        public String toString() {
-            return currencyNode.toString();
-        }
-
-        public boolean isLocked() {
-            return locked;
-        }
-
-        @Override
-        public int compareTo(@NotNull final LockedCurrency other) {
-            return currencyNode.compareTo(other.currencyNode);
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            return this == o || o instanceof LockedCurrency && currencyNode.equals(((LockedCurrency) o).currencyNode);
-        }
-
-        CurrencyNode getCurrencyNode() {
-            return currencyNode;
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = currencyNode.hashCode();
-            return 13 * hash + (locked ? 1 : 0);
-        }
-    }
-
-    /**
-     * Provides visual feedback that items are locked and may not be moved
-     */
-    private static class LockedSecurityListCell extends ListCell<LockedCurrency> {
-
-        @Override
-        public void updateItem(final LockedCurrency item, final boolean empty) {
-            super.updateItem(item, empty);  // required
-
-            if (!empty) {
-                if (item.isLocked()) {
-                    setId(StyleClass.DISABLED_CELL_ID);
-                    setDisable(true);
-                } else {
-                    setId(StyleClass.ENABLED_CELL_ID);
-                    setDisable(false);
-                }
-
-                setText(item.toString());
-            } else {
-                setText("");
-            }
-        }
     }
 }

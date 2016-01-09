@@ -35,7 +35,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.ColumnConstraints;
@@ -52,8 +51,10 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.control.LockedCommodityListCell;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.util.LockedCommodityNode;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
@@ -73,8 +74,8 @@ public class SelectAccountSecuritiesDialog {
     private Button moveToTarget;
     private Button moveToSource;
 
-    private final ListView<LockedSecurity> sourceListView = new ListView<>();
-    private final ListView<LockedSecurity> targetListView = new ListView<>();
+    private final ListView<LockedCommodityNode<SecurityNode>> sourceListView = new ListView<>();
+    private final ListView<LockedCommodityNode<SecurityNode>> targetListView = new ListView<>();
 
     private boolean result;
 
@@ -82,8 +83,8 @@ public class SelectAccountSecuritiesDialog {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        sourceListView.setCellFactory(param -> new LockedSecurityListCell());
-        targetListView.setCellFactory(param -> new LockedSecurityListCell());
+        sourceListView.setCellFactory(param -> new LockedCommodityListCell());
+        targetListView.setCellFactory(param -> new LockedCommodityListCell());
 
         Set<SecurityNode> usedSecurities = new HashSet<>();
         Set<SecurityNode> selectedSecurityNodes = new HashSet<>();
@@ -98,15 +99,15 @@ public class SelectAccountSecuritiesDialog {
 
         for (final SecurityNode securityNode : selectedSecurityNodes) {
             if (usedSecurities.contains(securityNode)) {
-                targetListView.getItems().add(new LockedSecurity(securityNode, true));
+                targetListView.getItems().add(new LockedCommodityNode<>(securityNode, true));
             } else {
-                targetListView.getItems().add(new LockedSecurity(securityNode, false));
+                targetListView.getItems().add(new LockedCommodityNode<>(securityNode, false));
             }
         }
 
         for (final SecurityNode securityNode : engine.getSecurities()) {
             if (!selectedSecurityNodes.contains(securityNode)) {
-                sourceListView.getItems().add(new LockedSecurity(securityNode, false));
+                sourceListView.getItems().add(new LockedCommodityNode<>(securityNode, false));
             }
         }
 
@@ -248,13 +249,16 @@ public class SelectAccountSecuritiesDialog {
         moveToSource.disableProperty().bind(Bindings.isEmpty(targetListView.getItems()));
     }
 
-    synchronized private void moveItems(final ListView<LockedSecurity> sourceView, final ListView<LockedSecurity> destinationView) {
-        final List<LockedSecurity> selectedItems = new ArrayList<>(sourceView.getSelectionModel().getSelectedItems());
-        final Iterator<LockedSecurity> iterator = selectedItems.iterator();
+    synchronized private void moveItems(final ListView<LockedCommodityNode<SecurityNode>> sourceView,
+                                        final ListView<LockedCommodityNode<SecurityNode>> destinationView) {
+        final List<LockedCommodityNode<SecurityNode>> selectedItems
+                = new ArrayList<>(sourceView.getSelectionModel().getSelectedItems());
+
+        final Iterator<LockedCommodityNode<SecurityNode>> iterator = selectedItems.iterator();
 
         // filter out any locked items
         while (iterator.hasNext()) {
-            final LockedSecurity lockedDecorator = iterator.next();
+            final LockedCommodityNode<SecurityNode> lockedDecorator = iterator.next();
             if (lockedDecorator.isLocked()) {
                 iterator.remove();
             }
@@ -263,8 +267,10 @@ public class SelectAccountSecuritiesDialog {
         moveItems(sourceView, destinationView, selectedItems);
     }
 
-    synchronized private void moveItems(final ListView<LockedSecurity> sourceView, final ListView<LockedSecurity> destinationView, final List<LockedSecurity> items) {
-        for (final LockedSecurity item : items) {
+    synchronized private void moveItems(final ListView<LockedCommodityNode<SecurityNode>> sourceView,
+                                        final ListView<LockedCommodityNode<SecurityNode>> destinationView,
+                                        final List<LockedCommodityNode<SecurityNode>> items) {
+        for (final LockedCommodityNode<SecurityNode> item : items) {
             sourceView.getItems().remove(item);
             destinationView.getItems().add(item);
 
@@ -284,65 +290,7 @@ public class SelectAccountSecuritiesDialog {
     }
 
     public Set<SecurityNode> getSelectedSecurities() {
-        return targetListView.getItems().stream().map(lockedSecurity -> lockedSecurity.securityNode).collect(Collectors.toCollection(TreeSet::new));
-    }
-
-    private static class LockedSecurity implements Comparable<LockedSecurity> {
-        private final boolean locked;
-        private final SecurityNode securityNode;
-
-        LockedSecurity(final SecurityNode securityNode, final boolean locked) {
-            this.securityNode = securityNode;
-            this.locked = locked;
-        }
-
-        @Override
-        public String toString() {
-            return securityNode.toString();
-        }
-
-        public boolean isLocked() {
-            return locked;
-        }
-
-        @Override
-        public int compareTo(@NotNull final LockedSecurity other) {
-            return securityNode.compareTo(other.securityNode);
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            return this == o || o instanceof LockedSecurity && securityNode.equals(((LockedSecurity) o).securityNode);
-        }
-
-        @Override
-        public int hashCode() {
-            return securityNode.hashCode();
-        }
-    }
-
-    /**
-     * Provides visual feedback that items are locked and may not be moved
-     */
-    private static class LockedSecurityListCell extends ListCell<LockedSecurity> {
-
-        @Override
-        public void updateItem(final LockedSecurity item, final boolean empty) {
-            super.updateItem(item, empty);  // required
-
-            if (!empty) {
-                if (item.isLocked()) {
-                    setId(StyleClass.DISABLED_CELL_ID);
-                    setDisable(true);
-                } else {
-                    setId(StyleClass.ENABLED_CELL_ID);
-                    setDisable(false);
-                }
-
-                setText(item.toString());
-            } else {
-                setText("");
-            }
-        }
+        return targetListView.getItems().stream().map(LockedCommodityNode::getNode)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 }
