@@ -125,7 +125,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @JoinColumn()
     @OrderBy("symbol")
-    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<SecurityNode> securities = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
