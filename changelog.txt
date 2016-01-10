@@ -26,6 +26,10 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Change the base highlight color for the FX interface
 
+Release 2.22.0
+----------------------
+01/10/16 Added the Monthly Account Balance CSV export report to the jGnashFx UI. (Fx)
+
 Release 2.21.0
 ----------------------
 01/09/16 Fixed a bug that was causing Investment Accounts to loose Securities resulting in exceptions.  It was triggered

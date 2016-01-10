@@ -368,4 +368,9 @@ public class MenuBarController implements MessageListener {
     private void handleExportProfitLoss() {
         ReportActions.exportProfitLossReport();
     }
+
+    @FXML
+    private void handleExportBalanceByMonthCSVReport() {
+        ReportActions.exportBalanceByMonthCSVReport();
+    }
 }

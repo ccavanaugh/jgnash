@@ -124,7 +124,7 @@
             name="Menu.Account.Name"/>
 
     <action id="report-monthCSV-command"
-            name="Menu.MonthEndBalance.Name"/>
+            name="Menu.MonthEndBalanceCSV.Name"/>
 
     <action id="report-sechighlow-command"
             name="Menu.HistoryChart.Name"/>

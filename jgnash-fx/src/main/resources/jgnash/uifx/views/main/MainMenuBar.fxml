@@ -48,6 +48,7 @@
     <Menu fx:id="reportMenu" text="%Menu.Reports.Name">
         <Menu text="%Menu.Export.Name">
             <MenuItem text="%Menu.ProfitLossTXT.Name" onAction="#handleExportProfitLoss"/>
+            <MenuItem text="%Menu.MonthEndBalanceCSV.Name" onAction="#handleExportBalanceByMonthCSVReport"/>
         </Menu>
         <Menu text="%Menu.Charts.Name">
             <MenuItem text="%Menu.IEBarChart.Name" onAction="#handleIncomeExpenseBarChart"/>

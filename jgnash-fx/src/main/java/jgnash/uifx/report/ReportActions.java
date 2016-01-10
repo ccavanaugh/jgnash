@@ -28,6 +28,7 @@ import javafx.stage.FileChooser;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.report.BalanceByMonthCSVReport;
 import jgnash.report.ProfitLossTextReport;
 import jgnash.uifx.control.DateRangeDialogController;
 import jgnash.uifx.util.FXMLUtils;
@@ -43,6 +44,7 @@ import jgnash.util.ResourceUtils;
 public class ReportActions {
 
     private static final String LAST_DIR = "lastDir";
+    private static final String FORCE_CURRENCY = "forceCurrency";
 
     public static void displayIncomeExpensePieChart() {
         final FXMLUtils.Pair pair =
@@ -77,7 +79,7 @@ public class ReportActions {
 
         if (dates.isPresent()) {
 
-            final Preferences preferences = Preferences.userNodeForPackage(ProfitLossTextReport.class);
+            final Preferences preferences = Preferences.userNodeForPackage(ReportActions.class);
 
             final String lastDir = preferences.get(LAST_DIR, null);
 
@@ -99,6 +101,61 @@ public class ReportActions {
 
                 final ProfitLossTextReport report = new ProfitLossTextReport(file.getAbsolutePath(), dates.get()[0],
                         dates.get()[1], baseCommodity, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
+
+                report.run();
+            }
+        }
+    }
+
+    public static void exportBalanceByMonthCSVReport() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final Preferences preferences = Preferences.userNodeForPackage(ReportActions.class);
+
+        final FXMLUtils.Pair<BalanceByMonthOptionsDialogController> pair
+                = FXMLUtils.load(BalanceByMonthOptionsDialogController.class.getResource("BalanceByMonthOptionsDialog.fxml"),
+                ResourceUtils.getString("Title.ReportOptions"));
+
+        pair.getController().forceDefaultCurrencyProperty().setValue(preferences.getBoolean(FORCE_CURRENCY, false));
+        pair.getStage().setResizable(false);
+        pair.getStage().showAndWait();
+
+        final Optional<LocalDate[]> dates = pair.getController().getDates();
+        final boolean vertical = pair.getController().isVertical();
+        final boolean forceCurrency = pair.getController().forceDefaultCurrencyProperty().get();
+
+        if (dates.isPresent()) {
+            final String lastDir = preferences.get(LAST_DIR, null);
+            preferences.putBoolean(FORCE_CURRENCY, forceCurrency);
+
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle(ResourceUtils.getString("Title.SaveFile"));
+
+            if (lastDir != null) {
+                fileChooser.setInitialDirectory(new File(lastDir));
+            }
+
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("CSV", "*.csv")
+            );
+
+            final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+
+            if (file != null) {
+                preferences.put(LAST_DIR, file.getParent());
+
+                final BalanceByMonthCSVReport report;
+
+                if (forceCurrency) {
+                    report = new BalanceByMonthCSVReport(file.getAbsolutePath(), dates.get()[0], dates.get()[1],
+                            engine.getDefaultCurrency(), vertical,
+                            AccountBalanceDisplayManager::convertToSelectedBalanceMode);
+
+                } else {
+                    report = new BalanceByMonthCSVReport(file.getAbsolutePath(), dates.get()[0],
+                            dates.get()[1], null, vertical, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
+                }
 
                 report.run();
             }
