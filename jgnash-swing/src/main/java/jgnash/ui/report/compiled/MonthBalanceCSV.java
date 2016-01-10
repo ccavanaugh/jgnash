@@ -15,31 +15,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/*
- * 2008-10-10, Tom Edelson:
- * Created this new Java class, consisting of most of the code which used to
- * be in jgnash/report/scripts/MonthBalanceCSV.bsh.
- * Very minor changes were made to get it to compile without error or warning.
- * This makes the report run successfully on Mac OS MARKED, where it didn't
- * before; as a side effect, it should make it run faster on all platforms.
- */
-
 package jgnash.ui.report.compiled;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,13 +29,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import jgnash.engine.Account;
-import jgnash.engine.Comparators;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
+import jgnash.report.BalanceByMonthCSVReport;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -70,46 +44,37 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author Tom Edelson
  */
 public final class MonthBalanceCSV {
-
-    private final List<Account> accountList = new ArrayList<>();
-
-    private final List<BigDecimal[]> balanceList = new ArrayList<>();
-
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private boolean vertical = true;
 
+    private LocalDate startDate;
+
+    private LocalDate endDate;
+
     private MonthBalanceCSV() {
 
-        final LocalDate[] dates = getDates();
+        try {
+            getOptions();
 
-        if (dates != null) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
+            if (startDate != null && endDate != null) {
+                final String fileName = getFileName();
 
-            Account root = engine.getRootAccount();
-            buildLists(root, dates);
-
-            try {
-                System.out.println("writing file");
-                if (vertical) {
-                    writeVerticalCSVFileFormat(getFileName(), dates);
-                } else {
-                    writeHorizontalFormatCSVFile(getFileName(), dates);
+                if (fileName != null) {
+                    BalanceByMonthCSVReport report = new BalanceByMonthCSVReport(fileName, startDate, endDate, null,
+                            vertical, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
+                    report.run();
                 }
-            } catch (IOException e) {
-                Logger.getLogger(MonthBalanceCSV.class.getName()).log(Level.SEVERE, null, e);
             }
+
+        } catch (Exception e) {
+            Logger.getLogger(MonthBalanceCSV.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
 
-    } // end constructor
-
-    private LocalDate[] getDates() {
-
-        LocalDate[] dates;
-
-        DatePanel startField = new DatePanel();
-        DatePanel endField = new DatePanel();
+    private void getOptions() {
+        final DatePanel startField = new DatePanel();
+        final DatePanel endField = new DatePanel();
 
         ButtonGroup group = new ButtonGroup();
         JRadioButton vButton = new JRadioButton(rb.getString("Button.Vertical"));
@@ -137,119 +102,11 @@ public final class MonthBalanceCSV {
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (option == JOptionPane.OK_OPTION) {
-            dates = getLastDays(startField.getLocalDate(), endField.getLocalDate());
-        } else {
-            dates = null;
+            startDate = startField.getLocalDate();
+            endDate = endField.getLocalDate();
         }
 
         vertical = vButton.isSelected();
-
-        return dates;
-
-    } // end method getDates
-
-    private static LocalDate[] getLastDays(final LocalDate startDate, final LocalDate stopDate) {
-        final ArrayList<LocalDate> list = new ArrayList<>();
-
-        LocalDate t = DateUtils.getLastDayOfTheMonth(startDate);
-
-        // add a month at a time to the previous date until all of the months
-        // have been captured
-        while (DateUtils.before(t, stopDate)) {
-            list.add(t);
-
-            t = t.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
-        }
-
-        return list.toArray(new LocalDate[list.size()]);
-
-    } // end method getLastDays
-
-    private void buildLists(final Account account, final LocalDate[] dates) {
-        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
-            if (child.getTransactionCount() > 0) {
-                accountList.add(child); // add the account
-                BigDecimal[] bigDecimals = new BigDecimal[dates.length];
-                for (int i = 0; i < dates.length; i++) {
-                    bigDecimals[i] = AccountBalanceDisplayManager.convertToSelectedBalanceMode(child.getAccountType(),
-                            child.getBalance(dates[i]));
-                }
-                balanceList.add(bigDecimals);
-            }
-            if (child.isParent()) {
-                buildLists(child, dates);
-            }
-        }
-    }
-
-    /*
-     * ,A1,A2,A3 Jan,455,30,80 Feb,566,70,90 March,678,200,300
-     */
-    private void writeHorizontalFormatCSVFile(final String fileName, final LocalDate[] dates) throws IOException {
-
-        if (fileName == null || dates == null) {
-            return;
-        }
-
-        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),
-                StandardCharsets.UTF_8))) {
-
-            // write out the account names with full path
-            final int length = accountList.size();
-
-            for (final Account a : accountList) {
-                writer.write(",");
-                writer.write(a.getPathName());
-            }
-
-            writer.newLine();
-
-            // write out the month, and then balance for that month
-            for (int i = 0; i < dates.length; i++) {
-                writer.write(dates[i].getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
-                for (int j = 0; j < length; j++) {
-                    BigDecimal[] bigDecimals = balanceList.get(j);
-                    writer.write(",");
-                    writer.write(bigDecimals[i].toString());
-                }
-                writer.newLine();
-            }
-        }
-
-    }
-
-    /*
-     * ,Jan,Feb,Mar A1,30,80,100 A2,70,90,120 A3,200,300,400
-     */
-    private void writeVerticalCSVFileFormat(final String fileName, final LocalDate[] dates) throws IOException {
-
-        if (fileName == null || dates == null) {
-            return;
-        }
-
-        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),
-                StandardCharsets.UTF_8))) {
-
-            // write out the month header, the first column is empty
-            for (final LocalDate date : dates) {
-                writer.write(",");
-                writer.write(date.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
-            }
-
-            writer.newLine();
-
-            // write out the account balance info
-            for (int i = 0; i < accountList.size(); i++) {
-                writer.write(accountList.get(i).getPathName());
-
-                for (final BigDecimal bigDecimal : balanceList.get(i)) {
-                    writer.write(",");
-                    writer.write(bigDecimal.toString());
-                }
-                writer.newLine();
-            } // end outer for loop
-        }
-
     }
 
     private String getFileName() {
@@ -265,11 +122,10 @@ public final class MonthBalanceCSV {
             return fileName;
         }
         return null;
-    } // end method getFileName
+    }
 
     @SuppressWarnings("unused")
     public static void run() {
         new MonthBalanceCSV();
     }
-
 }
