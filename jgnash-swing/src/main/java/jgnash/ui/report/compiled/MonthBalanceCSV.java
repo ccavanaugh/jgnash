@@ -37,7 +37,9 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,17 +65,15 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Export monthly balance information as a CSV (comma-separated variable) file
- * 
+ *
  * @author Craig Cavanaugh
  * @author Tom Edelson
  */
-
-@SuppressWarnings("ConstantConditions")
 public final class MonthBalanceCSV {
 
-    private final ArrayList<Account> accounts = new ArrayList<>();
+    private final List<Account> accountList = new ArrayList<>();
 
-    private final ArrayList<BigDecimal[]> balance = new ArrayList<>();
+    private final List<BigDecimal[]> balanceList = new ArrayList<>();
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
@@ -81,10 +81,12 @@ public final class MonthBalanceCSV {
 
     private MonthBalanceCSV() {
 
-        LocalDate[] dates = getDates();
+        final LocalDate[] dates = getDates();
 
         if (dates != null) {
-            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
             Account root = engine.getRootAccount();
             buildLists(root, dates);
 
@@ -95,7 +97,7 @@ public final class MonthBalanceCSV {
                 } else {
                     writeHorizontalFormatCSVFile(getFileName(), dates);
                 }
-            } catch (IOException e) {               
+            } catch (IOException e) {
                 Logger.getLogger(MonthBalanceCSV.class.getName()).log(Level.SEVERE, null, e);
             }
         }
@@ -131,7 +133,7 @@ public final class MonthBalanceCSV {
 
         JPanel panel = builder.getPanel();
 
-        int option = JOptionPane.showConfirmDialog(null, new Object[] { panel }, rb.getString("Message.StartEndDate"),
+        int option = JOptionPane.showConfirmDialog(null, new Object[]{panel}, rb.getString("Message.StartEndDate"),
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (option == JOptionPane.OK_OPTION) {
@@ -146,14 +148,14 @@ public final class MonthBalanceCSV {
 
     } // end method getDates
 
-    private static LocalDate[] getLastDays(final LocalDate start, final LocalDate stop) {
+    private static LocalDate[] getLastDays(final LocalDate startDate, final LocalDate stopDate) {
         final ArrayList<LocalDate> list = new ArrayList<>();
 
-        LocalDate t = DateUtils.getLastDayOfTheMonth(start);
+        LocalDate t = DateUtils.getLastDayOfTheMonth(startDate);
 
         // add a month at a time to the previous date until all of the months
         // have been captured
-        while (DateUtils.before(t, stop)) {
+        while (DateUtils.before(t, stopDate)) {
             list.add(t);
 
             t = t.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
@@ -163,40 +165,39 @@ public final class MonthBalanceCSV {
 
     } // end method getLastDays
 
-    private void buildLists(final Account a, final LocalDate[] dates) {
-        for (final Account child : a.getChildren(Comparators.getAccountByCode())) {
-
+    private void buildLists(final Account account, final LocalDate[] dates) {
+        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
             if (child.getTransactionCount() > 0) {
-                accounts.add(child); // add the account
-                BigDecimal[] b = new BigDecimal[dates.length];
-                for (int j = 0; j < dates.length; j++) {
-                    b[j] = AccountBalanceDisplayManager.convertToSelectedBalanceMode(child.getAccountType(),
-                            child.getBalance(dates[j]));
+                accountList.add(child); // add the account
+                BigDecimal[] bigDecimals = new BigDecimal[dates.length];
+                for (int i = 0; i < dates.length; i++) {
+                    bigDecimals[i] = AccountBalanceDisplayManager.convertToSelectedBalanceMode(child.getAccountType(),
+                            child.getBalance(dates[i]));
                 }
-                balance.add(b);
+                balanceList.add(bigDecimals);
             }
             if (child.isParent()) {
                 buildLists(child, dates);
             }
         }
-    } // end method buildLists
+    }
 
     /*
      * ,A1,A2,A3 Jan,455,30,80 Feb,566,70,90 March,678,200,300
      */
-
     private void writeHorizontalFormatCSVFile(final String fileName, final LocalDate[] dates) throws IOException {
 
         if (fileName == null || dates == null) {
             return;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8))) {
+        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),
+                StandardCharsets.UTF_8))) {
 
             // write out the account names with full path
-            int length = accounts.size();
+            final int length = accountList.size();
 
-            for (Account a : accounts) {
+            for (final Account a : accountList) {
                 writer.write(",");
                 writer.write(a.getPathName());
             }
@@ -207,9 +208,9 @@ public final class MonthBalanceCSV {
             for (int i = 0; i < dates.length; i++) {
                 writer.write(dates[i].getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
                 for (int j = 0; j < length; j++) {
-                    BigDecimal[] b = balance.get(j);
+                    BigDecimal[] bigDecimals = balanceList.get(j);
                     writer.write(",");
-                    writer.write(b[i].toString());
+                    writer.write(bigDecimals[i].toString());
                 }
                 writer.newLine();
             }
@@ -220,14 +221,14 @@ public final class MonthBalanceCSV {
     /*
      * ,Jan,Feb,Mar A1,30,80,100 A2,70,90,120 A3,200,300,400
      */
-
     private void writeVerticalCSVFileFormat(final String fileName, final LocalDate[] dates) throws IOException {
 
         if (fileName == null || dates == null) {
             return;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8))) {
+        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),
+                StandardCharsets.UTF_8))) {
 
             // write out the month header, the first column is empty
             for (final LocalDate date : dates) {
@@ -238,12 +239,12 @@ public final class MonthBalanceCSV {
             writer.newLine();
 
             // write out the account balance info
-            for (int i = 0; i < accounts.size(); i++) {
-                writer.write(accounts.get(i).getPathName());
-                BigDecimal[] b = balance.get(i);
-                for (BigDecimal aB : b) {
+            for (int i = 0; i < accountList.size(); i++) {
+                writer.write(accountList.get(i).getPathName());
+
+                for (final BigDecimal bigDecimal : balanceList.get(i)) {
                     writer.write(",");
-                    writer.write(aB.toString());
+                    writer.write(bigDecimal.toString());
                 }
                 writer.newLine();
             } // end outer for loop
@@ -252,7 +253,7 @@ public final class MonthBalanceCSV {
     }
 
     private String getFileName() {
-        JFileChooser chooser = new JFileChooser();
+        final JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(false);
         chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Message.CSVFile"), "csv"));
 
@@ -271,4 +272,4 @@ public final class MonthBalanceCSV {
         new MonthBalanceCSV();
     }
 
-} // end class MonthBalanceCSV
+}
