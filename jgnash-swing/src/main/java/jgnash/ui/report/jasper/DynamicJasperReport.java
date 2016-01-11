@@ -247,11 +247,12 @@ public abstract class DynamicJasperReport {
     }
 
     private Style getGlobalFooterStyle() {
-        Style style = new Style();
+        /*Style style = new Style();
         style.setFont(ReportFactory.getDefaultMonoFont(getBaseFontSize(), true));
         style.setHorizontalAlign(HorizontalAlign.RIGHT);
         style.setBorderTop(Border.THIN());
-        return style;
+        return style;*/
+        return getTypeFooterStyle();
     }
 
     private Style getStyle(final ColumnStyle style, final boolean formatForCSV) {
