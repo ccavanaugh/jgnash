@@ -79,6 +79,7 @@ public class SelectAccountSecuritiesDialog {
 
     private boolean result;
 
+    @SuppressWarnings("unchecked")
     public SelectAccountSecuritiesDialog(@Nullable final Account account, @NotNull Set<SecurityNode> preSelected) {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);

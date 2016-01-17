@@ -67,6 +67,7 @@ public class AddRemoveCurrencyController {
     private ResourceBundle resources;
 
     @FXML
+    @SuppressWarnings("unchecked")
     void initialize() {
         availableList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
