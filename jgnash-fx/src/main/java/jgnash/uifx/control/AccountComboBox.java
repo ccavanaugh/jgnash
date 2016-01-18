@@ -105,6 +105,22 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     public void setPredicate(final Predicate<Account> predicate) {
         filteredList.setPredicate(predicate);
+
+        // force an update if the filtered list does not contain the current value
+        if (!filteredList.contains(getValue())) {
+            selectDefaultAccount();
+        }
+    }
+
+    private void selectDefaultAccount() {
+        // Set a default account, must use the filtered list because that is what is visible
+        if (filteredList.size() > 0) {
+            if (Platform.isFxApplicationThread()) {
+                setValue(filteredList.get(0));
+            } else {    // push to the end of the application thread only if needed
+                Platform.runLater(() -> setValue(filteredList.get(0)));
+            }
+        }
     }
 
     private void loadAccounts(@NotNull final List<Account> accounts) {
@@ -125,14 +141,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         loadAccounts(engine.getRootAccount().getChildren(Comparators.getAccountByCode()));
 
-        // Set a default account
-        if (items.size() > 0) {
-            if (Platform.isFxApplicationThread()) {
-                setValue(items.get(0));
-            } else {    // push to the end of the application thread only if needed
-                Platform.runLater(() -> setValue(items.get(0)));
-            }
-        }
+        selectDefaultAccount();
     }
 
     @Override
