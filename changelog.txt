@@ -28,6 +28,7 @@ Change the base highlight color for the FX interface
 
 Release 2.22.0
 ----------------------
+01/18/16 Incorrect accounts were available for selection in the account ComboBox. (Fx)
 01/10/16 Added the Monthly Account Balance CSV export report to the jGnashFx UI. (Fx)
 
 Release 2.21.0
