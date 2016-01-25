@@ -22,12 +22,14 @@ Budgeting
 - annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
-Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
+
+Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account. Use a non-printing character for automatic merge
 
 Change the base highlight color for the FX interface
 
 Release 2.22.0
 ----------------------
+01/25/16 The transaction number ComboBox would not always capture a manually entered value. (Fx)
 01/18/16 Incorrect accounts were available for selection in the account ComboBox. (Fx)
 01/10/16 Added the Monthly Account Balance CSV export report to the jGnashFx UI. (Fx)
 
