@@ -80,12 +80,11 @@ public class TransactionNumberComboBox extends ComboBox<String> {
             }).start();
         });
 
-        // TODO: This is a workaround for a Java Bug that should be fixed in 8u72
-        if (OS.getJavaVersion() < 1.9 && OS.getJavaRelease() < OS.JVM_RELEASE_72) {
-
+        // TODO: This is a workaround for a Java Bug that should be fixed in 9
+        if (OS.getJavaVersion() < 1.9) {
             focusChangeListener = (observable, oldValue, isFocused) -> {
                 if (!isFocused) {
-                    if (getValue() != null && !getValue().equals(getConverter().fromString(getEditor().getText()))) {
+                    if (getEditor().getText() != null) {
                         setValue(getConverter().fromString(getEditor().getText()));
                     }
                 }
