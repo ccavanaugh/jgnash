@@ -373,4 +373,9 @@ public class MenuBarController implements MessageListener {
     private void handleExportBalanceByMonthCSVReport() {
         ReportActions.exportBalanceByMonthCSVReport();
     }
+
+    @FXML
+    private void handleDisplayPortfolioReport() {
+        ReportActions.displayPortfolioReport();
+    }
 }

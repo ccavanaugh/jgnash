@@ -23,10 +23,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-convert</artifactId>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jgnash-resources</artifactId>
-        </dependency>-->
+            <artifactId>jgnash-report-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx</artifactId>

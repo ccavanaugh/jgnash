@@ -54,6 +54,7 @@
             <MenuItem text="%Menu.IEBarChart.Name" onAction="#handleIncomeExpenseBarChart"/>
             <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
         </Menu>
+        <MenuItem text="%Menu.Portfolio.Name" onAction="#handleDisplayPortfolioReport"/>
     </Menu>
 
     <Menu text="%Menu.View.Name">

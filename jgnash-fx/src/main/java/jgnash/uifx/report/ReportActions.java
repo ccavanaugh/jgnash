@@ -18,11 +18,13 @@
 package jgnash.uifx.report;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 
+import javafx.fxml.FXMLLoader;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.CurrencyNode;
@@ -30,7 +32,9 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.BalanceByMonthCSVReport;
 import jgnash.report.ProfitLossTextReport;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DateRangeDialogController;
+import jgnash.uifx.report.jasper.JasperViewerDialogController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.main.MainApplication;
@@ -47,7 +51,7 @@ public class ReportActions {
     private static final String FORCE_CURRENCY = "forceCurrency";
 
     public static void displayIncomeExpensePieChart() {
-        final FXMLUtils.Pair pair =
+        final FXMLUtils.Pair<IncomeExpensePieChartDialogController> pair =
                 FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePieChartDialog.fxml"),
                         ResourceUtils.getString("Title.IncomeExpenseChart"));
 
@@ -55,11 +59,38 @@ public class ReportActions {
     }
 
     public static void displayIncomeExpenseBarChart() {
-        final FXMLUtils.Pair pair =
+        final FXMLUtils.Pair<IncomeExpenseBarChartDialogController> pair =
                 FXMLUtils.load(IncomeExpenseBarChartDialogController.class.getResource("IncomeExpenseBarChartDialog.fxml"),
                         ResourceUtils.getString("Title.IncomeExpenseBarChart"));
 
         pair.getStage().show();
+    }
+
+    public static void displayPortfolioReport() {
+
+        // Primary scene
+        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
+                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+                        ResourceUtils.getString("Title.PortfolioReport"));
+
+        try {
+
+            // Load the report panel and it's controller
+            final FXMLLoader fxmlLoader =
+                    new FXMLLoader(PortfolioReportController.class.getResource("PortfolioReport.fxml"),
+                            ResourceUtils.getBundle());
+
+            reportPair.getController().reportControllerPaneProperty().setValue(fxmlLoader.load());
+
+            final PortfolioReportController reportController = fxmlLoader.getController();
+
+            reportPair.getController().dynamicJasperReportProperty().setValue(reportController);
+
+            reportPair.getStage().show();
+
+        } catch (final IOException e) {
+            StaticUIMethods.displayException(e);
+        }
     }
 
     public static void exportProfitLossReport() {
