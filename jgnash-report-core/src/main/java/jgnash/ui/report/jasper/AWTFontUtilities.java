@@ -15,9 +15,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.ui.report;
+package jgnash.ui.report.jasper;
 
-import static java.lang.Math.ceil;
 import ar.com.fdvs.dj.domain.Style;
 
 import java.awt.Font;
@@ -26,20 +25,22 @@ import java.awt.geom.Rectangle2D;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 
+import static java.lang.Math.ceil;
+
 /**
  * Utility class to help calculate font sizes for reporting
  * 
  * @author Craig Cavanaugh
  *
  */
-public class FontUtilities {
+public class AWTFontUtilities {
 
     /**
      * Allow the {@code FontRenderContext} to be garbage collected as needed
      */
     private static Reference<FontRenderContext> contextReference = new SoftReference<>(null);
 
-    private FontUtilities() {
+    private AWTFontUtilities() {
     }
 
     /**

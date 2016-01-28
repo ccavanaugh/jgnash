@@ -29,6 +29,9 @@ import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.text.CommodityFormat;
+import jgnash.ui.report.jasper.ColumnHeaderStyle;
+import jgnash.ui.report.jasper.ColumnStyle;
+import jgnash.ui.report.jasper.ReportFactory;
 import jgnash.util.DateUtils;
 
 /**

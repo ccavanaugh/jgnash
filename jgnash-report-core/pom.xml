@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>jgnash2</artifactId>
+        <groupId>jgnash</groupId>
+        <version>2.21.0</version>
+    </parent>
+
+    <artifactId>jgnash-report-core</artifactId>
+    <name>jGnash Report Core</name>
+    <description>Core non UI specific report code</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jgnash-resources</artifactId>
+        </dependency>
+
+        <dependency>
+            <artifactId>itext</artifactId>
+            <groupId>com.lowagie</groupId>
+            <version>${itext.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcmail-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bctsp-jdk14</artifactId>
+                    <groupId>org.bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bcprov-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jfreechart</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>${jasperreports.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.zxing</groupId>
+                    <artifactId>core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-analyzers-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-queryparser</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.castor</groupId>
+                    <artifactId>castor-xml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jfreechart</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jcommon</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.olap4j</groupId>
+                    <artifactId>olap4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>ar.com.fdvs</groupId>
+            <artifactId>DynamicJasper</artifactId>
+            <version>${dynamic-jasper.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sf.jasperreports</groupId>
+                    <artifactId>jasperreports</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jcommon</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jfreechart</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+    </dependencies>
+
+</project>

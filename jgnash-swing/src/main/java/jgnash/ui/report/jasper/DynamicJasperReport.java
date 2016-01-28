@@ -57,10 +57,6 @@ import javax.swing.JPanel;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.report.AbstractReportTableModel;
-import jgnash.ui.report.ColumnHeaderStyle;
-import jgnash.ui.report.ColumnStyle;
-import jgnash.ui.report.FontUtilities;
-import jgnash.ui.report.ReportFactory;
 import jgnash.ui.report.ReportPrintFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
@@ -355,8 +351,8 @@ public abstract class DynamicJasperReport {
                     Style columnTypeStyle = getStyle(model.getColumnStyle(i), formatForCSV);
                     Style columnHeaderStyle = getStyle(model.getColumnHeaderStyle(i), formatForCSV);
 
-                    int width = FontUtilities.getStringWidth(model.getColumnPrototypeValueAt(i), getTypeFooterStyle());
-                    int hWidth = FontUtilities.getStringWidth(model.getColumnName(i), columnHeaderStyle);
+                    int width = AWTFontUtilities.getStringWidth(model.getColumnPrototypeValueAt(i), getTypeFooterStyle());
+                    int hWidth = AWTFontUtilities.getStringWidth(model.getColumnName(i), columnHeaderStyle);
 
                     if (hWidth > width) {
                         width = hWidth;

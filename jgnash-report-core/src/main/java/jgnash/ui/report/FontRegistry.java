@@ -41,7 +41,7 @@ import java.util.logging.Level;
  *
  * @author Craig Cavanaugh
  */
-class FontRegistry {
+public class FontRegistry {
 
     /**
      * Maps the font file to the font name for embedding fonts in PDF files
@@ -61,7 +61,7 @@ class FontRegistry {
     private FontRegistry() {
     }
 
-    static String getRegisteredFontPath(final String name) {
+    public static String getRegisteredFontPath(final String name) {
         if (!registrationStarted.get()) {
             registerFonts();
         }

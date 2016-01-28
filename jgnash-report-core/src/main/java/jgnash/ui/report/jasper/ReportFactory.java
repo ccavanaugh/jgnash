@@ -15,18 +15,19 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.ui.report;
+package jgnash.ui.report.jasper;
 
 import ar.com.fdvs.dj.domain.constants.Font;
 
 import java.text.NumberFormat;
 import java.util.prefs.Preferences;
 
+import jgnash.ui.report.FontRegistry;
+
 /**
  * Factory methods to help with report configuration and generation
  * 
  * @author Craig Cavanaugh
- *
  */
 public class ReportFactory {
 
