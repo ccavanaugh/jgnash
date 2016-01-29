@@ -97,9 +97,9 @@ public abstract class DynamicJasperReport {
         //DynamicJasperReportFrame.viewReport(this); //finally display the report report
     }*/
 
-   /* final public void setPageFormat(final PageFormat pageFormat) {
+    final public void setPageFormat(final PageFormat pageFormat) {
         ReportPrintFactory.savePageFormat(this, pageFormat);
-    }*/
+    }
 
     protected SimpleObjectProperty<Runnable> refreshCallBackProperty() {
         return refreshCallBack;

@@ -18,6 +18,8 @@
 package jgnash.uifx.report.jasper;
 
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
@@ -65,7 +67,6 @@ import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -100,7 +101,7 @@ public final class JasperViewerDialogController {
 
     private static final int DEFAULT_ZOOM_INDEX = 2;
 
-    private static final int PAGE_BORDER = 10;
+    private static final int PAGE_BORDER = 8;
 
     private final DoubleProperty zoomProperty = new SimpleDoubleProperty();
 
@@ -233,7 +234,7 @@ public final class JasperViewerDialogController {
                 fontSizeSpinner.valueFactoryProperty().get().setValue(newValue.getBaseFontSize());
 
                 newValue.refreshCallBackProperty().setValue(() ->
-                        jasperPrintProperty.setValue(newValue.createJasperPrint(false)));
+                        createJasperPrint(newValue));
             } else {
                 jasperPrintProperty.setValue(null);
             }
@@ -318,6 +319,10 @@ public final class JasperViewerDialogController {
 
     public SimpleObjectProperty<Pane> reportControllerPaneProperty() {
         return reportControllerPaneProperty;
+    }
+
+    private void createJasperPrint(final DynamicJasperReport dynamicJasperReport) {
+        jasperPrintProperty.setValue(dynamicJasperReport.createJasperPrint(false));
     }
 
     /**
@@ -491,9 +496,7 @@ public final class JasperViewerDialogController {
                 try {
                     parentProperty.get().setCursor(Cursor.WAIT);
 
-                    JasperPrintManager.getInstance(DefaultJasperReportsContext.getInstance())
-                            .print(jasperPrintProperty.get(), true);
-
+                    JasperPrintManager.printReport(jasperPrintProperty.get(), true);
                 } catch (final JRException e) {
                     StaticUIMethods.displayException(e);
                 } finally {
@@ -509,7 +512,18 @@ public final class JasperViewerDialogController {
 
     @FXML
     private void handleFormatAction() {
-        StaticUIMethods.displayMessage("Fix Me");
+        final PageFormat oldFormat = reportProperty.get().getPageFormat();
+        final PrinterJob job = PrinterJob.getPrinterJob();
+
+        final PageFormat format = job.pageDialog(oldFormat);
+
+        if (format != oldFormat) {
+            reportProperty.get().setPageFormat(format);
+
+            createJasperPrint(reportProperty.get());
+
+            Platform.runLater(this::refresh);
+        }
     }
 
     @FXML
