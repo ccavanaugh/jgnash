@@ -27,7 +27,7 @@
         </rowConstraints>
 
         <Label text="%Label.Account"/>
-        <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" maxWidth="Infinity"/>
+        <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" maxWidth="Infinity" onAction="#handleRefresh"/>
     </GridPane>
 
     <GridPane styleClass="form" GridPane.rowIndex="1">
@@ -39,7 +39,7 @@
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
-        <CheckBox fx:id="subAccountCheckBox" text="%Button.IncludeSubAccounts"/>
-        <CheckBox fx:id="longNameCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="1"/>
+        <CheckBox fx:id="subAccountCheckBox" text="%Button.IncludeSubAccounts" onAction="#handleRefresh"/>
+        <CheckBox fx:id="longNameCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="1" onAction="#handleRefresh"/>
     </GridPane>
 </GridPane>

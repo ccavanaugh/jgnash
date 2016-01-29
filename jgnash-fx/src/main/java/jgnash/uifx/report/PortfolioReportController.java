@@ -40,6 +40,8 @@ import jgnash.util.Nullable;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
+ * Portfolio report controller
+ *
  * @author Craig Cavanaugh
  */
 public class PortfolioReportController extends DynamicJasperReport {
@@ -58,15 +60,8 @@ public class PortfolioReportController extends DynamicJasperReport {
 
     @FXML
     private void initialize() {
-
-        // Only show investment accounts with transactions
-        accountComboBox.setPredicate(account -> account.instanceOf(AccountType.INVEST) && account.isVisible() && account.getTransactionCount() > 0);
-
-        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (refreshCallBackProperty().get() != null) {
-                refreshCallBackProperty().get().run();
-            }
-        });
+        // Only show visible investment accounts
+        accountComboBox.setPredicate(account -> account.instanceOf(AccountType.INVEST) && account.isVisible());
     }
 
     @Override
@@ -75,8 +70,7 @@ public class PortfolioReportController extends DynamicJasperReport {
         final Account account = accountComboBox.getValue();
 
         if (account != null) {  // a null account is possible
-            PortfolioReportTableModel model = new PortfolioReportTableModel(account.getCurrencyNode());
-            model.verbose = longNameCheckBox.isSelected();
+            final PortfolioReportTableModel model = new PortfolioReportTableModel(account.getCurrencyNode());
 
             return createJasperPrint(model, formatForCSV);
         }
@@ -99,19 +93,21 @@ public class PortfolioReportController extends DynamicJasperReport {
         return null;
     }
 
-    private class PortfolioReportTableModel extends AbstractReportTableModel {
+    @FXML
+    private void handleRefresh() {
+        if (refreshCallBackProperty().get() != null) {
+            refreshCallBackProperty().get().run();
+        }
+    }
 
-        boolean verbose;
+    private class PortfolioReportTableModel extends AbstractReportTableModel {
 
         private final CurrencyNode baseCurrency;
 
         private InvestmentPerformanceSummary performanceSummary;
 
         PortfolioReportTableModel(final CurrencyNode baseCurrency) {
-
             this.baseCurrency = baseCurrency;
-
-            verbose = longNameCheckBox.isSelected();
 
             try {
                 performanceSummary = new InvestmentPerformanceSummary(accountComboBox.getValue(), subAccountCheckBox.isSelected());
@@ -140,7 +136,7 @@ public class PortfolioReportController extends DynamicJasperReport {
 
             switch (col) {
                 case 0:
-                    if (verbose) {
+                    if (longNameCheckBox.isSelected()) {
                         return pd.getNode().getDescription();
                     }
                     return pd.getNode().getSymbol();
@@ -169,7 +165,6 @@ public class PortfolioReportController extends DynamicJasperReport {
                 default:
                     return "ERR";
             }
-
         }
 
         @Override
