@@ -439,6 +439,9 @@ public abstract class RegisterTableController {
                             }
 
                             Platform.runLater(() -> observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION)));
+
+                            // this will for the running balance to recalculate
+                            Platform.runLater(() -> tableView.refresh());
                             break;
                         case TRANSACTION_ADD:
                             Platform.runLater(() -> {
@@ -452,6 +455,9 @@ public abstract class RegisterTableController {
 
                                 // scroll to the new transaction
                                 scrollToTransaction(event.getObject(MessageProperty.TRANSACTION));
+
+                                // this will for the running balance to recalculate
+                                Platform.runLater(() -> tableView.refresh());
                             });
                             break;
                         default:
