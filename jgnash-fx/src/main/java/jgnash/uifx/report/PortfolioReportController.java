@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -46,6 +47,10 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public class PortfolioReportController extends DynamicJasperReport {
 
+    private static final String RECURSIVE = "recursive";
+
+    private static final String VERBOSE = "verbose";
+
     @FXML
     private AccountComboBox accountComboBox;
 
@@ -58,10 +63,17 @@ public class PortfolioReportController extends DynamicJasperReport {
     @FXML
     private ResourceBundle resources;
 
+    private Preferences preferences;
+
     @FXML
     private void initialize() {
         // Only show visible investment accounts
         accountComboBox.setPredicate(account -> account.instanceOf(AccountType.INVEST) && account.isVisible());
+
+        preferences = Preferences.userNodeForPackage(PortfolioReportController.class);
+
+        subAccountCheckBox.setSelected(preferences.getBoolean(RECURSIVE, true));
+        longNameCheckBox.setSelected(preferences.getBoolean(VERBOSE, false));
     }
 
     @Override
@@ -95,6 +107,9 @@ public class PortfolioReportController extends DynamicJasperReport {
 
     @FXML
     private void handleRefresh() {
+        preferences.putBoolean(RECURSIVE, subAccountCheckBox.isSelected());
+        preferences.putBoolean(VERBOSE, longNameCheckBox.isSelected());
+
         if (refreshCallBackProperty().get() != null) {
             refreshCallBackProperty().get().run();
         }
