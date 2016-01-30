@@ -83,7 +83,7 @@ import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 
 /**
- * Viewer for Jasper Reports
+ * Viewer controller for Jasper Reports
  *
  * @author Craig Cavanaugh
  */
@@ -492,7 +492,7 @@ public final class JasperViewerDialogController {
 
     @FXML
     private void handlePrintAction() {
-        Task<Void> task = new Task<Void>() {
+        final Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 try {
