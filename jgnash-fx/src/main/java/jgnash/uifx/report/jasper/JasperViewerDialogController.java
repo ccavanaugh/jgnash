@@ -105,7 +105,7 @@ public final class JasperViewerDialogController {
 
     private final DoubleProperty zoomProperty = new SimpleDoubleProperty();
 
-    private final DecimalFormat zoomDecimalFormat = new DecimalFormat("#.##");
+    private final DecimalFormat zoomDecimalFormat = new DecimalFormat("#.#");
 
     private double screenResolution = REPORT_RESOLUTION;
 

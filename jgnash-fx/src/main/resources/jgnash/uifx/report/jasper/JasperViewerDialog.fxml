@@ -121,7 +121,11 @@
         </ScrollPane>
     </center>
     <bottom>
-        <Label fx:id="statusLabel"/>
+        <BorderPane styleClass="dialog">
+            <center>
+                <Label fx:id="statusLabel"/>
+            </center>
+        </BorderPane>
     </bottom>
 </BorderPane>
 
