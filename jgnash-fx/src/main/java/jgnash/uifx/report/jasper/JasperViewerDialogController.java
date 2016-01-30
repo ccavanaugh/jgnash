@@ -258,6 +258,8 @@ public final class JasperViewerDialogController {
 
         fontSizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             reportProperty.get().setBaseFontSize(newValue);
+
+            Platform.runLater(() -> createJasperPrint(reportProperty.get()));
         });
 
         pagePane.setSpacing(PAGE_BORDER);
