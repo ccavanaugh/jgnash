@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.ui.report;
+package jgnash.ui.report.jasper;
 
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
@@ -27,15 +27,12 @@ import java.util.prefs.Preferences;
 import javax.print.PrintService;
 import javax.print.attribute.standard.MediaSize;
 
-import jgnash.ui.report.jasper.DynamicJasperReport;
-
 /**
  * Factory class for handling printing preferences
  * 
  * @author Craig Cavanaugh
- * 
  */
-public class ReportPrintFactory {
+class ReportPrintFactory {
     private static final String HEIGHT = "height";
     private static final String WIDTH = "width";
     private static final String ORIENTATION = "orientation";
@@ -92,7 +89,7 @@ public class ReportPrintFactory {
      * @param report report
      * @param format {@code PageFormat} to save
      */
-    public static void savePageFormat(final DynamicJasperReport report, final PageFormat format) {
+    static void savePageFormat(final BaseDynamicJasperReport report, final PageFormat format) {
         Preferences p = report.getPreferences();
 
         p.putInt(ORIENTATION, format.getOrientation());
@@ -108,7 +105,7 @@ public class ReportPrintFactory {
         p.putDouble(IMAGEABLE_Y, paper.getImageableY());
     }
 
-    public static PageFormat getPageFormat(final DynamicJasperReport report) {
+    static PageFormat getPageFormat(final BaseDynamicJasperReport report) {
         Preferences p = report.getPreferences();
 
         double height = p.getDouble(HEIGHT, 0);
