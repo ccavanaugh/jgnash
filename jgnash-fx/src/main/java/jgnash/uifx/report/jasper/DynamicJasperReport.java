@@ -56,6 +56,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import jgnash.text.CommodityFormat;
 import jgnash.ui.report.jasper.AWTFontUtilities;
+import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.ui.report.jasper.ReportFactory;

@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.ui.report;
+package jgnash.ui.report.jasper;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -29,9 +29,6 @@ import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.text.CommodityFormat;
-import jgnash.ui.report.jasper.ColumnHeaderStyle;
-import jgnash.ui.report.jasper.ColumnStyle;
-import jgnash.ui.report.jasper.ReportFactory;
 import jgnash.util.DateUtils;
 
 /**

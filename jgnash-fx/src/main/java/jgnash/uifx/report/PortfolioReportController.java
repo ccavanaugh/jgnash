@@ -31,10 +31,10 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.InvestmentPerformanceSummary;
 import jgnash.engine.SecurityNode;
+import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.uifx.control.AccountComboBox;
-import jgnash.uifx.report.jasper.AbstractReportTableModel;
 import jgnash.uifx.report.jasper.DynamicJasperReport;
 import jgnash.util.Nullable;
 

@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jgnash-resources</artifactId>
+            <artifactId>jgnash-core</artifactId>
         </dependency>
 
         <dependency>

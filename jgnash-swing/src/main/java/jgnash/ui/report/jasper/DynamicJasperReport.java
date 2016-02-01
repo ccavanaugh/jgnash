@@ -56,7 +56,6 @@ import javax.swing.JPanel;
 
 import jgnash.text.CommodityFormat;
 import jgnash.ui.StaticUIMethods;
-import jgnash.ui.report.AbstractReportTableModel;
 import jgnash.ui.report.ReportPrintFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;

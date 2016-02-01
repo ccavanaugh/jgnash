@@ -39,7 +39,7 @@ import jgnash.ui.register.table.FullCommodityStyle;
 import jgnash.ui.register.table.QuantityStyle;
 import jgnash.ui.register.table.RegisterModel;
 import jgnash.ui.register.table.ShortCommodityStyle;
-import jgnash.ui.report.AbstractReportTableModel;
+import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;

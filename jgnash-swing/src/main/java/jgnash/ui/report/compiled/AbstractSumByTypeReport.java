@@ -45,7 +45,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.components.DatePanel;
-import jgnash.ui.report.AbstractReportTableModel;
+import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
@@ -358,7 +358,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
             final Account account;
 
-            public AccountRow(final Account account) {
+            AccountRow(final Account account) {
                 this.account = account;
             }
 
