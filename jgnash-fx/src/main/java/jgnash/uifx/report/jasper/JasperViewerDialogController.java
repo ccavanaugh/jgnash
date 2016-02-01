@@ -611,10 +611,10 @@ public final class JasperViewerDialogController {
     private void handleFitHeightAction() {
         final PrintPageFormat pageFormat = jasperPrintProperty.get().getPageFormat(pageIndex.get());
 
-        final float heightRatio = ((float) scrollPane.getViewportBounds().getHeight() - 2 * PAGE_BORDER)
+        final double heightRatio = (scrollPane.getViewportBounds().getHeight() - (2 * PAGE_BORDER))
                 / pageFormat.getPageHeight();
 
-        final float widthRatio = ((float) scrollPane.getViewportBounds().getWidth() - 2 * PAGE_BORDER)
+        final double widthRatio = (scrollPane.getViewportBounds().getWidth() - (2 * PAGE_BORDER))
                 / pageFormat.getPageWidth();
 
         zoomComboBox.getSelectionModel().clearSelection();
@@ -626,7 +626,7 @@ public final class JasperViewerDialogController {
     private void handleFitPageWidthAction() {
         zoomComboBox.getSelectionModel().clearSelection();
 
-        setActualZoomRatio((float) (scrollPane.getViewportBounds().getWidth() - 2 * PAGE_BORDER - 2) /
+        setActualZoomRatio((scrollPane.getViewportBounds().getWidth() - (2 * PAGE_BORDER)) /
                 jasperPrintProperty.get().getPageFormat(pageIndex.get()).getPageWidth());
     }
 
