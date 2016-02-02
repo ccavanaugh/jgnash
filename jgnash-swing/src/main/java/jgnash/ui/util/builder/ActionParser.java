@@ -409,11 +409,11 @@ public final class ActionParser extends DefaultHandler {
     /**
      * A simple class that holds the parsed XML Attributes.
      */
-    static class ActionAttributes {
+    private static class ActionAttributes {
 
         private final String[] array;
 
-        public ActionAttributes(final Attributes attrs) {
+        ActionAttributes(final Attributes attrs) {
             // Populate the array with the objects that map to the attributes
             array = new String[9];
 
@@ -439,7 +439,7 @@ public final class ActionParser extends DefaultHandler {
         }
     }
 
-    static class ActionNode {
+    private static class ActionNode {
 
         String idref;
 
@@ -453,17 +453,17 @@ public final class ActionParser extends DefaultHandler {
 
         ActionNode parent = null; // make it easy to walk back up the tree
 
-        public ActionNode() {
+        ActionNode() {
         } // an empty node... use as a separator
 
-        public ActionNode(final Attributes attrs) {
+        ActionNode(final Attributes attrs) {
             idref = attrs.getValue(ID_REF_ATTRIBUTE); // reference to action id
             id = attrs.getValue(ID_ATTRIBUTE); // can be null if not root node
             group = attrs.getValue(GROUP_ATTRIBUTE); // may be null
             type = attrs.getValue(TYPE_ATTRIBUTE); // type attribute
         }
 
-        public void addChild(final ActionNode child) {
+        void addChild(final ActionNode child) {
             if (children == null) {
                 children = new ArrayList<>();
             }
@@ -478,7 +478,7 @@ public final class ActionParser extends DefaultHandler {
             return children.size();
         }
 
-        public ActionNode getChildAt(final int index) {
+        ActionNode getChildAt(final int index) {
             return children.get(index);
         }
 
@@ -613,19 +613,19 @@ public final class ActionParser extends DefaultHandler {
     /**
      * AbstractAction that uses reflection to implement actionPerformed
      */
-    static class ReflectiveAction extends AbstractAction {
+    private static class ReflectiveAction extends AbstractAction {
 
         private transient Method method;
 
         private transient Object clazz;
 
-        public ReflectiveAction(final String name, final String methodName, final Object clazz) {
+        ReflectiveAction(final String name, final String methodName, final Object clazz) {
             super(name);
 
             if (methodName != null) {
                 this.clazz = clazz;
                 try {
-                    method = clazz.getClass().getMethod(methodName, (Class<?>[]) null);
+                    method = clazz.getClass().getMethod(methodName, (Class<?>) null);
                 } catch (final NoSuchMethodException ex) {
                     log.log(Level.WARNING, "No such method: {0}", ex.getLocalizedMessage());
                     setEnabled(false);
