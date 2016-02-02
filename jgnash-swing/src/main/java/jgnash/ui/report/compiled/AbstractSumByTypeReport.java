@@ -246,7 +246,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         public abstract Object getValueAt(final int columnIndex);
     }
 
-    protected class ReportModel extends AbstractReportTableModel {
+    class ReportModel extends AbstractReportTableModel {
 
         private final List<Row> rowList = new ArrayList<>();
 
@@ -256,19 +256,19 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private final ResourceBundle rb = ResourceUtils.getBundle();
 
-        public ReportModel(final CurrencyNode currency) {
+        ReportModel(final CurrencyNode currency) {
             this.baseCurrency = currency;
         }
 
-        public void addAccounts(final Collection<Account> accounts) {
+        void addAccounts(final Collection<Account> accounts) {
             accounts.forEach(this::addAccount);
         }
 
-        public void addRow(final Row row) {
+        void addRow(final Row row) {
             rowList.add(row);
         }
 
-        public void addAccount(final Account account) {
+        void addAccount(final Account account) {
             rowList.add(new AccountRow(account));
         }
 

@@ -120,7 +120,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private static final String USE_LONG_NAMES = "useLongNames";
 
-    public AbstractCrosstabReport() {
+    AbstractCrosstabReport() {
 
         final Preferences p = getPreferences();
 
@@ -492,22 +492,22 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         public abstract Object getValue(int rowIndex);
 
-        public ColumnHeaderStyle headerStyle;
+        ColumnHeaderStyle headerStyle;
 
-        public ColumnStyle columnStyle;
+        ColumnStyle columnStyle;
 
-        public Class<?> columnClass;
+        Class<?> columnClass;
 
-        public String columnName;
+        String columnName;
 
-        public boolean isFixedWidth;
+        boolean isFixedWidth;
     }
 
     private class AccountNameColumnInfo extends ColumnInfo {
 
         private final List<Account> accountList;
 
-        public AccountNameColumnInfo(List<Account> accountList) {
+        AccountNameColumnInfo(List<Account> accountList) {
             this.accountList = accountList;
         }
 
@@ -527,7 +527,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private final CurrencyNode currency;
 
-        public CrossTabAmountColumnInfo(List<Account> accountList, CurrencyNode currency) {
+        CrossTabAmountColumnInfo(List<Account> accountList, CurrencyNode currency) {
             this.accountList = accountList;
             this.currency = currency;
         }
@@ -547,7 +547,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private final List<Account> accountList;
 
-        public GroupColumnInfo(List<Account> accountList) {
+        GroupColumnInfo(List<Account> accountList) {
             this.accountList = accountList;
         }
 
@@ -568,7 +568,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private final CurrencyNode currency;
 
-        public DateRangeBalanceColumnInfo(List<Account> accountList, LocalDate startDate, LocalDate endDate, CurrencyNode currency) {
+        DateRangeBalanceColumnInfo(List<Account> accountList, LocalDate startDate, LocalDate endDate, CurrencyNode currency) {
             this.accountList = accountList;
             this.startDate = startDate;
             this.endDate = endDate;
@@ -586,7 +586,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private final List<Account> accounts;
 
-        public PercentileColumnInfo(List<Account> accounts) {
+        PercentileColumnInfo(List<Account> accounts) {
             this.accounts = accounts;
         }
 
