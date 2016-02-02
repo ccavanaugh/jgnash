@@ -315,22 +315,23 @@ public final class ActionParser extends DefaultHandler {
      */
     private void createActions() {
 
-        for (ActionAttributes aa : actionList) {
-            // look for a preloaded action
+        for (final ActionAttributes aa : actionList) {
+            // look for a pre-loaded action
             Action action = actionMap.get(aa.getValue(ID_INDEX));
 
+            // underscores are removed to allow compatibility with JavaFX mnemonics
             if (action == null) { // create a new reflective action
-                action = new ReflectiveAction(rb.getString(aa.getValue(NAME_INDEX)), aa.getValue(METHOD_INDEX), target);
+                action = new ReflectiveAction(rb.getString(aa.getValue(NAME_INDEX)).replace("_", ""), aa.getValue(METHOD_INDEX), target);
             } else {
                 if (aa.getValue(NAME_INDEX) != null) {
-                    action.putValue(Action.NAME, rb.getString(aa.getValue(NAME_INDEX)));
+                    action.putValue(Action.NAME, rb.getString(aa.getValue(NAME_INDEX)).replace("_", ""));
                 }
             }
 
-            String accel = aa.getValue(ACCEL_INDEX);
+            final String accel = aa.getValue(ACCEL_INDEX);
 
             if (accel != null && !accel.trim().isEmpty()) {
-                KeyStroke stroke = jgnash.ui.util.Resource.getKeyStroke(accel);
+                final KeyStroke stroke = jgnash.ui.util.Resource.getKeyStroke(accel);
                 if (stroke != null) {
                     action.putValue(Action.ACCELERATOR_KEY, stroke);
                 } else {
@@ -340,7 +341,7 @@ public final class ActionParser extends DefaultHandler {
 
             if (aa.getValue(ICON_INDEX) != null) {
                 try {
-                    Icon icon = IconUtils.getIcon(aa.getValue(ICON_INDEX));
+                    final Icon icon = IconUtils.getIcon(aa.getValue(ICON_INDEX));
                     action.putValue(Action.SMALL_ICON, icon);
                 } catch (Exception e) {
                     log.log(Level.WARNING, aa.getValue(ICON_INDEX) + " not found", e);
