@@ -36,6 +36,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DateRangeDialogController;
 import jgnash.uifx.report.jasper.JasperViewerDialogController;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.ResourceUtils;
@@ -87,6 +88,9 @@ public class ReportActions {
             reportPair.getController().dynamicJasperReportProperty().setValue(reportController);
 
             reportPair.getStage().show();
+
+            // Preserve size and location
+            StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
 
         } catch (final IOException e) {
             StaticUIMethods.displayException(e);
