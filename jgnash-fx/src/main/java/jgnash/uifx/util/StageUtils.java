@@ -106,7 +106,7 @@ public class StageUtils {
         private final Preferences p;
         private final Window window;
 
-        public BoundsListener(final Window window, final String prefNode) {
+        BoundsListener(final Window window, final String prefNode) {
             executor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
                     new ThreadPoolExecutor.DiscardPolicy());
             p = Preferences.userRoot().node(prefNode);
