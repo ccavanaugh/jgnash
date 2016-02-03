@@ -63,14 +63,12 @@ public class PortfolioReportController extends DynamicJasperReport {
     @FXML
     private ResourceBundle resources;
 
-    private Preferences preferences;
-
     @FXML
     private void initialize() {
         // Only show visible investment accounts
         accountComboBox.setPredicate(account -> account.instanceOf(AccountType.INVEST) && account.isVisible());
 
-        preferences = Preferences.userNodeForPackage(PortfolioReportController.class);
+        final Preferences preferences = getPreferences();
 
         subAccountCheckBox.setSelected(preferences.getBoolean(RECURSIVE, true));
         longNameCheckBox.setSelected(preferences.getBoolean(VERBOSE, false));
@@ -107,6 +105,8 @@ public class PortfolioReportController extends DynamicJasperReport {
 
     @FXML
     private void handleRefresh() {
+        final Preferences preferences = getPreferences();
+
         preferences.putBoolean(RECURSIVE, subAccountCheckBox.isSelected());
         preferences.putBoolean(VERBOSE, longNameCheckBox.isSelected());
 
