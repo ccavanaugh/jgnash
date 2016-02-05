@@ -378,4 +378,9 @@ public class MenuBarController implements MessageListener {
     private void handleDisplayPortfolioReport() {
         ReportActions.displayPortfolioReport();
     }
+
+    @FXML
+    private void handleDisplayProfitLossReport() {
+        ReportActions.displayProfitLossReport();
+    }
 }

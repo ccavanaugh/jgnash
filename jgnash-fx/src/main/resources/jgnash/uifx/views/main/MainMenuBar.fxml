@@ -55,6 +55,7 @@
             <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
         </Menu>
         <Menu text="%Menu.Account.Name">
+            <MenuItem text="%Menu.ProfitLoss.Name" onAction="#handleDisplayProfitLossReport"/>
             <MenuItem text="%Menu.Portfolio.Name" onAction="#handleDisplayPortfolioReport"/>
         </Menu>
     </Menu>
