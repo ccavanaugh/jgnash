@@ -301,12 +301,8 @@ public abstract class BaseDynamicJasperReport {
 
     @SuppressWarnings("ConstantConditions")
     protected final JasperPrint createJasperPrint(final AbstractReportTableModel model, final boolean formatForCSV) {
-
-        System.out.println("createJasperPrint");
-
         logger.info(rb.getString("Message.ProcessingReportData"));
 
-        logger.info("Creating report builder");
         DynamicReportBuilder drb = new DynamicReportBuilder();
 
         try {
