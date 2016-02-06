@@ -27,6 +27,9 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -64,6 +67,7 @@ import javafx.stage.Screen;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
@@ -102,6 +106,8 @@ public final class JasperViewerDialogController {
     private static final int DEFAULT_ZOOM_INDEX = 2;
 
     private static final int PAGE_BORDER = 8;
+
+    private static final int UPDATE_PERIOD = 1500; // update period in milliseconds
 
     private final DoubleProperty zoomProperty = new SimpleDoubleProperty();
 
@@ -182,6 +188,12 @@ public final class JasperViewerDialogController {
     private final IntegerProperty pageIndex = new SimpleIntegerProperty();
 
     private final IntegerProperty pageCount = new SimpleIntegerProperty();
+
+    /**
+     * Used to limit report update rates
+     */
+    private final ScheduledThreadPoolExecutor reportExecutor = new ScheduledThreadPoolExecutor(1,
+            new DefaultDaemonThreadFactory(), new ThreadPoolExecutor.DiscardPolicy());
 
     @FXML
     private void initialize() {
@@ -324,7 +336,13 @@ public final class JasperViewerDialogController {
     }
 
     private void createJasperPrint(final DynamicJasperReport dynamicJasperReport) {
-        jasperPrintProperty.setValue(dynamicJasperReport.createJasperPrint(false));
+
+        // rate limit creation when print options are occurring quickly
+        reportExecutor.schedule(() -> {
+            if (reportExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
+                Platform.runLater(() -> jasperPrintProperty.setValue(dynamicJasperReport.createJasperPrint(false)));
+            }
+        }, UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
 
     /**
