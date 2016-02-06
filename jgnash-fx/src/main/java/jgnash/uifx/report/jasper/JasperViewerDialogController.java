@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -43,6 +44,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -65,6 +67,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.report.PortfolioReportController;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.DefaultDaemonThreadFactory;
@@ -327,14 +330,6 @@ public final class JasperViewerDialogController {
         setZoomRatio(1);
     }
 
-    public SimpleObjectProperty<DynamicJasperReport> dynamicJasperReportProperty() {
-        return reportProperty;
-    }
-
-    public SimpleObjectProperty<Pane> reportControllerPaneProperty() {
-        return reportControllerPaneProperty;
-    }
-
     private void createJasperPrint(final DynamicJasperReport dynamicJasperReport) {
 
         // rate limit creation when print options are occurring quickly
@@ -343,6 +338,18 @@ public final class JasperViewerDialogController {
                 Platform.runLater(() -> jasperPrintProperty.setValue(dynamicJasperReport.createJasperPrint(false)));
             }
         }, UPDATE_PERIOD, TimeUnit.MILLISECONDS);
+    }
+
+    public void loadReportController(final String fxmlResource) {
+        try {
+            final FXMLLoader fxmlLoader =
+                    new FXMLLoader(PortfolioReportController.class.getResource(fxmlResource), resources);
+
+            reportControllerPaneProperty.setValue(fxmlLoader.load());
+            reportProperty.setValue(fxmlLoader.getController());
+        } catch (IOException e) {
+            StaticUIMethods.displayException(e);
+        }
     }
 
     /**

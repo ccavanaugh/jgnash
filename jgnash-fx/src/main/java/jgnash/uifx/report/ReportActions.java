@@ -18,13 +18,11 @@
 package jgnash.uifx.report;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 
-import javafx.fxml.FXMLLoader;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.CurrencyNode;
@@ -32,7 +30,6 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.BalanceByMonthCSVReport;
 import jgnash.report.ProfitLossTextReport;
-import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DateRangeDialogController;
 import jgnash.uifx.report.jasper.JasperViewerDialogController;
 import jgnash.uifx.util.FXMLUtils;
@@ -68,91 +65,39 @@ public class ReportActions {
     }
 
     public static void displayPortfolioReport() {
-
-        // Primary scene
         final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
                 FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
                         ResourceUtils.getString("Title.PortfolioReport"));
 
-        try {
+        reportPair.getController().loadReportController("PortfolioReport.fxml");
+        reportPair.getStage().show();
 
-            // Load the report panel and it's controller
-            final FXMLLoader fxmlLoader =
-                    new FXMLLoader(PortfolioReportController.class.getResource("PortfolioReport.fxml"),
-                            ResourceUtils.getBundle());
-
-            reportPair.getController().reportControllerPaneProperty().setValue(fxmlLoader.load());
-
-            final PortfolioReportController reportController = fxmlLoader.getController();
-
-            reportPair.getController().dynamicJasperReportProperty().setValue(reportController);
-
-            reportPair.getStage().show();
-
-            // Preserve size and location
-            StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
-
-        } catch (final IOException e) {
-            StaticUIMethods.displayException(e);
-        }
+        // Preserve size and location
+        StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
     }
 
     public static void displayProfitLossReport() {
-
-        // Primary scene
         final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
                 FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
                         ResourceUtils.getString("Title.ProfitLoss"));
 
-        try {
+        reportPair.getController().loadReportController("ProfitLossReport.fxml");
+        reportPair.getStage().show();
 
-            // Load the report panel and it's controller
-            final FXMLLoader fxmlLoader =
-                    new FXMLLoader(PortfolioReportController.class.getResource("ProfitLossReport.fxml"),
-                            ResourceUtils.getBundle());
-
-            reportPair.getController().reportControllerPaneProperty().setValue(fxmlLoader.load());
-
-            final ProfitLossReportController reportController = fxmlLoader.getController();
-
-            reportPair.getController().dynamicJasperReportProperty().setValue(reportController);
-
-            reportPair.getStage().show();
-
-            // Preserve size and location
-            StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
-
-        } catch (final IOException e) {
-            StaticUIMethods.displayException(e);
-        }
+        // Preserve size and location
+        StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
     }
 
     public static void displayBalanceSheetReport() {
-
-        // Primary scene
         final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
                 FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
                         ResourceUtils.getString("Title.BalanceSheet"));
 
-        try {
-            // Load the report panel and it's controller
-            final FXMLLoader fxmlLoader =
-                    new FXMLLoader(PortfolioReportController.class.getResource("BalanceSheetReport.fxml"),
-                            ResourceUtils.getBundle());
+        reportPair.getController().loadReportController("BalanceSheetReport.fxml");
+        reportPair.getStage().show();
 
-            reportPair.getController().reportControllerPaneProperty().setValue(fxmlLoader.load());
-
-            final BalanceSheetReportController reportController = fxmlLoader.getController();
-            reportPair.getController().dynamicJasperReportProperty().setValue(reportController);
-
-            reportPair.getStage().show();
-
-            // Preserve size and location
-            StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
-
-        } catch (final IOException e) {
-            StaticUIMethods.displayException(e);
-        }
+        // Preserve size and location
+        StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
     }
 
     public static void exportProfitLossReport() {
