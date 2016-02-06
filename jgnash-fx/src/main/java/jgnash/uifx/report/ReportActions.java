@@ -127,6 +127,34 @@ public class ReportActions {
         }
     }
 
+    public static void displayBalanceSheetReport() {
+
+        // Primary scene
+        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
+                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+                        ResourceUtils.getString("Title.BalanceSheet"));
+
+        try {
+            // Load the report panel and it's controller
+            final FXMLLoader fxmlLoader =
+                    new FXMLLoader(PortfolioReportController.class.getResource("BalanceSheetReport.fxml"),
+                            ResourceUtils.getBundle());
+
+            reportPair.getController().reportControllerPaneProperty().setValue(fxmlLoader.load());
+
+            final BalanceSheetReportController reportController = fxmlLoader.getController();
+            reportPair.getController().dynamicJasperReportProperty().setValue(reportController);
+
+            reportPair.getStage().show();
+
+            // Preserve size and location
+            StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
+
+        } catch (final IOException e) {
+            StaticUIMethods.displayException(e);
+        }
+    }
+
     public static void exportProfitLossReport() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
