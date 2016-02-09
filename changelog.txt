@@ -29,6 +29,8 @@ Change the base highlight color for the FX interface
 
 Release 2.22.0
 ----------------------
+02/09/16 Enable Menu mnemonics for platforms that support it (Fx, Windows).  Changed mnemonics design so it is easier
+         for translation and works for both Swing and Fx interfaces.
 02/08/16 Added the Net Worth Report. (Fx)
 02/06/16 Added the Balance Sheet Report. (Fx)
 02/05/16 Added the Profit Loss Report. (Fx)

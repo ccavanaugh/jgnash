@@ -89,8 +89,6 @@ public final class ActionParser extends DefaultHandler {
 
     public final static String ID_REF_ATTRIBUTE = "idref";
 
-    private final static String MNEMONIC_ATTRIBUTE = "mnemonic";
-
     private final static String NAME_ATTRIBUTE = "name";
 
     private final static String SMALL_ICON_ATTRIBUTE = "smicon";
@@ -110,15 +108,13 @@ public final class ActionParser extends DefaultHandler {
 
     private final static int ID_INDEX = 3;
 
-    private final static int MNEMONIC_INDEX = 4;
+    private final static int NAME_INDEX = 4;
 
-    private final static int NAME_INDEX = 5;
+    private final static int SMICON_INDEX = 5;
 
-    private final static int SMICON_INDEX = 6;
+    private final static int TYPE_INDEX = 6;
 
-    private final static int TYPE_INDEX = 7;
-
-    private final static int METHOD_INDEX = 8;
+    private final static int METHOD_INDEX = 7;
 
     /**
      * A list of all defined ActionAttributes
@@ -328,6 +324,12 @@ public final class ActionParser extends DefaultHandler {
                 }
             }
 
+            // process mnemonics
+            if (rb.getString(aa.getValue(NAME_INDEX)).contains("_")) {
+                final int index = rb.getString(aa.getValue(NAME_INDEX)).indexOf("_");
+                action.putValue(Action.MNEMONIC_KEY, (int) rb.getString(aa.getValue(NAME_INDEX)).charAt(index + 1));
+            }
+
             final String accel = aa.getValue(ACCEL_INDEX);
 
             if (accel != null && !accel.trim().isEmpty()) {
@@ -353,9 +355,9 @@ public final class ActionParser extends DefaultHandler {
             }
 
             // validate length of mnemonic before trying
-            if (aa.getValue(MNEMONIC_INDEX) != null && rb.getString(aa.getValue(MNEMONIC_INDEX)).trim().length() == 1) {
+            /*if (aa.getValue(MNEMONIC_INDEX) != null && rb.getString(aa.getValue(MNEMONIC_INDEX)).trim().length() == 1) {
                 action.putValue(Action.MNEMONIC_KEY, (int) jgnash.ui.util.Resource.getMnemonic(aa.getValue(MNEMONIC_INDEX)));
-            }
+            }*/
 
             // load the ID into the action so it can be recalled later
             action.putValue(ID_ATTRIBUTE, aa.getValue(ID_INDEX));
@@ -416,13 +418,12 @@ public final class ActionParser extends DefaultHandler {
 
         ActionAttributes(final Attributes attrs) {
             // Populate the array with the objects that map to the attributes
-            array = new String[9];
+            array = new String[8];
 
             array[ACCEL_INDEX] = attrs.getValue(ACCEL_ATTRIBUTE);
             array[DESC_INDEX] = attrs.getValue(DESC_ATTRIBUTE);
             array[ICON_INDEX] = attrs.getValue(ICON_ATTRIBUTE);
             array[ID_INDEX] = attrs.getValue(ID_ATTRIBUTE);
-            array[MNEMONIC_INDEX] = attrs.getValue(MNEMONIC_ATTRIBUTE);
             array[NAME_INDEX] = attrs.getValue(NAME_ATTRIBUTE);
             array[SMICON_INDEX] = attrs.getValue(SMALL_ICON_ATTRIBUTE);
             array[TYPE_INDEX] = attrs.getValue(TYPE_ATTRIBUTE);

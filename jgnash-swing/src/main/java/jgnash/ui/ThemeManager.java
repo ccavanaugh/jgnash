@@ -96,7 +96,7 @@ public class ThemeManager {
      * 
      * @return true if the OSX Aqua look and feel is being used
      */
-    public static boolean isLookAndFeelOSX() {
+    static boolean isLookAndFeelOSX() {
         return UIManager.getLookAndFeel().getName().startsWith("Mac");
     }
 
@@ -173,7 +173,6 @@ public class ThemeManager {
         JMenu lfMenu = new JMenu();
 
         lfMenu.setText(rb.getString("Menu.LookAndFeel.Name"));
-        lfMenu.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.LookAndFeel.Mnemonic"));
 
         lfMenu.add(buildSubstanceMenu());
 
@@ -275,7 +274,6 @@ public class ThemeManager {
 
         themesMenu = new JMenu();
         themesMenu.setText(rb.getString("Menu.Themes.Name"));
-        themesMenu.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Themes.Mnemonic"));
 
         ButtonGroup themeButtonGroup = new ButtonGroup();
         buildThemeList();

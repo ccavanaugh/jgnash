@@ -10,38 +10,30 @@
     <!-- Define the actions. The following set represent menus. -->
 
     <action id="file-menu-command"
-            name="Menu.File.Name"
-            mnemonic="Menu.File.Mnemonic"/>
+            name="Menu.File.Name"/>
 
     <action id="report-menu-command"
-            name="Menu.Reports.Name"
-            mnemonic="Menu.Reports.Mnemonic"/>
+            name="Menu.Reports.Name"/>
 
     <action id="edit-menu-command"
-            name="Menu.Edit.Name"
-            mnemonic="Menu.Edit.Mnemonic"/>
+            name="Menu.Edit.Name"/>
 
     <action id="view-menu-command"
-            name="Menu.View.Name"
-            mnemonic="Menu.View.Mnemonic"/>
+            name="Menu.View.Name"/>
 
     <action id="tools-menu-command"
-            name="Menu.Tools.Name"
-            mnemonic="Menu.Tools.Mnemonic"/>
+            name="Menu.Tools.Name"/>
 
     <action id="window-menu-command"
-            name="Menu.Window.Name"
-            mnemonic="Menu.Window.Mnemonic"/>
+            name="Menu.Window.Name"/>
 
     <action id="help-menu-command"
-            name="Menu.Help.Name"
-            mnemonic="Menu.Help.Mnemonic"/>
+            name="Menu.Help.Name"/>
 
     <!-- File menu operations -->
 
     <action id="new-command"
             name="Menu.New.Name"
-            mnemonic="Menu.New.Mnemonic"
             smicon="/jgnash/resource/document-new.png"
             icon="/jgnash/resource/document-new.png"
             accel="Menu.New.KeyStroke"
@@ -57,7 +49,6 @@
 
     <action id="open-command"
             name="Menu.Open.Name"
-            mnemonic="Menu.Open.Mnemonic"
             smicon="/jgnash/resource/document-open.png"
             icon="/jgnash/resource/document-open.png"
             accel="Menu.Open.KeyStroke"
@@ -72,22 +63,18 @@
 
     <action id="saveas-command"
             name="Menu.SaveAs.Name"
-            mnemonic="Menu.SaveAs.Mnemonic"
             smicon="/jgnash/resource/document-save-as.png"
             icon="/jgnash/resource/document-save-as.png"
             desc="Menu.SaveAs.Tooltip"/>
 
     <action id="import-menu-command"
-            name="Menu.Import.Name"
-            mnemonic="Menu.Import.Mnemonic"/>
+            name="Menu.Import.Name"/>
 
     <action id="export-menu-command"
-            name="Menu.Export.Name"
-            mnemonic="Menu.Export.Mnemonic"/>
+            name="Menu.Export.Name"/>
 
     <action id="qifimport-command"
-            name="Menu.ImportQif.Name"
-            mnemonic="Menu.ImportQif.Mnemonic"/>
+            name="Menu.ImportQif.Name"/>
 
     <action id="exportAccounts-command"
             name="Menu.ExportAccounts.Name"/>
@@ -102,13 +89,11 @@
 
     <action id="exit-command"
             name="Menu.Exit.Name"
-            mnemonic="Menu.Exit.Mnemonic"
             desc="Menu.Exit.Tooltip"
             accel="Menu.Exit.KeyStroke"/>
 
     <action id="close-command"
             name="Menu.Close.Name"
-            mnemonic="Menu.Close.Mnemonic"
             desc="Menu.Close.Tooltip"
             accel="Menu.Close.KeyStroke"/>
 
@@ -166,7 +151,6 @@
 
     <action id="copy-command"
             name="Menu.Copy.Name"
-            mnemonic="Menu.Copy.Mnemonic"
             smicon="/jgnash/resource/edit-copy.png"
             icon="/jgnash/resource/edit-copy.png"
             accel="Menu.Copy.KeyStroke"
@@ -174,7 +158,6 @@
 
     <action id="cut-command"
             name="Menu.Cut.Name"
-            mnemonic="Menu.Cut.Mnemonic"
             smicon="/jgnash/resource/edit-cut.png"
             icon="/jgnash/resource/edit-cut.png"
             accel="Menu.Cut.KeyStroke"
@@ -182,7 +165,6 @@
 
     <action id="paste-command"
             name="Menu.Paste.Name"
-            mnemonic="Menu.Paste.Mnemonic"
             smicon="/jgnash/resource/edit-paste.png"
             icon="/jgnash/resource/edit-paste.png"
             accel="Menu.Paste.KeyStroke"
@@ -191,57 +173,45 @@
     <!-- View menu commands -->
 
     <action id="filter-menu-command"
-            name="Menu.Filter.Name"
-            mnemonic="Menu.Filter.Mnemonic"/>
+            name="Menu.Filter.Name"/>
 
     <action id="account-filter-command"
-            name="Menu.AccountList.Name"
-            mnemonic="Menu.AccountList.Mnemonic"/>
+            name="Menu.AccountList.Name"/>
 
     <action id="register-filter-command"
-            name="Menu.Register.Name"
-            mnemonic="Menu.Register.Mnemonic"/>
+            name="Menu.Register.Name"/>
 
     <!-- Tools menu commands -->
 
     <action id="commodity-menu-command"
-            name="Menu.Securities.Name"
-            mnemonic="Menu.Securities.Mnemonic"/>
+            name="Menu.Securities.Name"/>
 
     <action id="currency-menu-command"
-            name="Menu.Currency.Name"
-            mnemonic="Menu.Currency.Mnemonic"/>
+            name="Menu.Currency.Name"/>
 
     <action id="commodity-createmodify-command"
-            name="Menu.ModifyCommodity.Name"
-            mnemonic="Menu.ModifyCommodity.Mnemonic"/>
+            name="Menu.ModifyCommodity.Name"/>
 
     <action id="budget-manager-command"
-            name="Menu.BudgetManager.Name"
-            mnemonic="Menu.BudgetManager.Mnemonic"/>
+            name="Menu.BudgetManager.Name"/>
 
     <action id="exchangerate-modify-command"
-            name="Menu.ModifyExchangeRates.Name"
-            mnemonic="Menu.ModifyExchangeRates.Mnemonic"/>
+            name="Menu.ModifyExchangeRates.Name"/>
 
     <action id="commodity-history-command"
-            name="Menu.HistoryCommodity.Name"
-            mnemonic="Menu.HistoryCommodity.Mnemonic"/>
+            name="Menu.HistoryCommodity.Name"/>
 
     <action id="commodity-historyimport-command"
             name="Menu.HistoryImport.Name"/>
 
     <action id="currency-addremove-command"
-            name="Menu.AddRemoveCurrency.Name"
-            mnemonic="Menu.AddRemoveCurrency.Mnemonic"/>
+            name="Menu.AddRemoveCurrency.Name"/>
 
     <action id="currency-modify-command"
-            name="Menu.ModifyCurrency.Name"
-            mnemonic="Menu.ModifyCurrency.Mnemonic"/>
+            name="Menu.ModifyCurrency.Name"/>
 
     <action id="currency-default-command"
             name="Menu.DefaultCurrency.Name"
-            mnemonic="Menu.DefaultCurrency.Mnemonic"
             desc="Menu.DefaultCurrency.Tooltip"/>
 
     <action id="currency-background-update-command"
@@ -253,16 +223,13 @@
             desc="Menu.BackgroundSecurityUpdate.Tooltip"/>
 
     <action id="printchecks-command"
-            name="Menu.PrintCheck.Name"
-            mnemonic="Menu.PrintCheck.Mnemonic"/>
+            name="Menu.PrintCheck.Name"/>
 
     <action id="designchecks-command"
-            name="Menu.DesignCheck.Name"
-            mnemonic="Menu.DesignCheck.Mnemonic"/>
+            name="Menu.DesignCheck.Name"/>
 
     <action id="options-command"
             name="Menu.Option.Name"
-            mnemonic="Menu.Option.Mnemonic"
             accel="Menu.Option.KeyStroke"/>
 
     <action id="recurringList-command"
@@ -289,7 +256,6 @@
 
     <action id="about-command"
             name="Menu.About.Name"
-            mnemonic="Menu.About.Mnemonic"
             accel="Menu.About.KeyStroke"
             smicon="/jgnash/resource/dialog-information.png"
             icon="/jgnash/resource/dialog-information.png"
@@ -297,7 +263,6 @@
 
     <action id="help-command"
             name="Menu.HelpTopics.Name"
-            mnemonic="Menu.HelpTopics.Mnemonic"
             accel="Menu.HelpTopics.KeyStroke"
             smicon="/jgnash/resource/help-browser.png"
             icon="/jgnash/resource/help-browser.png"
