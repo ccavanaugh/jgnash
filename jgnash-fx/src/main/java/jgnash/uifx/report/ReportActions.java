@@ -100,6 +100,18 @@ public class ReportActions {
         StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
     }
 
+    public static void displayNetWorthReport() {
+        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
+                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+                        ResourceUtils.getString("Word.NetWorth"));
+
+        reportPair.getController().loadReportController("NetWorthReport.fxml");
+        reportPair.getStage().show();
+
+        // Preserve size and location
+        StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
+    }
+
     public static void exportProfitLossReport() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
