@@ -101,40 +101,43 @@ import static org.junit.Assert.*;
          search = securityNode.getHistoryNode(getLocalDate("2014-06-27"));
          assertEquals(today, search.get());
 
-         BigDecimal price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-29"));
+         BigDecimal price = Engine.getMarketPrice(Collections.emptyList(), securityNode, usdCurrency,
+                 getLocalDate("2014-06-29"));
+
          assertEquals(new BigDecimal("502.00"), price);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-28"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-28"));
          assertEquals(new BigDecimal("502.00"), price);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-27"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-27"));
          assertEquals(new BigDecimal("501.00"), price);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-26"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-26"));
          assertEquals(new BigDecimal("500.00"), price);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-25"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, usdCurrency, getLocalDate("2014-06-25"));
          assertEquals(BigDecimal.ZERO, price);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-25"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-25"));
          assertTrue(price.compareTo(BigDecimal.ZERO) == 0);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-26"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-26"));
          assertTrue(price.compareTo(new BigDecimal("250.00")) == 0);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-27"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-27"));
          assertTrue(price.compareTo(new BigDecimal("250.50")) == 0);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-28"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-28"));
          assertTrue(price.compareTo(new BigDecimal("251.00")) == 0);
 
-         price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-29"));
+         price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-29"));
          assertTrue(price.compareTo(new BigDecimal("251.00")) == 0);
 
          /// Test with a transaction for history precedence ///
 
          List<TransactionEntry> fees = new ArrayList<>();
-         fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees", TransactionTag.INVESTMENT_FEE));
+         fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees",
+                 TransactionTag.INVESTMENT_FEE));
 
          // Buying shares
          Transaction it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("501.34"),
@@ -142,44 +145,59 @@ import static org.junit.Assert.*;
 
          assertTrue(e.addTransaction(it));
 
-         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getLocalDate("2014-06-27"));
+         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency,
+                 getLocalDate("2014-06-27"));
          assertEquals(new BigDecimal("501.00"), price);
 
          /// Test a transaction after any known security history ///
 
          fees.clear();
-         fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees", TransactionTag.INVESTMENT_FEE));
+         fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees",
+                 TransactionTag.INVESTMENT_FEE));
+
          it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("501.34"),
                  new BigDecimal("125"), BigDecimal.ONE, getLocalDate("2014-06-29"), "Buy shares", fees);
 
          assertTrue(e.addTransaction(it));
 
 
-         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getLocalDate("2014-06-29"));
+         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency,
+                 getLocalDate("2014-06-29"));
+
          assertEquals(new BigDecimal("501.34"), price);
 
-         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getLocalDate("2014-06-30"));
+         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency,
+                 getLocalDate("2014-06-30"));
+
          assertEquals(new BigDecimal("501.34"), price);
 
          /// Test a transaction after any known security history and between a newer ///
 
          fees.clear();
-         fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees", TransactionTag.INVESTMENT_FEE));
+         fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees",
+                 TransactionTag.INVESTMENT_FEE));
+
          it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("502.34"),
                  new BigDecimal("125"), BigDecimal.ONE, getLocalDate("2014-07-01"), "Buy shares", fees);
 
          assertTrue(e.addTransaction(it));
 
-         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getLocalDate("2014-07-01"));
+         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency,
+                 getLocalDate("2014-07-01"));
+
          assertFalse(securityNode.getHistoryNode(getLocalDate("2014-07-01")).isPresent());
          assertEquals(new BigDecimal("502.34"), price);
 
-         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getLocalDate("2014-07-02"));
+         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency,
+                 getLocalDate("2014-07-02"));
+
          assertFalse(securityNode.getHistoryNode(getLocalDate("2014-07-02")).isPresent());
          assertEquals(new BigDecimal("502.34"), price);
 
          assertFalse(securityNode.getHistoryNode(getLocalDate("2014-06-30")).isPresent());
-         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getLocalDate("2014-06-30"));
+         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency,
+                 getLocalDate("2014-06-30"));
+
          assertEquals(new BigDecimal("501.34"), price);
 
          final SecurityHistoryNode future2 = new SecurityHistoryNode();
@@ -188,7 +206,8 @@ import static org.junit.Assert.*;
          assertTrue(e.addSecurityHistory(securityNode, future2));
          assertTrue(securityNode.getHistoryNode(getLocalDate("2014-07-02")).isPresent());
 
-         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getLocalDate("2014-07-02"));
+         price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency,
+                 getLocalDate("2014-07-02"));
 
          assertEquals(new BigDecimal("503.00"), price);
 
