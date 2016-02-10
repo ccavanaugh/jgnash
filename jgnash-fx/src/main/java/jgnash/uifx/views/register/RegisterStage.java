@@ -6,13 +6,11 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -88,12 +86,7 @@ public class RegisterStage extends Stage {
 
         registerStageListProperty.get().add(this);
 
-        setOnHidden(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                registerStageListProperty.get().remove(RegisterStage.this);
-            }
-        });
+        setOnHidden(event -> registerStageListProperty.get().remove(RegisterStage.this));
     }
 
     public static RegisterStage getRegisterStage(@NotNull final Account account) {
