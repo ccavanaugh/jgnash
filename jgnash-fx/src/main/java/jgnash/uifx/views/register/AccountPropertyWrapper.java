@@ -27,8 +27,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 
 import jgnash.engine.Account;
@@ -67,22 +65,19 @@ class AccountPropertyWrapper implements MessageListener {
 
     private NumberFormat numberFormat;  // not thread safe
 
-    public AccountPropertyWrapper() {
+    AccountPropertyWrapper() {
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
 
-        accountProperty.addListener(new ChangeListener<Account>() {
-            @Override
-            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
-                if (newValue != null) {
+        accountProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
 
-                    // Account changed, update the number format
-                    synchronized (numberFormatLock) {
-                        numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
-                    }
-
-                    // Update account properties
-                    updateProperties();
+                // Account changed, update the number format
+                synchronized (numberFormatLock) {
+                    numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
                 }
+
+                // Update account properties
+                updateProperties();
             }
         });
     }
@@ -182,23 +177,23 @@ class AccountPropertyWrapper implements MessageListener {
         }
     }
 
-    public ReadOnlyStringProperty reconciledAmountProperty() {
+    ReadOnlyStringProperty reconciledAmountProperty() {
         return reconciledAmountProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty accountBalanceProperty() {
+    ReadOnlyStringProperty accountBalanceProperty() {
         return accountBalanceProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty cashBalanceProperty() {
+    ReadOnlyStringProperty cashBalanceProperty() {
         return cashBalanceProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty marketValueProperty() {
+    ReadOnlyStringProperty marketValueProperty() {
         return marketValueProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty accountNameProperty() {
+    ReadOnlyStringProperty accountNameProperty() {
         return accountNameProperty.getReadOnlyProperty();
     }
 
