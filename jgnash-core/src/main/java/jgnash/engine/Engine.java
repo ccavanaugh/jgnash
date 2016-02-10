@@ -213,19 +213,16 @@ public class Engine {
         backgroundExecutorService.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
 
         // Engine needs to be registered before the update factories can find it.  Push the check to the background executor
-        backgroundExecutorService.schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (UpdateFactory.getUpdateOnStartup()) {
-                    // don't update on weekends unless needed
-                    if (UpdateFactory.shouldAutomaticUpdateOccur(getConfig().getLastSecuritiesUpdateTimestamp())) {
-                        startSecuritiesUpdate(SCHEDULED_DELAY);
-                    }
+        backgroundExecutorService.schedule((Runnable) () -> {
+            if (UpdateFactory.getUpdateOnStartup()) {
+                // don't update on weekends unless needed
+                if (UpdateFactory.shouldAutomaticUpdateOccur(getConfig().getLastSecuritiesUpdateTimestamp())) {
+                    startSecuritiesUpdate(SCHEDULED_DELAY);
                 }
+            }
 
-                if (CurrencyUpdateFactory.getUpdateOnStartup()) {
-                    startExchangeRateUpdate(SCHEDULED_DELAY);
-                }
+            if (CurrencyUpdateFactory.getUpdateOnStartup()) {
+                startExchangeRateUpdate(SCHEDULED_DELAY);
             }
         }, 30, TimeUnit.SECONDS);
     }
