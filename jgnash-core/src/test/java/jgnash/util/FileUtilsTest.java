@@ -73,10 +73,12 @@ public class FileUtilsTest {
     }
 
     private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
-        char[] buffer = new char[testdata.length()];
+        final char[] buffer = new char[testdata.length()];
 
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(absolutepath))) {
-            reader.read(buffer);
+            final int read = reader.read(buffer);
+
+            assertEquals(testdata.length(), read);
         }
 
         assertEquals(testdata, new String(buffer));
