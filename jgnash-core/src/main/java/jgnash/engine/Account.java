@@ -70,7 +70,7 @@ import jgnash.util.Nullable;
 @Entity
 public class Account extends StoredObject implements Comparable<Account> {
 
-    public static final int MAX_ATTRIBUTE_LENGTH = 8192;
+    static final int MAX_ATTRIBUTE_LENGTH = 8192;
 
     /**
      * Attribute key for the last attempted reconciliation date
@@ -204,7 +204,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int accountCode;
 
-    @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToOne(orphanRemoval = true, cascade = {CascadeType.ALL})
     private AmortizeObject amortizeObject;
 
     /**
@@ -1494,7 +1494,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @see Engine#setAccountAttribute
      */
     @Nullable
-    public String getAttribute(@NotNull final String key) {
+    String getAttribute(@NotNull final String key) {
         attributesLock.readLock().lock();
 
         try {
