@@ -35,7 +35,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyCode;
@@ -161,24 +160,18 @@ public class DecimalTextField extends TextFieldEx {
         });
 
         // Change the max and minimum scale allowed for entry
-        scaleProperty.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
-                if (format instanceof DecimalFormat) {
-                    format.setMaximumFractionDigits(scaleProperty.get());
-                }
-                evaluateAndSet();
+        scaleProperty.addListener((observable, oldValue, newValue) -> {
+            if (format instanceof DecimalFormat) {
+                format.setMaximumFractionDigits(scaleProperty.get());
             }
+            evaluateAndSet();
         });
 
-        minScaleProperty.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (format instanceof DecimalFormat) {
-                    format.setMinimumFractionDigits(minScaleProperty.get());
-                }
-                evaluateAndSet();
+        minScaleProperty.addListener((observable, oldValue, newValue) -> {
+            if (format instanceof DecimalFormat) {
+                format.setMinimumFractionDigits(minScaleProperty.get());
             }
+            evaluateAndSet();
         });
 
         scaleProperty.set(DEFAULT_SCALE); // trigger update to the format
