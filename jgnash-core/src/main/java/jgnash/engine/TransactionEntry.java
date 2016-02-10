@@ -104,7 +104,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     /**
      * Field for user defined tags
      */
-    @Column(columnDefinition = "VARCHAR(2048)", nullable = true)
+    @Column(columnDefinition = "VARCHAR(2048)")
     private String customTags;
 
     /**

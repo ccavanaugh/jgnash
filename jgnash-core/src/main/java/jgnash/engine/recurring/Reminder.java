@@ -110,7 +110,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * Reference to the transaction for this reminder.
      */
-    @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Transaction transaction;
 
     @Override

@@ -83,13 +83,13 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Financial Institute Transaction ID. Typically used for OFX import FITID.  If this field is not null
      * then it is an indicator of an imported transaction
      */
-    @Basic(optional = true)
+    @Basic
     private String fitid;
 
     /**
      * File name for the attachment, should not contain any preceding paths
      */
-    @Column(columnDefinition = "VARCHAR(256)", nullable = true)
+    @Column(columnDefinition = "VARCHAR(256)")
     private String attachment;
 
     /**
