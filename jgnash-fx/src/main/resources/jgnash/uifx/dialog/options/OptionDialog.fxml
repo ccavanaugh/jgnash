@@ -35,6 +35,9 @@
         <Tab text="%Tab.Reminders">
             <fx:include source="RemindersTab.fxml"/>
         </Tab>
+        <Tab text="%Tab.Report">
+            <fx:include source="ReportTab.fxml"/>
+        </Tab>
         <Tab text="%Tab.Network">
             <fx:include source="NetworkTab.fxml"/>
         </Tab>
