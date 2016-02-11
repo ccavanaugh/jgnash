@@ -17,7 +17,7 @@
         </tooltip>
     </Button>
 
-    <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name"
+    <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
             disable="true">
         <graphic>
             <FontAwesomeLabel glyphName="TIMES"/>
