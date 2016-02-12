@@ -37,8 +37,6 @@ if (dlg.getReturnStatus()) {
 
 	debug(debitAccount.getName());
 
-	var budgetCombo = new BudgetComboBox();
-
 	dlg.setTitle("Select credit account for transaction");
 	dlg.setVisible(true);
 
