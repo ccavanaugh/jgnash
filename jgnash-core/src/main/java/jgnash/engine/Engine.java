@@ -92,7 +92,11 @@ public class Engine {
     /**
      * Current version for the file format
      */
-    public static final float CURRENT_VERSION = 2.17f;
+    public static final float CURRENT_VERSION = 2.22f;
+
+    public static final int CURRENT_MAJOR_VERSION = 2;
+
+    public static final int CURRENT_MINOR_VERSION = 22;
 
     // Lock names
     private static final String ACCOUNT_LOCK = "account";
@@ -577,7 +581,7 @@ public class Engine {
             // if the file version is not current, then update it
             if (!nearlyEquals(getConfig().getFileVersion(), CURRENT_VERSION, EPSILON)) {
                 final Config localConfig = getConfig();
-                localConfig.setFileVersion(CURRENT_VERSION);
+                localConfig.updateFileVersion();
                 getConfigDAO().update(localConfig);
             }
         } finally {

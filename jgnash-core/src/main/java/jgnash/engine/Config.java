@@ -62,10 +62,14 @@ public class Config extends StoredObject {
 
     private String accountSeparator = ":";
 
-    /** TODO: this needs to be changed long term because of corner cases that can break version checks if not careful
-     * Use a date or store as a string so trailing zero's are not lost.  As a float, 2.2 and 2.20 look the same.
+    /**
+     * TODO: this needs to be changed long term because of corner cases that can break version checks if not careful
+     * This will be replaced by fileFormat in a future release
      */
     private float fileVersion = Engine.CURRENT_VERSION; // default to the latest version at init
+
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
+    private String fileFormat = Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION;
 
     private transient ReadWriteLock preferencesLock;
 
@@ -84,7 +88,7 @@ public class Config extends StoredObject {
 
     /**
      * {@code Map} for file based operation preferences.
-     *
+     * <p>
      * GUI locations, last used accounts, etc
      * should not be stored here as they will be dependent on the user.
      * Only values required for operation consistency should be stored here.
@@ -110,9 +114,14 @@ public class Config extends StoredObject {
         this.fileVersion = fileVersion;
     }
 
+    void updateFileVersion() {
+        this.fileFormat = Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION;
+        this.fileVersion = Engine.CURRENT_VERSION;
+    }
+
     /**
      * Returns the minor file revision.  This is a workaround for the old file revision scheme
-     *
+     * <p>
      * Warning: 2.2 and 2.20 will return 0.2.  2.21 returns 2.1, 2.14 returns 1.4
      *
      * @return minor revision as a float
@@ -124,11 +133,11 @@ public class Config extends StoredObject {
             final String minor = version.split("\\.")[1];
 
             if (minor.startsWith("0")) { // 2.01, 2.02, etc
-                return ((float)Integer.parseInt(minor.substring(1))) / 100f;
+                return ((float) Integer.parseInt(minor.substring(1))) / 100f;
             }
 
             // 2.1, 2.2, 2.17, etc
-            return ((float)Integer.parseInt(minor)) / 10f;
+            return ((float) Integer.parseInt(minor)) / 10f;
         }
 
         return 0;
@@ -151,14 +160,14 @@ public class Config extends StoredObject {
         return accountSeparator;
     }
 
-    public void setTransactionNumberList(final List<String> transactionNumberItems) {
+    void setTransactionNumberList(final List<String> transactionNumberItems) {
         if (transactionNumberItems != null) {
             this.transactionNumberItems.clear();
             this.transactionNumberItems.addAll(transactionNumberItems);
         }
     }
 
-    public List<String> getTransactionNumberList() {
+    List<String> getTransactionNumberList() {
         if (transactionNumberItems.isEmpty()) {
             final ResourceBundle rb = ResourceUtils.getBundle();
 
@@ -236,12 +245,12 @@ public class Config extends StoredObject {
         setPreference(REMOVE_BACKUPS, Boolean.toString(removeOldBackups));
     }
 
-    public void setLastSecuritiesUpdateTimestamp(@NotNull final LocalDateTime localDateTime) {
+    void setLastSecuritiesUpdateTimestamp(@NotNull final LocalDateTime localDateTime) {
         setPreference(LAST_SECURITIES_UPDATE_TIMESTAMP, localDateTime.toString());
     }
 
     @NotNull
-    public LocalDateTime getLastSecuritiesUpdateTimestamp() {
+    LocalDateTime getLastSecuritiesUpdateTimestamp() {
         final String result = getPreference(LAST_SECURITIES_UPDATE_TIMESTAMP);
 
         if (result != null) {

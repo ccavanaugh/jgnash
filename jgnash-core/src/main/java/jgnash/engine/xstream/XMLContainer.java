@@ -94,7 +94,7 @@ class XMLContainer extends AbstractXStreamContainer {
      * @param objects Collection of StoredObjects to write
      * @param file    file to write
      */
-    public static synchronized void writeXML(final Collection<StoredObject> objects, final File file) {
+    static synchronized void writeXML(final Collection<StoredObject> objects, final File file) {
         Logger logger = Logger.getLogger(XMLContainer.class.getName());
 
         createBackup(file);
@@ -122,11 +122,12 @@ class XMLContainer extends AbstractXStreamContainer {
 
         logger.info("Writing XML file");
 
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
+        try (final Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             writer.write("<?fileVersion " + Engine.CURRENT_VERSION + "?>\n");
+            writer.write("<?fileFormat " + Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION + "?>\n");
 
-            XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new KXml2Driver()));
+            final XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new KXml2Driver()));
 
             try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
                 out.writeObject(list);
