@@ -162,9 +162,9 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private JPanel layoutButtonPanel() {
-        ButtonBarBuilder builder = new ButtonBarBuilder();
+        final ButtonBarBuilder builder = new ButtonBarBuilder();
 
-        builder.addButton(new JButton[] { newButton, deleteButton, cancelButton });
+        builder.addButton(newButton, deleteButton, cancelButton);
         builder.addUnrelatedGap();
         builder.addGlue();
         builder.addButton(applyButton);
