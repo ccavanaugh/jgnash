@@ -128,7 +128,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
         }
 
         // Periods especially bi-weekly can get weird, correct ending period if needed.
-        if (endPeriod > BudgetGoal.PERIODS) {
+        if (endPeriod >= BudgetGoal.PERIODS) {
             endPeriod = BudgetGoal.PERIODS - 1;
             endDate = DateUtils.getLastDayOfTheYear(startDate);
         }

@@ -84,7 +84,7 @@ public class BudgetGoalsDialogController {
     @FXML
     private ComboBox<BudgetPeriod> periodComboBox;
 
-    private Optional<BudgetGoal> result = Optional.empty();
+    private BudgetGoal result = null;
 
     @FXML
     private ResourceBundle resources;
@@ -225,16 +225,16 @@ public class BudgetGoalsDialogController {
      *
      * @return BudgetGoal property
      */
-    public SimpleObjectProperty<BudgetGoal> budgetGoalProperty() {
+    SimpleObjectProperty<BudgetGoal> budgetGoalProperty() {
         return budgetGoalProperty;
     }
 
-    public IntegerProperty workingYearProperty() {
+    IntegerProperty workingYearProperty() {
         return workingYearProperty;
     }
 
     public Optional<BudgetGoal> getResult() {
-        return result;
+        return Optional.ofNullable(result);
     }
 
     private List<BudgetPeriodDescriptor> getDescriptors() {
@@ -267,8 +267,8 @@ public class BudgetGoalsDialogController {
 
         final Pattern pattern = patternComboBox.getValue();
 
-        setBudgetGoal(BudgetFactory.buildBudgetGoal(budgetGoalProperty.get(),
-                accountProperty.get(), getDescriptors(), pattern, startRow, endRow, fillAmount));
+        setBudgetGoal(BudgetFactory.buildBudgetGoal(budgetGoalProperty.get(), getDescriptors(), pattern, startRow,
+                endRow, fillAmount));
     }
 
     private void setBudgetGoal(final BudgetGoal budgetGoal) {
@@ -284,7 +284,7 @@ public class BudgetGoalsDialogController {
 
     @FXML
     private void handleOkayAction() {
-        result = Optional.ofNullable(budgetGoalProperty.get());
+        result = budgetGoalProperty.get();
         ((Stage) periodComboBox.getScene().getWindow()).close();
     }
 

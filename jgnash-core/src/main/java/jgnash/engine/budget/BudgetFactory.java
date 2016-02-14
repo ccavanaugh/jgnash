@@ -67,7 +67,9 @@ public class BudgetFactory {
         return budget;
     }
 
-    public static BudgetGoal buildAverageBudgetGoal(final Account account, final List<BudgetPeriodDescriptor> descriptors, final boolean round) {
+    public static BudgetGoal buildAverageBudgetGoal(final Account account,
+                                                    final List<BudgetPeriodDescriptor> descriptors,
+                                                    final boolean round) {
         BudgetGoal goal = new BudgetGoal();
 
         goal.setBudgetPeriod(descriptors.get(0).getBudgetPeriod());
@@ -97,7 +99,6 @@ public class BudgetFactory {
      * Creates a {@code BudgetGoal} with an alternating pattern
      *
      * @param baseBudgetGoal {@code BudgetGoal} to clone
-     * @param account  Account for BudgetGoal
      * @param descriptors descriptors to use
      * @param pattern Pattern to use
      * @param startRow starting row, 0 based index is assumed
@@ -105,7 +106,10 @@ public class BudgetFactory {
      * @param amount amount to use
      * @return new {@code BudgetGoal}
      */
-    public static BudgetGoal buildBudgetGoal(final BudgetGoal baseBudgetGoal, final Account account, final List<BudgetPeriodDescriptor> descriptors, final Pattern pattern, final int startRow, final int endRow, final BigDecimal amount) {
+    public static BudgetGoal buildBudgetGoal(final BudgetGoal baseBudgetGoal,
+                                             final List<BudgetPeriodDescriptor> descriptors,
+                                             final Pattern pattern, final int startRow, final int endRow,
+                                             final BigDecimal amount) {
         BudgetGoal goal;
 
         try {
@@ -123,15 +127,10 @@ public class BudgetFactory {
 
             //System.out.println(i);
 
-            BudgetPeriodDescriptor descriptor = descriptors.get(i);
+            final BudgetPeriodDescriptor descriptor = descriptors.get(i);
 
             goal.setBudgetPeriod(descriptor.getBudgetPeriod());
-
-            if (account.getAccountType() == AccountType.INCOME) {   // negate for income only
-                goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount.negate());
-            } else {
-                goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount);
-            }
+            goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount);
         }
 
         return goal;

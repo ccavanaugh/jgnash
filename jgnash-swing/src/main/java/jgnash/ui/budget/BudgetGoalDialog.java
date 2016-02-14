@@ -323,7 +323,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         int endRow = (Integer)endRowSpinner.getValue() - 1;
         Pattern pattern = patternComboBox.getItemAt(patternComboBox.getSelectedIndex());
 
-        budgetGoal = BudgetFactory.buildBudgetGoal(budgetGoal, account, getDescriptors(), pattern, startRow, endRow, fillAmount);
+        budgetGoal = BudgetFactory.buildBudgetGoal(budgetGoal, getDescriptors(), pattern, startRow, endRow, fillAmount);
 
         model.fireTableDataChanged();
     }

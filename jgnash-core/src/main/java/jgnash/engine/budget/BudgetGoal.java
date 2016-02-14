@@ -17,13 +17,15 @@
  */
 package jgnash.engine.budget;
 
-import jgnash.engine.MathConstants;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,6 +33,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OrderColumn;
+import javax.persistence.PostLoad;
+
+import jgnash.engine.MathConstants;
 
 /**
  * Budget Goal Object
@@ -52,19 +58,28 @@ public class BudgetGoal implements Cloneable, Serializable {
     // cache the hash code
     private transient int hash;
 
+    /**
+     * Do not used, this will be removed
+     * @deprecated
+     */
+    @SuppressWarnings("JpaAttributeTypeInspection")
     @Lob    // must be stored as a blob
+    @Deprecated
     private BigDecimal[] goals;
+
+    @ElementCollection
+    @OrderColumn(name="INDEX")
+    private List<BigDecimal> budgetGoals = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private BudgetPeriod budgetPeriod = BudgetPeriod.MONTHLY;
 
     public BudgetGoal() {
-        goals = new BigDecimal[PERIODS];
-        Arrays.fill(goals, BigDecimal.ZERO);
+        budgetGoals = new ArrayList<>(Collections.nCopies(PERIODS, BigDecimal.ZERO));
     }
 
     public final BigDecimal[] getGoals() {
-        return goals.clone();   // return a defensive copy
+        return budgetGoals.toArray(new BigDecimal[budgetGoals.size()]);
     }
 
     public final void setGoals(final BigDecimal[] goals) {
@@ -80,7 +95,9 @@ public class BudgetGoal implements Cloneable, Serializable {
             }
         }
 
-        this.goals = goals.clone(); //perform a defensive copy
+        for (int i = 0; i < goals.length; i++) {
+            budgetGoals.set(i, goals[i]);
+        }
     }
 
     /**
@@ -104,10 +121,14 @@ public class BudgetGoal implements Cloneable, Serializable {
     public void setGoal(final int startPeriod, final int endPeriod, final BigDecimal amount) {
         BigDecimal divisor = new BigDecimal(endPeriod - startPeriod + 1);
 
-        BigDecimal portion = amount.divide(divisor, MathConstants.mathContext);
+        final BigDecimal portion = amount.divide(divisor, MathConstants.budgetMathContext);
+
+        System.out.println(startPeriod);
+        System.out.println(endPeriod);
+        System.out.println();
 
         for (int i = startPeriod; i <= endPeriod; i++) {
-            goals[i] = portion;
+            budgetGoals.set(i, portion);
         }
     }
 
@@ -116,7 +137,7 @@ public class BudgetGoal implements Cloneable, Serializable {
 
         // clip to the max number of periods... some locale calendars behave differently
         for (int i = startPeriod; i <= endPeriod && i <= BudgetGoal.PERIODS - 1; i++) {
-            amount = amount.add(goals[i]);
+            amount = amount.add(budgetGoals.get(i));
         }
 
         return amount;
@@ -129,12 +150,15 @@ public class BudgetGoal implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-        BudgetGoal goal = (BudgetGoal) super.clone();
+        final BudgetGoal goal = (BudgetGoal) super.clone();
+
+        goal.id = 0;    // clones id must be reset for JPA
 
         // deep copy
-        goal.goals = new BigDecimal[PERIODS];
-        goal.id = 0;    // clones id must be reset for JPA
-        System.arraycopy(goals, 0, goal.goals, 0, goals.length);
+        goal.budgetGoals = new ArrayList<>(Collections.nCopies(PERIODS, BigDecimal.ZERO));
+        for (int i = 0; i< PERIODS; i++) {
+            goal.budgetGoals.set(i, budgetGoals.get(i));
+        }
 
         return goal;
     }
@@ -146,7 +170,7 @@ public class BudgetGoal implements Cloneable, Serializable {
             final int prime = 31;
             h = 1;
             h = prime * h + budgetPeriod.hashCode();
-            h = prime * h + Arrays.hashCode(goals);
+            h = prime * h + budgetGoals.hashCode();
 
             hash = h;
         }
@@ -167,8 +191,27 @@ public class BudgetGoal implements Cloneable, Serializable {
             return false;
         }
 
-        BudgetGoal other = (BudgetGoal) obj;
+        final BudgetGoal other = (BudgetGoal) obj;
 
-        return budgetPeriod == other.budgetPeriod && Arrays.equals(goals, other.goals);
+        return budgetPeriod == other.budgetPeriod && budgetGoals.equals(other.budgetGoals);
+    }
+
+    @SuppressWarnings("unused")
+    protected Object readResolve() {
+        postLoad();
+        return this;
+    }
+
+    /**
+     * Update the file
+     */
+    @SuppressWarnings("deprecation")
+    @PostLoad
+    private void postLoad() {
+        if (budgetGoals == null || budgetGoals.isEmpty() && goals != null) {
+            budgetGoals = new ArrayList<>();
+            budgetGoals.addAll(Arrays.asList(goals));
+            goals = null;
+        }
     }
 }
