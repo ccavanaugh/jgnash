@@ -33,9 +33,14 @@ public final class MathConstants {
     public static final RoundingMode roundingMode = RoundingMode.HALF_UP;
 
     /**
-     * Default match context
+     * Default math context
      */
     public static final MathContext mathContext = new MathContext(16, roundingMode);
+
+    /**
+     * Default math context for budget values.  Reduce precision to decrease file size
+     */
+    public static final MathContext budgetMathContext = new MathContext(8, roundingMode);
 
     /**
      * Number of significant digits to the right of the decimal separator
