@@ -41,6 +41,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.number.BigDecimalCloseTo.closeTo;
 import static org.junit.Assert.*;
 
 /**
@@ -109,7 +111,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testReminders() throws Exception {
+    public void testReminders() {
 
         assertEquals(0, e.getReminders().size());
 
@@ -142,7 +144,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetStoredObjectByUuid() throws Exception {
+    public void testGetStoredObjectByUuid() {
 
         // close and reopen to force check for persistence
         closeEngine();
@@ -162,7 +164,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAddCommodity() throws Exception {
+    public void testAddCommodity() {
         // close and reopen to force check for persistence
         closeEngine();
 
@@ -175,7 +177,7 @@ public abstract class EngineTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testPreferences() throws Exception {
+    public void testPreferences() {
         e.setPreference("myKey", "myValue");
         e.setPreference("myNumber", BigDecimal.TEN.toString());
 
@@ -272,7 +274,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testBudget() throws Exception {
+    public void testBudget() {
 
         final String ACCOUNT_NAME = "testAccount";
 
@@ -330,7 +332,8 @@ public abstract class EngineTest {
         assertEquals(BudgetPeriod.WEEKLY, recovered.getBudgetGoal(a).getBudgetPeriod());
 
         for (int i = 0; i < budgetGoals.length; i++) {
-            assertEquals(new BigDecimal(i), budgetGoals[i]);
+            //assertEquals(new BigDecimal(i), budgetGoals[i]);
+            assertThat(new BigDecimal(i), is(closeTo(budgetGoals[i], new BigDecimal(0.0001))));
         }
 
         // remove a budget
@@ -374,7 +377,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetCurrencies() throws Exception {
+    public void testGetCurrencies() {
 
         // close and reopen to force check for persistence
         closeEngine();
@@ -393,7 +396,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetExchangeRate() throws Exception {
+    public void testGetExchangeRate() {
 
         final LocalDate today = LocalDate.now();
         final LocalDate yesterday = today.minusDays(1);
@@ -517,7 +520,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetIncomeAccountList() throws Exception {
+    public void testGetIncomeAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.INCOME, node);
@@ -532,7 +535,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetExpenseAccountList() throws Exception {
+    public void testGetExpenseAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.EXPENSE, node);
@@ -547,7 +550,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetBankAccountList() throws Exception {
+    public void testGetBankAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
@@ -562,7 +565,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetInvestmentAccountList() throws Exception {
+    public void testGetInvestmentAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.INVEST, node);
@@ -607,7 +610,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAccounts() throws Exception {
+    public void testAccounts() {
 
         CurrencyNode node = e.getDefaultCurrency();
 
@@ -731,7 +734,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testRemoveAccount() throws Exception {
+    public void testRemoveAccount() {
         final String ACCOUNT_NAME = "testIsStored";
         CurrencyNode node = e.getDefaultCurrency();
 
@@ -833,7 +836,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetTransactions() throws Exception {
+    public void testGetTransactions() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -860,7 +863,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetTransactionsWithAttachments() throws Exception {
+    public void testGetTransactionsWithAttachments() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
