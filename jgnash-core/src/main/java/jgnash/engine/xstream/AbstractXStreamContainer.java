@@ -94,7 +94,7 @@ abstract class AbstractXStreamContainer {
      *
      * @param origFile file to check and backup
      */
-    protected static void createBackup(final File origFile) {
+    static void createBackup(final File origFile) {
         if (origFile.exists()) {
             File backup = new File(origFile.getAbsolutePath() + ".backup");
             if (backup.exists()) {
@@ -335,7 +335,7 @@ abstract class AbstractXStreamContainer {
 
     static class XStreamOut extends XStream {
 
-        public XStreamOut(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
+        XStreamOut(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
             super(reflectionProvider, hierarchicalStreamDriver);
         }
 
