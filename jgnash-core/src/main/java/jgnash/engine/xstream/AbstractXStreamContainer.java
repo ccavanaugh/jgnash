@@ -20,6 +20,7 @@ package jgnash.engine.xstream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
@@ -129,6 +130,8 @@ abstract class AbstractXStreamContainer {
         xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
 
         xstream.setMode(XStream.ID_REFERENCES);
+
+        xstream.alias("Decimal", BigDecimal.class);
 
         xstream.alias("Account", Account.class);
         xstream.alias("RootAccount", RootAccount.class);
