@@ -93,7 +93,7 @@ public class RecurringPropertiesController {
 
     private final HashMap<Class<?>, Integer> tabMap = new HashMap<>();
 
-    private Optional<Reminder> optionalReminder = Optional.empty();
+    private Reminder reminder = null;
 
     @FXML
     private void initialize() {
@@ -175,12 +175,12 @@ public class RecurringPropertiesController {
     }
 
     public Optional<Reminder> getReminder() {
-        return optionalReminder;
+        return Optional.ofNullable(reminder);
     }
 
     @FXML
     private void okAction() {
-        optionalReminder = Optional.of(generateReminder());
+        reminder = generateReminder();
 
         ((Stage) parentProperty.get().getWindow()).close();
     }
@@ -198,10 +198,10 @@ public class RecurringPropertiesController {
 
     @FXML
     private void handleEditTransaction() {
-        TransactionDialog.showAndWait(accountComboBox.getValue(), transaction, optional -> {
-            if (optional.isPresent()) {
-                transaction = optional.get();
-                payeeTextField.setText(transaction.getPayee());
+        TransactionDialog.showAndWait(accountComboBox.getValue(), this.transaction, transaction -> {
+            if (transaction != null) {
+                this.transaction = transaction;
+                payeeTextField.setText(this.transaction.getPayee());
             }
         });
     }

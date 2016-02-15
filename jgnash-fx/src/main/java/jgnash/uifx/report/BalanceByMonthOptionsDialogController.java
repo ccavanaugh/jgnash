@@ -60,7 +60,7 @@ public class BalanceByMonthOptionsDialogController {
     @FXML
     private DatePickerEx endDatePicker;
 
-    private Optional<LocalDate[]> dates = Optional.empty();
+    private LocalDate[] dates = null;
 
     private final BooleanProperty forceCurrency = new SimpleBooleanProperty();
 
@@ -73,15 +73,15 @@ public class BalanceByMonthOptionsDialogController {
         defaultCurrencyCheckBox.selectedProperty().bindBidirectional(forceCurrency);
     }
 
-    public Optional<LocalDate[]> getDates() {
-        return dates;
+    Optional<LocalDate[]> getDates() {
+        return Optional.ofNullable(dates);
     }
 
-    public boolean isVertical() {
+    boolean isVertical() {
         return verticalRadioButton.isSelected();
     }
 
-    public BooleanProperty forceDefaultCurrencyProperty() {
+    BooleanProperty forceDefaultCurrencyProperty() {
         return forceCurrency;
     }
 
@@ -92,7 +92,7 @@ public class BalanceByMonthOptionsDialogController {
 
     @FXML
     private void handleOkAction() {
-        dates = Optional.of(new LocalDate[] {startDatePicker.getValue(), endDatePicker.getValue()});
+        dates = new LocalDate[] {startDatePicker.getValue(), endDatePicker.getValue()};
 
         ((Stage) parentProperty.get().getWindow()).close();
     }

@@ -28,7 +28,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.stage.Stage;
 
 import jgnash.uifx.Options;
-import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 
 /**
@@ -50,7 +49,7 @@ public class DateRangeDialogController {
     @FXML
     private DatePickerEx endDatePicker;
 
-    private Optional<LocalDate[]> dates = Optional.empty();
+    private LocalDate[] dates = null;
 
     @FXML
     private void initialize() {
@@ -60,7 +59,7 @@ public class DateRangeDialogController {
     }
 
     public Optional<LocalDate[]> getDates() {
-        return dates;
+        return Optional.ofNullable(dates);
     }
 
     @FXML
@@ -70,7 +69,7 @@ public class DateRangeDialogController {
 
     @FXML
     private void handleOkAction() {
-        dates = Optional.of(new LocalDate[] {startDatePicker.getValue(), endDatePicker.getValue()});
+        dates = new LocalDate[] {startDatePicker.getValue(), endDatePicker.getValue()};
 
         ((Stage) parentProperty.get().getWindow()).close();
     }

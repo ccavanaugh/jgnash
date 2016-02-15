@@ -17,6 +17,13 @@
  */
 package jgnash.uifx.views.register;
 
+import java.io.IOException;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,20 +33,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import jgnash.engine.*;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
-
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A Dialog for creating and editing new transactions
@@ -56,7 +61,7 @@ public class TransactionDialog extends Stage {
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<Consumer<Optional<Transaction>>> transactionConsumer = new SimpleObjectProperty<>();
+    private final ObjectProperty<Consumer<Transaction>> transactionConsumer = new SimpleObjectProperty<>();
 
     private Tab creditTab;
     private Tab debitTab;
@@ -71,7 +76,7 @@ public class TransactionDialog extends Stage {
         return accountProperty;
     }
 
-    private void setTransactionConsumer(final Consumer<Optional<Transaction>> consumer) {
+    private void setTransactionConsumer(final Consumer<Transaction> consumer) {
         transactionConsumer.setValue(consumer);
     }
 
@@ -126,7 +131,7 @@ public class TransactionDialog extends Stage {
 
     private void handleEnterAction(final SlipController controller) {
         if (controller.validateForm()) {
-            transactionConsumer.get().accept(Optional.of(controller.buildTransaction()));
+            transactionConsumer.get().accept(controller.buildTransaction());
 
             tabPane.getScene().getWindow().hide();
         }
@@ -147,7 +152,8 @@ public class TransactionDialog extends Stage {
         }
     }
 
-    public static void showAndWait(@NotNull final Account account, @Nullable final Transaction transaction, final Consumer<Optional<Transaction>> consumer) {
+    public static void showAndWait(@NotNull final Account account, @Nullable final Transaction transaction,
+                                   final Consumer<Transaction> consumer) {
         final TransactionDialog transactionDialog = new TransactionDialog();
         transactionDialog.accountProperty().setValue(account);
         transactionDialog.setTransactionConsumer(consumer);

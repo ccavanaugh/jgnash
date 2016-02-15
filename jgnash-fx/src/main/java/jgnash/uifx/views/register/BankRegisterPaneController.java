@@ -95,13 +95,13 @@ public class BankRegisterPaneController extends RegisterPaneController {
             }
         } else {    // pop a dialog to modify the transaction
             InvestmentTransactionDialog.show(((InvestmentTransaction) transaction).getInvestmentAccount(), transaction,
-                    optional -> {
-                        if (optional.isPresent()) {
+                    newTransaction -> {
+                        if (newTransaction != null) {
                             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                             Objects.requireNonNull(engine);
 
                             engine.removeTransaction(transaction);
-                            engine.addTransaction(optional.get());
+                            engine.addTransaction(newTransaction);
                         }
                     });
         }

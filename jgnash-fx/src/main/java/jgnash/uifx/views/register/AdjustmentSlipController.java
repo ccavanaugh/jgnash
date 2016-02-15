@@ -128,14 +128,14 @@ public class AdjustmentSlipController extends AbstractSlipController {
 
             ReconcileManager.reconcileTransaction(accountProperty.get(), t, getReconciledState());
 
-            TransactionDialog.showAndWait(accountProperty.get(), t, optional -> {
-                if (optional.isPresent()) {
-                    final Transaction tran = optional.get();
+            TransactionDialog.showAndWait(accountProperty.get(), t, transaction -> {
+                if (transaction != null) {
+
                     final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                     Objects.requireNonNull(engine);
 
                     if (engine.removeTransaction(modTrans)) {
-                        engine.addTransaction(tran);
+                        engine.addTransaction(transaction);
                     }
                     clearForm();
                 }

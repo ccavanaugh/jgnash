@@ -54,7 +54,7 @@ public class TransactionNumberDialogController {
     @FXML
     private ListView<String> listView;
 
-    private Optional<List<String>> returnValue = Optional.empty();
+    private List<String> returnValue = null;
 
     @FXML
     private void initialize() {
@@ -111,9 +111,13 @@ public class TransactionNumberDialogController {
 
         returnedItems.removeIf(String::isEmpty);    // remove all empty strings
 
-        returnValue = Optional.of(returnedItems);
+        returnValue = returnedItems;
 
         ((Stage) parentProperty.get().getWindow()).close();
+    }
+
+    private Optional<List<String>> getItems() {
+        return Optional.ofNullable(returnValue);
     }
 
     @FXML
@@ -128,7 +132,7 @@ public class TransactionNumberDialogController {
 
         pair.getStage().showAndWait();
 
-        final Optional<List<String>> items = pair.getController().returnValue;
+        final Optional<List<String>> items = pair.getController().getItems();
 
         if (items.isPresent()) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);

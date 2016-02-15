@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -68,7 +67,7 @@ class InvestmentTransactionDialog extends Stage {
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<Consumer<Optional<Transaction>>> transactionConsumer = new SimpleObjectProperty<>();
+    private final ObjectProperty<Consumer<Transaction>> transactionConsumer = new SimpleObjectProperty<>();
 
     private InvestmentSlipManager investmentSlipManager;
 
@@ -93,7 +92,7 @@ class InvestmentTransactionDialog extends Stage {
         investmentSlipManager.accountProperty().bind(accountProperty());
     }
 
-    private void setTransactionConsumer(final Consumer<Optional<Transaction>> consumer) {
+    private void setTransactionConsumer(final Consumer<Transaction> consumer) {
         transactionConsumer.setValue(consumer);
     }
 
@@ -102,7 +101,7 @@ class InvestmentTransactionDialog extends Stage {
         final Slip controller = actionComboBox.getSelectionModel().getSelectedItem().getController();
 
         if (controller.validateForm()) {
-            transactionConsumer.get().accept(Optional.of(controller.buildTransaction()));
+            transactionConsumer.get().accept(controller.buildTransaction());
 
             transactionSlips.getScene().getWindow().hide();
         }
@@ -125,7 +124,7 @@ class InvestmentTransactionDialog extends Stage {
     }
 
     public static void show(final Account account, final Transaction transaction,
-                            final Consumer<Optional<Transaction>> consumer) {
+                            final Consumer<Transaction> consumer) {
 
         final InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
         transactionDialog.accountProperty().setValue(account);

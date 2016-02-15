@@ -21,7 +21,6 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,7 +62,8 @@ public class RegisterActions {
         // Utility class
     }
 
-    static void reconcileTransactionAction(final Account account, final Transaction transaction, final ReconciledState reconciled) {
+    static void reconcileTransactionAction(final Account account, final Transaction transaction,
+                                           final ReconciledState reconciled) {
         if (transaction != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             if (engine != null) {
@@ -86,7 +86,8 @@ public class RegisterActions {
                     if (transaction.getAttachment() != null) {
                         if (confirmAttachmentDeletion().getButtonData().isCancelButton()) {
                             if (!engine.removeAttachment(transaction.getAttachment())) {
-                                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.DeleteAttachment", transaction.getAttachment()));
+                                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.DeleteAttachment",
+                                        transaction.getAttachment()));
                             }
                         }
                     }
@@ -124,12 +125,12 @@ public class RegisterActions {
         }
     }
 
-    private static void addTransaction(final Optional<Transaction> optional) {
-        if (optional.isPresent()) {
+    private static void addTransaction(final Transaction transaction) {
+        if (transaction != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            engine.addTransaction(optional.get());
+            engine.addTransaction(transaction);
         }
     }
 
@@ -194,7 +195,8 @@ public class RegisterActions {
         final ResourceBundle rb = ResourceUtils.getBundle();
 
         return StaticUIMethods.showConfirmationDialog(rb.getString("Title.Confirm"),
-                count == 1 ? rb.getString("Message.ConfirmTransDelete") : rb.getString("Message.ConfirmMultipleTransDelete"));
+                count == 1 ? rb.getString("Message.ConfirmTransDelete")
+                        : rb.getString("Message.ConfirmMultipleTransDelete"));
     }
 
     private static ButtonType confirmAttachmentDeletion() {

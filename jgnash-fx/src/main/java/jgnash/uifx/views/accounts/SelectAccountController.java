@@ -45,10 +45,8 @@ public class SelectAccountController extends AbstractAccountTreeController {
 
     @FXML
     private ButtonBar buttonBar;
-    /**
-     * Overrides the default implementation
-     */
-    @NotNull private Optional<Account> selectedAccount = Optional.empty();
+
+    private Account selectedAccount = null;
 
     @Override
     protected TreeView<Account> getTreeView() {
@@ -83,17 +81,17 @@ public class SelectAccountController extends AbstractAccountTreeController {
         okButton.setOnAction(event -> ((Stage) okButton.getScene().getWindow()).close());
 
         cancelButton.setOnAction(event -> {
-            selectedAccount = Optional.empty();  // clear selections
+            selectedAccount = null;  // clear selections
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
 
         getSelectedAccountProperty().addListener((observable, oldValue, newValue) -> {
-            selectedAccount = Optional.of(newValue);
+            selectedAccount = newValue;
         });
     }
 
     @NotNull
     public Optional<Account> getSelectedAccount() {
-        return selectedAccount;
+        return Optional.ofNullable(selectedAccount);
     }
 }
