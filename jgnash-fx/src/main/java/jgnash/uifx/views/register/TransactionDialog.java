@@ -41,7 +41,6 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.util.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -154,6 +153,7 @@ public class TransactionDialog extends Stage {
 
     public static void showAndWait(@NotNull final Account account, @Nullable final Transaction transaction,
                                    final Consumer<Transaction> consumer) {
+
         final TransactionDialog transactionDialog = new TransactionDialog();
         transactionDialog.accountProperty().setValue(account);
         transactionDialog.setTransactionConsumer(consumer);
@@ -168,13 +168,13 @@ public class TransactionDialog extends Stage {
             // Lock the height of the dialog after it has been shown
             Platform.runLater(() -> {
                 transactionDialog.setMinHeight(transactionDialog.getHeight());
-                transactionDialog.setMaxHeight(transactionDialog.getHeight());
+                //transactionDialog.setMaxHeight(transactionDialog.getHeight());
             });
 
             // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
             Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth() + 1));
 
-            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, TransactionDialog.class));
+            //Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, TransactionDialog.class));
         });
     }
 }
