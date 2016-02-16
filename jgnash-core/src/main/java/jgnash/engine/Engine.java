@@ -451,6 +451,7 @@ public class Engine {
     private void checkAndCorrect() {
 
         commodityLock.writeLock().lock();
+        budgetLock.writeLock().lock();
         accountLock.writeLock().lock();
         configLock.writeLock().lock();
 
@@ -578,6 +579,13 @@ public class Engine {
                 }
             }
 
+            // Persist budget format update
+            if (getConfig().getMinorRevision() < 1.8f) {
+                for (final Budget budget : getBudgetList()) {
+                    getBudgetDAO().update(budget);
+                }
+            }
+
             // if the file version is not current, then update it
             if (!nearlyEquals(getConfig().getFileVersion(), CURRENT_VERSION, EPSILON)) {
                 final Config localConfig = getConfig();
@@ -587,6 +595,7 @@ public class Engine {
         } finally {
             configLock.writeLock().unlock();
             accountLock.writeLock().unlock();
+            budgetLock.writeLock().unlock();
             commodityLock.writeLock().unlock();
         }
     }
