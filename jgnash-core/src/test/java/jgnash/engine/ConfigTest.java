@@ -67,4 +67,13 @@ public class ConfigTest {
         config.setFileVersion(2.21f);
         assertEquals(2.1f, config.getMinorRevision(), DELTA);
     }
+
+    @Test
+    public void testFileFormat() {
+        Config config = new Config();
+
+        assertEquals(Engine.CURRENT_MAJOR_VERSION, config.getMajorFileFormatVersion());
+
+        assertEquals(Engine.CURRENT_MINOR_VERSION, config.getMinorFileFormatVersion());
+    }
 }

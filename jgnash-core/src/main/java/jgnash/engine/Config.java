@@ -68,7 +68,6 @@ public class Config extends StoredObject {
      */
     private float fileVersion = Engine.CURRENT_VERSION; // default to the latest version at init
 
-    @SuppressWarnings({"unused", "FieldCanBeLocal"})
     private String fileFormat = Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION;
 
     private transient ReadWriteLock preferencesLock;
@@ -107,6 +106,18 @@ public class Config extends StoredObject {
 
     public float getFileVersion() {
         return fileVersion;
+    }
+
+    public String getFileFormat() {
+        return fileFormat;
+    }
+
+    public int getMajorFileFormatVersion() {
+        return Integer.parseInt(getFileFormat().split("\\.")[0]);
+    }
+
+    public int getMinorFileFormatVersion() {
+        return Integer.parseInt(getFileFormat().split("\\.")[1]);
     }
 
     @SuppressWarnings("SameParameterValue")
