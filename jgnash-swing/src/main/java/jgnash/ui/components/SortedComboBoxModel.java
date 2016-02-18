@@ -107,11 +107,11 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
      * @param anObject object to find index for
      * @return an int representing the index position, where 0 is the first position
      */
-    final int getIndexOf(final E anObject) {
+    private int getIndexOf(final E anObject) {
         return list.indexOf(anObject);
     }
 
-    public void updateElement(final E anObject) {
+    void updateElement(final E anObject) {
         int index = getIndexOf(anObject);
         if (index >= 0) {
             fireContentsChanged(this, index, index);
@@ -166,7 +166,7 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
     /**
      * Empties the list.
      */
-    public void removeAllElements() {
+    void removeAllElements() {
         if (!list.isEmpty()) {
             int firstIndex = 0;
             int lastIndex = list.size() - 1;

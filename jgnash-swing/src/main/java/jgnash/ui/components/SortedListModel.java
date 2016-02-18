@@ -77,7 +77,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * 
      * @param aList collection of objects to add
      */
-    final void add(final Collection<E> aList) {
+    private void add(final Collection<E> aList) {
         synchronized (list) {
             list.addAll(aList);
             Collections.sort(list);
@@ -103,7 +103,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      *         not found.
      * @see java.util.Vector#indexOf(Object)
      */
-    int indexOf(final E elem) {
+    private int indexOf(final E elem) {
         return list.indexOf(elem);
     }
 

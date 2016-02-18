@@ -39,7 +39,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author Craig Cavanaugh
  */
-public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPanel {
+final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPanel {
 
     private final TransactionType tranType;
 
@@ -145,7 +145,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
                 priceField.getDecimal(), quantityField.getDecimal(), datePanel.getLocalDate(), memoField.getText());
     }
 
-    void updateTotalField() {
+    private void updateTotalField() {
         BigDecimal quantity = quantityField.getDecimal();
         BigDecimal price = priceField.getDecimal();
         totalField.setDecimal(quantity.multiply(price));

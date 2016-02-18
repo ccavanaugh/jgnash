@@ -34,7 +34,7 @@ import jgnash.convert.imports.ImportTransaction;
  */
 public class QifTransaction extends ImportTransaction {
 
-    public static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("/|'|\\.|-");
+    private static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("/|'|\\.|-");
 
     /**
      * Original date before conversion

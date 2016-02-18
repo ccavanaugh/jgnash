@@ -135,7 +135,7 @@ public class SecurityHighLowChart {
         }
     }
 
-    JPanel createPanel() {
+    private JPanel createPanel() {
 
         combo = new SecurityComboBox();
 

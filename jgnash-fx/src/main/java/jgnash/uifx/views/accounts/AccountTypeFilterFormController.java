@@ -40,7 +40,7 @@ public class AccountTypeFilterFormController {
     @FXML
     CheckBox hiddenAccountCheckBox;    
 
-    public void setAccountTypeFilter(final AccountTypeFilter filter) {
+    void setAccountTypeFilter(final AccountTypeFilter filter) {
 
         // Bind the buttons to the filter
         bankAccountCheckBox.selectedProperty().bindBidirectional(filter.getAccountTypesVisibleProperty());

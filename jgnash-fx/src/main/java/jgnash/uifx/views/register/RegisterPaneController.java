@@ -38,7 +38,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public abstract class RegisterPaneController {
+abstract class RegisterPaneController {
 
     @FXML
     protected Button newButton;

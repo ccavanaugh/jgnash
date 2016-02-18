@@ -58,7 +58,7 @@ public final class WaitMessagePanel extends JXPanel {
     /**
      * Builds the panel with the labels in the center.
      */
-    void layoutPanel() {
+    private void layoutPanel() {
 
         initComponents();
 

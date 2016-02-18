@@ -30,7 +30,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
+class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
     private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register/splits";
 
@@ -41,7 +41,7 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
     private Tab debitTab;
 
-    public SplitTransactionDialog() {
+    SplitTransactionDialog() {
         FXMLUtils.loadFXML(this, "SplitTransactionDialog.fxml", ResourceUtils.getBundle());
         setTitle(ResourceUtils.getBundle().getString("Title.SpitTran"));
     }

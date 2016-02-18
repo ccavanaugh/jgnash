@@ -131,7 +131,7 @@ public class AccountPropertiesController {
         accountTypeComboBox.setOnAction(event -> disableSecuritiesBinding.invalidate());
     }
 
-    public void setSelectedCurrency(final CurrencyNode currency) {
+    void setSelectedCurrency(final CurrencyNode currency) {
         currencyComboBox.setValue(currency);
     }
 
@@ -147,11 +147,11 @@ public class AccountPropertiesController {
         return result;
     }
 
-    public Set<SecurityNode> getSecurityNodes() {
+    Set<SecurityNode> getSecurityNodes() {
         return securityNodeSet;
     }
 
-    public void setParentAccount(final Account parentAccount) {
+    void setParentAccount(final Account parentAccount) {
         this.parentAccount = parentAccount;
 
         Platform.runLater(() -> {
@@ -165,7 +165,7 @@ public class AccountPropertiesController {
         });
     }
 
-    public Account getTemplate() {
+    Account getTemplate() {
         Account account = new Account(accountTypeComboBox.getValue(), currencyComboBox.getValue());
 
         account.setAccountCode(accountCodeField.getInteger());
@@ -193,7 +193,7 @@ public class AccountPropertiesController {
         return account;
     }
 
-    public void loadProperties(@NotNull final Account account) {
+    void loadProperties(@NotNull final Account account) {
         baseAccount = account;
         securityNodeSet.clear();
 

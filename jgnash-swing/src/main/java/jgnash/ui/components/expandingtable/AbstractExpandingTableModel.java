@@ -154,7 +154,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         }
     }
 
-    ExpandingTableNode<E> getNode(final E object) {
+    private ExpandingTableNode<E> getNode(final E object) {
         ReadLock readLock = rwl.readLock();
         readLock.lock();
 
@@ -307,7 +307,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @return the number of visible objects in this model
      * @see List#size()
      */
-    int size() {
+    private int size() {
         ReadLock readLock = rwl.readLock();
         readLock.lock();
 
@@ -410,7 +410,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * <p>
      * If overridden, the overriding method must call the base method for the model to update correctly
      */
-    void buildVisibleModel() {
+    private void buildVisibleModel() {
         buildVisibleModel(getRootObject());
     }
 

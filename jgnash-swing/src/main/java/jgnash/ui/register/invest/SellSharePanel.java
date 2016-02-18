@@ -46,7 +46,7 @@ import com.jgoodies.forms.layout.FormLayout;
  *
  * @author Craig Cavanaugh
  */
-public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel implements ActionListener {
+final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel implements ActionListener {
 
     private final FeePanel feePanel;
 
@@ -133,7 +133,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
         add(accountExchangePanel, cc.xy(3, 7));
     }
 
-    void updateTotalField() {
+    private void updateTotalField() {
         BigDecimal fee = feePanel.getDecimal();
         BigDecimal quantity = quantityField.getDecimal();
         BigDecimal price = priceField.getDecimal();

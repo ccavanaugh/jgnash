@@ -55,7 +55,7 @@ public final class QifParser {
 
     private DateFormat dateFormat = DateFormat.US;
 
-    public final ArrayList<QifCategory> categories = new ArrayList<>();
+    final ArrayList<QifCategory> categories = new ArrayList<>();
 
     private final ArrayList<QifClassItem> classes = new ArrayList<>();
 
@@ -65,7 +65,7 @@ public final class QifParser {
 
     private static final Logger logger = Logger.getLogger(QifParser.class.getName());
 
-    public QifParser(final DateFormat dateFormat) {
+    QifParser(final DateFormat dateFormat) {
         setDateFormat(dateFormat);
     }
 
@@ -85,7 +85,7 @@ public final class QifParser {
         return prefix.length() <= source.length() && source.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
-    void setDateFormat(@NotNull final DateFormat dateFormat) {
+    private void setDateFormat(@NotNull final DateFormat dateFormat) {
         Objects.requireNonNull(dateFormat);
         this.dateFormat = dateFormat;
     }
@@ -301,7 +301,7 @@ public final class QifParser {
         return result;
     }
 
-    QifAccount searchForDuplicate(final QifAccount acc) {
+    private QifAccount searchForDuplicate(final QifAccount acc) {
         String name = acc.name;
         String type = acc.type;
         String description = acc.description; // assume non-null description
@@ -622,17 +622,17 @@ public final class QifParser {
 
     private boolean parseClassList(final QifReader in) {
         String line;
-        QifClassItem clas = new QifClassItem();
+        QifClassItem classItem = new QifClassItem();
         try {
             line = in.readLine();
             while (line != null) {
                 if (line.startsWith("N")) {
-                    clas.name = line.substring(1);
+                    classItem.name = line.substring(1);
                 } else if (line.startsWith("D")) {
-                    clas.description = line.substring(1);
+                    classItem.description = line.substring(1);
                 } else if (line.startsWith("^")) { // end of a class item
-                    classes.add(clas); // add it to the list
-                    clas = new QifClassItem(); // start a new one
+                    classes.add(classItem); // add it to the list
+                    classItem = new QifClassItem(); // start a new one
                     in.mark(); // next line might be end of the list
                 } else if (line.startsWith("!")) { // done with the class list
                     in.reset(); // give the line back
@@ -719,7 +719,7 @@ public final class QifParser {
         return result;
     }
 
-    public void dumpStats() {
+    void dumpStats() {
         System.out.println("Num Classes :" + classes.size());
         System.out.println("Num Categories :" + categories.size());
         System.out.println("Num Securities :" + securities.size());

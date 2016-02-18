@@ -28,7 +28,7 @@ public final class OS {
 
     private static final boolean isWindows;
 
-    public static final String JAVA_VERSION = "java.version";
+    private static final String JAVA_VERSION = "java.version";
 
     /**
      * The minimum working release to use for JavaFx due to needed API changes
@@ -38,7 +38,7 @@ public final class OS {
     /**
      * JVM Release 72 has some focus bugs (JDK-8136838) that impacts the UI.
      */
-    public static final int JVM_RELEASE_72 = 72;
+    //public static final int JVM_RELEASE_72 = 72;
 
     static {
         final String os = System.getProperty("os.name");

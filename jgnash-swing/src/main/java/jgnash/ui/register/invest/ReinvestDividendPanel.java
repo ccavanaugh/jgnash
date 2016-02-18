@@ -43,7 +43,7 @@ import com.jgoodies.forms.layout.FormLayout;
  *
  * @author Craig Cavanaugh
  */
-public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionPanel {
+final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionPanel {
 
     private final FeePanel feePanel;
 
@@ -112,7 +112,7 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
         add(getReconcileCheckBox(), cc.xyw(1, 7, 5));
     }
 
-    void updateTotalField() {
+    private void updateTotalField() {
         BigDecimal fee = feePanel.getDecimal();
         BigDecimal quantity = quantityField.getDecimal();
         BigDecimal price = priceField.getDecimal();

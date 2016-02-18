@@ -32,7 +32,7 @@ import jgnash.util.ResourceUtils;
  * 
  * @author Craig Cavanaugh
  */
-public class ReminderObjectTableModel extends AbstractTableModel {
+class ReminderObjectTableModel extends AbstractTableModel {
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 

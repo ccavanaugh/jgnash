@@ -162,7 +162,7 @@ public final class RegisterFrame extends JFrame implements MessageListener {
         return account.getName();
     }
 
-    void setSelectedTransaction(final Transaction t) {
+    private void setSelectedTransaction(final Transaction t) {
         panel.setSelectedTransaction(t);
     }
 

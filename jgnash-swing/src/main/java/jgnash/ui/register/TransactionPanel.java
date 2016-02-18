@@ -281,7 +281,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         }
     }
 
-    public void newTransaction(final Transaction t) {
+    void newTransaction(final Transaction t) {
         clearForm();
 
         splits = null;
@@ -357,7 +357,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         }
     }
 
-    Account getOppositeSideAccount(final Transaction t) {
+    private Account getOppositeSideAccount(final Transaction t) {
         TransactionEntry entry = t.getTransactionEntries().get(0);
 
         if (entry.getCreditAccount().equals(getAccount())) {

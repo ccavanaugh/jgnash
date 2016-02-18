@@ -212,7 +212,7 @@ public class WizardDialog extends JDialog implements ActionListener {
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
-    void selectionAction(final ListSelectionEvent evt) {
+    private void selectionAction(final ListSelectionEvent evt) {
         if (evt.getValueIsAdjusting()) {
             return;
         }
@@ -351,7 +351,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
         private final ListCellRenderer<? super WizardPage> delegate;
 
-        public WizardPageRenderer(final ListCellRenderer<? super WizardPage> listCellRenderer) {
+        WizardPageRenderer(final ListCellRenderer<? super WizardPage> listCellRenderer) {
             super();
             this.delegate = listCellRenderer;
 
