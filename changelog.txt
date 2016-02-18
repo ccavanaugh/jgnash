@@ -29,6 +29,7 @@ Change the base highlight color for the FX interface
 
 Release 2.22.0 (File format change)
 ----------------------
+02/18/16 Fixed a bug that was preventing removal of stale data from the relational database file formats.
 02/14/16 Changed storage format for Budgets
 02/09/16 Enable Menu mnemonics for platforms that support it (Fx, Windows).  Changed mnemonics design so it is easier
          for translation and works for both Swing and Fx interfaces.
