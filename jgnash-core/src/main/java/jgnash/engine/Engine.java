@@ -3068,7 +3068,7 @@ public class Engine {
 
         private final List<ScheduledFuture<Boolean>> futures;
 
-        public SecuritiesUpdateThread(List<ScheduledFuture<Boolean>> futures) {
+        SecuritiesUpdateThread(List<ScheduledFuture<Boolean>> futures) {
             this.futures = futures;
         }
 
