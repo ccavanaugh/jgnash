@@ -58,7 +58,7 @@ public class JpaTrashEntity {
 
     }
 
-    public JpaTrashEntity(final Object entity) {
+    JpaTrashEntity(final Object entity) {
         className = entity.getClass().getName();
         entityId = getBasicEntityId(entity);
     }
@@ -67,11 +67,11 @@ public class JpaTrashEntity {
         return date;
     }
 
-    public String getClassName() {
+    String getClassName() {
         return className;
     }
 
-    public long getEntityId() {
+    long getEntityId() {
         return entityId;
     }
 

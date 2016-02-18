@@ -111,7 +111,7 @@ public class Engine {
 
     private static final Logger logger = Logger.getLogger(Engine.class.getName());
 
-    private final static long MAXIMUM_TRASH_AGE = 5 * 60 * 1000; // 5 minutes
+    private final static long MAXIMUM_TRASH_AGE = 2 * 60 * 1000; // 2 minutes
 
     private static final float EPSILON = .001f;
 
@@ -840,9 +840,7 @@ public class Engine {
                 logger.info("No trash was found");
             }
 
-            final LocalDateTime now = LocalDateTime.now();
-
-            trash.stream().filter(o -> ChronoUnit.MILLIS.between(now, o.getDate()) >= MAXIMUM_TRASH_AGE)
+            trash.stream().filter(o -> ChronoUnit.MILLIS.between(o.getDate(), LocalDateTime.now()) >= MAXIMUM_TRASH_AGE)
                     .forEach(o -> getTrashDAO().remove(o));
         } finally {
 

@@ -175,34 +175,35 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         }
     }
 
-    void cleanupEntityTrash() {
+    private void cleanupEntityTrash() {
         logger.info("Checking for entity trash");
 
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(() -> {
+            final Future<Void> future = executorService.submit(() -> {
 
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
-                Root<JpaTrashEntity> root = cq.from(JpaTrashEntity.class);
+                final CriteriaBuilder cb = em.getCriteriaBuilder();
+                final CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
+                final Root<JpaTrashEntity> root = cq.from(JpaTrashEntity.class);
                 cq.select(root);
 
-                TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
+                final TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
 
-                for (JpaTrashEntity trashEntity : q.getResultList()) {
-                    //final long now = new Date().getTime();
-                    final LocalDateTime now = LocalDateTime.now();
+                for (final JpaTrashEntity trashEntity : q.getResultList()) {
 
-                    if (ChronoUnit.MILLIS.between(now, trashEntity.getDate()) >= MAXIMUM_ENTITY_TRASH_AGE) {
-                        Class<?> clazz = Class.forName(trashEntity.getClassName());
-                        Object entity = em.find(clazz, trashEntity.getEntityId());
+                    if (ChronoUnit.MILLIS.between(trashEntity.getDate(), LocalDateTime.now())
+                            >= MAXIMUM_ENTITY_TRASH_AGE) {
+
+                        final Class<?> clazz = Class.forName(trashEntity.getClassName());
+                        final Object entity = em.find(clazz, trashEntity.getEntityId());
 
                         em.getTransaction().begin();
 
                         if (entity != null) {
                             em.remove(entity);
-                            logger.log(Level.INFO, "Removed entity trash: {0}@{1}", new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
+                            logger.log(Level.INFO, "Removed entity trash: {0}@{1}",
+                                    new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
                         }
                         em.remove(trashEntity);
 
