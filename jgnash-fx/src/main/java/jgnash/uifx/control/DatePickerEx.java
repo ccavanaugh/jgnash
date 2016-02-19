@@ -26,7 +26,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.DatePicker;
 import javafx.scene.input.KeyEvent;
-import javafx.util.StringConverter;
+import javafx.util.converter.LocalDateStringConverter;
 
 import jgnash.util.DateUtils;
 
@@ -37,7 +37,7 @@ import jgnash.util.DateUtils;
  */
 public class DatePickerEx extends DatePicker {
 
-    private final String ALLOWED_DATE_CHARACTERS;
+    private final String allowedDateCharacters;
 
     private final DateTimeFormatter dateFormatter;
 
@@ -64,9 +64,9 @@ public class DatePickerEx extends DatePicker {
             }
         }
 
-        ALLOWED_DATE_CHARACTERS = buf.toString();
+        allowedDateCharacters = buf.toString();
 
-        setConverter(new DateConverter());
+        setConverter(new LocalDateStringConverter(dateFormatter, dateFormatter));
 
         // Handle horizontal and vertical scroll wheel events
         getEditor().setOnScroll(event -> {
@@ -99,7 +99,7 @@ public class DatePickerEx extends DatePicker {
         });
 
         getEditor().addEventFilter(KeyEvent.KEY_TYPED, event -> {
-            if (ALLOWED_DATE_CHARACTERS.indexOf(event.getCharacter().charAt(0)) < 0) {
+            if (allowedDateCharacters.indexOf(event.getCharacter().charAt(0)) < 0) {
                 event.consume();
             }
         });
@@ -164,26 +164,6 @@ public class DatePickerEx extends DatePicker {
             return date;
         } catch (final DateTimeParseException ignored) {
             return getValue();  // return the current value
-        }
-    }
-
-    private class DateConverter extends StringConverter<LocalDate> {
-
-        @Override
-        public String toString(final LocalDate value) {
-            if (value != null) {
-                return dateFormatter.format(value);
-            } else {
-                return "";
-            }
-        }
-
-        @Override
-        public LocalDate fromString(final String text) {
-            if (text != null && !text.isEmpty()) {
-                return LocalDate.from(dateFormatter.parse(text));
-            }
-            return null;
         }
     }
 }
