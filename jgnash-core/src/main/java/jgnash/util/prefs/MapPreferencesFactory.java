@@ -23,9 +23,9 @@ import java.util.prefs.PreferencesFactory;
 /**
  * Map based Preferences implementation.
  *
- * @author Craig Cavanaugh
- *
+ * @author Craig Cavanaugh*
  */
+@SuppressWarnings("unused")
 class MapPreferencesFactory implements PreferencesFactory {
 
     private static final Preferences user = new MapBasedPreferences(null, "", true);

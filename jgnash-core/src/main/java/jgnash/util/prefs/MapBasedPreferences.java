@@ -28,8 +28,8 @@ import java.util.prefs.BackingStoreException;
  * methods.
  *
  * @author Craig Cavanaugh
- *
  */
+@SuppressWarnings("unused")
 class MapBasedPreferences extends AbstractPreferences {
 
     private final boolean isUserNode;
