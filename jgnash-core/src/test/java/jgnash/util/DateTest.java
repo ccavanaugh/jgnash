@@ -20,39 +20,17 @@ package jgnash.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-
-import com.thoughtworks.xstream.converters.basic.DateConverter;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Craig Cavanaugh
  */
 public class DateTest {
-
-    @Test
-    public void localDateTest() {
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN);
-        final DateConverter dateConverter = new DateConverter();    // xstream converter
-
-        final Date now = new Date();
-        final LocalDateTime localDateTime = DateUtils.asLocalDateTime(now);
-
-        assertNotNull(localDateTime);
-
-        // some minor variations may occur in formatting of fractional seconds... ignore those
-        assertEquals(dateConverter.toString(now).substring(0, 18), dateTimeFormatter.format(localDateTime).substring(0, 18));
-
-        final LocalDateTime rewind = LocalDateTime.from(dateTimeFormatter.parse(dateTimeFormatter.format(localDateTime)));
-
-        assertEquals(localDateTime, rewind);
-    }
 
     @Test
     public void formatTestOne() throws ParseException {

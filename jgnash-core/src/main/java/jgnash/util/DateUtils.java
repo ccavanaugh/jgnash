@@ -22,7 +22,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -193,20 +192,6 @@ public class DateUtils {
      */
     public static long asEpochMilli(final LocalDate localDate) {
         return localDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * MILLISECONDS_PER_SECOND;
-    }
-
-    /**
-     * Converts a {@code Date} into a {@code LocalDateTime} using the UTC timezone.
-     *
-     * @param date {@code Date} to convert
-     * @return an equivalent {@code LocalDateTime} or {@code null} if the supplied date was {@code null}
-     */
-    public static LocalDateTime asLocalDateTime(final Date date) {
-        if (date != null) {
-            return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.of("UTC")).toLocalDateTime();
-        }
-
-        return null;
     }
 
     /**
