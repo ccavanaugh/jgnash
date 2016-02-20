@@ -66,7 +66,7 @@ final class AccountRowHeaderPanel extends JPanel {
         layoutMainPanel();
     }
 
-    public JPanel getTableHeader() {
+    JPanel getTableHeader() {
         JTableHeader header = table.getTableHeader();
         header.setReorderingAllowed(false);
         header.setResizingAllowed(false);
@@ -152,7 +152,7 @@ final class AccountRowHeaderPanel extends JPanel {
         }
     }
 
-    public JComponent getFooter() {
+    JComponent getFooter() {
         FormLayout layout = new FormLayout("d:g", "d");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JPanel());
@@ -171,7 +171,7 @@ final class AccountRowHeaderPanel extends JPanel {
 
     private static class AccountTable extends ExpandingTable<Account> {
 
-        public AccountTable(final ExpandingBudgetTableModel model) {
+        AccountTable(final ExpandingBudgetTableModel model) {
             super(model);
         }
 
