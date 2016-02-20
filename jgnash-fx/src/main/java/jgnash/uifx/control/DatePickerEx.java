@@ -114,8 +114,8 @@ public class DatePickerEx extends DatePicker {
         getEditor().focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
 
         getEditor().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            final int caretPosition = getEditor().getCaretPosition();
-            final LocalDate date = _getValue();
+            final int caretPosition = getEditor().getCaretPosition();   // preserve caret position for restoration
+            final LocalDate date = _getValue(); // force an update to the current value
 
             switch (event.getCode()) {
                 case ADD:
@@ -160,7 +160,7 @@ public class DatePickerEx extends DatePicker {
     private LocalDate _getValue() {
         try {
             final LocalDate date = LocalDate.parse(getEditor().getText(), dateFormatter);
-            Platform.runLater(() -> setValue(date));
+            setValue(date);
             return date;
         } catch (final DateTimeParseException ignored) {
             return getValue();  // return the current value
