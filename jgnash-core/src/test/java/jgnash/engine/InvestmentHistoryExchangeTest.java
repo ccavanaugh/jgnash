@@ -73,16 +73,20 @@ import static org.junit.Assert.*;
          assertTrue(e.addSecurityHistory(securityNode, future));
 
          Optional<SecurityHistoryNode> search = securityNode.getClosestHistoryNode(getLocalDate("2014-06-26"));
+         assertTrue(search.isPresent());
          assertEquals(old, search.get());
 
          search = securityNode.getClosestHistoryNode(getLocalDate("2014-06-27"));
+         assertTrue(search.isPresent());
          assertEquals(today, search.get());
 
          search = securityNode.getClosestHistoryNode(getLocalDate("2014-06-28"));
+         assertTrue(search.isPresent());
          assertEquals(future, search.get());
 
          // postdate closest search, should return null
          search = securityNode.getClosestHistoryNode(getLocalDate("2014-06-29"));
+         assertTrue(search.isPresent());
          assertEquals(future, search.get());
 
          // predate closest search, should return null
@@ -99,6 +103,7 @@ import static org.junit.Assert.*;
 
          // exact match, should match
          search = securityNode.getHistoryNode(getLocalDate("2014-06-27"));
+         assertTrue(search.isPresent());
          assertEquals(today, search.get());
 
          BigDecimal price = Engine.getMarketPrice(Collections.emptyList(), securityNode, usdCurrency,
