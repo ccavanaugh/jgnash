@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class AbstractEngineTest {
 
     @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+    public final TemporaryFolder testFolder = new TemporaryFolder();
 
     protected String database;
 
