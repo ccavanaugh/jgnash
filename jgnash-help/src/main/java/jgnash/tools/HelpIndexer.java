@@ -51,6 +51,7 @@ import org.kohsuke.args4j.Option;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class HelpIndexer {
 
     private final String[] cmdArgs;
@@ -83,6 +84,7 @@ public class HelpIndexer {
         cmdArgs = args.clone();        
     }
 
+    @SuppressWarnings("WeakerAccess")
     void execute() {
         CmdLineParser parser = new CmdLineParser(this);
 

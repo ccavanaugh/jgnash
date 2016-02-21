@@ -42,6 +42,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class FeePane extends DetailedDecimalTextField {
     @FXML
     private ResourceBundle resources;
@@ -50,6 +51,7 @@ public class FeePane extends DetailedDecimalTextField {
 
     private FeeDialog feeDialog;
 
+    @SuppressWarnings("WeakerAccess")
     public FeePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FeePane.fxml"), ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);

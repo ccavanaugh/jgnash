@@ -42,6 +42,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class GainLossPane extends DetailedDecimalTextField {
 
     @FXML
@@ -51,6 +52,7 @@ public class GainLossPane extends DetailedDecimalTextField {
 
     private GainLossDialog gainLossDialog;
 
+    @SuppressWarnings("WeakerAccess")
     public GainLossPane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GainLossPane.fxml"), ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);

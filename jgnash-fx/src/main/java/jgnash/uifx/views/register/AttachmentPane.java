@@ -77,6 +77,7 @@ public class AttachmentPane extends GridPane {
     @FXML
     private ResourceBundle resources;
 
+    @SuppressWarnings("WeakerAccess")
     public AttachmentPane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AttachmentPane.fxml"), ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);
