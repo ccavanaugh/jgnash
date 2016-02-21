@@ -38,6 +38,7 @@ import org.junit.rules.TemporaryFolder;
  */
 public class CommodityNodeTest {
 
+    @SuppressWarnings("CanBeFinal")
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
