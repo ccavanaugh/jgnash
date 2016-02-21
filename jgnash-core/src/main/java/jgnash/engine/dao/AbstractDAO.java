@@ -26,11 +26,10 @@ import jgnash.engine.StoredObject;
  * Basic DAO
  *
  * @author Craig Cavanaugh
- *
  */
-public class AbstractDAO {
+public abstract class AbstractDAO {
 
-    protected static <T extends StoredObject> List<T> stripMarkedForRemoval(List<T> list) {
+    protected static <T extends StoredObject> List<T> stripMarkedForRemoval(final List<T> list) {
         for (Iterator<T> i = list.iterator(); i.hasNext();) {
             T node = i.next();
             if (node.isMarkedForRemoval()) {
@@ -40,4 +39,13 @@ public class AbstractDAO {
         return list;
     }
 
+    /**
+     * Returns a persisted object given a class type and unique identifier
+     *
+     * @param clazz entity class
+     * @param uuid identifier
+     * @param <T> the object type
+     * @return object if found, {@code null} otherwise
+     */
+    public abstract <T> T getObjectByUuid(final Class<T> clazz, final String uuid);
 }
