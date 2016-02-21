@@ -193,6 +193,7 @@ final class AccountRowHeaderPanel extends JPanel {
      */
     private class GroupTableModel extends AbstractTableModel {
 
+        @SuppressWarnings("CanBeFinal")
         private List<AccountGroup> groups;
 
         GroupTableModel() {
