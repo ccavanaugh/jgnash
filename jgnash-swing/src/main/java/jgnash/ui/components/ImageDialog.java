@@ -47,9 +47,9 @@ import org.jdesktop.swingx.util.GraphicsUtilities;
  */
 public class ImageDialog extends JDialog {
 
-    final ImagePanel imagePanel;
+    private final ImagePanel imagePanel;
 
-    ImageDialog() {
+    private ImageDialog() {
         setTitle(ResourceUtils.getString("Title.ViewImage"));
         setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
@@ -94,7 +94,7 @@ public class ImageDialog extends JDialog {
     }
 
     private static class ImagePanel extends JPanel {
-        public static final int MARGIN = 5;
+        static final int MARGIN = 5;
 
         private BufferedImage image;
 
