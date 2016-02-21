@@ -24,6 +24,7 @@ import jgnash.engine.TransactionEntry;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class SplitTransactionSlipController extends AbstractTransactionEntrySlipController {
 
     private SlipType slipType;

@@ -36,6 +36,7 @@ import jgnash.uifx.Options;
 /**
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class BudgetPropertiesDialogController {
 
     @FXML

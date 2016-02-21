@@ -54,6 +54,7 @@ import jgnash.util.Nullable;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class AccountPropertiesController {
 
     @FXML

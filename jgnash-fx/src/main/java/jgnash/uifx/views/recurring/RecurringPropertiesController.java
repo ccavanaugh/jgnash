@@ -46,6 +46,7 @@ import java.util.ResourceBundle;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class RecurringPropertiesController {
 
     @InjectFXML

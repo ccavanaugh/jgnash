@@ -56,6 +56,7 @@ import jgnash.util.ResourceUtils;
 /**
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class ConsoleDialogController {
 
     private static final long BYTES_PER_MB = 1024000;

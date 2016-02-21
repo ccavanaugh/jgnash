@@ -44,6 +44,7 @@ import jgnash.util.TextResource;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class HistoricalBudgetDialogController {
 
     @FXML

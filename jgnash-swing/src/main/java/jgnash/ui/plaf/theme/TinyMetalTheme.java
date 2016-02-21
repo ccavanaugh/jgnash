@@ -28,6 +28,7 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
  * @author Craig Cavanaugh
  *
  */
+@SuppressWarnings("WeakerAccess, unused")
 public class TinyMetalTheme extends DefaultMetalTheme {
 
     private final FontUIResource font = new FontUIResource("Dialog", Font.PLAIN, 9);

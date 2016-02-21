@@ -30,6 +30,7 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
  * @author Craig Cavanaugh
  *
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class CDETheme extends DefaultMetalTheme {
 
     @Override

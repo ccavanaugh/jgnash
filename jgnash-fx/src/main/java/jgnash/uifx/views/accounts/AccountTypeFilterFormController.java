@@ -26,6 +26,7 @@ import jgnash.uifx.util.AccountTypeFilter;
 /**
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class AccountTypeFilterFormController {
 
     @FXML
