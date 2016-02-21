@@ -15,6 +15,7 @@ import org.junit.rules.TemporaryFolder;
 
 public class TransactionTest {
 
+    @SuppressWarnings("CanBeFinal")
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
