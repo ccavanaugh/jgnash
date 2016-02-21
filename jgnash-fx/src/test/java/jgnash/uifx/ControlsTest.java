@@ -60,7 +60,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({"restriction", "WeakerAccess"})
 public class ControlsTest extends Application {
 
     private String testFile;
