@@ -47,7 +47,7 @@ public class ExchangeRate extends StoredObject {
     @JoinTable
     @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL})
-    private Set<ExchangeRateHistoryNode> historyNodes = new HashSet<>();
+    private final Set<ExchangeRateHistoryNode> historyNodes = new HashSet<>();
 
     /**
      * Cache the last exchange rate
@@ -212,7 +212,7 @@ public class ExchangeRate extends StoredObject {
      * @param localDate {@code LocalDate} for exchange
      * @return the exchange rate if known, otherwise {@code BigDecimal.ZERO}
      */
-    public BigDecimal getRate(final LocalDate localDate) {
+    BigDecimal getRate(final LocalDate localDate) {
         lock.readLock().lock();
 
         BigDecimal rate = BigDecimal.ZERO;

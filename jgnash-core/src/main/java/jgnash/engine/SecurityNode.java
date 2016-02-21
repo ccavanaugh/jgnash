@@ -73,7 +73,7 @@ public class SecurityNode extends CommodityNode {
     @JoinTable
     @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    private Set<SecurityHistoryEvent> securityHistoryEvents = new HashSet<>();
+    private final Set<SecurityHistoryEvent> securityHistoryEvents = new HashSet<>();
 
     private transient ReadWriteLock lock;
 

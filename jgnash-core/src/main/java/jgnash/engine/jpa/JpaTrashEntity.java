@@ -45,7 +45,7 @@ public class JpaTrashEntity {
     /**
      * Date object was added
      */
-    private LocalDateTime date = LocalDateTime.now();
+    private final LocalDateTime date = LocalDateTime.now();
 
     private String className;
 

@@ -39,7 +39,7 @@ public class TrashObject extends StoredObject implements Comparable<TrashObject>
      * Date object was added
      */
     @Convert(converter = LocalDateTimeAttributeConverter.class)
-    private LocalDateTime date = LocalDateTime.now();
+    private final LocalDateTime date = LocalDateTime.now();
 
     /**
      * The stored object

@@ -118,7 +118,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     @JoinTable
     @OrderBy("date, number, dateEntered")
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    Set<Transaction> transactions = new HashSet<>();
+    final Set<Transaction> transactions = new HashSet<>();
 
     /**
      * List of securities if this is an investment account
@@ -126,7 +126,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     @JoinColumn()
     @OrderBy("symbol")
     @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    private Set<SecurityNode> securities = new HashSet<>();
+    private final Set<SecurityNode> securities = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
@@ -157,7 +157,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @OrderBy("name")
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    private Set<Account> children = new HashSet<>();
+    private final Set<Account> children = new HashSet<>();
 
     /**
      * Cached list of sorted transactions that is not persisted. This prevents concurrency issues when using a JPA backend
@@ -212,7 +212,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @ElementCollection
     @Column(columnDefinition = "varchar(8192)")
-    private Map<String, String> attributes = new HashMap<>(); // maps from attribute name to value
+    private final Map<String, String> attributes = new HashMap<>(); // maps from attribute name to value
 
     private transient ReadWriteLock transactionLock;
 

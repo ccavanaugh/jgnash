@@ -76,7 +76,7 @@ public class Config extends StoredObject {
      * Contains a list a items to display in the transaction number combo
      */
     @ElementCollection
-    private List<String> transactionNumberItems = new ArrayList<>();
+    private final List<String> transactionNumberItems = new ArrayList<>();
 
     /**
      * Contains a list of custom transaction tags a user may apply
@@ -94,7 +94,7 @@ public class Config extends StoredObject {
      */
     @ElementCollection
     @Column(columnDefinition = "varchar(8192)")
-    private Map<String, String> preferences = new HashMap<>();
+    private final Map<String, String> preferences = new HashMap<>();
 
     public Config() {
         preferencesLock = new ReentrantReadWriteLock(true);
