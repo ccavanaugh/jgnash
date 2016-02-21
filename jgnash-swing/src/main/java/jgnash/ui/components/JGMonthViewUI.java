@@ -31,6 +31,7 @@ import javax.swing.plaf.ComponentUI;
  * @author Peter Vida
  *
  */
+@SuppressWarnings("WeakerAccess")
 public class JGMonthViewUI extends BasicMonthViewUI {
     private MouseListener mouseListener;
 

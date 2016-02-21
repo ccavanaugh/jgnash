@@ -86,7 +86,7 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
         }
     }     
 
-    boolean isColumnHeadersHeightUnified(JScrollPane sp) {
+    private boolean isColumnHeadersHeightUnified(JScrollPane sp) {
         return sp instanceof JideScrollPane && ((JideScrollPane) sp).isColumnHeadersHeightUnified();
     }   
 

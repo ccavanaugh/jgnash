@@ -10,7 +10,7 @@ import javax.swing.ScrollPaneConstants;
 /**
  * Constants used with the JideScrollPane component.
  */
-public interface JideScrollPaneConstants extends ScrollPaneConstants {
+interface JideScrollPaneConstants extends ScrollPaneConstants {
     /**
      * Identifies the area along the left side of the viewport between the
      * upper right corner and the lower right corner.

@@ -60,8 +60,8 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
 
     private static final String PROPERTY_COLUMN_HEADERS_HEIGHT_UNIFIED = "columnHeadersHeightUnified";
 
-    public static final String CLIENT_PROPERTY_SLAVE_VIEWPORT = "synchronizeViewSlaveViewport";
-    public static final String CLIENT_PROPERTY_MASTER_VIEWPORT = "synchronizeViewMasterViewport";
+    static final String CLIENT_PROPERTY_SLAVE_VIEWPORT = "synchronizeViewSlaveViewport";
+    static final String CLIENT_PROPERTY_MASTER_VIEWPORT = "synchronizeViewMasterViewport";
 
     /**
      * Creates a {@code JideScrollPane} that displays the view component in a viewport whose view position can be
@@ -161,7 +161,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      * @see #getRowFooter
      * @see #setRowFooterView(java.awt.Component)
      */
-    void setRowFooter(JViewport rowFooter) {
+    private void setRowFooter(JViewport rowFooter) {
         JViewport old = getRowFooter();
         _rowFooter = rowFooter;
         if (null != rowFooter) {
@@ -231,7 +231,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      *
      * @see #setColumnFooter(javax.swing.JViewport)
      */
-    public JViewport getColumnFooter() {
+    JViewport getColumnFooter() {
         return _columnFooter;
     }
 
@@ -245,7 +245,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      * @see #getColumnFooter
      * @see #setColumnFooterView(java.awt.Component)
      */
-    void setColumnFooter(JViewport columnFooter) {
+    private void setColumnFooter(final JViewport columnFooter) {
         JViewport old = getColumnFooter();
         _columnFooter = columnFooter;
         if (null != columnFooter) {
@@ -361,7 +361,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      *
      * @see #setCorner(String, java.awt.Component)
      */
-    public Component getScrollBarCorner(String key) {
+    Component getScrollBarCorner(String key) {
         boolean isLeftToRight = getComponentOrientation().isLeftToRight();
         if (key.equals(HORIZONTAL_LEADING)) {
             key = isLeftToRight ? HORIZONTAL_LEFT : HORIZONTAL_RIGHT;
@@ -401,7 +401,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      *
      * @return true or false.
      */
-    public boolean isColumnHeadersHeightUnified() {
+    boolean isColumnHeadersHeightUnified() {
         return _columnHeadersHeightUnified;
     }
 

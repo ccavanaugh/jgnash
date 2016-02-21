@@ -68,7 +68,7 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
  */
 public abstract class BaseDynamicJasperReport {
 
-    public final ResourceBundle rb = ResourceUtils.getBundle();
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final static String COLUMN_PROPERTY = "COLUMN_";
 
