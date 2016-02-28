@@ -137,12 +137,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     static {
         registerFollowsTree = doesRegisterFollowTree();
     }
-
-    /**
-     * Public constructor
-     */
-    public MainFrame() {
-
+    
+    MainFrame() {
         /*
          * hook in the theme manager before some of the more complex UI components are created... reduce start up time a
          * touch and avoids a couple UI burps
