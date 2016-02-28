@@ -75,7 +75,8 @@ public class ImportOfxAction {
         fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx" , "*.OFX", "*.QFX")
+                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx" , "*.OFX", "*.QFX"),
+                new FileChooser.ExtensionFilter("All Files (*.*)", "*.*")
         );
 
         return fileChooser;
