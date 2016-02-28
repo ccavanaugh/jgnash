@@ -75,7 +75,7 @@ public class ImportOfxAction {
         fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx")
+                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx" , "*.OFX", "*.QFX")
         );
 
         return fileChooser;
@@ -148,7 +148,7 @@ public class ImportOfxAction {
         private final Account account;
         private final List<ImportTransaction> transactions;
 
-        public ImportTransactionsTask(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
+        ImportTransactionsTask(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
             this.bank = bank;
             this.account = account;
             this.transactions = transactions;
