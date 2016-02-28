@@ -29,7 +29,8 @@ Change the base highlight color for the FX interface
 
 Release 2.22.1
 ----------------------
-02/28/16 Enable automatic load of the last file for the Fx interface.
+02/28/16 Enable automatic load of the last file for the Fx interface. (Fx)
+02/28/16 Force the Fx interface on Windows to use 95% font scaling for work around potential Hi-DPI display bugs. (Fx)
 02/28/16 NPE was occurring when editing transactions with an empty payee or memo's. (Fx)
 02/28/16 OFX/QFX files with a capitalised file extension were not visible for import. (Fx)
 

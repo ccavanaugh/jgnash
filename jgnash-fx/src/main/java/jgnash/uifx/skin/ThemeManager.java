@@ -44,6 +44,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import jgnash.util.NotNull;
+import jgnash.util.OS;
 
 /**
  * Theme manager
@@ -83,13 +84,15 @@ public class ThemeManager {
 
     private static final String DEFAULT_MODENA_BASE_COLOR = "#ececec";
 
+    private static final double WINDOWS_DEFAULT = 0.95;
+
     static {
         preferences = Preferences.userNodeForPackage(ThemeManager.class);
 
         final StringProperty _baseColorProperty = new SimpleStringProperty();
 
-        // restore the old value
-        fontScaleProperty.set(preferences.getDouble(FONT_SCALE, 1));
+        // restore the old value, default to a smaller value for Windows OS
+        fontScaleProperty.set(preferences.getDouble(FONT_SCALE, OS.isSystemWindows() ? WINDOWS_DEFAULT : 1));
 
         // Save the value when it changes
         fontScaleProperty.addListener((observable, oldValue, newValue) -> {
@@ -133,7 +136,7 @@ public class ThemeManager {
         // Utility class
     }
 
-    public static Color getDefaultBaseColor(final String theme) {
+    static Color getDefaultBaseColor(final String theme) {
         switch (theme) {
             case Application.STYLESHEET_CASPIAN:
                 return Color.web(DEFAULT_CASPIAN_BASE_COLOR);
@@ -186,7 +189,7 @@ public class ThemeManager {
         return fontScaleProperty;
     }
 
-    public static SimpleObjectProperty<Color> getBaseColorProperty() {
+    static SimpleObjectProperty<Color> getBaseColorProperty() {
         return baseColorProperty;
     }
 
@@ -194,7 +197,7 @@ public class ThemeManager {
         return controlTextFillProperty;
     }
 
-    public static String getCurrentTheme() {
+    static String getCurrentTheme() {
         return preferences.get(LAST, Application.STYLESHEET_MODENA);
     }
 
