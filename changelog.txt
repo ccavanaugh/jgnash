@@ -27,6 +27,10 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Change the base highlight color for the FX interface
 
+Release 2.22.1
+----------------------
+02/28/16 OFX/QFX files with a capitalised file extension were not visible for import.
+
 Release 2.22.0 (File format change)
 ----------------------
 02/20/16 Fixed behavior of manual date input.  It would sometimes reposition the caret and ignore input. (Fx)
