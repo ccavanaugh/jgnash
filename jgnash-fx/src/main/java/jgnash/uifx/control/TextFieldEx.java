@@ -64,7 +64,7 @@ public class TextFieldEx extends TextField {
         focusChangeListener = (observable, oldValue, newValue) -> {
             if (selectOnFocus.get()) {
                 Platform.runLater(() -> {
-                    if (isFocused() && isEditable() && !getText().isEmpty()) {
+                    if (getText() != null && isFocused() && isEditable() && !getText().isEmpty()) {
                         selectAll();
                     }
                 });
