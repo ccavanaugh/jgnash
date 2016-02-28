@@ -55,10 +55,12 @@ import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
 import jgnash.net.security.YahooParser;
 import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.tasks.BootEngineTask;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
@@ -187,6 +189,19 @@ public class MainApplication extends Application implements MessageListener {
 
         stage.toFront();
         stage.requestFocus();
+
+        // Load the last open file if enabled
+        if (Options.openLastProperty().get()) {
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(BootEngineTask.FORCED_DELAY);
+                    backgroundExecutor.execute(() -> Platform.runLater(BootEngineTask::openLast));
+                } catch (InterruptedException e) {
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }).start();
+        }
     }
 
     private void addViews() {

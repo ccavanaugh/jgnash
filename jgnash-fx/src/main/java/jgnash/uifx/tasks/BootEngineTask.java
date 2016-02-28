@@ -20,7 +20,7 @@ import jgnash.util.ResourceUtils;
  */
 public class BootEngineTask extends Task<String> {
 
-    private static final int FORCED_DELAY = 1500;
+    public static final int FORCED_DELAY = 1500;
 
     private static final int INDETERMINATE = -1;
 
@@ -30,7 +30,8 @@ public class BootEngineTask extends Task<String> {
     private final String serverName;
     private final int port;
 
-    private BootEngineTask(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
+    private BootEngineTask(final String localFile, final char[] password, final boolean remote,
+                           final String serverName, final int port) {
         this.localFile = localFile;
         this.password = password;
         this.remote = remote;
@@ -38,7 +39,24 @@ public class BootEngineTask extends Task<String> {
         this.port = port;
     }
 
-    public static void initiateBoot(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
+    public static void openLast() {
+        final BootEngineTask bootTask;
+
+        // must be a remote connection without use of a password
+        if (EngineFactory.getLastRemote() && !EngineFactory.usedPassword()) {
+            bootTask = new BootEngineTask(null, new char[]{}, true, EngineFactory.getLastHost(),
+                    EngineFactory.getLastPort());
+        } else {
+            bootTask = new BootEngineTask(EngineFactory.getLastDatabase(), new char[]{}, false, null, 0);
+        }
+
+        new Thread(bootTask ).start();
+
+        StaticUIMethods.displayTaskProgress(bootTask);
+    }
+
+    public static void initiateBoot(final String localFile, final char[] password, final boolean remote,
+                                    final String serverName, final int port) {
         final BootEngineTask bootTask = new BootEngineTask(localFile, password, remote, serverName, port);
 
         new Thread(bootTask).start();

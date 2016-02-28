@@ -29,7 +29,9 @@ Change the base highlight color for the FX interface
 
 Release 2.22.1
 ----------------------
-02/28/16 OFX/QFX files with a capitalised file extension were not visible for import.
+02/28/16 Enable automatic load of the last file for the Fx interface.
+02/28/16 NPE was occurring when editing transactions with an empty payee or memo's. (Fx)
+02/28/16 OFX/QFX files with a capitalised file extension were not visible for import. (Fx)
 
 Release 2.22.0 (File format change)
 ----------------------
