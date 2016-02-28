@@ -351,8 +351,7 @@ public class MainApplication extends Application implements MessageListener {
 
         final Node SEVERE;
 
-        public StatusBarLogHandler() {
-
+        StatusBarLogHandler() {
             INFO = new FontAwesomeLabel(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
             WARNING = new FontAwesomeLabel(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
             SEVERE = new FontAwesomeLabel(FontAwesomeIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
