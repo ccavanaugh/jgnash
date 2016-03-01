@@ -108,7 +108,7 @@ public class Config extends StoredObject {
         return fileVersion;
     }
 
-    public String getFileFormat() {
+    private String getFileFormat() {
         return fileFormat;
     }
 
