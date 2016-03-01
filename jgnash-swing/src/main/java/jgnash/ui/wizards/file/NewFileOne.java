@@ -51,7 +51,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
-    protected final ResourceBundle rb = ResourceUtils.getBundle();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final JTextField dbNameField = new JTextField();
 

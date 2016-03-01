@@ -89,7 +89,7 @@ public class ImportSummary extends JPanel implements WizardPage {
         return true;
     }
 
-    void refreshInfo() {
+    private void refreshInfo() {
         destLabel.setText(account.getPathName());
 
         int count = 0;

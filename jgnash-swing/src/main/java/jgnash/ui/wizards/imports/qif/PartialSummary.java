@@ -86,7 +86,7 @@ public class PartialSummary extends JPanel implements WizardPage {
         return true;
     }
 
-    void refreshInfo() {
+    private void refreshInfo() {
         destLabel.setText(dlg.getAccount().getPathName());
         transCount.setText(Integer.toString(qAcc.getTransactions().size()));
     }

@@ -150,12 +150,12 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
         return destinationAccount;
     }
 
-    void setAccount(Account account) {
+    private void setAccount(final Account account) {
         destinationAccount = account;
         accountCombo.setSelectedAccount(destinationAccount);
     }
 
-    DateFormat getDateFormat() {
+    private DateFormat getDateFormat() {
         return (DateFormat) dateFormatCombo.getSelectedItem();
     }
 

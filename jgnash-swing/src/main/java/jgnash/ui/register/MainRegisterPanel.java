@@ -201,7 +201,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
     /**
      * Displays the last active account
      */
-    final void showLast() {
+    private void showLast() {
         EventQueue.invokeLater(() -> {
             String uuid = prefs.get(ACTIVE_ACCOUNT, null);
             if (uuid != null) {

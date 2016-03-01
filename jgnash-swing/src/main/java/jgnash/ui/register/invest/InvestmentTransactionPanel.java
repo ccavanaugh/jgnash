@@ -201,7 +201,7 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
         fireCancelAction();
     }
 
-    void enterAction() {
+    private void enterAction() {
         cards[currentCard].enterAction();
         fireOkAction();
     }

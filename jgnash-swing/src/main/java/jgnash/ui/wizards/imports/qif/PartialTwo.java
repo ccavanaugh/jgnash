@@ -109,7 +109,7 @@ public class PartialTwo extends JPanel implements WizardPage, ActionListener {
         builder.append(deleteButton);
     }
 
-    void refreshInfo() {
+    private void refreshInfo() {
         table.fireTableDataChanged();
     }
 

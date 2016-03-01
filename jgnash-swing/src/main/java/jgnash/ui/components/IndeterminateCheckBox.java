@@ -49,12 +49,12 @@ public final class IndeterminateCheckBox extends JCheckBox {
         this(text, null, SelectionState.DESELECTED);
     }
 
-    public IndeterminateCheckBox(final String text, final Icon icon, final SelectionState initial) {
+    private IndeterminateCheckBox(final String text, final Icon icon, final SelectionState initial) {
         this(text, icon, initial, false);
     }
 
     // For testing only at present
-    IndeterminateCheckBox(final String text, final Icon icon, final SelectionState initial, final boolean original) {
+    private IndeterminateCheckBox(final String text, final Icon icon, final SelectionState initial, final boolean original) {
         super(text, icon);
 
         setBorderPaintedFlat(true);
