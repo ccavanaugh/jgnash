@@ -47,7 +47,7 @@ public abstract class AbstractEngineTest {
 
     Account expenseAccount;
 
-    Account usdBankAccount;
+    protected Account usdBankAccount;
 
     Account equityAccount;
 
