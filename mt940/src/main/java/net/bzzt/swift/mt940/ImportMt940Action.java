@@ -50,9 +50,8 @@ import net.bzzt.swift.mt940.parser.Mt940Parser;
  *
  * @author Arnout Engelen
  * @author Craig Cavanaugh
- * @version $Id: ImportMt940Action.java 3243 2012-07-17 16:41:22Z ccavanaugh $
  */
-public class ImportMt940Action extends AbstractEnabledAction {
+class ImportMt940Action extends AbstractEnabledAction {
 
     public ImportMt940Action() {
 
