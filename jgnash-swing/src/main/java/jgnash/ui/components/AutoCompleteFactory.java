@@ -382,12 +382,12 @@ public class AutoCompleteFactory {
                 if (ignoreCase) {
                     if (!transactions.removeValue(t.getPayee().toLowerCase(Locale.getDefault()), t)) {
                         Logger.getLogger(AutoCompleteFactory.class.getName())
-                                .warning(ResourceUtils.getString("Message.Warn.FailedTransInfoRemoval"));
+                                .finest(ResourceUtils.getString("Message.Warn.FailedTransInfoRemoval"));
                     }
                 } else {
                     if (!transactions.removeValue(t.getPayee(), t)) {
                         Logger.getLogger(AutoCompleteFactory.class.getName())
-                                .warning(ResourceUtils.getString("Message.Warn.FailedTransInfoRemoval"));
+                                .finest(ResourceUtils.getString("Message.Warn.FailedTransInfoRemoval"));
                     }
                 }
             });
