@@ -42,6 +42,7 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.MultiHashMap;
+import jgnash.util.ResourceUtils;
 
 /**
  * This factory class generates AutoCompleteTextFields that share a common model
@@ -254,9 +255,15 @@ public class AutoCompleteFactory {
         void removeExtraInfo(final Transaction t) {
             pool.execute(() -> {
                 if (ignoreCaseEnabled.get()) {
-                    transactions.removeValue(t.getPayee().toLowerCase(Locale.getDefault()), t);
+                    if (!transactions.removeValue(t.getPayee().toLowerCase(Locale.getDefault()), t)) {
+                        Logger.getLogger(AutoCompleteFactory.class.getName())
+                                .warning(ResourceUtils.getString("Message.Warn.FailedTransInfoRemoval"));
+                    }
                 } else {
-                    transactions.removeValue(t.getPayee(), t);
+                    if (!transactions.removeValue(t.getPayee(), t)) {
+                        Logger.getLogger(AutoCompleteFactory.class.getName())
+                                .warning(ResourceUtils.getString("Message.Warn.FailedTransInfoRemoval"));
+                    }
                 }
             });
         }
