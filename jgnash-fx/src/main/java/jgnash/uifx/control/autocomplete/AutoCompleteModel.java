@@ -17,7 +17,7 @@
  */
 package jgnash.uifx.control.autocomplete;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Auto complete model interface
@@ -44,7 +44,7 @@ public interface AutoCompleteModel<E> {
      * string key.
      *
      * @param key The string key most likely returned from doLookAhead()
-     * @return A list of objects that would give extra information about the key
+     * @return A collection of objects that would give extra information about the key
      */
-    List<E> getAllExtraInfo(String key);
+    Collection<E> getAllExtraInfo(String key);
 }

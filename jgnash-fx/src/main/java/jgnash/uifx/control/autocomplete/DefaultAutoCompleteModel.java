@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.control.autocomplete;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -131,7 +132,7 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
      * @return A list of objects that would give extra information about the key
      */
     @Override
-    public List<E> getAllExtraInfo(final String key) {
+    public Collection<E> getAllExtraInfo(final String key) {
         return Collections.emptyList();
     }
 

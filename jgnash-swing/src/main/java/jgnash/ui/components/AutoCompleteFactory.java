@@ -20,6 +20,7 @@ package jgnash.ui.components;
 import java.awt.EventQueue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -362,7 +363,8 @@ public class AutoCompleteFactory {
             }
         }
 
-        public List<Transaction> getAllExtraInfo(final String key) {
+        @Override
+        public Collection<Transaction> getAllExtraInfo(final String key) {
             if (ignoreCase) {
                 return transactions.getAll(key.toLowerCase(Locale.getDefault()));
             }

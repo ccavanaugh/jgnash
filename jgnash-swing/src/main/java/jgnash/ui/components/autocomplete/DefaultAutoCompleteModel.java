@@ -17,6 +17,7 @@
  */
 package jgnash.ui.components.autocomplete;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -122,7 +123,7 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
     }
 
     @Override
-    public List<?> getAllExtraInfo(final String key) {
+    public Collection<?> getAllExtraInfo(final String key) {
         return Collections.EMPTY_LIST;
     }
 
