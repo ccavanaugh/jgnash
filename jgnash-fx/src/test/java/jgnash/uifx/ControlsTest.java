@@ -49,6 +49,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.DetailedDecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
+import jgnash.uifx.control.TextFieldEx;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.skin.ThemeManager;
@@ -130,10 +131,12 @@ public class ControlsTest extends Application {
 
         DetailedDecimalTextField feesField = new DetailedDecimalTextField();
 
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, feesField, new TimePeriodComboBox());
+        TextFieldEx textFieldEx = new TextFieldEx();
 
-        primaryStage.setScene(new Scene(vBox, 300, 350));
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, feesField, new TimePeriodComboBox(), textFieldEx);
+
+        primaryStage.setScene(new Scene(vBox, 300, 420));
 
         primaryStage.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
         primaryStage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
