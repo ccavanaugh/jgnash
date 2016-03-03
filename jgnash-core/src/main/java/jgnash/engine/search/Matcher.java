@@ -24,7 +24,7 @@ import jgnash.engine.Transaction;
  *
  * @author Craig Cavanaugh
  */
-public interface Matcher {
+interface Matcher {
 
     /**
      * Regex match against a Transaction

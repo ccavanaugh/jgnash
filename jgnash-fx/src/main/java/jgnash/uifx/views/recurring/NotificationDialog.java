@@ -48,7 +48,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class NotificationDialog extends Stage {
+class NotificationDialog extends Stage {
 
     @FXML
     private Button cancelButton;
@@ -72,11 +72,11 @@ public class NotificationDialog extends Stage {
         setTitle(ResourceUtils.getBundle().getString("Title.Reminder"));
     }
 
-    public void setReminders(final Collection<PendingReminder> pendingReminders) {
+    void setReminders(final Collection<PendingReminder> pendingReminders) {
         observableReminderList.setAll(pendingReminders);
     }
 
-    public Collection<PendingReminder> getApprovedReminders() {
+    Collection<PendingReminder> getApprovedReminders() {
        return observableReminderList.stream().filter(PendingReminder::isApproved).collect(Collectors.toList());
     }
 
