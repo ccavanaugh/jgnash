@@ -172,17 +172,19 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     private void addAction() {
         aJList.getSelectedValuesList().stream().filter(obj -> obj != null).forEach(obj -> {
-            aList.removeElement(obj);
-            cList.addElement(new CurrencyElement(obj, true));
-            engine.addCurrency(obj);
+            if (aList.removeElement(obj)) {
+                cList.addElement(new CurrencyElement(obj, true));
+                engine.addCurrency(obj);
+            }
         });
     }
 
     private void removeAction() {
         cJList.getSelectedValuesList().stream().filter(CurrencyElement::isEnabled)
                 .filter(element -> engine.removeCommodity(element.getNode())).forEach(element -> {
-            cList.removeElement(element);
-            aList.addElement(element.getNode());
+            if (cList.removeElement(element)) {
+                aList.addElement(element.getNode());
+            }
         });
     }
 
@@ -282,12 +284,14 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
         private final ListCellRenderer<? super CurrencyElement> delegate;
 
-        public CurrencyRenderer(final ListCellRenderer<? super CurrencyElement> delegate) {
+        CurrencyRenderer(final ListCellRenderer<? super CurrencyElement> delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList<? extends CurrencyElement> list, final CurrencyElement value, final int index, final boolean isSelected, final boolean hasFocus) {
+        public Component getListCellRendererComponent(final JList<? extends CurrencyElement> list,
+                                                      final CurrencyElement value, final int index,
+                                                      final boolean isSelected, final boolean hasFocus) {
             Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
 
             c.setEnabled(value.isEnabled());

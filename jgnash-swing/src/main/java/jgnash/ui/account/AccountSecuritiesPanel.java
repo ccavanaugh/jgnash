@@ -115,20 +115,22 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
     private void addAction() {
         SecurityElement obj = availJList.getSelectedValue();
         if (obj != null) {
-            availModel.removeElement(obj);
-            selectedModel.addElement(obj);
+            if (availModel.removeElement(obj)) {
+                selectedModel.addElement(obj);
+            }
         }
     }
 
     private void removeAction() {
         SecurityElement obj = selectedJList.getSelectedValue();
         if (obj != null && obj.enabled) {
-            selectedModel.removeElement(obj);
-            availModel.addElement(obj);
+            if (selectedModel.removeElement(obj)) {
+                availModel.addElement(obj);
+            }
         }
     }
 
-    public void setSecuritiesList(final Set<SecurityNode> list) {
+    void setSecuritiesList(final Set<SecurityNode> list) {
 
         selectedModel = new SortedListModel<>();
 
@@ -152,7 +154,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
         buildAvailableList();
     }
 
-    public Set<SecurityNode> getSecuritiesList() {
+    Set<SecurityNode> getSecuritiesList() {
 
         return selectedModel.asList().stream()
                 .map(SecurityElement::getNode).collect(Collectors.toCollection(TreeSet::new));
@@ -230,12 +232,14 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
         private final ListCellRenderer<? super SecurityElement> delegate;
 
-        public SecurityRenderer(final ListCellRenderer<? super SecurityElement> delegate) {
+        SecurityRenderer(final ListCellRenderer<? super SecurityElement> delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList<? extends SecurityElement> list, final SecurityElement value, final int index, final boolean isSelected, final boolean hasFocus) {
+        public Component getListCellRendererComponent(final JList<? extends SecurityElement> list,
+                                                      final SecurityElement value, final int index,
+                                                      final boolean isSelected, final boolean hasFocus) {
             boolean enabled = value.isEnabled();
 
             Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
