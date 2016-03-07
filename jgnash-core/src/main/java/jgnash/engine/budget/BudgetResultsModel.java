@@ -115,7 +115,7 @@ public class BudgetResultsModel implements MessageListener {
      * @return depth depth relative to accounts to be shown in the budget
      * @see Account#getDepth()
      */
-    public int getDepth(final Account account) {
+    int getDepth(final Account account) {
 
         int depth = 0;
 
