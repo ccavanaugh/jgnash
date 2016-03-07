@@ -453,17 +453,15 @@ public class BudgetResultsModel implements MessageListener {
                 final BudgetGoal goal = budget.getBudgetGoal(account);
 
                 results.setBudgeted(goal.getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod()));
-                results.setChange(account.getBalance(descriptor.getStartDate(), descriptor.getEndDate()).abs());
 
-                // calculate the remaining amount for the budget
-                BigDecimal remaining = results.getBudgeted().subtract(results.getChange());
-
-                // reverse the sign if this is an income account
+                // calculate the change and remaining amount for the budget
                 if (account.getAccountType() == AccountType.INCOME) {
-                    remaining = remaining.negate();
+                    results.setChange(account.getBalance(descriptor.getStartDate(), descriptor.getEndDate()).negate());
+                    results.setRemaining(results.getChange().subtract(results.getBudgeted()));
+                } else {
+                    results.setChange(account.getBalance(descriptor.getStartDate(), descriptor.getEndDate()));
+                    results.setRemaining(results.getBudgeted().subtract(results.getChange()));
                 }
-
-                results.setRemaining(remaining);
             }
 
             // recursive decent to add child account results and handle exchange rates
