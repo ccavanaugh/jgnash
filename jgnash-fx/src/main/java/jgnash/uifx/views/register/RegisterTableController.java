@@ -83,7 +83,7 @@ import jgnash.util.function.TransactionAgePredicate;
  *
  * @author Craig Cavanaugh
  */
-public abstract class RegisterTableController {
+abstract class RegisterTableController {
 
     private final static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
