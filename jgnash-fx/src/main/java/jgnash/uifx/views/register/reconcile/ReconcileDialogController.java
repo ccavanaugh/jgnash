@@ -122,7 +122,7 @@ public class ReconcileDialogController implements MessageListener {
     @FXML
     private Label differenceLabel;
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 100, 0};
 
     private Account account;
 

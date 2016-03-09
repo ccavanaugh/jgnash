@@ -46,7 +46,7 @@ public class BasicRegisterTableController extends RegisterTableController {
     @FXML
     private Label reconciledBalanceLabel;
 
-    final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 33, 0, 0, 0, 0};
+    final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 34, 0, 0, 0, 0};
 
     @FXML
     @Override

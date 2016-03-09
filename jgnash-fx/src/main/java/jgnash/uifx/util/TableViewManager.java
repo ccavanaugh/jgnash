@@ -17,17 +17,6 @@
  */
 package jgnash.uifx.util;
 
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TableColumnBase;
-import javafx.scene.control.TableView;
-import javafx.util.Callback;
-import jgnash.util.EncodeDecode;
-import jgnash.util.NotNull;
-
 import java.text.Format;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -41,6 +30,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableColumnBase;
+import javafx.scene.control.TableView;
+import javafx.util.Callback;
+
+import jgnash.util.EncodeDecode;
+import jgnash.util.NotNull;
 
 /**
  * TableView manager.  Handles persistence of column sizes, visibility and will optimize column widths
@@ -189,12 +190,6 @@ public class TableViewManager<S> {
 
     public void packTable() {
 
-        // Prevent packing if the containing window is not showing
-        /*if (!tableView.getScene().getWindow().isShowing()) {
-            logger.log(Level.WARNING, "tried to pack a table that is not visible", new Throwable());
-            return;
-        }*/
-
         new Thread(() -> {
 
             LocalTime start = LocalTime.now();
@@ -212,12 +207,23 @@ public class TableViewManager<S> {
             }
 
             double calculatedWidths[] = new double[visibleColumns.size()];
+            double sumFixedColumns = 0; // sum of the fixed width columns
 
             for (int i = 0; i < calculatedWidths.length; i++) {
                 if (visibleColumnWeights.get(i) == 0) {
                     calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+                    sumFixedColumns += calculatedWidths[i];
                 } else {
                     calculatedWidths[i] = Double.MAX_VALUE;
+                }
+            }
+
+            double remainder = tableView.widthProperty().get() - sumFixedColumns;   // leftover visible table width
+
+            // calculate widths for adjustable columns using the remaining visible width
+            for (int i = 0; i < calculatedWidths.length; i++) {
+                if (visibleColumnWeights.get(i) != 0) {
+                    calculatedWidths[i] = remainder * (visibleColumnWeights.get(i) / 100.0);
                 }
             }
 
