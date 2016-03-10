@@ -19,6 +19,7 @@ package jgnash.engine.recurring;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -115,6 +116,8 @@ public class MonthlyReminderTest {
 
     @Test
     public void iteratorDayTestOne() {
+        Locale.setDefault(Locale.US);      // how weeks are counted depends on the locale
+        
         final MonthlyReminder reminder = new MonthlyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -145,6 +148,8 @@ public class MonthlyReminderTest {
 
     @Test
     public void iteratorDayTestTwo() {
+        Locale.setDefault(Locale.US);      // how weeks are counted depends on the locale
+        
         final MonthlyReminder reminder = new MonthlyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
