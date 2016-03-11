@@ -129,7 +129,6 @@ public class MainApplication extends Application implements MessageListener {
     }
 
     @Override
-    @SuppressWarnings("restriction")
     public void start(final Stage stage) throws Exception {
         ThemeManager.restoreLastUsedTheme();
 

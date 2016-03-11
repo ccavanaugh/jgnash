@@ -165,9 +165,9 @@ public class ReconcileDialogController implements MessageListener {
         // Selection listener that toggles the reconciled state
         class ToggleStateChangeListener implements ChangeListener<RecTransaction> {
 
-            final TableView tableView;
+            final TableView<RecTransaction> tableView;
 
-            ToggleStateChangeListener(final TableView tableView) {
+            ToggleStateChangeListener(final TableView<RecTransaction> tableView) {
                 this.tableView = tableView;
             }
 

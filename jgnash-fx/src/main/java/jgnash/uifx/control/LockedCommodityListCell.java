@@ -11,7 +11,6 @@ import jgnash.util.LockedCommodityNode;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("unused")
 public class LockedCommodityListCell<T extends CommodityNode> extends ListCell<LockedCommodityNode> {
 
     @Override

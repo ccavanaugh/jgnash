@@ -159,7 +159,7 @@ public class AccountsViewController implements MessageListener {
         final TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
         codeColumn.setEditable(true);
         codeColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getValue().getAccountCode()).asObject());
-        codeColumn.setCellFactory(param -> new IntegerTreeTableCell());
+        codeColumn.setCellFactory(param -> new IntegerTreeTableCell<>());
         codeColumn.setOnEditCommit(event -> updateAccountCode(event.getRowValue().getValue(), event.getNewValue()));
 
         treeTableView.getColumns().addAll(nameColumn, codeColumn, entriesColumn, balanceColumn,

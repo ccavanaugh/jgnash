@@ -154,7 +154,7 @@ public class BudgetViewController implements MessageListener {
 
     @FXML
     private void handleManagerAction() {
-        final FXMLUtils.Pair pair =
+        final FXMLUtils.Pair<BudgetManagerDialogController> pair =
                 FXMLUtils.load(BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml"),
                         resources.getString("Title.BudgetManager"));
 

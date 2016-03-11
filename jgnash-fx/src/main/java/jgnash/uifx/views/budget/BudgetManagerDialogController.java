@@ -132,7 +132,7 @@ public class BudgetManagerDialogController implements MessageListener{
 
     @FXML
     private void handleNewHistoricalAction() {
-        final FXMLUtils.Pair pair =
+        final FXMLUtils.Pair<HistoricalBudgetDialogController> pair =
                 FXMLUtils.load(HistoricalBudgetDialogController.class.getResource("HistoricalBudgetDialog.fxml"),
                         resources.getString("Title.NewBudget"));
 

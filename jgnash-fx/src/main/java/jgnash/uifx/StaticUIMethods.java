@@ -50,7 +50,7 @@ public class StaticUIMethods {
     }
 
     public static void showOpenDialog() {
-        final FXMLUtils.Pair pair = FXMLUtils.load(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
+        final FXMLUtils.Pair<OpenDatabaseController> pair = FXMLUtils.load(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
                 ResourceUtils.getBundle().getString("Title.Open"));
 
         pair.getStage().setResizable(false);

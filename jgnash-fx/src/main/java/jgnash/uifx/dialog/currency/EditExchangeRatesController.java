@@ -123,7 +123,7 @@ public class EditExchangeRatesController implements MessageListener {
     private volatile boolean requestCancel = false;
 
     public static void show() {
-        final FXMLUtils.Pair pair =
+        final FXMLUtils.Pair<EditExchangeRatesController> pair =
                 FXMLUtils.load(EditExchangeRatesController.class.getResource("EditExchangeRates.fxml"),
                         ResourceUtils.getString("Title.EditExchangeRates"));
 

@@ -190,7 +190,7 @@ public class ConsoleDialogController {
         if (!visible.get()) {
             visible.set(true);
 
-            final FXMLUtils.Pair pair =
+            final FXMLUtils.Pair<ConsoleDialogController> pair =
                     FXMLUtils.load(ConsoleDialogController.class.getResource("ConsoleDialog.fxml"),
                             ResourceUtils.getString("Title.Console"));
 

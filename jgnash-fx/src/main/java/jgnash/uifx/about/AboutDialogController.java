@@ -41,6 +41,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.FXMLUtils.Pair;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.HTMLResource;
 import jgnash.util.NotNull;
@@ -146,7 +147,7 @@ public class AboutDialogController {
 
     public static void showAndWait() {
         Platform.runLater(() -> {   // push to EDT to avoid race when loading the html files
-            final FXMLUtils.Pair pair = FXMLUtils.load(AboutDialogController.class.getResource("AboutDialog.fxml"),
+            final Pair<AboutDialogController> pair = FXMLUtils.load(AboutDialogController.class.getResource("AboutDialog.fxml"),
                     ResourceUtils.getString("Title.About"));
 
             pair.getStage().setResizable(false);

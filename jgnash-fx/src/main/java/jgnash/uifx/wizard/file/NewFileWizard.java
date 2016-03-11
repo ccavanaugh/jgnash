@@ -59,7 +59,7 @@ public class NewFileWizard {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        final FXMLUtils.Pair<WizardDialogController> pair =
+        final FXMLUtils.Pair<WizardDialogController<Settings>> pair =
                 FXMLUtils.load(WizardDialogController.class.getResource("WizardDialog.fxml"),
                         resources.getString("Title.NewFile"));
 
