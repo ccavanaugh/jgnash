@@ -19,7 +19,6 @@ package net.bzzt.swift.mt940.parser;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
