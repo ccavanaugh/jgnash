@@ -53,6 +53,7 @@ import org.kohsuke.args4j.Option;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("CanBeFinal")
 public final class Main {
 
     public static final String VERSION;
