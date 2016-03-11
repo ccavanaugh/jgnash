@@ -24,7 +24,7 @@ import jgnash.engine.CommodityNode;
  *
  * @author Craig Cavanaugh
  */
-public class LockedCommodityNode<T extends CommodityNode> implements Comparable<LockedCommodityNode> {
+public class LockedCommodityNode<T extends CommodityNode> implements Comparable<LockedCommodityNode<T>> {
 
     private final boolean locked;
     private final T t;
@@ -44,11 +44,12 @@ public class LockedCommodityNode<T extends CommodityNode> implements Comparable<
     }
 
     @Override
-    public int compareTo(@NotNull final LockedCommodityNode other) {
+    public int compareTo(@NotNull final LockedCommodityNode<T> other) {
         return t.compareTo(other.t);
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public boolean equals(final Object o) {
         return this == o || o instanceof LockedCommodityNode && t.equals(((LockedCommodityNode) o).t);
     }

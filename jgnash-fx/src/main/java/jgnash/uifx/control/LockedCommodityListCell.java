@@ -11,10 +11,10 @@ import jgnash.util.LockedCommodityNode;
  *
  * @author Craig Cavanaugh
  */
-public class LockedCommodityListCell<T extends CommodityNode> extends ListCell<LockedCommodityNode> {
+public class LockedCommodityListCell<T extends CommodityNode> extends ListCell<LockedCommodityNode<T>> {
 
     @Override
-    public void updateItem(final LockedCommodityNode item, final boolean empty) {
+    public void updateItem(final LockedCommodityNode<T> item, final boolean empty) {
         super.updateItem(item, empty);  // required
 
         if (!empty) {

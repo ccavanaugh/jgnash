@@ -84,8 +84,8 @@ public class SelectAccountSecuritiesDialog {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        sourceListView.setCellFactory(param -> new LockedCommodityListCell());
-        targetListView.setCellFactory(param -> new LockedCommodityListCell());
+        sourceListView.setCellFactory(param -> new LockedCommodityListCell<>());
+        targetListView.setCellFactory(param -> new LockedCommodityListCell<>());
 
         Set<SecurityNode> usedSecurities = new HashSet<>();
         Set<SecurityNode> selectedSecurityNodes = new HashSet<>();

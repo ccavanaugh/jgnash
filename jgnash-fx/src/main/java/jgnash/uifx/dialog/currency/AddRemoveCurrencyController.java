@@ -72,7 +72,7 @@ public class AddRemoveCurrencyController {
         availableList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        selectedList.setCellFactory(param -> new LockedCommodityListCell());
+        selectedList.setCellFactory(param -> new LockedCommodityListCell<>());
 
         addButton.disableProperty().bind(newCurrencyTextField.textProperty().isEmpty());
 
