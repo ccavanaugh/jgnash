@@ -500,6 +500,7 @@ public class SecurityNode extends CommodityNode {
      *
      * @return Properly initialized SecurityNode
      */
+    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;
