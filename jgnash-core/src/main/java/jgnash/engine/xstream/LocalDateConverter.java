@@ -41,6 +41,7 @@ public class LocalDateConverter extends AbstractSingleValueConverter {
     // Delegate to the xstream converter if an old file is being read
     private final DateConverter dateConverter = new DateConverter();
 
+    @SuppressWarnings("rawtypes") 
     @Override
     public boolean canConvert(final Class type) {
         return type.equals(LocalDate.class);

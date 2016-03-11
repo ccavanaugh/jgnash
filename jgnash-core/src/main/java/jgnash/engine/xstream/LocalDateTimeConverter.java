@@ -37,7 +37,8 @@ public class LocalDateTimeConverter extends AbstractSingleValueConverter {
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN);
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public boolean canConvert(final Class type) {
         return type.equals(LocalDateTime.class);
     }
