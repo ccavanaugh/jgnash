@@ -38,14 +38,4 @@ public abstract class AbstractDAO {
         }
         return list;
     }
-
-    /**
-     * Returns a persisted object given a class type and unique identifier
-     *
-     * @param clazz entity class
-     * @param uuid identifier
-     * @param <T> the object type
-     * @return object if found, {@code null} otherwise
-     */
-    public abstract <T> T getObjectByUuid(final Class<T> clazz, final String uuid);
 }
