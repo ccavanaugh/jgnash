@@ -91,11 +91,6 @@ public class PortfolioReport extends DynamicJasperReport {
         });
     }
 
-    public PortfolioReport(final Account account) {
-        this();
-        accountCombo.setSelectedAccount(account);
-    }
-
     @Override
     protected void refreshReport() {
         Preferences p = getPreferences();
@@ -183,7 +178,7 @@ public class PortfolioReport extends DynamicJasperReport {
         return null;
     }
 
-    public class PortfolioReportTableModel extends AbstractReportTableModel {
+    private class PortfolioReportTableModel extends AbstractReportTableModel {
 
         boolean verbose;
 
