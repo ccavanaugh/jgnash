@@ -291,14 +291,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @return object
      */
     public E get(final int rowIndex) {
-        ReadLock readLock = rwl.readLock();
-        readLock.lock();
-
-        try {
-            return getExpandingTableNodeAt(rowIndex).getObject();
-        } finally {
-            readLock.unlock();
-        }
+        return getExpandingTableNodeAt(rowIndex).getObject();
     }
 
     /**
@@ -325,20 +318,19 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @return node
      */
     protected ExpandingTableNode<E> getExpandingTableNodeAt(final int rowIndex) {
+        // wait for the worker to complete
+        if (initWorker != null) {
+            try {                   
+                initWorker.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                Logger.getLogger(AbstractExpandingTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+            
         ReadLock readLock = rwl.readLock();
         readLock.lock();
 
-        try {
-            
-            // wait for the worker to complete
-            if (initWorker != null) {
-                try {                   
-                    initWorker.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(AbstractExpandingTableModel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
+        try {            
             return visibleObjects.get(rowIndex);
         } finally {
             readLock.unlock();
