@@ -319,12 +319,10 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      */
     protected ExpandingTableNode<E> getExpandingTableNodeAt(final int rowIndex) {
         // wait for the worker to complete
-        if (initWorker != null) {
-            try {                   
-                initWorker.get();
-            } catch (InterruptedException | ExecutionException ex) {
-                Logger.getLogger(AbstractExpandingTableModel.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {                   
+            initWorker.get();
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(AbstractExpandingTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
             
         ReadLock readLock = rwl.readLock();
@@ -493,7 +491,6 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         @Override
         protected void done() {
             fireNodeChanged();
-            initWorker = null;
         }
     }
 }
