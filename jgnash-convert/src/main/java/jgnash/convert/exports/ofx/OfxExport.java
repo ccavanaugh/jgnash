@@ -52,7 +52,7 @@ public class OfxExport implements OfxTags {
             "SECURITY:NONE", "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE",
             "NEWFILEUID:NONE"};
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     private final Account account;
 
@@ -205,9 +205,9 @@ public class OfxExport implements OfxTags {
      * Writes all investment account transactions within the date range
      */
     private void writeInvestmentTransactions() {
-        for (Transaction transaction : account.getTransactions(startDate, endDate)) {
+        for (final Transaction transaction : account.getTransactions(startDate, endDate)) {
             if (transaction instanceof InvestmentTransaction) {
-                InvestmentTransaction invTransaction = (InvestmentTransaction) transaction;
+                final InvestmentTransaction invTransaction = (InvestmentTransaction) transaction;
 
                 switch (invTransaction.getTransactionType()) {
                     case ADDSHARE:
@@ -401,7 +401,7 @@ public class OfxExport implements OfxTags {
     }
 
     private String encodeDate(final LocalDate date) {
-        return dateTimeFormatter.format(date);
+        return dateTimeFormatter.format(date) + "000000";
     }
 
     private static String wrapOpen(final String element) {
@@ -509,7 +509,7 @@ public class OfxExport implements OfxTags {
 
         private static final String INDENT = "  ";
 
-        public IndentedPrintWriter(final Writer out) {
+        IndentedPrintWriter(final Writer out) {
             super(out);
         }
 
