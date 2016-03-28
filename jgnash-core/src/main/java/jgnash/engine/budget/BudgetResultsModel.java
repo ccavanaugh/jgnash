@@ -469,9 +469,13 @@ public class BudgetResultsModel implements MessageListener {
                 final BudgetPeriodResults childResults = buildAccountResults(descriptor, child);
 
                 final BigDecimal exchangeRate = child.getCurrencyNode().getExchangeRate(account.getCurrencyNode());
+                
+                // reverse sign if the parent account is an income account but the child is not, or vice versa
+                final BigDecimal sign = ((account.getAccountType() == AccountType.INCOME) != 
+                        (child.getAccountType() == AccountType.INCOME)) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
 
-                results.setChange(results.getChange().add(childResults.getChange().multiply(exchangeRate)));
-                results.setBudgeted(results.getBudgeted().add(childResults.getBudgeted().multiply(exchangeRate)));
+                results.setChange(results.getChange().add(childResults.getChange().multiply(exchangeRate).multiply(sign)));
+                results.setBudgeted(results.getBudgeted().add(childResults.getBudgeted().multiply(exchangeRate).multiply(sign)));
                 results.setRemaining(results.getRemaining().add(childResults.getRemaining().multiply(exchangeRate)));
             }
         } finally {
