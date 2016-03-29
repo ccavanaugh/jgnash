@@ -29,6 +29,7 @@ Change the base highlight color for the FX interface
 
 Release 2.22.1
 ----------------------
+03/29/16 Preserve the tree structure in budget exports. (t-pa)
 03/28/16 Fixed random deadlocks when loading budgets in the Swing interface. (t-pa)
 03/28/16 Corrected budget calculations for mixed child account types. (t-pa)
 03/28/16 Added Polish translation (Sławomir Szarkowicz)
