@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
+import jgnash.engine.Comparators;
 import jgnash.text.CommodityFormat;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
@@ -155,7 +156,7 @@ public class BudgetResultsExport {
 
             // must sort the accounts, otherwise child structure is not correct
             List<Account> accounts = new ArrayList<>(model.getAccounts());
-            Collections.sort(accounts);
+            Collections.sort(accounts, Comparators.getAccountByTreePosition(Comparators.getAccountByCode()));
 
             // create account rows
             for (final Account account : accounts) {

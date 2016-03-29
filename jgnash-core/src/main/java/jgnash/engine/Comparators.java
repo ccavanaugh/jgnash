@@ -22,7 +22,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Deque;
 
 /**
  * Utility class consisting of {@code Comparators} useful for sorting lists of {@code StoredObject}
@@ -54,6 +56,16 @@ public class Comparators {
 
     public static Comparator<Account> getAccountByBalance(LocalDate startDate, LocalDate endDate, CurrencyNode currency, boolean ascending) {
         return new AccountByBalance(startDate, endDate, currency, ascending);
+    }
+    
+    /** 
+     * Sort {@code Account}s according to their position in the account tree. Parent accounts are
+     * sorted before their children.
+     * @param subComparator defines the sort order of accounts which have the same parent account
+     * @return the {@code Comparator}
+     */
+    public static Comparator<Account> getAccountByTreePosition(Comparator<Account> subComparator) {
+        return new AccountByTreePosition(subComparator);
     }
 
     public static Comparator<Transaction> getTransactionByDate() {
@@ -135,6 +147,47 @@ public class Comparators {
             }
             return result;
         }
+    }
+    
+    private static class AccountByTreePosition implements Comparator<Account>, Serializable {
+
+        private final Comparator<Account> subComparator;
+        
+        public AccountByTreePosition(final Comparator<Account> subComparator) {
+            this.subComparator = subComparator;
+        }
+        
+        private Deque<Account> accountPath(Account acc) {
+            Deque<Account> path = new LinkedList<>();
+            while (acc != null) {
+                path.addFirst(acc);
+                acc = acc.getParent();
+            }
+            return path;
+        }
+        
+        @Override
+        public int compare(Account a1, Account a2) {
+            Deque<Account> path1 = accountPath(a1);
+            Deque<Account> path2 = accountPath(a2);
+            
+            // find the first non-common ancestors
+            Account pa1, pa2;
+            do {
+                pa1 = path1.pollFirst();
+                pa2 = path2.pollFirst();
+            } while (pa1 != null && pa2 != null && pa1.equals(pa2));
+            
+            if (pa1 == null && pa2 == null) {
+                // this can only happen if a1 equals a2
+                return 0;
+            }
+            
+            // if one of the pathes ended, this is an ancestor of the other one, so sort it first;
+            // otherwise, let the subComparator decide on the same-level ancestors
+            return (pa1 == null) ? -1 : (pa2 == null) ? 1 : subComparator.compare(pa1, pa2);
+        }
+        
     }
 
     private static class TransactionByAmount implements Comparator<Transaction>, Serializable {
