@@ -20,6 +20,7 @@ package jgnash.resource.font;
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.util.Locale;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -68,7 +69,8 @@ public class FontAwesomeLabel extends Label {
 
     public FontAwesomeLabel(final GlyphIcons glyphValue, final Double sizeValue, Paint paint) {
 
-        final StringExpression iconStyleProperty = Bindings.format("-fx-font-family: FontAwesome; -fx-font-size: %1$.6f;",
+        final StringExpression iconStyleProperty = Bindings.format(Locale.US,
+                "-fx-font-family: FontAwesome; -fx-font-size: %1$.6f;",
                 ThemeManager.getFontScaleProperty().multiply(sizeValue));
 
         setGlyphName(glyphValue);

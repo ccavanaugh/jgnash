@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.skin;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
 
@@ -128,7 +129,7 @@ public class ThemeManager {
         });
 
         // Create the binding format for the style / font size
-        styleProperty = Bindings.format("-fx-font-size: %1$.6fem; -fx-base:%2$s",
+        styleProperty = Bindings.format(Locale.US, "-fx-font-size: %1$.6fem; -fx-base:%2$s",
                 fontScaleProperty, _baseColorProperty);
     }
 
