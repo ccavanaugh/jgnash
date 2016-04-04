@@ -17,6 +17,7 @@
  */
 package jgnash.uifx;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,7 +101,9 @@ public class StaticUIMethods {
         alert.setTitle(title);
         alert.initOwner(MainApplication.getInstance().getPrimaryStage());
 
-        return alert.showAndWait().get();
+        final Optional<ButtonType> buttonType = alert.showAndWait();
+
+        return buttonType.isPresent() ? buttonType.get() : ButtonType.NO;
     }
 
     public static void displayException(final Throwable exception) {
