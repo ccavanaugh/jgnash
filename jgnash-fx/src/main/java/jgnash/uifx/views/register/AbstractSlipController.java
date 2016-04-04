@@ -42,6 +42,7 @@ import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
@@ -216,7 +217,9 @@ abstract class AbstractSlipController implements Slip {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
                 if (engine != null) {
-                    engine.addTransaction(newTrans);
+                    if (!engine.addTransaction(newTrans)) {
+                        StaticUIMethods.displayError(resources.getString("Message.Error.TranAddFail"));
+                    }
                 }
             } else {
                 Transaction newTrans = buildTransaction();
