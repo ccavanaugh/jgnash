@@ -18,6 +18,7 @@
 package jgnash.uifx.views.budget;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -53,7 +54,7 @@ class BudgetSparkLine extends Canvas {
 
     private double periodGap = DEFAULT_PERIOD_GAP;
 
-    public BudgetSparkLine(final List<BigDecimal> amounts) {
+    BudgetSparkLine(final List<BigDecimal> amounts) {
         ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
             draw();
         });
@@ -87,8 +88,8 @@ class BudgetSparkLine extends Canvas {
         gc.setLineWidth(barWidth);
 
         final double centerLine = getHeight() / 2d;
-        final double max = amounts.stream().max(BigDecimal::compareTo).get().doubleValue();
-        final double min = amounts.stream().min(BigDecimal::compareTo).get().doubleValue();
+        final double max = Collections.max(amounts).doubleValue();
+        final double min = Collections.min(amounts).doubleValue();
         final double scale = centerLine / Math.max(max, Math.abs(min));
 
         double x = MARGIN + barWidth / 2d;
