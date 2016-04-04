@@ -346,6 +346,7 @@ public class BudgetTableController implements MessageListener {
      * <p>
      * Synchronize binding, otherwise the ScrollBars get a bit confused and do not respond to a scroll wheel
      */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private synchronized void bindScrollBars() {
         final Optional<ScrollBar> accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
         final Optional<ScrollBar> vDataScrollBar = JavaFXUtils.findVerticalScrollBar(periodTable);
