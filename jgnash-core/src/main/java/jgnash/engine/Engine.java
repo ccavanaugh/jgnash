@@ -2261,6 +2261,17 @@ public class Engine {
     }
 
     /**
+     * Returns an {@code Account} attribute
+     *
+     * @param key the attribute key
+     * @return the attribute if found
+     * @see #setAccountAttribute
+     */
+    public String getAccountAttribute(@NotNull final Account account, @NotNull final String key) {
+        return account.getAttribute(key);
+    }
+
+    /**
      * Removes an existing account given it's ID.
      *
      * @param account The account to remove
