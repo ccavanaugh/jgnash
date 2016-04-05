@@ -60,7 +60,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         trashExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
 
         // run trash cleanup every 2 minutes 1 minute after startup
-        trashExecutor.scheduleWithFixedDelay((Runnable) JpaTrashDAO.this::cleanupEntityTrash, 1, 2, TimeUnit.MINUTES);
+        trashExecutor.scheduleWithFixedDelay(JpaTrashDAO.this::cleanupEntityTrash, 1, 2, TimeUnit.MINUTES);
     }
 
     void stopTrashExecutor() {
