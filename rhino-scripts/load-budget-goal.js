@@ -51,9 +51,9 @@ if (dlg.getReturnStatus()) {
 	for ( var i = 0; i < amounts.length; i++)
 		amounts[i] = java.math.BigDecimal.ZERO;
 
-	for ( var i = 6; i < amounts.length;) {
-		amounts[i] = new java.math.BigDecimal("1230.0");
-		i = i + 14;
+	for ( var j = 6; j < amounts.length;) {
+		amounts[j] = new java.math.BigDecimal("1230.0");
+		j = j + 14;
 	}
 
 	// set the new amounts and update the budget
