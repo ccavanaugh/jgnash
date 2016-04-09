@@ -17,7 +17,7 @@ var accountList = engine.getAccountList();  // get a list of accounts
 for (var i = 0; i < accountList.size(); i++)   // loop and print the account names to the console
 {
     var account = accountList.get(i);
-    debug(account.getName());
+    debug(account.toString());
 }
 
 // just to show how to use swing

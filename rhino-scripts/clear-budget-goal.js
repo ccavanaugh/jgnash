@@ -1,6 +1,6 @@
 // clears the budget goals for the selected account and budget
-// $Id: clear-budget-goal.js 2995 2011-12-19 22:35:47Z ccavanaugh $
 
+load("nashorn:mozilla_compat.js");  // Load compatibility script
 
 importPackage(javax.swing);
 importPackage(Packages.jgnash.ui);
@@ -29,7 +29,7 @@ dlg.setVisible(true);
 if (dlg.getReturnStatus()) {
 	account = dlg.getAccount();
     
-    debug(account.getName()); 
+    debug(account.toString());
     
     var budgetCombo = new BudgetComboBox();
     
@@ -38,13 +38,15 @@ if (dlg.getReturnStatus()) {
     
     var budget = budgetCombo.getSelectedBudget();    
     
-    debug(budget.getName());
+    debug(budget.toString());
     
     // have budget, have account, now get the existing budget goal    
-    var budgetGoal = BudgetGoal();
+    var budgetGoal = new BudgetGoal();
     
     // create array of amount and clear to zero
-    var amounts = java.lang.reflect.Array.newInstance(java.math.BigDecimal, BudgetGoal.PERIODS);
+    //noinspection JSValidateTypes
+    var BigDecimalArray = Java.type("java.math.BigDecimal[]");
+    var amounts = new BigDecimalArray(BudgetGoal.PERIODS);
     
     for (var i=0; i < amounts.length; i++)
     	amounts[i] = java.math.BigDecimal.ZERO;

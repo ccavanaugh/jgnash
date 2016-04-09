@@ -1,5 +1,6 @@
 // loads the budget goals for the selected account and budget
-// $Id: load-budget-goal.js 2995 2011-12-19 22:35:47Z ccavanaugh $
+
+load("nashorn:mozilla_compat.js");  // Load compatibility script
 
 importPackage(javax.swing);
 importPackage(Packages.jgnash.ui);
@@ -28,7 +29,7 @@ dlg.setVisible(true);
 if (dlg.getReturnStatus()) {
 	account = dlg.getAccount();
 
-	debug(account.getName());
+	debug(account.toString());
 
 	var budgetCombo = new BudgetComboBox();
 
@@ -37,15 +38,16 @@ if (dlg.getReturnStatus()) {
 
 	var budget = budgetCombo.getSelectedBudget();
 
-	debug(budget.getName());
+	debug(budget.toString());
 
 	// have budget, have account, now get the existing budget goal
 	var budgetGoal = new BudgetGoal();
 	budgetGoal.setBudgetPeriod(BudgetPeriod.DAILY);
 
-	// create array of amount and clear to zero
-	var amounts = java.lang.reflect.Array
-			.newInstance(java.math.BigDecimal, BudgetGoal.PERIODS);
+	// create array of amounts and clear to zero
+    //noinspection JSValidateTypes
+    var BigDecimalArray = Java.type("java.math.BigDecimal[]");
+    var amounts = new BigDecimalArray(BudgetGoal.PERIODS);
 
 	// zero all amounts first
 	for ( var i = 0; i < amounts.length; i++)

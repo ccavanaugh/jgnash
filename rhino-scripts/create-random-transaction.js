@@ -1,5 +1,6 @@
 // creates slightly random transaction data
-// $Id: clear-budget-goal.js 2990 2011-12-17 12:54:21Z ccavanaugh $
+
+load("nashorn:mozilla_compat.js");  // Load compatibility script
 
 importPackage(javax.swing);
 importPackage(Packages.jgnash.ui);
@@ -8,6 +9,7 @@ importPackage(Packages.jgnash.ui.components);
 importPackage(Packages.jgnash.ui.budget);
 importPackage(Packages.jgnash.engine);
 importPackage(Packages.jgnash.engine.budget);
+importPackage(Packages.java.time);
 
 var rand = new java.util.Random();
 
@@ -35,7 +37,7 @@ dlg.setVisible(true);
 if (dlg.getReturnStatus()) {
 	debitAccount = dlg.getAccount();
 
-	debug(debitAccount.getName());
+	debug(debitAccount.toString());
 
 	dlg.setTitle("Select credit account for transaction");
 	dlg.setVisible(true);
@@ -46,8 +48,7 @@ if (dlg.getReturnStatus()) {
 		var amount = new java.math.BigDecimal(random(10.12, 32.23));
 
 		var tran = TransactionFactory.generateDoubleEntryTransaction(
-				creditAccount, debitAccount, amount, new Date(), "memo",
-				"payee", "");
+				creditAccount, debitAccount, amount, LocalDate.now(), "memo", "payee", "");
 
 		engine.addTransaction(tran);
 	}
