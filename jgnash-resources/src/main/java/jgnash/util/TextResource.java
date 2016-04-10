@@ -52,7 +52,7 @@ public class TextResource {
 
         try (InputStream s = Object.class.getResourceAsStream(root + "/" + fileName)) {
             if (s != null) {
-                try (BufferedReader b = new BufferedReader(new InputStreamReader(s, "8859_1"))) {
+                try (BufferedReader b = new BufferedReader(new InputStreamReader(s, "UTF-8"))) {
                     String t = loadConvert(b.readLine());
                     while (t != null) {
                         sb.append(t);

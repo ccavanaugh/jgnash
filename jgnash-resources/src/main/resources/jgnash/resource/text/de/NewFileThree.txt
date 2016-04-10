@@ -1,1 +1,1 @@
-Die bei der Erstellung neuer Konten verfügbaren Währungen können unten ausgewählt werden. Wenn Sie nicht mehrere Währungen benutzen wollen, nehmen Sie hier keine Änderungen vor. Währungen können zu jeder Zeit hinzugefügt oder entfernt werden.
+Die bei der Erstellung neuer Konten verfÃ¼gbaren WÃ¤hrungen kÃ¶nnen unten ausgewÃ¤hlt werden. Wenn Sie nicht mehrere WÃ¤hrungen benutzen wollen, nehmen Sie hier keine Ã„nderungen vor. WÃ¤hrungen kÃ¶nnen zu jeder Zeit hinzugefÃ¼gt oder entfernt werden.

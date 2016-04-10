@@ -1,2 +1,2 @@
-Während des Imports wurde Transaktions-Dubletten gefunden.
-Möchten Sie die Transaktions-Dubletten speichern?
+WÃ¤hrend des Imports wurde Transaktions-Dubletten gefunden.
+MÃ¶chten Sie die Transaktions-Dubletten speichern?

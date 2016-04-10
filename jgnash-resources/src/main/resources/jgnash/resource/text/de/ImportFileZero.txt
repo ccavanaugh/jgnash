@@ -1,1 +1,1 @@
-Wählen Sie die Datei (jGnash 1.11.x oder neuer), die importiert werden soll.
+WÃ¤hlen Sie die Datei (jGnash 1.11.x oder neuer), die importiert werden soll.

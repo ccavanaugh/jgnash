@@ -1,3 +1,3 @@
-Die Standard-Währung sollte die am häufigsten benutzte Währung sein. In den meisten Fällen wird nur eine Währung benutzt (die Landeswährung).
+Die Standard-WÃ¤hrung sollte die am hÃ¤ufigsten benutzte WÃ¤hrung sein. In den meisten FÃ¤llen wird nur eine WÃ¤hrung benutzt (die LandeswÃ¤hrung).
 
-Alle Konten, die in jGnash erzeugt werden, werden als Vorgabe diese Währung benutzen, aber andere Währungen können beim Anlegen neuer Konten gewählt werden.
+Alle Konten, die in jGnash erzeugt werden, werden als Vorgabe diese WÃ¤hrung benutzen, aber andere WÃ¤hrungen kÃ¶nnen beim Anlegen neuer Konten gewÃ¤hlt werden.

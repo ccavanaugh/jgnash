@@ -1,2 +1,2 @@
-Des transactions redondantes ont été trouvées durant l'importation.
+Des transactions redondantes ont Ã©tÃ© trouvÃ©es durant l'importation.
 Souhaitez-vous sauver ces doublons?

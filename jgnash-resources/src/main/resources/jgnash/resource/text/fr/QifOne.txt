@@ -1,4 +1,4 @@
-Le fichier QIF sélectionné ne contient pas de compte de destination pour les transactions. Ce format est normal pour les fichiers QIF récupérés auprès de services bancaires en ligne ou assimilés.
+Le fichier QIF sÃ©lectionnÃ© ne contient pas de compte de destination pour les transactions. Ce format est normal pour les fichiers QIF rÃ©cupÃ©rÃ©s auprÃ¨s de services bancaires en ligne ou assimilÃ©s.
 
-Sélectionnez un compte de destination pour les transactions.
-Les nouvelles transactions seront du type "Entrée simple" car les informations fournies par le fichier QIF sont incomplètes. 
+SÃ©lectionnez un compte de destination pour les transactions.
+Les nouvelles transactions seront du type "EntrÃ©e simple" car les informations fournies par le fichier QIF sont incomplÃ¨tes. 
