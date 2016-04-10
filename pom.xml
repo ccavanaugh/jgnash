@@ -28,7 +28,7 @@
         <javahelp-version>2.0.05</javahelp-version>
         <jasperreports.version>6.0.4</jasperreports.version>
         <args4j.version>2.32</args4j.version>
-        <xstream.version>1.4.9</xstream.version>
+        <xstream.version>1.4.8</xstream.version>
         <h2.version>1.3.176</h2.version>
         <hibernate-entitymanager.version>4.3.11.Final</hibernate-entitymanager.version>
         <hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
