@@ -27,6 +27,10 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Change the base highlight color for the FX interface
 
+Release 2.23.0
+----------------------
+04/10/16 Language files now use UTF-8 file encoding.
+
 Release 2.22.1
 ----------------------
 04/03/16 Fix for Fx UI font scaling issues for locales that use a comma for the decimal separator. (t-pa)
