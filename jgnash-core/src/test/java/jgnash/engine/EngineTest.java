@@ -806,11 +806,6 @@ public abstract class EngineTest {
         assertTrue(e.isStored(a));
     }
 
-    @Test
-    public void testAddTransaction() throws Exception {
-        testGetTransactions();
-    }
-
     @Ignore
     @Test
     public void testRemoveTransaction() {
@@ -836,7 +831,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetTransactions() {
+    public void testAddGetTransactions() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
