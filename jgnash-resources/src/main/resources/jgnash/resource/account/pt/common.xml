@@ -1,17 +1,17 @@
 <object-stream>
   <RootAccount id="1" placeHolder="false" locked="false" visible="true" name="Contas comuns" description="Contas comuns">
-    <accountType id="2">ROOT</accountType>
+    <accountType>ROOT</accountType>
     <notes></notes>
     <currencyNode id="3" locale="pt_BR" symbol="BRL" scale="2" prefix="R$" suffix="" description="pt_BR"/>
     <children id="4">
       <Account id="5" placeHolder="true" locked="false" visible="true" name="Contas Bancárias" description="">
-        <accountType id="6">BANK</accountType>
+        <accountType>BANK</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>
         <currencyNode reference="3"/>
         <children id="7">
           <Account id="8" placeHolder="false" locked="false" visible="true" name="Dinheiro" description="">
-            <accountType reference="6"/>
+            <accountType>BANK</accountType>
             <parentAccount reference="5"/>
             <notes></notes>
             <currencyNode reference="3"/>
@@ -21,7 +21,7 @@
             <propertyMap id="11"/>
           </Account>
           <Account id="12" placeHolder="false" locked="false" visible="true" name="Economias" description="">
-            <accountType reference="6"/>
+            <accountType>BANK</accountType>
             <parentAccount reference="5"/>
             <notes></notes>
             <currencyNode reference="3"/>
@@ -36,19 +36,19 @@
         <propertyMap id="17"/>
       </Account>
       <Account id="18" placeHolder="true" locked="false" visible="true" name="Contas de Despesas" description="">
-        <accountType id="19">EXPENSE</accountType>
+        <accountType>EXPENSE</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>
         <currencyNode reference="3"/>
         <children id="20">
           <Account id="21" placeHolder="true" locked="false" visible="true" name="Automóvel" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="22">
               <Account id="23" placeHolder="false" locked="false" visible="true" name="Combustível" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="21"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -58,7 +58,7 @@
                 <propertyMap id="26"/>
               </Account>
               <Account id="27" placeHolder="false" locked="false" visible="true" name="Seguro" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="21"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -68,7 +68,7 @@
                 <propertyMap id="30"/>
               </Account>
               <Account id="31" placeHolder="false" locked="false" visible="true" name="Serviços" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="21"/>
                 <notes>Óleo, pneus, etc.</notes>
                 <currencyNode reference="3"/>
@@ -83,13 +83,13 @@
             <propertyMap id="36"/>
           </Account>
           <Account id="37" placeHolder="true" locked="false" visible="true" name="Contas" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="38">
               <Account id="39" placeHolder="false" locked="false" visible="true" name="Telefone celular" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="37"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -99,7 +99,7 @@
                 <propertyMap id="42"/>
               </Account>
               <Account id="43" placeHolder="false" locked="false" visible="true" name="Telefone" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="37"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -114,13 +114,13 @@
             <propertyMap id="48"/>
           </Account>
           <Account id="49" placeHolder="true" locked="false" visible="true" name="Alimentação" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="50">              
               <Account id="51" placeHolder="false" locked="false" visible="true" name="Refeições fora" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="49"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -130,7 +130,7 @@
                 <propertyMap id="54"/>
               </Account>
               <Account id="55" placeHolder="false" locked="false" visible="true" name="Guloseimas" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="49"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -145,13 +145,13 @@
             <propertyMap id="60"/>
           </Account>
           <Account id="61" placeHolder="true" locked="false" visible="true" name="Saúde" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="62">
               <Account id="63" placeHolder="false" locked="false" visible="true" name="Plano de saúde" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="61"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -161,7 +161,7 @@
                 <propertyMap id="66"/>
               </Account>
               <Account id="67" placeHolder="false" locked="false" visible="true" name="Consultas" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="61"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -171,7 +171,7 @@
                 <propertyMap id="70"/>
               </Account>
               <Account id="71" placeHolder="false" locked="false" visible="true" name="Medicamentos" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="61"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -181,7 +181,7 @@
                 <propertyMap id="74"/>
               </Account>
               <Account id="75" placeHolder="false" locked="false" visible="true" name="Escritório" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="61"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -191,7 +191,7 @@
                 <propertyMap id="78"/>
               </Account>
               <Account id="79" placeHolder="false" locked="false" visible="true" name="Bem-estar" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="61"/>
                 <notes>Hait cuts, etc.</notes>
                 <currencyNode reference="3"/>
@@ -206,13 +206,13 @@
             <propertyMap id="84"/>
           </Account>
           <Account id="85" placeHolder="true" locked="false" visible="true" name="Casa" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="86">
               <Account id="87" placeHolder="false" locked="false" visible="true" name="Eletrodomésticos e móveis" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="85"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -222,7 +222,7 @@
                 <propertyMap id="90"/>
               </Account>
               <Account id="91" placeHolder="false" locked="false" visible="true" name="Vestuário, cama, mesa e banho" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="85"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -232,7 +232,7 @@
                 <propertyMap id="94"/>
               </Account>
               <Account id="95" placeHolder="false" locked="false" visible="true" name="Eletrônicos" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="85"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -242,7 +242,7 @@
                 <propertyMap id="98"/>
               </Account>
               <Account id="99" placeHolder="false" locked="false" visible="true" name="Outras" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="85"/>
                 <notes>Selos, baterias, etc</notes>
                 <currencyNode reference="3"/>
@@ -252,7 +252,7 @@
                 <propertyMap id="102"/>
               </Account>
               <Account id="103" placeHolder="false" locked="false" visible="true" name="Higiene pessoal" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="85"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -267,13 +267,13 @@
             <propertyMap id="108"/>
           </Account>
           <Account id="109" placeHolder="false" locked="false" visible="true" name="Outras" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="110">
               <Account id="111" placeHolder="false" locked="false" visible="true" name="Taxas bancárias" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="109"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -283,7 +283,7 @@
                 <propertyMap id="114"/>
               </Account>
               <Account id="115" placeHolder="false" locked="false" visible="true" name="Contribuição a caridade" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="109"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -293,7 +293,7 @@
                 <propertyMap id="118"/>
               </Account>
               <Account id="119" placeHolder="false" locked="false" visible="true" name="Seguro de vida" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="109"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -308,13 +308,13 @@
             <propertyMap id="124"/>
           </Account>
           <Account id="125" placeHolder="true" locked="false" visible="true" name="Recreação" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="126">
               <Account id="127" placeHolder="false" locked="false" visible="true" name="Livros e revistas" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="125"/>
                 <notes>Livros e revistas</notes>
                 <currencyNode reference="3"/>
@@ -324,7 +324,7 @@
                 <propertyMap id="130"/>
               </Account>
               <Account id="131" placeHolder="false" locked="false" visible="true" name="Concertos / Filmes" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="125"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -334,7 +334,7 @@
                 <propertyMap id="134"/>
               </Account>
               <Account id="135" placeHolder="false" locked="false" visible="true" name="Passatempo" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="125"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -344,7 +344,7 @@
                 <propertyMap id="138"/>
               </Account>
               <Account id="139" placeHolder="false" locked="false" visible="true" name="Hospedagem" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="125"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -354,7 +354,7 @@
                 <propertyMap id="142"/>
               </Account>
               <Account id="143" placeHolder="false" locked="false" visible="true" name="Outras" description="Outras">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="125"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -364,7 +364,7 @@
                 <propertyMap id="146"/>
               </Account>
               <Account id="147" placeHolder="false" locked="false" visible="true" name="Assinaturas" description="">
-                <accountType reference="19"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="125"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -379,7 +379,7 @@
             <propertyMap id="152"/>
           </Account>
           <Account id="153" placeHolder="true" locked="false" visible="true" name="Imposto de renda" description="">
-            <accountType reference="19"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
@@ -393,13 +393,13 @@
         <propertyMap id="178"/>
       </Account>
       <Account id="179" placeHolder="true" locked="false" visible="true" name="Contas de Receitas" description="">
-        <accountType id="180">INCOME</accountType>
+        <accountType>INCOME</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>
         <currencyNode reference="3"/>
         <children id="181">
           <Account id="182" placeHolder="false" locked="false" visible="true" name="Receitas não tributáveis" description="">
-            <accountType reference="180"/>
+            <accountType>INCOME</accountType>
             <parentAccount reference="179"/>
             <notes></notes>
             <currencyNode reference="3"/>
@@ -409,7 +409,7 @@
             <propertyMap id="185"/>
           </Account>
           <Account id="186" placeHolder="false" locked="false" visible="true" name="Juros" description="">
-            <accountType reference="180"/>
+            <accountType>INCOME</accountType>
             <parentAccount reference="179"/>
             <notes></notes>
             <currencyNode reference="3"/>
@@ -419,7 +419,7 @@
             <propertyMap id="189"/>
           </Account>
           <Account id="190" placeHolder="false" locked="false" visible="true" name="Outras receitas" description="">
-            <accountType reference="180"/>
+            <accountType>INCOME</accountType>
             <parentAccount reference="179"/>
             <notes></notes>
             <currencyNode reference="3"/>
@@ -429,7 +429,7 @@
             <propertyMap id="193"/>
           </Account>
           <Account id="194" placeHolder="false" locked="false" visible="true" name="Salário" description="">
-            <accountType reference="180"/>
+            <accountType>INCOME</accountType>
             <parentAccount reference="179"/>
             <notes></notes>
             <currencyNode reference="3"/>
@@ -444,7 +444,7 @@
         <propertyMap id="199"/>
       </Account>
       <Account id="200" placeHolder="false" locked="false" visible="false" name="Balanço inicial" description="">
-        <accountType id="201">EQUITY</accountType>
+        <accountType>EQUITY</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>
         <currencyNode reference="3"/>

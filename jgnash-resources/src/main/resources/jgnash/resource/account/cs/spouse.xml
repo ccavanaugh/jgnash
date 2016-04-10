@@ -1,23 +1,23 @@
 <object-stream>
   <RootAccount id="1" placeHolder="false" locked="false" visible="true" name="Příjmy partnera/partnerky" description="Spouse&apos;s Income">
-    <accountType id="2">ROOT</accountType>
+    <accountType>ROOT</accountType>
     <notes></notes>
     <currencyNode id="3" locale="en_US" symbol="USD" scale="2" prefix="$" suffix="" description="en_US"/>
     <children id="4">
       <Account id="5" placeHolder="true" locked="false" visible="true" name="Výdajové položky" description="Expense Accounts">
-        <accountType id="6">EXPENSE</accountType>
+        <accountType>EXPENSE</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>
         <currencyNode reference="3"/>
         <children id="7">
           <Account id="8" placeHolder="true" locked="false" visible="true" name="Daně partnera/partnerky" description="Spouse&apos;s Taxes">
-            <accountType reference="6"/>
+            <accountType>EXPENSE</accountType>
             <parentAccount reference="5"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="9">
               <Account id="10" placeHolder="false" locked="false" visible="true" name="Okresní daně" description="County tax">
-                <accountType reference="6"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="8"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -27,7 +27,7 @@
                 <propertyMap id="13"/>
               </Account>
               <Account id="14" placeHolder="false" locked="false" visible="true" name="Lékařská péče" description="">
-                <accountType reference="6"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="8"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -37,7 +37,7 @@
                 <propertyMap id="17"/>
               </Account>
               <Account id="18" placeHolder="false" locked="false" visible="true" name="Sociální zabezpečení" description="">
-                <accountType reference="6"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="8"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -47,7 +47,7 @@
                 <propertyMap id="21"/>
               </Account>
               <Account id="22" placeHolder="false" locked="false" visible="true" name="Státní daně" description="Description">
-                <accountType reference="6"/>
+                <accountType>EXPENSE</accountType>
                 <parentAccount reference="8"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -67,19 +67,19 @@
         <propertyMap id="29"/>
       </Account>
       <Account id="30" placeHolder="true" locked="false" visible="true" name="Příjmové položky" description="Income Accounts">
-        <accountType id="31">INCOME</accountType>
+        <accountType>INCOME</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>
         <currencyNode reference="3"/>
         <children id="32">
           <Account id="33" placeHolder="true" locked="false" visible="true" name="Příjem partnera/partnerky" description="Spouse&apos;s Income Accounts">
-            <accountType reference="31"/>
+            <accountType>INCOME</accountType>
             <parentAccount reference="30"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="34">
               <Account id="35" placeHolder="false" locked="false" visible="true" name="Příjem - nezdanitelný" description="Non taxable income">
-                <accountType reference="31"/>
+                <accountType>INCOME</accountType>
                 <parentAccount reference="33"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -89,7 +89,7 @@
                 <propertyMap id="38"/>
               </Account>
               <Account id="39" placeHolder="false" locked="false" visible="true" name="Úroky" description="Interest Income">
-                <accountType reference="31"/>
+                <accountType>INCOME</accountType>
                 <parentAccount reference="33"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -99,7 +99,7 @@
                 <propertyMap id="42"/>
               </Account>
               <Account id="43" placeHolder="false" locked="false" visible="true" name="Jiné příjmy" description="Other">
-                <accountType reference="31"/>
+                <accountType>INCOME</accountType>
                 <parentAccount reference="33"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
@@ -109,7 +109,7 @@
                 <propertyMap id="46"/>
               </Account>
               <Account id="47" placeHolder="false" locked="false" visible="true" name="Plat" description="Salary">
-                <accountType reference="31"/>
+                <accountType>INCOME</accountType>
                 <parentAccount reference="33"/>
                 <notes></notes>
                 <currencyNode reference="3"/>
