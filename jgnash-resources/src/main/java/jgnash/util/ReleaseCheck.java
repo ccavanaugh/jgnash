@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.Optional;
 
 /**
- * Utility to checks with Github for the latest available release
+ * Utility to checks with GitHub for the latest available release
  */
 public class ReleaseCheck {
 
@@ -42,6 +42,8 @@ public class ReleaseCheck {
                     builder.append(line);
                 }
             }
+
+            // TODO: Parse for fist occurrence of [{"name":"2.22.1",.... or use JSON tool
 
             return Optional.of(builder.toString());
         } catch (Exception e) {
