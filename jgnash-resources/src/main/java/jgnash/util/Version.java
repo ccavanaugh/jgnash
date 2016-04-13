@@ -87,19 +87,37 @@ public class Version {
     }
 
     public static boolean isReleaseCurrent() {
+        return isReleaseCurrent(getAppVersion());
+    }
+
+    public static boolean isReleaseCurrent(String version) {
+        boolean current = true;
+
         Optional<String> release = getLatestGitHubRelease();
         if (release.isPresent()) {
 
             // quick check
-            if (getAppVersion().equals( release.get())) {
+            if (version.equals(release.get())) {
                 return true;
             } else {
-                String gitVersion[] = release.get().split(".");
-                String thisVersion[] = getAppVersion().split(".");
-            }
+                final String gitVersion[] = release.get().split("\\.");
+                final String thisVersion[] = version.split("\\.");
 
+                for (int i = 0; i < 3; i++) {
+                    if (i < gitVersion.length && i < thisVersion.length) {
+                        if (Integer.parseInt(gitVersion[i]) > Integer.parseInt(thisVersion[i])) {
+                            current = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (gitVersion.length > thisVersion.length && current) {
+                    current = false;
+                }
+            }
         }
-        return true;
+        return current;
     }
 
     public static void main(final String[] args) {
