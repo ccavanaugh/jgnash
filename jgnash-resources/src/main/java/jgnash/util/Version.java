@@ -85,4 +85,24 @@ public class Version {
             return Optional.empty();
         }
     }
+
+    public static boolean isReleaseCurrent() {
+        Optional<String> release = getLatestGitHubRelease();
+        if (release.isPresent()) {
+
+            // quick check
+            if (getAppVersion().equals( release.get())) {
+                return true;
+            } else {
+                String gitVersion[] = release.get().split(".");
+                String thisVersion[] = getAppVersion().split(".");
+            }
+
+        }
+        return true;
+    }
+
+    public static void main(final String[] args) {
+        System.out.println(isReleaseCurrent());
+    }
 }
