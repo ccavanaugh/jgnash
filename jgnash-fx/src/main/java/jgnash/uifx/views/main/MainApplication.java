@@ -61,6 +61,7 @@ import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.BootEngineTask;
+import jgnash.uifx.tasks.CheckReleaseTask;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
@@ -201,6 +202,19 @@ public class MainApplication extends Application implements MessageListener {
                 }
             }).start();
         }
+
+        checkForLatestRelease();
+    }
+
+    private void checkForLatestRelease() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(BootEngineTask.FORCED_DELAY);
+                backgroundExecutor.execute(new CheckReleaseTask());
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }).start();
     }
 
     private void addViews() {

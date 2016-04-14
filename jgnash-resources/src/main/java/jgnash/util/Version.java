@@ -20,8 +20,11 @@ package jgnash.util;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +46,8 @@ public class Version {
     private static final String TAG_URL = "https://api.github.com/repos/ccavanaugh/jgnash/tags";
     private static final String REGEX = "\"(.+?)\"";
 
+    private static final int CONNECT_TIMEOUT = 5000;
+
     private Version() {
         // Utility class
     }
@@ -55,14 +60,17 @@ public class Version {
         return ResourceBundle.getBundle(JGNASH_RESOURCE_CONSTANTS).getString(NAME);
     }
 
-    public static Optional<String> getLatestGitHubRelease() {
+    private static Optional<String> getLatestGitHubRelease() {
 
         try {
             final StringBuilder builder = new StringBuilder();
 
             final URL url = new URL(TAG_URL);
+            final URLConnection connection = url.openConnection();
+            connection.setConnectTimeout(CONNECT_TIMEOUT);
 
-            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
+            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
+                    "UTF-8"))) {
                 for (String line; (line = reader.readLine()) != null; ) {
                     builder.append(line);
                 }
@@ -80,8 +88,8 @@ public class Version {
             }
 
             return Optional.empty();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            Logger.getLogger(Version.class.getName()).log(Level.WARNING, e.getLocalizedMessage(), e);
             return Optional.empty();
         }
     }
@@ -93,7 +101,7 @@ public class Version {
     public static boolean isReleaseCurrent(String version) {
         boolean current = true;
 
-        Optional<String> release = getLatestGitHubRelease();
+        final Optional<String> release = getLatestGitHubRelease();
         if (release.isPresent()) {
 
             // quick check
@@ -103,11 +111,15 @@ public class Version {
                 final String gitVersion[] = release.get().split("\\.");
                 final String thisVersion[] = version.split("\\.");
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 3; i++) {   // x.x.x is tested for
                     if (i < gitVersion.length && i < thisVersion.length) {
-                        if (Integer.parseInt(gitVersion[i]) > Integer.parseInt(thisVersion[i])) {
-                            current = false;
-                            break;
+                        try {
+                            if (Integer.parseInt(gitVersion[i]) > Integer.parseInt(thisVersion[i])) {
+                                current = false;
+                                break;
+                            }
+                        } catch (final NumberFormatException e) {
+                            Logger.getLogger(Version.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
                         }
                     }
                 }
@@ -118,9 +130,5 @@ public class Version {
             }
         }
         return current;
-    }
-
-    public static void main(final String[] args) {
-        System.out.println(isReleaseCurrent());
     }
 }
