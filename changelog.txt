@@ -29,6 +29,7 @@ Change the base highlight color for the FX interface
 
 Release 2.23.0
 ----------------------
+04/15/16 Display a message at startup when a newer version is available for download.
 04/10/16 Language files now use UTF-8 file encoding.
 
 Release 2.22.1

@@ -70,6 +70,15 @@ public class StaticUIMethods {
      * Display an error message
      *
      * @param message error message to display
+     */
+    static void displayMessage(final String message) {
+        displayMessage(message, ResourceUtils.getString("Title.Information"), JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Display an error message
+     *
+     * @param message error message to display
      * @param title   dialog title
      * @param type    message type
      */

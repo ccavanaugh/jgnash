@@ -86,6 +86,7 @@ import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.ResourceUtils;
+import jgnash.util.Version;
 
 import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXStatusBar;
@@ -195,6 +196,17 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             addViews();
             updateTitle();
         }
+
+        new Thread() {
+            @Override
+            public void run() {
+                boolean current = Version.isReleaseCurrent();
+
+                if (!current) {
+                    StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion"));
+                }
+            }
+        }.start();
     }
 
     /**
