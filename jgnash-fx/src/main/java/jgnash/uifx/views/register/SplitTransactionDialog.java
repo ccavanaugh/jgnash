@@ -18,9 +18,12 @@
 package jgnash.uifx.views.register;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+
 import jgnash.engine.TransactionEntry;
+import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
@@ -36,6 +39,9 @@ class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
     @FXML
     private TabPane tabPane;
+
+    @FXML
+    private CheckBox concatenateMemosCheckBox;
 
     private Tab creditTab;
 
@@ -82,6 +88,8 @@ class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
     @Override
     void initForm() {
+        concatenateMemosCheckBox.selectedProperty().bindBidirectional(Options.concatenateMemosProperty());
+
         final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountProperty().get().getAccountType());
 
         creditTab = new Tab(tabNames[0]);

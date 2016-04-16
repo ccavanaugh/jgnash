@@ -49,6 +49,8 @@ public class Options {
 
     private static final String CASE_SENSITIVE = "autoCompleteIsCaseEnabled";
 
+    private static final String CONCATENATE_MEMOS = "concatenateMemos";
+
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
 
     private final static String REMINDER_SNOOZE = "reminderSnoozePeriod";
@@ -87,6 +89,8 @@ public class Options {
 
     private static final SimpleBooleanProperty restoreLastRegisterTab;
 
+    private static final SimpleBooleanProperty concatenateMemos;
+
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
     private static final SimpleStringProperty buttonOrder;
@@ -116,6 +120,7 @@ public class Options {
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
         openLastEnabled = createBooleanProperty(OPEN_LAST, false);
         selectOnFocusEnabled = createBooleanProperty(SELECT_ON_FOCUS, false);
+        concatenateMemos = createBooleanProperty(CONCATENATE_MEMOS, false);
         animationsEnabled = createBooleanProperty(ANIMATIONS_ENABLED, true);
         restoreLastRegisterTab = createBooleanProperty(RESTORE_LAST_TAB, true);
 
@@ -165,6 +170,10 @@ public class Options {
      */
     public static BooleanProperty confirmOnDeleteReminderProperty() {
         return confirmDeleteReminder;
+    }
+
+    public static BooleanProperty concatenateMemosProperty() {
+        return concatenateMemos;
     }
 
     public static BooleanProperty useAccountingTermsProperty() {
