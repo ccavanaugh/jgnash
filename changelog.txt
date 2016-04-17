@@ -23,8 +23,6 @@ Budgeting
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
 
-Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account. Use a non-printing character for automatic merge
-
 Change the base highlight color for the FX interface
 
 Release 2.23.0
