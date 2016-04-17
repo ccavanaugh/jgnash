@@ -348,7 +348,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public BigDecimal getAmount(final Account account) {
         BigDecimal balance = BigDecimal.ZERO;
 
-        Lock l = getLock().readLock();
+        final Lock l = getLock().readLock();
         l.lock();
 
         try {
@@ -436,7 +436,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         List<TransactionEntry> list = null;
 
-        Lock l = getLock().readLock();
+        final Lock l = getLock().readLock();
         l.lock();
 
         try {
@@ -450,6 +450,25 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         return list;
     }
 
+    private List<TransactionEntry> getTransactionEntries(final Account account) {
+        final List<TransactionEntry> list = new ArrayList<>();
+
+        final Lock l = getLock().readLock();
+        l.lock();
+
+        try {
+            list.addAll(transactionEntries.stream()
+                    .filter(transactionEntry -> transactionEntry.getCreditAccount().equals(account)
+                            || transactionEntry.getDebitAccount().equals(account)).collect(Collectors.toList()));
+        } finally {
+            l.unlock();
+        }
+
+        return list;
+    }
+
+
+
     /**
      * Return a list of transaction entries with the given tag
      *
@@ -460,7 +479,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     List<TransactionEntry> getTransactionEntriesByTag(final TransactionTag tag) {
         List<TransactionEntry> list = new ArrayList<>();
 
-        Lock l = getLock().readLock();
+        final Lock l = getLock().readLock();
         l.lock();
 
         try {
@@ -530,6 +549,16 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
             return memo;
         }
         return getTransactionEntries().get(0).getMemo();
+    }
+
+    /**
+     * Returns the concatenated memo given an Account.
+     * @param account base account to generate a memo for
+     * @return Concatenated string of split entry memos
+     */
+    @NotNull
+    public String getMemo(final Account account) {
+        return getMemo(getTransactionEntries(account));
     }
 
     /**
