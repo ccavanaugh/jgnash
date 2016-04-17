@@ -58,6 +58,11 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private static final transient String EMPTY = "";
 
     /**
+     * If the memo consists of only the summation symbol, and
+     */
+    public static final transient String CONCATENATE = "Ʃ";
+
+    /**
      * Date of entry from form entry, used for sort order
      */
     LocalDate date = LocalDate.now();
@@ -97,6 +102,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      */
     @Column(columnDefinition = "VARCHAR(1024)")
     private String memo;
+
+    private transient String concatMemo;
 
     /**
      * Transaction entries
@@ -513,9 +520,46 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @NotNull
     public String getMemo() {
         if (memo != null) {
+            if (isMemoConcatenated()) {
+                if (concatMemo == null) {
+                    concatMemo = getMemo(getTransactionEntries());
+                }
+                return concatMemo;
+            }
+
             return memo;
         }
         return getTransactionEntries().get(0).getMemo();
+    }
+
+    /**
+     * Builds a concatenated memo given a list of TransactionEntries
+     *
+     * @param transEntries List of {@code TransactionEntry}
+     * @return concatenated memo
+     */
+    public static String getMemo(final List<TransactionEntry> transEntries) {
+        String concatenatedMemo = EMPTY;
+
+        final List<String> memoList = new ArrayList<>();
+
+        // Create an ordered list of unique memos
+        transEntries.stream().filter(transactionEntry
+                -> !memoList.contains(transactionEntry.getMemo())).forEachOrdered(transactionEntry
+                -> memoList.add(transactionEntry.getMemo()));
+
+        for (int i = 0; i < memoList.size(); i++) {
+            concatenatedMemo = concatenatedMemo + memoList.get(i);
+            if (i < memoList.size() - 1) {
+                concatenatedMemo = concatenatedMemo + ", ";
+            }
+        }
+
+        return concatenatedMemo;
+    }
+
+    public boolean isMemoConcatenated() {
+        return CONCATENATE.equals(memo);
     }
 
     public void setMemo(final String memo) {

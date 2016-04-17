@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -34,6 +36,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
+import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
@@ -64,6 +67,8 @@ public class SlipController extends AbstractSlipController {
 
     private TransactionEntry modEntry = null;
 
+    private final BooleanProperty concatenatedProperty = new SimpleBooleanProperty();
+
     @FXML
     @Override
     public void initialize() {
@@ -82,6 +87,8 @@ public class SlipController extends AbstractSlipController {
 
         amountField.editableProperty().bind(transactionEntriesProperty.emptyProperty());
         accountExchangePane.disableProperty().bind(transactionEntriesProperty.emptyProperty().not());
+
+        memoTextField.disableProperty().bind(concatenatedProperty);
     }
 
     void setSlipType(final SlipType slipType) {
@@ -100,6 +107,9 @@ public class SlipController extends AbstractSlipController {
 
         modTrans = transaction; // save reference to old transaction
         modTrans = attachmentPane.modifyTransaction(modTrans);
+
+        // Set state of memo concatenation
+        concatenatedProperty.setValue(modTrans.isMemoConcatenated());
 
         if (!canModifyTransaction(transaction) && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
             for (final TransactionEntry entry : transaction.getTransactionEntries()) {
@@ -141,7 +151,8 @@ public class SlipController extends AbstractSlipController {
 
             transaction.setDate(date);
             transaction.setNumber(numberComboBox.getValue());
-            transaction.setMemo(memoTextField.getText());
+            transaction.setMemo(Options.concatenateMemosProperty().get() ? Transaction.CONCATENATE
+                    : memoTextField.getText());
             transaction.setPayee(payeeTextField.getText());
 
             transaction.addTransactionEntries(transactionEntriesProperty);
@@ -272,6 +283,9 @@ public class SlipController extends AbstractSlipController {
     public void clearForm() {
         super.clearForm();
 
+        // Not yet a split transaction
+        concatenatedProperty.setValue(false);
+
         transactionEntriesProperty.clear();   // clear an old transaction entries
 
         modEntry = null;
@@ -324,6 +338,14 @@ public class SlipController extends AbstractSlipController {
         splitsDialog.show(slipType, () -> {
             transactionEntriesProperty.setAll(splitsDialog.getTransactionEntries());
             amountField.setDecimal(splitsDialog.getBalance().abs());
+
+            // If valid splits exist and the user has requested concatenation, show a preview of what will happen
+            concatenatedProperty.setValue(Options.concatenateMemosProperty().get()
+                    && transactionEntriesProperty.size() > 0);
+
+            if (concatenatedProperty.get()) {
+                memoTextField.setText(Transaction.getMemo(transactionEntriesProperty));
+            }
         });
     }
 }
