@@ -24,6 +24,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 
+import javafx.scene.control.CheckBox;
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Transaction;
@@ -36,6 +37,7 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.util.Nullable;
 
+import jgnash.util.ResourceUtils;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
@@ -49,14 +51,15 @@ public class AccountRegisterReport extends DynamicJasperReport {
     AccountComboBox accountComboBox;
 
     @FXML
+    private CheckBox showSplitsCheckBox;
+
+    @FXML
     private DatePickerEx startDatePicker;
 
     @FXML
     private DatePickerEx endDatePicker;
 
     private ReportModel reportModel = new ReportModel();
-
-    private boolean showSplits;
 
     @FXML
     private void initialize() {
@@ -87,11 +90,18 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
     private class ReportModel extends AbstractReportTableModel {
 
+        final String split = ResourceUtils.getString("Button.Splits");
+
+        Account account;
+
         final ObservableList<Row> rows = FXCollections.observableArrayList();
 
         final FilteredList<Row> filteredList = new FilteredList<>(rows);
 
         void loadAccount(@Nullable final Account account) {
+            this.account = account;
+
+            final boolean showSplits = showSplitsCheckBox.isSelected();
 
             rows.clear();
 
@@ -138,23 +148,58 @@ public class AccountRegisterReport extends DynamicJasperReport {
         public Object getValueAt(int rowIndex, int columnIndex) {
             return filteredList.get(rowIndex).getValueAt(columnIndex);
         }
-    }
 
-    private class Row {
-        private Transaction transaction;
+        private class Row {
+            private Transaction transaction;
 
-        private TransactionEntry transactionEntry;
+            private TransactionEntry transactionEntry;
 
-        Row(final Transaction transaction, final int entry) {
-            this.transaction = transaction;
+            Row(final Transaction transaction, final int entry) {
+                this.transaction = transaction;
 
-            if (entry >= 0) {
-                transactionEntry = transaction.getTransactionEntries().get(entry);
+                if (entry >= 0) {
+                    transactionEntry = transaction.getTransactionEntries().get(entry);
+                }
             }
-        }
 
-        Object getValueAt(int columnIndex) {
-            return null;
+            Object getValueAt(int columnIndex) {
+                if (transactionEntry == null) {
+                    switch (columnIndex) {
+                        case 0:
+                            return transaction.getLocalDate();
+                        case 1:
+                            return transaction.getNumber();
+                        case 2:
+                            return transaction.getPayee();
+                        case 3:
+                            return transaction.getMemo(account);
+                        case 4:
+                            if (transaction.getTransactionType() == TransactionType.SPLITENTRY) {
+                                return "[ " + transaction.size() + " " + split + " ]";
+                            } else {
+                                final TransactionEntry entry = transaction.getTransactionEntries().get(0);
+
+                                if (entry.getCreditAccount() != account) {
+                                    return entry.getCreditAccount().getName();
+                                }
+                            }
+
+                        default:
+                            return null;
+                    }
+                } else {
+                    switch (columnIndex) {
+                        case 4:
+                            if (account != transactionEntry.getCreditAccount()) {
+                                return transactionEntry.getCreditAccount().getName();
+                            } else {
+                                return transactionEntry.getDebitAccount().getName();
+                            }
+                        default:
+                            return null;
+                    }
+                }
+            }
         }
     }
 }
