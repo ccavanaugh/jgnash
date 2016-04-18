@@ -17,20 +17,20 @@
  */
 package jgnash.ui.register.table;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.util.ResourceUtils;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * Generic register table model.
  * 
  * @author Craig Cavanaugh
  */
-public class RegisterTableModel extends AbstractRegisterTableModel {
+class RegisterTableModel extends AbstractRegisterTableModel {
 
     static final String split = ResourceUtils.getString("Button.Splits");
 
@@ -66,7 +66,7 @@ public class RegisterTableModel extends AbstractRegisterTableModel {
             case 2:
                 return t.getPayee();
             case 3:
-                return t.getMemo();
+                return t.getMemo(getAccount());
             case 4:
                 if (t instanceof InvestmentTransaction) {
                     return ((InvestmentTransaction) t).getInvestmentAccount().getName();

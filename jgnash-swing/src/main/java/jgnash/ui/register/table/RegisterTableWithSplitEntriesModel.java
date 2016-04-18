@@ -88,7 +88,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
                 if (showDetail) {
                     return null;
                 }
-                return wrapper.transaction.getMemo();
+                return wrapper.transaction.getMemo(getAccount());
             case 4:
                 if (wrapper.entry != null && showDetail) {
                     TransactionEntry _t = wrapper.entry;

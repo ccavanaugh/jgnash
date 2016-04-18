@@ -289,7 +289,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         // handles any exchange rate that may exist
         amountField.setDecimal(t.getAmount(getAccount()).abs());
 
-        memoField.setText(t.getMemo());
+        memoField.setText(t.getMemo(getAccount()));
         payeeField.setText(t.getPayee());
         numberField.setText(t.getNumber());
         datePanel.setDate(t.getLocalDate());
