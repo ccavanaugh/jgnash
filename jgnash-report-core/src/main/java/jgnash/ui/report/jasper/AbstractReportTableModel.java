@@ -71,19 +71,21 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
      * @param columnIndex column to check
      * @return String representing the longest value
      */
-    public String getColumnPrototypeValueAt(final int columnIndex) {
+    String getColumnPrototypeValueAt(final int columnIndex) {
 
-        int groupColumn = getGroupColumn();
+        final int groupColumn = getGroupColumn();
 
         String longest = "";
 
         if (getColumnClass(columnIndex).isAssignableFrom(BigDecimal.class)) {
 
             // does the column need to be summed
-            boolean sum = getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM || getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL || getColumnStyle(columnIndex) == ColumnStyle.AMOUNT_SUM;
+            boolean sum = getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM ||
+                    getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL
+                    || getColumnStyle(columnIndex) == ColumnStyle.AMOUNT_SUM;
 
             // mapping to sum groups
-            HashMap<String, BigDecimal> groupMap = new HashMap<>();
+            final HashMap<String, BigDecimal> groupMap = new HashMap<>();
 
             // number format to use
             NumberFormat nf;
@@ -103,11 +105,11 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
             BigDecimal total = BigDecimal.ZERO; // end total
 
             for (int i = 0; i < getRowCount(); i++) {
-                BigDecimal value = (BigDecimal) getValueAt(i, columnIndex);
+                final BigDecimal value = (BigDecimal) getValueAt(i, columnIndex);
 
                 if (value != null) {
 
-                    String prototype = nf.format(value);
+                    final String prototype = nf.format(value);
 
                     // look and individual values
                     if (prototype.length() > longest.length()) {
@@ -119,9 +121,9 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
                     }
 
                     if (groupColumn >= 0) {
-                        String group = (String) getValueAt(i, groupColumn);
+                        final String group = (String) getValueAt(i, groupColumn);
 
-                        BigDecimal o = groupMap.get(group);
+                        final BigDecimal o = groupMap.get(group);
                         if (o != null) {
                             groupMap.put(group, o.add(value));
                         } else {
@@ -136,7 +138,7 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
                     longest = nf.format(total);
                 }
 
-                for (BigDecimal value : groupMap.values()) {
+                for (final BigDecimal value : groupMap.values()) {
                     if (nf.format(value).length() > longest.length()) { // look at group totals
                         longest = nf.format(value);
                     }
@@ -145,7 +147,7 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
         } else if (getColumnStyle(columnIndex) == ColumnStyle.STRING) {
             for (int i = 0; i < getRowCount(); i++) {
-                String val = (String) getValueAt(i, columnIndex);
+                final String val = (String) getValueAt(i, columnIndex);
 
                 if (val != null && val.length() > longest.length()) {
                     longest = val;
@@ -156,10 +158,10 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
             for (int i = 0; i < getRowCount(); i++) {
                 try {
-                    LocalDate date = (LocalDate) getValueAt(i, columnIndex);
+                    final LocalDate date = (LocalDate) getValueAt(i, columnIndex);
 
                     if (date != null) {
-                        String val = dateTimeFormatter.format(date);
+                        final String val = dateTimeFormatter.format(date);
                         if (val.length() > longest.length()) {
                             longest = val;
                         }
