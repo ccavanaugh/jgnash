@@ -55,6 +55,7 @@
             <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
         </Menu>
         <Menu text="%Menu.Account.Name">
+            <MenuItem text="%Menu.AccountRegister.Name" onAction="#handleDisplayAccountRegisterReport"/>
             <MenuItem text="%Menu.NetWorth.Name" onAction="#handleDisplayNetWorthReport"/>
             <MenuItem text="%Menu.BalanceSheet.Name" onAction="#handleDisplayBalanceSheetReport"/>
             <MenuItem text="%Menu.ProfitLoss.Name" onAction="#handleDisplayProfitLossReport"/>

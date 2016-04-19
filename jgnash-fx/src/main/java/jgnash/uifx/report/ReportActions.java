@@ -48,6 +48,18 @@ public class ReportActions {
     private static final String LAST_DIR = "lastDir";
     private static final String FORCE_CURRENCY = "forceCurrency";
 
+    public static void displayAccountRegisterReport() {
+        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
+                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+                        ResourceUtils.getString("Title.AccountRegister"));
+
+        reportPair.getController().loadReportController("AccountRegisterReport.fxml");
+        reportPair.getStage().show();
+
+        // Preserve size and location
+        StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class);
+    }
+
     public static void displayIncomeExpensePieChart() {
         final FXMLUtils.Pair<IncomeExpensePieChartDialogController> pair =
                 FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePieChartDialog.fxml"),
@@ -85,7 +97,7 @@ public class ReportActions {
         reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), ProfitLossReportController.class);
     }
 
     public static void displayBalanceSheetReport() {
@@ -109,7 +121,7 @@ public class ReportActions {
         reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), NetWorthReportController.class);
     }
 
     public static void exportProfitLossReport() {
