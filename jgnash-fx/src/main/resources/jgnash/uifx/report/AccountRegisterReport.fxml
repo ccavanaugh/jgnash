@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.DatePickerEx?>
+
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="jgnash.uifx.report.AccountRegisterReportController" styleClass="form, dialog">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <GridPane styleClass="form">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <Label text="%Label.StartDate"/>
+        <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1"/>
+        <Label text="%Label.EndDate" GridPane.columnIndex="2"/>
+        <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3"/>
+    </GridPane>
+
+    <GridPane styleClass="form" GridPane.rowIndex="1">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+    </GridPane>
+</GridPane>

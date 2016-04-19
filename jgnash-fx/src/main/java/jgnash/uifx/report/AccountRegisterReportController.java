@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.report.jasper;
+package jgnash.uifx.report;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,6 +37,7 @@ import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.report.jasper.DynamicJasperReport;
 import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -48,7 +49,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  *
  * @author Craig Cavanaugh
  */
-public class AccountRegisterReport extends DynamicJasperReport {
+public class AccountRegisterReportController extends DynamicJasperReport {
 
     @FXML
     AccountComboBox accountComboBox;
