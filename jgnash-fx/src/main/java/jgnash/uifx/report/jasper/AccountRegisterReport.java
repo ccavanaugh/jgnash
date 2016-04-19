@@ -17,15 +17,17 @@
  */
 package jgnash.uifx.report.jasper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.CheckBox;
+
 import jgnash.engine.Account;
+import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
@@ -35,9 +37,10 @@ import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.Nullable;
-
 import jgnash.util.ResourceUtils;
+
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
@@ -90,6 +93,8 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
     private class ReportModel extends AbstractReportTableModel {
 
+        private boolean sumAmounts;
+
         final String split = ResourceUtils.getString("Button.Splits");
 
         Account account;
@@ -98,7 +103,15 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
         final FilteredList<Row> filteredList = new FilteredList<>(rows);
 
+        String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
+
+        ColumnStyle[] columnStyles = new ColumnStyle[] {ColumnStyle.SHORT_DATE, ColumnStyle.STRING, ColumnStyle.STRING,
+                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
+                ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
+
         void loadAccount(@Nullable final Account account) {
+            this.sumAmounts = filteredList.getPredicate() == null;
+
             this.account = account;
 
             final boolean showSplits = showSplitsCheckBox.isSelected();
@@ -106,6 +119,8 @@ public class AccountRegisterReport extends DynamicJasperReport {
             rows.clear();
 
             if (account != null) {
+                columnNames = RegisterFactory.getColumnNames(account.getAccountType());
+
                 for (Transaction transaction : account.getSortedTransactionList()) {
                     if (showSplits && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
                         List<TransactionEntry> transactionEntries = transaction.getTransactionEntries();
@@ -126,12 +141,20 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
         @Override
         public ColumnStyle getColumnStyle(int columnIndex) {
-            return null;
+            if (sumAmounts && columnIndex == columnNames.length) {
+                return ColumnStyle.GROUP_NO_HEADER;
+            }
+
+            return columnStyles[columnIndex];
         }
 
         @Override
         public ColumnHeaderStyle getColumnHeaderStyle(int columnIndex) {
-            return null;
+            if (sumAmounts && columnIndex == columnNames.length) {
+                return ColumnHeaderStyle.LEFT;
+            }
+
+            return ColumnHeaderStyle.LEFT;
         }
 
         @Override
@@ -141,7 +164,18 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
         @Override
         public int getColumnCount() {
-            return 0;
+            if (sumAmounts) {
+                return columnNames.length + 1;
+            }
+            return columnNames.length;
+        }
+
+        @Override
+        public String getColumnName(final int columnIndex) {
+            if (sumAmounts && columnIndex == getColumnCount()) {
+                return "group";
+            }
+            return columnNames[columnIndex];
         }
 
         @Override
@@ -150,12 +184,16 @@ public class AccountRegisterReport extends DynamicJasperReport {
         }
 
         private class Row {
-            private Transaction transaction;
-
+            private final Transaction transaction;
+            private final BigDecimal amount;
+            private final int signum;
             private TransactionEntry transactionEntry;
+
 
             Row(final Transaction transaction, final int entry) {
                 this.transaction = transaction;
+                amount = transaction.getAmount(account);
+                signum = amount.signum();
 
                 if (entry >= 0) {
                     transactionEntry = transaction.getTransactionEntries().get(entry);
@@ -163,6 +201,7 @@ public class AccountRegisterReport extends DynamicJasperReport {
             }
 
             Object getValueAt(int columnIndex) {
+
                 if (transactionEntry == null) {
                     switch (columnIndex) {
                         case 0:
@@ -183,7 +222,20 @@ public class AccountRegisterReport extends DynamicJasperReport {
                                     return entry.getCreditAccount().getName();
                                 }
                             }
-
+                        case 5:
+                            return transaction.getReconciled(account);
+                        case 6:
+                            if (signum >= 0) {
+                                return amount;
+                            }
+                            return null;
+                        case 7:
+                            if (signum < 0) {
+                                return amount.abs();
+                            }
+                            return null;
+                        case 8:
+                            return account.getBalanceAt(transaction);
                         default:
                             return null;
                     }
@@ -195,6 +247,18 @@ public class AccountRegisterReport extends DynamicJasperReport {
                             } else {
                                 return transactionEntry.getDebitAccount().getName();
                             }
+                        case 5:
+                            return transaction.getReconciled(account);
+                        case 6:
+                            if (signum >= 0) {
+                                return amount;
+                            }
+                            return null;
+                        case 7:
+                            if (signum < 0) {
+                                return amount.abs();
+                            }
+                            return null;
                         default:
                             return null;
                     }
