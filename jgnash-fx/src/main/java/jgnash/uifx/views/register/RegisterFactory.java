@@ -150,7 +150,7 @@ public class RegisterFactory {
         // Utility class
     }
 
-    public static String[] getGainLossSplitColumnName() {
+    static String[] getGainLossSplitColumnName() {
         String[] names; // reference to the correct column names
 
         if (Options.useAccountingTermsProperty().get()) {
@@ -162,7 +162,7 @@ public class RegisterFactory {
         return names;
     }
 
-    public static String[] getSplitColumnNames(@NotNull final AccountType accountType) {
+    static String[] getSplitColumnNames(@NotNull final AccountType accountType) {
         String[] names; // reference to the correct column names
 
         if (Options.useAccountingTermsProperty().get()) {
