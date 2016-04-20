@@ -18,7 +18,10 @@
 package jgnash.uifx.report;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.prefs.Preferences;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,23 +66,47 @@ public class AccountRegisterReportController extends DynamicJasperReport {
     @FXML
     private DatePickerEx endDatePicker;
 
-    private ReportModel reportModel = new ReportModel();
+    private static final String SHOW_SPLITS = "showSplits";
 
     @FXML
     private void initialize() {
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            reportModel.loadAccount(newValue);
+            handleRefresh();
         });
+
+        showSplitsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            handleRefresh();
+        });
+    }
+
+    private void handleRefresh() {
+        final Preferences preferences = getPreferences();
+
+        preferences.putBoolean(SHOW_SPLITS, showSplitsCheckBox.isSelected());
+
+        if (refreshCallBackProperty().get() != null) {
+            refreshCallBackProperty().get().run();
+        }
+    }
+
+    private ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
+        ReportModel model = new ReportModel();
+        model.loadAccount(accountComboBox.getValue());
+
+        return model;
     }
 
     @Override
     public JasperPrint createJasperPrint(boolean formatForCSV) {
-        return null;
+        return createJasperPrint(createReportModel(startDatePicker.getValue(), endDatePicker.getValue()), formatForCSV);
     }
 
     @Override
     public String getReportName() {
-        return accountComboBox.getValue().getName();
+        if (accountComboBox.getValue() != null) {
+            return accountComboBox.getValue().getName();
+        }
+        return "";
     }
 
     @Override
@@ -94,7 +121,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
     private class ReportModel extends AbstractReportTableModel {
 
-        private boolean sumAmounts;
+        private boolean sumAmounts = false;
 
         final String split = ResourceUtils.getString("Button.Splits");
 
@@ -104,6 +131,8 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         final FilteredList<Row> filteredList = new FilteredList<>(rows);
 
+        private final Predicate ALWAYS_TRUE = filteredList.getPredicate();
+
         String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
 
         ColumnStyle[] columnStyles = new ColumnStyle[] {ColumnStyle.SHORT_DATE, ColumnStyle.STRING, ColumnStyle.STRING,
@@ -111,16 +140,16 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
         void loadAccount(@Nullable final Account account) {
-            this.sumAmounts = filteredList.getPredicate() == null;
+            this.sumAmounts = filteredList.getPredicate() != ALWAYS_TRUE;
 
             this.account = account;
 
             final boolean showSplits = showSplitsCheckBox.isSelected();
 
-            rows.clear();
-
             if (account != null) {
                 columnNames = RegisterFactory.getColumnNames(account.getAccountType());
+
+                rows.clear();
 
                 for (Transaction transaction : account.getSortedTransactionList()) {
                     if (showSplits && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
@@ -155,7 +184,11 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 return ColumnHeaderStyle.LEFT;
             }
 
-            return ColumnHeaderStyle.LEFT;
+            if (columnIndex < 6) {
+                return ColumnHeaderStyle.LEFT;
+            }
+
+            return ColumnHeaderStyle.RIGHT;
         }
 
         @Override
@@ -177,6 +210,27 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 return "group";
             }
             return columnNames[columnIndex];
+        }
+
+        @Override
+        public Class<?> getColumnClass(final int columnIndex) {
+
+            if (columnIndex == getColumnCount()) { // group column
+                return String.class;
+            }
+
+            switch (columnIndex) {
+                case 0:
+                    return LocalDate.class;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    return String.class;
+                default:
+                    return BigDecimal.class;
+            }
         }
 
         @Override
@@ -224,7 +278,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                                 }
                             }
                         case 5:
-                            return transaction.getReconciled(account);
+                            return transaction.getReconciled(account).toString();
                         case 6:
                             if (signum >= 0) {
                                 return amount;
@@ -249,7 +303,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                                 return transactionEntry.getDebitAccount().getName();
                             }
                         case 5:
-                            return transaction.getReconciled(account);
+                            return transaction.getReconciled(account).toString();
                         case 6:
                             if (signum >= 0) {
                                 return amount;
