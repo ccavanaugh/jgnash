@@ -32,6 +32,7 @@ import javafx.scene.control.CheckBox;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionType;
@@ -70,13 +71,24 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
     @FXML
     private void initialize() {
+        refreshAccount(accountComboBox.getValue());
+
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            refreshAccount(newValue);
             handleRefresh();
         });
 
         showSplitsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             handleRefresh();
         });
+    }
+
+    private void refreshAccount(final Account account) {
+        if (account != null) {
+            if (account.getTransactionCount() > 0) {
+                startDatePicker.setValue(account.getTransactionAt(0).getLocalDate());
+            }
+        }
     }
 
     private void handleRefresh() {
@@ -151,7 +163,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
                 rows.clear();
 
-                for (Transaction transaction : account.getSortedTransactionList()) {
+                for (final Transaction transaction : account.getSortedTransactionList()) {
                     if (showSplits && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
                         List<TransactionEntry> transactionEntries = transaction.getTransactionEntries();
                         for (int i = 0; i < transactionEntries.size(); i++) {
@@ -278,7 +290,8 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                                 }
                             }
                         case 5:
-                            return transaction.getReconciled(account).toString();
+                            return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
+                                    ? transaction.getReconciled(account).toString() : null;
                         case 6:
                             if (signum >= 0) {
                                 return amount;
@@ -303,7 +316,8 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                                 return transactionEntry.getDebitAccount().getName();
                             }
                         case 5:
-                            return transaction.getReconciled(account).toString();
+                            return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
+                                    ? transaction.getReconciled(account).toString() : null;
                         case 6:
                             if (signum >= 0) {
                                 return amount;
