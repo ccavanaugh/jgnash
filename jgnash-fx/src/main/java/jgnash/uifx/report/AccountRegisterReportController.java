@@ -43,6 +43,7 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.jasper.DynamicJasperReport;
 import jgnash.uifx.views.register.RegisterFactory;
+import jgnash.util.DateUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
@@ -81,12 +82,21 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         showSplitsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             handleRefresh();
         });
+
+        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            handleRefresh();
+        });
+
+        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            handleRefresh();
+        });
     }
 
     private void refreshAccount(final Account account) {
         if (account != null) {
             if (account.getTransactionCount() > 0) {
                 startDatePicker.setValue(account.getTransactionAt(0).getLocalDate());
+                endDatePicker.setValue(LocalDate.now());
             }
         }
     }
@@ -102,10 +112,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
     }
 
     private ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
-        ReportModel model = new ReportModel();
-        model.loadAccount(accountComboBox.getValue());
-
-        return model;
+        return new ReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(), startDate, endDate);
     }
 
     @Override
@@ -131,13 +138,15 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         return rb.getString("Word.Totals");
     }
 
-    private class ReportModel extends AbstractReportTableModel {
+    private static class ReportModel extends AbstractReportTableModel {
+
+        final private boolean showSplits;
 
         private boolean sumAmounts = false;
 
         final String split = ResourceUtils.getString("Button.Splits");
 
-        Account account;
+        private final Account account;
 
         final ObservableList<Row> rows = FXCollections.observableArrayList();
 
@@ -151,12 +160,32 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
-        void loadAccount(@Nullable final Account account) {
-            this.sumAmounts = filteredList.getPredicate() != ALWAYS_TRUE;
-
+        ReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate, final LocalDate endDate) {
             this.account = account;
+            this.showSplits = showSplits;
 
-            final boolean showSplits = showSplitsCheckBox.isSelected();
+            filteredList.setPredicate(new TransactionAfterDatePredicate(startDate).and(new TransactionBeforeDatePredicate(endDate)));
+
+            loadAccount();
+        }
+
+        @Override
+        public boolean isColumnFixedWidth(final int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        void loadAccount() {
+            // FIXME
+            //this.sumAmounts = filteredList.getPredicate() != ALWAYS_TRUE;
 
             if (account != null) {
                 columnNames = RegisterFactory.getColumnNames(account.getAccountType());
@@ -165,6 +194,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
                 for (final Transaction transaction : account.getSortedTransactionList()) {
                     if (showSplits && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
+                        rows.add(new Row(transaction, -1));
                         List<TransactionEntry> transactionEntries = transaction.getTransactionEntries();
                         for (int i = 0; i < transactionEntries.size(); i++) {
                             rows.add(new Row(transaction, i));
@@ -178,7 +208,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         @Override
         public CurrencyNode getCurrency() {
-            return accountComboBox.getValue().getCurrencyNode();
+            return account.getCurrencyNode();
         }
 
         @Override
@@ -248,6 +278,34 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             return filteredList.get(rowIndex).getValueAt(columnIndex);
+        }
+
+        class TransactionAfterDatePredicate implements Predicate<Row> {
+
+            private final LocalDate localDate;
+
+            TransactionAfterDatePredicate(final LocalDate localDate) {
+                this.localDate = localDate;
+            }
+
+            @Override
+            public boolean test(final Row row) {
+                return DateUtils.after(row.transaction.getLocalDate(), localDate);
+            }
+        }
+
+        class TransactionBeforeDatePredicate implements Predicate<Row> {
+
+            private final LocalDate localDate;
+
+            TransactionBeforeDatePredicate(final LocalDate localDate) {
+                this.localDate = localDate;
+            }
+
+            @Override
+            public boolean test(final Row row) {
+                return DateUtils.before(row.transaction.getLocalDate(), localDate);
+            }
         }
 
         private class Row {
