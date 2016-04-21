@@ -193,7 +193,8 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 rows.clear();
 
                 for (final Transaction transaction : account.getSortedTransactionList()) {
-                    if (showSplits && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
+                    if (showSplits && transaction.getTransactionType() == TransactionType.SPLITENTRY
+                            && transaction.getCommonAccount() == account) {
                         rows.add(new Row(transaction, -1));
                         List<TransactionEntry> transactionEntries = transaction.getTransactionEntries();
                         for (int i = 0; i < transactionEntries.size(); i++) {
@@ -317,12 +318,15 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
             Row(final Transaction transaction, final int entry) {
                 this.transaction = transaction;
-                amount = transaction.getAmount(account);
-                signum = amount.signum();
 
                 if (entry >= 0) {
                     transactionEntry = transaction.getTransactionEntries().get(entry);
+                    amount = transactionEntry.getAmount(account);
+                } else {
+                    amount = transaction.getAmount(account);
                 }
+
+                signum = amount.signum();
             }
 
             Object getValueAt(int columnIndex) {
@@ -337,7 +341,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                             return transaction.getPayee();
                         case 3:
                             return transaction.getMemo(account);
-                        case 4:
+                        case 4: // TODO, handle split with non-common account
                             if (transaction.getTransactionType() == TransactionType.SPLITENTRY) {
                                 return "[ " + transaction.size() + " " + split + " ]";
                             } else {
@@ -365,14 +369,13 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                         default:
                             return null;
                     }
-                } else {
+                } else {    // detailed split
                     switch (columnIndex) {
                         case 4:
-                            if (account != transactionEntry.getCreditAccount()) {
-                                return transactionEntry.getCreditAccount().getName();
-                            } else {
-                                return transactionEntry.getDebitAccount().getName();
+                            if (transactionEntry.getCreditAccount() != account) {
+                                return "   - " + transactionEntry.getCreditAccount().getName();
                             }
+                            return "   - " + transactionEntry.getDebitAccount().getName();
                         case 5:
                             return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
                                     ? transaction.getReconciled(account).toString() : null;
