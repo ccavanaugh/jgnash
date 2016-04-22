@@ -17,19 +17,12 @@
  */
 package jgnash.uifx.report;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.prefs.Preferences;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
@@ -47,8 +40,14 @@ import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
-
 import net.sf.jasperreports.engine.JasperPrint;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
+import java.util.prefs.Preferences;
 
 /**
  * Account Register Report
@@ -95,6 +94,14 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         });
 
         endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            handleRefresh();
+        });
+
+        payeeFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            handleRefresh();
+        });
+
+        memoFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             handleRefresh();
         });
     }
@@ -178,7 +185,9 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                     && (payeeFilter != null && !payeeFilter.isEmpty());
 
             filteredList.setPredicate(new TransactionAfterDatePredicate(startDate)
-                    .and(new TransactionBeforeDatePredicate(endDate)));
+                    .and(new TransactionBeforeDatePredicate(endDate))
+                    .and(new MemoPredicate(memoFilter))
+                    .and(new PayeePredicate(payeeFilter)));
 
             loadAccount();
         }
@@ -317,6 +326,34 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             @Override
             public boolean test(final Row row) {
                 return DateUtils.before(row.transaction.getLocalDate(), localDate);
+            }
+        }
+
+        class PayeePredicate implements Predicate<Row> {
+
+            private final String filter;
+
+            PayeePredicate(final String payee) {
+                filter = payee;
+            }
+
+            @Override
+            public boolean test(final Row row) {
+                return row.transaction.getPayee().toLowerCase(Locale.getDefault()).contains(filter);
+            }
+        }
+
+        class MemoPredicate implements Predicate<Row> {
+
+            private final String filter;
+
+            MemoPredicate(final String memo) {
+                filter = memo;
+            }
+
+            @Override
+            public boolean test(final Row row) {
+                return row.transaction.getMemo().toLowerCase(Locale.getDefault()).contains(filter);
             }
         }
 
