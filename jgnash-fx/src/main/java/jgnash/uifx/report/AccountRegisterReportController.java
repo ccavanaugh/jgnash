@@ -28,6 +28,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -55,6 +56,12 @@ import net.sf.jasperreports.engine.JasperPrint;
  * @author Craig Cavanaugh
  */
 public class AccountRegisterReportController extends DynamicJasperReport {
+
+    @FXML
+    private TextField memoFilterTextField;
+
+    @FXML
+    private TextField payeeFilterTextField;
 
     @FXML
     AccountComboBox accountComboBox;
@@ -112,12 +119,16 @@ public class AccountRegisterReportController extends DynamicJasperReport {
     }
 
     private ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
-        return new ReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(), startDate, endDate);
+        return new ReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(), startDate, endDate,
+                memoFilterTextField.getText(), payeeFilterTextField.getText());
     }
 
     @Override
     public JasperPrint createJasperPrint(boolean formatForCSV) {
-        return createJasperPrint(createReportModel(startDatePicker.getValue(), endDatePicker.getValue()), formatForCSV);
+        if (accountComboBox.getValue() != null) {
+            return createJasperPrint(createReportModel(startDatePicker.getValue(), endDatePicker.getValue()), formatForCSV);
+        }
+        return null;
     }
 
     @Override
@@ -152,19 +163,22 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         final FilteredList<Row> filteredList = new FilteredList<>(rows);
 
-        private final Predicate ALWAYS_TRUE = filteredList.getPredicate();
-
         String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
 
         ColumnStyle[] columnStyles = new ColumnStyle[] {ColumnStyle.SHORT_DATE, ColumnStyle.STRING, ColumnStyle.STRING,
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
-        ReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate, final LocalDate endDate) {
+        ReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate,
+                    final LocalDate endDate, final String memoFilter, final String payeeFilter) {
             this.account = account;
             this.showSplits = showSplits;
 
-            filteredList.setPredicate(new TransactionAfterDatePredicate(startDate).and(new TransactionBeforeDatePredicate(endDate)));
+            sumAmounts = (memoFilter != null && !memoFilter.isEmpty())
+                    && (payeeFilter != null && !payeeFilter.isEmpty());
+
+            filteredList.setPredicate(new TransactionAfterDatePredicate(startDate)
+                    .and(new TransactionBeforeDatePredicate(endDate)));
 
             loadAccount();
         }
@@ -184,9 +198,6 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         }
 
         void loadAccount() {
-            // FIXME
-            //this.sumAmounts = filteredList.getPredicate() != ALWAYS_TRUE;
-
             if (account != null) {
                 columnNames = RegisterFactory.getColumnNames(account.getAccountType());
 
@@ -329,7 +340,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 signum = amount.signum();
             }
 
-            Object getValueAt(int columnIndex) {
+            Object getValueAt(final int columnIndex) {
 
                 if (transactionEntry == null) {
                     switch (columnIndex) {

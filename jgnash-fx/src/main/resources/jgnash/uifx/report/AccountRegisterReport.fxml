@@ -8,6 +8,7 @@
 
 <?import javafx.scene.control.CheckBox?>
 <?import jgnash.uifx.control.AccountComboBox?>
+<?import javafx.scene.control.TextField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="jgnash.uifx.report.AccountRegisterReportController" styleClass="form, dialog">
     <columnConstraints>
@@ -20,12 +21,12 @@
 
     <GridPane styleClass="form">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="105" maxWidth="105"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="105" maxWidth="105"/>
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-            <ColumnConstraints hgrow="NEVER"/>
-            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-            <ColumnConstraints hgrow="NEVER"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
@@ -41,13 +42,15 @@
 
     <GridPane styleClass="form" GridPane.rowIndex="1">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-            <ColumnConstraints hgrow="NEVER"/>
-            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" maxWidth="200"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" maxWidth="200"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
+
+        <TextField fx:id="memoFilterTextField" promptText="%ToolTip.FilterMemo"/>
+        <TextField fx:id="payeeFilterTextField" promptText="%ToolTip.FilterPayee" GridPane.columnIndex="1"/>
     </GridPane>
+
 </GridPane>
