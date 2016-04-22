@@ -56,8 +56,8 @@ public class ReportActions {
         reportPair.getController().loadReportController("AccountRegisterReport.fxml");
         reportPair.getStage().show();
 
-        // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class);
+        // Preserve size and location   //TODO Bounds listener is enforce too large of a size
+        //StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class);
     }
 
     public static void displayIncomeExpensePieChart() {
