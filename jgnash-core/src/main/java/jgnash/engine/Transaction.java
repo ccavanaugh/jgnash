@@ -574,8 +574,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         // Create an ordered list of unique memos
         transEntries.stream().filter(transactionEntry
-                -> !memoList.contains(transactionEntry.getMemo())).forEachOrdered(transactionEntry
-                -> memoList.add(transactionEntry.getMemo()));
+                -> !transactionEntry.getMemo().isEmpty() && !memoList.contains(transactionEntry.getMemo()))
+                .forEachOrdered(transactionEntry -> memoList.add(transactionEntry.getMemo()));
 
         for (int i = 0; i < memoList.size(); i++) {
             concatenatedMemo = concatenatedMemo + memoList.get(i);
