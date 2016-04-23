@@ -23,6 +23,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
@@ -40,6 +41,7 @@ import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
+
 import net.sf.jasperreports.engine.JasperPrint;
 
 import java.math.BigDecimal;
@@ -158,23 +160,25 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
     private static class ReportModel extends AbstractReportTableModel {
 
-        final private boolean showSplits;
+        private static final String INDENT_PREFIX = "  - ";
 
-        private boolean sumAmounts = false;
+        private final boolean showSplits;
 
-        final String split = ResourceUtils.getString("Button.Splits");
+        private final boolean sumAmounts;
+
+        private final String split = ResourceUtils.getString("Button.Splits");
 
         private final Account account;
 
-        final ObservableList<Row> rows = FXCollections.observableArrayList();
+        private final ObservableList<Row> rows = FXCollections.observableArrayList();
 
-        final FilteredList<Row> filteredList = new FilteredList<>(rows);
+        private final FilteredList<Row> filteredList = new FilteredList<>(rows);
 
-        String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
+        private String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
 
-        ColumnStyle[] columnStyles = new ColumnStyle[] {ColumnStyle.SHORT_DATE, ColumnStyle.STRING, ColumnStyle.STRING,
-                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
-                ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
+        private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.STRING,
+                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING,
+                ColumnStyle.SHORT_AMOUNT, ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
         ReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate,
                     final LocalDate endDate, final String memoFilter, final String payeeFilter) {
@@ -182,7 +186,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             this.showSplits = showSplits;
 
             sumAmounts = (memoFilter != null && !memoFilter.isEmpty())
-                    && (payeeFilter != null && !payeeFilter.isEmpty());
+                    || (payeeFilter != null && !payeeFilter.isEmpty());
 
             filteredList.setPredicate(new TransactionAfterDatePredicate(startDate)
                     .and(new TransactionBeforeDatePredicate(endDate))
@@ -233,16 +237,20 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         }
 
         @Override
-        public ColumnStyle getColumnStyle(int columnIndex) {
+        public ColumnStyle getColumnStyle(final int columnIndex) {
+
+            // Override defaults is summing the accounts
             if (sumAmounts && columnIndex == columnNames.length) {
                 return ColumnStyle.GROUP_NO_HEADER;
+            } else if (columnStyles[columnIndex] == ColumnStyle.SHORT_AMOUNT && sumAmounts) {
+                return ColumnStyle.AMOUNT_SUM;
             }
 
             return columnStyles[columnIndex];
         }
 
         @Override
-        public ColumnHeaderStyle getColumnHeaderStyle(int columnIndex) {
+        public ColumnHeaderStyle getColumnHeaderStyle(final int columnIndex) {
             if (sumAmounts && columnIndex == columnNames.length) {
                 return ColumnHeaderStyle.LEFT;
             }
@@ -269,7 +277,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         @Override
         public String getColumnName(final int columnIndex) {
-            if (sumAmounts && columnIndex == getColumnCount()) {
+            if (sumAmounts && columnIndex == columnNames.length) {
                 return "group";
             }
             return columnNames[columnIndex];
@@ -278,7 +286,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         @Override
         public Class<?> getColumnClass(final int columnIndex) {
 
-            if (columnIndex == getColumnCount()) { // group column
+            if (sumAmounts && columnIndex == columnNames.length) { // group column
                 return String.class;
             }
 
@@ -297,7 +305,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         }
 
         @Override
-        public Object getValueAt(int rowIndex, int columnIndex) {
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
             return filteredList.get(rowIndex).getValueAt(columnIndex);
         }
 
@@ -379,6 +387,10 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
             Object getValueAt(final int columnIndex) {
 
+                if (sumAmounts && columnIndex == columnNames.length) {
+                    return "group";
+                }
+
                 if (transactionEntry == null) {
                     switch (columnIndex) {
                         case 0:
@@ -425,9 +437,9 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                             return transactionEntry.getMemo();
                         case 4:
                             if (transactionEntry.getCreditAccount() != account) {
-                                return "   - " + transactionEntry.getCreditAccount().getName();
+                                return INDENT_PREFIX + transactionEntry.getCreditAccount().getName();
                             }
-                            return "   - " + transactionEntry.getDebitAccount().getName();
+                            return INDENT_PREFIX + transactionEntry.getDebitAccount().getName();
                         case 5:
                             return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
                                     ? transaction.getReconciled(account).toString() : null;
