@@ -46,6 +46,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
@@ -212,7 +213,12 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         void loadAccount() {
             if (account != null) {
-                columnNames = RegisterFactory.getColumnNames(account.getAccountType());
+                if (sumAmounts) {   // dump the running total column as it does not make sense when filtering
+                    final String[] base = RegisterFactory.getColumnNames(account.getAccountType());
+                    columnNames = Arrays.copyOfRange(base, 0, base.length - 1);
+                } else {
+                    columnNames = RegisterFactory.getColumnNames(account.getAccountType());
+                }
 
                 rows.clear();
 
