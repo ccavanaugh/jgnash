@@ -58,7 +58,7 @@ public class ReportActions {
         final AccountRegisterReportController controller
                 = reportPair.getController().loadReportController("AccountRegisterReport.fxml");
 
-        if (account != null && controller != null) {
+        if (controller != null) {
             controller.setAccount(account);
         }
 

@@ -81,8 +81,6 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
     @FXML
     private void initialize() {
-        refreshAccount(accountComboBox.getValue());
-
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             refreshAccount(newValue);
             handleRefresh();
@@ -109,8 +107,12 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         });
     }
 
-    public void setAccount(final Account account) {
-        accountComboBox.setValue(account);
+    public void setAccount(@Nullable final Account account) {
+        if (account != null) {
+            accountComboBox.setValue(account);
+        } else {    // load the selected account
+            refreshAccount(accountComboBox.getValue());
+        }
     }
 
     private void refreshAccount(final Account account) {
