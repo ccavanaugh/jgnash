@@ -340,15 +340,20 @@ public final class JasperViewerDialogController {
         }, UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
 
-    public void loadReportController(final String fxmlResource) {
+    public <T extends DynamicJasperReport> T loadReportController(final String fxmlResource) {
         try {
             final FXMLLoader fxmlLoader =
                     new FXMLLoader(PortfolioReportController.class.getResource(fxmlResource), resources);
 
             reportControllerPaneProperty.setValue(fxmlLoader.load());
-            reportProperty.setValue(fxmlLoader.getController());
+
+            T controller = fxmlLoader.getController();
+            reportProperty.setValue(controller);
+
+            return controller;
         } catch (IOException e) {
             StaticUIMethods.displayException(e);
+            return null;
         }
     }
 

@@ -109,6 +109,10 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         });
     }
 
+    public void setAccount(final Account account) {
+        accountComboBox.setValue(account);
+    }
+
     private void refreshAccount(final Account account) {
         if (account != null) {
             if (account.getTransactionCount() > 0) {

@@ -47,6 +47,14 @@
                     <Tooltip text="%ToolTip.ExportTransactions"/>
                 </tooltip>
             </Button>
+            <Button text="%Button.Print" onAction="#handleAccountReport">
+                <graphic>
+                    <FontAwesomeLabel glyphName="PRINT"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ToolTip.PrintRegRep"/>
+                </tooltip>
+            </Button>
         </ToolBar>
     </top>
     <center>

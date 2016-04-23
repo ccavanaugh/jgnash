@@ -17,21 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeView;
-import javafx.scene.layout.StackPane;
-import jgnash.engine.*;
-import jgnash.uifx.control.AbstractAccountTreeController;
-import jgnash.uifx.skin.StyleClass;
-import jgnash.uifx.util.AccountTypeFilter;
-import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.views.accounts.StaticAccountsMethods;
-import jgnash.util.DefaultDaemonThreadFactory;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +25,27 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeView;
+import javafx.scene.layout.StackPane;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
+import jgnash.uifx.control.AbstractAccountTreeController;
+import jgnash.uifx.report.ReportActions;
+import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.util.AccountTypeFilter;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.accounts.StaticAccountsMethods;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Top level view for account registers
@@ -215,6 +221,11 @@ public class RegisterViewController {
 
             RegisterActions.exportTransactions(account, startDate, endDate);
         }
+    }
+
+    @FXML
+    private  void handleAccountReport() {
+        ReportActions.displayAccountRegisterReport(registerPaneController.accountProperty().get());
     }
 
     private static final class DisabledTreeCell extends TreeCell<Account> {

@@ -25,6 +25,7 @@ import java.util.prefs.Preferences;
 
 import javafx.stage.FileChooser;
 
+import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -36,6 +37,7 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -48,12 +50,18 @@ public class ReportActions {
     private static final String LAST_DIR = "lastDir";
     private static final String FORCE_CURRENCY = "forceCurrency";
 
-    public static void displayAccountRegisterReport() {
+    public static void displayAccountRegisterReport(@Nullable final Account account) {
         final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
                 FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
                         ResourceUtils.getString("Title.AccountRegister"));
 
-        reportPair.getController().loadReportController("AccountRegisterReport.fxml");
+        final AccountRegisterReportController controller
+                = reportPair.getController().loadReportController("AccountRegisterReport.fxml");
+
+        if (account != null && controller != null) {
+            controller.setAccount(account);
+        }
+
         reportPair.getStage().show();
 
         // Preserve size and location   //TODO Bounds listener is enforce too large of a size
