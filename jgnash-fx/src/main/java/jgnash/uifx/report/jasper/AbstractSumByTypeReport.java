@@ -41,6 +41,7 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.ui.report.Row;
 import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
@@ -192,19 +193,6 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         return createJasperPrint(createReportModel(startDatePicker.getValue(), endDatePicker.getValue()), formatForCSV);
     }
 
-    /**
-     * Wraps a row of table data into one object
-     */
-    protected static abstract class Row {
-        /**
-         * Returns the value given a column index
-         * 
-         * @param columnIndex
-         *            column index
-         * @return column value
-         */
-        public abstract Object getValueAt(final int columnIndex);
-    }
 
     protected class ReportModel extends AbstractReportTableModel {
 
@@ -314,7 +302,7 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             return ColumnHeaderStyle.RIGHT;
         }
 
-        private class AccountRow extends Row {
+        private class AccountRow implements Row {
 
             final Account account;
 
