@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -48,6 +49,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -422,7 +424,8 @@ public final class JasperViewerDialogController {
     }
 
     private void refresh() {
-        pagePane.getChildren().clear();
+        final List<Node> children = pagePane.getChildren();
+        children.clear();
 
         for (int i = 0; i < pageCount.get(); i++) {
             try {
@@ -431,13 +434,14 @@ public final class JasperViewerDialogController {
 
                 final ImageView imageView = new ImageView(SwingFXUtils.toFXImage(bufferedImage, null));
                 imageView.setEffect(dropShadow);
-                setPageIndex(0);
-                pagePane.getChildren().add(imageView);
 
+                children.add(imageView);
             } catch (final JRException ex) {
                 StaticUIMethods.displayException(ex);
             }
         }
+
+        setPageIndex(0);
     }
 
     private void updateStatus(final String status) {
