@@ -25,8 +25,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
@@ -50,8 +52,10 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 /**
  * Account Register Report
@@ -79,6 +83,11 @@ public class AccountRegisterReportController extends DynamicJasperReport {
     private DatePickerEx endDatePicker;
 
     private static final String SHOW_SPLITS = "showSplits";
+
+    private static final String INDENT_PREFIX = "  - ";
+
+    private static final String SPLIT = ResourceUtils.getString("Button.Splits");
+
 
     @FXML
     private void initialize() {
@@ -135,9 +144,20 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         }
     }
 
-    private ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
-        return new ReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(), startDate, endDate,
-                memoFilterTextField.getText(), payeeFilterTextField.getText());
+    private AbstractReportTableModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
+        final Account account = accountComboBox.getValue();
+
+        // disable the payee filter if an investment account is selected
+        payeeFilterTextField.setDisable(account.getAccountType().getAccountGroup() == AccountGroup.INVEST);
+        showSplitsCheckBox.setDisable(account.getAccountType().getAccountGroup() == AccountGroup.INVEST);
+
+        if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+            return new InvestmentAccountReportModel(accountComboBox.getValue(), startDate, endDate,
+                    memoFilterTextField.getText());
+        } else {
+            return new AccountReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(),
+                    startDate, endDate, memoFilterTextField.getText(), payeeFilterTextField.getText());
+        }
     }
 
     @Override
@@ -166,15 +186,11 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         return rb.getString("Word.Totals");
     }
 
-    private static class ReportModel extends AbstractReportTableModel {
-
-        private static final String INDENT_PREFIX = "  - ";
+    private static class AccountReportModel extends AbstractReportTableModel {
 
         private final boolean showSplits;
 
         private final boolean sumAmounts;
-
-        private final String split = ResourceUtils.getString("Button.Splits");
 
         private final Account account;
 
@@ -188,8 +204,8 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
-        ReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate,
-                    final LocalDate endDate, final String memoFilter, final String payeeFilter) {
+        AccountReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate,
+                           final LocalDate endDate, final String memoFilter, final String payeeFilter) {
             this.account = account;
             this.showSplits = showSplits;
 
@@ -218,7 +234,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             }
         }
 
-        void loadAccount() {
+        private void loadAccount() {
             if (account != null) {
                 if (sumAmounts) {   // dump the running total column as it does not make sense when filtering
                     final String[] base = RegisterFactory.getColumnNames(account.getAccountType());
@@ -226,8 +242,6 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 } else {
                     columnNames = RegisterFactory.getColumnNames(account.getAccountType());
                 }
-
-                transactionRows.clear();
 
                 for (final Transaction transaction : account.getSortedTransactionList()) {
                     if (showSplits && transaction.getTransactionType() == TransactionType.SPLITENTRY
@@ -363,7 +377,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                         case 4:
                             if (transaction.getTransactionType() == TransactionType.SPLITENTRY
                                     && transaction.getCommonAccount() == account) {
-                                return "[ " + transaction.size() + " " + split + " ]";
+                                return "[ " + transaction.size() + " " + SPLIT + " ]";
                             } else {
                                 final TransactionEntry entry = transaction.getTransactionEntries().get(0);
 
@@ -415,6 +429,164 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                         default:
                             return null;
                     }
+                }
+            }
+        }
+    }
+
+    private static class InvestmentAccountReportModel extends AbstractReportTableModel {
+
+        private final ResourceBundle resources = ResourceUtils.getBundle();
+
+        private final Account account;
+
+        private final ObservableList<Row<Transaction>> transactionRows = FXCollections.observableArrayList();
+
+        private final FilteredList<Row<Transaction>> filteredList = new FilteredList<>(transactionRows);
+
+        private String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
+
+        private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.STRING,
+                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
+                ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
+
+        InvestmentAccountReportModel(@Nullable final Account account, final LocalDate startDate,
+                                     final LocalDate endDate, final String memoFilter) {
+            this.account = account;
+
+            filteredList.setPredicate(new TransactionAfterDatePredicate(startDate)
+                    .and(new TransactionBeforeDatePredicate(endDate))
+                    .and(new MemoPredicate(memoFilter)));
+
+            loadAccount();
+        }
+
+        @Override
+        public boolean isColumnFixedWidth(final int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                case 2:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private void loadAccount() {
+            if (account != null) {
+                columnNames = RegisterFactory.getColumnNames(account.getAccountType());
+
+                transactionRows.addAll(account.getSortedTransactionList().stream()
+                        .map(TransactionRow::new).collect(Collectors.toList()));
+            }
+        }
+
+        @Override
+        public CurrencyNode getCurrency() {
+            return account.getCurrencyNode();
+        }
+
+        @Override
+        public ColumnStyle getColumnStyle(final int columnIndex) {
+            return columnStyles[columnIndex];
+        }
+
+        @Override
+        public ColumnHeaderStyle getColumnHeaderStyle(final int columnIndex) {
+            if (columnIndex < 5) {
+                return ColumnHeaderStyle.LEFT;
+            }
+
+            return ColumnHeaderStyle.RIGHT;
+        }
+
+        @Override
+        public int getRowCount() {
+            return filteredList.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public String getColumnName(final int columnIndex) {
+            return columnNames[columnIndex];
+        }
+
+        @Override
+        public Class<?> getColumnClass(final int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return LocalDate.class;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    return String.class;
+                default:
+                    return BigDecimal.class;
+            }
+        }
+
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            return filteredList.get(rowIndex).getValueAt(columnIndex);
+        }
+
+        private class TransactionRow extends Row<Transaction> {
+
+            TransactionRow(final Transaction transaction) {
+                super(transaction);
+            }
+
+            @Override
+            public Object getValueAt(final int columnIndex) {
+                final Transaction transaction = getValue();
+
+                switch (columnIndex) {
+                    case 0:
+                        return transaction.getLocalDate();
+                    case 1:
+                        if (transaction instanceof InvestmentTransaction) {
+                            return transaction.getTransactionType().toString();
+                        } else if (transaction.getAmount(account).signum() > 0) {
+                            return resources.getString("Item.CashDeposit");
+                        } else {
+                            return resources.getString("Item.CashWithdrawal");
+                        }
+                    case 2:
+                        if (transaction instanceof InvestmentTransaction) {
+                            return ((InvestmentTransaction) transaction).getSecurityNode().getSymbol();
+                        }
+                        return null;
+                    case 3:
+                        return transaction.getMemo(account);
+                    case 4:
+                        return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
+                                ? transaction.getReconciled(account).toString() : null;
+                    case 5:
+                        if (transaction instanceof InvestmentTransaction) {
+                            return ((InvestmentTransaction) transaction).getQuantity();
+                        }
+                        return null;
+                    case 6:
+                        if (transaction instanceof InvestmentTransaction) {
+                            return ((InvestmentTransaction) transaction).getPrice();
+                        }
+                        return null;
+                    case 7:
+                        if (transaction instanceof InvestmentTransaction) {
+                            return ((InvestmentTransaction) transaction).getNetCashValue();
+                        }
+                        return transaction.getAmount(account);
+                    default:
+                        return null;
                 }
             }
         }
