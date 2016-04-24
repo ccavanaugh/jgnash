@@ -46,7 +46,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
     @FXML
     private Label marketValueLabel;
 
-    final private double[] PREF_COLUMN_WEIGHTS = { 0, 50, 50, 0, 0, 0, 0 };
+    final private double[] PREF_COLUMN_WEIGHTS = {0, 33, 33, 34, 0, 0, 0, 0};
 
     @FXML
     @Override
@@ -76,27 +76,31 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         typeColumn.setCellValueFactory(param -> new TransactionTypeWrapper(param.getValue()));
         typeColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
-        final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[2]);
-        memoColumn.setCellValueFactory(param -> new TransactionSymbolWrapper(param.getValue()));
+        final TableColumn<Transaction, String> investmentColumn = new TableColumn<>(columnNames[2]);
+        investmentColumn.setCellValueFactory(param -> new TransactionSymbolWrapper(param.getValue()));
+        investmentColumn.setCellFactory(cell -> new TransactionStringTableCell());
+
+        final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[3]);
+        memoColumn.setCellValueFactory(param -> new MemoWrapper(param.getValue()));
         memoColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
-        final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[3]);
+        final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[4]);
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
-        final TableColumn<Transaction, BigDecimal> quantityColumn = new TableColumn<>(columnNames[4]);
+        final TableColumn<Transaction, BigDecimal> quantityColumn = new TableColumn<>(columnNames[5]);
         quantityColumn.setCellValueFactory(param -> new QuantityProperty(param.getValue()));
         quantityColumn.setCellFactory(cell -> new InvestmentTransactionQuantityTableCell());
 
-        final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[5]);
+        final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[6]);
         priceColumn.setCellValueFactory(param -> new PriceProperty(param.getValue()));
         priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
 
-        final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[6]);
+        final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[7]);
         netColumn.setCellValueFactory(param -> new AmountProperty(param.getValue()));
         netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
 
-        tableView.getColumns().addAll(dateColumn, typeColumn, memoColumn, reconciledColumn, quantityColumn, priceColumn, netColumn);
+        tableView.getColumns().addAll(dateColumn, typeColumn, investmentColumn, memoColumn, reconciledColumn, quantityColumn, priceColumn, netColumn);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tableViewManager.setColumnFormatFactory(param -> {
@@ -132,9 +136,16 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
             if (t instanceof InvestmentTransaction) {
                 setValue(((InvestmentTransaction) t).getSecurityNode().getSymbol());
-            } else if (t.getAmount(accountProperty.get()).signum() > 0) {
-                setValue(t.getMemo());
+            } else {
+                setValue(null);
             }
+        }
+    }
+
+    private class MemoWrapper extends SimpleStringProperty {
+        MemoWrapper(final Transaction t) {
+            super();
+            setValue(t.getMemo());
         }
     }
 

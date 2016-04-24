@@ -104,8 +104,8 @@ public class RegisterFactory {
             rb.getString(COLUMN_BALANCE) };
 
     private static final String[] INVESTMENT_NAMES = { rb.getString(COLUMN_DATE), rb.getString(COLUMN_ACTION),
-            rb.getString(COLUMN_INVESTMENT), rb.getString(COLUMN_CLR), rb.getString(COLUMN_QUANTITY),
-            rb.getString(COLUMN_PRICE), rb.getString(COLUMN_TOTAL) };
+            rb.getString(COLUMN_INVESTMENT), rb.getString(COLUMN_MEMO), rb.getString(COLUMN_CLR),
+            rb.getString(COLUMN_QUANTITY), rb.getString(COLUMN_PRICE), rb.getString(COLUMN_TOTAL) };
 
     private static final String[] SPLIT_ACCOUNTING_NAMES = { rb.getString(COLUMN_ACCOUNT), rb.getString(COLUMN_CLR),
             rb.getString(COLUMN_MEMO), rb.getString(COLUMN_DEBIT), rb.getString(COLUMN_CREDIT),
