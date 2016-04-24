@@ -322,67 +322,10 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             return filteredList.get(rowIndex).getValueAt(columnIndex);
         }
 
-        class TransactionAfterDatePredicate implements Predicate<Row<Transaction>> {
-
-            private final LocalDate localDate;
-
-            TransactionAfterDatePredicate(final LocalDate localDate) {
-                this.localDate = localDate;
-            }
-
-            @Override
-            public boolean test(final Row<Transaction> transactionRow) {
-                return DateUtils.after(transactionRow.getValue().getLocalDate(), localDate);
-            }
-        }
-
-        class TransactionBeforeDatePredicate implements Predicate<Row<Transaction>> {
-
-            private final LocalDate localDate;
-
-            TransactionBeforeDatePredicate(final LocalDate localDate) {
-                this.localDate = localDate;
-            }
-
-            @Override
-            public boolean test(final Row<Transaction> transactionRow) {
-                return DateUtils.before(transactionRow.getValue().getLocalDate(), localDate);
-            }
-        }
-
-        class PayeePredicate implements Predicate<Row<Transaction>> {
-
-            private final String filter;
-
-            PayeePredicate(final String payee) {
-                filter = payee;
-            }
-
-            @Override
-            public boolean test(final Row<Transaction> transactionRow) {
-                return transactionRow.getValue().getPayee().toLowerCase(Locale.getDefault()).contains(filter);
-            }
-        }
-
-        class MemoPredicate implements Predicate<Row<Transaction>> {
-
-            private final String filter;
-
-            MemoPredicate(final String memo) {
-                filter = memo;
-            }
-
-            @Override
-            public boolean test(final Row<Transaction> transactionRow) {
-                return transactionRow.getValue().getMemo().toLowerCase(Locale.getDefault()).contains(filter);
-            }
-        }
-
         private class TransactionRow extends Row<Transaction> {
             private final BigDecimal amount;
             private final int signum;
-            private TransactionEntry transactionEntry;
-
+            private final TransactionEntry transactionEntry;
 
             TransactionRow(final Transaction transaction, final int entry) {
                 super(transaction);
@@ -391,6 +334,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                     transactionEntry = transaction.getTransactionEntries().get(entry);
                     amount = transactionEntry.getAmount(account);
                 } else {
+                    transactionEntry = null;
                     amount = transaction.getAmount(account);
                 }
 
@@ -473,6 +417,62 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                     }
                 }
             }
+        }
+    }
+
+    private static class TransactionBeforeDatePredicate implements Predicate<Row<Transaction>> {
+
+        private final LocalDate localDate;
+
+        TransactionBeforeDatePredicate(final LocalDate localDate) {
+            this.localDate = localDate;
+        }
+
+        @Override
+        public boolean test(final Row<Transaction> transactionRow) {
+            return DateUtils.before(transactionRow.getValue().getLocalDate(), localDate);
+        }
+    }
+
+    private static class TransactionAfterDatePredicate implements Predicate<Row<Transaction>> {
+
+        private final LocalDate localDate;
+
+        TransactionAfterDatePredicate(final LocalDate localDate) {
+            this.localDate = localDate;
+        }
+
+        @Override
+        public boolean test(final Row<Transaction> transactionRow) {
+            return DateUtils.after(transactionRow.getValue().getLocalDate(), localDate);
+        }
+    }
+
+    private static class MemoPredicate implements Predicate<Row<Transaction>> {
+
+        private final String filter;
+
+        MemoPredicate(final String memo) {
+            filter = memo;
+        }
+
+        @Override
+        public boolean test(final Row<Transaction> transactionRow) {
+            return transactionRow.getValue().getMemo().toLowerCase(Locale.getDefault()).contains(filter);
+        }
+    }
+
+    private static class PayeePredicate implements Predicate<Row<Transaction>> {
+
+        private final String filter;
+
+        PayeePredicate(final String payee) {
+            filter = payee;
+        }
+
+        @Override
+        public boolean test(final Row<Transaction> transactionRow) {
+            return transactionRow.getValue().getPayee().toLowerCase(Locale.getDefault()).contains(filter);
         }
     }
 }
