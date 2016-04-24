@@ -10,7 +10,6 @@ Mass selection of destination accounts for imported transactions.
 Info icon in a sell investment panel that calculate the estimated gains/loss for selling a transaction
 FIFO, and Lot performance calculations for securities. (http://groups.google.com/group/jgnash-user/browse_thread/thread/fe124ecf806857f3?hl=en)
 Moving option for a Transaction from one Register to other Register.
-Date filtering option for the Accounts view & Register view
 Hyperlink option from the results in the Reports and Graphs to the concerned Transactions of the Registers.
 Drill down of split entries in Split Transactions by right clicking on ledger view.
 Class/Tag option to Transaction entries. ( to categorize the Expense & Income further in more categorized way )
@@ -27,6 +26,7 @@ Change the base highlight color for the FX interface
 
 Release 2.23.0
 ----------------------
+04/24/16 Added the Account Register Report. (Fx)
 04/24/16 Added a Memo specific column to the investment register table and separated the Investment column (Fx)
 04/17/16 Added an option to the split entry dialog to automatically concatenate the memos of split transactions.
          This will reduce file size and reduced transaction entry effort. (Fx)
