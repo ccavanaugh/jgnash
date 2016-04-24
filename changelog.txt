@@ -26,7 +26,7 @@ Change the base highlight color for the FX interface
 
 Release 2.23.0
 ----------------------
-04/24/16 Display a wait indicator when a generating a large report
+04/24/16 Display a wait indicator when a generating a large report. (Fx)
 04/24/16 Added the Account Register Report. (Fx)
 04/24/16 Added a Memo specific column to the investment register table and separated the Investment column (Fx)
 04/17/16 Added an option to the split entry dialog to automatically concatenate the memos of split transactions.
