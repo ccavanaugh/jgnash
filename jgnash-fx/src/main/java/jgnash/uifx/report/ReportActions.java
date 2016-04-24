@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.Account;
@@ -50,6 +51,9 @@ public class ReportActions {
     private static final String LAST_DIR = "lastDir";
     private static final String FORCE_CURRENCY = "forceCurrency";
 
+    private static final int MIN_WIDTH = 640;
+    private static final int MIN_HEIGHT = 480;
+
     public static void displayAccountRegisterReport(@Nullable final Account account) {
         final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
                 FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
@@ -64,8 +68,14 @@ public class ReportActions {
 
         reportPair.getStage().show();
 
-        // Preserve size and location   //TODO Bounds listener is enforce too large of a size
-        //StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class);
+        // Preserve size and location
+        StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class);
+
+        // Override the default sizes
+        Platform.runLater(() -> {
+            reportPair.getStage().setMinWidth(MIN_WIDTH);
+            reportPair.getStage().setMinHeight(MIN_HEIGHT);
+        });
     }
 
     public static void displayIncomeExpensePieChart() {
@@ -106,6 +116,12 @@ public class ReportActions {
 
         // Preserve size and location
         StageUtils.addBoundsListener(reportPair.getStage(), ProfitLossReportController.class);
+
+        // Override the default sizes
+        Platform.runLater(() -> {
+            reportPair.getStage().setMinWidth(MIN_WIDTH);
+            reportPair.getStage().setMinHeight(MIN_HEIGHT);
+        });
     }
 
     public static void displayBalanceSheetReport() {
@@ -118,6 +134,12 @@ public class ReportActions {
 
         // Preserve size and location
         StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
+
+        // Override the default sizes
+        Platform.runLater(() -> {
+            reportPair.getStage().setMinWidth(MIN_WIDTH);
+            reportPair.getStage().setMinHeight(MIN_HEIGHT);
+        });
     }
 
     public static void displayNetWorthReport() {
@@ -130,6 +152,12 @@ public class ReportActions {
 
         // Preserve size and location
         StageUtils.addBoundsListener(reportPair.getStage(), NetWorthReportController.class);
+
+        // Override the default sizes
+        Platform.runLater(() -> {
+            reportPair.getStage().setMinWidth(MIN_WIDTH);
+            reportPair.getStage().setMinHeight(MIN_HEIGHT);
+        });
     }
 
     public static void exportProfitLossReport() {
