@@ -18,7 +18,7 @@
 <StackPane fx:id="stackPane" fx:controller="jgnash.uifx.report.jasper.JasperViewerDialogController"
            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <fx:define>
-        <DropShadow fx:id="dropShadow" color="grey" offsetX="2" offsetY="2"/>
+        <DropShadow fx:id="dropShadow" color="grey" offsetX="2" offsetY="2" blurType="ONE_PASS_BOX"/>
     </fx:define>
     <BorderPane>
         <top>
