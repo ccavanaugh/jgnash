@@ -17,12 +17,24 @@
  */
 package jgnash.ui.report;
 
+import jgnash.util.Nullable;
+
 /**
  * Support interface to wrap a row of table data into one object
  *
  * @author Craig Cavanaugh
  */
-public interface Row {
+public abstract class Row<T> {
+
+    private final T object;
+
+    public Row(@Nullable T object) {
+        this.object = object;
+    }
+
+    public T getValue() {
+        return object;
+    }
 
     /**
      * Returns the value given a column index
@@ -30,5 +42,5 @@ public interface Row {
      * @param columnIndex column index
      * @return column value
      */
-    Object getValueAt(final int columnIndex);
+    public abstract Object getValueAt(final int columnIndex);
 }

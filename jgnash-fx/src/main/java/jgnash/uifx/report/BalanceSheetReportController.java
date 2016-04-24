@@ -28,7 +28,6 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-
 import jgnash.ui.report.Row;
 import jgnash.uifx.report.jasper.AbstractSumByTypeReport;
 
@@ -93,7 +92,11 @@ public class BalanceSheetReportController extends AbstractSumByTypeReport {
     /**
      * Internal class to return a row the calculates the retained earnings for an account   
      */
-    private class RetainedEarningsRow implements Row {
+    private class RetainedEarningsRow extends Row<Void> {
+
+        RetainedEarningsRow() {
+            super(null);
+        }
 
         /**
          * Returns values for retained earnings

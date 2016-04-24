@@ -178,9 +178,9 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         private final Account account;
 
-        private final ObservableList<TransactionRow> transactionRows = FXCollections.observableArrayList();
+        private final ObservableList<Row<Transaction>> transactionRows = FXCollections.observableArrayList();
 
-        private final FilteredList<TransactionRow> filteredList = new FilteredList<>(transactionRows);
+        private final FilteredList<Row<Transaction>> filteredList = new FilteredList<>(transactionRows);
 
         private String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
 
@@ -322,7 +322,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             return filteredList.get(rowIndex).getValueAt(columnIndex);
         }
 
-        class TransactionAfterDatePredicate implements Predicate<TransactionRow> {
+        class TransactionAfterDatePredicate implements Predicate<Row<Transaction>> {
 
             private final LocalDate localDate;
 
@@ -331,12 +331,12 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             }
 
             @Override
-            public boolean test(final TransactionRow transactionRow) {
-                return DateUtils.after(transactionRow.transaction.getLocalDate(), localDate);
+            public boolean test(final Row<Transaction> transactionRow) {
+                return DateUtils.after(transactionRow.getValue().getLocalDate(), localDate);
             }
         }
 
-        class TransactionBeforeDatePredicate implements Predicate<TransactionRow> {
+        class TransactionBeforeDatePredicate implements Predicate<Row<Transaction>> {
 
             private final LocalDate localDate;
 
@@ -345,12 +345,12 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             }
 
             @Override
-            public boolean test(final TransactionRow transactionRow) {
-                return DateUtils.before(transactionRow.transaction.getLocalDate(), localDate);
+            public boolean test(final Row<Transaction> transactionRow) {
+                return DateUtils.before(transactionRow.getValue().getLocalDate(), localDate);
             }
         }
 
-        class PayeePredicate implements Predicate<TransactionRow> {
+        class PayeePredicate implements Predicate<Row<Transaction>> {
 
             private final String filter;
 
@@ -359,12 +359,12 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             }
 
             @Override
-            public boolean test(final TransactionRow transactionRow) {
-                return transactionRow.transaction.getPayee().toLowerCase(Locale.getDefault()).contains(filter);
+            public boolean test(final Row<Transaction> transactionRow) {
+                return transactionRow.getValue().getPayee().toLowerCase(Locale.getDefault()).contains(filter);
             }
         }
 
-        class MemoPredicate implements Predicate<TransactionRow> {
+        class MemoPredicate implements Predicate<Row<Transaction>> {
 
             private final String filter;
 
@@ -373,20 +373,19 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             }
 
             @Override
-            public boolean test(final TransactionRow transactionRow) {
-                return transactionRow.transaction.getMemo().toLowerCase(Locale.getDefault()).contains(filter);
+            public boolean test(final Row<Transaction> transactionRow) {
+                return transactionRow.getValue().getMemo().toLowerCase(Locale.getDefault()).contains(filter);
             }
         }
 
-        private class TransactionRow implements Row {
-            private final Transaction transaction;
+        private class TransactionRow extends Row<Transaction> {
             private final BigDecimal amount;
             private final int signum;
             private TransactionEntry transactionEntry;
 
 
             TransactionRow(final Transaction transaction, final int entry) {
-                this.transaction = transaction;
+                super(transaction);
 
                 if (entry >= 0) {
                     transactionEntry = transaction.getTransactionEntries().get(entry);
@@ -404,6 +403,8 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 if (sumAmounts && columnIndex == columnNames.length) {
                     return "group";
                 }
+
+                final Transaction transaction = getValue();
 
                 if (transactionEntry == null) {
                     switch (columnIndex) {

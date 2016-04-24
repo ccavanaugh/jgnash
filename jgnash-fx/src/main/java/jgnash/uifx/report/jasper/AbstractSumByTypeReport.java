@@ -302,29 +302,27 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             return ColumnHeaderStyle.RIGHT;
         }
 
-        private class AccountRow implements Row {
-
-            final Account account;
+        private class AccountRow extends Row<Account> {
 
             AccountRow(final Account account) {
-                this.account = account;
+                super(account);
             }
 
             @Override
             public Object getValueAt(final int columnIndex) {
 
                 if (columnIndex == 0) { // account column
-                    return account.getName();
+                    return getValue().getName();
                 } else if (columnIndex == getColumnCount() - 1) { // group column
-                    return account.getAccountType().getAccountGroup().toString();
+                    return getValue().getAccountType().getAccountGroup().toString();
                 } else if (columnIndex > 0 && columnIndex <= dates.size()) {
                     if (runningTotal) {
-                        return account.getBalance(dates.get(columnIndex - 1), getCurrency());
+                        return getValue().getBalance(dates.get(columnIndex - 1), getCurrency());
                     } else {
                         final LocalDate startDate = dates.get(columnIndex - 1);
                         final LocalDate endDate = dates.get(columnIndex).minusDays(1);
 
-                        return account.getBalance(startDate, endDate, getCurrency()).negate();
+                        return getValue().getBalance(startDate, endDate, getCurrency()).negate();
                     }
                 }
                 return null;
