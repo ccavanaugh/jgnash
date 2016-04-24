@@ -67,6 +67,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.report.PortfolioReportController;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.main.MainApplication;
@@ -176,11 +177,16 @@ public final class JasperViewerDialogController {
     @FXML
     private Button saveButton;
 
+    @FXML
+    private StackPane stackPane;
+
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
     private ResourceBundle resources;
+
+    private BusyPane busyPane;
 
     private final SimpleObjectProperty<DynamicJasperReport> reportProperty = new SimpleObjectProperty<>();
 
@@ -200,6 +206,9 @@ public final class JasperViewerDialogController {
 
     @FXML
     private void initialize() {
+        busyPane = new BusyPane();
+        stackPane.getChildren().add(busyPane);
+
         screenResolution = Screen.getPrimary().getDpi();
 
         saveButton.disableProperty().bind(jasperPrintProperty.isNull());
@@ -335,7 +344,22 @@ public final class JasperViewerDialogController {
         // rate limit creation when print options are occurring quickly
         reportExecutor.schedule(() -> {
             if (reportExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
-                Platform.runLater(() -> jasperPrintProperty.setValue(dynamicJasperReport.createJasperPrint(false)));
+                final Task<Void> task = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        updateMessage(resources.getString("Message.CompilingReport"));
+                        updateProgress(-1, Long.MAX_VALUE);
+
+                        jasperPrintProperty.setValue(dynamicJasperReport.createJasperPrint(false));
+                        return null;
+                    }
+                };
+
+                Platform.runLater(() -> {
+                    busyPane.setTask(task);
+                    new Thread(task).start();
+                });
+
             }
         }, UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
