@@ -108,6 +108,7 @@ public class AccountTreeXMLFactory {
         xstream.omitField(Account.class, "accountBalance");
         xstream.omitField(Account.class, "reconciledBalance");
         xstream.omitField(Account.class, "attributes");
+        xstream.omitField(Account.class, "propertyMap");
 
         xstream.omitField(SecurityNode.class, "historyNodes");
         xstream.omitField(SecurityNode.class, "securityHistoryEvents");
