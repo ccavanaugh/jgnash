@@ -42,6 +42,8 @@ import jgnash.uifx.actions.DefaultCurrencyAction;
 import jgnash.uifx.actions.DefaultDateFormatAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.actions.ExecuteJavaScriptAction;
+import jgnash.uifx.actions.ExportAccountsAction;
+import jgnash.uifx.actions.ImportAccountsAction;
 import jgnash.uifx.actions.ImportOfxAction;
 import jgnash.uifx.actions.ImportQifAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
@@ -66,6 +68,12 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem importAccountsMenuItem;
+
+    @FXML
+    private MenuItem exportAccountsMenuItem;
 
     @FXML
     private Menu reportMenu;
@@ -121,6 +129,8 @@ public class MenuBarController implements MessageListener {
         transNumberListMenuItem.disableProperty().bind(disabled);
         importOfxMenuItem.disableProperty().bind(disabled);
         importQifMenuItem.disableProperty().bind(disabled);
+        importAccountsMenuItem.disableProperty().bind(disabled);
+        exportAccountsMenuItem.disableProperty().bind(disabled);
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageList().emptyProperty()));
 
@@ -397,5 +407,15 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleDisplayNetWorthReport() {
         ReportActions.displayNetWorthReport();
+    }
+
+    @FXML
+    private void handleImportAccountsAction() {
+        ImportAccountsAction.showAndWait();
+    }
+
+    @FXML
+    private void handleExportAccountsAction() {
+        ExportAccountsAction.showAndWait();
     }
 }

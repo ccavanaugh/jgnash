@@ -31,6 +31,11 @@
         <Menu text="%Menu.Import.Name">
             <MenuItem text="%Menu.ImportOfx.Name" fx:id="importOfxMenuItem" onAction="#handleImportOFXAction"/>
             <MenuItem text="%Menu.ImportQif.Name" fx:id="importQifMenuItem" onAction="#handleImportQIFAction"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="%Menu.ImportAccounts.Name"  fx:id="importAccountsMenuItem" onAction="#handleImportAccountsAction"/>
+        </Menu>
+        <Menu text="%Menu.Export.Name">
+            <MenuItem text="%Menu.ExportAccounts.Name"  fx:id="exportAccountsMenuItem" onAction="#handleExportAccountsAction"/>
         </Menu>
         <SeparatorMenuItem/>
         <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">

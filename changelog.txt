@@ -26,6 +26,7 @@ Change the base highlight color for the FX interface
 
 Release 2.23.0
 ----------------------
+04/25/16 Added Account structure import and export capability. (Fx)
 04/24/16 Display a wait indicator when a generating a large report. (Fx)
 04/24/16 Added the Account Register Report. (Fx)
 04/24/16 Added a Memo specific column to the investment register table and separated the Investment column (Fx)
