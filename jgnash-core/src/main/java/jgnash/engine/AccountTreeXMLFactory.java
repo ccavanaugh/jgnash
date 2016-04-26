@@ -109,6 +109,7 @@ public class AccountTreeXMLFactory {
         xstream.omitField(Account.class, "reconciledBalance");
         xstream.omitField(Account.class, "attributes");
         xstream.omitField(Account.class, "propertyMap");
+        xstream.omitField(Account.class, "amortizeObject");
 
         xstream.omitField(SecurityNode.class, "historyNodes");
         xstream.omitField(SecurityNode.class, "securityHistoryEvents");
@@ -252,8 +253,14 @@ public class AccountTreeXMLFactory {
          */
         private void fixCurrencies(final Engine engine, final Account account) {
 
+            // If an existing currency matches, assign it to the account
             engine.getCurrencies().stream().filter(currencyNode -> account.getCurrencyNode()
                     .matches(currencyNode)).forEach(account::setCurrencyNode);
+
+            // Need to persist the currency before the account if it does not exist within the database
+            if (!engine.getCurrencies().contains(account.getCurrencyNode())) {
+                engine.addCurrency(account.getCurrencyNode());
+            }
 
             // match SecurityNodes to prevent duplicates
             if (account.memberOf(AccountGroup.INVEST)) {
