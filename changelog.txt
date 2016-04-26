@@ -26,6 +26,7 @@ Change the base highlight color for the FX interface
 
 Release 2.23.0
 ----------------------
+04/26/16 Fixed import of an account tree when using a relational database. (Swing, Fx)
 04/25/16 Added Account structure import and export capability. (Fx)
 04/24/16 Display a wait indicator when a generating a large report. (Fx)
 04/24/16 Added the Account Register Report. (Fx)
