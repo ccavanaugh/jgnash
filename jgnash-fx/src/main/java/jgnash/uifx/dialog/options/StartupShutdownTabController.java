@@ -54,6 +54,9 @@ public class StartupShutdownTabController {
     private CheckBox openLastCheckBox;
 
     @FXML
+    private CheckBox checkForUpdatesCheckBox;
+
+    @FXML
     private void initialize() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -94,5 +97,7 @@ public class StartupShutdownTabController {
 
 
         openLastCheckBox.selectedProperty().bindBidirectional(Options.openLastProperty());
+
+        checkForUpdatesCheckBox.selectedProperty().bindBidirectional(Options.checkForUpdatesProperty());
     }
 }

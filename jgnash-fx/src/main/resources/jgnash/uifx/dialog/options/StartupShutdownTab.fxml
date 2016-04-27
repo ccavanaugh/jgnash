@@ -20,9 +20,11 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
             <CheckBox text="%Button.OpenLastOnStartup" fx:id="openLastCheckBox"/>
+            <CheckBox text="%Button.CheckForUpdates" fx:id="checkForUpdatesCheckBox" GridPane.rowIndex="1"/>
         </GridPane>
     </TitledPane>
 

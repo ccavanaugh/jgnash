@@ -49,6 +49,8 @@ public class Options {
 
     private static final String CASE_SENSITIVE = "autoCompleteIsCaseEnabled";
 
+    private static final String CHECK_UPDATES = "checkForUpdates";
+
     private static final String CONCATENATE_MEMOS = "concatenateMemos";
 
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
@@ -68,6 +70,8 @@ public class Options {
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
     private static final SimpleBooleanProperty useAccountingTerms;
+
+    private static final SimpleBooleanProperty checkForUpdates;
 
     private static final SimpleBooleanProperty confirmDeleteTransaction;
 
@@ -112,6 +116,7 @@ public class Options {
                 p.put(((SimpleStringProperty) observable).getName(), (String) newValue);
 
         useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
+        checkForUpdates = createBooleanProperty(CHECK_UPDATES, true);
         confirmDeleteTransaction = createBooleanProperty(CONFIRM_DELETE_TRANSACTION, true);
         confirmDeleteReminder = createBooleanProperty(CONFIRM_DELETE_REMINDER, true);
         rememberDate = createBooleanProperty(REMEMBER_DATE, true);
@@ -161,6 +166,10 @@ public class Options {
      */
     public static BooleanProperty confirmOnTransactionDeleteProperty() {
         return confirmDeleteTransaction;
+    }
+
+    public static BooleanProperty checkForUpdatesProperty() {
+        return checkForUpdates;
     }
 
     /**

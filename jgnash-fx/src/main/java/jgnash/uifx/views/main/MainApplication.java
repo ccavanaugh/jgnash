@@ -208,11 +208,13 @@ public class MainApplication extends Application implements MessageListener {
 
     private void checkForLatestRelease() {
         new Thread(() -> {
-            try {
-                Thread.sleep(BootEngineTask.FORCED_DELAY * 3);
-                Platform.runLater(new CheckReleaseTask());
-            } catch (InterruptedException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            if (Options.checkForUpdatesProperty().get()) {
+                try {
+                    Thread.sleep(BootEngineTask.FORCED_DELAY * 3);
+                    Platform.runLater(new CheckReleaseTask());
+                } catch (InterruptedException e) {
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
             }
         }).start();
     }
