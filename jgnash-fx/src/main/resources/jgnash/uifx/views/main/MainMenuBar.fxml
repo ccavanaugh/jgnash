@@ -58,6 +58,7 @@
         <Menu text="%Menu.Charts.Name">
             <MenuItem text="%Menu.IEBarChart.Name" onAction="#handleIncomeExpenseBarChart"/>
             <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
+            <MenuItem text="%Menu.PeriodicAccountBalance.Name" onAction="#handleDisplayAccountBalanceChart"/>
         </Menu>
         <Menu text="%Menu.Account.Name">
             <MenuItem text="%Menu.AccountRegister.Name" onAction="#handleDisplayAccountRegisterReport"/>

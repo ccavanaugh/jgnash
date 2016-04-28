@@ -390,6 +390,11 @@ public class MenuBarController implements MessageListener {
     }
 
     @FXML
+    private void handleDisplayAccountBalanceChart() {
+        ReportActions.displayAccountBalanceChart();
+    }
+
+    @FXML
     private void handleDisplayAccountRegisterReport() {
         ReportActions.displayAccountRegisterReport(null);
     }

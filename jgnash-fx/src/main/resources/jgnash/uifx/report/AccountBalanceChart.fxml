@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.control.DatePickerEx?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import jgnash.uifx.control.AccountComboBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.CheckBox?>
+<BorderPane fx:controller="jgnash.uifx.report.AccountBalanceChartController" minWidth="850" minHeight="600"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+      <ToolBar>
+          <Button text="%Button.SaveImage" onAction="#handleSaveAction">
+              <graphic>
+                  <FontAwesomeLabel glyphName="FILE_IMAGE_ALT"/>
+              </graphic>
+          </Button>
+          <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">
+              <graphic>
+                  <FontAwesomeLabel glyphName="CLIPBOARD"/>
+              </graphic>
+          </Button>
+          <Button text="%Button.Print" onAction="#handlePrintAction">
+              <graphic>
+                  <FontAwesomeLabel glyphName="PRINT"/>
+              </graphic>
+          </Button>
+      </ToolBar>
+    </top>
+    <center>
+        <GridPane styleClass="form, dialog">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="ALWAYS"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Label text="%Label.Account"/>
+            <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.columnSpan="7"/>
+
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="6">
+                <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts"/>
+            </HBox>
+
+            <Label text="%Label.StartDate" GridPane.rowIndex="2"/>
+            <DatePickerEx fx:id="startDatePicker"  GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="%Label.EndDate"  GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+            <Label text="%Label.Period"  GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+
+            <BarChart fx:id="barChart" title="%Title.IncomeExpenseBarChart" legendSide="RIGHT"
+                      GridPane.rowIndex="3" GridPane.columnSpan="7">
+                <xAxis>
+                    <CategoryAxis side="BOTTOM" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Currency" side="LEFT" />
+                </yAxis>
+            </BarChart>
+
+            <ButtonBar GridPane.rowIndex="4" GridPane.columnSpan="7">
+                <buttons>
+                    <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
+                            ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </center>
+</BorderPane>
+
+

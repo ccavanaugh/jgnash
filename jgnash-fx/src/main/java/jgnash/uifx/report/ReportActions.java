@@ -54,6 +54,14 @@ public class ReportActions {
     private static final int MIN_WIDTH = 640;
     private static final int MIN_HEIGHT = 480;
 
+    public static void displayAccountBalanceChart() {
+        final FXMLUtils.Pair<AccountBalanceChartController> pair =
+                FXMLUtils.load(IncomeExpenseBarChartDialogController.class.getResource("AccountBalanceChart.fxml"),
+                        ResourceUtils.getString("Title.AccountBalance"));
+
+        pair.getStage().show();
+    }
+
     public static void displayAccountRegisterReport(@Nullable final Account account) {
         final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
                 FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
