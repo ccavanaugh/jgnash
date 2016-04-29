@@ -41,7 +41,7 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.jasper.DynamicJasperReport;
 import jgnash.uifx.views.register.RegisterFactory;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 

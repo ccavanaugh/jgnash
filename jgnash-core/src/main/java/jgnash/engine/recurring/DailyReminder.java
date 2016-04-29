@@ -21,7 +21,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Entity;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * A daily reminder

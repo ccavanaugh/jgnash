@@ -34,7 +34,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**

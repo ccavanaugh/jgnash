@@ -31,7 +31,7 @@ import javafx.util.StringConverter;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.uifx.Options;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Extends and AreaChart to encapsulate generation of a SecurityNode chart

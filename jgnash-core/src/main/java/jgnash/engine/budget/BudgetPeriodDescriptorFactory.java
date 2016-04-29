@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jgnash.time.Period;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Factory class for generating descriptors

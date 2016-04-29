@@ -68,7 +68,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterFactory;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 

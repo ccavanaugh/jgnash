@@ -23,6 +23,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import jgnash.time.DateUtils;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

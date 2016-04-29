@@ -44,7 +44,7 @@ import jgnash.ui.components.FilteredAccountListComboBox;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;

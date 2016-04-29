@@ -42,7 +42,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**

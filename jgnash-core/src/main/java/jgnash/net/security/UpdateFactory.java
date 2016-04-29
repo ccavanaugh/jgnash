@@ -56,7 +56,7 @@ import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 

@@ -31,7 +31,7 @@ import javafx.util.Callback;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Investment Register Table with stats controller

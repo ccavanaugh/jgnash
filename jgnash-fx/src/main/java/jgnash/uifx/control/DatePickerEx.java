@@ -28,7 +28,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.input.KeyEvent;
 import javafx.util.converter.LocalDateStringConverter;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Enhanced DatePicker.  Adds short cuts for date entry with better input character filters

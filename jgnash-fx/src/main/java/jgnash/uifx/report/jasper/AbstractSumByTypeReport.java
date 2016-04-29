@@ -46,7 +46,7 @@ import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.uifx.control.DatePickerEx;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JasperPrint;

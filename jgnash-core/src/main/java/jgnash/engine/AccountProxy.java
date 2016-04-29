@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Proxy class to locate account balance behaviors. Depending on account type, summation of transaction types are

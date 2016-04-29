@@ -51,7 +51,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.checks.CheckLayout;
 import jgnash.engine.checks.CheckObject;
 import jgnash.text.BigDecimalToWords;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Check layout object
@@ -151,16 +151,16 @@ class PrintableCheckLayout implements Printable {
 
     public PageFormat getPageFormat() {
 
-        PrintRequestAttributeSet attrs = checkLayout.getPrintAttributes();
+        PrintRequestAttributeSet printAttributes = checkLayout.getPrintAttributes();
 
         if (pageFormat == null) { // create a default pageFormat
             PageFormat format = getPrinterJob().defaultPage();
             Paper paper = format.getPaper();
 
-            MediaSizeName media = (MediaSizeName) attrs.get(Media.class);
+            MediaSizeName media = (MediaSizeName) printAttributes.get(Media.class);
             MediaSize ms = MediaSize.getMediaSizeForName(media);
 
-            MediaPrintableArea ma = (MediaPrintableArea) attrs.get(MediaPrintableArea.class);
+            MediaPrintableArea ma = (MediaPrintableArea) printAttributes.get(MediaPrintableArea.class);
 
             if (ma != null) {
                 int INCH = MediaPrintableArea.INCH;
@@ -173,7 +173,7 @@ class PrintableCheckLayout implements Printable {
 
             format.setPaper(paper);
 
-            OrientationRequested or = (OrientationRequested) attrs.get(OrientationRequested.class);
+            OrientationRequested or = (OrientationRequested) printAttributes.get(OrientationRequested.class);
             if (or != null) {
                 if (or == OrientationRequested.LANDSCAPE) {
                     format.setOrientation(PageFormat.LANDSCAPE);

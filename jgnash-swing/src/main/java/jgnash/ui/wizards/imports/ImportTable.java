@@ -45,7 +45,7 @@ import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;

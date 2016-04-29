@@ -42,7 +42,7 @@ import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 /**

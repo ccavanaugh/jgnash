@@ -26,7 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;

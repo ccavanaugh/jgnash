@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.text.CommodityFormat;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JRDataSource;

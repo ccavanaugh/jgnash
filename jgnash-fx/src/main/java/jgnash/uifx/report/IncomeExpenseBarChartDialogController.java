@@ -48,7 +48,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Income and Expense Bar Chart

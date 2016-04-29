@@ -20,7 +20,7 @@ package jgnash.engine.xstream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 

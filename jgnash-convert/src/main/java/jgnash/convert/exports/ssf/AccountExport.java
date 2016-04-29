@@ -31,7 +31,7 @@ import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 

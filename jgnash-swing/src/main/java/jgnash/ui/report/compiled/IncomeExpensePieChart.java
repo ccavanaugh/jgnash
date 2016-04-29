@@ -48,7 +48,7 @@ import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.util.CursorUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;

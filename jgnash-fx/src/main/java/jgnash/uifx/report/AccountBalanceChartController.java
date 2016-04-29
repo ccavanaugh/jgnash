@@ -52,7 +52,7 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Periodic Account Balance Bar Chart

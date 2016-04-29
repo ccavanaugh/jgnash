@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.util;
+package jgnash.time;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -37,6 +37,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
+
+import jgnash.util.NotNull;
 
 /**
  * Static methods to make working with dates a bit easier

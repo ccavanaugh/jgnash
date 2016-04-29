@@ -23,7 +23,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import jgnash.time.Period;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 

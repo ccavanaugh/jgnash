@@ -40,7 +40,7 @@ import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 

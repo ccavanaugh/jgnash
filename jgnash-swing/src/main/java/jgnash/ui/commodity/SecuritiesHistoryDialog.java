@@ -70,7 +70,7 @@ import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.SecurityComboBox;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;

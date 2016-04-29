@@ -41,7 +41,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Security Node

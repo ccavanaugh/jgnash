@@ -27,7 +27,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.convert.imports.ofx.OfxTransaction;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 /**

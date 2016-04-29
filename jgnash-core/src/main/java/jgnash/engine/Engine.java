@@ -73,7 +73,7 @@ import jgnash.engine.recurring.RecurringIterator;
 import jgnash.engine.recurring.Reminder;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;

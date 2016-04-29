@@ -56,7 +56,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 

@@ -34,7 +34,7 @@ import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Register Table with stats controller

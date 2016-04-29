@@ -40,7 +40,7 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 

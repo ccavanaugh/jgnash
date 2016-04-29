@@ -28,7 +28,7 @@ import javafx.scene.control.ChoiceDialog;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainApplication;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**

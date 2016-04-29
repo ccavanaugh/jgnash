@@ -33,7 +33,7 @@ import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.register.TransactionDialog;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

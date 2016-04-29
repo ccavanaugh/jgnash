@@ -24,7 +24,7 @@ import javafx.scene.control.TableCell;
 
 import jgnash.engine.Transaction;
 import jgnash.uifx.skin.StyleClass;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * @author Craig Cavanaugh

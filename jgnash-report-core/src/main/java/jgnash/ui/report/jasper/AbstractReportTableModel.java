@@ -29,7 +29,7 @@ import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.text.CommodityFormat;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * Report model interface

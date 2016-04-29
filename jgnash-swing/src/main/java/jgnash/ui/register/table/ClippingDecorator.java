@@ -23,7 +23,7 @@ import javax.swing.event.TableModelListener;
 
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 /**

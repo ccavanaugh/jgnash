@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import javax.persistence.Entity;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * A monthly reminder / iterator. Dates get a little weird when iterating by DAY

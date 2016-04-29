@@ -52,7 +52,7 @@ import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;

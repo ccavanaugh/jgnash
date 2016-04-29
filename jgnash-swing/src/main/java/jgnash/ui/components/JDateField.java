@@ -34,7 +34,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * This is an extended JTextField for the entry of dates.<br>

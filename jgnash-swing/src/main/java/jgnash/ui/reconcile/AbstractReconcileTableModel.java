@@ -29,7 +29,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.table.PackableTableModel;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import javax.swing.table.AbstractTableModel;

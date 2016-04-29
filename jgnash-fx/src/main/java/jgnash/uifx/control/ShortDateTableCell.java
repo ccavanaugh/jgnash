@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 
 import javafx.scene.control.TableCell;
 
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 
 /**
  * {@code TableCell} for {@code Dates} formatted in a simplified manner

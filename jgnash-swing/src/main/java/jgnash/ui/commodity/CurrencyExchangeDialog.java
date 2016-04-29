@@ -71,7 +71,7 @@ import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.DateUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
