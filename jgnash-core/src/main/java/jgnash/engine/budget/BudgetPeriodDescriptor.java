@@ -22,6 +22,7 @@ import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+import jgnash.time.Period;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
@@ -52,11 +53,11 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
 
     final private String periodDescription;
 
-    final private BudgetPeriod budgetPeriod;
+    final private Period budgetPeriod;
 
     final private int budgetYear;
 
-    BudgetPeriodDescriptor(final LocalDate budgetDate, final int budgetYear, final BudgetPeriod budgetPeriod) {
+    BudgetPeriodDescriptor(final LocalDate budgetDate, final int budgetYear, final Period budgetPeriod) {
         Objects.requireNonNull(budgetPeriod);
         Objects.requireNonNull(budgetDate);
 
@@ -154,7 +155,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
         return periodDescription;
     }
 
-    public BudgetPeriod getBudgetPeriod() {
+    public Period getBudgetPeriod() {
         return budgetPeriod;
     }
 

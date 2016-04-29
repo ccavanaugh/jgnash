@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import jgnash.time.Period;
 import jgnash.util.DateUtils;
 
 /**
@@ -43,7 +44,7 @@ public final class BudgetPeriodDescriptorFactory {
     private BudgetPeriodDescriptorFactory() {
     }
 
-    public static List<BudgetPeriodDescriptor> getDescriptors(final int budgetYear, final BudgetPeriod budgetPeriod) {
+    public static List<BudgetPeriodDescriptor> getDescriptors(final int budgetYear, final Period budgetPeriod) {
         final String cacheKey = budgetYear + budgetPeriod.name();
 
         List<BudgetPeriodDescriptor> descriptors = null;

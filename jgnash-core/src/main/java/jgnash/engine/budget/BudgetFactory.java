@@ -30,6 +30,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.time.Period;
 
 /**
  * Budget Factory for automatic generation of Budgets
@@ -44,7 +45,7 @@ public class BudgetFactory {
     private BudgetFactory() {
     }
 
-    public static Budget buildAverageBudget(final BudgetPeriod budgetPeriod, final String name, final boolean round) {
+    public static Budget buildAverageBudget(final Period budgetPeriod, final String name, final boolean round) {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 

@@ -36,7 +36,7 @@ import javax.swing.WindowConstants;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
@@ -57,7 +57,7 @@ final class BudgetPropertiesDialog extends JDialog implements ActionListener {
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
-    private JComboBox<BudgetPeriod> budgetPeriodCombo;
+    private JComboBox<Period> budgetPeriodCombo;
 
     private JButton okButton;
 
@@ -89,17 +89,17 @@ final class BudgetPropertiesDialog extends JDialog implements ActionListener {
         descriptionField.setText(budget.getDescription());
     }
 
-    private void setSelectedPeriod(final BudgetPeriod period) {
+    private void setSelectedPeriod(final Period period) {
         budgetPeriodCombo.setSelectedItem(period);
     }
 
-    private BudgetPeriod getSelectedPeriod() {
-        return (BudgetPeriod) budgetPeriodCombo.getSelectedItem();
+    private Period getSelectedPeriod() {
+        return (Period) budgetPeriodCombo.getSelectedItem();
     }
 
     private void initComponents() {
         budgetPeriodCombo = new JComboBox<>();       
-        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));
+        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(Period.values()));
 
         descriptionField = new JTextField();
 

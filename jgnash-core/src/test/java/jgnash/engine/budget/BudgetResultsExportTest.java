@@ -18,6 +18,8 @@
 package jgnash.engine.budget;
 
 import jgnash.engine.*;
+import jgnash.time.Period;
+
 import org.junit.Test;
 
 import java.io.File;
@@ -59,7 +61,7 @@ public class BudgetResultsExportTest {
         Budget budget = new Budget();
         budget.setName("My Budget");
         budget.setDescription("Test");
-        budget.setBudgetPeriod(BudgetPeriod.MONTHLY);
+        budget.setBudgetPeriod(Period.MONTHLY);
 
         assertTrue(e.addBudget(budget));
 

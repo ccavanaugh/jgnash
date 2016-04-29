@@ -34,7 +34,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetFactory;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.TextResource;
@@ -57,7 +57,7 @@ public class HistoricalBudgetDialogController {
     private TextField nameTextField;
 
     @FXML
-    private ComboBox<BudgetPeriod> periodComboBox;
+    private ComboBox<Period> periodComboBox;
 
     @FXML
     private CheckBox roundupCheckBox;
@@ -72,8 +72,8 @@ public class HistoricalBudgetDialogController {
     private void initialize() {
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
-        periodComboBox.getItems().addAll(BudgetPeriod.values());
-        periodComboBox.setValue(BudgetPeriod.MONTHLY);
+        periodComboBox.getItems().addAll(Period.values());
+        periodComboBox.setValue(Period.MONTHLY);
 
         textFlow.getChildren().addAll(new Text(TextResource.getString("NewBudgetOne.txt")));
 

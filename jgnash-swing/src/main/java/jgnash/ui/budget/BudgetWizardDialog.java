@@ -40,7 +40,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetFactory;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
@@ -73,7 +73,7 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
 
     private JTextField budgetNameField;
 
-    private JComboBox<BudgetPeriod> budgetPeriodCombo;
+    private JComboBox<Period> budgetPeriodCombo;
 
     private JEditorPane helpPane;
 
@@ -135,8 +135,8 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
         cancelButton = new JButton(rb.getString("Button.Cancel"));
 
         budgetPeriodCombo = new JComboBox<>();
-        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));
-        budgetPeriodCombo.setSelectedItem(BudgetPeriod.MONTHLY);
+        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(Period.values()));
+        budgetPeriodCombo.setSelectedItem(Period.MONTHLY);
 
         budgetNameField = new JTextField();
 
@@ -166,7 +166,7 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 Objects.requireNonNull(engine);
 
-                final BudgetPeriod period = (BudgetPeriod) budgetPeriodCombo.getSelectedItem();
+                final Period period = (Period) budgetPeriodCombo.getSelectedItem();
 
                 final Budget budget = BudgetFactory.buildAverageBudget(period, budgetNameField.getText(), roundButton.isSelected());
 

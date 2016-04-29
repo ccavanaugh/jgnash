@@ -51,7 +51,7 @@ import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
 import jgnash.engine.budget.BudgetFactory;
 import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
 import jgnash.engine.budget.Pattern;
@@ -88,7 +88,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
-    private JComboBox<BudgetPeriod> budgetPeriodCombo;
+    private JComboBox<Period> budgetPeriodCombo;
 
     private BudgetGoal budgetGoal;
 
@@ -175,7 +175,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         fillPatternEnterButton = new JButton(rb.getString("Button.Enter"));
 
         budgetPeriodCombo = new JComboBox<>();
-        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));
+        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(Period.values()));
         budgetPeriodCombo.setSelectedItem(getBudgetGoal().getBudgetPeriod());
 
         patternComboBox = new JComboBox<>();
@@ -280,7 +280,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     }
 
     private void updatePeriod() {
-        BudgetPeriod period = (BudgetPeriod) budgetPeriodCombo.getSelectedItem();
+        Period period = (Period) budgetPeriodCombo.getSelectedItem();
 
         getBudgetGoal().setBudgetPeriod(period);
 

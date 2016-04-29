@@ -15,16 +15,16 @@
  *  You should have received account copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.engine.budget;
+package jgnash.time;
 
 import jgnash.util.ResourceUtils;
 
 /**
- * Budget BudgetPeriod Enum
+ * Period Enum
  * 
  * @author Craig Cavanaugh
  */
-public enum BudgetPeriod {
+public enum Period {
 
     DAILY(ResourceUtils.getString("Period.Daily")),
     WEEKLY(ResourceUtils.getString("Period.Weekly")),
@@ -35,7 +35,7 @@ public enum BudgetPeriod {
 
     private final transient String description;
 
-    BudgetPeriod(final String description) {
+    Period(final String description) {
         this.description = description;
     }
 

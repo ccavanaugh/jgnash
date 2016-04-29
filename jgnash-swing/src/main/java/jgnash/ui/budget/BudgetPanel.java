@@ -54,7 +54,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
 import jgnash.engine.budget.BudgetResultsExport;
@@ -276,7 +276,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                     budgetPropertiesButton.setEnabled(true);
 
                     // export cannot handle and daily export
-                    budgetExportButton.setEnabled(activeBudget.getBudgetPeriod() != BudgetPeriod.DAILY);
+                    budgetExportButton.setEnabled(activeBudget.getBudgetPeriod() != Period.DAILY);
                 } else {
                     budgetPropertiesButton.setEnabled(false);
                     budgetExportButton.setEnabled(false);
@@ -382,7 +382,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 addSummaryRows();
             }
 
-            if (activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY && summaryColVisibleCheckBox.isSelected()) { // summary is redundant for a yearly view
+            if (activeBudget.getBudgetPeriod() != Period.YEARLY && summaryColVisibleCheckBox.isSelected()) { // summary is redundant for a yearly view
                 addSummaryColumn();
 
                 if (summaryRowVisibleCheckBox.isSelected()) {
@@ -468,7 +468,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
             EventQueue.invokeLater(() -> {
                 if (summaryColVisibleCheckBox.isSelected()) {
-                    if (activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) { // summary is redundant for a yearly view
+                    if (activeBudget.getBudgetPeriod() != Period.YEARLY) { // summary is redundant for a yearly view
                         addSummaryColumn();
 
                         if (summaryRowVisibleCheckBox.isSelected()) {
@@ -495,7 +495,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                     addSummaryRows();
 
                     if (summaryColVisibleCheckBox.isSelected()
-                            && activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) {
+                            && activeBudget.getBudgetPeriod() != Period.YEARLY) {
                         addSummaryCorner();
                     }
                 } else {

@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -37,6 +38,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.PostLoad;
 
 import jgnash.engine.MathConstants;
+import jgnash.time.Period;
 
 /**
  * Budget Goal Object
@@ -72,7 +74,8 @@ public class BudgetGoal implements Cloneable, Serializable {
     private List<BigDecimal> budgetGoals = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private BudgetPeriod budgetPeriod = BudgetPeriod.MONTHLY;
+    @Column(name = "BUDGETPERIOD")
+    private Period budgetPeriod = Period.MONTHLY;
 
     public BudgetGoal() {
         budgetGoals = new ArrayList<>(Collections.nCopies(PERIODS, BigDecimal.ZERO));
@@ -105,7 +108,7 @@ public class BudgetGoal implements Cloneable, Serializable {
      * 
      * @return the BudgetPeriod
      */
-    public BudgetPeriod getBudgetPeriod() {
+    public Period getBudgetPeriod() {
         return budgetPeriod;
     }
 
@@ -114,7 +117,7 @@ public class BudgetGoal implements Cloneable, Serializable {
      * 
      * @param budgetPeriod The budget period
      */
-    public void setBudgetPeriod(final BudgetPeriod budgetPeriod) {
+    public void setBudgetPeriod(final Period budgetPeriod) {
         this.budgetPeriod = Objects.requireNonNull(budgetPeriod);
     }
 

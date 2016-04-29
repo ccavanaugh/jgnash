@@ -59,7 +59,7 @@ import jgnash.engine.TransactionEntrySellX;
 import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
@@ -142,7 +142,7 @@ abstract class AbstractXStreamContainer {
         xstream.alias("ExchangeRate", ExchangeRate.class);
         xstream.alias("ExchangeRateHistoryNode", ExchangeRateHistoryNode.class);
         xstream.alias("InvestmentTransaction", InvestmentTransaction.class);
-        xstream.alias("BudgetPeriod", BudgetPeriod.class);
+        xstream.alias("BudgetPeriod", Period.class);
         xstream.alias("SecurityNode", SecurityNode.class);
         xstream.alias("SecurityHistoryNode", SecurityHistoryNode.class);
         xstream.alias("SecurityHistoryEvent", SecurityHistoryEvent.class);

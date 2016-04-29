@@ -44,7 +44,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.MathConstants;
 import jgnash.engine.budget.BudgetFactory;
 import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
 import jgnash.engine.budget.Pattern;
@@ -82,7 +82,7 @@ public class BudgetGoalsDialogController {
     private Label currencyLabel;
 
     @FXML
-    private ComboBox<BudgetPeriod> periodComboBox;
+    private ComboBox<Period> periodComboBox;
 
     private BudgetGoal result = null;
 
@@ -107,7 +107,7 @@ public class BudgetGoalsDialogController {
         endRowSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1));
         startRowSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1));
 
-        periodComboBox.getItems().addAll(BudgetPeriod.values());
+        periodComboBox.getItems().addAll(Period.values());
 
         patternComboBox.getItems().addAll(Pattern.values());
         patternComboBox.setValue(Pattern.EveryRow);

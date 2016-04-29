@@ -31,7 +31,7 @@ import java.util.Set;
 
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.util.FileUtils;
@@ -193,7 +193,7 @@ public abstract class EngineTest {
     @Test
     public void testSecurityNodeStorage() {
 
-        final String SECURITY_SYMBOL =" GOOG";
+        final String SECURITY_SYMBOL ="GOOG";
 
         SecurityNode securityNode = new SecurityNode(e.getDefaultCurrency());
 
@@ -300,10 +300,10 @@ public abstract class EngineTest {
             budgetGoals[i] = new BigDecimal(i);
         }
         goal.setGoals(budgetGoals);
-        goal.setBudgetPeriod(BudgetPeriod.WEEKLY);
+        goal.setBudgetPeriod(Period.WEEKLY);
 
         budget.setBudgetGoal(a, goal);
-        budget.setBudgetPeriod(BudgetPeriod.WEEKLY);
+        budget.setBudgetPeriod(Period.WEEKLY);
 
         assertTrue(e.addBudget(budget));
 
@@ -328,8 +328,8 @@ public abstract class EngineTest {
         assertEquals(BudgetGoal.PERIODS, budgetGoals.length);
 
         // check the periods
-        assertEquals(BudgetPeriod.WEEKLY, recovered.getBudgetPeriod());
-        assertEquals(BudgetPeriod.WEEKLY, recovered.getBudgetGoal(a).getBudgetPeriod());
+        assertEquals(Period.WEEKLY, recovered.getBudgetPeriod());
+        assertEquals(Period.WEEKLY, recovered.getBudgetGoal(a).getBudgetPeriod());
 
         for (int i = 0; i < budgetGoals.length; i++) {
             //assertEquals(new BigDecimal(i), budgetGoals[i]);

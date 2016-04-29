@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -33,6 +34,7 @@ import javax.persistence.PostLoad;
 
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
+import jgnash.time.Period;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -58,7 +60,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
      * Period to report the budget in
      */
     @Enumerated(EnumType.STRING)
-    private BudgetPeriod budgetPeriod = BudgetPeriod.MONTHLY;
+    @Column(name = "BUDGETPERIOD")
+    private Period budgetPeriod = Period.MONTHLY;
 
     /**
      * Account goals are stored internally by the account UUID.
@@ -174,7 +177,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
      *
      * @return The period for this budget
      */
-    public BudgetPeriod getBudgetPeriod() {
+    public Period getBudgetPeriod() {
         return budgetPeriod;
     }
 
@@ -183,7 +186,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
      *
      * @param budgetPeriod The budget period
      */
-    public void setBudgetPeriod(final BudgetPeriod budgetPeriod) {
+    public void setBudgetPeriod(final Period budgetPeriod) {
         this.budgetPeriod = Objects.requireNonNull(budgetPeriod);
     }
 

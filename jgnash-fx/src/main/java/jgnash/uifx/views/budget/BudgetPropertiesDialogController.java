@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetPeriod;
+import jgnash.time.Period;
 import jgnash.uifx.Options;
 
 /**
@@ -55,7 +55,7 @@ public class BudgetPropertiesDialogController {
     private CheckBox liabilityCheckBox;
 
     @FXML
-    private ComboBox<BudgetPeriod> periodComboBox;
+    private ComboBox<Period> periodComboBox;
 
     @FXML
     private TextField descriptionTextField;
@@ -64,7 +64,7 @@ public class BudgetPropertiesDialogController {
 
     @FXML
     private void initialize() {
-        periodComboBox.getItems().setAll(BudgetPeriod.values());
+        periodComboBox.getItems().setAll(Period.values());
     }
 
     @FXML
