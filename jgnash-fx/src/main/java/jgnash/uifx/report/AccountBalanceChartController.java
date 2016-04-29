@@ -17,14 +17,6 @@
  */
 package jgnash.uifx.report;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,22 +29,25 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
-
 import jgnash.engine.Account;
-import jgnash.engine.AccountType;
-import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
 import jgnash.text.CommodityFormat;
+import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.time.DateUtils;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 /**
  * Periodic Account Balance Bar Chart
@@ -116,11 +111,22 @@ public class AccountBalanceChartController {
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
         barChart.barGapProperty().set(BAR_GAP);
         barChart.setCategoryGap(PERIOD_GAP);
+        barChart.setLegendVisible(false);
 
         // Respect animation preference
         barChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
 
         startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(11)));
+
+        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                defaultCurrency = newValue.getCurrencyNode();
+                numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
+                barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
+
+                Platform.runLater(this::updateChart);
+            }
+        });
 
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -144,78 +150,37 @@ public class AccountBalanceChartController {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final List<Account> incomeAccounts = engine.getIncomeAccountList();
-
-        final List<Account> expenseAccounts = engine.getExpenseAccountList();
+        final Account account = accountComboBox.getValue();
 
         barChart.getData().clear();
 
+        //final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
+        //        periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
+
         final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
-                periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
+                ReportPeriod.MONTHLY, startDatePicker.getValue(), endDatePicker.getValue());
 
         // Income Series
-        final XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
-        incomeSeries.setName(AccountType.INCOME.toString());
-        barChart.getData().add(incomeSeries);
-
-        // Expense Series
-        final XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
-        expenseSeries.setName(AccountType.EXPENSE.toString());
-        barChart.getData().add(expenseSeries);
-
-        // Profit Series
-        final XYChart.Series<String, Number> profitSeries = new XYChart.Series<>();
-        profitSeries.setName(resources.getString("Word.NetIncome"));
-        barChart.getData().add(profitSeries);
+        final XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Date");
+        barChart.getData().add(series);
 
         for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
-            final BigDecimal income = getSum(incomeAccounts, descriptor.getStartDate(), descriptor.getEndDate());
-            final BigDecimal expense = getSum(expenseAccounts, descriptor.getStartDate(), descriptor.getEndDate());
+            final BigDecimal income;
 
-            incomeSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income));
-            expenseSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), expense));
-            profitSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income.add(expense)));
-        }
-
-        for (XYChart.Data<String, Number> data : incomeSeries.getData()) {
-            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
-        }
-
-        for (XYChart.Data<String, Number> data : expenseSeries.getData()) {
-            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
-        }
-
-        for (XYChart.Data<String, Number> data : profitSeries.getData()) {
-            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
-        }
-    }
-
-    private BigDecimal getSum(final List<Account> accounts, final LocalDate statDate, final LocalDate endDate) {
-        BigDecimal sum = BigDecimal.ZERO;
-
-        for (final Account account : accounts) {
-            sum = sum.add(account.getBalance(statDate, endDate, defaultCurrency));
-        }
-
-        return sum.negate();
-    }
-
-    private BigDecimal calculateTotal(final LocalDate start, final LocalDate end, final Account account,
-                                             final CurrencyNode baseCurrency) {
-        BigDecimal amount;
-        AccountType type = account.getAccountType();
-
-        // get the amount for the account
-        amount = AccountBalanceDisplayManager.convertToSelectedBalanceMode(type, account.getBalance(start, end, baseCurrency));
-
-        // add the amount of every sub accounts
-        if (includeSubAccounts.isSelected()) {
-            for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
-                amount = amount.add(calculateTotal(start, end, child, baseCurrency));
+            if (!includeSubAccounts.isSelected()) {
+                income = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
+            } else {
+                income = account.getTreeBalance(descriptor.getStartDate(), descriptor.getEndDate(),
+                        account.getCurrencyNode());
             }
+
+            series.getData().add(new XYChart.Data<>(descriptor.getLabel(), income));
         }
 
-        return amount;
+        for (final XYChart.Data<String, Number> data : series.getData()) {
+            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
+        }
     }
 
     @FXML

@@ -74,7 +74,7 @@
             <Label text="%Label.Period"  GridPane.columnIndex="4" GridPane.rowIndex="2"/>
             <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5" GridPane.rowIndex="2"/>
 
-            <BarChart fx:id="barChart" title="%Title.IncomeExpenseBarChart" legendSide="RIGHT"
+            <BarChart fx:id="barChart" title="%Title.AccountBalance" legendSide="RIGHT"
                       GridPane.rowIndex="3" GridPane.columnSpan="7">
                 <xAxis>
                     <CategoryAxis side="BOTTOM" />
