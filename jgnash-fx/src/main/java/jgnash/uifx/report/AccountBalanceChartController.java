@@ -17,6 +17,13 @@
  */
 package jgnash.uifx.report;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,6 +36,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
@@ -42,19 +50,11 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
-
 /**
  * Periodic Account Balance Bar Chart
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class AccountBalanceChartController {
 
     private static final String CHART_CSS = "jgnash/skin/incomeExpenseBarChart.css";
@@ -63,7 +63,7 @@ public class AccountBalanceChartController {
 
     private static final int BAR_GAP = 1;
 
-    private static final int PERIOD_GAP = 20;
+    private static final int CATEGORY_GAP = 20;
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -96,13 +96,16 @@ public class AccountBalanceChartController {
     @FXML
     public void initialize() {
 
+        accountComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
+
         final Preferences preferences = Preferences.userNodeForPackage(AccountBalanceChartController.class);
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        periodComboBox.getItems().addAll(ReportPeriod.values());
-        periodComboBox.setValue(ReportPeriod.values()[preferences.getInt(REPORT_PERIOD, ReportPeriod.MONTHLY.ordinal())]);
+        periodComboBox.getItems().addAll(ReportPeriod.MONTHLY, ReportPeriod.QUARTERLY);
+        periodComboBox.setValue(ReportPeriod.values()[preferences.getInt(REPORT_PERIOD,
+                ReportPeriod.MONTHLY.ordinal())]);
 
         defaultCurrency = engine.getDefaultCurrency();
         numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
@@ -110,27 +113,31 @@ public class AccountBalanceChartController {
         barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
         barChart.barGapProperty().set(BAR_GAP);
-        barChart.setCategoryGap(PERIOD_GAP);
+        barChart.setCategoryGap(CATEGORY_GAP);
         barChart.setLegendVisible(false);
+        barChart.getXAxis().setLabel(resources.getString("Column.Period"));
 
         // Respect animation preference
         barChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
 
         startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(11)));
 
+        includeSubAccounts.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(AccountBalanceChartController.this::updateChart);
+        });
+
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 defaultCurrency = newValue.getCurrencyNode();
                 numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
-                barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
 
-                Platform.runLater(this::updateChart);
+                Platform.runLater(AccountBalanceChartController.this::updateChart);
             }
         });
 
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
-                Platform.runLater(this::updateChart);
+                Platform.runLater(AccountBalanceChartController.this::updateChart);
             }
         };
 
@@ -154,15 +161,11 @@ public class AccountBalanceChartController {
 
         barChart.getData().clear();
 
-        //final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
-        //        periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
-
         final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
-                ReportPeriod.MONTHLY, startDatePicker.getValue(), endDatePicker.getValue());
+                periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
 
         // Income Series
         final XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Date");
         barChart.getData().add(series);
 
         for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
@@ -181,6 +184,8 @@ public class AccountBalanceChartController {
         for (final XYChart.Data<String, Number> data : series.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
         }
+
+        barChart.getYAxis().setLabel(resources.getString("Column.Balance") + " : " + defaultCurrency.getSymbol());
     }
 
     @FXML
