@@ -103,6 +103,15 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         return account -> account.isVisible() && !account.isLocked() && !account.isPlaceHolder();
     }
 
+    /**
+     * Returns a Predicate used to display all accounts
+     *
+     * @return Account Predicate
+     */
+    public static Predicate<Account> getShowAllPredicate() {
+        return account -> true;
+    }
+
     public void setPredicate(final Predicate<Account> predicate) {
         filteredList.setPredicate(predicate);
 
