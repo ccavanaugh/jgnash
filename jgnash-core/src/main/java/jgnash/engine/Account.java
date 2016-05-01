@@ -854,6 +854,33 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
+     * Returns the balance of the account plus any child accounts
+     *
+     * @param endDate The inclusive end date
+     * @param node The commodity to convert balance to
+     *
+     * @return the balance of this account including the balance of any child
+     * accounts.
+     */
+    public BigDecimal getTreeBalance(final LocalDate endDate, final CurrencyNode node) {
+        transactionLock.readLock().lock();
+        childLock.readLock().lock();
+
+        try {
+            BigDecimal balance = getBalance(endDate, node);
+
+            for (final Account child : cachedSortedChildren) {
+                balance = balance.add(child.getTreeBalance(endDate, node));
+            }
+
+            return balance;
+        } finally {
+            transactionLock.readLock().unlock();
+            childLock.readLock().unlock();
+        }
+    }
+
+    /**
      * Returns the balance of the account plus any child accounts. The balance
      * is adjusted to the current exchange rate of the supplied commodity if
      * needed.
