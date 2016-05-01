@@ -49,8 +49,6 @@
         <opencsv.version>2.3</opencsv.version>
         <netty.version>4.0.34.Final</netty.version>
         <controlsfx.version>8.40.10</controlsfx.version>
-        <fontawesomefx.version>8.6</fontawesomefx.version>
-
     </properties>
 
     <repositories>
@@ -64,6 +62,15 @@
             <id>jgnash-local</id>
             <name>Local repository in project tree</name>
             <url>file:${basedir}/../repository</url>
+        </repository>
+
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
         </repository>
 
         <repository>
@@ -159,11 +166,6 @@
                 <groupId>org.controlsfx</groupId>
                 <artifactId>controlsfx</artifactId>
                 <version>${controlsfx.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.jensd</groupId>
-                <artifactId>fontawesomefx</artifactId>
-                <version>${fontawesomefx.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.opencsv</groupId>
