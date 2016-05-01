@@ -5,21 +5,25 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 
-<?import javafx.scene.control.ComboBox?>
-<?import jgnash.uifx.control.AccountComboBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.CheckBox?>
 <BorderPane fx:controller="jgnash.uifx.report.AccountBalanceChartController" minWidth="850" minHeight="600"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <fx:define>
+        <ToggleGroup fx:id="toggleGroup"/>
+    </fx:define>
     <top>
       <ToolBar>
           <Button text="%Button.SaveImage" onAction="#handleSaveAction">
@@ -48,10 +52,10 @@
                 <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="ALWAYS"/>
@@ -59,23 +63,33 @@
             </rowConstraints>
 
             <Label text="%Label.Account"/>
-            <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.columnSpan="7"/>
 
-            <HBox GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="6">
-                <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts"/>
-            </HBox>
+            <GridPane GridPane.columnIndex="1" GridPane.columnSpan="7" styleClass="form">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                    <ColumnConstraints hgrow="NEVER"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="NEVER"/>
+                </rowConstraints>
 
-            <Label text="%Label.StartDate" GridPane.rowIndex="2"/>
-            <DatePickerEx fx:id="startDatePicker"  GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <AccountComboBox fx:id="accountComboBox" maxWidth="Infinity"/>
+                <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts" GridPane.columnIndex="1"/>
+            </GridPane>
 
-            <Label text="%Label.EndDate"  GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-            <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            <Label text="%Label.StartDate" GridPane.rowIndex="1"/>
+            <DatePickerEx fx:id="startDatePicker"  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-            <Label text="%Label.Period"  GridPane.columnIndex="4" GridPane.rowIndex="2"/>
-            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+            <Label text="%Label.EndDate"  GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+            <Label text="%Label.Period"  GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+            <RadioButton fx:id="monthlyBalance" text="%Button.MonthlyBalance" toggleGroup="$toggleGroup" GridPane.columnIndex="6" GridPane.rowIndex="1"/>
+            <RadioButton fx:id="runningBalance" text="%Button.RunningBalance" toggleGroup="$toggleGroup" GridPane.columnIndex="7" GridPane.rowIndex="1" GridPane.halignment="LEFT"/>
 
             <BarChart fx:id="barChart" title="%Title.AccountBalance" legendSide="RIGHT"
-                      GridPane.rowIndex="3" GridPane.columnSpan="7">
+                      GridPane.rowIndex="2" GridPane.columnSpan="9">
                 <xAxis>
                     <CategoryAxis side="BOTTOM" />
                 </xAxis>
@@ -84,7 +98,7 @@
                 </yAxis>
             </BarChart>
 
-            <ButtonBar GridPane.rowIndex="4" GridPane.columnSpan="7">
+            <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="8">
                 <buttons>
                     <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
                             ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>

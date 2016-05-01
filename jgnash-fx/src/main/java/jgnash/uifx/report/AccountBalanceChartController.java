@@ -34,6 +34,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
@@ -67,6 +68,12 @@ public class AccountBalanceChartController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private RadioButton monthlyBalance;
+
+    @FXML
+    private RadioButton runningBalance;
 
     @FXML
     private AccountComboBox accountComboBox;
@@ -120,11 +127,11 @@ public class AccountBalanceChartController {
         // Respect animation preference
         barChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
 
-        startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(11)));
+        startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(12)));
 
-        includeSubAccounts.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(AccountBalanceChartController.this::updateChart);
-        });
+        // Force a defaults
+        includeSubAccounts.setSelected(true);
+        runningBalance.setSelected(true);
 
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -135,6 +142,11 @@ public class AccountBalanceChartController {
             }
         });
 
+        periodComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            preferences.putInt(REPORT_PERIOD, newValue.ordinal());
+            Platform.runLater(this::updateChart);
+        });
+
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Platform.runLater(AccountBalanceChartController.this::updateChart);
@@ -143,11 +155,9 @@ public class AccountBalanceChartController {
 
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
-
-        periodComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            preferences.putInt(REPORT_PERIOD, newValue.ordinal());
-            Platform.runLater(this::updateChart);
-        });
+        runningBalance.selectedProperty().addListener(listener);
+        monthlyBalance.selectedProperty().addListener(listener);
+        includeSubAccounts.selectedProperty().addListener(listener);
 
         // Push the initial load to the end of the platform thread for better startup and a nicer visual effect
         Platform.runLater(this::updateChart);
@@ -172,10 +182,19 @@ public class AccountBalanceChartController {
             final BigDecimal income;
 
             if (!includeSubAccounts.isSelected()) {
-                income = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
+
+                if (runningBalance.isSelected()) {
+                    income = account.getBalance(descriptor.getEndDate());
+                } else {
+                    income = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
+                }
             } else {
-                income = account.getTreeBalance(descriptor.getStartDate(), descriptor.getEndDate(),
-                        account.getCurrencyNode());
+                if (runningBalance.isSelected()) {
+                    income = account.getTreeBalance(descriptor.getEndDate(), account.getCurrencyNode());
+                } else {
+                    income = account.getTreeBalance(descriptor.getStartDate(), descriptor.getEndDate(),
+                            account.getCurrencyNode());
+                }
             }
 
             series.getData().add(new XYChart.Data<>(descriptor.getLabel(), income));
