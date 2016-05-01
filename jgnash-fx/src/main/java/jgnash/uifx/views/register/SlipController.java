@@ -215,7 +215,7 @@ public class SlipController extends AbstractSlipController {
 
         amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
 
-        memoTextField.setText(t.getMemo(accountProperty().get()));
+        memoTextField.setText(t.getMemo());
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
@@ -245,6 +245,8 @@ public class SlipController extends AbstractSlipController {
                 payeeTextField.setEditable(false);
                 numberComboBox.setDisable(true);
                 datePicker.setEditable(false);
+
+                memoTextField.setText(t.getMemo(accountProperty.get()));   // Override
 
                 amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
 
