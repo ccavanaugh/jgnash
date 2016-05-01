@@ -438,10 +438,10 @@ abstract class RegisterTableController {
                                 Platform.runLater(RegisterTableController.this::clearTableSelection);
                             }
 
-                            Platform.runLater(() -> observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION)));
-
-                            // this will for the running balance to recalculate
-                            Platform.runLater(() -> tableView.refresh());
+                            Platform.runLater(() -> {
+                                observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION));
+                                tableView.refresh();  // this will for the running balance to recalculate
+                            });
                             break;
                         case TRANSACTION_ADD:
                             Platform.runLater(() -> {
