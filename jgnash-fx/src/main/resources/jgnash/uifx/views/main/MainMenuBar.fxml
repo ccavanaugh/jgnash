@@ -44,6 +44,12 @@
             <MenuItem text="%Menu.ExportAccounts.Name"  fx:id="exportAccountsMenuItem" onAction="#handleExportAccountsAction"/>
         </Menu>
         <SeparatorMenuItem/>
+        <MenuItem fx:id="changePasswordMenuItem" onAction="#handleChangeDatabasePasswordAction" text="%Menu.ChangeCredentials.Name">
+            <graphic>
+                <FontAwesomeLabel glyphName="KEY"/>
+            </graphic>
+        </MenuItem>
+        <SeparatorMenuItem/>
         <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>

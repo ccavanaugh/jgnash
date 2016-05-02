@@ -46,6 +46,7 @@ import jgnash.uifx.actions.ExportAccountsAction;
 import jgnash.uifx.actions.ImportAccountsAction;
 import jgnash.uifx.actions.ImportOfxAction;
 import jgnash.uifx.actions.ImportQifAction;
+import jgnash.uifx.dialog.ChangeDatabasePasswordDialogController;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
@@ -69,6 +70,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem changePasswordMenuItem;
 
     @FXML
     private MenuItem saveAsMenuItem;
@@ -125,6 +129,7 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void initialize() {
+        changePasswordMenuItem.disableProperty().bind(Bindings.not(disabled));
         securitiesMenu.disableProperty().bind(disabled);
         currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
@@ -294,6 +299,15 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleSetDefaultCurrencyAction() {
         DefaultCurrencyAction.showAndWait();
+    }
+
+    @FXML
+    private void handleChangeDatabasePasswordAction() {
+        final FXMLUtils.Pair<ChangeDatabasePasswordDialogController> pair =
+                FXMLUtils.load(ChangeDatabasePasswordDialogController.class.getResource("ChangePasswordDialog.fxml"),
+                        resources.getString("Title.ChangePassword"));
+
+        pair.getStage().show();
     }
 
     @FXML
