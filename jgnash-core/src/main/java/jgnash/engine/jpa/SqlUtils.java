@@ -230,7 +230,7 @@ public class SqlUtils {
      * @param lockFileExtension lock file extension
      * @param password          password for the database
      */
-    public static void waitForLockFileRelease(final DataStoreType dataStoreType, final String fileName, final String lockFileExtension, final char[] password) {
+    static void waitForLockFileRelease(final DataStoreType dataStoreType, final String fileName, final String lockFileExtension, final char[] password) {
 
         final String lockFile = FileUtils.stripFileExtension(fileName) + lockFileExtension;
         logger.log(Level.INFO, "Searching for lock file: {0}", lockFile);

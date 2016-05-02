@@ -31,7 +31,7 @@ import jgnash.util.FileUtils;
  */
 class JpaConfiguration {
 
-    public static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
+    static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
 
     private static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
     private static final String JAVAX_PERSISTENCE_JDBC_USER = "javax.persistence.jdbc.user";
@@ -39,7 +39,7 @@ class JpaConfiguration {
     private static final String HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 
-    public static final String DEFAULT_USER = "JGNASH";
+    static final String DEFAULT_USER = "JGNASH";
 
     private static final String UNKNOWN_DATABASE_TYPE = "Unknown database type";
 
@@ -64,10 +64,10 @@ class JpaConfiguration {
         return properties;
     }
 
-    public static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password, final boolean readOnly) {
+    static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password, final boolean readOnly) {
         Objects.requireNonNull(password);
 
-        StringBuilder urlBuilder = new StringBuilder();
+        final StringBuilder urlBuilder = new StringBuilder();
 
         switch (database) {
             case H2_DATABASE:
@@ -124,14 +124,12 @@ class JpaConfiguration {
      * @param password database password
      * @return   JPA properties
      */
-    public static Properties getClientProperties(final DataStoreType database, final String fileName, final String host, final int port, final char[] password) {
+    static Properties getClientProperties(final DataStoreType database, final String fileName, final String host, final int port, final char[] password) {
         Objects.requireNonNull(password);
 
-        StringBuilder urlBuilder = new StringBuilder();
+        final StringBuilder urlBuilder = new StringBuilder();
 
-        Properties properties = getBaseProperties(database);
-
-
+        final Properties properties = getBaseProperties(database);
 
         switch (database) {
             case H2_DATABASE:
