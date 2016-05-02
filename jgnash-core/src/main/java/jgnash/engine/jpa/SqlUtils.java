@@ -64,7 +64,7 @@ public class SqlUtils {
     private SqlUtils() {
     }
 
-    public static boolean changeUserAndPassword(final String fileName, final char[] password, final char[] newPassword) {
+    public static boolean changePassword(final String fileName, final char[] password, final char[] newPassword) {
         boolean result = false;
 
         try {

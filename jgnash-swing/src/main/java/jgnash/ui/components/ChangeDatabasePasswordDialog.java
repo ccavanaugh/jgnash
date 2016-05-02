@@ -129,7 +129,7 @@ public class ChangeDatabasePasswordDialog extends JDialog implements ActionListe
             } else if (!Arrays.equals(newPasswordField.getPassword(), newPasswordFieldVal.getPassword())) {
                 ValidationFactory.showValidationError(rb.getString("Message.Error.PasswordMatch"), newPasswordFieldVal);
             } else {
-                boolean result = SqlUtils.changeUserAndPassword(fileField.getText(), passwordField.getPassword(), newPasswordField.getPassword());
+                boolean result = SqlUtils.changePassword(fileField.getText(), passwordField.getPassword(), newPasswordField.getPassword());
 
                 if (result) {   // display a success message
                     new Thread() {
