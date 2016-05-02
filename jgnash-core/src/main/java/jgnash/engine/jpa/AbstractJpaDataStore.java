@@ -69,7 +69,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
     static final Logger logger = Logger.getLogger(AbstractJpaDataStore.class.getName());
 
-    private void waitForLockFileRelease(final String fileName, final char[] password) {
+    void waitForLockFileRelease(final String fileName, final char[] password) {
 
         // Explicitly force the database closed, Required for hsqldb and h2
         SqlUtils.waitForLockFileRelease(getType(), fileName, getLockFileExtension(), password);
