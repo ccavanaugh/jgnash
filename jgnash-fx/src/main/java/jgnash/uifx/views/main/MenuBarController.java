@@ -58,6 +58,7 @@ import jgnash.uifx.skin.BaseColorDialogController;
 import jgnash.uifx.skin.FontSizeDialogController;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
+import jgnash.uifx.tasks.SaveAsTask;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
@@ -68,6 +69,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem saveAsMenuItem;
 
     @FXML
     private MenuItem importAccountsMenuItem;
@@ -131,6 +135,7 @@ public class MenuBarController implements MessageListener {
         importQifMenuItem.disableProperty().bind(disabled);
         importAccountsMenuItem.disableProperty().bind(disabled);
         exportAccountsMenuItem.disableProperty().bind(disabled);
+        saveAsMenuItem.disableProperty().bind(disabled);
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageList().emptyProperty()));
 
@@ -422,5 +427,10 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleExportAccountsAction() {
         ExportAccountsAction.showAndWait();
+    }
+
+    @FXML
+    private void handleSaveAsAction() {
+        SaveAsTask.start();
     }
 }

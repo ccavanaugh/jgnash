@@ -19,12 +19,18 @@
                 <FontAwesomeLabel glyphName="FILE"/>
             </graphic>
         </MenuItem>
+        <SeparatorMenuItem/>
         <MenuItem fx:id="openMenuItem" onAction="#handleOpenAction" text="%Menu.Open.Name">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
             <graphic>
                 <FontAwesomeLabel glyphName="FOLDER_OPEN"/>
+            </graphic>
+        </MenuItem>
+        <MenuItem fx:id="saveAsMenuItem" onAction="#handleSaveAsAction" text="%Menu.SaveAs.Name">
+            <graphic>
+                <FontAwesomeLabel glyphName="SAVE"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>

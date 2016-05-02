@@ -154,7 +154,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                                 }
 
                                 if (!tempFile.delete()) {
-                                    Logger.getLogger(SaveAs.class.getName()).info("Unable to remove temporary file");
+                                    Logger.getLogger(SaveAs.class.getName()).info(rb.getString("Message.Error.RemoveTempFile"));
                                 }
                             }
                         } else {

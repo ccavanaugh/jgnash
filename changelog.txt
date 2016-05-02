@@ -26,7 +26,8 @@ Change the base highlight color for the FX interface
 
 Release 2.23.0
 ----------------------
-05/01/16 Added the Periodic Account Balance report.  (Fx)
+05/02/16 Implemented "File | Save As" for the FX interface. (Fx)
+05/01/16 Added the Periodic Account Balance report. (Fx)
 05/01/16 Modified transactions were not refreshing consistently in the register table. (Fx)
 04/26/16 Fixed import of an account tree when using a relational database. (Swing, Fx)
 04/25/16 Added Account structure import and export capability. (Fx)
@@ -34,7 +35,7 @@ Release 2.23.0
 04/24/16 Added the Account Register Report. (Fx)
 04/24/16 Added a Memo specific column to the investment register table and separated the Investment column (Fx)
 04/17/16 Added an option to the split entry dialog to automatically concatenate the memos of split transactions.
-         This will reduce file size and reduced transaction entry effort. (Fx)
+         This will reduce file size if used and reduces split transaction entry effort. (Fx)
 04/15/16 Display a message at startup when a newer version is available for download. (Swing, Fx)
 04/10/16 Language files now use UTF-8 file encoding. (Swing, Fx)
 
