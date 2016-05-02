@@ -75,7 +75,7 @@ public class SqlUtils {
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
 
-                    try (final PreparedStatement statement = connection.prepareStatement("SET PASSWORD '?'")) {
+                    try (final PreparedStatement statement = connection.prepareStatement("SET PASSWORD ?")) {
                         statement.setString(1, new String(newPassword));
                         statement.execute();
                         result = true;
