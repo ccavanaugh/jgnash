@@ -17,9 +17,6 @@
  */
 package jgnash.uifx.views.main;
 
-import java.util.Objects;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -29,7 +26,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -62,8 +58,12 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.tasks.SaveAsTask;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.budget.BudgetManagerDialogController;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
+
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Primary Menu Controller
@@ -71,6 +71,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem budgetManagerMenuItem;
 
     @FXML
     private MenuItem shutdownServerMenuItem;
@@ -133,6 +136,7 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void initialize() {
+        budgetManagerMenuItem.disableProperty().bind(disabled);
         changePasswordMenuItem.disableProperty().bind(Bindings.not(disabled));
         securitiesMenu.disableProperty().bind(disabled);
         currenciesMenu.disableProperty().bind(disabled);
@@ -471,5 +475,10 @@ public class MenuBarController implements MessageListener {
                 StaticUIMethods.displayError(e.getMessage());
             }
         }
+    }
+
+    @FXML
+    private void handleBudgetManagerAction() {
+        BudgetManagerDialogController.showBudgetManager();
     }
 }

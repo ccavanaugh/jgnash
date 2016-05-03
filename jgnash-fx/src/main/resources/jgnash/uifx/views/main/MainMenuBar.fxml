@@ -132,6 +132,8 @@
             </MenuItem>
         </Menu>
         <SeparatorMenuItem/>
+        <MenuItem fx:id="budgetManagerMenuItem" text="%Menu.BudgetManager.Name" onAction="#handleBudgetManagerAction"/>
+        <SeparatorMenuItem/>
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog">
             <graphic>
                 <FontAwesomeLabel glyphName="WRENCH"/>

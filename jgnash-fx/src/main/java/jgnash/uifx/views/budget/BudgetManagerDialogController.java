@@ -45,6 +45,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.TextInputDialog;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -204,5 +205,14 @@ public class BudgetManagerDialogController implements MessageListener{
                 || message.getEvent() == ChannelEvent.BUDGET_UPDATE) {
             Platform.runLater(this::loadBudgetListView);
         }
+    }
+
+    public static void showBudgetManager() {
+        final FXMLUtils.Pair<BudgetManagerDialogController> pair =
+                FXMLUtils.load(BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml"),
+                        ResourceUtils.getString("Title.BudgetManager"));
+
+        pair.getStage().show();
+        pair.getStage().setResizable(false);
     }
 }

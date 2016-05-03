@@ -27,6 +27,7 @@ Change the base highlight color for the FX interface
 Release 2.23.0
 ----------------------
 05/03/16 Implemented the "Shutdown Server" command for the FX interface. (Fx)
+05/03/16 Added access to the Budget Manager from the Tools Menu. (Fx)
 05/02/16 Implemented "File | Save As" capability for the FX interface. (Fx)
 05/02/16 Implemented Password Change capability for relational databases. (Fx)
 05/01/16 Added the Periodic Account Balance report. (Fx)
