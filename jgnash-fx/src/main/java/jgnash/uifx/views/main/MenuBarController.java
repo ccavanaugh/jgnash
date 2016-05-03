@@ -47,6 +47,7 @@ import jgnash.uifx.actions.ImportAccountsAction;
 import jgnash.uifx.actions.ImportOfxAction;
 import jgnash.uifx.actions.ImportQifAction;
 import jgnash.uifx.dialog.ChangeDatabasePasswordDialogController;
+import jgnash.uifx.dialog.RemoteConnectionDialogController;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
@@ -70,6 +71,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem shutdownServerMenuItem;
 
     @FXML
     private MenuItem changePasswordMenuItem;
@@ -141,6 +145,7 @@ public class MenuBarController implements MessageListener {
         importAccountsMenuItem.disableProperty().bind(disabled);
         exportAccountsMenuItem.disableProperty().bind(disabled);
         saveAsMenuItem.disableProperty().bind(disabled);
+        shutdownServerMenuItem.disableProperty().bind(Bindings.not(disabled));
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageList().emptyProperty()));
 
@@ -446,5 +451,25 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleSaveAsAction() {
         SaveAsTask.start();
+    }
+
+    @FXML
+    private void handleShutDownServerAction() {
+        final FXMLUtils.Pair<RemoteConnectionDialogController> pair =
+                FXMLUtils.load(RemoteConnectionDialogController.class.getResource("RemoteConnectionDialog.fxml"),
+                        resources.getString("Title.ConnectServer"));
+
+        pair.getStage().showAndWait();
+
+        final RemoteConnectionDialogController controller = pair.getController();
+
+        if (controller.getResult()) {
+            try {
+                MessageBus.getInstance().shutDownRemoteServer(controller.getHost(), controller.getPort(),
+                        controller.getPassword());
+            } catch (final Exception e) {
+                StaticUIMethods.displayError(e.getMessage());
+            }
+        }
     }
 }

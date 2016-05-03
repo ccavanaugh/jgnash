@@ -49,6 +49,11 @@
                 <FontAwesomeLabel glyphName="KEY"/>
             </graphic>
         </MenuItem>
+        <MenuItem fx:id="shutdownServerMenuItem" onAction="#handleShutDownServerAction" text="%Menu.ShutdownServer.Name">
+            <graphic>
+                <FontAwesomeLabel glyphName="POWER_OFF"/>
+            </graphic>
+        </MenuItem>
         <SeparatorMenuItem/>
         <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">
             <accelerator>

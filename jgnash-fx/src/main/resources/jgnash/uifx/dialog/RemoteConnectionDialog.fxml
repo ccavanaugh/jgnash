@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.IntegerTextField?>
+
+<BorderPane fx:controller="jgnash.uifx.dialog.RemoteConnectionDialogController"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog">
+    <center>
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="120"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Label text="%Label.DatabaseServer"/>
+            <TextField fx:id="hostTextField" GridPane.columnIndex="1"/>
+
+            <Label text="%Label.Port" GridPane.rowIndex="1"/>
+            <IntegerTextField fx:id="portTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="%Label.Password" GridPane.rowIndex="2"/>
+            <PasswordField fx:id="passwordField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="3">
+                <buttons>
+                    <Button fx:id="okayButton" onAction="#handleOkAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+                    <Button onAction="#handleCloseAction" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </center>
+</BorderPane>
+
+
