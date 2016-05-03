@@ -59,11 +59,17 @@
             <accelerator>
                 <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
+            <graphic>
+                <FontAwesomeLabel glyphName="CLOSE"/>
+            </graphic>
         </MenuItem>
         <MenuItem fx:id="exitMenuItem" onAction="#handleExitAction" text="%Menu.Exit.Name">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="Q" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
+            <graphic>
+                <FontAwesomeLabel glyphName="SIGN_OUT"/>
+            </graphic>
         </MenuItem>
     </Menu>
 
