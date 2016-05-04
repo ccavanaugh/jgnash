@@ -131,6 +131,8 @@
                 </graphic>
             </MenuItem>
         </Menu>
+        <MenuItem fx:id="recurringTransactionsMenuItem" text="%Menu.RecurringList.Name"
+                  onAction="#handleShowRecurringTransactionsAction"/>
         <SeparatorMenuItem/>
         <MenuItem fx:id="budgetManagerMenuItem" text="%Menu.BudgetManager.Name" onAction="#handleBudgetManagerAction"/>
         <SeparatorMenuItem/>

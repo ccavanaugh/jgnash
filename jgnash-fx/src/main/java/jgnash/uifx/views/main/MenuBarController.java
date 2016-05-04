@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.views.main;
 
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -26,6 +29,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -59,11 +63,9 @@ import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.tasks.SaveAsTask;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.budget.BudgetManagerDialogController;
+import jgnash.uifx.views.recurring.RecurringDialogController;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
-
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * Primary Menu Controller
@@ -71,6 +73,9 @@ import java.util.ResourceBundle;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem recurringTransactionsMenuItem;
 
     @FXML
     private MenuItem budgetManagerMenuItem;
@@ -148,6 +153,7 @@ public class MenuBarController implements MessageListener {
         importQifMenuItem.disableProperty().bind(disabled);
         importAccountsMenuItem.disableProperty().bind(disabled);
         exportAccountsMenuItem.disableProperty().bind(disabled);
+        recurringTransactionsMenuItem.disableProperty().bind(disabled);
         saveAsMenuItem.disableProperty().bind(disabled);
         shutdownServerMenuItem.disableProperty().bind(Bindings.not(disabled));
 
@@ -480,5 +486,14 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleBudgetManagerAction() {
         BudgetManagerDialogController.showBudgetManager();
+    }
+
+    @FXML
+    private void handleShowRecurringTransactionsAction() {
+        final FXMLUtils.Pair<RecurringDialogController> pair =
+                FXMLUtils.load(RecurringDialogController.class.getResource("RecurringDialog.fxml"),
+                        resources.getString("Title.Reminders"));
+
+        pair.getStage().show();
     }
 }

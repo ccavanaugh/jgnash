@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.scene.layout.StackPane?>
+<GridPane fx:controller="jgnash.uifx.views.recurring.RecurringDialogController"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <StackPane fx:id="contentPane"/>
+
+    <ButtonBar GridPane.rowIndex="1">
+        <buttons>
+            <Button onAction="#handleCloseAction" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
+        </buttons>
+    </ButtonBar>
+
+</GridPane>
+
+
