@@ -61,7 +61,6 @@ import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.BootEngineTask;
-import jgnash.uifx.tasks.CheckReleaseTask;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
@@ -73,6 +72,7 @@ import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
+import jgnash.util.Version;
 
 /**
  * JavaFX version of jGnash.
@@ -208,13 +208,18 @@ public class MainApplication extends Application implements MessageListener {
 
     private void checkForLatestRelease() {
         new Thread(() -> {
-            if (Options.checkForUpdatesProperty().get()) {
-                try {
-                    Thread.sleep(BootEngineTask.FORCED_DELAY * 3);
-                    Platform.runLater(new CheckReleaseTask());
-                } catch (InterruptedException e) {
-                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            try {
+                Thread.sleep(BootEngineTask.FORCED_DELAY * 2);
+                if (Options.checkForUpdatesProperty().get()) {
+                    backgroundExecutor.execute(() -> {
+                        if (!Version.isReleaseCurrent()) {
+                            StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion"));
+                        }
+                        logger.info("Version check performed");
+                    });
                 }
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         }).start();
     }
@@ -234,7 +239,7 @@ public class MainApplication extends Application implements MessageListener {
                 resources.getString("Tab.Reminders"))));
 
         backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
-                    FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"), resources),
+                FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"), resources),
                 resources.getString("Tab.Budgeting"))));
 
         backgroundExecutor.execute(() ->
