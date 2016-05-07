@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.engine.jpa.SqlUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -70,8 +71,11 @@ public class FileTransferTest {
         }
 
         // Start an engine and close so we have a populated file
-        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, password, DataStoreType.H2_DATABASE);
+        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, new char[]{}, DataStoreType.H2_DATABASE);
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+        // Change the password
+        SqlUtils.changePassword(testFile, new char[]{}, password);
 
         final JpaNetworkServer networkServer = new JpaNetworkServer();
 
