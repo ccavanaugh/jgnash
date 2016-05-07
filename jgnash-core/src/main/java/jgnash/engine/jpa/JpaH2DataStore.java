@@ -21,11 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import jgnash.engine.DataStoreType;
@@ -51,35 +46,8 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
      */
     @Override
     public boolean initEmptyDatabase(final String fileName) {
+        return true;
         // H2 starts cleanly without an initial file, don't call the super
-
-        boolean result = false;
-
-        final Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName, new char[]{}, false);
-        final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
-
-        // Increase the maximum size of the log file.  Need for file save As
-        try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, "")) {
-            try (final PreparedStatement statement = connection.prepareStatement("SET MAX_LOG_SIZE 128")) {
-                statement.execute();
-                connection.commit();
-            }
-
-            // absolutely required for a correct shutdown
-            try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
-                statement.execute();
-            }
-
-            result = true;
-        } catch (final SQLException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-
-        waitForLockFileRelease(fileName, new char[]{});
-
-        logger.log(Level.INFO, "Initialized an empty database for {0}", FileUtils.stripFileExtension(fileName));
-
-        return result;
     }
 
     @NotNull
