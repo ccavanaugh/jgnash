@@ -92,7 +92,7 @@ class MessageBusClient {
         logger.setLevel(Level.INFO);
     }
 
-    public MessageBusClient(final String host, final int port, final String name) {
+    MessageBusClient(final String host, final int port, final String name) {
         this.host = host;
         this.port = port;
         this.name = name;
@@ -100,11 +100,11 @@ class MessageBusClient {
         xstream = XStreamFactory.getInstance();
     }
 
-    public String getDataBasePath() {
+    String getDataBasePath() {
         return dataBasePath;
     }
 
-    public DataStoreType getDataStoreType() {
+    DataStoreType getDataStoreType() {
         return dataBaseType;
     }
 
@@ -112,7 +112,7 @@ class MessageBusClient {
         return ConnectionFactory.getConnectionTimeout();
     }
 
-    public boolean connectToServer(final char[] password) {
+    boolean connectToServer(final char[] password) {
         boolean result = false;
 
         // If a password has been specified, create an EncryptionManager
@@ -231,7 +231,7 @@ class MessageBusClient {
         }
     }
 
-    public void disconnectFromServer() {
+    void disconnectFromServer() {
 
         channelLock.lock();
 
@@ -249,7 +249,7 @@ class MessageBusClient {
         eventLoopGroup = null;
     }
 
-    public synchronized void sendRemoteMessage(final Message message) {
+    synchronized void sendRemoteMessage(final Message message) {
         CharArrayWriter writer = new CharArrayWriter();
         xstream.marshal(message, new CompactWriter(writer));
 
@@ -258,7 +258,7 @@ class MessageBusClient {
         logger.log(Level.FINE, "sent: {0}", writer.toString());
     }
 
-    public void sendRemoteShutdownRequest() {
+    void sendRemoteShutdownRequest() {
         sendRemoteMessage(JpaNetworkServer.STOP_SERVER_MESSAGE);
     }
 
