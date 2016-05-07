@@ -60,7 +60,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
 
         // Increase the maximum size of the log file.  Need for file save As
         try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, "")) {
-            try (final PreparedStatement statement = connection.prepareStatement("MAX_LOG_SIZE 128")) {
+            try (final PreparedStatement statement = connection.prepareStatement("SET MAX_LOG_SIZE 128")) {
                 statement.execute();
                 connection.commit();
             }
