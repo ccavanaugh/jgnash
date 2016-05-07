@@ -230,7 +230,7 @@ public class FileTransferTest {
         private final int port;
         private final char[] password;
 
-        public StartServerThread(JpaNetworkServer networkServer, String serverFile, int port, char[] password) {
+        StartServerThread(JpaNetworkServer networkServer, String serverFile, int port, char[] password) {
             this.networkServer = networkServer;
             this.serverFile = serverFile;
             this.port = port;
