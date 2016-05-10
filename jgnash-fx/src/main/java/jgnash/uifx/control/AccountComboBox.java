@@ -92,6 +92,8 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         });
     }
 
+    public ObservableList<Account> getUnfilteredItems() {return items; }
+
     /**
      * Returns the default Predicate used to determine which Accounts are displayed.
      *
@@ -134,7 +136,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     private void loadAccounts(@NotNull final List<Account> accounts) {
         accounts.stream().forEach(account -> {
-            items.add(account);
+            getUnfilteredItems().add(account);
 
             if (account.getChildCount() > 0) {
                 loadAccounts(account.getChildren(Comparators.getAccountByCode()));
@@ -143,7 +145,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     }
 
     private void loadAccounts() {
-        items.clear();
+        getUnfilteredItems().clear();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
