@@ -19,10 +19,14 @@ package jgnash.uifx.report;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -36,6 +40,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -70,6 +75,9 @@ public class AccountBalanceChartController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private GridPane accountPane;
+
+    @FXML
     private RadioButton monthlyBalance;
 
     @FXML
@@ -100,6 +108,11 @@ public class AccountBalanceChartController {
 
     private NumberFormat numberFormat;
 
+    private final Account NOP_ACCOUNT = new Account();
+
+    // List to retain auxiliary AccountComboBoxes
+    private final List<AccountComboBox> auxAccountComboBoxList = new ArrayList<>();
+
     @FXML
     public void initialize() {
 
@@ -123,6 +136,7 @@ public class AccountBalanceChartController {
         barChart.setCategoryGap(CATEGORY_GAP);
         barChart.setLegendVisible(false);
         barChart.getXAxis().setLabel(resources.getString("Column.Period"));
+        barChart.getYAxis().setLabel(resources.getString("Column.Balance") + " : " + defaultCurrency.getSymbol());
 
         // Respect animation preference
         barChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
@@ -153,6 +167,18 @@ public class AccountBalanceChartController {
             }
         };
 
+        final AccountComboBox auxComboBox = new AccountComboBox();
+        auxComboBox.setMaxWidth(Double.MAX_VALUE);
+        auxComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
+
+        auxComboBox.getUnfilteredItems().add(0, NOP_ACCOUNT);
+        auxComboBox.setValue(NOP_ACCOUNT);
+        auxAccountComboBoxList.add(auxComboBox);
+        auxComboBox.valueProperty().addListener(listener);
+
+        GridPane.setRowIndex(auxComboBox, 1);
+        accountPane.getChildren().add(auxComboBox);
+
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
         runningBalance.selectedProperty().addListener(listener);
@@ -164,47 +190,52 @@ public class AccountBalanceChartController {
     }
 
     private void updateChart() {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
-
-        final Account account = accountComboBox.getValue();
-
         barChart.getData().clear();
 
         final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
                 periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
 
-        // Income Series
-        final XYChart.Series<String, Number> series = new XYChart.Series<>();
-        barChart.getData().add(series);
+        // Create a set of accounts to display
+        final Set<Account> accountSet = new HashSet<>();
+        accountSet.add(accountComboBox.getValue());
+        accountSet.addAll(auxAccountComboBoxList.stream().filter(auxAccountComboBox
+                -> auxAccountComboBox.getValue() != NOP_ACCOUNT).map(AccountComboBox::getValue)
+                .collect(Collectors.toList()));
 
-        for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
-            final BigDecimal income;
+        barChart.setLegendVisible(accountSet.size() > 1);
 
-            if (!includeSubAccounts.isSelected()) {
+        for (final Account account : accountSet) {
 
-                if (runningBalance.isSelected()) {
-                    income = account.getBalance(descriptor.getEndDate());
+            final XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName(account.getName());
+            barChart.getData().add(series);
+
+            for (final ReportPeriodUtils.Descriptor descriptor : descriptors) {
+                final BigDecimal income;
+
+                if (!includeSubAccounts.isSelected()) {
+
+                    if (runningBalance.isSelected()) {
+                        income = account.getBalance(descriptor.getEndDate());
+                    } else {
+                        income = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
+                    }
                 } else {
-                    income = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
+                    if (runningBalance.isSelected()) {
+                        income = account.getTreeBalance(descriptor.getEndDate(), account.getCurrencyNode());
+                    } else {
+                        income = account.getTreeBalance(descriptor.getStartDate(), descriptor.getEndDate(),
+                                account.getCurrencyNode());
+                    }
                 }
-            } else {
-                if (runningBalance.isSelected()) {
-                    income = account.getTreeBalance(descriptor.getEndDate(), account.getCurrencyNode());
-                } else {
-                    income = account.getTreeBalance(descriptor.getStartDate(), descriptor.getEndDate(),
-                            account.getCurrencyNode());
-                }
+
+                series.getData().add(new XYChart.Data<>(descriptor.getLabel(), income));
             }
 
-            series.getData().add(new XYChart.Data<>(descriptor.getLabel(), income));
+            for (final XYChart.Data<String, Number> data : series.getData()) {
+                Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
+            }
         }
-
-        for (final XYChart.Data<String, Number> data : series.getData()) {
-            Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
-        }
-
-        barChart.getYAxis().setLabel(resources.getString("Column.Balance") + " : " + defaultCurrency.getSymbol());
     }
 
     @FXML

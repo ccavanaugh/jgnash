@@ -25,23 +25,23 @@
         <ToggleGroup fx:id="toggleGroup"/>
     </fx:define>
     <top>
-      <ToolBar>
-          <Button text="%Button.SaveImage" onAction="#handleSaveAction">
-              <graphic>
-                  <FontAwesomeLabel glyphName="FILE_IMAGE_ALT"/>
-              </graphic>
-          </Button>
-          <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">
-              <graphic>
-                  <FontAwesomeLabel glyphName="CLIPBOARD"/>
-              </graphic>
-          </Button>
-          <Button text="%Button.Print" onAction="#handlePrintAction">
-              <graphic>
-                  <FontAwesomeLabel glyphName="PRINT"/>
-              </graphic>
-          </Button>
-      </ToolBar>
+        <ToolBar>
+            <Button text="%Button.SaveImage" onAction="#handleSaveAction">
+                <graphic>
+                    <FontAwesomeLabel glyphName="FILE_IMAGE_ALT"/>
+                </graphic>
+            </Button>
+            <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CLIPBOARD"/>
+                </graphic>
+            </Button>
+            <Button text="%Button.Print" onAction="#handlePrintAction">
+                <graphic>
+                    <FontAwesomeLabel glyphName="PRINT"/>
+                </graphic>
+            </Button>
+        </ToolBar>
     </top>
     <center>
         <GridPane styleClass="form, dialog">
@@ -62,9 +62,23 @@
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
-            <Label text="%Label.Account"/>
+            <Label text="%Label.StartDate"/>
+            <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1"/>
 
-            <GridPane GridPane.columnIndex="1" GridPane.columnSpan="7" styleClass="form">
+            <Label text="%Label.EndDate" GridPane.columnIndex="2"/>
+            <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3"/>
+
+            <Label text="%Label.Period" GridPane.columnIndex="4"/>
+            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5"/>
+            <RadioButton fx:id="monthlyBalance" text="%Button.MonthlyBalance" toggleGroup="$toggleGroup"
+                         GridPane.columnIndex="6"/>
+            <RadioButton fx:id="runningBalance" text="%Button.RunningBalance" toggleGroup="$toggleGroup"
+                         GridPane.columnIndex="7" GridPane.halignment="LEFT"/>
+
+            <Label text="%Label.Account" GridPane.rowIndex="1" GridPane.valignment="TOP"/>
+
+            <GridPane fx:id="accountPane" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="7"
+                      styleClass="form">
                 <columnConstraints>
                     <ColumnConstraints hgrow="ALWAYS"/>
                     <ColumnConstraints hgrow="NEVER"/>
@@ -77,24 +91,13 @@
                 <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts" GridPane.columnIndex="1"/>
             </GridPane>
 
-            <Label text="%Label.StartDate" GridPane.rowIndex="1"/>
-            <DatePickerEx fx:id="startDatePicker"  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-            <Label text="%Label.EndDate"  GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-            <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-
-            <Label text="%Label.Period"  GridPane.columnIndex="4" GridPane.rowIndex="1"/>
-            <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
-            <RadioButton fx:id="monthlyBalance" text="%Button.MonthlyBalance" toggleGroup="$toggleGroup" GridPane.columnIndex="6" GridPane.rowIndex="1"/>
-            <RadioButton fx:id="runningBalance" text="%Button.RunningBalance" toggleGroup="$toggleGroup" GridPane.columnIndex="7" GridPane.rowIndex="1" GridPane.halignment="LEFT"/>
-
             <BarChart fx:id="barChart" title="%Title.AccountBalance" legendSide="RIGHT"
                       GridPane.rowIndex="2" GridPane.columnSpan="9">
                 <xAxis>
-                    <CategoryAxis side="BOTTOM" />
+                    <CategoryAxis side="BOTTOM"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis label="Currency" side="LEFT" />
+                    <NumberAxis label="Currency" side="LEFT"/>
                 </yAxis>
             </BarChart>
 
