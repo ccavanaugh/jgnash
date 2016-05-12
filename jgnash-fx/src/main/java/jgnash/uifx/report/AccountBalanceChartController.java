@@ -113,6 +113,20 @@ public class AccountBalanceChartController {
     // List to retain auxiliary AccountComboBoxes
     private final List<AccountComboBox> auxAccountComboBoxList = new ArrayList<>();
 
+    private final ChangeListener<Account> auxListener = (observable, oldValue, newValue) -> {
+        if (newValue != null) {
+            if (newValue == NOP_ACCOUNT) {
+                Platform.runLater(AccountBalanceChartController.this::trimAuxAccountCombos);
+            } else {
+                if (!isEmptyAccountComboPresent()) {
+                    Platform.runLater(AccountBalanceChartController.this::addAuxAccountCombo);
+                }
+            }
+
+            Platform.runLater(AccountBalanceChartController.this::updateChart);
+        }
+    };
+
     @FXML
     public void initialize() {
 
@@ -174,7 +188,7 @@ public class AccountBalanceChartController {
         auxComboBox.getUnfilteredItems().add(0, NOP_ACCOUNT);
         auxComboBox.setValue(NOP_ACCOUNT);
         auxAccountComboBoxList.add(auxComboBox);
-        auxComboBox.valueProperty().addListener(listener);
+        auxComboBox.valueProperty().addListener(auxListener);
 
         GridPane.setRowIndex(auxComboBox, 1);
         accountPane.getChildren().add(auxComboBox);
@@ -187,6 +201,51 @@ public class AccountBalanceChartController {
 
         // Push the initial load to the end of the platform thread for better startup and a nicer visual effect
         Platform.runLater(this::updateChart);
+    }
+
+    private void addAuxAccountCombo() {
+
+        final AccountComboBox auxComboBox = new AccountComboBox();
+        auxComboBox.setMaxWidth(Double.MAX_VALUE);
+        auxComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
+
+        auxComboBox.getUnfilteredItems().add(0, NOP_ACCOUNT);
+        auxComboBox.setValue(NOP_ACCOUNT);
+        auxAccountComboBoxList.add(auxComboBox);
+        auxComboBox.valueProperty().addListener(auxListener);
+
+        GridPane.setRowIndex(auxComboBox, auxAccountComboBoxList.size());
+        accountPane.getChildren().add(auxComboBox);
+    }
+
+    private void trimAuxAccountCombos() {
+
+        final List<AccountComboBox> empty = auxAccountComboBoxList.stream()
+                .filter(accountComboBox -> accountComboBox.getValue() == NOP_ACCOUNT).collect(Collectors.toList());
+
+        //Collections.reverse(empty);
+
+        // work backwards through the list, but leave at least one empty account combo
+        for (int i = empty.size() - 1; i > 0; i--) {
+            final AccountComboBox accountComboBox = empty.get(i);
+
+            accountPane.getChildren().remove(accountComboBox);
+            auxAccountComboBoxList.remove(accountComboBox);
+            accountComboBox.valueProperty().removeListener(auxListener);
+        }
+    }
+
+    private boolean isEmptyAccountComboPresent() {
+        boolean result = false;
+
+        for (final AccountComboBox accountComboBox : auxAccountComboBoxList) {
+            if (accountComboBox.getValue() == NOP_ACCOUNT) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 
     private void updateChart() {
