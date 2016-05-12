@@ -19,6 +19,7 @@
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 
+<?import javafx.scene.layout.VBox?>
 <BorderPane fx:controller="jgnash.uifx.report.AccountBalanceChartController" minWidth="850" minHeight="600"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <fx:define>
@@ -75,21 +76,15 @@
             <RadioButton fx:id="runningBalance" text="%Button.RunningBalance" toggleGroup="$toggleGroup"
                          GridPane.columnIndex="7" GridPane.halignment="LEFT"/>
 
-            <Label text="%Label.Account" GridPane.rowIndex="1" GridPane.valignment="TOP"/>
+            <Label text="%Label.Account" GridPane.rowIndex="1" GridPane.valignment="BASELINE"/>
 
-            <GridPane fx:id="accountPane" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="7"
-                      styleClass="form">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="ALWAYS"/>
-                    <ColumnConstraints hgrow="NEVER"/>
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints vgrow="NEVER"/>
-                </rowConstraints>
-
+            <VBox fx:id="accountComboVBox" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="6"
+                  GridPane.valignment="BASELINE" styleClass="form">
                 <AccountComboBox fx:id="accountComboBox" maxWidth="Infinity"/>
-                <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts" GridPane.columnIndex="1"/>
-            </GridPane>
+            </VBox>
+
+            <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts" GridPane.valignment="BASELINE"
+                      GridPane.rowIndex="1" GridPane.columnIndex="7"/>
 
             <BarChart fx:id="barChart" title="%Title.AccountBalance" legendSide="RIGHT"
                       GridPane.rowIndex="2" GridPane.columnSpan="9">

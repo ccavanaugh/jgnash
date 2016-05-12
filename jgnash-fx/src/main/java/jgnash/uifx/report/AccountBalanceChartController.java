@@ -17,17 +17,6 @@
  */
 package jgnash.uifx.report;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -40,9 +29,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
@@ -55,6 +43,18 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 /**
  * Periodic Account Balance Bar Chart
@@ -75,7 +75,7 @@ public class AccountBalanceChartController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
-    private GridPane accountPane;
+    private VBox accountComboVBox;
 
     @FXML
     private RadioButton monthlyBalance;
@@ -190,8 +190,8 @@ public class AccountBalanceChartController {
         auxAccountComboBoxList.add(auxComboBox);
         auxComboBox.valueProperty().addListener(auxListener);
 
-        GridPane.setRowIndex(auxComboBox, 1);
-        accountPane.getChildren().add(auxComboBox);
+        //GridPane.setRowIndex(auxComboBox, 1);
+        accountComboVBox.getChildren().add(auxComboBox);
 
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
@@ -214,8 +214,7 @@ public class AccountBalanceChartController {
         auxAccountComboBoxList.add(auxComboBox);
         auxComboBox.valueProperty().addListener(auxListener);
 
-        GridPane.setRowIndex(auxComboBox, auxAccountComboBoxList.size());
-        accountPane.getChildren().add(auxComboBox);
+        accountComboVBox.getChildren().add(auxComboBox);
     }
 
     private void trimAuxAccountCombos() {
@@ -223,13 +222,14 @@ public class AccountBalanceChartController {
         final List<AccountComboBox> empty = auxAccountComboBoxList.stream()
                 .filter(accountComboBox -> accountComboBox.getValue() == NOP_ACCOUNT).collect(Collectors.toList());
 
-        //Collections.reverse(empty);
+        // Reverse order so we leave the last empty at the bottom
+        Collections.reverse(empty);
 
-        // work backwards through the list, but leave at least one empty account combo
+        // work backwards through the list to avoid use of an iterator, and leave at least one empty account combo
         for (int i = empty.size() - 1; i > 0; i--) {
             final AccountComboBox accountComboBox = empty.get(i);
 
-            accountPane.getChildren().remove(accountComboBox);
+            accountComboVBox.getChildren().remove(accountComboBox);
             auxAccountComboBoxList.remove(accountComboBox);
             accountComboBox.valueProperty().removeListener(auxListener);
         }
