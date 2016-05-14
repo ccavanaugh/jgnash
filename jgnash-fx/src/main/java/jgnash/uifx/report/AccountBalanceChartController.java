@@ -17,6 +17,17 @@
  */
 package jgnash.uifx.report;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,10 +42,12 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.StoredObject;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
 import jgnash.text.CommodityFormat;
@@ -43,18 +56,8 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
+import jgnash.util.EncodeDecode;
+import jgnash.util.Nullable;
 
 /**
  * Periodic Account Balance Bar Chart
@@ -67,9 +70,19 @@ public class AccountBalanceChartController {
 
     private static final String REPORT_PERIOD = "reportPeriod";
 
+    private static final String RUNNING_BALANCE = "runningBalance";
+
+    private static final String MONTHLY_BALANCE = "monthlyBalance";
+
+    private static final String SUB_ACCOUNTS = "subAccounts";
+
+    private static final String SELECTED_ACCOUNTS = "selectedAccounts";
+
     private static final int BAR_GAP = 1;
 
     private static final int CATEGORY_GAP = 20;
+
+    private final Preferences preferences = Preferences.userNodeForPackage(AccountBalanceChartController.class);
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -119,20 +132,18 @@ public class AccountBalanceChartController {
                 Platform.runLater(AccountBalanceChartController.this::trimAuxAccountCombos);
             } else {
                 if (!isEmptyAccountComboPresent()) {
-                    Platform.runLater(AccountBalanceChartController.this::addAuxAccountCombo);
+                    Platform.runLater(() -> addAuxAccountCombo(null));
                 }
             }
 
             Platform.runLater(AccountBalanceChartController.this::updateChart);
+            Platform.runLater(AccountBalanceChartController.this::saveSelectedAccounts);
         }
     };
 
     @FXML
     public void initialize() {
-
         accountComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
-
-        final Preferences preferences = Preferences.userNodeForPackage(AccountBalanceChartController.class);
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -158,8 +169,11 @@ public class AccountBalanceChartController {
         startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(12)));
 
         // Force a defaults
-        includeSubAccounts.setSelected(true);
-        runningBalance.setSelected(true);
+        includeSubAccounts.setSelected(preferences.getBoolean(SUB_ACCOUNTS, true));
+        runningBalance.setSelected(preferences.getBoolean(RUNNING_BALANCE, true));
+        monthlyBalance.setSelected(preferences.getBoolean(MONTHLY_BALANCE, false));
+
+        restoreSelectedAccounts();
 
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -167,32 +181,25 @@ public class AccountBalanceChartController {
                 numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
 
                 Platform.runLater(AccountBalanceChartController.this::updateChart);
+                Platform.runLater(AccountBalanceChartController.this::saveSelectedAccounts);
             }
         });
 
-        periodComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            preferences.putInt(REPORT_PERIOD, newValue.ordinal());
-            Platform.runLater(this::updateChart);
-        });
-
+        // Generic listener.  No super efficient but reduces listener count
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Platform.runLater(AccountBalanceChartController.this::updateChart);
+
+                preferences.putBoolean(MONTHLY_BALANCE, monthlyBalance.isSelected());
+                preferences.putBoolean(RUNNING_BALANCE, runningBalance.isSelected());
+                preferences.putBoolean(SUB_ACCOUNTS, includeSubAccounts.isSelected());
+                preferences.putInt(REPORT_PERIOD, periodComboBox.getValue().ordinal());
             }
         };
 
-        final AccountComboBox auxComboBox = new AccountComboBox();
-        auxComboBox.setMaxWidth(Double.MAX_VALUE);
-        auxComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
+        addAuxAccountCombo(null);   // load the initial aux account combo
 
-        auxComboBox.getUnfilteredItems().add(0, NOP_ACCOUNT);
-        auxComboBox.setValue(NOP_ACCOUNT);
-        auxAccountComboBoxList.add(auxComboBox);
-        auxComboBox.valueProperty().addListener(auxListener);
-
-        //GridPane.setRowIndex(auxComboBox, 1);
-        accountComboVBox.getChildren().add(auxComboBox);
-
+        periodComboBox.valueProperty().addListener(listener);
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
         runningBalance.selectedProperty().addListener(listener);
@@ -203,17 +210,53 @@ public class AccountBalanceChartController {
         Platform.runLater(this::updateChart);
     }
 
-    private void addAuxAccountCombo() {
+    /**
+     * Store a list of selected accounts
+     */
+    private void saveSelectedAccounts() {
+        final List<String> accounts
+                = getSelectedAccounts().stream().map(StoredObject::getUuid).collect(Collectors.toList());
+
+        preferences.put(SELECTED_ACCOUNTS, EncodeDecode.encodeStringCollection(accounts));
+    }
+
+    private void restoreSelectedAccounts() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final List<String> accountIds
+                = new ArrayList<>(EncodeDecode.decodeStringCollection(preferences.get(SELECTED_ACCOUNTS, "")));
+
+        if (!accountIds.isEmpty()) {
+            // set Primary account
+            Account account = engine.getAccountByUuid(accountIds.get(0));
+            if (account != null) {
+                accountComboBox.setValue(account);
+            }
+
+            if (accountIds.size() > 1) {
+                for (int i = 1; i < accountIds.size(); i++) {
+                    account = engine.getAccountByUuid(accountIds.get(i));
+                    if (account != null) {
+                        addAuxAccountCombo(account);
+                    }
+                }
+            }
+        }
+
+        trimAuxAccountCombos();
+    }
+
+    private void addAuxAccountCombo(@Nullable Account account) {
 
         final AccountComboBox auxComboBox = new AccountComboBox();
         auxComboBox.setMaxWidth(Double.MAX_VALUE);
         auxComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
-
         auxComboBox.getUnfilteredItems().add(0, NOP_ACCOUNT);
-        auxComboBox.setValue(NOP_ACCOUNT);
-        auxAccountComboBoxList.add(auxComboBox);
+        auxComboBox.setValue(account == null ? NOP_ACCOUNT : account);
         auxComboBox.valueProperty().addListener(auxListener);
 
+        auxAccountComboBoxList.add(auxComboBox);
         accountComboVBox.getChildren().add(auxComboBox);
     }
 
@@ -248,6 +291,21 @@ public class AccountBalanceChartController {
         return result;
     }
 
+    private Collection<Account> getSelectedAccounts() {
+        // Use a list for consistent sort order
+        final List<Account> accountList = new ArrayList<>();
+        accountList.add(accountComboBox.getValue());
+
+        for (final AccountComboBox auxAccountComboBox : auxAccountComboBoxList) {
+            final Account account = auxAccountComboBox.getValue();
+            if (account != NOP_ACCOUNT && !accountList.contains(account)) {
+                accountList.add(account);
+            }
+        }
+
+        return accountList;
+    }
+
     private void updateChart() {
         barChart.getData().clear();
 
@@ -255,15 +313,11 @@ public class AccountBalanceChartController {
                 periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
 
         // Create a set of accounts to display
-        final Set<Account> accountSet = new HashSet<>();
-        accountSet.add(accountComboBox.getValue());
-        accountSet.addAll(auxAccountComboBoxList.stream().filter(auxAccountComboBox
-                -> auxAccountComboBox.getValue() != NOP_ACCOUNT).map(AccountComboBox::getValue)
-                .collect(Collectors.toList()));
+        final Collection<Account> selectedAccounts = getSelectedAccounts();
 
-        barChart.setLegendVisible(accountSet.size() > 1);
+        barChart.setLegendVisible(selectedAccounts.size() > 1);
 
-        for (final Account account : accountSet) {
+        for (final Account account : selectedAccounts) {
 
             final XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName(account.getName());
