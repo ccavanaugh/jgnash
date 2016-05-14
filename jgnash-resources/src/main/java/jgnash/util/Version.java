@@ -98,11 +98,13 @@ public class Version {
         return isReleaseCurrent(getAppVersion());
     }
 
-    public static boolean isReleaseCurrent(String version) {
-        boolean current = true;
+    public static boolean isReleaseCurrent(final String version) {
+        boolean currentRelease = true;
 
         final Optional<String> release = getLatestGitHubRelease();
         if (release.isPresent()) {
+
+            System.out.println(release.get());
 
             // quick check
             if (version.equals(release.get())) {
@@ -114,8 +116,13 @@ public class Version {
                 for (int i = 0; i < 3; i++) {   // x.x.x is tested for
                     if (i < gitVersion.length && i < thisVersion.length) {
                         try {
-                            if (Integer.parseInt(gitVersion[i]) > Integer.parseInt(thisVersion[i])) {
-                                current = false;
+                            final int current = Integer.parseInt(thisVersion[i]);
+                            final int git = Integer.parseInt(gitVersion[i]);
+
+                            if (git > current) {
+                                currentRelease = false;
+                                break;
+                            } else if (current > git) {    // newer release than git
                                 break;
                             }
                         } catch (final NumberFormatException e) {
@@ -124,11 +131,11 @@ public class Version {
                     }
                 }
 
-                if (gitVersion.length > thisVersion.length && current) {
-                    current = false;
+                if (gitVersion.length > thisVersion.length && currentRelease) {
+                    currentRelease = false;
                 }
             }
         }
-        return current;
+        return currentRelease;
     }
 }
