@@ -213,7 +213,8 @@ public class MainApplication extends Application implements MessageListener {
                 if (Options.checkForUpdatesProperty().get()) {
                     backgroundExecutor.execute(() -> {
                         if (!Version.isReleaseCurrent()) {
-                            StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion"));
+                            Platform.runLater(() ->
+                                    StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion")));
                         }
                         logger.info("Version check performed");
                     });
