@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="jGnashFx" default="default" basedir="."
+         xmlns:fx="javafx:com.sun.javafx.tools.ant">
+
+    <path id="CLASSPATH">
+        <fileset dir="target/lib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <property name="build.src.dir" value="src"/>
+    <property name="build.classes.dir" value="target/classes"/>
+
+    <target name="clean">
+        <mkdir dir="deploy"/>
+
+        <delete>
+            <fileset dir="deploy" includes="**/*"/>
+            <fileset dir="bundles" includes="**/*"/>
+        </delete>
+
+    </target>
+
+    <target name="default" depends="clean">
+        <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+                 uri="javafx:com.sun.javafx.tools.ant"
+                 classpath="/usr/lib/jvm/java-8-jdk/lib/ant-javafx.jar"/>
+
+        <!--Disable inclusion of the JRE-->
+        <fx:platform basedir=""/>
+
+        <fx:application id="jgnashFx"
+                        name="jgnashFx"
+                        mainClass="jgnash.MainFX"
+                        version="2.23.0"
+        />
+
+        <fx:resources id="appRes">
+            <fx:fileset dir="target" includes="jgnashFx-ea.jar"/>
+            <fx:fileset dir="target/lib"/>
+        </fx:resources>
+
+        <fx:jar destfile="target/jgnashFx-ea.jar">
+            <fx:application refid="jgnashFx"/>
+            <fx:resources refid="appRes"/>
+            <fx:fileset dir="${build.classes.dir}"/>
+
+			<manifest>
+            	<attribute name="Application-Name" value="jGnash"/>				
+            </manifest>
+        </fx:jar>
+
+        <fx:deploy outdir="native-packages/" embedJNLP="true" outfile="jgnashFx" nativeBundles="all">
+            <fx:application refId="jgnashFx"/>
+            <fx:resources refid="appRes"/>
+            <fx:info title="jGnash 2" vendor="Open Source"/>
+        </fx:deploy>
+    </target>
+
+</project>
