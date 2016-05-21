@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="jGnash" default="default" basedir=".">
+
+    <property name="jarbundler.jar" value="../osxbuild/jarbundler-core-3.3.0.jar"/>
+
+    <target name="default" description="Build an example application">
+
+        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
+
+        <taskdef name="jarbundler"
+                 classpath="${jarbundler.jar}"
+                 classname="com.ultramixer.jarbundler.JarBundler"/>
+
+        <jarbundler dir="${basedir}" verbose="true" showPlist="true"
+                    name="jGnash-${version}"
+                    shortname="jGnash"
+                    signature="jGna"
+                    mainclass="jgnash.Main"
+                    jvmversion="1.8"
+                    icon="../osxbuild/gnome-money.icns"
+                    version="${version}"
+                    copyright="Craig Cavanaugh"
+                    stubfile="../osxbuild/JavaAppLauncher"
+                    usejavaxkey="true"
+                    LSApplicationCategoryType="public.app-category.finance"
+        >
+            <javaproperty name="apple.laf.useScreenMenuBar" value="true"/>
+
+            <jarfileset dir="target">
+                <include name="**/*.jar"/>
+            </jarfileset>
+
+            <resourcefilelist id="docFiles" dir="../jgnash-help/target/docbkx/pdf" files="guide.pdf"/>
+            <resourcefilelist id="docFiles" dir="../" files="readme.html, README.md, changelog.txt"/>
+
+            <resourcefileset dir="scripts">
+                <include name="**/*.js"/>
+            </resourcefileset>
+
+            <documenttype name="jGnash document" extensions="bxds" role="Editor"/>
+        </jarbundler>
+
+    </target>
+
+
+</project>

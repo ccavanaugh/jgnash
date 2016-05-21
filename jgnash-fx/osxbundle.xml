@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="jGnashFx-ea" default="default" basedir=".">
+
+    <property name="jarbundler.jar" value="../osxbuild/jarbundler-core-3.3.0.jar"/>
+
+    <target name="default" description="Build an example application">
+
+        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
+
+        <taskdef name="jarbundler"
+                 classpath="${jarbundler.jar}"
+                 classname="com.ultramixer.jarbundler.JarBundler"/>
+
+        <jarbundler dir="${basedir}" verbose="true" showPlist="true"
+                    name="jGnashFx-ea-${version}"
+                    shortname="jGnash"
+                    signature="jGna"
+                    mainclass="jgnash.MainFX"
+                    jvmversion="1.8"
+                    icon="../osxbuild/gnome-money.icns"
+                    version="${version}"
+                    copyright="Craig Cavanaugh"
+                    stubfile="../osxbuild/JavaAppLauncher"
+                    usejavaxkey="false"
+                    LSApplicationCategoryType="public.app-category.finance"
+        >
+            <jarfileset dir="target/jgnash-${version}">
+                <include name="**/*.jar"/>
+            </jarfileset>
+
+            <resourcefileset dir="target/jgnash-${version}">
+                <include name="**/*.js"/>
+                <include name="**/*.pdf"/>
+                <include name="**/*.html"/>
+                <include name="**/*.md"/>
+                <exclude name="**/*.exe"/>
+            </resourcefileset>
+
+            <documenttype name="jGnash document" extensions="bxds" role="Editor"/>
+        </jarbundler>
+
+    </target>
+
+
+</project>
