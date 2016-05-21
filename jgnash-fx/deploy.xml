@@ -38,13 +38,15 @@
                  uri="javafx:com.sun.javafx.tools.ant"
                  classpath="/usr/lib/jvm/java-8-jdk/lib/ant-javafx.jar"/>
 
+        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
+
         <!--Disable inclusion of the JRE-->
         <fx:platform basedir=""/>
 
         <fx:application id="jgnashFx"
                         name="jgnashFx"
                         mainClass="jgnash.MainFX"
-                        version="2.23.0"
+                        version="${version}"
         />
 
         <fx:resources id="appRes">
@@ -74,13 +76,15 @@
                  uri="javafx:com.sun.javafx.tools.ant"
                  classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/lib/ant-javafx.jar"/>
 
+        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
+
         <!--Disable inclusion of the JRE-->
         <fx:platform basedir=""/>
 
         <fx:application id="jgnashFx"
                         name="jgnashFx"
                         mainClass="jgnash.MainFX"
-                        version="2.23.0"
+                        version="${version}"
         />
 
         <fx:resources id="appRes">
@@ -110,13 +114,15 @@
                  uri="javafx:com.sun.javafx.tools.ant"
                  classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/lib/ant-javafx.jar"/>
 
+        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
+
         <!--Disable inclusion of the JRE-->
         <fx:platform basedir=""/>
 
         <fx:application id="jgnashFx"
                         name="jgnashFx"
                         mainClass="jgnash.MainFX"
-                        version="2.23.0"
+                        version="${version}"
         />
 
         <fx:resources id="appRes">
