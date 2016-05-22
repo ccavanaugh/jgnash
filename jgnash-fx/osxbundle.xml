@@ -18,7 +18,7 @@
                     signature="jGna"
                     mainclass="jgnash.MainFX"
                     jvmversion="1.8"
-                    icon="../osxbuild/gnome-money.icns"
+                    icon="../deployfx/gnome-money.icns"
                     version="${version}"
                     copyright="Craig Cavanaugh"
                     stubfile="../osxbuild/JavaAppLauncher"

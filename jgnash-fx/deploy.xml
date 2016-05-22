@@ -12,14 +12,6 @@
     <property name="build.src.dir" value="src"/>
     <property name="build.classes.dir" value="target/classes"/>
 
-    <target name="clean">
-        <delete>
-            <fileset dir="native-packages" includes="**/*"/>
-        </delete>
-
-        <mkdir dir="native-packages"/>
-    </target>
-
     <condition property="isMac">
         <os family="mac"/>
     </condition>
@@ -29,17 +21,48 @@
     </condition>
 
     <condition property="isUnix">
+      <and>
         <os family="unix"/>
+        <not>
+          <os family="mac"/>
+        </not>
+      </and>
     </condition>
+
+    <target name="initUnixPath" if="isUnix">
+      <echo message="Settings Unix ant-tools path"/>
+      <property name="ant-tools-path">/usr/lib/jvm/java-8-jdk</property>
+      <property name="icon-file">${basedir}/../deployfx/gnome-money.png</property>
+    </target>
+
+    <target name="initMacPath" if="isMac">
+      <echo message="Settings Windows ant-tools path"/>
+      <property name="ant-tools-path">/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home</property>
+      <property name="icon-file">${basedir}/../deployfx/gnome-money.icns</property>
+    </target>
+
+    <target name="initWindowsPath" if="isWindows">
+      <echo message="Settings Windows ant-tools path"/>
+      <property name="ant-tools-path">C:\Program Files\Java\jdk1.8.0_92</property>
+      <property name="icon-file">${basedir}/../deployfx/gnome-money.ico</property>
+    </target>
+
+    <target name="default" depends="deployMac, deployUnix, deployWindows"/>
+
+    <target name="clean" depends="initUnixPath, initMacPath, initWindowsPath">
+        <delete>
+            <fileset dir="native-packages" includes="**/*"/>
+        </delete>
+
+        <mkdir dir="native-packages"/>
+    </target>
 
     <target name="deployUnix" depends="clean" if="isUnix">
         <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
                  uri="javafx:com.sun.javafx.tools.ant"
-                 classpath="/usr/lib/jvm/java-8-jdk/lib/ant-javafx.jar"/>
+                 classpath="${ant-tools-path}\lib/ant-javafx.jar"/>
 
         <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
-
-        
 
         <fx:application id="jgnashFx"
                         name="jgnashFx"
@@ -66,22 +89,23 @@
         <fx:deploy outdir="native-packages/" embedJNLP="true" outfile="jgnashFx" nativeBundles="all">
             <fx:application refId="jgnashFx"/>
             <fx:resources refid="appRes"/>
-            <fx:info title="jGnash 2" vendor="Open Source" license="GPLv3" category="Finance"
+            <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="Finance"
                      copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
-					 description="jGnash Personal Finance">				
+					           description="jGnash Personal Finance">
+             <fx:icon href="${icon-file}"/>
 			</fx:info>
 
 			<!--Disable inclusion of the JRE-->
-        	<fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>	
+        	<fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
         </fx:deploy>
     </target>
 
     <target name="deployMac" depends="clean" if="isMac">
         <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
                  uri="javafx:com.sun.javafx.tools.ant"
-                 classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/lib/ant-javafx.jar"/>
+                  classpath="${ant-tools-path}\lib/ant-javafx.jar"/>
 
-        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>       
+        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
 
         <fx:application id="jgnashFx"
                         name="jgnashFx"
@@ -108,9 +132,12 @@
         <fx:deploy outdir="native-packages/" embedJNLP="true" outfile="jgnashFx" nativeBundles="all">
             <fx:application refId="jgnashFx"/>
             <fx:resources refid="appRes"/>
-            <fx:info title="jGnash 2" vendor="Open Source" license="GPLv3" category="public.app-category.finance"
+            <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="public.app-category.finance"
                      copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
-					 description="jGnash Personal Finance"/>
+					           description="jGnash Personal Finance">
+               <fx:icon href="${icon-file}"/>
+            </fx:info>
+
 
 			<!--Disable inclusion of the JRE-->
         	<fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
@@ -120,9 +147,9 @@
     <target name="deployWindows" depends="clean" if="isWindows">
         <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
                  uri="javafx:com.sun.javafx.tools.ant"
-                 classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/lib/ant-javafx.jar"/>
+                 classpath="${ant-tools-path}\lib/ant-javafx.jar"/>
 
-        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>      
+        <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
 
         <fx:application id="jgnashFx"
                         name="jgnashFx"
@@ -146,17 +173,17 @@
             </manifest>
         </fx:jar>
 
-        <fx:deploy outdir="native-packages/" embedJNLP="true" outfile="jgnashFx" nativeBundles="all">
+        <fx:deploy outdir="native-packages/" embedJNLP="true" outfile="jgnashFx" nativeBundles="EXE">
             <fx:application refId="jgnashFx"/>
             <fx:resources refid="appRes"/>
-            <fx:info title="jGnash 2" vendor="Open Source" license="GPLv3" category="Finance"
+            <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="Finance"
                      copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
-					 description="jGnash Personal Finance"/>
+					           description="jGnash Personal Finance">
+              <fx:icon href="${icon-file}"/>
+            </fx:info>
 			 <!--Disable inclusion of the JRE-->
         	<fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
         </fx:deploy>
     </target>
-
-    <target name="default" depends="deployMac, deployUnix, deployWindows"/>
 
 </project>
