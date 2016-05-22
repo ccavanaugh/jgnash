@@ -69,7 +69,7 @@ public final class StaticAccountsMethods {
         dialog.showAndWait();
     }
 
-    public static void showNewAccountPropertiesDialog(@Nullable final Account parentAccount) {
+    static void showNewAccountPropertiesDialog(@Nullable final Account parentAccount) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
@@ -100,7 +100,7 @@ public final class StaticAccountsMethods {
         }
     }
 
-    public static void showModifyAccountProperties(final Account account) {
+    static void showModifyAccountProperties(final Account account) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
