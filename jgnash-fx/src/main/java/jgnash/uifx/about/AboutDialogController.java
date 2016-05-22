@@ -169,7 +169,7 @@ public class AboutDialogController {
             this.value = new SimpleStringProperty(value);
         }
 
-        public StringProperty keyProperty() {
+        StringProperty keyProperty() {
             return key;
         }
 
