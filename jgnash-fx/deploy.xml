@@ -50,6 +50,8 @@
     <target name="default" depends="deployMac, deployUnix, deployWindows"/>
 
     <target name="clean" depends="initUnixPath, initMacPath, initWindowsPath">
+		<mkdir dir="native-packages"/>
+
         <delete>
             <fileset dir="native-packages" includes="**/*"/>
         </delete>
