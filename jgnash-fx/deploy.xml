@@ -21,30 +21,30 @@
     </condition>
 
     <condition property="isUnix">
-      <and>
-        <os family="unix"/>
-        <not>
-          <os family="mac"/>
-        </not>
-      </and>
+        <and>
+            <os family="unix"/>
+            <not>
+                <os family="mac"/>
+            </not>
+        </and>
     </condition>
 
     <target name="initUnixPath" if="isUnix">
-      <echo message="Settings Unix ant-tools path"/>
-      <property name="ant-tools-path">/usr/lib/jvm/java-8-jdk</property>
-      <property name="icon-file">${basedir}/../deployfx/gnome-money.png</property>
+        <echo message="Settings Unix ant-tools path"/>
+        <property name="ant-tools-path">/usr/lib/jvm/java-8-jdk</property>
+        <property name="icon-file">${basedir}/../deployfx/gnome-money.png</property>
     </target>
 
     <target name="initMacPath" if="isMac">
-      <echo message="Settings Windows ant-tools path"/>
-      <property name="ant-tools-path">/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home</property>
-      <property name="icon-file">${basedir}/../deployfx/gnome-money.icns</property>
+        <echo message="Settings Windows ant-tools path"/>
+        <property name="ant-tools-path">/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home</property>
+        <property name="icon-file">${basedir}/../deployfx/gnome-money.icns</property>
     </target>
 
     <target name="initWindowsPath" if="isWindows">
-      <echo message="Settings Windows ant-tools path"/>
-      <property name="ant-tools-path">C:\Program Files\Java\jdk1.8.0_92</property>
-      <property name="icon-file">${basedir}/../deployfx/gnome-money.ico</property>
+        <echo message="Settings Windows ant-tools path"/>
+        <property name="ant-tools-path">C:\Program Files\Java\jdk1.8.0_92</property>
+        <property name="icon-file">${basedir}/../deployfx/gnome-money.ico</property>
     </target>
 
     <target name="default" depends="deployMac, deployUnix, deployWindows"/>
@@ -73,7 +73,7 @@
         <fx:resources id="appRes">
             <fx:fileset dir="target" includes="jgnashFx-ea.jar"/>
             <fx:fileset dir="target/lib"/>
-			<fx:fileset type="license" dir="../" includes="COPYING"/>
+            <fx:fileset type="license" dir="../" includes="COPYING"/>
         </fx:resources>
 
         <fx:jar destfile="target/jgnashFx-ea.jar">
@@ -91,19 +91,19 @@
             <fx:resources refid="appRes"/>
             <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="Finance"
                      copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
-					           description="jGnash Personal Finance">
-             <fx:icon href="${icon-file}"/>
-			</fx:info>
+                     description="jGnash Personal Finance">
+                <fx:icon href="${icon-file}"/>
+            </fx:info>
 
-			<!--Disable inclusion of the JRE-->
-        	<fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
+            <!--Disable inclusion of the JRE-->
+            <fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
         </fx:deploy>
     </target>
 
     <target name="deployMac" depends="clean" if="isMac">
         <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
                  uri="javafx:com.sun.javafx.tools.ant"
-                  classpath="${ant-tools-path}\lib/ant-javafx.jar"/>
+                 classpath="${ant-tools-path}\lib/ant-javafx.jar"/>
 
         <loadproperties srcFile="${basedir}/../jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
 
@@ -116,7 +116,7 @@
         <fx:resources id="appRes">
             <fx:fileset dir="target" includes="jgnashFx-ea.jar"/>
             <fx:fileset dir="target/lib"/>
-			<fx:fileset type="license" dir="../" includes="COPYING"/>
+            <fx:fileset type="license" dir="../" includes="COPYING"/>
         </fx:resources>
 
         <fx:jar destfile="target/jgnashFx-ea.jar">
@@ -134,13 +134,13 @@
             <fx:resources refid="appRes"/>
             <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="public.app-category.finance"
                      copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
-					           description="jGnash Personal Finance">
-               <fx:icon href="${icon-file}"/>
+                     description="jGnash Personal Finance">
+                <fx:icon href="${icon-file}"/>
             </fx:info>
 
 
-			<!--Disable inclusion of the JRE-->
-        	<fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
+            <!--Disable inclusion of the JRE-->
+            <fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
         </fx:deploy>
     </target>
 
@@ -178,11 +178,11 @@
             <fx:resources refid="appRes"/>
             <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="Finance"
                      copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
-					           description="jGnash Personal Finance">
-              <fx:icon href="${icon-file}"/>
+                     description="jGnash Personal Finance">
+                <fx:icon href="${icon-file}"/>
             </fx:info>
-			 <!--Disable inclusion of the JRE-->
-        	<fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
+            <!--Disable inclusion of the JRE-->
+            <fx:platform javafx="8.0+" j2se="8.0+" basedir=""/>
         </fx:deploy>
     </target>
 
