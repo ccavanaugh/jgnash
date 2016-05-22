@@ -67,7 +67,7 @@ public class AboutDialogController {
     @FXML
     void initialize() {
         tabbedPane.getTabs().addAll(
-                addHTMLTab(resources.getString("Menu.About.Name"), "notice.html"),
+                addHTMLTab(resources.getString("Tab.About"), "notice.html"),
                 addHTMLTab(resources.getString("Tab.Credits"), "credits.html"),
                 addHTMLTab(resources.getString("Tab.AppLicense"), "jgnash-license.html"),
                 addHTMLTab(resources.getString("Tab.GPLLicense"), "gpl-license.html"),
