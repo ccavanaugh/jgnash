@@ -15,37 +15,48 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash;
-
 import java.net.Authenticator;
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
 import javafx.application.Application;
+import javafx.stage.Stage;
 
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.net.NetworkAuthenticator;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
-import jgnash.util.Version;
 
 /**
- * Main launch point for the JavaFX UI
+ * Decorator for {@code MainApplication} and main entry.
+ *
+ * This Bootstraps the JavaFX application and lives in the default class as a workaround for
+ * Gnome and OSX menu naming issues.
  *
  * @author Craig Cavanaugh
  */
-public class MainFX {
+public class jGnashFx extends Application {
 
-    public static final String VERSION;
+    private final MainApplication mainApplication = new MainApplication();
 
-    static {
-        VERSION = Version.getAppName() + " - " + Version.getAppVersion();
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        mainApplication.start(primaryStage);
+    }
+
+    @Override
+    public void init() throws Exception {
+        mainApplication.init();
+    }
+
+    @Override
+    public void stop() {
+        mainApplication.stop();
     }
 
     public static void main(final String[] args) {
-
         if (OS.getJavaVersion() < 1.8f) {
             System.out.println(ResourceUtils.getString("Message.JVM8"));
             System.out.println(ResourceUtils.getString("Message.Version") + " "
@@ -68,8 +79,9 @@ public class MainFX {
 
         setupNetworking();
 
-        // Boot the application
-        Application.launch(MainApplication.class, args);
+        // System.setProperty("javafx.verbose", "true");
+
+        launch(args);
     }
 
     private static void setupNetworking() {

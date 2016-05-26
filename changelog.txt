@@ -24,6 +24,10 @@ Reinstate archive capability.
 
 Change the base highlight color for the FX interface
 
+Release 2.23.1
+----------------------
+05/26/16 Improved the name of the application in the OSX and Gnome global menu. (Fx)
+
 Release 2.23.0
 ----------------------
 05/14/16 Added the Periodic Account Balance report. (Fx)

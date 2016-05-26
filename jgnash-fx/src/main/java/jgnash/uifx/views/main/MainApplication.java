@@ -45,7 +45,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import jgnash.MainFX;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -85,6 +84,8 @@ public class MainApplication extends Application implements MessageListener {
      */
     public static final String DEFAULT_CSS = "jgnash/skin/default.css";
 
+    private static final String title;
+
     private static final String LAST_TAB = "lastTab";
 
     private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
@@ -112,6 +113,10 @@ public class MainApplication extends Application implements MessageListener {
      * Application Singleton
      */
     private static MainApplication instance;
+
+    static {
+        title = Version.getAppName() + " - " + Version.getAppVersion();
+    }
 
     @Override
     public void init() throws Exception {
@@ -164,7 +169,7 @@ public class MainApplication extends Application implements MessageListener {
 
         scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
 
-        stage.setTitle(MainFX.VERSION);
+        stage.setTitle(title);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());
         stage.setScene(scene);
         stage.setResizable(true);
@@ -365,9 +370,9 @@ public class MainApplication extends Application implements MessageListener {
 
             Platform.runLater(() -> {
                 if (engine != null) {
-                    getPrimaryStage().setTitle(MainFX.VERSION + "  [" + EngineFactory.getActiveDatabase() + ']');
+                    getPrimaryStage().setTitle(title + "  [" + EngineFactory.getActiveDatabase() + ']');
                 } else {
-                    getPrimaryStage().setTitle(MainFX.VERSION);
+                    getPrimaryStage().setTitle(title);
                 }
             });
         });

@@ -16,7 +16,7 @@
                     name="jGnashFx-ea-${version}"
                     shortname="jGnash"
                     signature="jGna"
-                    mainclass="jgnash.MainFX"
+                    mainclass="jGnashFx"
                     jvmversion="1.8"
                     icon="../deployfx/gnome-money.icns"
                     version="${version}"
