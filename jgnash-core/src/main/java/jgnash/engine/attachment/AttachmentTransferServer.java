@@ -17,7 +17,6 @@
  */
 package jgnash.engine.attachment;
 
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -35,8 +34,6 @@ import io.netty.handler.codec.base64.Base64Decoder;
 import io.netty.handler.codec.base64.Base64Encoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
@@ -86,7 +83,7 @@ public class AttachmentTransferServer {
             b.group(eventLoopGroup)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_KEEPALIVE, true)
-                    .handler(new LoggingHandler(LogLevel.INFO))
+                    //.handler(new LoggingHandler(LogLevel.INFO))   // for debugging purposes
                     .childHandler(new ChannelInitializer<SocketChannel>() {
 
                         @Override
@@ -137,7 +134,7 @@ public class AttachmentTransferServer {
 
     private final class ServerTransferHandler extends NettyTransferHandler {
 
-        public ServerTransferHandler() {
+        ServerTransferHandler() {
             super(attachmentPath, encryptionManager);
         }
 
