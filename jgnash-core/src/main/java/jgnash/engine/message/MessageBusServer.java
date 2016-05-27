@@ -59,11 +59,11 @@ public class MessageBusServer {
 
     private static final Logger logger = Logger.getLogger(MessageBusServer.class.getName());
 
-    public static final String PATH_PREFIX = "<PATH>";
+    static final String PATH_PREFIX = "<PATH>";
 
-    public static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
+    static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
 
-    public static final String EOL_DELIMITER = "\r\n";
+    static final String EOL_DELIMITER = "\r\n";
 
     private int port = 0;
 
