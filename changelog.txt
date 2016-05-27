@@ -26,6 +26,7 @@ Change the base highlight color for the FX interface
 
 Release 2.23.1
 ----------------------
+05/27/16 Update to the latest Netty and include only the needed dependencies. (Swing, Fx)
 05/26/16 Improved the name of the application in the OSX and Gnome global menu. (Fx)
 
 Release 2.23.0
