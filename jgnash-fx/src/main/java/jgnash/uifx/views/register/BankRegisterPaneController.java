@@ -69,15 +69,12 @@ public class BankRegisterPaneController extends RegisterPaneController {
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         // Load the register table
-        final RegisterTableController controller = FXMLUtils.loadFXML(o -> {
-            registerTablePane.getChildren().add(o);
-        }, "BasicRegisterTable.fxml", resources);
+        final RegisterTableController controller = FXMLUtils.loadFXML(o
+                -> registerTablePane.getChildren().add(o), "BasicRegisterTable.fxml", resources);
 
         registerTableControllerProperty.setValue(controller);
 
-        accountProperty().addListener((observable, oldValue, newValue) -> {
-            buildTabs();
-        });
+        accountProperty().addListener((observable, oldValue, newValue) -> buildTabs());
     }
 
     @Override
@@ -126,9 +123,8 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
         restoreLastTabUsed();
 
-        transactionForms.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            saveLastTabUsed(newValue.intValue());
-        });
+        transactionForms.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue)
+                -> saveLastTabUsed(newValue.intValue()));
     }
 
     private Tab buildTab(final String tabName, final SlipType slipType) {

@@ -89,18 +89,15 @@ public class ModifyCurrencyController implements MessageListener {
 
         selectedCurrency.bind(listView.getSelectionModel().selectedItemProperty());
 
-        selectedCurrency.addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(this::loadForm);
-        });
+        selectedCurrency.addListener((observable, oldValue, newValue) -> Platform.runLater(this::loadForm));
 
         // unregister when the window closes
-        parentProperty.addListener((observable, oldValue, newValue) -> {
-            newValue.windowProperty().addListener((observable1, oldValue1, newValue1) -> {
-                newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
-                        event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
-                                MessageChannel.COMMODITY));
-            });
-        });
+        parentProperty.addListener((observable, oldValue, newValue)
+                -> newValue.windowProperty().addListener((observable1, oldValue1, newValue1) -> {
+            newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
+                    event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
+                            MessageChannel.COMMODITY));
+        }));
 
         applyButton.disableProperty().bind(Bindings.or(selectedCurrency.isNull(),
                 scaleTextField.textProperty().isEmpty()));

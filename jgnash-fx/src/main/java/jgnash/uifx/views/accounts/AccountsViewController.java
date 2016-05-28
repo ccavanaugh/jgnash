@@ -109,16 +109,12 @@ public class AccountsViewController implements MessageListener {
         // Register invalidation listeners to force a reload
         typeFilter.addListener(observable -> reload());
 
-        selectedAccountProperty.addListener((observable, oldValue, newValue) -> {
-            updateButtonStates();
-        });
+        selectedAccountProperty.addListener((observable, oldValue, newValue) -> updateButtonStates());
 
         modifyButton.disableProperty().bind(selectedAccountProperty.isNull());
 
         AccountBalanceDisplayManager.accountBalanceDisplayMode()
-                .addListener((observable, oldValue, newValue) -> {
-            treeTableView.refresh();
-        });
+                .addListener((observable, oldValue, newValue) -> treeTableView.refresh());
     }
 
     @SuppressWarnings("unchecked")

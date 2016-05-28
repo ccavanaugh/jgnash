@@ -98,9 +98,8 @@ public class WizardDialogController<K extends Enum<?>> {
         taskList.setEditable(false);
 
         // updates the task title
-        taskList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            handleTaskChange(newValue);
-        });
+        taskList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
+                -> handleTaskChange(newValue));
 
         taskList.setCellFactory(param -> new ControllerListCell());
 
@@ -123,9 +122,7 @@ public class WizardDialogController<K extends Enum<?>> {
         wizardPaneController.putSettings(settings);
 
         // Listen for changes to the controller descriptor
-        wizardPaneController.descriptorProperty().addListener(observable -> {
-            taskList.refresh();
-        });
+        wizardPaneController.descriptorProperty().addListener(observable -> taskList.refresh());
 
         taskList.getItems().add(wizardPaneController.descriptorProperty().get());
         paneMap.put(wizardPaneController, pane);
@@ -271,7 +268,7 @@ public class WizardDialogController<K extends Enum<?>> {
      */
     private class ControllerListCell extends ListCell<WizardDescriptor> {
 
-        public ControllerListCell() {
+        ControllerListCell() {
             super();
             updateListView(taskList);
             setSkin(createDefaultSkin());

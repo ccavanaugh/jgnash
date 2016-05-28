@@ -67,9 +67,7 @@ class InvestmentSlipManager {
             transactionSlips.getChildren().addAll(newValue.getPane());
         });
 
-        accountProperty().addListener((observable, oldValue, newValue) -> {
-            buildTabs();
-        });
+        accountProperty().addListener((observable, oldValue, newValue) -> buildTabs());
     }
 
     ObjectProperty<Account> accountProperty() {

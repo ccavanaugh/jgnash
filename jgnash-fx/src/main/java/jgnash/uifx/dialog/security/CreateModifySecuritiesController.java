@@ -95,9 +95,7 @@ public class CreateModifySecuritiesController implements MessageListener {
 
         deleteButton.disableProperty().bind(Bindings.isNull(selectedSecurityNode));
 
-        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            loadForm();
-        });
+        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> loadForm());
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 

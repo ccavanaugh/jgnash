@@ -101,13 +101,11 @@ public class ControlsTest extends Application {
             System.out.println("Selected date: " + date);
         });
 
-        decimalTextField.decimalProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("decimalTextField: " + newValue);
-        });
+        decimalTextField.decimalProperty().addListener((observable, oldValue, newValue)
+                -> System.out.println("decimalTextField: " + newValue));
 
-        decimalTextField2.decimalProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("decimalTextField2: " + newValue);
-        });
+        decimalTextField2.decimalProperty().addListener((observable, oldValue, newValue)
+                -> System.out.println("decimalTextField2: " + newValue));
 
         ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
         decimalTextField2.decimalProperty().bindBidirectional(decimalProperty);

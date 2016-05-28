@@ -85,9 +85,7 @@ public class SelectAccountController extends AbstractAccountTreeController {
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
 
-        getSelectedAccountProperty().addListener((observable, oldValue, newValue) -> {
-            selectedAccount = newValue;
-        });
+        getSelectedAccountProperty().addListener((observable, oldValue, newValue) -> selectedAccount = newValue);
     }
 
     @NotNull

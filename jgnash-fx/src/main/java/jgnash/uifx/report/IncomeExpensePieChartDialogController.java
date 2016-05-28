@@ -138,7 +138,7 @@ public class IncomeExpensePieChartDialogController {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        Account a = accountComboBox.getValue();
+        final Account a = accountComboBox.getValue();
 
         if (a != null) {
             final CurrencyNode defaultCurrency = a.getCurrencyNode();
@@ -147,19 +147,19 @@ public class IncomeExpensePieChartDialogController {
 
             final ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
-            double total = a.getTreeBalance(startDatePicker.getValue(), endDatePicker.getValue(), defaultCurrency).doubleValue();
+            double total = a.getTreeBalance(startDatePicker.getValue(), endDatePicker.getValue(),
+                    defaultCurrency).doubleValue();
 
             for (final Account child : a.getChildren()) {
-                double balance = child.getTreeBalance(startDatePicker.getValue(), endDatePicker.getValue(), defaultCurrency).doubleValue();
+                double balance = child.getTreeBalance(startDatePicker.getValue(), endDatePicker.getValue(),
+                        defaultCurrency).doubleValue();
 
                 if (balance > 0 || balance < 0) {
                     final String label = child.getName() + " - " + numberFormat.format(balance);
                     final PieChart.Data data = new PieChart.Data(label, balance / total * 100);
 
                     // nodes are created lazily.  Set the user data (Account) after the node is created
-                    data.nodeProperty().addListener((observable, oldValue, newValue) -> {
-                        newValue.setUserData(child);
-                    });
+                    data.nodeProperty().addListener((observable, oldValue, newValue) -> newValue.setUserData(child));
 
                     pieChartData.add(data);
                 }

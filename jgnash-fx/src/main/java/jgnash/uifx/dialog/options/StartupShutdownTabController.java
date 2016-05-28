@@ -67,17 +67,14 @@ public class StartupShutdownTabController {
             createBackupsCheckBox.setSelected(engine.createBackups());
             removeOldBackupsCheckBox.setSelected(engine.removeOldBackups());
 
-            backupCountSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-                engine.setRetainedBackupLimit(newValue);
-            });
+            backupCountSpinner.valueProperty().addListener((observable, oldValue, newValue)
+                    -> engine.setRetainedBackupLimit(newValue));
 
-            createBackupsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                engine.setCreateBackups(newValue);
-            });
+            createBackupsCheckBox.selectedProperty().addListener((observable, oldValue, newValue)
+                    -> engine.setCreateBackups(newValue));
 
-            removeOldBackupsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                engine.setRemoveOldBackups(newValue);
-            });
+            removeOldBackupsCheckBox.selectedProperty().addListener((observable, oldValue, newValue)
+                    -> engine.setRemoveOldBackups(newValue));
         } else {
             backupCountSpinner.setDisable(true);
             createBackupsCheckBox.setDisable(true);
@@ -87,13 +84,11 @@ public class StartupShutdownTabController {
         updateSecurities.setSelected(UpdateFactory.getUpdateOnStartup());
         updateCurrencies.setSelected(CurrencyUpdateFactory.getUpdateOnStartup());
 
-        updateSecurities.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            UpdateFactory.setUpdateOnStartup(newValue);
-        });
+        updateSecurities.selectedProperty().addListener((observable, oldValue, newValue)
+                -> UpdateFactory.setUpdateOnStartup(newValue));
 
-        updateCurrencies.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            CurrencyUpdateFactory.setUpdateOnStartup(newValue);
-        });
+        updateCurrencies.selectedProperty().addListener((observable, oldValue, newValue)
+                -> CurrencyUpdateFactory.setUpdateOnStartup(newValue));
 
 
         openLastCheckBox.selectedProperty().bindBidirectional(Options.openLastProperty());

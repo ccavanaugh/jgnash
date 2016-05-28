@@ -77,32 +77,25 @@ public class NetworkTabController {
         userNameTextField.setText(NetworkAuthenticator.getName());
         passwordField.setText(NetworkAuthenticator.getPassword());
 
-        useProxyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            NetworkAuthenticator.setUseProxy(newValue);
-        });
+        useProxyCheckBox.selectedProperty().addListener((observable, oldValue, newValue)
+                -> NetworkAuthenticator.setUseProxy(newValue));
 
-        hostTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            NetworkAuthenticator.setHost(newValue);
-        });
+        hostTextField.textProperty().addListener((observable, oldValue, newValue)
+                -> NetworkAuthenticator.setHost(newValue));
 
-        portTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            NetworkAuthenticator.setPort(portTextField.getInteger());
-        });
+        portTextField.textProperty().addListener((observable, oldValue, newValue)
+                -> NetworkAuthenticator.setPort(portTextField.getInteger()));
 
-        requireAuthCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            NetworkAuthenticator.setUseAuthentication(newValue);
-        });
+        requireAuthCheckBox.selectedProperty().addListener((observable, oldValue, newValue)
+                -> NetworkAuthenticator.setUseAuthentication(newValue));
 
-        userNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            NetworkAuthenticator.setName(newValue);
-        });
+        userNameTextField.textProperty().addListener((observable, oldValue, newValue)
+                -> NetworkAuthenticator.setName(newValue));
 
-        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
-            NetworkAuthenticator.setPassword(newValue);
-        });
+        passwordField.textProperty().addListener((observable, oldValue, newValue)
+                -> NetworkAuthenticator.setPassword(newValue));
 
-        timeoutSpinner.getValueFactory().valueProperty().addListener((observable, oldValue, newValue) -> {
-            ConnectionFactory.setConnectionTimeout(newValue);
-        });
+        timeoutSpinner.getValueFactory().valueProperty().addListener((observable, oldValue, newValue)
+                -> ConnectionFactory.setConnectionTimeout(newValue));
     }
 }

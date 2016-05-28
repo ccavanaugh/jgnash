@@ -46,10 +46,9 @@ public class BaseColorDialogController {
         // Unbind the font size when the dialog closes
         parentProperty.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
-                scene.windowProperty().addListener((observable1, oldValue1, window) -> {
-                    window.addEventHandler(WindowEvent.WINDOW_HIDING, event ->
-                            ThemeManager.getBaseColorProperty().unbind());
-                });
+                scene.windowProperty().addListener((observable1, oldValue1, window)
+                        -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event ->
+                        ThemeManager.getBaseColorProperty().unbind()));
             }
         });
     }

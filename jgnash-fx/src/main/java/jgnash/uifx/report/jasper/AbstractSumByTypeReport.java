@@ -84,13 +84,9 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         startDatePicker.setValue(LocalDate.now().minusMonths(preferences.getInt(MONTHS, 4)));
 
-        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
+        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleRefresh());
 
-        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
+        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleRefresh());
     }
 
     @FXML

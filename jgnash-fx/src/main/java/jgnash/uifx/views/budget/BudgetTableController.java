@@ -237,9 +237,8 @@ public class BudgetTableController implements MessageListener {
         buildAccountSummaryTable();
         buildAccountGroupSummaryTable();
 
-        accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(this::updateExpandedAccountList);
-        });
+        accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue)
+                -> Platform.runLater(this::updateExpandedAccountList));
 
         final ChangeListener<Object> budgetChangeListener = (observable, oldValue, newValue) -> {
             // push change to end of the application thread
@@ -275,9 +274,7 @@ public class BudgetTableController implements MessageListener {
             }
         });
 
-        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
-            updateHeights();
-        });
+        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
     }
 
     private void rateLimitUpdate(final Runnable runnable) {

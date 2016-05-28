@@ -75,9 +75,7 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
 
         updateDescriptor();
 
-        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            updateDescriptor();
-        });
+        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> updateDescriptor());
 
         dateFormatChoiceBox.getItems().addAll(DateFormat.values());
         dateFormatChoiceBox.getSelectionModel().select(preferences.getInt(DATE_FORMAT, 0));

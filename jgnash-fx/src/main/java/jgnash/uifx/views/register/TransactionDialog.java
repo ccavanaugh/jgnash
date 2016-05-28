@@ -81,9 +81,7 @@ public class TransactionDialog extends Stage {
 
     @FXML
     private void initialize() {
-        accountProperty().addListener((observable, oldValue, newValue) -> {
-            buildTabs();
-        });
+        accountProperty().addListener((observable, oldValue, newValue) -> buildTabs());
     }
 
     private Tab buildTab(final String tabName, final SlipType slipType) {

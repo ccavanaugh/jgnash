@@ -165,13 +165,11 @@ public class EditExchangeRatesController implements MessageListener {
         rateColumn.setCellFactory(cell -> new BigDecimalTableCell<>(decimalFormat));
         exchangeRateTable.getColumns().add(rateColumn);
 
-        baseCurrencyComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            handleExchangeRateSelectionChange();
-        });
+        baseCurrencyComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
+                -> handleExchangeRateSelectionChange());
 
-        targetCurrencyComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            handleExchangeRateSelectionChange();
-        });
+        targetCurrencyComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
+                -> handleExchangeRateSelectionChange());
 
         selectedHistoryNode.bind(exchangeRateTable.getSelectionModel().selectedItemProperty());
 
@@ -183,26 +181,23 @@ public class EditExchangeRatesController implements MessageListener {
                 .or(Bindings.equal(baseCurrencyComboBox.getSelectionModel().selectedItemProperty(),
                         targetCurrencyComboBox.getSelectionModel().selectedItemProperty())));
 
-        selectedExchangeRate.addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(EditExchangeRatesController.this::loadExchangeRateHistory);
-        });
+        selectedExchangeRate.addListener((observable, oldValue, newValue)
+                -> Platform.runLater(EditExchangeRatesController.this::loadExchangeRateHistory));
 
-        selectedHistoryNode.addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(EditExchangeRatesController.this::updateForm);
-        });
+        selectedHistoryNode.addListener((observable, oldValue, newValue)
+                -> Platform.runLater(EditExchangeRatesController.this::updateForm));
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 
         // Install a listener to unregister from the message bus when the window closes
         parentProperty.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
-                scene.windowProperty().addListener((observable1, oldValue1, window) -> {
-                    window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
-                        handleStopAction();
-                        Logger.getLogger(EditExchangeRatesController.class.getName()).info("Unregistered from the message bus");
-                        MessageBus.getInstance().unregisterListener(EditExchangeRatesController.this, MessageChannel.COMMODITY);
-                    });
-                });
+                scene.windowProperty().addListener((observable1, oldValue1, window)
+                        -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
+                    handleStopAction();
+                    Logger.getLogger(EditExchangeRatesController.class.getName()).info("Unregistered from the message bus");
+                    MessageBus.getInstance().unregisterListener(EditExchangeRatesController.this, MessageChannel.COMMODITY);
+                }));
             }
         });
     }

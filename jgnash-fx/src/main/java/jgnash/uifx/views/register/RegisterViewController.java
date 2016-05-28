@@ -122,9 +122,8 @@ public class RegisterViewController {
         typeFilter.addListener(observable -> accountTreeController.reload());
 
         // Remember the last divider location
-        splitPane.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
-            executorService.submit(() -> preferences.putDouble(DIVIDER_POSITION, (Double) newValue));
-        });
+        splitPane.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue)
+                -> executorService.submit(() -> preferences.putDouble(DIVIDER_POSITION, (Double) newValue)));
 
         // Remember the last account selection
         accountTreeController.getSelectedAccountProperty().addListener((observable, oldValue, newValue) -> {

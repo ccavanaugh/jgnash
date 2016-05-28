@@ -120,13 +120,9 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         startDatePicker.setValue(LocalDate.now().minusYears(1));
 
-        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
+        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleRefresh());
 
-        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
+        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleRefresh());
 
         hideZeroBalanceAccounts.setSelected(preferences.getBoolean(HIDE_ZERO_BALANCE, true));
         showLongNamesCheckBox.setSelected(preferences.getBoolean(USE_LONG_NAMES, false));

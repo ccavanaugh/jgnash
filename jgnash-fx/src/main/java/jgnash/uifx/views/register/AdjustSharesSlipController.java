@@ -44,9 +44,7 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
     public void initialize() {
         super.initialize();
 
-        accountProperty().addListener((observable, oldValue, newValue) -> {
-            clearForm();
-        });
+        accountProperty().addListener((observable, oldValue, newValue) -> clearForm());
 
         final ChangeListener<BigDecimal> changeListener = (observable, oldValue, newValue) -> updateTotalField();
 

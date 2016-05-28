@@ -68,9 +68,8 @@ public class FeePane extends DetailedDecimalTextField {
     private void initialize() {
         feeDialog = new FeeDialog();
 
-        accountProperty.addListener((observable, oldValue, newValue) -> {
-            feeDialog.accountProperty().setValue(accountProperty().get());
-        });
+        accountProperty.addListener((observable, oldValue, newValue) ->
+                feeDialog.accountProperty().setValue(accountProperty().get()));
     }
 
     @Override
@@ -137,7 +136,7 @@ public class FeePane extends DetailedDecimalTextField {
     private BigDecimal sumFees() {
         BigDecimal sum = BigDecimal.ZERO;
 
-        for (TransactionEntry entry : feeDialog.getTransactionEntries()) {
+        for (final TransactionEntry entry : feeDialog.getTransactionEntries()) {
             sum = sum.add(entry.getAmount(accountProperty().get()));
         }
 

@@ -18,10 +18,8 @@
 package jgnash.uifx.views.register;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
@@ -61,7 +59,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
         // Load the register table
-        registerTableControllerProperty.setValue(FXMLUtils.loadFXML((Consumer<Node>) node ->
+        registerTableControllerProperty.setValue(FXMLUtils.loadFXML(node ->
                 registerTablePane.getChildren().add(node), "InvestmentRegisterTable.fxml", resources));
 
         investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);

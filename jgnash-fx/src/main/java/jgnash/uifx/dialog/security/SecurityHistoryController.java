@@ -296,12 +296,11 @@ public class SecurityHistoryController implements MessageListener {
         // Install a listener to unregister from the message bus when the window closes
         parentProperty.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
-                scene.windowProperty().addListener((observable1, oldValue1, window) -> {
-                    window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
-                        Logger.getLogger(SecurityHistoryController.class.getName()).info("Unregistered from the message bus");
-                        MessageBus.getInstance().unregisterListener(SecurityHistoryController.this, MessageChannel.COMMODITY);
-                    });
-                });
+                scene.windowProperty().addListener((observable1, oldValue1, window)
+                        -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
+                    Logger.getLogger(SecurityHistoryController.class.getName()).info("Unregistered from the message bus");
+                    MessageBus.getInstance().unregisterListener(SecurityHistoryController.this, MessageChannel.COMMODITY);
+                }));
             }
         });
     }
@@ -458,7 +457,7 @@ public class SecurityHistoryController implements MessageListener {
 
         private final NumberFormat volumeFormat = NumberFormat.getIntegerInstance();
 
-        public LongFormatTableCell() {
+        LongFormatTableCell() {
             setStyle("-fx-alignment: center-right;"); // Right align
         }
 

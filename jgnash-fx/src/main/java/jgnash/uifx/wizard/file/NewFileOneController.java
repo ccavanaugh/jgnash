@@ -65,9 +65,8 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
         storageTypeComboBox.setValue(DataStoreType.H2_DATABASE);
 
         // push this to the end of the EDT, otherwise the dialog does not display correctly
-        Platform.runLater(() -> fileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            checkForOverwrite();
-        }));
+        Platform.runLater(() -> fileNameField.textProperty().addListener((observable, oldValue, newValue)
+                -> checkForOverwrite()));
 
         updateDescriptor();
     }

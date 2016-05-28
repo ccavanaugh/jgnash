@@ -38,7 +38,7 @@ import jgnash.util.NotNull;
 /**
  * @author Craig Cavanaugh
  */
-public abstract class AbstractInvSlipController implements Slip {
+abstract class AbstractInvSlipController implements Slip {
 
     @InjectFXML
     private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
@@ -73,9 +73,7 @@ public abstract class AbstractInvSlipController implements Slip {
         });
 
         // Install an event handler when the parent has been set via injection
-        parentProperty.addListener((observable, oldValue, newValue) -> {
-            installKeyPressedHandler(newValue);
-        });
+        parentProperty.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
     }
 
     @Override

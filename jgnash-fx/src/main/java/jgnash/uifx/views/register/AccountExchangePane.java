@@ -187,9 +187,7 @@ public class AccountExchangePane extends GridPane {
 
         exchangeRateField.focusedProperty().addListener(new WeakChangeListener<>(rateFocusChangeListener));
 
-        amountProperty.addListener((observable, oldValue, newValue) -> {
-            amountFieldAction();
-        });
+        amountProperty.addListener((observable, oldValue, newValue) -> amountFieldAction());
     }
 
     private void updateExchangeRateField() {
@@ -279,11 +277,11 @@ public class AccountExchangePane extends GridPane {
         }
     }
 
-    public ObjectProperty<Account> baseAccountProperty() {
+    ObjectProperty<Account> baseAccountProperty() {
         return baseAccountProperty;
     }
 
-    public ObjectProperty<Account> selectedAccountProperty() {
+    ObjectProperty<Account> selectedAccountProperty() {
         return selectedAccountProperty;
     }
 
@@ -292,15 +290,15 @@ public class AccountExchangePane extends GridPane {
         return baseCurrencyProperty;
     }
 
-    public ObjectProperty<BigDecimal> exchangeAmountProperty() {
+    ObjectProperty<BigDecimal> exchangeAmountProperty() {
         return exchangeAmountProperty;
     }
 
-    public ObjectProperty<BigDecimal> amountProperty() {
+    ObjectProperty<BigDecimal> amountProperty() {
         return amountProperty;
     }
 
-    public SimpleBooleanProperty amountEditableProperty() {
+    SimpleBooleanProperty amountEditableProperty() {
         return amountEditableProperty;
     }
 
@@ -316,7 +314,7 @@ public class AccountExchangePane extends GridPane {
         exchangeAmountProperty.setValue(value);
     }
 
-    public SimpleBooleanProperty filterBaseAccountProperty() {
+    SimpleBooleanProperty filterBaseAccountProperty() {
         return filterBaseAccountProperty;
     }
 }

@@ -69,9 +69,8 @@ public class GainLossPane extends DetailedDecimalTextField {
     private void initialize() {
         gainLossDialog = new GainLossDialog();
 
-        accountProperty.addListener((observable, oldValue, newValue) -> {
-            gainLossDialog.accountProperty().setValue(accountProperty().get());
-        });
+        accountProperty.addListener((observable, oldValue, newValue)
+                -> gainLossDialog.accountProperty().setValue(accountProperty().get()));
     }
 
     @Override

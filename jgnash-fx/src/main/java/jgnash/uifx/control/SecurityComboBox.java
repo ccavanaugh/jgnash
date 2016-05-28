@@ -79,9 +79,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
 
         Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
 
-        accountProperty.addListener((observable, oldValue, newValue) -> {
-            loadModel();
-        });
+        accountProperty.addListener((observable, oldValue, newValue) -> loadModel());
 
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }

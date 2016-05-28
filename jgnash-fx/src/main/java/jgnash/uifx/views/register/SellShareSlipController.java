@@ -68,9 +68,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         gainLossPane.accountProperty().bind(accountProperty());
         feePane.accountProperty().bind(accountProperty());
 
-        accountProperty().addListener((observable, oldValue, newValue) -> {
-            clearForm();
-        });
+        accountProperty().addListener((observable, oldValue, newValue) -> clearForm());
 
         final ChangeListener<BigDecimal> changeListener = (observable, oldValue, newValue) -> updateTotalField();
 

@@ -68,17 +68,15 @@ public class TransactionNumberComboBox extends ComboBox<String> {
 
         setEditable(true);
 
-        valueProperty().addListener((observable, oldValue, newValue) -> {
-            new Thread(() -> {
-                if (nextNumberItem.equals(newValue)) {
-                    final Account account = accountProperty().getValue();
+        valueProperty().addListener((observable, oldValue, newValue) -> new Thread(() -> {
+            if (nextNumberItem.equals(newValue)) {
+                final Account account = accountProperty().getValue();
 
-                    if (account != null) {
-                        Platform.runLater(() -> setValue(account.getNextTransactionNumber()));
-                    }
+                if (account != null) {
+                    Platform.runLater(() -> setValue(account.getNextTransactionNumber()));
                 }
-            }).start();
-        });
+            }
+        }).start());
 
         // TODO: This is a workaround for a Java Bug that should be fixed in 9
         if (OS.getJavaVersion() < 1.9) {

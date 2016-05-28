@@ -97,9 +97,7 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
         AutoCompleteFactory.setMemoModel(memoField);
 
         // Install an event handler when the parent has been set via injection
-        parentProperty.addListener((observable, oldValue, newValue) -> {
-            installKeyPressedHandler(newValue);
-        });
+        parentProperty.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
     }
 
     @Override

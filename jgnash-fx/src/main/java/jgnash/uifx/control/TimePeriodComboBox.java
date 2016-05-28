@@ -54,9 +54,8 @@ public class TimePeriodComboBox extends ComboBox<String> {
         loadModel();
 
         // Update the period property automatically
-        valueProperty().addListener((observable, oldValue, newValue) -> {
-            periodProperty.setValue(periods[getSelectionModel().getSelectedIndex()]);
-        });
+        valueProperty().addListener((observable, oldValue, newValue)
+                -> periodProperty.setValue(periods[getSelectionModel().getSelectedIndex()]));
     }
 
     public ReadOnlyIntegerProperty periodProperty() {
