@@ -28,8 +28,8 @@
                             <RowConstraints vgrow="NEVER"/>
                         </rowConstraints>
 
-                        <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true" prefHeight="200"
-                                   tableMenuButtonVisible="false"/>
+                        <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true"
+                                   prefHeight="200"/>
                         <Label text="%Label.RemindLater" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                         <TimePeriodComboBox fx:id="snoozeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="2">

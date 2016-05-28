@@ -15,8 +15,8 @@
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity" minWidth="600"
           fx:controller="jgnash.uifx.views.register.reconcile.ReconcileDialogController" styleClass="dialog, form">
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" percentWidth="50.0"/>
-        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" percentWidth="50.0"/>
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="ALWAYS"/>
@@ -32,7 +32,7 @@
             <bottom>
                 <GridPane  styleClass="form">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" minWidth="300.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="300.0"/>
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints vgrow="NEVER"/>
@@ -61,7 +61,7 @@
             <bottom>
                 <GridPane  styleClass="form">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" minWidth="300.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="300.0"/>
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints vgrow="NEVER"/>

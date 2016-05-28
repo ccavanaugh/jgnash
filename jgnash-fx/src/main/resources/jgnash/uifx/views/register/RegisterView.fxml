@@ -58,7 +58,7 @@
         </ToolBar>
     </top>
     <center>
-        <SplitPane fx:id="splitPane" orientation="HORIZONTAL">
+        <SplitPane fx:id="splitPane">
             <TreeView fx:id="treeView" BorderPane.alignment="CENTER" minWidth="120"/>
             <StackPane fx:id="registerPane"/>
         </SplitPane>

@@ -57,7 +57,7 @@
 
             <Button text="%Button.HistoricalFill" onAction="#handleHistoricalFill" GridPane.columnSpan="2"
                     maxWidth="Infinity"/>
-            <Separator orientation="HORIZONTAL" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+            <Separator GridPane.rowIndex="1" GridPane.columnSpan="2"/>
             <GridPane styleClass="form" GridPane.rowIndex="2" GridPane.columnSpan="2">
                 <columnConstraints>
                     <ColumnConstraints hgrow="NEVER"/>
@@ -71,7 +71,7 @@
                 <DecimalTextField fx:id="fillAllDecimalTextField" GridPane.columnIndex="1"/>
                 <Button text="%Button.Enter" onAction="#handleFillAllAction" GridPane.columnIndex="2"/>
             </GridPane>
-            <Separator orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+            <Separator GridPane.rowIndex="3" GridPane.columnSpan="2"/>
 
             <Label text="%Label.Pattern" GridPane.rowIndex="4"/>
             <ComboBox fx:id="patternComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="Infinity"/>

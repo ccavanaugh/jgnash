@@ -39,13 +39,13 @@
             <ListView fx:id="availableList" prefHeight="180"/>
         </TitledPane>
 
-        <VBox GridPane.columnIndex="1" fillWidth="true" styleClass="form" GridPane.fillHeight="true">
+        <VBox GridPane.columnIndex="1" styleClass="form" GridPane.fillHeight="true">
             <Button text="%Button.Add" onAction="#handleAddAction" contentDisplay="RIGHT" maxWidth="Infinity">
                 <graphic>
                     <FontAwesomeLabel glyphName="CHEVRON_RIGHT"/>
                 </graphic>
             </Button>
-            <Button text="%Button.Remove" onAction="#handleRemoveAction" contentDisplay="LEFT"
+            <Button text="%Button.Remove" onAction="#handleRemoveAction"
                     maxWidth="Infinity">
                 <graphic>
                     <FontAwesomeLabel glyphName="CHEVRON_LEFT"/>

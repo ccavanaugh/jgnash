@@ -7,40 +7,39 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.resource.font.FontAwesomeLabel?>
 
-<fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form">
-  <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" />
-    <ColumnConstraints hgrow="NEVER" />
-    <ColumnConstraints hgrow="NEVER" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints vgrow="NEVER" />
-  </rowConstraints>
-  <children>
-    <Button fx:id="attachmentButton" mnemonicParsing="false" >
-      <graphic>
-        <FontAwesomeLabel glyphName="LINK"/>
-      </graphic>
-      <tooltip>
-        <Tooltip text="%ToolTip.AddAttachment"/>
-      </tooltip>
+<fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity"
+         minWidth="-Infinity"
+         xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <Button fx:id="attachmentButton" mnemonicParsing="false">
+        <graphic>
+            <FontAwesomeLabel glyphName="LINK"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%ToolTip.AddAttachment"/>
+        </tooltip>
     </Button>
-    <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="1" >
-      <graphic>
-        <FontAwesomeLabel glyphName="EYE"/>
-      </graphic>
-      <tooltip>
-        <Tooltip text="%ToolTip.ViewAttachment"/>
-      </tooltip>
+    <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="1">
+        <graphic>
+            <FontAwesomeLabel glyphName="EYE"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%ToolTip.ViewAttachment"/>
+        </tooltip>
     </Button>
     <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2">
-      <graphic>
-        <FontAwesomeLabel glyphName="UNLINK"/>
-      </graphic>
-      <tooltip>
-        <Tooltip text="%ToolTip.DeleteAttachment"/>
-      </tooltip>
+        <graphic>
+            <FontAwesomeLabel glyphName="UNLINK"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%ToolTip.DeleteAttachment"/>
+        </tooltip>
     </Button>
-  </children>
 </fx:root>

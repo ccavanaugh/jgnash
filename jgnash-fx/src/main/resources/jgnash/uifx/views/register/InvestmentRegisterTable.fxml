@@ -6,7 +6,7 @@
 <?import jgnash.resource.font.FontAwesomeLabel?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.InvestmentRegisterTableController">
    <top>
-       <TitledPane collapsible="true" focusTraversable="false" expanded="false">
+       <TitledPane focusTraversable="false" expanded="false">
            <graphic>
                <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
                    <columnConstraints>

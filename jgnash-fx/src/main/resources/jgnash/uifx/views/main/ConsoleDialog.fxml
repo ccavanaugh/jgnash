@@ -24,7 +24,7 @@
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
-    <TextArea fx:id="consoleArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="false"/>
+    <TextArea fx:id="consoleArea" editable="false" prefHeight="200.0" prefWidth="200.0"/>
 
     <StackPane GridPane.rowIndex="1">
         <ProgressBar fx:id="memoryUsageProgressBar" maxWidth="Infinity"/>

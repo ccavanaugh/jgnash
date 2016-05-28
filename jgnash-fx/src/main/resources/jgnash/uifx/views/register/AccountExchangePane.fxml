@@ -36,7 +36,7 @@
     </fx:define>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" fillWidth="true"/>
+        <ColumnConstraints hgrow="SOMETIMES"/>
         <ColumnConstraints hgrow="NEVER"/>
         <ColumnConstraints hgrow="NEVER"/>
         <ColumnConstraints hgrow="NEVER"/>

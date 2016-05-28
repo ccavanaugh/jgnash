@@ -15,7 +15,7 @@
         <StackPane fx:id="registerTablePane" VBox.vgrow="ALWAYS"/>
     </center>
     <bottom>
-        <TitledPane fx:id="titledPane" collapsible="true" contentDisplay="GRAPHIC_ONLY" focusTraversable="false">
+        <TitledPane fx:id="titledPane" contentDisplay="GRAPHIC_ONLY" focusTraversable="false">
             <graphic>
                 <ButtonBar>
                     <buttons>

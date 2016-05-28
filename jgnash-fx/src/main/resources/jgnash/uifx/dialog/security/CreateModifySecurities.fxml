@@ -27,7 +27,7 @@
 
     <GridPane GridPane.columnIndex="1" GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" fillWidth="true"/>
+            <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="ALWAYS" minWidth="150.0" prefWidth="150.0"/>
         </columnConstraints>
         <rowConstraints>

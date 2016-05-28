@@ -118,7 +118,7 @@
 
         <center>
             <ScrollPane fx:id="scrollPane" prefHeight="500.0" prefWidth="480.0" BorderPane.alignment="CENTER"
-                        hbarPolicy="AS_NEEDED" vbarPolicy="ALWAYS" styleClass="dialog">
+                        vbarPolicy="ALWAYS" styleClass="dialog">
                 <VBox fx:id="pagePane"/>
             </ScrollPane>
         </center>

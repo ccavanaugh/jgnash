@@ -14,9 +14,9 @@
         <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" vgrow="NEVER" fillHeight="true"/>
-        <RowConstraints minHeight="10.0" vgrow="NEVER" fillHeight="true"/>
-        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" fillHeight="true"/>
+        <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <Label text="%Label.FileName" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
     <TextField fx:id="fileNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"
@@ -25,5 +25,5 @@
     <TextField fx:id="defaultCurrencyField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"
                maxWidth="Infinity"/>
     <Label text="%Label.Currencies" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP"/>
-    <ListView fx:id="currenciesList" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" prefHeight="100"/>
+    <ListView fx:id="currenciesList" GridPane.columnIndex="1" GridPane.rowIndex="2" prefHeight="100"/>
 </GridPane>

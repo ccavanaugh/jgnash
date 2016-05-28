@@ -53,7 +53,7 @@
     <GridPane GridPane.columnSpan="4" GridPane.rowIndex="4" styleClass="form">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER"/>
-            <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>

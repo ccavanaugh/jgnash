@@ -11,7 +11,7 @@
           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
-        <ColumnConstraints hgrow="NEVER" fillWidth="true"/>
+        <ColumnConstraints hgrow="NEVER"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>

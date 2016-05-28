@@ -44,7 +44,7 @@
             <TableView fx:id="periodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <TableView fx:id="accountGroupPeriodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
-            <ScrollBar fx:id="horizontalScrollBar" orientation="HORIZONTAL" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <ScrollBar fx:id="horizontalScrollBar" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         </GridPane>
     </center>
 </BorderPane>

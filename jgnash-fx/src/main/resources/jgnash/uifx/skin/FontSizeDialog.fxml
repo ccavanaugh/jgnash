@@ -8,6 +8,6 @@
             styleClass="form, dialog">
    <center>
       <Slider fx:id="slider" max="150.0" min="75.0" showTickLabels="true" showTickMarks="true" value="100.0"
-              majorTickUnit="25" minorTickCount="9" snapToTicks="false" blockIncrement="2.5" BorderPane.alignment="CENTER" />
+              minorTickCount="9" blockIncrement="2.5" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

@@ -7,7 +7,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.register.BasicRegisterTableController">
     <top>
-        <TitledPane collapsible="true" focusTraversable="false" expanded="false">
+        <TitledPane focusTraversable="false" expanded="false">
             <graphic>
                 <GridPane maxWidth="Infinity" styleClass="info-bar">
                     <columnConstraints>
