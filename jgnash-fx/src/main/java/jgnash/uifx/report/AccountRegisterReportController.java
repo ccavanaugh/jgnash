@@ -17,6 +17,17 @@
  */
 package jgnash.uifx.report;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -33,6 +44,7 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionType;
+import jgnash.time.DateUtils;
 import jgnash.ui.report.Row;
 import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
@@ -41,21 +53,10 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.jasper.DynamicJasperReport;
 import jgnash.uifx.views.register.RegisterFactory;
-import jgnash.time.DateUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JasperPrint;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 /**
  * Account Register Report
@@ -96,25 +97,13 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             handleRefresh();
         });
 
-        showSplitsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
+        final ChangeListener<Object> refreshListener = (observable, oldValue, newValue) -> handleRefresh();
 
-        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
-
-        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
-
-        payeeFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
-
-        memoFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            handleRefresh();
-        });
+        showSplitsCheckBox.selectedProperty().addListener(refreshListener);
+        startDatePicker.valueProperty().addListener(refreshListener);
+        endDatePicker.valueProperty().addListener(refreshListener);
+        payeeFilterTextField.textProperty().addListener(refreshListener);
+        memoFilterTextField.textProperty().addListener(refreshListener);
     }
 
     public void setAccount(@Nullable final Account account) {
