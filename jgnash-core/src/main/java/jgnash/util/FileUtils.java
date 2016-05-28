@@ -250,9 +250,7 @@ public final class FileUtils {
         if (directory != null && directory.isDirectory()) {
             final Pattern p = SearchUtils.createSearchPattern(pattern, false);
 
-            final File[] files = directory.listFiles((dir, name) -> {
-                return p.matcher(name).matches();
-            });
+            final File[] files = directory.listFiles((dir, name) -> p.matcher(name).matches());
 
             if (files != null) {
                 fileList.addAll(Arrays.asList(files));
