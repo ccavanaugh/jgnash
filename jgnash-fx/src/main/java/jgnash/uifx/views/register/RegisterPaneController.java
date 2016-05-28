@@ -80,7 +80,7 @@ abstract class RegisterPaneController {
     @FXML
     void initialize() {
 
-        /**
+        /*
          * The Buttons may be null depending on the form tha was loaded with this controller
          */
 

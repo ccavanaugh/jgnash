@@ -46,7 +46,7 @@ import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
  *
  * @author Craig Cavanaugh
  *
- * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8129123">Bug JDK-8129123</a>
+ * <a href="https://bugs.openjdk.java.net/browse/JDK-8129123">Bug JDK-8129123</a>
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
 

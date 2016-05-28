@@ -1,8 +1,3 @@
-/**
- * A dialog for displaying recurring event / transactions when they occur.
- *
- * @author Craig Cavanaugh
- */
 package jgnash.uifx.views.recurring;
 
 import java.util.Optional;
@@ -16,6 +11,8 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.util.ResourceUtils;
 
 /**
+ * A dialog for displaying recurring event / transactions when they occur.
+ *
  * @author Craig Cavanaugh
  */
 public class RecurringEntryDialog {
