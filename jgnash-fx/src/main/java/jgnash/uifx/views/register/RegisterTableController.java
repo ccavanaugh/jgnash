@@ -37,6 +37,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -195,9 +196,8 @@ abstract class RegisterTableController {
         });
 
         // For the table view to refresh itself if the mode changes
-        AccountBalanceDisplayManager.accountBalanceDisplayMode().addListener((observable, oldValue, newValue) -> {
-            tableView.refresh();
-        });
+        AccountBalanceDisplayManager.accountBalanceDisplayMode().addListener((observable, oldValue, newValue)
+                -> tableView.refresh());
 
         reconciledStateFilterComboBox.getItems().addAll(ReconciledStateEnum.values());
         reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
@@ -205,24 +205,18 @@ abstract class RegisterTableController {
         transactionAgeFilterComboBox.getItems().addAll(AgeEnum.values());
         transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
 
-        reconciledStateFilterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleFilterChange();
-        });
+        final ChangeListener<Object> filterChangeListener = (observable, oldValue, newValue) -> handleFilterChange();
 
-        transactionAgeFilterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleFilterChange();
-        });
+        reconciledStateFilterComboBox.valueProperty().addListener(filterChangeListener);
+
+        transactionAgeFilterComboBox.valueProperty().addListener(filterChangeListener);
 
         if (memoFilterTextField != null) {  // memo filter may not have been initialized for all register types
-            memoFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-                handleFilterChange();
-            });
+            memoFilterTextField.textProperty().addListener(filterChangeListener);
         }
 
         if (payeeFilterTextField != null) { // payee filter may not have been initialized for all register types
-            payeeFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-                handleFilterChange();
-            });
+            payeeFilterTextField.textProperty().addListener(filterChangeListener);
         }
 
         // Listen for engine events
@@ -382,13 +376,16 @@ abstract class RegisterTableController {
 
             final Menu markedAs = new Menu(resources.getString("Menu.MarkAs.Name"));
             final MenuItem markAsClearedItem = new MenuItem(resources.getString("Menu.Cleared.Name"));
-            markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.CLEARED));
+            markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(),
+                    row.getItem(), ReconciledState.CLEARED));
 
             final MenuItem markAsReconciledItem = new MenuItem(resources.getString("Menu.Reconciled.Name"));
-            markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.RECONCILED));
+            markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(),
+                    row.getItem(), ReconciledState.RECONCILED));
 
             final MenuItem markAsUnreconciledItem = new MenuItem(resources.getString("Menu.Unreconciled.Name"));
-            markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.NOT_RECONCILED));
+            markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(),
+                    row.getItem(), ReconciledState.NOT_RECONCILED));
 
             markedAs.getItems().addAll(markAsClearedItem, markAsReconciledItem, markAsUnreconciledItem);
 
@@ -404,7 +401,8 @@ abstract class RegisterTableController {
             final MenuItem reminderItem = new MenuItem(resources.getString("Menu.NewReminder.Name"));
             reminderItem.setOnAction(event -> handleCreateNewReminder());
 
-            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
+            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem,
+                    new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
 
             // only display context menu for non-null items:
             row.contextMenuProperty().bind(
