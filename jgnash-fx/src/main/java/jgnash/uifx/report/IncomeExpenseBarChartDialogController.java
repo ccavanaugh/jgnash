@@ -51,7 +51,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.time.DateUtils;
 
 /**
- * Income and Expense Bar Chart
+ * Income and Expense Bar Chart.
  *
  * @author Craig Cavanaugh
  */

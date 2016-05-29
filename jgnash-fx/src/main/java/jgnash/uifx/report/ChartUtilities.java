@@ -44,7 +44,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * Chart utilities
+ * JavaFX Chart utilities.
  *
  * @author Craig Cavanaugh
  */
@@ -75,7 +75,7 @@ class ChartUtilities {
     }
 
 
-    public static void saveChart(final Chart chart) {
+    static void saveChart(final Chart chart) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(ResourceUtils.getString("Title.SaveFile"));
         fileChooser.getExtensionFilters().addAll(
@@ -98,7 +98,7 @@ class ChartUtilities {
     }
 
 
-    public static void copyToClipboard(final Chart chart) {
+    static void copyToClipboard(final Chart chart) {
         final Clipboard clipboard = Clipboard.getSystemClipboard();
         final ClipboardContent content = new ClipboardContent();
 
@@ -108,7 +108,7 @@ class ChartUtilities {
     }
 
 
-    public static void printChart(final Chart chart) {
+    static void printChart(final Chart chart) {
         // Manipulate a snapshot of the chart instead of the chart itself to avoid visual artifacts when scaling
         final ImageView imageView = new ImageView(takeSnapshot(chart));
 

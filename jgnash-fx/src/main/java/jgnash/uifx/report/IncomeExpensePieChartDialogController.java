@@ -50,7 +50,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.function.ParentAccountPredicate;
 
 /**
- * Income and Expense Pie Chart
+ * Income and Expense Pie Chart.
  *
  * @author Craig Cavanaugh
  */

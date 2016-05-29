@@ -60,7 +60,7 @@ import jgnash.util.EncodeDecode;
 import jgnash.util.Nullable;
 
 /**
- * Periodic Account Balance Bar Chart
+ * Periodic Account Balance Bar Chart.
  *
  * @author Craig Cavanaugh
  */
@@ -211,7 +211,7 @@ public class AccountBalanceChartController {
     }
 
     /**
-     * Store a list of selected accounts
+     * Stores a list of selected accounts.
      */
     private void saveSelectedAccounts() {
         final List<String> accounts
