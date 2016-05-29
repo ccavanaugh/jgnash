@@ -109,7 +109,7 @@ public class DistributedLockServer {
             return;
         }
 
-        /** lock_action, lock_id, thread_id, lock_type */
+        /* lock_action, lock_id, thread_id, lock_type */
         // unlock,account,1194917570,read
         // lock,account,1194917570,write
 

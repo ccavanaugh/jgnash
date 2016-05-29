@@ -74,7 +74,7 @@ public class CheckLayoutSerializationFactory {
         xstream.alias("CheckLayout", CheckLayout.class);
         xstream.alias("CheckObject", CheckObject.class);       
         
-        /** Fix for printing on some Windows Systems.  Value and winID do not always serialize correctly
+        /* Fix for printing on some Windows Systems.  Value and winID do not always serialize correctly
          * and do not have any apparent impact on restoring printing preferences */
         if (OS.isSystemWindows()) {
             try {

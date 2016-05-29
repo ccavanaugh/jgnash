@@ -264,7 +264,7 @@ public class DistributedLockManager implements LockManager {
 
         //logger.info(plainMessage);
 
-        /** lock_action, lock_id, thread_id, lock_type */
+        /* lock_action, lock_id, thread_id, lock_type */
         // unlock,account,3456384756384563,read
         // lock,account,3456384756384563,write
 
