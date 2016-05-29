@@ -68,7 +68,7 @@ import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
 
 /**
- * Primary Menu Controller
+ * Primary Menu Controller.
  *
  * @author Craig Cavanaugh
  */
@@ -401,6 +401,11 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleIncomeExpensePieChart() {
         ReportActions.displayIncomeExpensePieChart();
+    }
+
+    @FXML
+    private void handleIncomeExpensePayeePieChart() {
+        ReportActions.displayIncomeExpensePayeePieChart();
     }
 
     @FXML

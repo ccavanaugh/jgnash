@@ -42,7 +42,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
- * Centralize report actions here
+ * Utility class for loading and displaying reports.
  *
  * @author Craig Cavanaugh
  */
@@ -89,6 +89,14 @@ public class ReportActions {
     public static void displayIncomeExpensePieChart() {
         final FXMLUtils.Pair<IncomeExpensePieChartDialogController> pair =
                 FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePieChartDialog.fxml"),
+                        ResourceUtils.getString("Title.IncomeExpenseChart"));
+
+        pair.getStage().show();
+    }
+
+    public static void displayIncomeExpensePayeePieChart() {
+        final FXMLUtils.Pair<IncomeExpensePieChartDialogController> pair =
+                FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePayeePieChartDialog.fxml"),
                         ResourceUtils.getString("Title.IncomeExpenseChart"));
 
         pair.getStage().show();
