@@ -18,8 +18,6 @@ public class DoughnutChart extends PieChart {
 
     private static final int RING_WIDTH = 3;
 
-    private boolean contentInstalled = false;
-
     private final Circle hole;
 
     @SuppressWarnings("unused")
@@ -45,14 +43,13 @@ public class DoughnutChart extends PieChart {
     }
 
     private void installContent() {
-        if (!getData().isEmpty() && !contentInstalled) {
+        if (!getData().isEmpty()) {
             final Node node = getData().get(0).getNode();
             if (node.getParent() instanceof Pane) {
                 final Pane parent = (Pane) node.getParent();
 
                 if (!parent.getChildren().contains(hole)) {
                     parent.getChildren().add(hole);
-                    contentInstalled = true;
                 }
             }
         }
