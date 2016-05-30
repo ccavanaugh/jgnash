@@ -47,9 +47,11 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.control.DoughnutChart;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
 
@@ -59,7 +61,6 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  * @author Pranay Kumar
  */
-@SuppressWarnings("WeakerAccess")
 public class IncomeExpensePayeePieChartDialogController {
 
     private static final int CREDIT = 0;
@@ -76,10 +77,10 @@ public class IncomeExpensePayeePieChartDialogController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
-    private PieChart debitPieChart;
+    private DoughnutChart debitPieChart;
 
     @FXML
-    private PieChart creditPieChart;
+    private DoughnutChart creditPieChart;
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -104,6 +105,9 @@ public class IncomeExpensePayeePieChartDialogController {
 
         creditPieChart.getStylesheets().addAll(CHART_CSS);
         debitPieChart.getStylesheets().addAll(CHART_CSS);
+
+        creditPieChart.labelLineLengthProperty().set(15);
+        debitPieChart.labelLineLengthProperty().set(15);
 
         accountComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
 
@@ -149,7 +153,9 @@ public class IncomeExpensePayeePieChartDialogController {
             creditPieChart.setData(chartData[CREDIT]);
             debitPieChart.setData(chartData[DEBIT]);
 
-            // Calculate the totals for percentage calulations
+            final NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+
+            // Calculate the totals for percentage value
             final double creditTotal = chartData[CREDIT].parallelStream().mapToDouble(PieChart.Data::getPieValue).sum();
             final double debitTotal = chartData[DEBIT].parallelStream().mapToDouble(PieChart.Data::getPieValue).sum();
 
@@ -160,12 +166,14 @@ public class IncomeExpensePayeePieChartDialogController {
             // Install tooltips on the data after it has been added to the chart
             creditPieChart.getData().stream().forEach(data ->
                     Tooltip.install(data.getNode(), new Tooltip((data.getNode().getUserData()
-                            + " - " + percentFormat.format(data.getPieValue() / creditTotal)))));
+                            + "\n" + numberFormat.format(data.getPieValue()) + "(" +
+                            percentFormat.format(data.getPieValue() / creditTotal)) + ")")));
 
             // Install tooltips on the data after it has been added to the chart
             debitPieChart.getData().stream().forEach(data ->
                     Tooltip.install(data.getNode(), new Tooltip(((data.getNode().getUserData())
-                            + " - " + percentFormat.format(data.getPieValue() / debitTotal)))));
+                            + "\n" + numberFormat.format(data.getPieValue()) + "(" +
+                            percentFormat.format(data.getPieValue() / debitTotal)) + ")")));
 
             /*final String title;
 
@@ -264,7 +272,7 @@ public class IncomeExpensePayeePieChartDialogController {
 
         final Transaction transaction;
 
-        public TranTuple(Account account, Transaction transaction) {
+        TranTuple(Account account, Transaction transaction) {
             this.account = account;
             this.transaction = transaction;
         }
