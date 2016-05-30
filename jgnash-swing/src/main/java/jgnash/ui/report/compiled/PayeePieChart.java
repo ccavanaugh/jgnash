@@ -67,7 +67,7 @@ import org.jfree.data.general.PieDataset;
 /**
  * This displays a dialog that shows a pie chart with transactions from the selected account Filters can be setup on a
  * per account basis to group by payee Name.
- * 
+ *
  * @author Pranay Kumar
  */
 public class PayeePieChart {
@@ -77,6 +77,9 @@ public class PayeePieChart {
     private static final String FILTER_TAG = "filter:";
 
     private static final Pattern POUND_DELIMITER_PATTERN = Pattern.compile("#");
+
+    private static final int CREDIT = 0;
+    private static final int DEBIT = 1;
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
@@ -154,7 +157,7 @@ public class PayeePieChart {
 
         combo = AccountListComboBox.getFullInstance();
 
-        final LocalDate dStart = DateUtils.getFirstDayOfTheMonth(LocalDate.now().minusYears(1));
+        final LocalDate dStart = DateUtils.getFirstDayOfTheMonth(LocalDate.now().minusYears(DEBIT));
 
         long start = pref.getLong(START_DATE, DateUtils.asEpochMilli(dStart));
 
@@ -162,15 +165,15 @@ public class PayeePieChart {
 
         currentAccount = combo.getSelectedAccount();
         PieDataset[] data = createPieDataSet(currentAccount);
-        JFreeChart chartCredit = createPieChart(currentAccount, data, 0);
+        JFreeChart chartCredit = createPieChart(currentAccount, data, CREDIT);
         chartPanelCredit = new ChartPanel(chartCredit, true, true, true, false, true);
         //                         (chart, properties, save, print, zoom, tooltips)
-        JFreeChart chartDebit = createPieChart(currentAccount, data, 1);
+        JFreeChart chartDebit = createPieChart(currentAccount, data, DEBIT);
         chartPanelDebit = new ChartPanel(chartDebit, true, true, true, false, true);
 
         FormLayout layout = new FormLayout("p, $lcgap, 70dlu, 8dlu, p, $lcgap, 70dlu, $ugap, p, $lcgap:g, left:p", "d, $rgap, d, $ugap, f:p:g, $rgap, d");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        layout.setRowGroups(new int[][] { { 1, 3 } });
+        layout.setRowGroups(new int[][]{{DEBIT, 3}});
 
         // row 1
         builder.append(combo, 9);
@@ -191,7 +194,7 @@ public class PayeePieChart {
         DefaultFormBuilder subBuilder = new DefaultFormBuilder(subLayout);
         subBuilder.append(chartPanelCredit);
         subBuilder.append(chartPanelDebit);
-        
+
         builder.append(subBuilder.getPanel(), 11);
         builder.nextLine();
         builder.nextLine();
@@ -201,7 +204,7 @@ public class PayeePieChart {
         builder.append(addFilterButton, 3);
         builder.append(saveButton);
         builder.nextLine();
-        
+
         // row
         builder.append(filterCombo, 3);
         builder.append(deleteFilterButton, 3);
@@ -306,11 +309,11 @@ public class PayeePieChart {
             currentAccount = a;
 
             PieDataset[] data = createPieDataSet(a);
-            chartPanelCredit.setChart(createPieChart(a, data, 0));
+            chartPanelCredit.setChart(createPieChart(a, data, CREDIT));
             chartPanelCredit.validate();
-            chartPanelDebit.setChart(createPieChart(a, data, 1));
+            chartPanelDebit.setChart(createPieChart(a, data, DEBIT));
             chartPanelDebit.validate();
-        } catch (final Exception ex) {           
+        } catch (final Exception ex) {
             Logger.getLogger(PayeePieChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
@@ -330,19 +333,21 @@ public class PayeePieChart {
         plot.setInteriorGap(.1);
 
         BigDecimal thisTotal = BigDecimal.ZERO;
-        for(int i=0; i<data[index].getItemCount(); i++ ) {
-            thisTotal = thisTotal.add( (BigDecimal)(data[index].getValue(i)) );
+
+        for (int i = 0; i < data[index].getItemCount(); i++) {
+            thisTotal = thisTotal.add((BigDecimal) (data[index].getValue(i)));
         }
+
         BigDecimal acTotal = a.getTreeBalance(startField.getLocalDate(), endField.getLocalDate()).abs();
 
         String title = "";
         String subtitle = "";
 
         // pick an appropriate title(s)
-        if (index == 0) {
+        if (index == CREDIT) {
             title = a.getPathName();
             subtitle = rb.getString("Column.Credit") + " : " + valueFormat.format(thisTotal);
-        } else if (index == 1) {
+        } else if (index == DEBIT) {
             title = rb.getString("Column.Balance") + " : " + valueFormat.format(acTotal);
             subtitle = rb.getString("Column.Debit") + " : " + valueFormat.format(thisTotal);
         }
@@ -383,9 +388,9 @@ public class PayeePieChart {
     }
 
     private PieDataset[] createPieDataSet(final Account a) {
-        DefaultPieDataset[] returnValue = new DefaultPieDataset[2];
-        returnValue[0] = new DefaultPieDataset();
-        returnValue[1] = new DefaultPieDataset();
+        final DefaultPieDataset[] returnValue = new DefaultPieDataset[2];
+        returnValue[CREDIT] = new DefaultPieDataset();
+        returnValue[DEBIT] = new DefaultPieDataset();
 
         if (a != null) {
             //System.out.print("Account = "); System.out.println(a);
@@ -432,10 +437,9 @@ public class PayeePieChart {
 
                 if (value.compareTo(BigDecimal.ZERO) == -1) {
                     value = value.negate();
-                    returnValue[1].setValue(entry.getKey(), value);
-                }
-                else {
-                    returnValue[0].setValue(entry.getKey(), value);
+                    returnValue[DEBIT].setValue(entry.getKey(), value);
+                } else {
+                    returnValue[CREDIT].setValue(entry.getKey(), value);
                 }
             }
         }
