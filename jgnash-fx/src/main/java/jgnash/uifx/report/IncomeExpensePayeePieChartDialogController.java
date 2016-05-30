@@ -38,6 +38,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -123,7 +124,7 @@ public class IncomeExpensePayeePieChartDialogController {
 
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
-                updateChart();
+                updateCharts();
                 preferences.put(LAST_ACCOUNT, accountComboBox.getValue().getUuid());
             }
         };
@@ -136,49 +137,48 @@ public class IncomeExpensePayeePieChartDialogController {
         debitPieChart.setLegendSide(Side.BOTTOM);
 
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
-        Platform.runLater(this::updateChart);
+        Platform.runLater(this::updateCharts);
     }
 
-    private void updateChart() {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
+    private void updateCharts() {
+        final Account account = accountComboBox.getValue();
 
-        final Account a = accountComboBox.getValue();
-
-        if (a != null) {
-
-            ObservableList<PieChart.Data>[] chartData = createPieDataSet(a);
+        if (account != null) {
+            final ObservableList<PieChart.Data>[] chartData = createPieDataSet(account);
 
             creditPieChart.setData(chartData[CREDIT]);
             debitPieChart.setData(chartData[DEBIT]);
+
+            // Calculate the totals for percentage calulations
+            final double creditTotal = chartData[CREDIT].parallelStream().mapToDouble(PieChart.Data::getPieValue).sum();
+            final double debitTotal = chartData[DEBIT].parallelStream().mapToDouble(PieChart.Data::getPieValue).sum();
 
             final NumberFormat percentFormat = NumberFormat.getPercentInstance();
             percentFormat.setMaximumFractionDigits(1);
             percentFormat.setMinimumFractionDigits(1);
 
-            /*
-
             // Install tooltips on the data after it has been added to the chart
             creditPieChart.getData().stream().forEach(data ->
-                    Tooltip.install(data.getNode(), new Tooltip((((Account) data.getNode().getUserData()).getName()
-                            + " - " + percentFormat.format(data.getPieValue() / 100d))))); */
+                    Tooltip.install(data.getNode(), new Tooltip((data.getNode().getUserData()
+                            + " - " + percentFormat.format(data.getPieValue() / creditTotal)))));
+
+            // Install tooltips on the data after it has been added to the chart
+            debitPieChart.getData().stream().forEach(data ->
+                    Tooltip.install(data.getNode(), new Tooltip(((data.getNode().getUserData())
+                            + " - " + percentFormat.format(data.getPieValue() / debitTotal)))));
 
             /*final String title;
 
             // pick an appropriate title
-            if (a.getAccountType() == AccountType.EXPENSE) {
+            if (account.getAccountType() == AccountType.EXPENSE) {
                 title = resources.getString("Title.PercentExpense");
-            } else if (a.getAccountType() == AccountType.INCOME) {
+            } else if (account.getAccountType() == AccountType.INCOME) {
                 title = resources.getString("Title.PercentIncome");
             } else {
                 title = resources.getString("Title.PercentDist");
             }
 
             creditPieChart.setTitle(title + " - " + accountComboBox.getValue().getName() + " - " + numberFormat.format(total));*/
-
-            // abs() on all values won't work if children aren't of uniform sign,
-            // then again, this chart is not right to display those trees
-            //boolean negate = total != null && total.signum() < 0;
         } else {
             creditPieChart.setData(FXCollections.emptyObservableList());
             creditPieChart.setTitle("No Data");
@@ -199,7 +199,6 @@ public class IncomeExpensePayeePieChartDialogController {
 
         final Map<String, BigDecimal> names = new HashMap<>();
 
-
         final List<TranTuple> list = getTransactions(account, new ArrayList<>(), startDatePicker.getValue(),
                 endDatePicker.getValue());
 
@@ -209,11 +208,8 @@ public class IncomeExpensePayeePieChartDialogController {
 
         for (final TranTuple tranTuple : list) {
 
-            Transaction tran = tranTuple.transaction;
-            //Account account = tranTuple.account;
-
-            String payee = tran.getPayee();
-            BigDecimal sum = tran.getAmount(tranTuple.account);
+            final String payee = tranTuple.transaction.getPayee();
+            BigDecimal sum = tranTuple.transaction.getAmount(tranTuple.account);
 
             sum = sum.multiply(tranTuple.account.getCurrencyNode().getExchangeRate(currency));
 
@@ -238,12 +234,11 @@ public class IncomeExpensePayeePieChartDialogController {
         }
 
         for (final Map.Entry<String, BigDecimal> entry : names.entrySet()) {
-            //final String label = child.getName() + " - " + numberFormat.format(value);
-            final PieChart.Data data = new PieChart.Data(truncateName(entry.getKey()),
+            final PieChart.Data data = new PieChart.Data(truncateString(entry.getKey()),
                     entry.getValue().abs().doubleValue());
 
             // nodes are created lazily.  Set the user data (Account) after the node is created
-            //data.nodeProperty().addListener((observable, oldValue, newValue) -> newValue.setUserData(child));
+            data.nodeProperty().addListener((observable, oldValue, newValue) -> newValue.setUserData(entry.getKey()));
 
             if (entry.getValue().signum() == -1) {
                 chartData[DEBIT].add(data);
@@ -255,11 +250,11 @@ public class IncomeExpensePayeePieChartDialogController {
         return chartData;
     }
 
-    private static String truncateName(final String name) {
-        if (name.length() <= MAX_NAME_LENGTH) {
-            return name;
+    private static String truncateString(final String string) {
+        if (string.length() <= MAX_NAME_LENGTH) {
+            return string;
         } else {
-            return name.substring(0, MAX_NAME_LENGTH - 1) + ELLIPSIS;
+            return string.substring(0, MAX_NAME_LENGTH - 1) + ELLIPSIS;
         }
     }
 
