@@ -106,8 +106,8 @@ public class IncomeExpensePayeePieChartDialogController {
         creditPieChart.getStylesheets().addAll(CHART_CSS);
         debitPieChart.getStylesheets().addAll(CHART_CSS);
 
-        creditPieChart.labelLineLengthProperty().set(15);
-        debitPieChart.labelLineLengthProperty().set(15);
+        creditPieChart.centerTitleProperty().setValue(resources.getString("Column.Credit"));
+        debitPieChart.centerTitleProperty().setValue(resources.getString("Column.Debit"));
 
         accountComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
 
