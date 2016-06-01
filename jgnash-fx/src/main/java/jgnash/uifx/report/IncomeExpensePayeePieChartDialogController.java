@@ -53,6 +53,7 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DoughnutChart;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.util.CollectionUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -164,13 +165,13 @@ public class IncomeExpensePayeePieChartDialogController {
             percentFormat.setMinimumFractionDigits(1);
 
             // Install tooltips on the data after it has been added to the chart
-            creditPieChart.getData().stream().forEach(data ->
+            creditPieChart.getData().forEach(data ->
                     Tooltip.install(data.getNode(), new Tooltip((data.getNode().getUserData()
                             + "\n" + numberFormat.format(data.getPieValue()) + "(" +
                             percentFormat.format(data.getPieValue() / creditTotal)) + ")")));
 
             // Install tooltips on the data after it has been added to the chart
-            debitPieChart.getData().stream().forEach(data ->
+            debitPieChart.getData().forEach(data ->
                     Tooltip.install(data.getNode(), new Tooltip(((data.getNode().getUserData())
                             + "\n" + numberFormat.format(data.getPieValue()) + "(" +
                             percentFormat.format(data.getPieValue() / debitTotal)) + ")")));
@@ -229,7 +230,9 @@ public class IncomeExpensePayeePieChartDialogController {
             names.put(payee, sum);
         }
 
-        for (final Map.Entry<String, BigDecimal> entry : names.entrySet()) {
+        final Map<String, BigDecimal> sortedNames = CollectionUtils.sortMapByValue(names);
+
+        for (final Map.Entry<String, BigDecimal> entry : sortedNames.entrySet()) {
             final PieChart.Data data = new PieChart.Data(truncateString(entry.getKey()),
                     entry.getValue().abs().doubleValue());
 
