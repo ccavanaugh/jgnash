@@ -27,6 +27,7 @@ public class DoughnutChart extends PieChart {
     private final Text subTitleText;
 
     private final StringProperty centerTitle = new SimpleStringProperty();
+
     private final StringProperty centerSubTitle = new SimpleStringProperty();
 
     @SuppressWarnings("unused")
@@ -74,6 +75,13 @@ public class DoughnutChart extends PieChart {
             final Node node = getData().get(0).getNode();
             if (node.getParent() instanceof Pane) {
                 final Pane parent = (Pane) node.getParent();
+
+                // The content needs to be reordered after data has changed
+                if (parent.getChildren().contains(hole)) {
+                    parent.getChildren().remove(hole);
+                    parent.getChildren().remove(titleText);
+                    parent.getChildren().remove(subTitleText);
+                }
 
                 if (!parent.getChildren().contains(hole)) {
                     parent.getChildren().add(hole);
