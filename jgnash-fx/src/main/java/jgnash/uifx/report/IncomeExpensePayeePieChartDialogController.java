@@ -175,18 +175,8 @@ public class IncomeExpensePayeePieChartDialogController {
                             + "\n" + numberFormat.format(data.getPieValue()) + "(" +
                             percentFormat.format(data.getPieValue() / debitTotal)) + ")")));
 
-            /*final String title;
-
-            // pick an appropriate title
-            if (account.getAccountType() == AccountType.EXPENSE) {
-                title = resources.getString("Title.PercentExpense");
-            } else if (account.getAccountType() == AccountType.INCOME) {
-                title = resources.getString("Title.PercentIncome");
-            } else {
-                title = resources.getString("Title.PercentDist");
-            }
-
-            creditPieChart.setTitle(title + " - " + accountComboBox.getValue().getName() + " - " + numberFormat.format(total));*/
+            creditPieChart.centerSubTitleProperty().setValue(numberFormat.format(creditTotal));
+            debitPieChart.centerSubTitleProperty().setValue(numberFormat.format(debitTotal));
         } else {
             creditPieChart.setData(FXCollections.emptyObservableList());
             creditPieChart.setTitle("No Data");
@@ -210,9 +200,7 @@ public class IncomeExpensePayeePieChartDialogController {
         final List<TranTuple> list = getTransactions(account, new ArrayList<>(), startDatePicker.getValue(),
                 endDatePicker.getValue());
 
-        CurrencyNode currency = account.getCurrencyNode();
-
-        //final NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(currency);
+        final CurrencyNode currency = account.getCurrencyNode();
 
         for (final TranTuple tranTuple : list) {
 
