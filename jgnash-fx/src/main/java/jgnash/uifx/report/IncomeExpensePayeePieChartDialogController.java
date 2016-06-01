@@ -39,6 +39,7 @@ import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -76,6 +77,9 @@ public class IncomeExpensePayeePieChartDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private GridPane chartPane;
 
     @FXML
     private DoughnutChart debitPieChart;
@@ -287,17 +291,17 @@ public class IncomeExpensePayeePieChartDialogController {
 
     @FXML
     private void handleSaveAction() {
-        ChartUtilities.saveChart(creditPieChart);
+        ChartUtilities.saveChart(chartPane);
     }
 
     @FXML
     private void handleCopyToClipboard() {
-        ChartUtilities.copyToClipboard(creditPieChart);
+        ChartUtilities.copyToClipboard(chartPane);
     }
 
     @FXML
     private void handlePrintAction() {
-        ChartUtilities.printChart(creditPieChart);
+        ChartUtilities.printChart(chartPane);
     }
 
     @FXML

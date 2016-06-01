@@ -58,7 +58,7 @@
             <Label text="%Label.EndDate" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
             <DatePickerEx fx:id="endDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
 
-            <GridPane GridPane.rowIndex="2" GridPane.columnSpan="5">
+            <GridPane GridPane.rowIndex="2" GridPane.columnSpan="5" fx:id="chartPane">
                 <columnConstraints>
                     <ColumnConstraints hgrow="ALWAYS"/>
                     <ColumnConstraints hgrow="ALWAYS"/>
