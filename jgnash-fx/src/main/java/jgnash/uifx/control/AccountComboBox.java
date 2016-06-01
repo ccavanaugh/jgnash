@@ -106,7 +106,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     }
 
     /**
-     * Returns a Predicate used to display all accounts
+     * Returns a Predicate used to display all accounts.
      *
      * @return Account Predicate
      */
@@ -135,7 +135,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     }
 
     private void loadAccounts(@NotNull final List<Account> accounts) {
-        accounts.stream().forEach(account -> {
+        accounts.forEach(account -> {
             getUnfilteredItems().add(account);
 
             if (account.getChildCount() > 0) {

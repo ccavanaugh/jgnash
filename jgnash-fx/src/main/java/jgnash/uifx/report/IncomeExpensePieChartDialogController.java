@@ -172,7 +172,7 @@ public class IncomeExpensePieChartDialogController {
             percentFormat.setMinimumFractionDigits(1);
 
             // Install tooltips on the data after it has been added to the chart
-            pieChart.getData().stream().forEach(data ->
+            pieChart.getData().forEach(data ->
                     Tooltip.install(data.getNode(), new Tooltip((((Account) data.getNode().getUserData()).getName()
                             + " - " + percentFormat.format(data.getPieValue() / 100d)))));
 

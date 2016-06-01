@@ -37,7 +37,7 @@ import jgnash.util.TextResource;
 import org.controlsfx.control.CheckListView;
 
 /**
- * New file wizard pane, handles selection of account sets
+ * New file wizard pane, handles selection of account sets.
  *
  * @author Craig Cavanaugh
  */
@@ -75,7 +75,7 @@ public class NewFileFourController extends AbstractWizardPaneController<NewFileW
     }
 
     private void loadChildren(final TreeItem<Account> parentItem) {
-        parentItem.getValue().getChildren(Comparators.getAccountByCode()).stream().forEach(child ->
+        parentItem.getValue().getChildren(Comparators.getAccountByCode()).forEach(child ->
         {
             final TreeItem<Account> childItem = new TreeItem<>(child);
             childItem.setExpanded(true);
