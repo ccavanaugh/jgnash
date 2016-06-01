@@ -17,20 +17,24 @@
  */
 package jgnash.util;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Utility class for working with Arrays and Lists
+ * Utility class for working with Collections.
  * 
  * @author Craig Cavanaugh
  */
-public class Arrays {
+public class CollectionUtils {
     
-    private Arrays() {}
+    private CollectionUtils() {}
     
     /**
-     * Converts a List of Integers to an integer array
+     * Converts a List of Integers to an integer array.
      * 
      * @param integerList List of Integers
      * @return integer array
@@ -46,6 +50,28 @@ public class Arrays {
         }
         
         return intArray;
+    }
+
+    /**
+     * Sorts a map by it's value.
+     *
+     * @param map Map to sort
+     * @param <K> key
+     * @param <V> value
+     * @return sorted Map
+     */
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortMapByValue(final Map<K, V> map) {
+        final List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
+
+        Collections.sort(list, (e1, e2) -> (e1.getValue()).compareTo(e2.getValue()));
+
+        final Map<K, V> sortedMap = new LinkedHashMap<>();
+
+        for (final Map.Entry<K, V> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
     }
 
 }

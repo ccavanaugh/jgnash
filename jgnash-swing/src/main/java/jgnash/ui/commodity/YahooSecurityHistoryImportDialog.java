@@ -52,7 +52,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
-import static jgnash.util.Arrays.intListToArray;
+import static jgnash.util.CollectionUtils.intListToArray;
 
 /**
  * Dialog that lets the user download and import security history from Yahoo
