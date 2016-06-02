@@ -34,6 +34,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -59,6 +60,9 @@ public class IncomeExpensePieChartDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private StackPane chartPane;
 
     @FXML
     private PieChart pieChart;
@@ -225,17 +229,17 @@ public class IncomeExpensePieChartDialogController {
 
     @FXML
     private void handleSaveAction() {
-        ChartUtilities.saveChart(pieChart);
+        ChartUtilities.saveChart(chartPane);
     }
 
     @FXML
     private void handleCopyToClipboard() {
-        ChartUtilities.copyToClipboard(pieChart);
+        ChartUtilities.copyToClipboard(chartPane);
     }
 
     @FXML
     private void handlePrintAction() {
-        ChartUtilities.printChart(pieChart);
+        ChartUtilities.printChart(chartPane);
     }
 
     @FXML

@@ -15,6 +15,7 @@
 <?import jgnash.uifx.control.DatePickerEx?>
 
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.StackPane?>
 <BorderPane fx:controller="jgnash.uifx.report.IncomeExpenseBarChartDialogController" minWidth="850" minHeight="600"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <top>
@@ -62,15 +63,16 @@
             <Label text="%Label.Period"  GridPane.columnIndex="4"/>
             <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5"/>
 
-            <BarChart fx:id="barChart" title="%Title.IncomeExpenseBarChart" legendSide="RIGHT"
-                      GridPane.rowIndex="1" GridPane.columnSpan="7">
-                <xAxis>
-                    <CategoryAxis side="BOTTOM" />
-                </xAxis>
-                <yAxis>
-                    <NumberAxis label="Currency" side="LEFT" />
-                </yAxis>
-            </BarChart>
+            <StackPane GridPane.rowIndex="1" GridPane.columnSpan="7" fx:id="chartPane">
+                <BarChart fx:id="barChart" title="%Title.IncomeExpenseBarChart" legendSide="RIGHT">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Currency" side="LEFT" />
+                    </yAxis>
+                </BarChart>
+            </StackPane>
 
             <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="7">
                 <buttons>

@@ -40,7 +40,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 
-import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.FileUtils;
@@ -58,30 +57,15 @@ class ChartUtilities {
     }
 
     /**
-     * Increases scale of captured image.  This could be made user configurable
+     * Increases scale/resolution of captured image.  This could be made user configurable
      */
     private static final int SNAPSHOT_SCALE_FACTOR = 4;
-
-    private static WritableImage takeSnapshot(final Chart chart) {
-        // Need to disable animation for printing
-        chart.animatedProperty().setValue(false);
-
-        final SnapshotParameters snapshotParameters = new SnapshotParameters();
-        snapshotParameters.setTransform(new Scale(SNAPSHOT_SCALE_FACTOR, SNAPSHOT_SCALE_FACTOR));
-
-        final WritableImage image = chart.snapshot(snapshotParameters, null);
-
-        // Restore animation
-        chart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
-
-        return image;
-    }
 
     private static WritableImage takeSnapshot(final Pane pane) {
 
         Map<Chart, Boolean> animationMap = new HashMap<>();
 
-        // Need to disable animation for printing
+        // Need to disable chart animations for printing
         pane.getChildren().stream().filter(node -> node instanceof Chart).forEach(node -> {
             animationMap.put((Chart) node, ((Chart) node).getAnimated());
 
@@ -100,28 +84,6 @@ class ChartUtilities {
         }
 
         return image;
-    }
-
-    static void saveChart(final Chart chart) {
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(ResourceUtils.getString("Title.SaveFile"));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("PNG", "*.png")
-        );
-
-        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
-
-        if (file != null) {
-            final WritableImage image = takeSnapshot(chart);
-
-            try {
-                final String type = FileUtils.getFileExtension(file.toString().toLowerCase(Locale.ROOT));
-
-                ImageIO.write(SwingFXUtils.fromFXImage(image, null), type, file);
-            } catch (final IOException e) {
-                StaticUIMethods.displayException(e);
-            }
-        }
     }
 
     static void saveChart(final Pane pane) {
@@ -146,15 +108,6 @@ class ChartUtilities {
         }
     }
 
-    static void copyToClipboard(final Chart chart) {
-        final Clipboard clipboard = Clipboard.getSystemClipboard();
-        final ClipboardContent content = new ClipboardContent();
-
-        content.putImage(takeSnapshot(chart));
-
-        clipboard.setContent(content);
-    }
-
     static void copyToClipboard(final Pane pane) {
         final Clipboard clipboard = Clipboard.getSystemClipboard();
         final ClipboardContent content = new ClipboardContent();
@@ -162,43 +115,6 @@ class ChartUtilities {
         content.putImage(takeSnapshot(pane));
 
         clipboard.setContent(content);
-    }
-
-
-    static void printChart(final Chart chart) {
-        // Manipulate a snapshot of the chart instead of the chart itself to avoid visual artifacts when scaling
-        final ImageView imageView = new ImageView(takeSnapshot(chart));
-
-        final PrinterJob job = PrinterJob.createPrinterJob();
-
-        if (job != null) {
-
-            // Get the default page layout
-            final Printer printer = Printer.getDefaultPrinter();
-            PageLayout pageLayout = job.getJobSettings().getPageLayout();
-
-            // Request landscape orientation by default
-            pageLayout = printer.createPageLayout(pageLayout.getPaper(), PageOrientation.LANDSCAPE,
-                    Printer.MarginType.DEFAULT);
-
-            job.getJobSettings().setPageLayout(pageLayout);
-
-            if (job.showPageSetupDialog(MainApplication.getInstance().getPrimaryStage())) {
-                pageLayout = job.getJobSettings().getPageLayout();
-
-                // determine the scaling factor to fit the page
-                final double scale = Math.min(pageLayout.getPrintableWidth() / imageView.getBoundsInParent().getWidth(),
-                        pageLayout.getPrintableHeight() / imageView.getBoundsInParent().getHeight());
-
-                imageView.getTransforms().add(new Scale(scale, scale));
-
-                if (job.printPage(imageView)) {
-                    job.endJob();
-                }
-            } else {
-                job.cancelJob();
-            }
-        }
     }
 
     static void printChart(final Pane pane) {

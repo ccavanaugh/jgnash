@@ -40,6 +40,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -86,6 +87,9 @@ public class AccountBalanceChartController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private StackPane chartPane;
 
     @FXML
     private VBox accountComboVBox;
@@ -353,17 +357,17 @@ public class AccountBalanceChartController {
 
     @FXML
     private void handleSaveAction() {
-        ChartUtilities.saveChart(barChart);
+        ChartUtilities.saveChart(chartPane);
     }
 
     @FXML
     private void handleCopyToClipboard() {
-        ChartUtilities.copyToClipboard(barChart);
+        ChartUtilities.copyToClipboard(chartPane);
     }
 
     @FXML
     private void handlePrintAction() {
-        ChartUtilities.printChart(barChart);
+        ChartUtilities.printChart(chartPane);
     }
 
     @FXML

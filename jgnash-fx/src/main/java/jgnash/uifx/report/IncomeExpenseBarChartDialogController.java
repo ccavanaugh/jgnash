@@ -23,6 +23,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -35,6 +37,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -68,6 +71,9 @@ public class IncomeExpenseBarChartDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private StackPane chartPane;
 
     @FXML
     private ComboBox<ReportPeriod> periodComboBox;
@@ -192,17 +198,17 @@ public class IncomeExpenseBarChartDialogController {
 
     @FXML
     private void handleSaveAction() {
-        ChartUtilities.saveChart(barChart);
+        ChartUtilities.saveChart(chartPane);
     }
 
     @FXML
     private void handleCopyToClipboard() {
-        ChartUtilities.copyToClipboard(barChart);
+        ChartUtilities.copyToClipboard(chartPane);
     }
 
     @FXML
     private void handlePrintAction() {
-        ChartUtilities.printChart(barChart);
+        ChartUtilities.printChart(chartPane);
     }
 
     @FXML

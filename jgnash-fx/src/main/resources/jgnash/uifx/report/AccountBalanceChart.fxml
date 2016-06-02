@@ -20,6 +20,7 @@
 <?import jgnash.uifx.control.DatePickerEx?>
 
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 <BorderPane fx:controller="jgnash.uifx.report.AccountBalanceChartController" minWidth="850" minHeight="600"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <fx:define>
@@ -86,15 +87,16 @@
             <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts" GridPane.valignment="BASELINE"
                       GridPane.rowIndex="1" GridPane.columnIndex="7"/>
 
-            <BarChart fx:id="barChart" title="%Title.AccountBalance" legendSide="RIGHT"
-                      GridPane.rowIndex="2" GridPane.columnSpan="9">
-                <xAxis>
-                    <CategoryAxis side="BOTTOM"/>
-                </xAxis>
-                <yAxis>
-                    <NumberAxis label="Currency" side="LEFT"/>
-                </yAxis>
-            </BarChart>
+            <StackPane GridPane.rowIndex="2" GridPane.columnSpan="9" fx:id="chartPane">
+                <BarChart fx:id="barChart" title="%Title.AccountBalance" legendSide="RIGHT">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Currency" side="LEFT"/>
+                    </yAxis>
+                </BarChart>
+            </StackPane>
 
             <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="8">
                 <buttons>
