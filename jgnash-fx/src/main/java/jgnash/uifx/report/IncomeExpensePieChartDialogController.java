@@ -47,6 +47,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.control.DoughnutChart;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.function.ParentAccountPredicate;
 
@@ -65,7 +66,7 @@ public class IncomeExpensePieChartDialogController {
     private StackPane chartPane;
 
     @FXML
-    private PieChart pieChart;
+    private DoughnutChart pieChart;
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -216,7 +217,10 @@ public class IncomeExpensePieChartDialogController {
                 title = resources.getString("Title.PercentDist");
             }
 
-            pieChart.setTitle(title + " - " + accountComboBox.getValue().getName() + " - " + numberFormat.format(total));
+            pieChart.setTitle(title);
+
+            pieChart.centerTitleProperty().setValue(accountComboBox.getValue().getName());
+            pieChart.centerSubTitleProperty().setValue(numberFormat.format(total));
 
             // abs() on all values won't work if children aren't of uniform sign,
             // then again, this chart is not right to display those trees
