@@ -73,27 +73,27 @@ public class Account extends StoredObject implements Comparable<Account> {
     static final int MAX_ATTRIBUTE_LENGTH = 8192;
 
     /**
-     * Attribute key for the last attempted reconciliation date
+     * Attribute key for the last attempted reconciliation date.
      */
     public static final String RECONCILE_LAST_ATTEMPT_DATE = "Reconcile.LastAttemptDate";
 
     /**
-     * Attribute key for the last successful reconciliation date
+     * Attribute key for the last successful reconciliation date.
      */
     public static final String RECONCILE_LAST_SUCCESS_DATE = "Reconcile.LastSuccessDate";
 
     /**
-     * Attribute key for the last reconciliation statement date
+     * Attribute key for the last reconciliation statement date.
      */
     public static final String RECONCILE_LAST_STATEMENT_DATE = "Reconcile.LastStatementDate";
 
     /**
-     * Attribute key for the last reconciliation opening balance
+     * Attribute key for the last reconciliation opening balance.
      */
     public static final String RECONCILE_LAST_OPENING_BALANCE = "Reconcile.LastOpeningBalance";
 
     /**
-     * Attribute key for the last reconciliation closing balance
+     * Attribute key for the last reconciliation closing balance.
      */
     public static final String RECONCILE_LAST_CLOSING_BALANCE = "Reconcile.LastClosingBalance";
 
@@ -102,7 +102,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     private static final Logger logger = Logger.getLogger(Account.class.getName());
 
     /**
-     * String delimiter for reported account structure
+     * String delimiter for reported account structure.
      */
     private static String accountSeparator = ":";
 
@@ -113,7 +113,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     Account parentAccount;
 
     /**
-     * List of transactions for this account
+     * List of transactions for this account.
      */
     @JoinTable
     @OrderBy("date, number, dateEntered")
@@ -121,7 +121,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     final Set<Transaction> transactions = new HashSet<>();
 
     /**
-     * List of securities if this is an investment account
+     * List of securities if this is an investment account.
      */
     @JoinColumn()
     @OrderBy("symbol")
@@ -147,13 +147,13 @@ public class Account extends StoredObject implements Comparable<Account> {
     private String notes = "";
 
     /**
-     * CurrencyNode for this account
+     * CurrencyNode for this account.
      */
     @ManyToOne
     private CurrencyNode currencyNode;
 
     /**
-     * Sorted list of child accounts
+     * Sorted list of child accounts.
      */
     @OrderBy("name")
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
@@ -173,23 +173,23 @@ public class Account extends StoredObject implements Comparable<Account> {
     private transient List<Account> cachedSortedChildren;
 
     /**
-     * Balance of the account
-     * <p>
+     * Balance of the account.
+     *
      * Cached balances cannot be persisted to do nature of JPA
      */
     @Transient
     private transient BigDecimal accountBalance;
 
     /**
-     * Reconciled balance of the account
-     * <p>
+     * Reconciled balance of the account.
+     *
      * Cached balances cannot be persisted to do nature of JPA
      */
     @Transient
     private transient BigDecimal reconciledBalance;
 
     /**
-     * User definable account number
+     * User definable account number.
      */
     private String accountNumber = "";
 
@@ -208,7 +208,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     private AmortizeObject amortizeObject;
 
     /**
-     * User definable attributes
+     * User definable attributes.
      */
     @ElementCollection
     @Column(columnDefinition = "varchar(8192)")
@@ -226,7 +226,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * No argument public constructor for reflection purposes.
-     * <p>
+     *
      * <b>Do not use to create account new instance</b>
      */
     public Account() {
@@ -269,7 +269,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Sets / Adds an AccountProperty
+     * Sets / Adds an AccountProperty.
      *
      * @param key   AccountProperty
      * @param value actual object to add or set
@@ -281,7 +281,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Remove an AccountProperty from this account
+     * Remove an AccountProperty from this account.
      *
      * @param key AccountProperty to remove
      * @return true if this account contained the AccountProperty
@@ -293,7 +293,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Gets an account property
+     * Gets an account property.
      *
      * @param key AccountProperty to get
      * @return not null if the account contained the property
@@ -320,7 +320,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Clear cached account balances so they will be recalculated
+     * Clear cached account balances so they will be recalculated.
      */
     void clearCachedBalances() {
         accountBalance = null;
@@ -328,7 +328,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Adds account transaction in chronological order
+     * Adds account transaction in chronological order.
      *
      * @param tran the {@code Transaction} to be added
      * @return <tt>true</tt> the transaction was added successful <tt>false</tt> the transaction was already attached
@@ -370,7 +370,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Removes the specified transaction from this account
+     * Removes the specified transaction from this account.
      *
      * @param tran the {@code Transaction} to be removed
      * @return {@code true} the transaction removal was successful {@code false} the transaction could not be found
@@ -399,7 +399,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Determines if the specified transaction is attach to this account
+     * Determines if the specified transaction is attach to this account.
      *
      * @param tran the {@code Transaction} to look for
      * @return {@code true} the transaction is attached to this account {@code false} the transaction is not attached
@@ -416,7 +416,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Determine if the supplied account is a child of this account
+     * Determine if the supplied account is a child of this account.
      *
      * @param account to check
      * @return true if the supplied account is a child of this account
@@ -432,7 +432,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns a sorted list of transactions for this account that is unmodifiable
+     * Returns a sorted list of transactions for this account that is unmodifiable.
      *
      * @return List of transactions
      */
@@ -448,7 +448,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the transaction at the specified index
+     * Returns the transaction at the specified index.
      *
      * @param index the index of the transaction to return.
      * @return the transaction at the specified index.
@@ -514,7 +514,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Add account child account given it's reference
+     * Add account child account given it's reference.
      *
      * @param child The child account to add to this account.
      * @return {@code true} if the account was added successfully, {@code false} otherwise.
@@ -610,7 +610,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the number of children this account has
+     * Returns the number of children this account has.
      *
      * @return the number of children this account has.
      */
@@ -640,7 +640,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Sets the parent of this {@code Account}
+     * Sets the parent of this {@code Account}.
      *
      * @param account The new parent {@code Account}
      * @return {@code true} is successful
@@ -717,7 +717,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Get the account balance up to the specified index using the natural
-     * transaction sort order
+     * transaction sort order.
      *
      * @param index the balance of this account at the specified index.
      * @return the balance of this account at the specified index.
@@ -734,7 +734,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Get the account balance up to the specified transaction using the natural
-     * transaction sort order
+     * transaction sort order.
      *
      * @param transaction reference transaction for running balance.  Must be contained within the account
      * @return the balance of this account at the specified transaction
@@ -742,16 +742,14 @@ public class Account extends StoredObject implements Comparable<Account> {
     public BigDecimal getBalanceAt(final Transaction transaction) {
         transactionLock.readLock().lock();
 
-        BigDecimal balance = BigDecimal.ZERO;
-
         try {
-            int index = indexOf(transaction);
+            final int index = indexOf(transaction);
 
             if (index >= 0) {
-                balance = getBalanceAt(index);
+                return getBalanceAt(index);
             }
 
-            return balance;
+            return BigDecimal.ZERO;
         } finally {
             transactionLock.readLock().unlock();
         }
@@ -792,7 +790,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the date of the first unreconciled transaction
+     * Returns the date of the first unreconciled transaction.
      *
      * @return Date of first unreconciled transaction
      */
@@ -820,7 +818,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Get the default opening balance for reconciling the account
+     * Get the default opening balance for reconciling the account.
      *
      * @return Opening balance for reconciling the account
      * @see AccountProxy#getOpeningBalanceForReconcile()
@@ -830,7 +828,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the balance of the account plus any child accounts
+     * Returns the balance of the account plus any child accounts.
      *
      * @return the balance of this account including the balance of any child
      * accounts.
@@ -854,7 +852,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the balance of the account plus any child accounts
+     * Returns the balance of the account plus any child accounts.
      *
      * @param endDate The inclusive end date
      * @param node The commodity to convert balance to
@@ -1073,7 +1071,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the account balance up to and inclusive of the supplied localDate
+     * Returns the account balance up to and inclusive of the supplied localDate.
      *
      * @param localDate The inclusive ending localDate
      * @return The ending balance
@@ -1211,7 +1209,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the visibility of the account
+     * Returns the visibility of the account.
      *
      * @return boolean is this account is visible, false otherwise
      */
@@ -1220,7 +1218,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Changes the visibility of the account
+     * Changes the visibility of the account.
      *
      * @param visible the new account visibility
      */
@@ -1229,7 +1227,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the notes for this account
+     * Returns the notes for this account.
      *
      * @return the notes for this account
      */
@@ -1238,7 +1236,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Sets the notes for this account
+     * Sets the notes for this account.
      *
      * @param notes the notes for this account
      */
@@ -1363,7 +1361,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the market value of this account
+     * Returns the market value of this account.
      *
      * @return market value of the account
      */
@@ -1372,7 +1370,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns a defensive copy of the security set
+     * Returns a defensive copy of the security set.
      *
      * @return a sorted set
      */
@@ -1387,7 +1385,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns a set of used SecurityNodes
+     * Returns a set of used SecurityNodes.
      *
      * @return a set of used SecurityNodes
      */
@@ -1405,7 +1403,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the cash balance of this account
+     * Returns the cash balance of this account.
      *
      * @return Cash balance of the account
      */
@@ -1421,8 +1419,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the depth of the account relative to the
-     * {@code RootAccount}
+     * Returns the depth of the account relative to the {@code RootAccount}.
      *
      * @return depth relative to the root
      */
@@ -1440,7 +1437,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Shortcut method to check account type
+     * Shortcut method to check account type.
      *
      * @param type AccountType to compare against
      * @return true if supplied AccountType match
@@ -1450,7 +1447,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Shortcut method to check account group membership
+     * Shortcut method to check account group membership.
      *
      * @param group AccountGroup to compare against
      * @return true if this account belongs to the supplied group
@@ -1476,7 +1473,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Amortization object for loan payments
+     * Amortization object for loan payments.
      *
      * @return {@code AmortizeObject} if not null
      */
@@ -1490,7 +1487,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Sets an attribute for the {@code Account}
+     * Sets an attribute for the {@code Account}.
      *
      * @param key   the attribute key
      * @param value the value. If null, the attribute will be removed
@@ -1514,7 +1511,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns an {@code Account} attribute
+     * Returns an {@code Account} attribute.
      *
      * @param key the attribute key
      * @return the attribute if found
@@ -1554,7 +1551,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Required by XStream for proper initialization
+     * Required by XStream for proper initialization.
      *
      * @return Properly initialized Account
      */
@@ -1576,7 +1573,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Accounts should not be cloned
+     * Accounts should not be cloned.
      *
      * @return will result in a CloneNotSupportedException
      * @throws java.lang.CloneNotSupportedException will always occur
