@@ -21,12 +21,15 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -38,8 +41,10 @@ import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -56,6 +61,7 @@ import jgnash.uifx.control.DoughnutChart;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.CollectionUtils;
 import jgnash.util.NotNull;
+import jgnash.util.function.PayeePredicate;
 
 /**
  * Income and Expense Payee Pie Chart.
@@ -79,6 +85,9 @@ public class IncomeExpensePayeePieChartDialogController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private VBox filtersPane;
+
+    @FXML
     private GridPane chartPane;
 
     @FXML
@@ -100,6 +109,20 @@ public class IncomeExpensePayeePieChartDialogController {
     private ResourceBundle resources;
 
     private static final String LAST_ACCOUNT = "lastAccount";
+
+    // TODO: Rate limit updates
+    private final ChangeListener<String> payeeChangeListener = (observable, oldValue, newValue) -> {
+        if (newValue != null) {
+            if (newValue.isEmpty()) {
+                Platform.runLater(this::trimAuxPayeeTextFields);
+            } else {
+                if (!isEmptyPayeeFieldAvailable()) {
+                    Platform.runLater(this::addAuxPayeeTextField);
+                }
+            }
+        }
+        Platform.runLater(this::updateCharts);
+    };
 
     @FXML
     public void initialize() {
@@ -145,8 +168,52 @@ public class IncomeExpensePayeePieChartDialogController {
         creditPieChart.setLegendSide(Side.BOTTOM);
         debitPieChart.setLegendSide(Side.BOTTOM);
 
+        // Load in the first aux payee text field
+        addAuxPayeeTextField();
+
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
         Platform.runLater(this::updateCharts);
+    }
+
+    private void addAuxPayeeTextField() {
+        final TextField payeeField = new TextField();
+        payeeField.textProperty().addListener(payeeChangeListener);
+        filtersPane.getChildren().add(payeeField);
+    }
+
+    private void trimAuxPayeeTextFields() {
+
+        final List<TextField> empty = filtersPane.getChildren().stream().filter(node -> node instanceof TextField)
+                .filter(node -> ((TextField) node).getText().isEmpty())
+                .map(node -> (TextField) node).collect(Collectors.toList());
+
+        // Reverse order so we leave the last empty at the bottom
+        Collections.reverse(empty);
+
+        for (int i = empty.size() - 1; i > 0; i--) {
+            final TextField textField = empty.get(i);
+
+            textField.textProperty().removeListener(payeeChangeListener);
+            filtersPane.getChildren().remove(textField);
+        }
+    }
+
+    private boolean isEmptyPayeeFieldAvailable() {
+        boolean result = false;
+
+        for (TextField textField : getPayeeTextFields()) {
+            if (textField.getText().isEmpty()) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private List<TextField> getPayeeTextFields() {
+        return filtersPane.getChildren().stream()
+                .filter(node -> node instanceof TextField).map(node -> (TextField) node).collect(Collectors.toList());
     }
 
     private void updateCharts() {
@@ -207,31 +274,38 @@ public class IncomeExpensePayeePieChartDialogController {
 
         final CurrencyNode currency = account.getCurrencyNode();
 
-        for (final TranTuple tranTuple : list) {
+        // Create a list of predicates
+        final List<Predicate<Transaction>> predicates = getPayeeTextFields().stream()
+                .filter(textField -> !textField.getText().isEmpty())
+                .map(textField -> new PayeePredicate(textField.getText())).collect(Collectors.toList());
 
+        // Iterate through the list and add up filtered payees
+        for (final TranTuple tranTuple : list) {
             final String payee = tranTuple.transaction.getPayee();
             BigDecimal sum = tranTuple.transaction.getAmount(tranTuple.account);
 
             sum = sum.multiply(tranTuple.account.getCurrencyNode().getExchangeRate(currency));
 
-            /*if (useFilters.isSelected()) {
-                for (String aFilterList : filterList) {
+            boolean keep = false;
 
-                    PayeeMatcher pm = new PayeeMatcher(aFilterList, false);
-
-                    if (pm.matches(tran)) {
-                        payee = aFilterList;
-                        //System.out.println(filterList.get(i));
+            if (predicates.isEmpty()) {
+                keep = true;
+            } else {
+                for (final Predicate<Transaction> predicate : predicates) {
+                    if (predicate.test(tranTuple.transaction)) {
+                        keep = true;
                         break;
                     }
                 }
-            }*/
-
-            if (names.containsKey(payee)) {
-                sum = sum.add(names.get(payee));
             }
 
-            names.put(payee, sum);
+            if (keep) {
+                if (names.containsKey(payee)) {
+                    sum = sum.add(names.get(payee));
+                }
+
+                names.put(payee, sum);
+            }
         }
 
         final Map<String, BigDecimal> sortedNames = CollectionUtils.sortMapByValue(names);
