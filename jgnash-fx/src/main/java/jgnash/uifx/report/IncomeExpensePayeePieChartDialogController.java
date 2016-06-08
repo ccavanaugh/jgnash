@@ -277,7 +277,8 @@ public class IncomeExpensePayeePieChartDialogController {
         // Create a list of predicates
         final List<Predicate<Transaction>> predicates = getPayeeTextFields().stream()
                 .filter(textField -> !textField.getText().isEmpty())
-                .map(textField -> new PayeePredicate(textField.getText())).collect(Collectors.toList());
+                .map(textField -> new PayeePredicate(textField.getText(), Options.regexForFiltersProperty().get()))
+                .collect(Collectors.toList());
 
         // Iterate through the list and add up filtered payees
         for (final TranTuple tranTuple : list) {

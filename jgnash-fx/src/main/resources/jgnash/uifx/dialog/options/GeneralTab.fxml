@@ -25,6 +25,7 @@
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="ALWAYS"/>
         </rowConstraints>
 
@@ -68,6 +69,18 @@
                              toggleGroup="$toggleGroup" GridPane.rowIndex="1"/>
                 <RadioButton fx:id="linuxStyleRadioButton" text="%Button.Order.LinuxOS"
                              toggleGroup="$toggleGroup" GridPane.rowIndex="2"/>
+            </GridPane>
+        </TitledPane>
+
+        <TitledPane text="%Title.Filters" GridPane.rowIndex="3" collapsible="false">
+            <GridPane styleClass="form">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="NEVER"/>
+                </rowConstraints>
+                <CheckBox text="%Button.UseRegexForFilter" fx:id="filterRegexEnabledCheckBox" />
             </GridPane>
         </TitledPane>
     </GridPane>

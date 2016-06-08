@@ -18,27 +18,45 @@
 package jgnash.util.function;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jgnash.engine.Transaction;
+import jgnash.util.NotNull;
+import jgnash.util.SearchUtils;
 
 /**
+ * Filter for Transaction payees.
+ *
  * @author Craig Cavanaugh
  */
 public class PayeePredicate implements Predicate<Transaction> {
 
     private final String filter;
 
-    public PayeePredicate(final String filter) {
-        this.filter = filter.toLowerCase(Locale.getDefault());
+    private final Pattern pattern;
+
+    public PayeePredicate(@NotNull final String filter, final boolean useRegex) {
+        if (useRegex && !filter.isEmpty()) {
+            pattern = SearchUtils.createSearchPattern(Objects.requireNonNull(filter), false);
+            this.filter = null;
+        } else {
+            pattern = null;
+            this.filter = filter.toLowerCase(Locale.getDefault());
+        }
     }
 
     @Override
     public boolean test(final Transaction transaction) {
-        if (filter == null || filter.isEmpty()) {
-            return true;
+        if (pattern != null) {
+            final Matcher matcher = pattern.matcher(transaction.getPayee());
+            return matcher.matches();
+        } else if (filter != null && !filter.isEmpty()) {
+            return transaction.getPayee().toLowerCase(Locale.getDefault()).contains(filter);
         }
 
-        return transaction.getPayee().toLowerCase(Locale.getDefault()).contains(filter);
+        return true;
     }
 }

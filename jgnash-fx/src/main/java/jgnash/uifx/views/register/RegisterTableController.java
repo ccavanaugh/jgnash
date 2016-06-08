@@ -70,6 +70,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.Options;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
@@ -80,7 +81,7 @@ import jgnash.util.function.ReconciledPredicate;
 import jgnash.util.function.TransactionAgePredicate;
 
 /**
- * Abstract Register Table with stats controller
+ * Abstract Register Table with stats controller.
  *
  * @author Craig Cavanaugh
  */
@@ -113,25 +114,25 @@ abstract class RegisterTableController {
     protected TextField payeeFilterTextField;
 
     /**
-     * Active account for the pane
+     * Active account for the pane.
      */
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     final private ReadOnlyObjectWrapper<Transaction> selectedTransactionProperty = new ReadOnlyObjectWrapper<>();
 
     /**
-     * This is the master list of transactions
+     * This is the master list of transactions.
      */
     private final ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
 
     /**
-     * Filters may be applied to this list
+     * Filters may be applied to this list.
      */
     private final FilteredList<Transaction> filteredTransactionList
             = new FilteredList<>(observableTransactions, transaction -> true);
 
     /**
-     * Sorted list of transactions
+     * Sorted list of transactions.
      */
     final SortedList<Transaction> sortedList = new SortedList<>(filteredTransactionList);
 
@@ -208,8 +209,10 @@ abstract class RegisterTableController {
         final ChangeListener<Object> filterChangeListener = (observable, oldValue, newValue) -> handleFilterChange();
 
         reconciledStateFilterComboBox.valueProperty().addListener(filterChangeListener);
-
         transactionAgeFilterComboBox.valueProperty().addListener(filterChangeListener);
+
+        // Rebuild filters when regex properties change
+        Options.regexForFiltersProperty().addListener(filterChangeListener);
 
         if (memoFilterTextField != null) {  // memo filter may not have been initialized for all register types
             memoFilterTextField.textProperty().addListener(filterChangeListener);
@@ -235,7 +238,8 @@ abstract class RegisterTableController {
         }
 
         if (payeeFilterTextField != null) {
-            predicate = predicate.and(new PayeePredicate(payeeFilterTextField.getText()));
+            predicate = predicate.and(new PayeePredicate(payeeFilterTextField.getText(),
+                    Options.regexForFiltersProperty().get()));
         }
 
         filteredTransactionList.setPredicate(predicate);
@@ -287,7 +291,7 @@ abstract class RegisterTableController {
     }
 
     /**
-     * Ensures the transaction is visible and selects it
+     * Ensures the transaction is visible and selects it.
      *
      * @param transaction Transaction that needs to be visible in the view
      */

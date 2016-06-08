@@ -26,11 +26,14 @@ import javafx.scene.control.ToggleGroup;
 import jgnash.uifx.Options;
 
 /**
- * Controller for General Options
+ * Controller for General Options.
  *
  * @author Craig Cavanaugh
  */
 public class GeneralTabController {
+
+    @FXML
+    private CheckBox filterRegexEnabledCheckBox;
 
     @FXML
     private RadioButton windowsStyleRadioButton;
@@ -54,6 +57,7 @@ public class GeneralTabController {
     private void initialize() {
         selectOnFocusCheckBox.selectedProperty().bindBidirectional(Options.selectOnFocusProperty());
         animationsEnabledCheckBox.selectedProperty().bindBidirectional(Options.animationsEnabledProperty());
+        filterRegexEnabledCheckBox.selectedProperty().bindBidirectional(Options.regexForFiltersProperty());
 
         switch (Options.buttonOrderProperty().get()) {
             case ButtonBar.BUTTON_ORDER_LINUX:

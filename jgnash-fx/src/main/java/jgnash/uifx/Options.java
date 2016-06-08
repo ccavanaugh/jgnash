@@ -29,7 +29,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ButtonBar;
 
 /**
- * Manages application preferences
+ * Manages application preferences.
  *
  * @author Craig Cavanaugh
  */
@@ -67,6 +67,8 @@ public class Options {
 
     private final static String RESTORE_LAST_TAB = "restoreLastTab";
 
+    private final static String REGEX_FOR_FILTERS = "regexForFilters";
+
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -94,6 +96,8 @@ public class Options {
     private static final SimpleBooleanProperty restoreLastRegisterTab;
 
     private static final SimpleBooleanProperty concatenateMemos;
+
+    private static final SimpleBooleanProperty regexForFilters;
 
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
@@ -128,6 +132,7 @@ public class Options {
         concatenateMemos = createBooleanProperty(CONCATENATE_MEMOS, false);
         animationsEnabled = createBooleanProperty(ANIMATIONS_ENABLED, true);
         restoreLastRegisterTab = createBooleanProperty(RESTORE_LAST_TAB, true);
+        regexForFilters = createBooleanProperty(REGEX_FOR_FILTERS, false);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
 
@@ -160,7 +165,7 @@ public class Options {
     }
 
     /**
-     * Returns transaction deletion confirmation
+     * Returns transaction deletion confirmation.
      *
      * @return true if confirm on transaction delete is enabled, false otherwise
      */
@@ -173,7 +178,7 @@ public class Options {
     }
 
     /**
-     * Returns reminder deletion confirmation
+     * Returns reminder deletion confirmation.
      *
      * @return true if confirm on reminder delete is enabled, false otherwise
      */
@@ -200,7 +205,7 @@ public class Options {
     }
 
     /**
-     * Provides access to the enabled state of auto completion
+     * Provides access to the enabled state of auto completion.
      *
      * @return {@code BooleanProperty} controlling enabled state
      */
@@ -209,7 +214,7 @@ public class Options {
     }
 
     /**
-     * Provides access to the case sensitivity of auto completion
+     * Provides access to the case sensitivity of auto completion.
      *
      * @return {@code BooleanProperty} controlling case sensitivity
      */
@@ -217,7 +222,7 @@ public class Options {
         return autoCompleteCaseSensitiveEnabled;
     }
 
-    /** Provides access to the property controlling if fuzzy match is used for auto completion
+    /** Provides access to the property controlling if fuzzy match is used for auto completion.
      *
      * @return {@code BooleanProperty} controlling fuzzy match
      */
@@ -226,7 +231,7 @@ public class Options {
     }
 
     /**
-     * Provides access to the property controlling the snooze time between reminder events
+     * Provides access to the property controlling the snooze time between reminder events.
      *
      * @return {@code IntegerProperty} controlling snooze time. Period is in milliseconds
      */
@@ -234,7 +239,8 @@ public class Options {
         return reminderSnoozePeriod;
     }
 
-    /** Provides access to the property controlling if a text field automatically selects all text when it receives the focus
+    /** Provides access to the property controlling if a text field automatically selects all text when
+     * it receives the focus.
      *
      * @return {@code BooleanProperty} controlling fuzzy match
      */
@@ -243,7 +249,7 @@ public class Options {
     }
 
     /**
-     * Provides access to the open last file at startup property
+     * Provides access to the open last file at startup property.
      *
      * @return {@code BooleanProperty} controlling open last file
      */
@@ -252,7 +258,7 @@ public class Options {
     }
 
     /**
-     * Provides access to the enabled state for animations
+     * Provides access to the enabled state for animations.
      *
      * @return {@code BooleanProperty} controlling open last file
      */
@@ -261,12 +267,21 @@ public class Options {
     }
 
     /**
-     * Provides access to the restore last used tab property
+     * Provides access to the restore last used tab property.
      *
      * @return {@code BooleanProperty} controlling open last file
      */
     public static BooleanProperty restoreLastTabProperty() {
         return restoreLastRegisterTab;
+    }
+
+    /**
+     * Provides access to the property controlling use of regular expressions when applying filters.
+     *
+     * @return {@code BooleanProperty} controlling use of regex for filters/{@code Predicate}
+     */
+    public static BooleanProperty regexForFiltersProperty() {
+        return regexForFilters;
     }
 
     public static StringProperty buttonOrderProperty() {
