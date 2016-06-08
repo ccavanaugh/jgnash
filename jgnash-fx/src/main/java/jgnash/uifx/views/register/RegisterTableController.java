@@ -234,7 +234,8 @@ abstract class RegisterTableController {
                         transactionAgeFilterComboBox.valueProperty().get().getAge()));
 
         if (memoFilterTextField != null) {
-            predicate = predicate.and(new MemoPredicate(memoFilterTextField.getText()));
+            predicate = predicate.and(new MemoPredicate(memoFilterTextField.getText(),
+                    Options.regexForFiltersProperty().get()));
         }
 
         if (payeeFilterTextField != null) {

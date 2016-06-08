@@ -18,27 +18,44 @@
 package jgnash.util.function;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jgnash.engine.Transaction;
+import jgnash.util.SearchUtils;
 
 /**
+ * Filter for Transaction memos.
+ *
  * @author Craig Cavanaugh
  */
 public class MemoPredicate implements Predicate<Transaction> {
 
     private final String filter;
 
-    public MemoPredicate(final String filter) {
-        this.filter = filter.toLowerCase(Locale.getDefault());
+    private final Pattern pattern;
+
+    public MemoPredicate(final String filter, final boolean useRegex) {
+        if (useRegex && !filter.isEmpty()) {
+            pattern = SearchUtils.createSearchPattern(Objects.requireNonNull(filter), false);
+            this.filter = null;
+        } else {
+            pattern = null;
+            this.filter = filter.toLowerCase(Locale.getDefault());
+        }
     }
 
     @Override
     public boolean test(final Transaction transaction) {
-        if (filter == null || filter.isEmpty()) {
-            return true;
+        if (pattern != null) {
+            final Matcher matcher = pattern.matcher(transaction.getMemo());
+            return matcher.matches();
+        } else if (filter != null && !filter.isEmpty()) {
+            return transaction.getMemo().toLowerCase(Locale.getDefault()).contains(filter);
         }
 
-        return transaction.getMemo().toLowerCase(Locale.getDefault()).contains(filter);
+        return true;
     }
 }
