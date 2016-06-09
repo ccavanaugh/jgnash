@@ -119,7 +119,6 @@ public class IncomeExpensePayeePieChartDialogController {
     @FXML
     private ResourceBundle resources;
 
-    // TODO: Rate limit updates
     private final ChangeListener<String> payeeChangeListener = (observable, oldValue, newValue) -> {
         if (newValue != null) {
             if (newValue.isEmpty()) {
