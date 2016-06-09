@@ -23,7 +23,7 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
- * Utility methods for {@code Scene}
+ * Utility methods for {@code Scene}.
  *
  * @author Craig Cavanaugh
  */
@@ -38,7 +38,7 @@ public class JavaFXUtils {
     }
 
     /**
-     * Focuses the next node within a {@code Parent}
+     * Focuses the next node within a {@code Parent}.
      *
      * @param node {@code Node} predecessor node
      */
@@ -95,7 +95,7 @@ public class JavaFXUtils {
     }*/
 
     /**
-     * Calculates the displayed width of a text string
+     * Calculates the displayed width of a text string.
      *
      * @param displayString displayed text
      * @param style text style, may be null
