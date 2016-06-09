@@ -42,6 +42,7 @@ import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -60,6 +61,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DoughnutChart;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.CollectionUtils;
+import jgnash.util.EncodeDecode;
 import jgnash.util.NotNull;
 import jgnash.util.function.PayeePredicate;
 
@@ -71,6 +73,12 @@ import jgnash.util.function.PayeePredicate;
  */
 public class IncomeExpensePayeePieChartDialogController {
 
+    private static final String LAST_ACCOUNT = "lastAccount";
+
+    private static final String FILTERS = "filters";
+
+    private static final char DELIMITER = '◼';
+
     private static final int CREDIT = 0;
 
     private static final int DEBIT = 1;
@@ -80,6 +88,9 @@ public class IncomeExpensePayeePieChartDialogController {
     private static final String ELLIPSIS = "…";
 
     private static final String CHART_CSS = "jgnash/skin/incomeExpensePieChart.css";
+
+    private final Preferences preferences
+            = Preferences.userNodeForPackage(IncomeExpensePayeePieChartDialogController.class);
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -108,8 +119,6 @@ public class IncomeExpensePayeePieChartDialogController {
     @FXML
     private ResourceBundle resources;
 
-    private static final String LAST_ACCOUNT = "lastAccount";
-
     // TODO: Rate limit updates
     private final ChangeListener<String> payeeChangeListener = (observable, oldValue, newValue) -> {
         if (newValue != null) {
@@ -117,11 +126,21 @@ public class IncomeExpensePayeePieChartDialogController {
                 Platform.runLater(this::trimAuxPayeeTextFields);
             } else {
                 if (!isEmptyPayeeFieldAvailable()) {
-                    Platform.runLater(this::addAuxPayeeTextField);
+                    Platform.runLater(this::insertAuxPayeeTextField);
                 }
             }
         }
         Platform.runLater(this::updateCharts);
+
+        final List<String> filters = getPayeeTextFields().stream()
+                .filter(textField -> !textField.getText().isEmpty())
+                .map(TextInputControl::getText).collect(Collectors.toList());
+
+        if (filters.isEmpty()) {
+            preferences.remove(FILTERS);
+        } else {
+            preferences.put(FILTERS, EncodeDecode.encodeStringCollection(filters, DELIMITER));
+        }
     };
 
     @FXML
@@ -138,8 +157,6 @@ public class IncomeExpensePayeePieChartDialogController {
         debitPieChart.centerTitleProperty().setValue(resources.getString("Column.Debit"));
 
         accountComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
-
-        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpensePayeePieChartDialogController.class);
 
         if (preferences.get(LAST_ACCOUNT, null) != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -169,16 +186,34 @@ public class IncomeExpensePayeePieChartDialogController {
         debitPieChart.setLegendSide(Side.BOTTOM);
 
         // Load in the first aux payee text field
-        addAuxPayeeTextField();
+        insertAuxPayeeTextField();
+
+        restoreFilters();
 
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
         Platform.runLater(this::updateCharts);
     }
 
-    private void addAuxPayeeTextField() {
+    private void restoreFilters() {
+        final List<String> filters
+                = new ArrayList<>(EncodeDecode.decodeStringCollection(preferences.get(FILTERS, ""), DELIMITER));
+
+        // Need to reverse the order since we are inserting at the top
+        Collections.reverse(filters);
+
+        filters.forEach(this::insertAuxPayeeTextField);
+    }
+
+    private void insertAuxPayeeTextField() {
         final TextField payeeField = new TextField();
         payeeField.textProperty().addListener(payeeChangeListener);
         filtersPane.getChildren().add(payeeField);
+    }
+
+    private void insertAuxPayeeTextField(final String filter) {
+        final TextField payeeField = new TextField(filter);
+        payeeField.textProperty().addListener(payeeChangeListener);
+        filtersPane.getChildren().add(0, payeeField);
     }
 
     private void trimAuxPayeeTextFields() {
