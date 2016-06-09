@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.regex.Pattern;
 
 /**
- * EncodeDecode is used to encode/decode various objects using a String
+ * EncodeDecode is used to encode/decode various objects using a String.
  *
  * @author Craig Cavanaugh
  */
@@ -83,7 +83,7 @@ public class EncodeDecode {
     }
 
     /**
-     * Decodes a comma separated list of {@code double} into a primitive {@code double} array
+     * Decodes a comma separated list of {@code double} into a primitive {@code double} array.
      *
      * @param string Comma separated string
      * @return primitive {@code double} array
@@ -101,7 +101,7 @@ public class EncodeDecode {
     }
 
     /**
-     * Encodes a boolean array as a string of 1's and 0's
+     * Encodes a boolean array as a string of 1's and 0's.
      *
      * @param array a boolean array to encode as a String
      * @return A string of 1's and 0's representing the boolean array
@@ -122,7 +122,7 @@ public class EncodeDecode {
     }
 
     /**
-     * Turns a string of "10101" into a boolean array
+     * Turns a string of "10101" into a boolean array.
      *
      * @param array array to decode
      * @return the boolean array, zero length if string is null or zero length
@@ -144,11 +144,15 @@ public class EncodeDecode {
     }
 
     public static String encodeStringCollection(final Collection<String> list) {
+        return encodeStringCollection(list, COMMA_DELIMITER);
+    }
+
+    public static String encodeStringCollection(final Collection<String> list, final char delimiter) {
 
         // precondition check for the delimiter existence
         for (String string : list) {
-            if (string.indexOf(COMMA_DELIMITER) > -1) {
-                throw new RuntimeException("The list of strings may not contain a " + COMMA_DELIMITER);
+            if (string.indexOf(delimiter) > -1) {
+                throw new RuntimeException("The list of strings may not contain a " + delimiter);
             }
         }
 
@@ -156,18 +160,24 @@ public class EncodeDecode {
 
         for (String string : list) {
             result.append(string);
-            result.append(COMMA_DELIMITER);
+            result.append(delimiter);
         }
 
         return result.length() > 0 ? result.substring(0, result.length() - 1) : null;
     }
 
     public static Collection<String> decodeStringCollection(final String string) {
+        return decodeStringCollection(string, COMMA_DELIMITER);
+    }
+
+    public static Collection<String> decodeStringCollection(final String string, final char delimiter) {
         if (string == null || string.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return java.util.Arrays.asList(COMMA_DELIMITER_PATTERN.split(string));
+        Pattern pattern = Pattern.compile(String.valueOf(delimiter));
+
+        return java.util.Arrays.asList(pattern.split(string));
     }
 
 }
