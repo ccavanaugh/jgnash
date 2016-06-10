@@ -43,6 +43,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -94,6 +95,9 @@ public class IncomeExpensePayeePieChartDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private  TitledPane titledPane;
 
     @FXML
     private VBox filtersPane;
@@ -188,6 +192,13 @@ public class IncomeExpensePayeePieChartDialogController {
         insertAuxPayeeTextField();
 
         restoreFilters();
+
+        // Expand the titled pane if filters are being used
+        Platform.runLater(() -> {
+            if (getPayeeTextFields().size() > 1) {
+               titledPane.setExpanded(true);
+            }
+        });
 
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
         Platform.runLater(this::updateCharts);
