@@ -97,7 +97,8 @@ public class IncomeExpenseBarChartDialogController {
     @FXML
     public void initialize() {
 
-        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseBarChartDialogController.class);
+        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpenseBarChartDialogController.class)
+                .node("IncomeExpenseBarChart");
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);

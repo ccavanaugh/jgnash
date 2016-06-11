@@ -91,7 +91,8 @@ public class IncomeExpensePayeePieChartDialogController {
     private static final String CHART_CSS = "jgnash/skin/incomeExpensePieChart.css";
 
     private final Preferences preferences
-            = Preferences.userNodeForPackage(IncomeExpensePayeePieChartDialogController.class);
+            = Preferences.userNodeForPackage(IncomeExpensePayeePieChartDialogController.class)
+            .node("IncomeExpensePayeePieChart");
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();

@@ -83,7 +83,8 @@ public class AccountBalanceChartController {
 
     private static final int CATEGORY_GAP = 20;
 
-    private final Preferences preferences = Preferences.userNodeForPackage(AccountBalanceChartController.class);
+    private final Preferences preferences = Preferences.userNodeForPackage(AccountBalanceChartController.class)
+            .node("AccountBalanceChart");
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();

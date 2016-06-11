@@ -98,7 +98,8 @@ public class IncomeExpensePieChartDialogController {
             }
         });
 
-        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpensePieChartDialogController.class);
+        final Preferences preferences = Preferences.userNodeForPackage(IncomeExpensePieChartDialogController.class)
+                .node("IncomeExpensePieChart");
 
         accountComboBox.setPredicate(new ParentAccountPredicate());
 
