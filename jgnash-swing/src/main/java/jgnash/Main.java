@@ -18,15 +18,10 @@
 package jgnash;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
@@ -43,6 +38,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
+import jgnash.util.prefs.PortablePreferences;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -157,7 +153,7 @@ public final class Main {
     }
 
     /**
-     * main method
+     * main method.
      *
      * @param args command line arguments
      */
@@ -170,7 +166,7 @@ public final class Main {
     }
 
     /**
-     * Setup the networking to handle authentication requests and work http proxies correctly
+     * Setup the networking to handle authentication requests and work http proxies correctly.
      */
     private static void setupNetworking() {
         final Preferences auth = Preferences.userRoot().node(NetworkAuthenticator.NODEHTTP);
@@ -187,22 +183,6 @@ public final class Main {
             java.net.Authenticator.setDefault(new NetworkAuthenticator());
 
             System.out.println(ResourceUtils.getString("Message.Proxy") + proxyHost + ":" + proxyPort);
-        }
-    }
-
-    private static void deleteUserPreferences() {
-        try {
-            Preferences prefs = Preferences.userRoot();
-            if (prefs.nodeExists("/jgnash")) {
-                Preferences jgnash = prefs.node("/jgnash");
-                jgnash.removeNode();
-                prefs.flush();
-            } else {
-                System.err.println(ResourceUtils.getString("Message.PrefFail"));
-            }
-        } catch (BackingStoreException bse) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, bse.toString(), bse);
-            System.err.println(ResourceUtils.getString("Message.UninstallBad"));
         }
     }
 
@@ -249,7 +229,7 @@ public final class Main {
 
                 MessageBus.getInstance().shutDownRemoteServer(serverName, port + 1, password.toCharArray());
             } else if (uninstall) { /* Dump the registry settings if requested */
-                deleteUserPreferences();
+                PortablePreferences.deleteUserPreferences();
             } else if (serverFile != null) {
                 try {
                     if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {
@@ -265,13 +245,9 @@ public final class Main {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
                 }
             } else { // start the UI
-                if (portable || portableFile != null) { // must hook in the preferences implementation first for best operation
-                    System.setProperty("java.util.prefs.PreferencesFactory", "jgnash.util.prefs.MapPreferencesFactory");
-
-                    importPreferences();
-
-                    // add a shutdown hook to export user preferences
-                    Runtime.getRuntime().addShutdownHook(new ExportPreferencesThread());
+                if (portable || portableFile != null) { // must hook in the preferences implementation first
+                    // for best operation
+                    PortablePreferences.initPortablePreferences(portableFile);
                 }
 
                 enableAntialiasing();
@@ -301,67 +277,6 @@ public final class Main {
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
-        }
-    }
-
-    private File getPreferenceFile() {
-
-        File exportFile;
-
-        if (portableFile != null && !portableFile.isEmpty()) {
-            exportFile = new File(portableFile);
-        } else {
-            String base = System.getProperty("user.dir");
-            String fileSep = System.getProperty("file.separator");
-            exportFile = new File(base + fileSep + "pref.xml");
-        }
-        return exportFile;
-    }
-
-    /**
-     * Import jGnash preferences from the file system
-     */
-    private void importPreferences() {
-        final File importFile = getPreferenceFile();
-
-        if (importFile.canRead()) {
-            Logger.getLogger(Main.class.getName()).info("Importing preferences");
-
-            try (FileInputStream is = new FileInputStream(importFile)) {
-                Preferences.importPreferences(is);
-            } catch (InvalidPreferencesFormatException | IOException e) {
-                System.err.println("Preferences file " + importFile.getAbsolutePath() + " could not be read");
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-            }
-        } else {
-            System.err.println("Preferences file " + importFile.getAbsolutePath() + " was not found");
-        }
-    }
-
-    /* Exports preferences to an XML file */
-
-    private class ExportPreferencesThread extends Thread {
-        @Override
-        public void run() {
-            Logger.getLogger(ExportPreferencesThread.class.getName()).info("Exporting preferences");
-
-            File exportFile = getPreferenceFile();
-
-            Preferences preferences = Preferences.userRoot();
-
-            try (FileOutputStream os = new FileOutputStream(exportFile)) {
-                try {
-                    if (preferences.nodeExists("/jgnash")) {
-                        Preferences p = preferences.node("/jgnash");
-                        p.exportSubtree(os);
-                    }
-                    deleteUserPreferences();
-                } catch (BackingStoreException e) {
-                    Logger.getLogger(ExportPreferencesThread.class.getName()).log(Level.SEVERE, e.toString(), e);
-                }
-            } catch (IOException e) {
-                Logger.getLogger(ExportPreferencesThread.class.getName()).log(Level.SEVERE, e.toString(), e);
-            }
         }
     }
 }
