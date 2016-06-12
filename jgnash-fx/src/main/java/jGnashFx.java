@@ -15,6 +15,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
+import java.io.File;
 import java.net.Authenticator;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -33,11 +38,14 @@ import jgnash.uifx.net.NetworkAuthenticator;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
+import jgnash.util.prefs.PortablePreferences;
+
+import static java.util.Arrays.asList;
 
 /**
- * Decorator for {@code MainApplication} and main entry.
- *
- * This Bootstraps the JavaFX application and lives in the default class as a workaround for
+ * Main entry for the application.
+ * <p>
+ * This bootstraps the JavaFX application and lives in the default class as a workaround for
  * Gnome and OSX menu naming issues.
  *
  * @author Craig Cavanaugh
@@ -45,12 +53,12 @@ import jgnash.util.ResourceUtils;
 public class jGnashFx extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) throws Exception {
         final MainView mainApplication = new MainView();
         mainApplication.start(primaryStage);
     }
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Exception {
         if (OS.getJavaVersion() < 1.8f) {
             System.out.println(ResourceUtils.getString("Message.JVM8"));
             System.out.println(ResourceUtils.getString("Message.Version") + " "
@@ -75,7 +83,40 @@ public class jGnashFx extends Application {
 
         setupNetworking();
 
-        // System.setProperty("javafx.verbose", "true");
+        final OptionParser parser = buildParser();
+
+        try {
+            final OptionSet options = parser.parse(args);
+
+            // Does the user want to uninstall and clear their registry settings
+            if (options.has("u")) {
+                PortablePreferences.deleteUserPreferences();
+                System.exit(0);
+            }
+
+            // Needs to be checked for launching
+            if (options.has("v")) {
+                System.setProperty("javafx.verbose", "true");
+            }
+
+            // Check to see if portable preferences are being used
+            if (options.has("portableFile")) {
+                final File file = (File) options.valueOf("portableFile");
+                if (file.exists()) {
+                    PortablePreferences.initPortablePreferences(file.getAbsolutePath());
+                }
+            } else if (options.has("p")) {  // simple use of portable preferences
+                PortablePreferences.initPortablePreferences(null);
+            }
+
+            if (!options.nonOptionArguments().isEmpty()) {
+                // TODO, try to load a file
+            }
+        } catch (final Exception exception) {
+            parser.printHelpOn(System.err);
+        }
+
+        parser.printHelpOn(System.err);
 
         launch(args);
     }
@@ -106,5 +147,24 @@ public class jGnashFx extends Application {
 
         Engine.getLogger().setLevel(Level.ALL);
         YahooParser.logger.setLevel(Level.ALL);
+    }
+
+    private static OptionParser buildParser() {
+
+        OptionParser parser = new OptionParser() {
+            {
+                accepts("help", "This help").forHelp();
+                acceptsAll(asList("u", "uninstall"), "Remove registry settings");
+                acceptsAll(asList("v", "verbose"), "Enable verbose application messages");
+                acceptsAll(asList("p", "portable"), "Enable portable preferences");
+                accepts("portableFile", "Enable portable preferences and specify the file")
+                        .withRequiredArg().ofType(File.class).describedAs("file");
+                //nonOptions("File to load").ofType(File.class);
+            }
+        };
+
+        parser.allowsUnrecognizedOptions();
+
+        return parser;
     }
 }

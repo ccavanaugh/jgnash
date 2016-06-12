@@ -49,6 +49,7 @@
         <opencsv.version>2.3</opencsv.version>
         <netty.version>4.1.0.Final</netty.version>
         <controlsfx.version>8.40.10</controlsfx.version>
+        <jopt-simple.version>5.0.2</jopt-simple.version>
     </properties>
 
     <repositories>
@@ -161,6 +162,11 @@
                 <groupId>args4j</groupId>
                 <artifactId>args4j</artifactId>
                 <version>${args4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.jopt-simple</groupId>
+                <artifactId>jopt-simple</artifactId>
+                <version>${jopt-simple.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.controlsfx</groupId>
