@@ -16,6 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import java.net.Authenticator;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
@@ -23,6 +26,8 @@ import javax.swing.JOptionPane;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import jgnash.engine.Engine;
+import jgnash.net.security.YahooParser;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.net.NetworkAuthenticator;
 import jgnash.uifx.views.main.MainApplication;
@@ -77,6 +82,8 @@ public class jGnashFx extends Application {
         // Register the default exception handler
         Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
 
+        configureLogging();
+
         setupNetworking();
 
         // System.setProperty("javafx.verbose", "true");
@@ -100,5 +107,15 @@ public class jGnashFx extends Application {
 
             System.out.println(ResourceUtils.getString("Message.Proxy") + proxyHost + ":" + proxyPort);
         }
+    }
+
+    private static void configureLogging() {
+        final Handler[] handlers = Logger.getLogger("").getHandlers();
+        for (final Handler handler : handlers) {
+            handler.setLevel(Level.ALL);
+        }
+
+        Engine.getLogger().setLevel(Level.ALL);
+        YahooParser.logger.setLevel(Level.ALL);
     }
 }
