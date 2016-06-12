@@ -10,3 +10,4 @@ target/
 *.log
 nb-configuration.xml
 *.backup
+/pref.xml
