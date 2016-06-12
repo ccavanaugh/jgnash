@@ -34,7 +34,7 @@ import javafx.stage.StageStyle;
 
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -60,7 +60,7 @@ public class ImageDialog {
 
         dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getInstance().getPrimaryStage());
         dialog.setTitle(resources.getString("Title.ViewImage"));
 
         // Set a sane default size
@@ -76,7 +76,7 @@ public class ImageDialog {
 
         dialog.setScene(new Scene(stackPane));
 
-        dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         // Remember dialog size and location

@@ -30,7 +30,7 @@ import jgnash.engine.Engine;
 import jgnash.net.security.YahooParser;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.net.NetworkAuthenticator;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
 
@@ -46,7 +46,7 @@ public class jGnashFx extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        final MainApplication mainApplication = new MainApplication();
+        final MainView mainApplication = new MainView();
         mainApplication.start(primaryStage);
     }
 

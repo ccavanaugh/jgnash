@@ -41,7 +41,7 @@ import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
@@ -93,7 +93,7 @@ class ChartUtilities {
                 new FileChooser.ExtensionFilter("PNG", "*.png")
         );
 
-        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             final WritableImage image = takeSnapshot(pane);
@@ -135,7 +135,7 @@ class ChartUtilities {
 
             job.getJobSettings().setPageLayout(pageLayout);
 
-            if (job.showPageSetupDialog(MainApplication.getInstance().getPrimaryStage())) {
+            if (job.showPageSetupDialog(MainView.getInstance().getPrimaryStage())) {
                 pageLayout = job.getJobSettings().getPageLayout();
 
                 // determine the scaling factor to fit the page

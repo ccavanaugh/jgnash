@@ -32,7 +32,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.util.ValidationFactory;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 
 /**
  * @author Craig Cavanaugh
@@ -60,7 +60,7 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
     @FXML
     DecimalTextField totalField;
 
-    private static final Logger logger = MainApplication.getLogger();
+    private static final Logger logger = MainView.getLogger();
 
     @FXML
     public void initialize() {

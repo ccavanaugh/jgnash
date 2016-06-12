@@ -35,7 +35,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.wizard.imports.ImportWizard;
 import jgnash.util.ResourceUtils;
 
@@ -58,7 +58,7 @@ public class ImportOfxAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(ImportOfxAction.class);

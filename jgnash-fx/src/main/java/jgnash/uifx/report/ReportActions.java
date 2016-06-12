@@ -37,7 +37,7 @@ import jgnash.uifx.report.jasper.JasperViewerDialogController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
@@ -208,7 +208,7 @@ public class ReportActions {
                     new FileChooser.ExtensionFilter("TXT", "*.txt")
             );
 
-            final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+            final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
             if (file != null) {
                 preferences.put(LAST_DIR, file.getParent());
@@ -254,7 +254,7 @@ public class ReportActions {
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
 
-            final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+            final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
             if (file != null) {
                 preferences.put(LAST_DIR, file.getParent());

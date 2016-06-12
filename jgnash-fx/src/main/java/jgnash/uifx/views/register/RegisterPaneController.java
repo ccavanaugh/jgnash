@@ -30,7 +30,7 @@ import javafx.scene.layout.StackPane;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
@@ -168,6 +168,6 @@ abstract class RegisterPaneController {
         RegisterActions.duplicateTransaction(accountProperty.get(), registerTableControllerProperty.get().getSelectedTransactions());
 
         // Request focus as it may have been lost
-        MainApplication.getInstance().requestFocus();
+        MainView.getInstance().requestFocus();
     }
 }

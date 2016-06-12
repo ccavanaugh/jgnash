@@ -72,7 +72,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.report.PortfolioReportController;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
@@ -468,7 +468,7 @@ public final class JasperViewerDialogController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Document", "*.csv", "*.CSV"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RTF Document", "*.rtf", "*.RTF"));
 
-        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             preferences.put(LAST_DIR, file.getParent());

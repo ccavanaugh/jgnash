@@ -33,7 +33,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
@@ -82,7 +82,7 @@ public class SaveAsTask extends Task<Void> {
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description.toString(), ext));
 
-        final File newFile = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+        final File newFile = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
         if (newFile != null) {
             final SaveAsTask saveAsTask = new SaveAsTask(newFile);

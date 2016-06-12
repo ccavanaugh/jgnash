@@ -54,9 +54,9 @@ import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.LockedCommodityListCell;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.LockedCommodityNode;
 import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -121,7 +121,7 @@ public class SelectAccountSecuritiesDialog {
         // Create the base dialog
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getInstance().getPrimaryStage());
         dialog.setTitle(resources.getString("Title.AccountSecurities"));
 
         final Label availableLabel = new Label(resources.getString("Title.Available"));
@@ -139,7 +139,7 @@ public class SelectAccountSecuritiesDialog {
         gridPane.add(createButtonBar(), 0, 2, 3, 1);
 
         dialog.setScene(new Scene(gridPane));
-        dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
         dialog.getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 

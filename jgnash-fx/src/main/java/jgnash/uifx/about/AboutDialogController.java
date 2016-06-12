@@ -42,7 +42,7 @@ import javafx.stage.Stage;
 
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.FXMLUtils.Pair;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.HTMLResource;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
@@ -113,7 +113,7 @@ public class AboutDialogController {
         tableViewColumns.add(keyCol);
         tableViewColumns.add(valueCol);
 
-        tableView.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        tableView.getStylesheets().addAll(MainView.DEFAULT_CSS);
 
         final ContextMenu menu = new ContextMenu();
         final MenuItem copyMenuItem = new MenuItem(resources.getString("Menu.Copy.Name"));

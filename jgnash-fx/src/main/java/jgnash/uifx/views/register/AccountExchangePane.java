@@ -38,7 +38,7 @@ import jgnash.engine.MathConstants;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 import org.controlsfx.control.PopOver;
@@ -122,7 +122,7 @@ public class AccountExchangePane extends GridPane {
         popOver.detachableProperty().setValue(false);
 
         // popover needs a bit of extra help for styling
-        popOver.getRoot().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        popOver.getRoot().getStylesheets().addAll(MainView.DEFAULT_CSS);
 
         accountCombo.disableProperty().bind(disableProperty());
         expandButton.disableProperty().bind(disableProperty());

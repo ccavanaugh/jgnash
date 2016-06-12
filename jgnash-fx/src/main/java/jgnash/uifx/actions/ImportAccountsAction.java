@@ -27,7 +27,7 @@ import javafx.stage.FileChooser;
 import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
@@ -50,7 +50,7 @@ public class ImportAccountsAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(ImportAccountsAction.class);
@@ -61,7 +61,7 @@ public class ImportAccountsAction {
 
             new Thread(importTask).start();
 
-            MainApplication.getInstance().setBusy(importTask);
+            MainView.getInstance().setBusy(importTask);
         }
     }
 

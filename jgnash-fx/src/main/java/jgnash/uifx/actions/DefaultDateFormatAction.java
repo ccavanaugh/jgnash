@@ -27,7 +27,7 @@ import javafx.scene.control.ChoiceDialog;
 
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
@@ -59,7 +59,7 @@ public class DefaultDateFormatAction {
                     final ChoiceDialog<String> dialog = new ChoiceDialog<>(DateUtils.getDateFormatPattern(), dateFormats);
                     dialog.setTitle(resources.getString("Title.SelDefDateFormat"));
 
-                    dialog.getDialogPane().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+                    dialog.getDialogPane().getStylesheets().addAll(MainView.DEFAULT_CSS);
                     dialog.getDialogPane().getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
                     dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
                     dialog.setHeaderText(resources.getString("Title.SelDefDateFormat"));

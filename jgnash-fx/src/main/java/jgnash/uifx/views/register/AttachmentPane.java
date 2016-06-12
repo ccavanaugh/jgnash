@@ -49,7 +49,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ImageDialog;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -208,7 +208,7 @@ public class AttachmentPane extends GridPane {
             }
         }
 
-        final File selectedFile = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
+        final File selectedFile = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
         if (selectedFile != null) {
             pref.put(LAST_DIR, selectedFile.getParent());   // save last good directory location
 

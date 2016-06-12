@@ -28,7 +28,7 @@ import javafx.stage.StageStyle;
 
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -98,8 +98,8 @@ public class FXMLUtils {
             Logger.getLogger(stage.getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
-        stage.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        stage.initOwner(MainView.getInstance().getPrimaryStage());
+        stage.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
         stage.getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
         stage.initStyle(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -188,15 +188,15 @@ public class FXMLUtils {
         final Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        if (MainApplication.getInstance() != null) {    // null check is only necessary to pass unit tests
-            stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+        if (MainView.getInstance() != null) {    // null check is only necessary to pass unit tests
+            stage.initOwner(MainView.getInstance().getPrimaryStage());
         }
 
         try {
             fxmlLoader.setController(controller);
 
             final Scene scene = new Scene(fxmlLoader.load());
-            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+            scene.getStylesheets().addAll(MainView.DEFAULT_CSS);
             scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
 
             stage.setScene(scene);
@@ -249,11 +249,11 @@ public class FXMLUtils {
 
         final Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+        stage.initOwner(MainView.getInstance().getPrimaryStage());
 
         try {
             final Scene scene = new Scene(fxmlLoader.load());
-            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+            scene.getStylesheets().addAll(MainView.DEFAULT_CSS);
             scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
 
             final C controller = fxmlLoader.getController();

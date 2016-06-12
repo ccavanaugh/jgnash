@@ -77,7 +77,7 @@ import jgnash.util.Version;
  *
  * @author Craig Cavanaugh
  */
-public class MainApplication implements MessageListener {
+public class MainView implements MessageListener {
     /**
      * Default style sheet.
      */
@@ -87,7 +87,7 @@ public class MainApplication implements MessageListener {
 
     private static final String LAST_TAB = "lastTab";
 
-    private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
+    private static final Logger logger = Logger.getLogger(MainView.class.getName());
 
     private final ResourceBundle resources = ResourceUtils.getBundle();
 
@@ -103,7 +103,7 @@ public class MainApplication implements MessageListener {
 
     private BusyPane busyPane;
 
-    private final Preferences preferences = Preferences.userNodeForPackage(MainApplication.class);
+    private final Preferences preferences = Preferences.userNodeForPackage(MainView.class);
 
     // Maintain a reference for removal to prevent memory leaks
     private ChangeListener<Number> tabListener;
@@ -111,19 +111,19 @@ public class MainApplication implements MessageListener {
     /**
      * Application Singleton.
      */
-    private static MainApplication instance;
+    private static MainView instance;
 
     static {
         title = Version.getAppName() + " - " + Version.getAppVersion();
     }
 
-    public MainApplication() {
+    public MainView() {
         if (instance == null) {
             instance = this;
         }
     }
 
-    public static MainApplication getInstance() {
+    public static MainView getInstance() {
         return instance;
     }
 
@@ -179,7 +179,7 @@ public class MainApplication implements MessageListener {
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
 
-        StageUtils.addBoundsListener(stage, MainApplication.class);
+        StageUtils.addBoundsListener(stage, MainView.class);
 
         stage.show();
 

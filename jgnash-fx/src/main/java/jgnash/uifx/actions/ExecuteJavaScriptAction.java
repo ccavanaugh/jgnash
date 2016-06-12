@@ -34,7 +34,7 @@ import javax.script.ScriptException;
 import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -56,7 +56,7 @@ public class ExecuteJavaScriptAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(ExecuteJavaScriptAction.class);

@@ -30,7 +30,7 @@ import jgnash.uifx.control.Alert;
 import jgnash.uifx.control.ExceptionDialog;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.views.main.OpenDatabaseController;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -65,7 +65,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.ERROR, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
-        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -74,7 +74,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Information"));
-        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -83,7 +83,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.WARNING, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Warning"));
-        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -99,7 +99,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.YES_NO, message);
 
         alert.setTitle(title);
-        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getInstance().getPrimaryStage());
 
         final Optional<ButtonType> buttonType = alert.showAndWait();
 
@@ -114,7 +114,7 @@ public class StaticUIMethods {
     }
 
     public static void displayTaskProgress(final Task<?> task) {
-        MainApplication.getInstance().setBusy(task);
+        MainView.getInstance().setBusy(task);
     }
 
 

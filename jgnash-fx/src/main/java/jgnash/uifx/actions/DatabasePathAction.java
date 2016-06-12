@@ -26,7 +26,7 @@ import java.util.prefs.Preferences;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.DataStoreType;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -48,7 +48,7 @@ public class DatabasePathAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.NewFile"));
 
-        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(DatabasePathAction.class);
@@ -64,7 +64,7 @@ public class DatabasePathAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.Open"));
 
-        final File file = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(DatabasePathAction.class);

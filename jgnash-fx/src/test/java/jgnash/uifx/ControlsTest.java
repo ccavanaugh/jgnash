@@ -53,7 +53,7 @@ import jgnash.uifx.control.TextFieldEx;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -136,7 +136,7 @@ public class ControlsTest extends Application {
 
         primaryStage.setScene(new Scene(vBox, 300, 420));
 
-        primaryStage.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        primaryStage.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
         primaryStage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         primaryStage.show();

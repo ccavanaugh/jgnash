@@ -36,7 +36,7 @@ import jgnash.engine.DataStoreType;
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 
 /**
  * Utility Dialog/Controller for changing the password of a relational database
@@ -118,7 +118,7 @@ public class ChangeDatabasePasswordDialogController {
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description.toString(), ext));
 
-        final File file = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null && file.exists()) {
             databaseTextField.setText(file.getAbsolutePath());

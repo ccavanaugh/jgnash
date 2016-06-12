@@ -33,7 +33,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 
 /**
  * Simple implementation of a FontAwesome based icon.  This scales well with font size changes and is good for use
@@ -83,7 +83,7 @@ public class FontAwesomeLabel extends Label {
             textFillProperty().bind(ThemeManager.controlTextFillProperty());
         }
 
-        getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        getStylesheets().addAll(MainView.DEFAULT_CSS);
     }
 
     /**

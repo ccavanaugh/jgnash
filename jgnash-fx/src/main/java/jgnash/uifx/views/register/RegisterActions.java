@@ -42,7 +42,7 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
@@ -161,7 +161,7 @@ public class RegisterActions {
                         "*.xls", "*.xlsx")
         );
 
-        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
         if (file != null) {
             pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());

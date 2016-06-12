@@ -156,7 +156,7 @@ public class ConsoleDialogController {
         timeline.play();
 
         // Close with the main application
-        MainApplication.getInstance().getPrimaryStage()
+        MainView.getInstance().getPrimaryStage()
                 .addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> handleCloseAction());
     }
 

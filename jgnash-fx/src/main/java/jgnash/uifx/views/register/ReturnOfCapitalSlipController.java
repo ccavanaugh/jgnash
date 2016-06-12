@@ -38,7 +38,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.util.ValidationFactory;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
@@ -72,7 +72,7 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
     @FXML
     protected AttachmentPane attachmentPane;
 
-    private static final Logger logger = MainApplication.getLogger();
+    private static final Logger logger = MainView.getLogger();
 
     @FXML
     public void initialize() {

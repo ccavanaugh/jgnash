@@ -17,7 +17,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Transaction;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -64,7 +64,7 @@ public class RegisterStage extends Stage {
         controller = FXMLUtils.loadFXML(scene -> setScene(new Scene((Parent) scene)), formResource,
                 ResourceUtils.getBundle());
 
-        getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
 
         double minWidth = Double.MAX_VALUE;
         double minHeight = Double.MAX_VALUE;

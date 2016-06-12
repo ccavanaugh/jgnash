@@ -34,7 +34,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainApplication;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
@@ -52,13 +52,13 @@ public final class StaticAccountsMethods {
     public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getInstance().getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
 
         final AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountTypeFilterForm.fxml", ResourceUtils.getBundle());
 
-        dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
 
         controller.setAccountTypeFilter(accountTypeFilter);
 
@@ -72,13 +72,13 @@ public final class StaticAccountsMethods {
     static void showNewAccountPropertiesDialog(@Nullable final Account parentAccount) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getInstance().getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.NewAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
 
-        dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -103,13 +103,13 @@ public final class StaticAccountsMethods {
     static void showModifyAccountProperties(final Account account) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getInstance().getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
 
-        dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
 
         controller.loadProperties(account);
 
