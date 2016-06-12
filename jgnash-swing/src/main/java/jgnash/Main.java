@@ -98,7 +98,7 @@ public final class Main {
     @Option(name = "-enableEDT", usage = "Check for EDT violations")
     private static boolean enableEDT;
 
-    @Option(name = "-verbose", usage = "Enable verbose logging")
+    @Option(name = "-verbose", usage = "Enable verbose application messages")
     private static boolean verbose;
 
     @Option(name = "-enableHangDetect", usage = "Enable hang detection on the EDT")
