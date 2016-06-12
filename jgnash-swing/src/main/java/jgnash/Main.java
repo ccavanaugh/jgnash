@@ -71,7 +71,7 @@ public final class Main {
     @Option(name = "-portable", usage = "Enable portable preferences")
     private boolean portable;
 
-    @Option(name = "-portableFile", usage = "Location for portable file")
+    @Option(name = "-portableFile", usage = "Enable portable preferences and specify the file", metaVar = "<file>")
     private String portableFile;
 
     @Option(name = "-shutdown", usage = "Issues a shutdown request to a server")
@@ -83,10 +83,10 @@ public final class Main {
     @Option(name = "-host", usage = "Server host name or address")
     private String hostName;
 
-    @Option(name = "-file", usage = "File to load at start")
+    @Option(name = "-file", usage = "File to load at start",  metaVar = "<file>")
     private File file;
 
-    @Option(name = "-server", usage = "Act as a server using the specified file")
+    @Option(name = "-server", usage = "Act as a server using the specified file",  metaVar = "<file>")
     private File serverFile;
 
     @Option(name = "-password", usage = "Client or Server password")
