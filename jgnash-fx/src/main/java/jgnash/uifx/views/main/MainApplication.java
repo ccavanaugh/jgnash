@@ -28,7 +28,6 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
@@ -78,9 +77,9 @@ import jgnash.util.Version;
  *
  * @author Craig Cavanaugh
  */
-public class MainApplication extends Application implements MessageListener {
+public class MainApplication implements MessageListener {
     /**
-     * Default style sheet
+     * Default style sheet.
      */
     public static final String DEFAULT_CSS = "jgnash/skin/default.css";
 
@@ -110,7 +109,7 @@ public class MainApplication extends Application implements MessageListener {
     private ChangeListener<Number> tabListener;
 
     /**
-     * Application Singleton
+     * Application Singleton.
      */
     private static MainApplication instance;
 
@@ -118,8 +117,7 @@ public class MainApplication extends Application implements MessageListener {
         title = Version.getAppName() + " - " + Version.getAppVersion();
     }
 
-    @Override
-    public void init() throws Exception {
+    public MainApplication() {
         if (instance == null) {
             instance = this;
         }
@@ -134,7 +132,6 @@ public class MainApplication extends Application implements MessageListener {
         return logger;
     }
 
-    @Override
     public void start(final Stage stage) throws Exception {
         ThemeManager.restoreLastUsedTheme();
 
@@ -290,7 +287,7 @@ public class MainApplication extends Application implements MessageListener {
     }
 
     /**
-     * Requests focus for the primary {@code Stage}
+     * Requests focus for the primary {@code Stage}.
      *
      * @see javafx.stage.Stage#requestFocus()
      */
@@ -306,11 +303,6 @@ public class MainApplication extends Application implements MessageListener {
      */
     public void setBusy(@Nullable final Task<?> task) {
         busyPane.setTask(task);
-    }
-
-    @Override
-    public void stop() {
-        logger.info("Shutting down");
     }
 
     @Override

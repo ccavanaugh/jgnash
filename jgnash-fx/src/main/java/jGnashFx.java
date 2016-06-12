@@ -44,21 +44,10 @@ import jgnash.util.ResourceUtils;
  */
 public class jGnashFx extends Application {
 
-    private final MainApplication mainApplication = new MainApplication();
-
     @Override
     public void start(Stage primaryStage) throws Exception {
+        final MainApplication mainApplication = new MainApplication();
         mainApplication.start(primaryStage);
-    }
-
-    @Override
-    public void init() throws Exception {
-        mainApplication.init();
-    }
-
-    @Override
-    public void stop() {
-        mainApplication.stop();
     }
 
     public static void main(final String[] args) {
