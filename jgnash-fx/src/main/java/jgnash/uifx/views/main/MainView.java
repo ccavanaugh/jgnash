@@ -19,6 +19,7 @@ package jgnash.uifx.views.main;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -132,7 +133,7 @@ public class MainView implements MessageListener {
         return logger;
     }
 
-    public void start(final Stage stage) throws Exception {
+    public void start(final Stage stage, @Nullable final Path dataFile, final char[] password) throws Exception {
         ThemeManager.restoreLastUsedTheme();
 
         primaryStage = stage;
@@ -192,9 +193,17 @@ public class MainView implements MessageListener {
         stage.toFront();
         stage.requestFocus();
 
-        // Load the last open file if enabled
-        if (Options.openLastProperty().get()) {
-
+        if (dataFile != null) { // Load the specified file, this overrides the last open file
+            new Thread(() -> {
+                try {
+                    Thread.sleep(BootEngineTask.FORCED_DELAY);
+                    backgroundExecutor.execute(() -> Platform.runLater(()
+                            -> BootEngineTask.initiateBoot(dataFile.toString(), password, false, null, 0)));
+                } catch (InterruptedException e) {
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }).start();
+        } else if (Options.openLastProperty().get()) { // Load the last open file if enabled
             new Thread(() -> {
                 try {
                     Thread.sleep(BootEngineTask.FORCED_DELAY);

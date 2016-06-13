@@ -21,6 +21,9 @@ import joptsimple.OptionSet;
 
 import java.io.File;
 import java.net.Authenticator;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,10 +55,26 @@ import static java.util.Arrays.asList;
  */
 public class jGnashFx extends Application {
 
+    private static final String FILE_OPTION_SHORT = "f";
+    private static final String FILE_OPTION_LONG = "file";
+    private static final String VERBOSE_OPTION_SHORT = "v";
+    private static final String VERBOSE_OPTION_LONG = "verbose";
+    private static final String PORTABLE_FILE_OPTION = "portableFile";
+    private static final String PORTABLE_OPTION_SHORT = "p";
+    private static final String PORTABLE_OPTION_LONG = "portable";
+    private static final String UNINSTALL_OPTION_SHORT = "u";
+    private static final String UNINSTALL_OPTION_LONG = "uninstall";
+    private static final String HELP_OPTION_SHORT = "h";
+    private static final String HELP_OPTION_LONG = "help";
+
+    private static Path dataFile = null;
+    private static char[] password = new char[]{};
+
     @Override
     public void start(final Stage primaryStage) throws Exception {
         final MainView mainApplication = new MainView();
-        mainApplication.start(primaryStage);
+        mainApplication.start(primaryStage, dataFile, password);
+        password = null;
     }
 
     public static void main(final String[] args) throws Exception {
@@ -89,28 +108,41 @@ public class jGnashFx extends Application {
             final OptionSet options = parser.parse(args);
 
             // Does the user want to uninstall and clear their registry settings
-            if (options.has("u")) {
+            if (options.has(UNINSTALL_OPTION_SHORT)) {
                 PortablePreferences.deleteUserPreferences();
                 System.exit(0);
             }
 
             // Needs to be checked for launching
-            if (options.has("v")) {
+            if (options.has(VERBOSE_OPTION_SHORT)) {
                 System.setProperty("javafx.verbose", "true");
             }
 
             // Check to see if portable preferences are being used
-            if (options.has("portableFile")) {
-                final File file = (File) options.valueOf("portableFile");
+            if (options.has(PORTABLE_FILE_OPTION)) {
+                final File file = (File) options.valueOf(PORTABLE_FILE_OPTION);
                 if (file.exists()) {
                     PortablePreferences.initPortablePreferences(file.getAbsolutePath());
                 }
-            } else if (options.has("p")) {  // simple use of portable preferences
+            } else if (options.has(PORTABLE_OPTION_SHORT)) {  // simple use of portable preferences
                 PortablePreferences.initPortablePreferences(null);
             }
 
-            if (!options.nonOptionArguments().isEmpty()) {
-                // TODO, try to load a file
+            if (options.has(FILE_OPTION_SHORT)) {
+                final File file = (File) options.valueOf(FILE_OPTION_SHORT);
+                if (file.exists()) {
+                    dataFile = file.toPath();
+                }
+            } else if (!options.nonOptionArguments().isEmpty() && dataFile == null) {
+                // Check for no-option version of a file load
+                for (Object object : options.nonOptionArguments()) {
+                    if (object instanceof String) {
+                        if (Files.exists(Paths.get((String)object))) {
+                            dataFile = Paths.get((String)object);
+                            break;
+                        }
+                    }
+                }
             }
         } catch (final Exception exception) {
             parser.printHelpOn(System.err);
@@ -150,16 +182,16 @@ public class jGnashFx extends Application {
     }
 
     private static OptionParser buildParser() {
-
-        OptionParser parser = new OptionParser() {
+        final OptionParser parser = new OptionParser() {
             {
-                accepts("help", "This help").forHelp();
-                acceptsAll(asList("u", "uninstall"), "Remove registry settings");
-                acceptsAll(asList("v", "verbose"), "Enable verbose application messages");
-                acceptsAll(asList("p", "portable"), "Enable portable preferences");
-                accepts("portableFile", "Enable portable preferences and specify the file")
+                acceptsAll(asList(HELP_OPTION_SHORT, HELP_OPTION_LONG), "This help").forHelp();
+                acceptsAll(asList(UNINSTALL_OPTION_SHORT, UNINSTALL_OPTION_LONG), "Remove registry settings");
+                acceptsAll(asList(VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG), "Enable verbose application messages");
+                acceptsAll(asList(FILE_OPTION_SHORT, FILE_OPTION_LONG), "File to load at start").withRequiredArg()
+                        .ofType(File.class).describedAs("file");
+                acceptsAll(asList(PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG), "Enable portable preferences");
+                accepts(PORTABLE_FILE_OPTION, "Enable portable preferences and specify the file")
                         .withRequiredArg().ofType(File.class).describedAs("file");
-                //nonOptions("File to load").ofType(File.class);
             }
         };
 
