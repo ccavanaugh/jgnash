@@ -47,14 +47,14 @@ import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 
 /**
- * File utilities
+ * File utilities.
  *
  * @author Craig Cavanaugh
  */
 public final class FileUtils {
 
     /**
-     * Regular expression for returning the file extension
+     * Regular expression for returning the file extension.
      */
     private final static String FILE_EXT_REGEX = "(?<=\\.).*$";
 
@@ -66,7 +66,7 @@ public final class FileUtils {
     }
 
     /**
-     * Deletes a path and it's contents
+     * Deletes a path and it's contents.
      *
      * @param path {@code Path} to delete
      * @throws IOException thrown if an IO error occurs
@@ -138,7 +138,7 @@ public final class FileUtils {
     }
 
     /**
-     * Determine if the supplied file name has an extension
+     * Determine if the supplied file name has an extension.
      *
      * @param fileName filename to check
      * @return true if supplied file has an extension
