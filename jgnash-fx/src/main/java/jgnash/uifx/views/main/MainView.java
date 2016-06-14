@@ -19,7 +19,7 @@ package jgnash.uifx.views.main;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -133,7 +133,8 @@ public class MainView implements MessageListener {
         return logger;
     }
 
-    public void start(final Stage stage, @Nullable final Path dataFile, final char[] password) throws Exception {
+    public void start(final Stage stage, @Nullable final File dataFile, final char[] password,
+                      @Nullable final String host, final int port) throws Exception {
         ThemeManager.restoreLastUsedTheme();
 
         primaryStage = stage;
@@ -193,12 +194,22 @@ public class MainView implements MessageListener {
         stage.toFront();
         stage.requestFocus();
 
-        if (dataFile != null) { // Load the specified file, this overrides the last open file
+        if (host != null) { // connect to a remote server instead of loading a local file
             new Thread(() -> {
                 try {
                     Thread.sleep(BootEngineTask.FORCED_DELAY);
                     backgroundExecutor.execute(() -> Platform.runLater(()
-                            -> BootEngineTask.initiateBoot(dataFile.toString(), password, false, null, 0)));
+                            -> BootEngineTask.initiateBoot(null, password, true, host, port)));
+                } catch (InterruptedException e) {
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }).start();
+        } else if (dataFile != null) { // Load the specified file, this overrides the last open file
+            new Thread(() -> {
+                try {
+                    Thread.sleep(BootEngineTask.FORCED_DELAY);
+                    backgroundExecutor.execute(() -> Platform.runLater(()
+                            -> BootEngineTask.initiateBoot(dataFile.getAbsolutePath(), password, false, null, 0)));
                 } catch (InterruptedException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }

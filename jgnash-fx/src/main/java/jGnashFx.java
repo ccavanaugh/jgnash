@@ -20,9 +20,9 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.Authenticator;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -35,10 +35,12 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import jgnash.engine.Engine;
+import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.net.security.YahooParser;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.net.NetworkAuthenticator;
 import jgnash.uifx.views.main.MainView;
+import jgnash.util.FileUtils;
 import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
 import jgnash.util.prefs.PortablePreferences;
@@ -66,16 +68,16 @@ public class jGnashFx extends Application {
     private static final String UNINSTALL_OPTION_LONG = "uninstall";
     private static final String HELP_OPTION_SHORT = "h";
     private static final String HELP_OPTION_LONG = "help";
+    private static final String PORT_OPTION = "port";
+    private static final String HOST_OPTION = "host";
+    private static final String PASSWORD_OPTION = "password";
+    private static final String SERVER_OPTION = "server";
 
-    private static Path dataFile = null;
+    private static File dataFile = null;
+    private static File serverFile = null;
     private static char[] password = new char[]{};
-
-    @Override
-    public void start(final Stage primaryStage) throws Exception {
-        final MainView mainApplication = new MainView();
-        mainApplication.start(primaryStage, dataFile, password);
-        password = null;
-    }
+    private static int port = JpaNetworkServer.DEFAULT_PORT;
+    private static String host = null;
 
     public static void main(final String[] args) throws Exception {
         if (OS.getJavaVersion() < 1.8f) {
@@ -99,8 +101,6 @@ public class jGnashFx extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
 
         configureLogging();
-
-        setupNetworking();
 
         final OptionParser parser = buildParser();
 
@@ -128,29 +128,76 @@ public class jGnashFx extends Application {
                 PortablePreferences.initPortablePreferences(null);
             }
 
+            if (options.has(PORT_OPTION)) {
+                port = (Integer)options.valueOf(PORT_OPTION);
+            }
+
+            if (options.has(PASSWORD_OPTION)) {
+                password = ((String)options.valueOf(PASSWORD_OPTION)).toCharArray();
+            }
+
             if (options.has(FILE_OPTION_SHORT)) {
                 final File file = (File) options.valueOf(FILE_OPTION_SHORT);
                 if (file.exists()) {
-                    dataFile = file.toPath();
+                    dataFile = file;
                 }
             } else if (!options.nonOptionArguments().isEmpty() && dataFile == null) {
                 // Check for no-option version of a file load
                 for (Object object : options.nonOptionArguments()) {
                     if (object instanceof String) {
                         if (Files.exists(Paths.get((String)object))) {
-                            dataFile = Paths.get((String)object);
+                            dataFile = new File((String) object);
                             break;
                         }
                     }
                 }
             }
+
+            if (options.has(HOST_OPTION)) {
+                host = (String)options.valueOf(HOST_OPTION);
+            }
+
+            if (options.has(SERVER_OPTION)) {
+                final File file = (File) options.valueOf(SERVER_OPTION);
+                if (file.exists()) {
+                    serverFile = file;
+                }
+            }
+
+            //parser.printHelpOn(System.err);
+
+            if (serverFile != null) {
+                startServer();
+            } else {
+                setupNetworking();
+                launch(args);
+            }
         } catch (final Exception exception) {
             parser.printHelpOn(System.err);
         }
+    }
 
-        parser.printHelpOn(System.err);
+    @Override
+    public void start(final Stage primaryStage) throws Exception {
+        final MainView mainView = new MainView();
+        mainView.start(primaryStage, dataFile, password, host, port);
+        password = new char[]{};    // clear the password to protect against malicious code
+    }
 
-        launch(args);
+    private static void startServer() {
+        try {
+            if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {
+                JpaNetworkServer networkServer = new JpaNetworkServer();
+                networkServer.startServer(serverFile.getAbsolutePath(), port, password);
+            } else {
+                System.err.println(ResourceUtils.getString("Message.FileIsLocked"));
+            }
+        } catch (FileNotFoundException e) {
+            Logger.getLogger(jGnashFx.class.getName()).log(Level.SEVERE, e.toString(), e);
+            System.err.println("File " + serverFile.getAbsolutePath() + " was not found");
+        } catch (Exception e) {
+            Logger.getLogger(jGnashFx.class.getName()).log(Level.SEVERE, e.toString(), e);
+        }
     }
 
     private static void setupNetworking() {
@@ -188,10 +235,16 @@ public class jGnashFx extends Application {
                 acceptsAll(asList(UNINSTALL_OPTION_SHORT, UNINSTALL_OPTION_LONG), "Remove registry settings");
                 acceptsAll(asList(VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG), "Enable verbose application messages");
                 acceptsAll(asList(FILE_OPTION_SHORT, FILE_OPTION_LONG), "File to load at start").withRequiredArg()
-                        .ofType(File.class).describedAs("file");
+                        .ofType(File.class);
+                accepts(PASSWORD_OPTION, "Password for a local File, server or client").withRequiredArg();
                 acceptsAll(asList(PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG), "Enable portable preferences");
                 accepts(PORTABLE_FILE_OPTION, "Enable portable preferences and specify the file")
-                        .withRequiredArg().ofType(File.class).describedAs("file");
+                        .withRequiredArg().ofType(File.class);
+                accepts(PORT_OPTION, "Network port server is running on (default: 5300)").withRequiredArg()
+                        .ofType(Integer.class);
+                accepts(HOST_OPTION, "Server host name or address").requiredIf(PORT_OPTION).withRequiredArg();
+                accepts(SERVER_OPTION, "Runs as a server using the specified file")
+                        .withRequiredArg().ofType(File.class);
             }
         };
 
