@@ -26,7 +26,7 @@ import java.util.prefs.PreferencesFactory;
  * @author Craig Cavanaugh*
  */
 @SuppressWarnings("unused")
-class MapPreferencesFactory implements PreferencesFactory {
+public class MapPreferencesFactory implements PreferencesFactory {
 
     private static final Preferences user = new MapBasedPreferences(null, "", true);
 
