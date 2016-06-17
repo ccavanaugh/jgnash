@@ -77,7 +77,7 @@ public final class Main {
     @Option(name = "-shutdown", usage = "Issues a shutdown request to a server")
     private boolean shutdown;
 
-    @Option(name = "-port", usage = "Network port server is running on; default is 5300")
+    @Option(name = "-port", usage = "Network port server is running on; default is " + JpaNetworkServer.DEFAULT_PORT)
     private int port;
 
     @Option(name = "-host", usage = "Server host name or address")
@@ -124,10 +124,12 @@ public final class Main {
 
         if (version < 1.8f) {
             System.out.println(ResourceUtils.getString("Message.JVM8"));
-            System.out.println(ResourceUtils.getString("Message.Version") + " " + System.getProperty("java.version") + "\n");
+            System.out.println(ResourceUtils.getString("Message.Version") + " "
+                    + System.getProperty("java.version") + "\n");
 
             // try and show a dialog
-            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM8"), ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM8"),
+                    ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
 
             result = false;
         }
@@ -157,7 +159,6 @@ public final class Main {
      *
      * @param args command line arguments
      */
-    @SuppressWarnings("unused")
     public static void main(final String args[]) {
         if (checkJVMVersion()) {
             Main main = new Main();

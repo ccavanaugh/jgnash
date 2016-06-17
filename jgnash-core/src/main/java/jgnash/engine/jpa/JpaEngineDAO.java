@@ -42,11 +42,11 @@ import jgnash.engine.dao.TransactionDAO;
 import jgnash.engine.dao.TrashDAO;
 
 /**
- * Engine DAO
+ * Engine DAO.
  *
  * @author Craig Cavanaugh
  */
-public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
+class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     private AccountDAO accountDAO;
 
@@ -135,20 +135,19 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<StoredObject> getStoredObjects() {
         List<StoredObject> list = Collections.emptyList();
 
         emLock.lock();
 
         try {
-            Future<List<StoredObject>> future = executorService.submit(() -> {
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
-                Root<StoredObject> root = cq.from(StoredObject.class);
+            final Future<List<StoredObject>> future = executorService.submit(() -> {
+                final CriteriaBuilder cb = em.getCriteriaBuilder();
+                final CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
+                final Root<StoredObject> root = cq.from(StoredObject.class);
                 cq.select(root);
 
-                TypedQuery<StoredObject> q = em.createQuery(cq);
+                final TypedQuery<StoredObject> q = em.createQuery(cq);
 
                 return new ArrayList<>(q.getResultList());
             });
@@ -164,21 +163,19 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends StoredObject> List<T> getStoredObjects(final Class<T> tClass) {
         List<T> list = Collections.emptyList();
 
         emLock.lock();
 
         try {
-
-            Future<List<T>> future = executorService.submit(() -> {
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaQuery<T> cq = cb.createQuery(tClass);
-                Root<T> root = cq.from(tClass);
+            final Future<List<T>> future = executorService.submit(() -> {
+                final CriteriaBuilder cb = em.getCriteriaBuilder();
+                final CriteriaQuery<T> cq = cb.createQuery(tClass);
+                final Root<T> root = cq.from(tClass);
                 cq.select(root);
 
-                TypedQuery<T> q = em.createQuery(cq);
+                final TypedQuery<T> q = em.createQuery(cq);
 
                 return new ArrayList<>(q.getResultList());
             });
@@ -194,7 +191,7 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     }
 
     /**
-     * Refresh a managed object
+     * Refresh a managed object.
      *
      * @param object object to re
      */

@@ -49,7 +49,7 @@ import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
 
 /**
- * JPA network server
+ * JPA network server.
  *
  * @author Craig Cavanaugh
  */
@@ -77,13 +77,15 @@ public class JpaNetworkServer {
 
     private static final String SERVER_ENGINE = "server";
 
+    private static final Logger logger = Logger.getLogger(JpaNetworkServer.class.getName());
+
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
-        File file = new File(fileName);
+        final File file = new File(fileName);
 
         // create the base directory if needed
         if (!file.exists()) {
-            File parent = file.getParentFile();
+            final File parent = file.getParentFile();
 
             if (parent != null && !parent.exists()) {
                 boolean result = parent.mkdirs();
@@ -94,7 +96,7 @@ public class JpaNetworkServer {
             }
         }
 
-        FileMagic.FileType type = FileMagic.magic(new File(fileName));
+        final FileMagic.FileType type = FileMagic.magic(new File(fileName));
 
         switch (type) {
             case h2:
@@ -104,13 +106,15 @@ public class JpaNetworkServer {
                 runHsqldbServer(fileName, port, password);
                 break;
             default:
-                Logger.getLogger(JpaNetworkServer.class.getName()).severe("Not a valid file type for server usage");
+                logger.severe("Not a valid file type for server usage");
         }
 
         System.exit(0); // force exit
     }
 
-    private boolean run(final DataStoreType dataStoreType, final String fileName, final int port, final char[] password) {
+    private boolean run(final DataStoreType dataStoreType, final String fileName, final int port,
+                        final char[] password) {
+
         boolean result = false;
 
         final DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
@@ -147,7 +151,7 @@ public class JpaNetworkServer {
 
                         // look for a remote request to stop the server
                         if (event.startsWith(STOP_SERVER_MESSAGE)) {
-                            Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
+                            logger.info("Remote shutdown request was received");
                             stopServer();
                         }
 
@@ -223,12 +227,12 @@ public class JpaNetworkServer {
             server.start();
 
         } catch (SQLException e) {
-            Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
         // Start the message server and engine, this should block until closed
         if (!run(DataStoreType.H2_DATABASE, fileName, port, password)) {
-            Logger.getLogger(JpaNetworkServer.class.getName()).severe("Failed to start the server");
+            logger.severe("Failed to start the server");
         }
 
         if (server != null) {
@@ -247,7 +251,7 @@ public class JpaNetworkServer {
 
         // Start the message server and engine, this should block until closed
         if (!run(DataStoreType.HSQL_DATABASE, fileName, port, password)) {
-            Logger.getLogger(JpaNetworkServer.class.getName()).severe("Failed to start the server");
+            logger.severe("Failed to start the server");
         }
 
         hsqlServer.stop();
@@ -261,11 +265,14 @@ public class JpaNetworkServer {
         this.notify();
     }
 
-    private Engine createEngine(final DataStoreType database, final String fileName, final int port, final char[] password) {
+    private Engine createEngine(final DataStoreType dataStoreType, final String fileName, final int port,
+                                final char[] password) {
 
-        Properties properties = JpaConfiguration.getClientProperties(database, fileName, "localhost", port, password);
+        final Properties properties = JpaConfiguration.getClientProperties(dataStoreType, fileName, "localhost", port,
+                password);
 
-        Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.INFO, "Local connection url is: {0}", properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
+        logger.log(Level.INFO, "Local connection url is: {0}",
+                properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
 
         Engine engine = null;
 
@@ -280,10 +287,14 @@ public class JpaNetworkServer {
             distributedAttachmentManager = new DistributedAttachmentManager("localhost", port + 3);
             distributedAttachmentManager.connectToServer(password);
 
-            Logger.getLogger(JpaNetworkServer.class.getName()).info("Created local JPA container and engine");
-            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, SERVER_ENGINE); // treat as a remote engine
+            logger.info("Created local JPA container and engine");
+
+            // this is blocking and not returning
+            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager,
+                    SERVER_ENGINE); // treat as a remote engine
+
         } catch (final Exception e) {
-            Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.toString(), e);
+            logger.log(Level.SEVERE, e.toString(), e);
         }
 
         return engine;

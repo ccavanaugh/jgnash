@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -37,7 +37,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.AccountDAO;
 
 /**
- * Account DAO
+ * Account Jpa DAO.
  *
  * @author Craig Cavanaugh
  */
@@ -53,17 +53,16 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      * @see jgnash.engine.AccountDAOInterface#getRootAccount()
      */
     @Override
-    @SuppressWarnings("unchecked")
     public RootAccount getRootAccount() {
         RootAccount root = null;
 
         emLock.lock();
 
         try {
-            Future<RootAccount> future = executorService.submit(() -> {
-                Query q = em.createQuery("select a from RootAccount a");
+            final Future<RootAccount> future = executorService.submit(() -> {
 
-                List<RootAccount> list = (List<RootAccount>) q.getResultList();
+                final TypedQuery<RootAccount> q = em.createQuery("select a from RootAccount a", RootAccount.class);
+                final List<RootAccount> list = q.getResultList();
 
                 if (list.size() == 1) {
                     return list.get(0);
@@ -89,15 +88,15 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      * @see jgnash.engine.AccountDAOInterface#getAccountList()
      */
     @Override
-    @SuppressWarnings("unchecked")
     public List<Account> getAccountList() {
         List<Account> accountList = Collections.emptyList();
 
         emLock.lock();
 
         try {
-            Future<List<Account>> future = executorService.submit(() -> {
-                Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
+            final Future<List<Account>> future = executorService.submit(() -> {
+                final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
+                        Account.class);
 
                 return new ArrayList<>(q.getResultList());
             });
@@ -122,7 +121,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(() -> {
+            final Future<Boolean> future = executorService.submit(() -> {
 
                 em.getTransaction().begin();
                 em.persist(child);
@@ -157,16 +156,17 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         return merge(account) != null;
     }
 
-    @SuppressWarnings("unchecked")
     private List<Account> getAccountList(final AccountType type) {
         List<Account> accountList = Collections.emptyList();
 
         emLock.lock();
 
         try {
-            Future<List<Account>> future = executorService.submit(() -> {
-                String queryString = "SELECT a FROM Account a WHERE a.accountType = :type AND a.markedForRemoval = false";
-                Query query = em.createQuery(queryString);
+            final Future<List<Account>> future = executorService.submit(() -> {
+
+                final String queryString
+                        = "SELECT a FROM Account a WHERE a.accountType = :type AND a.markedForRemoval = false";
+                final TypedQuery<Account> query = em.createQuery(queryString, Account.class);
                 query.setParameter("type", type);
 
                 return new ArrayList<>(query.getResultList());
@@ -235,7 +235,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         return false;
     }
 
-    /**
+    /*
      * @see jgnash.engine.dao.AccountDAO#toggleAccountVisibility(jgnash.engine.Account)
      */
     @Override

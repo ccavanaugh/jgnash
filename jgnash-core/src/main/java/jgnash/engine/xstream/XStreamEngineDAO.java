@@ -37,11 +37,11 @@ import jgnash.engine.dao.TransactionDAO;
 import jgnash.engine.dao.TrashDAO;
 
 /**
- * XML Engine DAO Interface
+ * XML Engine DAO Interface.
  * 
  * @author Craig Cavanaugh
  */
-public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
+class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
 
     private AccountDAO accountDAO;
 

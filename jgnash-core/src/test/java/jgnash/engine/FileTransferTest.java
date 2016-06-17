@@ -41,7 +41,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * File transfer test
+ * File transfer test.
  *
  * @author Craig Cavanaugh
  */
@@ -51,7 +51,6 @@ public class FileTransferTest {
     public void encryptedNetworkedTest() throws Exception {
 
         final char[] password = new char[]{'p','a','s','s','w','o','r','d'};
-        final int port = 5300;
 
         //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
         //System.setProperty("ssl", "true");
@@ -82,12 +81,12 @@ public class FileTransferTest {
         final String serverFile = testFile;
 
         System.out.println("starting server");
-        new StartServerThread(networkServer, serverFile, port, password).start();
+        new StartServerThread(networkServer, serverFile, JpaNetworkServer.DEFAULT_PORT, password).start();
 
         Thread.sleep(4000);
 
         try {
-            Engine e = EngineFactory.bootClientEngine("localhost", port, password, EngineFactory.DEFAULT);
+            Engine e = EngineFactory.bootClientEngine("localhost", JpaNetworkServer.DEFAULT_PORT, password, EngineFactory.DEFAULT);
 
             Account account = new Account(AccountType.CASH, e.getDefaultCurrency());
             account.setName("test");
@@ -137,7 +136,7 @@ public class FileTransferTest {
     @Test
     public void networkedTest() throws Exception {
         final char[] password = new char[]{};
-        final int port = 5400;
+        final int port = JpaNetworkServer.DEFAULT_PORT + 100;
 
         //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
         //System.setProperty("ssl", "false");

@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
@@ -46,7 +47,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
- * Factory class for obtaining an engine instance
+ * Factory class for obtaining an engine instance.
  * <p>
  * The filename of the database or remote server must be explicitly set before
  * an Engine instance will be returned
@@ -120,7 +121,7 @@ public class EngineFactory {
     }
 
     /**
-     * Returns the engine with the given name
+     * Returns the engine with the given name.
      *
      * @param name engine name to look for
      * @return returns {@code null} if it does not exist
@@ -131,7 +132,7 @@ public class EngineFactory {
     }
 
     /**
-     * Returns the DataStoreType for a given engine name
+     * Returns the DataStoreType for a given engine name.
      *
      * @param name engine name to look for
      * @return the DataStoreType
@@ -455,7 +456,7 @@ public class EngineFactory {
     public static synchronized int getLastPort() {
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
-        return pref.getInt(LAST_PORT, 5300);
+        return pref.getInt(LAST_PORT, JpaNetworkServer.DEFAULT_PORT);
     }
 
     /**

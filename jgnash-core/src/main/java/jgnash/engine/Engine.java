@@ -90,7 +90,7 @@ import jgnash.util.ResourceUtils;
 public class Engine {
 
     /**
-     * Current version for the file format
+     * Current version for the file format.
      */
     public static final float CURRENT_VERSION = 2.22f;
 
@@ -128,7 +128,7 @@ public class Engine {
     private final ReentrantReadWriteLock engineLock;
 
     /**
-     * Named identifier for this engine instance
+     * Named identifier for this engine instance.
      */
     private final String name;
 
@@ -143,17 +143,17 @@ public class Engine {
     }
 
     /**
-     * All engine instances will share the same message bus
+     * All engine instances will share the same message bus.
      */
     private MessageBus messageBus = null;
 
     /**
-     * Cached for performance
+     * Cached for performance.
      */
     private Config config;
 
     /**
-     * Cached for performance
+     * Cached for performance.
      */
     private RootAccount rootAccount;
 
@@ -164,17 +164,17 @@ public class Engine {
     private final AttachmentManager attachmentManager;
 
     /**
-     * Cached for performance
+     * Cached for performance.
      */
     private String accountSeparator = null;
 
     /**
-     * The maximum number of network errors before scheduled tasks are stopped
+     * The maximum number of network errors before scheduled tasks are stopped.
      */
     private static final short MAX_ERRORS = 2;
 
     /**
-     * Time in seconds to delay start of background updates
+     * Time in seconds to delay start of background updates.
      */
     private static final int SCHEDULED_DELAY = 30;
 
@@ -242,7 +242,7 @@ public class Engine {
     }
 
     /**
-     * Initiates a background exchange rate update with a given start delay
+     * Initiates a background exchange rate update with a given start delay.
      *
      * @param delay delay in seconds
      * @return {@code Future} for background task
@@ -253,7 +253,7 @@ public class Engine {
     }
 
     /**
-     * Initiates a background securities history update with a given start delay
+     * Initiates a background securities history update with a given start delay.
      *
      * @param delay delay in seconds
      */
@@ -351,7 +351,7 @@ public class Engine {
     }
 
     /**
-     * Returns the engine logger
+     * Returns the engine logger.
      *
      * @return the engine logger
      */
@@ -360,7 +360,7 @@ public class Engine {
     }
 
     /**
-     * Log a informational message
+     * Log a informational message.
      *
      * @param message message to display
      */
@@ -369,7 +369,7 @@ public class Engine {
     }
 
     /**
-     * Log a warning message
+     * Log a warning message.
      *
      * @param message message to display
      */
@@ -378,7 +378,7 @@ public class Engine {
     }
 
     /**
-     * Log a severe message
+     * Log a severe message.
      *
      * @param message message to display
      */
@@ -387,7 +387,7 @@ public class Engine {
     }
 
     /**
-     * Creates a RootAccount and default currency only if necessary
+     * Creates a RootAccount and default currency only if necessary.
      */
     private void initialize() {
 
@@ -396,14 +396,14 @@ public class Engine {
 
         try {
 
-            // ask the Config object to perform and needed configuration
+            // ask the Config object to perform any needed configuration
             getConfig().initialize();
 
             // build the exchange rate storage object
             exchangeRateDAO = new ExchangeRateDAO(getCommodityDAO());
 
             // assign the exchange rate store to the currencies
-            for (CurrencyNode node : getCurrencies()) {
+            for (final CurrencyNode node : getCurrencies()) {
                 node.setExchangeRateDAO(exchangeRateDAO);
             }
 
@@ -445,7 +445,7 @@ public class Engine {
     }
 
     /**
-     * Corrects minor issues with a database that may occur because of prior bugs or file format upgrades
+     * Corrects minor issues with a database that may occur because of prior bugs or file format upgrades.
      */
     @SuppressWarnings("ConstantConditions")
     private void checkAndCorrect() {
@@ -601,7 +601,7 @@ public class Engine {
     }
 
     /**
-     * Checks double values for equality
+     * Checks double values for equality.
      *
      * @param a       float value to test for equality
      * @param b       float value to test for equality
@@ -613,7 +613,7 @@ public class Engine {
     }
 
     /**
-     * Removes any duplicate currencies by symbol and fixes up references to them
+     * Removes any duplicate currencies by symbol and fixes up references to them.
      */
     private void removeDuplicateCurrencies() {
 
@@ -678,7 +678,7 @@ public class Engine {
     }
 
     /**
-     * Search and remove orphaned transactions left behind when reminders were removed
+     * Search and remove orphaned transactions left behind when reminders were removed.
      */
     private void removeOrphanedTransactions() {
         for (final Transaction transaction : getTransactions()) {
@@ -815,7 +815,7 @@ public class Engine {
     }
 
     /**
-     * Empty the trash if any objects are older than the defined time
+     * Empty the trash if any objects are older than the defined time.
      */
     private void emptyTrash() {
 
@@ -915,7 +915,7 @@ public class Engine {
     }
 
     /**
-     * Returns a list of reminders
+     * Returns a list of reminders.
      *
      * @return List of reminders
      */
@@ -1014,7 +1014,7 @@ public class Engine {
     }
 
     /**
-     * Validate a CommodityNode for correctness
+     * Validate a CommodityNode for correctness.
      *
      * @param node CommodityNode to validate
      * @return true if valid
@@ -1236,7 +1236,7 @@ public class Engine {
     }
 
     /**
-     * Returns a list of investment accounts that use the given security node
+     * Returns a list of investment accounts that use the given security node.
      *
      * @param node security node
      * @return list of investment accounts
@@ -1301,7 +1301,7 @@ public class Engine {
     }
 
     /**
-     * Returns an array of currencies being used in accounts
+     * Returns an array of currencies being used in accounts.
      *
      * @return Set of CurrencyNodes
      */
@@ -1385,7 +1385,7 @@ public class Engine {
     }
 
     /**
-     * Find a SecurityNode given it's symbol
+     * Find a SecurityNode given it's symbol.
      *
      * @param symbol symbol of security to find
      * @return null if not found
@@ -1520,7 +1520,7 @@ public class Engine {
     }
 
     /**
-     * Remove a {@code SecurityHistoryNode} given a {@code Date}
+     * Remove a {@code SecurityHistoryNode} given a {@code Date}.
      *
      * @param node {@code SecurityNode} to remove history from
      * @param date the search {@code Date}
@@ -1563,7 +1563,7 @@ public class Engine {
     }
 
     /**
-     * Remove a {@code SecurityHistoryEvent} from a {@code SecurityNode}
+     * Remove a {@code SecurityHistoryEvent} from a {@code SecurityNode}.
      *
      * @param node         {@code SecurityNode} to remove history from
      * @param historyEvent the {@code SecurityHistoryEvent} to remove
@@ -1886,7 +1886,7 @@ public class Engine {
     }
 
     /**
-     * Returns a list of all Accounts excluding the rootAccount
+     * Returns a list of all Accounts excluding the rootAccount.
      *
      * @return List of accounts
      */
@@ -1902,7 +1902,7 @@ public class Engine {
     }
 
     /**
-     * Search for an account with a matching account name
+     * Search for an account with a matching account name.
      *
      * @param accountName Account name to search for. <b>Must not be null</b>
      * @return The matching account. {@code null} if not found.
@@ -1924,7 +1924,7 @@ public class Engine {
     }
 
     /**
-     * Returns a list of IncomeAccounts excluding the rootIncomeAccount
+     * Returns a list of IncomeAccounts excluding the rootIncomeAccount.
      *
      * @return List of income accounts
      */
@@ -1934,7 +1934,7 @@ public class Engine {
     }
 
     /**
-     * Returns a list of ExpenseAccounts excluding the rootExpenseAccount
+     * Returns a list of ExpenseAccounts excluding the rootExpenseAccount.
      *
      * @return List if expense accounts
      */
@@ -1944,7 +1944,7 @@ public class Engine {
     }
 
     /**
-     * Returns a list of Accounts that are members of the group
+     * Returns a list of Accounts that are members of the group.
      *
      * @param group the requested AccountGroup
      * @return member accounts
@@ -1954,7 +1954,7 @@ public class Engine {
     }
 
     /**
-     * Returns a list of all accounts excluding the rootAccount and IncomeAccounts and ExpenseAccounts
+     * Returns a list of all accounts excluding the rootAccount and IncomeAccounts and ExpenseAccounts.
      *
      * @return List of investment accounts
      */
@@ -1968,7 +1968,7 @@ public class Engine {
     }
 
     /**
-     * Adds a new account
+     * Adds a new account.
      *
      * @param parent The parent account
      * @param child  A new Account object
@@ -2014,7 +2014,7 @@ public class Engine {
     }
 
     /**
-     * Return the root account
+     * Return the root account.
      *
      * @return RootAccount
      */
@@ -2033,7 +2033,7 @@ public class Engine {
     }
 
     /**
-     * Move an account to a new parent account
+     * Move an account to a new parent account..
      *
      * @param account   account to move
      * @param newParent the new parent account
@@ -2187,7 +2187,7 @@ public class Engine {
     }
 
     /**
-     * Purges any {@code BudgetGoal} associated with an account
+     * Purges any {@code BudgetGoal} associated with an account.
      *
      * @param account {@code Account} to remove all associated budget goal history
      */
@@ -2202,7 +2202,7 @@ public class Engine {
     }
 
     /**
-     * Sets the account number of an account
+     * Sets the account number of an account.
      *
      * @param account account to change
      * @param number  new account number
@@ -2261,7 +2261,7 @@ public class Engine {
     }
 
     /**
-     * Returns an {@code Account} attribute
+     * Returns an {@code Account} attribute.
      *
      * @param key the attribute key
      * @return the attribute if found
@@ -2366,7 +2366,7 @@ public class Engine {
     }
 
     /**
-     * Sets the amortize object of an account
+     * Sets the amortize object of an account.
      *
      * @param account        The Liability account to change
      * @param amortizeObject the new AmortizeObject
@@ -2422,7 +2422,7 @@ public class Engine {
     }
 
     /**
-     * Adds a SecurityNode from a InvestmentAccount
+     * Adds a SecurityNode from a InvestmentAccount.
      *
      * @param account destination account
      * @param node    SecurityNode to add
@@ -2461,7 +2461,7 @@ public class Engine {
     }
 
     /**
-     * Removes a SecurityNode from an InvestmentAccount
+     * Removes a SecurityNode from an InvestmentAccount.
      *
      * @param account Account to remove SecurityNode from
      * @param node    SecurityNode to remove
@@ -2754,7 +2754,7 @@ public class Engine {
     }
 
     /**
-     * Determine if a StoredObject is persisted in the database
+     * Determine if a StoredObject is persisted in the database.
      *
      * @param object StoredObject to check
      * @return true if persisted
@@ -2842,7 +2842,7 @@ public class Engine {
     }
 
     /**
-     * Changes the reconciled state of a transaction
+     * Changes the reconciled state of a transaction.
      *
      * @param transaction transaction to change
      * @param account     account to change state for
@@ -2895,7 +2895,7 @@ public class Engine {
     }
 
     /**
-     * Get all transactions
+     * Get all transactions.
      *
      * @return List of transactions that may be altered without concern of side effects
      */
@@ -2951,7 +2951,7 @@ public class Engine {
     }
 
     /**
-     * Returns the unique identifier for this engine instance
+     * Returns the unique identifier for this engine instance.
      *
      * @return uuid
      */
@@ -3073,7 +3073,7 @@ public class Engine {
     }
 
     /**
-     * Handles background update of securities
+     * Handles background update of securities.
      */
     private static class SecuritiesUpdateThread extends Thread {
 
@@ -3115,7 +3115,7 @@ public class Engine {
     }
 
     /**
-     * Decorates a Callable to indicate background engine activity is occurring
+     * Decorates a Callable to indicate background engine activity is occurring.
      *
      * @param <E> return type for the decorated callable
      */
