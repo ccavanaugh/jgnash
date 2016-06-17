@@ -51,7 +51,7 @@ import jgnash.engine.DataStoreType;
 import jgnash.util.EncryptionManager;
 
 /**
- * Message bus server for remote connections
+ * Message bus server for remote connections.
  *
  * @author Craig Cavanaugh
  */
@@ -94,7 +94,7 @@ public class MessageBusServer {
     public boolean startServer(final DataStoreType dataStoreType, final String dataBasePath, final char[] password) {
         boolean result = false;
 
-        logger.info("Starting message bus server");
+        logger.info("Starting message bus server on port: " + port);
 
         this.dataBasePath = dataBasePath;
         this.dataStoreType = dataStoreType.name();
@@ -173,7 +173,7 @@ public class MessageBusServer {
     }
 
     /**
-     * Utility method to encrypt a message
+     * Utility method to encrypt a message.
      *
      * @param message message to encrypt
      * @return encrypted message
