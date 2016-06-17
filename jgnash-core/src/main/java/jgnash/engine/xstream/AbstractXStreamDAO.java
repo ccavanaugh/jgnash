@@ -26,14 +26,14 @@ import jgnash.engine.dao.AbstractDAO;
 import jgnash.util.NotNull;
 
 /**
- * Simple object container for StoredObjects that reads and writes and xml file
+ * Simple object container for StoredObjects that reads and writes and xml file.
  *
  * @author Craig Cavanaugh
  */
 abstract class AbstractXStreamDAO extends AbstractDAO {
 
     /**
-     * Maximum time in seconds before a commit will occur
+     * Maximum time in seconds before a commit will occur.
      */
     static final int MAX_COMMIT_TIME = 30; // seconds
 

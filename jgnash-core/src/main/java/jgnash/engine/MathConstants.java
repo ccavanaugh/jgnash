@@ -21,39 +21,39 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 /**
- * Math constants interface
+ * Math constants utility class.
  *
  * @author Craig Cavanaugh
  */
 public final class MathConstants {
 
     /**
-     * Default rounding mode
+     * Default rounding mode.
      */
     public static final RoundingMode roundingMode = RoundingMode.HALF_UP;
 
     /**
-     * Default math context
+     * Default math context.
      */
     public static final MathContext mathContext = new MathContext(16, roundingMode);
 
     /**
-     * Default math context for budget values.  Reduce precision to decrease file size
+     * Default math context for budget values.  Reduces precision to decrease file size.
      */
     public static final MathContext budgetMathContext = new MathContext(8, roundingMode);
 
     /**
-     * Number of significant digits to the right of the decimal separator
+     * Number of significant digits to the right of the decimal separator.
      */
     public static final int EXCHANGE_RATE_ACCURACY = 6;
 
     /**
-     * Number of significant digits to the right of the decimal separator
+     * Number of significant digits to the right of the decimal separator.
      */
     public static final int SECURITY_PRICE_ACCURACY = 6;
 
     /**
-     * Number of significant digits to the right of the decimal separator
+     * Number of significant digits to the right of the decimal separator.
      */
     public static final int SECURITY_QUANTITY_ACCURACY = 6;
 

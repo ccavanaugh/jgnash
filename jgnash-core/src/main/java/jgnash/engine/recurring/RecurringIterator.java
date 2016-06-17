@@ -20,14 +20,14 @@ package jgnash.engine.recurring;
 import java.time.LocalDate;
 
 /**
- * Interface for recurring iterators
+ * Interface for recurring iterators.
  *
  * @author Craig Cavanaugh
  */
 public interface RecurringIterator {
 
     /**
-     * Returns the next date the event should occur
+     * Returns the next date the event should occur.
      *
      * @return The next date in the sequence or null if the sequence is no longer valid.
      */

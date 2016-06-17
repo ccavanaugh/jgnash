@@ -27,8 +27,9 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * @author Craig Cavanaugh
+ * Tests account ancestor depth API.
  *
+ * @author Craig Cavanaugh
  */
 public class AccountTreeDepthTest {
 

@@ -43,63 +43,63 @@ import jgnash.util.Nullable;
 public abstract class Reminder extends StoredObject implements Comparable<Reminder> {
 
     /**
-     * Number of days to notify in advance
+     * Number of days to notify in advance.
      */
     private int daysAdvance;
 
     /**
-     * Create the transaction automatically
+     * Create the transaction automatically.
      */
     private boolean autoCreate;
 
     /**
-     * Display notice of the automatically created transaction
+     * Display notice of the automatically created transaction.
      */
     @Deprecated
     @SuppressWarnings("unused")
     private boolean autoCreateNotify;
 
     /**
-     * Description for this reminder
+     * Description for this reminder.
      */
     private String description;
 
     /**
-     * Enabled state
+     * Enabled state.
      */
     private boolean enabled = true;
 
     /**
-     * The last date the reminder will stop executing, may be null (Bug #2860259)
+     * The last date the reminder will stop executing, may be null (Bug #2860259).
      */
     private LocalDate endDate = null;
 
     /**
-     * Number of periods to increment between events
+     * Number of periods to increment between events.
      */
     private int increment = 1;
 
     /**
-     * The last date the reminder was executed
-     * It should remain an increment of the iterator
-     * for correct operation
+     * The last date the reminder was executed.
+     * <p>
+     * It should remain an increment of the iterator for correct operation.
      */
     private LocalDate lastDate = null;
 
     /**
-     * Notes for this reminder
+     * Notes for this reminder.
      */
     private String notes = null;
 
     /**
-     * Delete on completion
+     * Delete on completion.
      */
     @Deprecated
     @SuppressWarnings("unused")
     private boolean removable = false;
 
     /**
-     * The start date of this reminder
+     * The start date of this reminder.
      */
     @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate startDate = LocalDate.now();
@@ -132,6 +132,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Gets the number of days in advance the reminder should execute.
+     *
      * @return Returns the advanceRemindDays.
      */
     public int getDaysAdvance() {
@@ -139,6 +141,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Gets the description for the reminder.
+     *
      * @return Returns the description.
      */
     public String getDescription() {
@@ -146,6 +150,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Gets the ending date for the reminder.
+     *
      * @return Returns the last date the reminder should execute.
      */
     public @Nullable LocalDate getEndDate() {
@@ -153,11 +159,14 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Gets the {@code Iterator} for this {@code Reminder}.
+     *
      * @return Returns the iterator.
      */
     public abstract RecurringIterator getIterator();
 
     /**
+     * Gets the last recorded date for this {@code Reminder}.
      * @return Returns the last recorded date
      */
     public @Nullable LocalDate getLastDate() {
@@ -165,6 +174,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Gets the start date for this {@code Reminder}.
+     *
      * @return Returns the start date.
      */
     public @NotNull LocalDate getStartDate() {
@@ -224,6 +235,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Returns true is this {@code Reminder} is executed without user interation.
+     *
      * @return Returns the autoCreate.
      */
     public boolean isAutoCreate() {
@@ -241,6 +254,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
 
 
     /**
+     * Sets the number of days in advance this {@code Reminder} should execute.
+     *
      * @param advanceRemindDays The advanceRemindDays to set.
      */
     public void setDaysAdvance(final int advanceRemindDays) {
@@ -248,6 +263,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Controls auto entry of the {@code Reminder}.
      * @param autoCreate The autoCreate to set.
      */
     public void setAutoCreate(final boolean autoCreate) {
@@ -255,6 +271,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Sets the descrption for this {@code Reminder}.
+     *
      * @param description The description to set.
      */
     public void setDescription(final String description) {
@@ -271,6 +289,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Sets the last date for the iterator in the series.
+     *
      * @param endDate The last date the reminder should execute.
      */
     public void setEndDate(final @Nullable LocalDate endDate) {
@@ -278,6 +298,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Sets the last date fired to the next iterator date in the series.
+     *
      * @param lastDate The lastDate to set.
      */
     private void setLastDate(final @NotNull LocalDate lastDate) {
@@ -285,13 +307,15 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
-     * Sets the last date fired to the next iterator date in the series
+     * Increment the last date fired to the next iterator date in the series.
      */
     public void setLastDate() {
         setLastDate(getIterator().next());
     }
 
     /**
+     * Set the starting date for the reminder.
+     *
      * @param startDate The startDate to set.
      */
     public void setStartDate(final @NotNull LocalDate startDate) {
@@ -299,6 +323,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Assign the transaction to be enterd upon acceptable of the reminder.
+     *
      * @param transaction The transaction to set.
      */
     public void setTransaction(final Transaction transaction) {
@@ -306,6 +332,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Get the Reminders's increment.
+     *
      * @return Returns the increment.
      */
     public int getIncrement() {
@@ -313,6 +341,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Set the Reminders's increment.
+     *
      * @param increment The increment to set.
      */
     public void setIncrement(final int increment) {
@@ -325,6 +355,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Sets the Reminder's notes.
+     *
      * @param notes The notes to set.
      */
     public void setNotes(final String notes) {
@@ -332,6 +364,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Get the Reminder's notes.
+     *
      * @return Returns the notes.
      */
     public String getNotes() {
@@ -339,6 +373,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
+     * Sets the base Account associated with the Reminder.
+     *
      * @param account base account for this Reminder
      */
     public void setAccount(final Account account) {
@@ -346,7 +382,9 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
-     * @return Returns the accountId.
+     * Returns the base Account associated with the Reminder.
+     *
+     * @return Returns the account
      */
     public Account getAccount() {
         return account;

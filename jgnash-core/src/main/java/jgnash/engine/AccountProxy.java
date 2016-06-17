@@ -39,7 +39,7 @@ class AccountProxy {
     }
 
     /**
-     * Get the balance of all account transactions
+     * Get the balance of all account transactions.
      *
      * @return the balance of this account
      */
@@ -113,7 +113,7 @@ class AccountProxy {
     }
 
     /**
-     * Returns the account balance up to and inclusive of the supplied date
+     * Returns the account balance up to and inclusive of the supplied date.
      *
      * @param date The inclusive ending date
      * @return The ending balance
@@ -136,7 +136,7 @@ class AccountProxy {
     }
 
     /**
-     * Returns the cash balance of this account
+     * Returns the cash balance of this account.
      *
      * @return exception thrown
      */
@@ -145,7 +145,7 @@ class AccountProxy {
     }
 
     /**
-     * Returns the market value of this account
+     * Returns the market value of this account.
      *
      * @return exception thrown
      */
@@ -154,7 +154,7 @@ class AccountProxy {
     }
 
     /**
-     * Calculates the reconciled balance of the account
+     * Calculates the reconciled balance of the account.
      *
      * @return the reconciled balance of this account
      */
@@ -179,7 +179,7 @@ class AccountProxy {
     }
 
     /**
-     * Get the default opening balance for reconciling the account
+     * Get the default opening balance for reconciling the account.
      *
      * @return Opening balance for reconciling the account
      */

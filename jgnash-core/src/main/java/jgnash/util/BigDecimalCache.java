@@ -56,7 +56,7 @@ public final class BigDecimalCache {
     }
 
     /**
-     * Returns the <tt>BigDecimal</tt> at the specified position in the cache
+     * Returns the <tt>BigDecimal</tt> at the specified position in the cache.
      *
      * @param index index of the <tt>BigDecimal</tt> to return.
      * @return the <tt>BigDecimal</tt> at the specified position in this list.

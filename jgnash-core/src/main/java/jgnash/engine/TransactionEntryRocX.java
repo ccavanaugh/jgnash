@@ -25,7 +25,7 @@ import javax.persistence.Entity;
 import jgnash.util.NotNull;
 
 /**
- * Return of capital investment transaction
+ * Return of capital investment transaction.
  * <p>
  * The creditAccount and creditAmount fields are used for the investment account.
  * The debitAccount and debitAmount fields are used for the capital gains (income) account.
@@ -44,7 +44,7 @@ public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param incomeAccount         Debit account
      * @param investmentAccount     Credit/Investment  account

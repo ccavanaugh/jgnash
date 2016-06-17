@@ -24,12 +24,11 @@ import jgnash.engine.Config;
 import jgnash.engine.dao.ConfigDAO;
 
 /**
- * Config object DAO
+ * Config object DAO.
  *
  * @author Craig Cavanaugh
- *
  */
-public class XStreamConfigDAO extends AbstractXStreamDAO implements ConfigDAO {
+class XStreamConfigDAO extends AbstractXStreamDAO implements ConfigDAO {
 
     private static final Logger logger = Logger.getLogger(XStreamConfigDAO.class.getName());
 

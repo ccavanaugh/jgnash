@@ -37,7 +37,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 
 /**
- * Exchange rate object
+ * Exchange rate object.
  *
  * @author Craig Cavanaugh
  */
@@ -50,17 +50,17 @@ public class ExchangeRate extends StoredObject {
     private final Set<ExchangeRateHistoryNode> historyNodes = new HashSet<>();
 
     /**
-     * Cache the last exchange rate
+     * Cache the last exchange rate.
      */
     transient private BigDecimal lastRate;
 
     /**
-     * Identifier for the ExchangeRate object
+     * Identifier for the ExchangeRate object.
      */
     private String rateId;
 
     /**
-     * ReadWrite lock
+     * ReadWrite lock.
      */
     private transient ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -237,7 +237,7 @@ public class ExchangeRate extends StoredObject {
     }
 
     /**
-     * @see java.lang.Object#hashCode()
+     *  {@inheritDoc}
      */
     @Override
     public int hashCode() {
@@ -245,11 +245,10 @@ public class ExchangeRate extends StoredObject {
     }
 
     /**
-     * Required by XStream for proper initialization
+     * Required by XStream for proper initialization.
      *
      * @return Properly initialized ExchangeRate
      */
-    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

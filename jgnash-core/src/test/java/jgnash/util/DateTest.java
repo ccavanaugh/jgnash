@@ -30,6 +30,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * Unit test for date utilities.
+ *
  * @author Craig Cavanaugh
  */
 public class DateTest {

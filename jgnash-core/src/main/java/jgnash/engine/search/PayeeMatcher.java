@@ -20,7 +20,7 @@ package jgnash.engine.search;
 import jgnash.engine.Transaction;
 
 /**
- * Transaction payee matcher
+ * Transaction payee matcher.
  *
  * @author Craig Cavanaugh
  *
@@ -28,7 +28,7 @@ import jgnash.engine.Transaction;
 public class PayeeMatcher extends AbstractStringMatcher {
 
     /**
-     * Creates a Matcher for Transaction payees
+     * Creates a Matcher for Transaction payees.
      *
      * @param pattern       DOS style wildcard search pattern
      * @param caseSensitive should be true if match should be case sensitive

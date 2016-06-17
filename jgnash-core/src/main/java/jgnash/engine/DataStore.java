@@ -23,19 +23,19 @@ import java.util.Collection;
 import jgnash.util.NotNull;
 
 /**
- * Interface for data storage backends
+ * Interface for data storage backends.
  *
  * @author Craig Cavanaugh
  */
 public interface DataStore {
 
     /**
-     * Close the engine instance if open
+     * Close the engine instance if open.
      */
     void closeEngine();
 
     /**
-     * Create an engine instance connected to a remote server
+     * Create an engine instance connected to a remote server.
      * 
      * @param host host name or IP address
      * @param port connection port
@@ -46,7 +46,7 @@ public interface DataStore {
     Engine getClientEngine(final String host, final int port, final char[] password, final String engineName);
 
     /**
-     * Create an engine instance that uses a file
+     * Create an engine instance that uses a file.
      * 
      * @param fileName full path to the file
      * @param engineName unique name to give the engine instance
@@ -56,7 +56,7 @@ public interface DataStore {
     Engine getLocalEngine(final String fileName, final String engineName, final char[] password);
 
     /**
-     * Returns the default file extension for this DataStore
+     * Returns the default file extension for this DataStore.
      * 
      * @return file extension
      */
@@ -71,13 +71,14 @@ public interface DataStore {
     String getFileName();
 
     /**
-     * Returns this DataStores type
+     * Returns this DataStores type.
+     *
      * @return type of data store
      */
     DataStoreType getType();
 
     /**
-     * Remote connection indicator
+     * Remote connection indicator.
      * 
      * @return true if connected to a remote server
      */
@@ -86,7 +87,7 @@ public interface DataStore {
     /**
      * Saves a Collection of StoredObjects to a file other than what is currently open.
      * <p> 
-     * The currently open file will not be closed
+     * The currently open file will not be closed.
      * 
      * @param file full path to the file to save the database to
      * @param objects Collection of StoredObjects to save

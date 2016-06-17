@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertTrue;
 
 /**
- * JUnit test class to export a {@code BudgetResultsModel}
+ * JUnit test class to export a {@code BudgetResultsModel}.
  *
  * @author Craig Cavanaugh
  */

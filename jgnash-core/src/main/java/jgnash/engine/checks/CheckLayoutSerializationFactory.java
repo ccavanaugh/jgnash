@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 import jgnash.util.OS;
 
 /**
- * Factory methods for serializing CheckLayout objects
+ * Factory methods for serializing CheckLayout objects.
  *
  * @author Craig Cavanaugh
  */

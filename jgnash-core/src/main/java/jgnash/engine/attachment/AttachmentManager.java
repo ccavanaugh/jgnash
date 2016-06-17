@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.concurrent.Future;
 
 /**
- * Interface for handling attachments
+ * Interface for handling attachments.
  *
  * @author Craig Cavanaugh
  */

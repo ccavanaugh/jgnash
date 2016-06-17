@@ -35,6 +35,8 @@ import org.junit.Test;
 import static org.junit.Assert.fail;
 
 /**
+ * HSQLDB Relational database engine test.
+ *
  * @author Craig Cavanaugh
  */
 public class JpaHsqlEngineTest extends EngineTest {

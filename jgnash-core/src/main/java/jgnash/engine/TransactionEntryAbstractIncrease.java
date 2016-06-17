@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import javax.persistence.Entity;
 
 /**
- * Abstract Add transaction
+ * Abstract Add transaction.
  *
  * @author Craig Cavanaugh
  */

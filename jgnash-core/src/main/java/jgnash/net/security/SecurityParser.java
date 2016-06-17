@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import jgnash.engine.SecurityNode;
 
 /**
- * Interface for security history information
+ * Interface for security history information.
  *
  * @author Craig Cavanaugh
  */

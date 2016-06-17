@@ -35,7 +35,7 @@ import jgnash.util.NotNull;
 /**
  * Represents security history events such as splits and dividends.
  *
- * Equality is assumed if the date and type match
+ * Equality is assumed if the date and type match.
  *
  * @author Craig Cavanaugh
  */
@@ -55,7 +55,7 @@ public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, S
     private LocalDate date = LocalDate.now();
 
     /**
-     * public no-argument constructor for reflection
+     * public no-argument constructor for reflection.
      */
     @SuppressWarnings("unused")
     public SecurityHistoryEvent() {

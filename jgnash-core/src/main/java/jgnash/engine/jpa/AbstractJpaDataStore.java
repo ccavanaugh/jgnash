@@ -45,7 +45,7 @@ import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.FileUtils;
 
 /**
- * Abstract JPA DataStore
+ * Abstract JPA DataStore.
  *
  * @author Craig Cavanaugh
  */
@@ -69,7 +69,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
     static final Logger logger = Logger.getLogger(AbstractJpaDataStore.class.getName());
 
-    void waitForLockFileRelease(final String fileName, final char[] password) {
+    private void waitForLockFileRelease(final String fileName, final char[] password) {
 
         // Explicitly force the database closed, Required for hsqldb and h2
         SqlUtils.waitForLockFileRelease(getType(), fileName, getLockFileExtension(), password);
@@ -281,14 +281,14 @@ public abstract class AbstractJpaDataStore implements DataStore {
     }
 
     /**
-     * Deletes a database and associated files and directories
+     * Deletes a database and associated files and directories.
      *
      * @param file one of the primary database files
      */
     protected abstract void deleteDatabase(final File file);
 
     /**
-     * Return the extension used by the lock file with the preceding period
+     * Return the extension used by the lock file with the preceding period.
      *
      * @return lock file extension
      */

@@ -54,64 +54,64 @@ public class AmortizeObject implements Serializable {
     private Account feesAccount; // account to place non interest fees
 
     /**
-     * the number of payments per year
+     * the number of payments per year.
      */
     private int numPayments;
 
     /**
-     * length of loan in months
+     * length of loan in months.
      */
     private int length;
 
     /**
-     * the number of compounding periods per year
+     * the number of compounding periods per year.
      */
     private int numCompPeriods;
 
     /**
-     * annual interest rate, APR (ex 6.75)
+     * annual interest rate, APR (ex 6.75).
      */
     private BigDecimal interestRate;
 
     /**
-     * original balance of the loan
+     * original balance of the loan.
      */
     private BigDecimal originalBalance;
 
     /**
-     * PMI, escrow, etc
+     * PMI, escrow, etc.
      */
     private BigDecimal fees = BigDecimal.ZERO;
 
     /**
-     * the payee to use
+     * the payee to use.
      */
     private String payee;
 
     /**
-     * the memo to use
+     * the memo to use.
      */
     private String memo;
 
     // private String checkNumber;     // check number to use
 
     /**
-     * origination date
+     * origination date.
      */
     private LocalDate date = LocalDate.now();
 
     /**
-     * calculate interest based on daily periodic rate
+     * calculate interest based on daily periodic rate.
      */
     private boolean useDailyRate;
 
     /**
-     * the number of days per year for daily periodic rate
+     * the number of days per year for daily periodic rate.
      */
     private BigDecimal daysPerYear;
 
     /**
-     * Empty constructor to keep reflection happy
+     * Empty constructor to keep reflection happy.
      */
     public AmortizeObject() {
     }
@@ -133,7 +133,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Sets the length of the loan (in months)
+     * Sets the length of the loan (in months).
      *
      * @param months length of loan
      */
@@ -142,7 +142,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Gets the length of the loan in months
+     * Gets the length of the loan in months.
      *
      * @return length of loan in months
      */
@@ -226,7 +226,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Set the id of the interest account
+     * Set the id of the interest account.
      *
      * @param id the id of the interest account
      */
@@ -235,7 +235,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Returns the id of the interest account
+     * Returns the id of the interest account.
      *
      * @return the id of the interest account
      */
@@ -244,7 +244,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Set the id of the principal account
+     * Set the id of the principal account.
      *
      * @param id the id of the principal account
      */
@@ -253,7 +253,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Returns the id of the principal account
+     * Returns the id of the principal account.
      *
      * @return the id of the principal account
      */
@@ -262,7 +262,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Set the id of the fees account
+     * Set the id of the fees account.
      *
      * @param id the id of the fees account
      */
@@ -271,7 +271,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Returns the id of the fees account
+     * Returns the id of the fees account.
      *
      * @return the id of the fees account
      */
@@ -342,7 +342,7 @@ public class AmortizeObject implements Serializable {
     /**
      * Calculates the principal and interest payment of an equal payment series
      * M = P * ( Ie / (1 - (1 + Ie) ^ -N)) N = total number of periods the loan
-     * is amortized over
+     * is amortized over.
      *
      * @return P and I
      */
@@ -365,7 +365,7 @@ public class AmortizeObject implements Serializable {
     }
 
     /**
-     * Calculates the principal and interest plus finance charges
+     * Calculates the principal and interest plus finance charges.
      *
      * @return the payment
      */
@@ -375,7 +375,7 @@ public class AmortizeObject implements Serializable {
 
     /**
      * Calculates the interest portion of the next loan payment given the
-     * remaining loan balance
+     * remaining loan balance.
      *
      * @param balance remaining balance
      * @return interest
@@ -390,7 +390,7 @@ public class AmortizeObject implements Serializable {
 
     /**
      * Calculates the interest portion of the next loan payment given the
-     * remaining loan balance and the dates between payments
+     * remaining loan balance and the dates between payments.
      *
      * @param balance balance
      * @param start   start date

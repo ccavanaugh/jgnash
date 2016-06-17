@@ -40,7 +40,7 @@ public enum ReminderType {
     }
 
     /**
-     * Prints the ReminderType name in the toString method
+     * Prints the ReminderType name in the toString method.
      */
     @Override
     public final String toString() {

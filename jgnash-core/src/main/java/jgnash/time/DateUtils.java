@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 import jgnash.util.NotNull;
 
 /**
- * Static methods to make working with dates a bit easier
+ * Static methods to make working with dates a bit easier.
  *
  * @author Craig Cavanaugh
  * @author Vincent Frison
@@ -51,7 +51,7 @@ import jgnash.util.NotNull;
 public class DateUtils {
 
     /**
-     * Maximum number of weeks that can occur in a year
+     * Maximum number of weeks that can occur in a year.
      */
     public static final int LEAP_WEEK = 53;
 
@@ -138,7 +138,7 @@ public class DateUtils {
     }
 
     /**
-     * Returns a variant of the default format with required days reduced to one to make manual entry easier
+     * Returns a variant of the default format with required days reduced to one to make manual entry easier.
      *
      * @return date format
      */
@@ -153,7 +153,7 @@ public class DateUtils {
     }
 
     /**
-     * Converts a {@code LocalDate} into a {@code Date} using the default timezone
+     * Converts a {@code LocalDate} into a {@code Date} using the default timezone.
      *
      * @param localDate {@code LocalDate} to convert
      * @return an equivalent {@code Date}
@@ -187,7 +187,7 @@ public class DateUtils {
     }
 
     /**
-     * Converts a LocaleDate into milliseconds from the epoch of 1970-01-01T00:00:00Z
+     * Converts a LocaleDate into milliseconds from the epoch of 1970-01-01T00:00:00Z.
      *
      * @param localDate {@code LocalDate} to convert
      * @return and equivalent milliseconds from the epoch of 1970-01-01T00:00:00Z
@@ -237,7 +237,7 @@ public class DateUtils {
     }
 
     /**
-     * Returns the number of days in the year
+     * Returns the number of days in the year.
      *
      * @param year calendar year
      * @return the number of days in the year
@@ -247,6 +247,8 @@ public class DateUtils {
     }
 
     /**
+     * Returns an array of the first days bi-weekly for a given year.
+     *
      * @param year The year to generate the array for
      * @return The array of dates
      */
@@ -264,7 +266,7 @@ public class DateUtils {
 
     /**
      * Generates an array of dates starting on the first day of every month in
-     * the specified year
+     * the specified year.
      *
      * @param year The year to generate the array for
      * @return The array of dates
@@ -289,7 +291,7 @@ public class DateUtils {
     }
 
     /**
-     * Returns a date representing the first day of the month
+     * Returns a date representing the first day of the month.
      *
      * @param month The month (index starts at 1)
      * @param year  The year (index starts at 1)
@@ -300,7 +302,7 @@ public class DateUtils {
     }
 
     /**
-     * Returns an array of the starting date of each quarter in a year
+     * Returns an array of the starting date of each quarter in a year.
      *
      * @param year The year to generate the array for
      * @return The array of quarter bound dates
@@ -318,7 +320,7 @@ public class DateUtils {
 
     /**
      * Returns an array of Dates starting with the first day of each week of the
-     * year per ISO 8601
+     * year per ISO 8601.
      *
      * @param year The year to generate the array for
      * @return The array of dates
@@ -356,7 +358,7 @@ public class DateUtils {
     }
 
     /**
-     * Returns an array of every day in a given year
+     * Returns an array of every day in a given year.
      *
      * @param year The year to generate the array for
      * @return The array of dates
@@ -536,7 +538,7 @@ public class DateUtils {
     }
 
     /**
-     * Returns the numerical week of the year given a date per the ISO 8601 standard
+     * Returns the numerical week of the year given a date per the ISO 8601 standard.
      *
      * @param dateOfYear the base date to work from
      * @return the week of the year

@@ -38,6 +38,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
+ * JUnit test for the Yahoo security downloader.
+ *
  * @author Craig Cavanaugh
  */
 public class YahooEventParserTest extends AbstractEngineTest {

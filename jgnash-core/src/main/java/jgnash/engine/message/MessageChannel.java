@@ -18,7 +18,7 @@
 package jgnash.engine.message;
 
 /**
- * Default message channels used by the engine
+ * Default message channels used by the engine.
  *
  * @author Craig Cavanaugh
  */

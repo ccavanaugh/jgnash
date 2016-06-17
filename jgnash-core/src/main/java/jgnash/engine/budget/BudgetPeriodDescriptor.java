@@ -28,7 +28,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * Immutable descriptor for a budget period
+ * Immutable descriptor for a budget period.
  *
  * @author Craig Cavanaugh
  */
@@ -41,7 +41,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
     private static final int TWO_WEEK_INCREMENT = 13;
 
     /**
-     * The starting period (Day of the year)
+     * The starting period (Day of the year).
      */
     private int startPeriod;
 
@@ -160,7 +160,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
     }
 
     /**
-     * Determines if the specified date lies within or inclusive of this descriptor period
+     * Determines if the specified date lies within or inclusive of this descriptor period.
      *
      * @param date date to check
      * @return true if between or inclusive

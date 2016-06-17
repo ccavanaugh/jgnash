@@ -33,7 +33,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * XML specific code for data storage and creating an engine
+ * XML specific code for data storage and creating an engine.
  *
  * @author Craig Cavanaugh
  */
@@ -46,8 +46,7 @@ public class XMLDataStore implements DataStore {
     private XMLContainer container;
 
     /**
-     * Close the open
-     * {@code Engine}
+     * Close the open {@code Engine}.
      *
      * @see DataStore#closeEngine()
      */
@@ -60,7 +59,7 @@ public class XMLDataStore implements DataStore {
     }
 
     /**
-     * Create an engine instance that uses a local XML file
+     * Create an engine instance that uses a local XML file.
      *
      * @see DataStore#getLocalEngine(java.lang.String, java.lang.String, char[])
      */
@@ -83,7 +82,7 @@ public class XMLDataStore implements DataStore {
     }
 
     /**
-     * {@code XMLDataStore} will always return false
+     * {@code XMLDataStore} will always return false.
      *
      * @see DataStore#isRemote()
      */
@@ -93,8 +92,7 @@ public class XMLDataStore implements DataStore {
     }
 
     /**
-     * Returns the default file extension for this
-     * {@code DataStore}
+     * Returns the default file extension for this {@code DataStore}.
      *
      * @see DataStore#getFileExt()
      * @see XMLDataStore#FILE_EXT
@@ -121,7 +119,7 @@ public class XMLDataStore implements DataStore {
     }
 
     /**
-     * XMLDataStore will throw an exception if called
+     * XMLDataStore will throw an exception if called.
      *
      * @see DataStore#getClientEngine(java.lang.String, int, char[], java.lang.String)
      * @throws UnsupportedOperationException thrown if an attempt is made to use as a remote data store
@@ -132,8 +130,7 @@ public class XMLDataStore implements DataStore {
     }
 
     /**
-     * Returns the string representation of this
-     * {@code DataStore}.
+     * Returns the string representation of this {@code DataStore}.
      *
      * @return string representation of this
      * {@code DataStore}.
@@ -144,7 +141,7 @@ public class XMLDataStore implements DataStore {
     }
 
     /**
-     * @see DataStore#saveAs(java.io.File, java.util.Collection)
+     * {@inheritDoc}
      */
     @Override
     public void saveAs(final File file, final Collection<StoredObject> objects) {

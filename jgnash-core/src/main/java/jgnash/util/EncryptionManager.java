@@ -36,7 +36,7 @@ import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 /**
- * A Simple encryption class based on a supplied user and password
+ * A Simple encryption class based on a supplied user and password.
  *
  * @author Craig Cavanaugh
  */
@@ -72,7 +72,7 @@ public class EncryptionManager {
     }
 
     /**
-     * Encrypts the supplied string
+     * Encrypts the supplied string.
      *
      * @param plain String to encrypt
      * @return the encrypted string
@@ -86,7 +86,8 @@ public class EncryptionManager {
 
             return printBase64Binary(cipher.doFinal(plain.getBytes(StandardCharsets.UTF_8)));
 
-        } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException
+                | IllegalBlockSizeException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
@@ -94,7 +95,7 @@ public class EncryptionManager {
     }
 
     /**
-     * Decrypts the supplied string
+     * Decrypts the supplied string.
      *
      * @param encrypted String to decrypt
      * @return The decrypted string of {@code DECRYPTION_ERROR_TAG} if decryption fails
@@ -108,7 +109,8 @@ public class EncryptionManager {
             cipher.init(Cipher.DECRYPT_MODE, key);
 
             return new String(cipher.doFinal(parseBase64Binary(encrypted)), StandardCharsets.UTF_8);
-        } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException
+                | IllegalBlockSizeException e) {
             logger.log(Level.SEVERE, "Invalid password");
             return DECRYPTION_ERROR_TAG;
         }

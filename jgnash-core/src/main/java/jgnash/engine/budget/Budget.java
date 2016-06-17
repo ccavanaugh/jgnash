@@ -39,7 +39,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * Budget Object
+ * Budget Object.
  *
  * @author Craig Cavanaugh
  */
@@ -47,17 +47,17 @@ import jgnash.util.ResourceUtils;
 public class Budget extends StoredObject implements Comparable<Budget>, Cloneable {
 
     /**
-     * Budget name
+     * Budget name.
      */
     private String name = "Default";
 
     /**
-     * Budget description
+     * Budget description.
      */
     private String description = "";
 
     /**
-     * Period to report the budget in
+     * Period to report the budget in.
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "BUDGETPERIOD")
@@ -79,7 +79,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     private boolean liabilityAccountsIncluded = false;
 
     /**
-     * Transient property for the working budget year
+     * Transient property for the working budget year.
      */
     private transient int workingYear = LocalDate.now().getYear();
 
@@ -106,7 +106,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Sets the goals for an {@code Account}
+     * Sets the goals for an {@code Account}.
      *
      * @param account    Account
      * @param budgetGoal budget goals
@@ -173,7 +173,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Returns the global display period for this budget
+     * Returns the global display period for this budget.
      *
      * @return The period for this budget
      */
@@ -182,7 +182,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Sets the global display period for this budget
+     * Sets the global display period for this budget.
      *
      * @param budgetPeriod The budget period
      */
@@ -191,7 +191,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Returns a clone of this {@code Budget}
+     * Returns a clone of this {@code Budget}.
      *
      * @return clone
      */
@@ -215,7 +215,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Returns the working year for the budget
+     * Returns the working year for the budget.
      *
      * @return the activeYear
      */
@@ -235,6 +235,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Returns true if asset accounts are included in the budget.
+     *
      * @return the assetAccountsIncluded
      */
     public boolean areAssetAccountsIncluded() {
@@ -242,6 +244,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Controls inclusion of asset accounts in the budget.
+     *
      * @param assetAccountsIncluded the assetAccountsIncluded to set
      */
     public void setAssetAccountsIncluded(final boolean assetAccountsIncluded) {
@@ -249,6 +253,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Returns true if income accounts are included in the budget.
+     *
      * @return the incomeAccountsIncluded
      */
     public boolean areIncomeAccountsIncluded() {
@@ -256,6 +262,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Controls inclusion of income accounts in the budget.
+     *
      * @param incomeAccountsIncluded the incomeAccountsIncluded to set
      */
     public void setIncomeAccountsIncluded(final boolean incomeAccountsIncluded) {
@@ -263,6 +271,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Returns true if expense accounts are included in the budget.
+     *
      * @return the expenseAccountsIncluded
      */
     public boolean areExpenseAccountsIncluded() {
@@ -270,6 +280,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Controls inclusion of expense accounts in the budget.
+     *
      * @param expenseAccountsIncluded the expenseAccountsIncluded to set
      */
     public void setExpenseAccountsIncluded(final boolean expenseAccountsIncluded) {
@@ -277,6 +289,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Returns true if liability accounts are included in the budget.
+     *
      * @return the liabilityAccountsIncluded
      */
     public boolean areLiabilityAccountsIncluded() {
@@ -284,6 +298,8 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
+     * Controls inclusion of liability accounts in the budget.
+     *
      * @param liabilityAccountsIncluded the liabilityAccountsIncluded to set
      */
     public void setLiabilityAccountsIncluded(final boolean liabilityAccountsIncluded) {
@@ -301,11 +317,10 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Required by XStream for proper initialization
+     * Required by XStream for proper serialization.
      *
      * @return Properly initialized Budget
      */
-    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

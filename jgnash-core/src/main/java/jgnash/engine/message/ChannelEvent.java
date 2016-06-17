@@ -18,7 +18,7 @@
 package jgnash.engine.message;
 
 /**
- * Standard message channel events
+ * Standard message channel events.
  * 
  * @author Craig Cavanaugh
  */

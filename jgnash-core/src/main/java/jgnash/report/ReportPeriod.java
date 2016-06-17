@@ -20,7 +20,7 @@ package jgnash.report;
 import jgnash.util.ResourceUtils;
 
 /**
- * Report period Enum
+ * Report period Enum.
  * 
  * @author Craig Cavanaugh
  */

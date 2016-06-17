@@ -32,7 +32,7 @@ import java.nio.file.Files;
 import org.junit.Test;
 
 /**
- * File utilities test
+ * File utilities test.
  * 
  * @author Craig Cavanaugh
  */

@@ -46,7 +46,7 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
- * Base class for transactions
+ * Base class for transactions.
  *
  * @author Craig Cavanaugh
  */
@@ -58,29 +58,29 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private static final transient String EMPTY = "";
 
     /**
-     * If the memo consists of only the summation symbol, and
+     * If the memo consists of only the summation symbol, memos from the TransactionEntries are concatenated.
      */
     public static final transient String CONCATENATE = "Ʃ";
 
     /**
-     * Date of entry from form entry, used for sort order
+     * Date of entry from form entry, used for sort order.
      */
     LocalDate date = LocalDate.now();
 
     /**
-     * Date transaction was created
+     * Date transaction was created.
      *
      * TODO: Replace with LocalDateTime
      */
     LocalDate dateEntered = LocalDate.now();
 
     /**
-     * Transaction number
+     * Transaction number.
      */
     private String number;
 
     /**
-     * Transaction payee
+     * Transaction payee.
      */
     private String payee;
 
@@ -92,13 +92,13 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private String fitid;
 
     /**
-     * File name for the attachment, should not contain any preceding paths
+     * File name for the attachment, should not contain any preceding paths.
      */
     @Column(columnDefinition = "VARCHAR(256)")
     private String attachment;
 
     /**
-     * Transaction memo
+     * Transaction memo.
      */
     @Column(columnDefinition = "VARCHAR(1024)")
     private String memo;
@@ -106,19 +106,21 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private transient String concatMemo;
 
     /**
-     * Transaction entries
+     * Transaction entries.
      */
     @JoinTable
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     Set<TransactionEntry> transactionEntries = new HashSet<>();
 
     /**
-     * ReadWrite lock
+     * ReadWrite lock.
+     *
+     * TODO, change API so this is not needed... reduce memory usage
      */
     private transient ReadWriteLock lock;
 
     /**
-     * Public constructor
+     * Public constructor.
      */
     public Transaction() {
         lock = new ReentrantReadWriteLock(true);
@@ -155,7 +157,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Determines if any of the transaction's accounts are hidden
+     * Determines if any of the transaction's accounts are hidden.
      *
      * @return true if any of the accounts are hidden
      */
@@ -173,7 +175,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Determines if any of the transaction's accounts are locked against editing (cloning and then changing accounts)
+     * Determines if any of the transaction's accounts are locked against editing (cloning and then changing accounts).
      *
      * @return true if any of the accounts are locked
      */
@@ -191,7 +193,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Search for a common account for all entries
+     * Search for a common account for all entries.
      *
      * @return the common Account
      * @see Account
@@ -292,7 +294,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Sets the payee for this transaction
+     * Sets the payee for this transaction.
      *
      * @param payee the transaction payee
      */
@@ -301,7 +303,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Return the payee for this transaction
+     * Return the payee for this transaction.
      *
      * @return the transaction payee. Guaranteed to not return null
      */
@@ -316,7 +318,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Sets the number for this transaction
+     * Sets the number for this transaction.
      *
      * @param number the transaction number
      */
@@ -325,7 +327,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Return the number for this transaction
+     * Return the number for this transaction.
      *
      * @return the transaction number. Guaranteed to not return null
      */
@@ -340,7 +342,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Calculates the amount of the transaction relative to the supplied account
+     * Calculates the amount of the transaction relative to the supplied account.
      *
      * @param account reference account
      * @return Amount of this transaction relative to the supplied account
@@ -470,7 +472,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
 
     /**
-     * Return a list of transaction entries with the given tag
+     * Return a list of transaction entries with the given tag.
      *
      * @param tag TransactionTag to filter for
      * @return {@code List<TransactionEntry>} of entries with the given tag. An empty list will be
@@ -493,7 +495,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Adds a collection of transaction entries
+     * Adds a collection of transaction entries.
      *
      * @param entries collection of TransactionEntry(s)
      */
@@ -502,7 +504,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Clears all transaction entries
+     * Clears all transaction entries.
      */
     public void clearTransactionEntries() {
         transactionEntries.clear();
@@ -562,7 +564,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Builds a concatenated memo given a list of TransactionEntries
+     * Builds a concatenated memo given a list of TransactionEntries.
      *
      * @param transEntries List of {@code TransactionEntry}
      * @return concatenated memo
@@ -711,7 +713,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Required by XStream for proper initialization
+     * Required by XStream for proper initialization.
      *
      * @return Properly initialized Transaction
      */

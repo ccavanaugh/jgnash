@@ -63,13 +63,14 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     private transient BigDecimal adjustedLow = null;
 
     /**
-     * public no-argument constructor for reflection
+     * public no-argument constructor for reflection.
      */
     public SecurityHistoryNode() {
     }
 
     /**
-     * Public constructor for creating a history node
+     * Public constructor for creating a history node.
+     *
      * @param date date
      * @param price closing price
      * @param volume closing volume
@@ -133,7 +134,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     }
 
     /**
-     * The price adjusted for any splits or reverse splits
+     * The price adjusted for any splits or reverse splits.
+     *
      * @return the adjusted price
      */
     public @NotNull BigDecimal getAdjustedPrice() {
@@ -144,7 +146,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     }
 
     /**
-     * The high price adjusted for any splits or reverse splits
+     * The high price adjusted for any splits or reverse splits.
+     *
      * @return the adjusted price
      */
     public @NotNull BigDecimal getAdjustedHigh() {
@@ -155,7 +158,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     }
 
     /**
-     * The low price adjusted for any splits or reverse splits
+     * The low price adjusted for any splits or reverse splits.
+     *
      * @return the adjusted price
      */
     public @NotNull BigDecimal getAdjustedLow() {
@@ -167,7 +171,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     /**
      * Adjusts the historical values given a multiplier.  To be used for handling
-     * security splits and reverse splits
+     * security splits and reverse splits.
+     *
      * @param multiplier multiplier to be used for adjusting prices
      */
     void setAdjustmentMultiplier(@NotNull BigDecimal multiplier) {
@@ -186,7 +191,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     /**
      * Compare using only the month, day and year of the node ignoring hours and
-     * seconds
+     * seconds.
      *
      * @param node node to compare
      */

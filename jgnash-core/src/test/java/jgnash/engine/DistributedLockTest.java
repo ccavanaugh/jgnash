@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * Test to validate the Distributed lock manager
+ * Test to validate the Distributed lock manager.
  *
  * @author Craig Cavanaugh
  */
@@ -155,7 +155,7 @@ public class DistributedLockTest {
         class ReadLockThread implements Runnable {
             final private ReadWriteLock readWriteLock;
 
-            public ReadLockThread(final ReadWriteLock readWriteLock) {
+            private ReadLockThread(final ReadWriteLock readWriteLock) {
                 this.readWriteLock = readWriteLock;
             }
 
@@ -175,7 +175,7 @@ public class DistributedLockTest {
         class WriteLockThread implements Runnable {
             final private ReadWriteLock readWriteLock;
 
-            public WriteLockThread(final ReadWriteLock readWriteLock) {
+            private WriteLockThread(final ReadWriteLock readWriteLock) {
                 this.readWriteLock = readWriteLock;
             }
 

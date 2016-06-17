@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Support methods for handling attachments
+ * Support methods for handling attachments.
  *
  * @author Craig Cavanaugh
  */
@@ -37,16 +37,15 @@ public class AttachmentUtils {
     private static final String ATTACHMENT_BASE = "attachments";
 
     /**
-     * Utility class
+     * Utility class.
      */
     private AttachmentUtils() {
     }
 
     /**
-     * Creates the attachment directory for the active database
+     * Creates the attachment directory for the active database.
      * 
      * @param baseFile base directory for file attachments
-     *
      * @return {@code true} if and only if the directory was created or if
      *         it already exists; {@code false} otherwise
      */
@@ -70,7 +69,7 @@ public class AttachmentUtils {
     }
 
     /**
-     * Returns the default attachment directory for the given base file
+     * Returns the default attachment directory for the given base file.
      *
      * @param baseFile base file for attachment directory
      * @return directory for all attachments

@@ -28,11 +28,11 @@ import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.AccountDAO;
 
 /**
- * XML Account DAO
+ * XML Account DAO.
  *
  * @author Craig Cavanaugh
  */
-public class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO {
+class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO {
 
     private static final Logger logger = Logger.getLogger(XStreamAccountDAO.class.getName());
 

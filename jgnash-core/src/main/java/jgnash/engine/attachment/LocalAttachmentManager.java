@@ -32,7 +32,7 @@ import jgnash.engine.AttachmentUtils;
 import jgnash.engine.EngineFactory;
 
 /**
- * Attachment handler for a local database
+ * Attachment handler for a local database.
  *
  * @author Craig Cavanaugh
  */

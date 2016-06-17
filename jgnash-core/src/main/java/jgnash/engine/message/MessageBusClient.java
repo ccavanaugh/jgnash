@@ -61,7 +61,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 
 /**
- * Message bus client for remote connections
+ * Message bus client for remote connections.
  *
  * @author Craig Cavanaugh
  */

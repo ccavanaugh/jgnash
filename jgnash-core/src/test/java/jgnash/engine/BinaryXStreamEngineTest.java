@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 import org.junit.AfterClass;
 
 /**
+ * Engine text for Binary XStream.
+ *
  * @author Craig Cavanaugh
  */
 public class BinaryXStreamEngineTest extends EngineTest {
@@ -36,7 +38,8 @@ public class BinaryXStreamEngineTest extends EngineTest {
     @Override
     public Engine createEngine() throws Exception {
         try {
-            testFile = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
+            testFile = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt())
+                    .toFile().getAbsolutePath();
             tempFile = testFile;
 
             new File(testFile + ".backup").deleteOnExit();

@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Abstract class for anything stored in the database that requires a unique id
+ * Abstract class for anything stored in the database that requires a unique id.
  *
  * @author Craig Cavanaugh
  */
@@ -33,20 +33,20 @@ import java.util.logging.Logger;
 public abstract class StoredObject implements Cloneable, Serializable {
 
     /**
-     * Version field for persistence purposes
+     * Version field for persistence purposes.
      */
     @Version
     @SuppressWarnings("unused")
     private int version;
 
     /**
-     * Indicates object is marked for removal
+     * Indicates object is marked for removal.
      */
     @Basic
     private boolean markedForRemoval = false;
 
     /**
-     * Unique ID for every object
+     * Unique ID for every object.
      */
     @Id()
     @Column(nullable = false, length = 36)
@@ -79,7 +79,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
     }
 
     /**
-     * Override hashCode to use uuid
+     * Override hashCode to use uuid.
      *
      * @see java.lang.Object#hashCode()
      */
@@ -89,7 +89,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
     }
 
     /**
-     * Default equals override
+     * Default equals override.
      *
      * @param o object to compare
      * @see java.lang.Object#equals(java.lang.Object)

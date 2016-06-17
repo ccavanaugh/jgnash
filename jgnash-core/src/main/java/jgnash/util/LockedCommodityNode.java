@@ -20,7 +20,7 @@ package jgnash.util;
 import jgnash.engine.CommodityNode;
 
 /**
- * Decorator around a CommodityNode to indicate it is in a locked/unlocked state
+ * Decorator around a CommodityNode to indicate it is in a locked/unlocked state.
  *
  * @author Craig Cavanaugh
  */

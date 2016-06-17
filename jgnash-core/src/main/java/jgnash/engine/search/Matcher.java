@@ -20,14 +20,14 @@ package jgnash.engine.search;
 import jgnash.engine.Transaction;
 
 /**
- * Matcher Interface
+ * Matcher .
  *
  * @author Craig Cavanaugh
  */
 interface Matcher {
 
     /**
-     * Regex match against a Transaction
+     * Regex match against a Transaction.
      *
      * @param t Transaction to match
      * @return true if Transaction matches

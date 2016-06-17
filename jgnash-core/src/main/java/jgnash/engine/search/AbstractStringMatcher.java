@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import jgnash.util.SearchUtils;
 
 /**
- * Transaction payee matcher
+ * Abstract String matcher.
  *
  * @author Craig Cavanaugh
  */
@@ -32,7 +32,7 @@ abstract class AbstractStringMatcher implements Matcher {
     final Pattern p;
 
     /**
-     * Creates a Matcher for Strings
+     * Creates a Matcher for Strings.
      *
      * @param pattern       DOS style wildcard search pattern
      * @param caseSensitive should be true if match should be case sensitive

@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 import jgnash.engine.Account;
 
 /**
- * Predicate that only allows Accounts with children
+ * Predicate that only allows Accounts with children.
  *
  * @author Craig Cavanaugh
  */

@@ -33,7 +33,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * XML specific code for data storage and creating an engine
+ * XML specific code for data storage and creating an engine.
  *
  * @author Craig Cavanaugh
  */
@@ -46,8 +46,7 @@ public class BinaryXStreamDataStore implements DataStore {
     private BinaryContainer container;
 
     /**
-     * Close the open
-     * {@code Engine}
+     * Close the open {@code Engine}.
      *
      * @see jgnash.engine.DataStore#closeEngine()
      */
@@ -60,7 +59,7 @@ public class BinaryXStreamDataStore implements DataStore {
     }
 
     /**
-     * Create an engine instance that uses a local XML file
+     * Create an engine instance that uses a local XML file.
      *
      * @see jgnash.engine.DataStore#getLocalEngine(String, String, char[])
      */
@@ -83,7 +82,7 @@ public class BinaryXStreamDataStore implements DataStore {
     }
 
     /**
-     * {@code XMLDataStore} will always return false
+     * {@code XMLDataStore} will always return false.
      *
      * @see jgnash.engine.DataStore#isRemote()
      */
@@ -93,8 +92,7 @@ public class BinaryXStreamDataStore implements DataStore {
     }
 
     /**
-     * Returns the default file extension for this
-     * {@code DataStore}
+     * Returns the default file extension for this {@code DataStore}.
      *
      * @see jgnash.engine.DataStore#getFileExt()
      * @see BinaryXStreamDataStore#FILE_EXT
@@ -121,7 +119,7 @@ public class BinaryXStreamDataStore implements DataStore {
     }
 
     /**
-     * XMLDataStore will throw an exception if called
+     * XMLDataStore will throw an exception if called.
      *
      * @see jgnash.engine.DataStore#getClientEngine(String, int, char[], String)
      * @throws UnsupportedOperationException thrown if an attempt is made to use as a remote data store
@@ -132,18 +130,16 @@ public class BinaryXStreamDataStore implements DataStore {
     }
 
     /**
-     * Returns the string representation of this
-     * {@code DataStore}.
+     * Returns the string representation of this {@code DataStore}.
      *
-     * @return string representation of this
-     * {@code DataStore}.
+     * @return string representation of this {@code DataStore}.
      */
     @Override
     public String toString() {
         return ResourceUtils.getString("DataStoreType.Bxds");
     }
 
-    /**
+    /*
      * @see jgnash.engine.DataStore#saveAs(java.io.File, java.util.Collection)
      */
     @Override

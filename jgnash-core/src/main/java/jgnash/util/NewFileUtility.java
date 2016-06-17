@@ -34,7 +34,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 
 /**
- * Utility class for generating new files
+ * Utility class for generating new files.
  *
  * @author Craig Cavanaugh
  */

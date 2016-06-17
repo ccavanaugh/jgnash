@@ -57,7 +57,7 @@ import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 
 /**
- * Simple object container for StoredObjects that reads and writes an XML file
+ * Simple object container for StoredObjects that reads and writes an XML file.
  *
  * @author Craig Cavanaugh
  */

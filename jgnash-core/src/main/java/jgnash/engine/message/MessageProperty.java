@@ -18,7 +18,7 @@
 package jgnash.engine.message;
 
 /**
- * Message property Enums
+ * Message property Enums.
  *
  * @author Craig Cavanaugh
  */

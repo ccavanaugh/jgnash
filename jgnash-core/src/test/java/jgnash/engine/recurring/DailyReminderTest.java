@@ -26,6 +26,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
+ * Unit test for DailyReminders.
+ *
  * @author Craig Cavanaugh
  */
 public class DailyReminderTest {

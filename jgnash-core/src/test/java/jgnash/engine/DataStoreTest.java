@@ -21,8 +21,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * @author Craig Cavanaugh
+ * Unit test for DataStoreTypes.
  *
+ * @author Craig Cavanaugh
  */
 @SuppressWarnings("ConstantConditions")
 public class DataStoreTest {

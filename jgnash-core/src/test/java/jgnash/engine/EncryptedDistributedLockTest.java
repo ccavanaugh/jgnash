@@ -28,7 +28,7 @@ import org.junit.Before;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test to validate the Distributed lock manager
+ * Test to validate the Distributed lock manager.
  *
  * @author Craig Cavanaugh
  */

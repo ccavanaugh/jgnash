@@ -30,7 +30,7 @@ import jgnash.time.Period;
 import jgnash.time.DateUtils;
 
 /**
- * Factory class for generating descriptors
+ * Factory class for generating descriptors.
  * 
  * @author Craig Cavanaugh
  *

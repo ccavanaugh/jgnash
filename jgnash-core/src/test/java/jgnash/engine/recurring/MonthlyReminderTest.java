@@ -27,6 +27,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
+ * Unit test for Monthly Reminders.
+ *
  * @author Craig Cavanaugh
  */
 public class MonthlyReminderTest {

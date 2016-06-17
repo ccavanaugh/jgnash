@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 import jgnash.util.NotNull;
 
 /**
- * Sell shares and increase the (cash) balance of an account
+ * Sell shares and increase the (cash) balance of an account.
  * <p>
  * The investment account is always assigned to the credit account.
  * <p>
@@ -46,7 +46,7 @@ public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param account           Debit account
      * @param investmentAccount Credit / Investment  account
@@ -55,7 +55,8 @@ public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
      * @param quantity          Number of shares
      * @param exchangeRate      Exchange rate for the debit account (May be ONE, but may not be null and must be greater than ZERO)
      */
-    TransactionEntrySellX(final Account account, final Account investmentAccount, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate) {
+    TransactionEntrySellX(final Account account, final Account investmentAccount, final SecurityNode securityNode,
+                          final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate) {
 
         assert investmentAccount.memberOf(AccountGroup.INVEST);
         assert exchangeRate != null && exchangeRate.signum() == 1;

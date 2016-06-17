@@ -28,9 +28,9 @@ import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 /**
- * Manages the reconciliation options and provides utility functions for preserving account reconciliation attributes
+ * Manages the reconciliation options and provides utility functions for preserving account reconciliation attributes.
  * <p>
- * Both reconcileIncomeExpense and reconcileBothSides can be false, but only one can be true
+ * Both reconcileIncomeExpense and reconcileBothSides can be false, but only one can be true.
  *
  * @author Craig Cavanaugh
  */
@@ -57,7 +57,7 @@ public class ReconcileManager {
 
     /**
      * Set so the income or expense side of a transaction is
-     * automatically reconciled
+     * automatically reconciled.
      *
      * @param reconcile true if income and expense accounts should be
      *                  automatically reconciled
@@ -77,7 +77,7 @@ public class ReconcileManager {
 
     /**
      * Determines if the income or expense side of a transaction should
-     * be automatically reconciled
+     * be automatically reconciled.
      *
      * @return true if income and expense accounts should automatically be
      * reconciled.
@@ -88,7 +88,7 @@ public class ReconcileManager {
 
     /**
      * Set so both sides of a double entry transaction are automatically
-     * reconciled
+     * reconciled.
      *
      * @param reconcile true if income and expense accounts should be
      *                  automatically reconciled
@@ -107,7 +107,7 @@ public class ReconcileManager {
     }
 
     /**
-     * Determines if both sides of a transaction should be automatically reconciled
+     * Determines if both sides of a transaction should be automatically reconciled.
      *
      * @return true if income and expense accounts should automatically be
      * reconciled.
@@ -121,7 +121,7 @@ public class ReconcileManager {
     }
 
     /**
-     * Disables auto reconciliation
+     * Disables auto reconciliation.
      */
     public static void setDoNotAutoReconcile() {
         setAutoReconcileBothSides(false);
@@ -130,7 +130,7 @@ public class ReconcileManager {
 
     /**
      * Sets the reconciled state of the transaction using the rules set
-     * by the user
+     * by the user.
      *
      * @param account    Base account
      * @param t          Transaction to reconcile
@@ -183,7 +183,8 @@ public class ReconcileManager {
     }
 
     /**
-     * Sets a date attribute for an account
+     * Sets a date attribute for an account.
+     *
      * @param account account that is being updated
      * @param attribute key for the date attribute
      * @param date date value
@@ -197,7 +198,8 @@ public class ReconcileManager {
     }
 
     /**
-     * Returns a date attribute for an account
+     * Returns a date attribute for an account.
+     *
      * @param account {@code Account} that is being queried
      * @param attribute key for the date attribute
      * @return an {@code Optional} containing the date if previously set
@@ -212,7 +214,8 @@ public class ReconcileManager {
     }
 
     /**
-     * Sets a {@code BigDecimal} attribute for an account
+     * Sets a {@code BigDecimal} attribute for an account.
+     *
      * @param account account that is being updated
      * @param attribute key for the {@code BigDecimal} attribute
      * @param decimal decimal value
@@ -226,7 +229,8 @@ public class ReconcileManager {
     }
 
     /**
-     * Returns a {@code BigDecimal} attribute for an account
+     * Returns a {@code BigDecimal} attribute for an account.
+     *
      * @param account {@code Account} that is being queried
      * @param attribute key for the {@code BigDecimal} attribute
      * @return an {@code Optional} containing the {@code BigDecimal} if previously set

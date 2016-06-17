@@ -20,7 +20,7 @@ package jgnash.net.currency;
 import java.math.BigDecimal;
 
 /**
- * Currency parser interface
+ * Currency parser interface.
  *
  * @author Craig Cavanaugh
  */

@@ -18,7 +18,7 @@
 package jgnash.engine.message;
 
 /**
- * Classes must implement this interface to register and lister the message events
+ * Classes must implement this interface to register and lister the message events.
  *
  * @author Craig Cavanaugh
  */

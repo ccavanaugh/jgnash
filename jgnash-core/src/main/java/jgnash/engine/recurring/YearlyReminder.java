@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 import jgnash.time.DateUtils;
 
 /**
- * A yearly reminder
+ * A yearly reminder.
  * 
  * @author Craig Cavanaugh
  */
@@ -36,7 +36,7 @@ public class YearlyReminder extends Reminder {
     }
 
     /**
-     * @see jgnash.engine.recurring.Reminder#getIterator()
+     * {@inheritDoc}
      */
     @Override
     public RecurringIterator getIterator() {
@@ -44,8 +44,7 @@ public class YearlyReminder extends Reminder {
     }
 
     /**
-     * @return Return reminder type
-     * @see jgnash.engine.recurring.Reminder#getReminderType()
+     * {@inheritDoc}
      */
     @Override
     public ReminderType getReminderType() {
@@ -55,7 +54,7 @@ public class YearlyReminder extends Reminder {
     private class YearlyIterator implements RecurringIterator {
         private LocalDate base;
 
-        public YearlyIterator() {
+        YearlyIterator() {
             if (getLastDate() != null) {
                 base = getLastDate();
 
@@ -71,7 +70,7 @@ public class YearlyReminder extends Reminder {
         }
 
         /**
-         * @see jgnash.engine.recurring.RecurringIterator#next()
+         * {@inheritDoc}
          */
         @Override
         public LocalDate next() {

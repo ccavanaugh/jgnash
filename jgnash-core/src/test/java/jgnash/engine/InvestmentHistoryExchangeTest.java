@@ -18,7 +18,7 @@ import static jgnash.engine.TransactionFactory.generateBuyXTransaction;
 import static org.junit.Assert.*;
 
 /**
-  * Unit test for investment history and exchange rate combinations
+  * Unit test for investment history and exchange rate combinations.
   *
   * @author Craig Cavanaugh
   */

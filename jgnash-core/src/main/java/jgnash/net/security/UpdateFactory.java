@@ -61,7 +61,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * Fetches latest stock prices in the background
+ * Fetches latest stock prices in the background.
  *
  * @author Craig Cavanaugh
  */
@@ -79,7 +79,7 @@ public class UpdateFactory {
     private static final int TIMEOUT = 1;   // default timeout in minutes
 
     /**
-     * Registers a {@code Handler} with the class logger
+     * Registers a {@code Handler} with the class logger.
      *
      * @param handler {@code Handler} to register
      */
@@ -265,7 +265,7 @@ public class UpdateFactory {
         return newSecurityNodes;
     }
 
-    public static class HistoricalImportCallable implements Callable<Boolean> {
+    private static class HistoricalImportCallable implements Callable<Boolean> {
 
         private final LocalDate startDate;
 
@@ -273,8 +273,8 @@ public class UpdateFactory {
 
         private final SecurityNode securityNode;
 
-        public HistoricalImportCallable(@NotNull final SecurityNode securityNode, @NotNull final LocalDate startDate,
-                                        @NotNull final LocalDate endDate) {
+        HistoricalImportCallable(@NotNull final SecurityNode securityNode, @NotNull final LocalDate startDate,
+                                 @NotNull final LocalDate endDate) {
             this.securityNode = securityNode;
 
             if (DateUtils.before(startDate, endDate)) {

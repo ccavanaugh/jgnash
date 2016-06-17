@@ -20,7 +20,7 @@ package jgnash.engine;
 import jgnash.engine.dao.CommodityDAO;
 
 /**
- * DAO for exchange rate access
+ * DAO for exchange rate access.
  *
  * @author Craig Cavanaugh
  *
@@ -33,12 +33,12 @@ class ExchangeRateDAO {
         this.commodityDAO = commodityDAO;
     }
 
-    public ExchangeRate getExchangeRateNode(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
+    ExchangeRate getExchangeRateNode(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
         if (baseCurrency.equals(exchangeCurrency)) {
             return null;
         }
 
-        String rateId = Engine.buildExchangeRateId(baseCurrency, exchangeCurrency);
+        final String rateId = Engine.buildExchangeRateId(baseCurrency, exchangeCurrency);
 
         ExchangeRate node = commodityDAO.getExchangeNode(rateId);
 

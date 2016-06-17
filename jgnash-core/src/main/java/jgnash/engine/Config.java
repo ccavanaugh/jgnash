@@ -40,7 +40,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
- * A general configuration class so that global configuration information may be stored inside the database
+ * A general configuration class so that global configuration information may be stored inside the database.
  *
  * @author Craig Cavanaugh
  */
@@ -63,8 +63,9 @@ public class Config extends StoredObject {
     private String accountSeparator = ":";
 
     /**
-     * TODO: this needs to be changed long term because of corner cases that can break version checks if not careful
-     * This will be replaced by fileFormat in a future release
+     * This will be replaced by fileFormat in a future release.
+     * <p>
+     * TODO: this needs to be changed long term because of corner cases that can break version checks if not careful.
      */
     private float fileVersion = Engine.CURRENT_VERSION; // default to the latest version at init
 
@@ -73,13 +74,13 @@ public class Config extends StoredObject {
     private transient ReadWriteLock preferencesLock;
 
     /**
-     * Contains a list a items to display in the transaction number combo
+     * Contains a list a items to display in the transaction number combo.
      */
     @ElementCollection
     private final List<String> transactionNumberItems = new ArrayList<>();
 
     /**
-     * Contains a list of custom transaction tags a user may apply
+     * Contains a list of custom transaction tags a user may apply.
      */
     @ElementCollection
     @SuppressWarnings("unused")
@@ -112,11 +113,11 @@ public class Config extends StoredObject {
         return fileFormat;
     }
 
-    public int getMajorFileFormatVersion() {
+    int getMajorFileFormatVersion() {
         return Integer.parseInt(getFileFormat().split("\\.")[0]);
     }
 
-    public int getMinorFileFormatVersion() {
+    int getMinorFileFormatVersion() {
         return Integer.parseInt(getFileFormat().split("\\.")[1]);
     }
 
@@ -272,11 +273,10 @@ public class Config extends StoredObject {
     }
 
     /**
-     * Required by XStream for proper initialization
+     * Required by XStream for proper initialization.
      *
      * @return Properly initialized Config object
      */
-    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

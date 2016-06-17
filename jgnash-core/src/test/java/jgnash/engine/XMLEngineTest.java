@@ -27,8 +27,9 @@ import java.util.logging.Logger;
 import org.junit.AfterClass;
 
 /**
- * @author Craig Cavanaugh
+ * JUnit test for XML storage with the Engine API.
  *
+ * @author Craig Cavanaugh
  */
 public class XMLEngineTest extends EngineTest {
 

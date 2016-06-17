@@ -29,29 +29,29 @@ import java.util.concurrent.locks.ReentrantLock;
  * A Utility class that forwards messages to registered listeners.
  * <p>
  * This is useful for classes that must process a message first and then forward to other listeners for secondary
- * processing
+ * processing.
  *
  * @author Craig Cavanaugh
  */
 public class MessageProxy {
 
     /**
-     * Message Listeners
+     * Message Listeners.
      */
     private final List<WeakReference<MessageListener>> messageListeners = new ArrayList<>();
 
     /**
-     * Concurrency lock
+     * Concurrency lock.
      */
     private final ReentrantLock lock = new ReentrantLock();
 
     /**
-     * Shared thread pool for all instances of MessageProxy
+     * Shared thread pool for all instances of MessageProxy.
      */
     private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
 
     /**
-     * Register a listener
+     * Register a listener.
      *
      * @param messageListener listener to register with this proxy
      */
@@ -67,7 +67,7 @@ public class MessageProxy {
     }
 
     /**
-     * Remove a listener
+     * Remove a listener.
      *
      * @param messageListener listener to register with this proxy
      */
@@ -92,7 +92,7 @@ public class MessageProxy {
     }
 
     /**
-     * Forwards a message to an listeners
+     * Forwards a message to an listeners.
      *
      * @param message message to forward
      */

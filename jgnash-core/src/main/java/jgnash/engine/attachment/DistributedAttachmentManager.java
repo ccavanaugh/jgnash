@@ -37,7 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Attachment handler for a remote database
+ * Attachment handler for a remote database.
  *
  * @author Craig Cavanaugh
  */
@@ -54,7 +54,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
     private final int port;
 
     /**
-     * Path to temporary attachment cache location
+     * Path to temporary attachment cache location.
      */
     private Path tempAttachmentPath;
 

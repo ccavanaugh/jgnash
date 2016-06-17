@@ -27,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Static methods for currency generation and discovery
+ * Static methods for currency generation and discovery.
  * <p>
  * These are known to not show up because Java 1.4.2 and older does not have
  * a default NumberFormat defined for the currency:
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
 public class DefaultCurrencies {
 
     /**
-     * Private Constructor, use static methods only
+     * Private Constructor, use static methods only.
      */
     private DefaultCurrencies() {
     }
@@ -97,7 +97,7 @@ public class DefaultCurrencies {
     }
 
     /**
-     * Creates a valid CurrencyNode given a locale
+     * Creates a valid CurrencyNode given a locale.
      *
      * @param locale Locale to create a CurrencyNode for
      * @return The new CurrencyNode
@@ -115,7 +115,7 @@ public class DefaultCurrencies {
     }
 
     /**
-     * Generates the default CurrencyNode for the current locale
+     * Generates the default CurrencyNode for the current locale.
      *
      * @return The new CurrencyNode
      */

@@ -36,7 +36,7 @@ import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.LogUtils;
 
 /**
- * Thread safe Message Bus
+ * Thread safe Message Bus.
  *
  * @author Craig Cavanaugh
  */
@@ -50,7 +50,7 @@ import jgnash.util.LogUtils;
 public class MessageBus {
 
     /**
-     * Maximum wait to get a valid response from the remote message bus before giving up
+     * Maximum wait to get a valid response from the remote message bus before giving up.
      */
     private static final long MAX_LATENCY = 5 * 1000;
 
@@ -66,7 +66,7 @@ public class MessageBus {
 
     private static final String DEFAULT = "default";
 
-    /** Name given to this message bus instance */
+    /** Name given to this message bus instance. */
     private final String busName;
 
     private MessageBus(final String busName) {
@@ -74,7 +74,7 @@ public class MessageBus {
     }
 
     /**
-     * Set message bus to post remote messages
+     * Set message bus to post remote messages.
      *
      * @param host message server name or IP address
      * @param port message server port
@@ -87,7 +87,7 @@ public class MessageBus {
     }
 
     /**
-     * Set message bus for local operation
+     * Set message bus for local operation.
      */
     public synchronized void setLocal() {
         disconnectFromServer();
@@ -134,7 +134,8 @@ public class MessageBus {
     }
 
     /**
-     * Issues a shutdown request to a remote server
+     * Issues a shutdown request to a remote server.
+     *
      * @param remoteHost message server name or IP address
      * @param remotePort message server port
      * @param password connection password   

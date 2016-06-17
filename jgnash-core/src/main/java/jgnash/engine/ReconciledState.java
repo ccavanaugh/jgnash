@@ -20,7 +20,7 @@ package jgnash.engine;
 import jgnash.util.ResourceUtils;
 
 /**
- * Reconciled State of a transaction
+ * Enumeration for the reconciled state of a transaction.
  *
  * @author Craig Cavanaugh
  */

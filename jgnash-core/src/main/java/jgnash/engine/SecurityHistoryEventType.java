@@ -20,7 +20,7 @@ package jgnash.engine;
 import jgnash.util.ResourceUtils;
 
 /**
- * Historical event descriptor for securities
+ * Historical event descriptor for securities.
  *
  * @author Craig Cavanaugh
  */

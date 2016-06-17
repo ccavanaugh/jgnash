@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 /**
- * Investment Account Proxy class
+ * Investment Account Proxy class.
  *
  * @author Craig Cavanaugh
  */
-public class InvestmentAccountProxy extends AccountProxy {
+class InvestmentAccountProxy extends AccountProxy {
 
     public InvestmentAccountProxy(final Account account) {
         super(account);
@@ -40,7 +40,7 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Returns the cash balance plus the market value of the shares
+     * Returns the cash balance plus the market value of the shares.
      *
      * @return cash balance
      */
@@ -55,7 +55,7 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Returns the cash balance of this account
+     * Returns the cash balance of this account.
      * 
      * @return cash balance of the account
      */
@@ -190,7 +190,7 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Returns the market value for an account
+     * Returns the market value for an account.
      *
      * @param start inclusive start date
      * @param end   inclusive end date
@@ -228,7 +228,7 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Calculates the accounts market value based on the latest security price
+     * Calculates the accounts market value based on the latest security price.
      *
      * @param index index to calculate the balance to
      * @return market value
@@ -293,7 +293,7 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Calculates the reconciled balance of the account
+     * Calculates the reconciled balance of the account.
      *
      * @return the reconciled balance of this account
      */
@@ -303,7 +303,7 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Get the default opening balance for reconciling the account
+     * Get the default opening balance for reconciling the account.
      *
      * @return Opening balance for reconciling the account
      */

@@ -39,9 +39,9 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
- * Retrieves historical stock dividend and split information from Yahoo
+ * Retrieves historical stock dividend and split information from Yahoo.
  * <p>
- * Craig Cavanaugh
+ * @author Craig Cavanaugh
  */
 public class YahooEventParser {
 
@@ -53,7 +53,7 @@ public class YahooEventParser {
         // Utility class
     }
 
-    public static Set<SecurityHistoryEvent> retrieveNew(final SecurityNode securityNode) {
+    static Set<SecurityHistoryEvent> retrieveNew(final SecurityNode securityNode) {
         return retrieveNew(securityNode, LocalDate.now());
     }
 

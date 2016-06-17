@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import jgnash.engine.SecurityNode;
 
 /**
- * Null security history parser
+ * Null security history parser.
  *
  * @author Craig Cavanaugh
  */

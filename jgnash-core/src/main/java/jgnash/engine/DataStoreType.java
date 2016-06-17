@@ -29,7 +29,7 @@ import jgnash.engine.xstream.XMLDataStore;
 import jgnash.util.ResourceUtils;
 
 /**
- * Storage type enumeration
+ * Storage type enumeration.
  *
  * @author Craig Cavanaugh
  */

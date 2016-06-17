@@ -38,19 +38,19 @@ import jgnash.time.DateUtils;
 public class MonthlyReminder extends Reminder {
 
     /**
-     * Defines if increment is by day of the week or day of the month
+     * Defines if increment is by day of the week or day of the month.
      */
     private int type = DATE;
 
-    public static final int DATE = 0;
+    static final int DATE = 0;
 
-    public static final int DAY = 1;
+    static final int DAY = 1;
 
     public MonthlyReminder() {
     }
 
     /**
-     * @see jgnash.engine.recurring.Reminder#getIterator()
+     * {@inheritDoc}
      */
     @Override
     public RecurringIterator getIterator() {
@@ -58,6 +58,8 @@ public class MonthlyReminder extends Reminder {
     }
 
     /**
+     * Returns the Monthly Reminder type.
+     *
      * @return Returns the type.
      */
     public int getType() {
@@ -65,8 +67,7 @@ public class MonthlyReminder extends Reminder {
     }
 
     /**
-     * @return Return reminder type
-     * @see jgnash.engine.recurring.Reminder#getReminderType()
+     * {@inheritDoc}
      */
     @Override
     public ReminderType getReminderType() {
@@ -74,6 +75,8 @@ public class MonthlyReminder extends Reminder {
     }
 
     /**
+     * Sets the Monthly Reminder type.
+     *
      * @param type The type to set.
      */
     public void setType(int type) {
@@ -85,7 +88,7 @@ public class MonthlyReminder extends Reminder {
     private class MonthlyIterator implements RecurringIterator {
         private LocalDate base;
 
-        public MonthlyIterator() {
+        MonthlyIterator() {
             if (getLastDate() != null) {
 
                 base = getLastDate();
@@ -116,7 +119,7 @@ public class MonthlyReminder extends Reminder {
         }
 
         /**
-         * @see jgnash.engine.recurring.RecurringIterator#next()
+         * {@inheritDoc}
          */
         @Override
         public LocalDate next() {

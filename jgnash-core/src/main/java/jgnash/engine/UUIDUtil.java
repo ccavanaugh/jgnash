@@ -20,7 +20,7 @@ package jgnash.engine;
 import java.util.UUID;
 
 /**
- * Used to create unique business keys for the database
+ * Used to create unique business keys for the database.
  *
  * @author Craig Cavanaugh
  */
@@ -32,7 +32,7 @@ class UUIDUtil {
      *
      * @return the unique id
      */
-    public static String getUID() {
+    static String getUID() {
         return UUID.randomUUID().toString();
     }
 

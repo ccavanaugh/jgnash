@@ -27,7 +27,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 
 /**
- * Fetches latest exchange rates in the background
+ * Fetches latest exchange rates in the background.
  *
  * @author Craig Cavanaugh
  */

@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 import jgnash.util.NotNull;
 
 /**
- * Buy shares and reduce the (cash) balance of an account
+ * Buy shares and reduce the (cash) balance of an account.
  * <p>
  * The investment account is always assigned to the debit account.
  * <p>
@@ -46,7 +46,7 @@ public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param account           Credit account
      * @param investmentAccount Debit / Investment  account

@@ -29,14 +29,14 @@ import java.util.logging.Logger;
 import org.junit.Test;
 
 /**
- * Test FileMagic
+ * Test FileMagic.
  * 
  * @author Craig Cavanaugh
  */
 public class FileMagicTest {
 
     /**
-     * Test for db4o file identification
+     * Test for db4o file identification.
      */
     @Test
     public void db4oMagicTest() {
@@ -82,7 +82,7 @@ public class FileMagicTest {
     }
 
     /**
-     * Test for Ofx version 1 file identification
+     * Test for Ofx version 1 file identification.
      */
     @Test
     public void OfxV1Test() {
@@ -105,7 +105,7 @@ public class FileMagicTest {
     }
 
     /**
-     * Test for Ofx version 1 file encoding
+     * Test for Ofx version 1 file encoding.
      */
     @Test
     public void OfxV1EncodingTest1() {
@@ -120,7 +120,7 @@ public class FileMagicTest {
     }
 
     /**
-     * Test for Ofx version 1 file encoding
+     * Test for Ofx version 1 file encoding.
      */
     @Test
     public void OfxV1EncodingTest2() {
@@ -135,7 +135,7 @@ public class FileMagicTest {
     }
 
     /**
-     * Test for Ofx version 2 file identification
+     * Test for Ofx version 2 file identification.
      */
     @Test
     public void OfxV2Test() {

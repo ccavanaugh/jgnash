@@ -28,7 +28,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
 /**
- * JPA specific code for data storage and creating an engine
+ * JPA specific code for HSQLDB data storage and creating an engine.
  *
  * @author Craig Cavanaugh
  */
@@ -39,7 +39,7 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
     public static final String LOCK_EXT = ".lck";
 
     /**
-     * Creates an empty database with the assumed default user name
+     * Creates an empty database with the assumed default user name.
      *
      * @param fileName file name to use
      * @return true if successful
@@ -77,12 +77,13 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
     }
 
     /**
-     * Deletes a Hsqldb database and associated files
+     * Deletes a Hsqldb database and associated files.
      *
      * @param fileName one of the database files
      */
     private static void deleteDatabase(final String fileName) {
-        final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp", ".lobs", ".lck"};
+        final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp",
+                ".lobs", ".lck"};
 
         final String base = FileUtils.stripFileExtension(fileName);
 

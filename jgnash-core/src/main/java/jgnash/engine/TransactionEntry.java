@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
 
     /**
-     * Cached hashcode
+     * Cached hashcode.
      */
     private volatile transient int hashCode = 0;
 
@@ -66,13 +66,13 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     private TransactionTag transactionTag = TransactionTag.BANK;
 
     /**
-     * Account with balance being decreased
+     * Account with balance being decreased.
      */
     @ManyToOne
     private Account debitAccount;
 
     /**
-     * Account with balance being increased
+     * Account with balance being increased.
      */
     @ManyToOne
     private Account creditAccount;
@@ -84,37 +84,37 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     private BigDecimal debitAmount = BigDecimal.ZERO;
 
     /**
-     * Reconciled state of the transaction
+     * Reconciled state of the transaction.
      */
     @Enumerated(EnumType.STRING)
     private ReconciledState creditReconciled = ReconciledState.NOT_RECONCILED;
 
     /**
-     * Reconciled state of the debit side of the transaction
+     * Reconciled state of the debit side of the transaction.
      */
     @Enumerated(EnumType.STRING)
     private ReconciledState debitReconciled = ReconciledState.NOT_RECONCILED;
 
     /**
-     * Memo for this entry
+     * Memo for this entry.
      */
     @Column(columnDefinition = "VARCHAR(1024)")
     private String memo = "";
 
     /**
-     * Field for user defined tags
+     * Field for user defined tags.
      */
     @Column(columnDefinition = "VARCHAR(2048)")
     private String customTags;
 
     /**
-     * Public constructor
+     * Public constructor.
      */
     public TransactionEntry() {
     }
 
     /**
-     * Simple constructor for a single entry transaction
+     * Simple constructor for a single entry transaction.
      *
      * @param account account for the transaction
      * @param amount  amount for the transaction
@@ -131,7 +131,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     /**
-     * Simple constructor for a double entry transaction
+     * Simple constructor for a double entry transaction.
      *
      * @param creditAccount credit account for the transaction
      * @param debitAccount  debit account for the transaction
@@ -149,14 +149,15 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     /**
-     * Simple constructor for a double entry transaction with exchange rate
+     * Simple constructor for a double entry transaction with exchange rate.
      *
      * @param creditAccount credit account for the transaction
      * @param debitAccount  debit account for the transaction
      * @param creditAmount  amount for the transaction
      * @param debitAmount   amount for the transaction
      */
-    TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount, final BigDecimal debitAmount) {
+    TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount,
+                     final BigDecimal debitAmount) {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
         Objects.requireNonNull(creditAmount);
@@ -188,7 +189,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     /**
-     * Shortcut method to set credit and debit amounts
+     * Shortcut method to set credit and debit amounts.
      *
      * @param amount credit amount of the transaction
      */
@@ -259,7 +260,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     /**
-     * Sets the memo for the entry
+     * Sets the memo for the entry.
      *
      * @param memo new memo
      */
@@ -313,7 +314,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     /**
-     * Check to determine is this is a single entry transaction
+     * Check to determine is this is a single entry transaction.
      *
      * @return {@code true} if this is a single entry TransactionEntry
      */
@@ -345,7 +346,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     /**
-     * Returns a delimited string of user defined customTags applied to the transaction
+     * Returns a delimited string of user defined customTags applied to the transaction.
      *
      * @return custom tags or an empty collection if not set
      */

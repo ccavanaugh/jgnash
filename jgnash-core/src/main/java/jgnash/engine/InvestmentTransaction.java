@@ -28,7 +28,7 @@ import jgnash.util.NotNull;
 /**
  * Class for investment transactions.
  * <p>
- * All TransactionEntry(s) must be of the same security
+ * All TransactionEntry(s) must be of the same security.
  *
  * @author Craig Cavanaugh
  */
@@ -105,7 +105,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Returns the price per share
+     * Returns the price per share.
      *
      * @return the price per share
      */
@@ -195,7 +195,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Sum transaction fees
+     * Sum transaction fees.
      *
      * @return transaction fees
      */
@@ -204,7 +204,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Sum transaction fees
+     * Sum transaction fees for a given {@code Account}.
      *
      * @param account account to calculate fees against
      * @return transaction fees
@@ -228,7 +228,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Get a list of transaction entries tagged as investment fees
+     * Get a list of transaction entries tagged as investment fees.
      *
      * @return list of investment fees
      * @see TransactionTag#INVESTMENT_FEE
@@ -238,7 +238,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Get a list of transaction entries tagged as gains and loss
+     * Get a list of transaction entries tagged as gains and loss.
      *
      * @return list of gains and loss entries
      * @see TransactionTag#GAIN_LOSS
@@ -248,8 +248,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Return the market value of the transaction based on the supplied share
-     * price
+     * Return the market value of the transaction based on the supplied share price.
      *
      * @param sharePrice share price
      * @return the value of this transaction
@@ -259,8 +258,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Return the market value of the transaction based on the latest share
-     * price
+     * Return the market value of the transaction based on the latest share price.
      *
      * @param date Date to base market value against
      * @return the value of this transaction
@@ -302,7 +300,7 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Calculates the total cash value of the transaction
+     * Calculates the total cash value of the transaction.
      * <p>
      * <b>Not intended for use to calculate account balances</b>
      *

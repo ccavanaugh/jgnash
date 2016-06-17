@@ -45,7 +45,7 @@ import jgnash.util.EncryptionManager;
 import static jgnash.engine.attachment.NettyTransferHandler.*;
 
 /**
- * Client for sending and receiving files
+ * Client for sending and receiving files.
  *
  * @author Craig Cavanaugh
  */
@@ -62,7 +62,7 @@ class AttachmentTransferClient {
 
     private EncryptionManager encryptionManager = null;
 
-    public AttachmentTransferClient(final Path tempPath) {
+    AttachmentTransferClient(final Path tempPath) {
         tempDirectory = tempPath;
     }
 
@@ -74,7 +74,7 @@ class AttachmentTransferClient {
      * @param password connection password
      * @return {@code true} if successful
      */
-    public boolean connectToServer(final String host, final int port, final char[] password) {
+    boolean connectToServer(final String host, final int port, final char[] password) {
         boolean result = false;
 
         // If a password has been specified, create an EncryptionManager
@@ -115,7 +115,7 @@ class AttachmentTransferClient {
         return message;
     }
 
-    public void requestFile(final Path file) {
+    void requestFile(final Path file) {
         try {
             channel.writeAndFlush(encrypt(FILE_REQUEST + file) + EOL_DELIMITER).sync();
         } catch (final InterruptedException e) {
@@ -123,7 +123,7 @@ class AttachmentTransferClient {
         }
     }
 
-    public void deleteFile(final String attachment) {
+    void deleteFile(final String attachment) {
         try {
             channel.writeAndFlush(encrypt(DELETE + Paths.get(attachment).getFileName()) + EOL_DELIMITER).sync();
         } catch (final InterruptedException e) {
@@ -131,7 +131,7 @@ class AttachmentTransferClient {
         }
     }
 
-    public Future<Void> sendFile(final File file) {
+    Future<Void> sendFile(final File file) {
         if (transferHandler != null) {
             return transferHandler.sendFile(channel, file.getAbsolutePath());
         }
@@ -140,9 +140,9 @@ class AttachmentTransferClient {
     }
 
     /**
-     * Disconnects from the lock server
+     * Disconnects from the lock server.
      */
-    public void disconnectFromServer() {
+    void disconnectFromServer() {
 
         try {
             channel.close().sync();

@@ -37,7 +37,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Class to identify file type
+ * Class to identify file types.
  *
  * @author Craig Cavanaugh
  */
@@ -63,7 +63,7 @@ public class FileMagic {
     }
 
     /**
-     * Returns the file type
+     * Returns the file type.
      *
      * @param file file to identify
      * @return identified file type
@@ -92,7 +92,7 @@ public class FileMagic {
     }
 
     /**
-     * Determine the correct character encoding of an OFX Version 1 file
+     * Determine the correct character encoding of an OFX Version 1 file.
      *
      * @param file File to look at
      * @return encoding of the file
@@ -214,7 +214,7 @@ public class FileMagic {
         return result;
     }
 
-    public static boolean isBinaryXStreamFile(final File file) {
+    static boolean isBinaryXStreamFile(final File file) {
         return isFile(file, BINARY_XSTREAM_HEADER);
     }
 
@@ -270,7 +270,7 @@ public class FileMagic {
         return result;
     }
 
-    public static boolean isValidVersion1File(final File file) {
+    static boolean isValidVersion1File(final File file) {
         return isValidVersionXFile(file, "1");
     }
 
@@ -294,7 +294,8 @@ public class FileMagic {
     }
 
     /**
-     * Determines the version of the jGnash file
+     * Determines the version of the jGnash file.
+     *
      * @param file {@code file to check}
      * @return file version as a String
      */

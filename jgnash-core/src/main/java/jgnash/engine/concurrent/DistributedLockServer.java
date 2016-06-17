@@ -50,7 +50,7 @@ import jgnash.util.EncodeDecode;
 import jgnash.util.EncryptionManager;
 
 /**
- * Distributed Lock Server
+ * Distributed Lock Server.
  *
  * @author Craig Cavanaugh
  */
@@ -302,7 +302,7 @@ public class DistributedLockServer {
         private final String id;
 
         /**
-         * The key is the uuid of the manager plus the remote thread id
+         * The key is the uuid of the manager plus the remote thread id.
          * <p>
          * uuid-integer
          */

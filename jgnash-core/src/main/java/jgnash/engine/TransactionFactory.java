@@ -29,14 +29,14 @@ import jgnash.text.CommodityFormat;
 import jgnash.util.ResourceUtils;
 
 /**
- * Transaction Factory
+ * Transaction Factory.
  *
  * @author Craig Cavanaugh
  */
 public class TransactionFactory {
 
     /**
-     * Create an AddX investment transaction
+     * Create an AddX investment transaction.
      *
      * @param investmentAccount Investment account
      * @param node              Security to add
@@ -72,7 +72,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a buy security transaction
+     * Create a buy security transaction.
      *
      * @param account           Account to buy against (can be the same investment account)
      * @param investmentAccount Investment account
@@ -128,7 +128,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a Dividend transaction
+     * Create a Dividend transaction.
      *
      * @param incomeAccount         Income source account for the cash dividend
      * @param investmentAccount     Investment account
@@ -169,7 +169,8 @@ public class TransactionFactory {
 
         final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
 
-        transaction.setPayee(ResourceUtils.getString("Word.Dividend") + " : " + node.getSymbol() + " @ " + format.format(dividend));
+        transaction.setPayee(ResourceUtils.getString("Word.Dividend") + " : " + node.getSymbol() + " @ "
+                + format.format(dividend));
 
         transaction.addTransactionEntry(entry);
 
@@ -180,7 +181,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a Return of Capital transaction
+     * Create a Return of Capital transaction.
      *
      * @param incomeAccount         Income source account for the cash dividend
      * @param investmentAccount     Investment account
@@ -236,7 +237,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Generate a double entry transaction with exchange rate
+     * Generate a double entry transaction with exchange rate.
      *
      * @param creditAccount Credit account
      * @param debitAccount  Debit account
@@ -275,7 +276,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Generate a double entry transaction
+     * Generate a double entry transaction.
      *
      * @param creditAccount Credit account
      * @param debitAccount  Debit account
@@ -312,7 +313,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a Split investment transaction
+     * Create a Split investment transaction.
      *
      * @param investmentAccount Investment account
      * @param node              Security that merged
@@ -348,7 +349,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a Reinvested Dividend transaction
+     * Create a Reinvested Dividend transaction.
      *
      * @param investmentAccount Investment account
      * @param node              Security for dividend
@@ -429,7 +430,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a RemoveX investment transaction
+     * Create a RemoveX investment transaction.
      *
      * @param investmentAccount Investment account
      * @param node              Security to remove
@@ -465,7 +466,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a sell security transaction
+     * Create a sell security transaction.
      *
      * @param account           Account receive sale profits or loss. May be the same as the investment account (Cash balance)
      * @param investmentAccount Investment account
@@ -533,7 +534,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a single entry transaction
+     * Create a single entry transaction.
      *
      * @param account Destination account
      * @param amount  Transaction amount
@@ -568,7 +569,7 @@ public class TransactionFactory {
     }
 
     /**
-     * Create a Split investment transaction
+     * Create a Split investment transaction.
      *
      * @param investmentAccount Investment account
      * @param node              Security that split

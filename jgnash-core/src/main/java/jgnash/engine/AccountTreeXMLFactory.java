@@ -58,7 +58,7 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
- * Import and export a tree of accounts
+ * Import and export a tree of accounts using XML files.
  *
  * @author Craig Cavanaugh
  */
@@ -142,7 +142,7 @@ public class AccountTreeXMLFactory {
     }
 
     /**
-     * Load an account tree given a reader
+     * Load an account tree given a reader.
      *
      * @param reader Reader to use
      * @return RootAccount if reader is valid
@@ -166,7 +166,7 @@ public class AccountTreeXMLFactory {
     }
 
     /**
-     * Load an account tree given a reader
+     * Load an account tree given a reader.
      *
      * @param file file name to use
      * @return RootAccount if file name is valid
@@ -184,7 +184,7 @@ public class AccountTreeXMLFactory {
     }
 
     /**
-     * Load an account tree given an InputStream
+     * Load an account tree given an InputStream.
      *
      * @param stream InputStream to use
      * @return RootAccount if stream is valid
@@ -245,8 +245,7 @@ public class AccountTreeXMLFactory {
         }
 
         /**
-         * Ensures that duplicate currencies are not created when the accounts
-         * are merged
+         * Ensures that duplicate currencies are not created when the accounts are merged.
          *
          * @param engine  Engine with existing currencies
          * @param account account to correct
@@ -280,7 +279,8 @@ public class AccountTreeXMLFactory {
                             }
                             if (!engine.addSecurity(sNode)) {
                                 final ResourceBundle rb = ResourceUtils.getBundle();
-                                Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
+                                Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE,
+                                        rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
                         } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE,
@@ -299,8 +299,7 @@ public class AccountTreeXMLFactory {
         }
 
         /**
-         * Ensures that duplicate currencies are not created when the accounts
-         * are merged
+         * Ensures that duplicate currencies are not created when the accounts are merged.
          *
          * @param engine  Engine with existing currencies
          * @param account account to correct
@@ -324,7 +323,8 @@ public class AccountTreeXMLFactory {
 
                             if (!engine.addSecurity(sNode)) {
                                 final ResourceBundle rb = ResourceUtils.getBundle();
-                                Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
+                                Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE,
+                                        rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
                         } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, e.toString(), e);

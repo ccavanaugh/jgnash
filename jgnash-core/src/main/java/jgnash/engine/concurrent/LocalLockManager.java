@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Lock manager for local engine instances
+ * Lock manager for local engine instances.
  *
  * @author Craig Cavanaugh
  */

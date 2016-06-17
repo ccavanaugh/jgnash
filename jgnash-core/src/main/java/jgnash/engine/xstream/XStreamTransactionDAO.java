@@ -24,18 +24,18 @@ import jgnash.engine.Transaction;
 import jgnash.engine.dao.TransactionDAO;
 
 /**
- * Transaction XML DAO
+ * Transaction XML DAO.
  *
  * @author Craig Cavanaugh
  */
-public class XStreamTransactionDAO extends AbstractXStreamDAO implements TransactionDAO {
+class XStreamTransactionDAO extends AbstractXStreamDAO implements TransactionDAO {
 
     XStreamTransactionDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
     /**
-     * @see TransactionDAO#getTransactions()    
+     * {@inheritDoc}
      */
     @Override
     public List<Transaction> getTransactions() {

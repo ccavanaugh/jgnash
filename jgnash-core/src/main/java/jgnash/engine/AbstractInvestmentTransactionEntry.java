@@ -26,7 +26,7 @@ import javax.persistence.ManyToOne;
 import jgnash.util.NotNull;
 
 /**
- * Investment Transaction Entry
+ * Investment Transaction Entry.
  *
  * @author Craig Cavanaugh
  */
@@ -34,25 +34,25 @@ import jgnash.util.NotNull;
 public abstract class AbstractInvestmentTransactionEntry extends TransactionEntry {
 
     /**
-     * Security for this entry
+     * Security for this entry.
      */
     @ManyToOne
     private SecurityNode securityNode;
 
     /**
-     * share price
+     * share price.
      */
     @Column(precision = 26, scale = 8)
     private BigDecimal price;
 
     /**
-     * number of shares
+     * number of shares.
      */
     @Column(precision = 26, scale = 8)
     private BigDecimal quantity;
 
     /**
-     * Creates a new instance of InvestmentTransactionEntry
+     * Creates a new instance of InvestmentTransactionEntry.
      */
     protected AbstractInvestmentTransactionEntry() {
         setTransactionTag(TransactionTag.INVESTMENT);
@@ -117,7 +117,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     public abstract BigDecimal getSignedQuantity();
 
     /**
-     * Returns the type of this transaction entry
+     * Returns the type of this transaction entry.
      *
      * @return the transaction type
      */

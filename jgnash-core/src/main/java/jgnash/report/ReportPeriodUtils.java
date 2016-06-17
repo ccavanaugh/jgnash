@@ -26,6 +26,8 @@ import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 /**
+ * Utility Methods for reporting.
+ *
  * @author Craig Cavanaugh
  */
 public class ReportPeriodUtils {

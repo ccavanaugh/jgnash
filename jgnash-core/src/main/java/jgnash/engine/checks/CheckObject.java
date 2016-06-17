@@ -22,7 +22,7 @@ import java.io.Serializable;
 import jgnash.util.ResourceUtils;
 
 /**
- * Check Object
+ * Check Object.
  *
  * @author Craig Cavanaugh
  */

@@ -26,6 +26,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
+ * JUnit test for weekly reminders.
+ *
  * @author Craig Cavanaugh
  */
 public class WeeklyReminderTest {

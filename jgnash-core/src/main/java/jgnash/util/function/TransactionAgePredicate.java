@@ -24,6 +24,8 @@ import java.util.function.Predicate;
 import jgnash.engine.Transaction;
 
 /**
+ * Predicate for age of a {@code Transaction}.
+ *
  * @author Craig Cavanaugh
  */
 public class TransactionAgePredicate implements Predicate<Transaction> {

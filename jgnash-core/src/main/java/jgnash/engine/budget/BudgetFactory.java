@@ -33,14 +33,14 @@ import jgnash.engine.EngineFactory;
 import jgnash.time.Period;
 
 /**
- * Budget Factory for automatic generation of Budgets
+ * Budget Factory for automatic generation of Budgets.
  *
  * @author Craig Cavanaugh
  */
 public class BudgetFactory {
 
     /**
-     * Utility class, no public constructor
+     * Utility class, no public constructor.
      */
     private BudgetFactory() {
     }
@@ -97,7 +97,7 @@ public class BudgetFactory {
     }
 
     /**
-     * Creates a {@code BudgetGoal} with an alternating pattern
+     * Creates a {@code BudgetGoal} with an alternating pattern.
      *
      * @param baseBudgetGoal {@code BudgetGoal} to clone
      * @param descriptors descriptors to use

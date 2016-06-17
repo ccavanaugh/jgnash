@@ -26,10 +26,9 @@ import java.util.regex.Pattern;
 import jgnash.util.SearchUtils;
 
 /**
- * Search Engine class
+ * Search Engine class.
  *
  * @author Craig Cavanaugh
- *
  */
 class SearchEngine {
 
@@ -37,7 +36,7 @@ class SearchEngine {
     }
 
     /**
-     * Searches transaction memos
+     * Searches transaction memos.
      *
      * @param pattern       Search pattern, may include wild cards
      * @param transactions  Collection of transactions to search through
@@ -61,7 +60,7 @@ class SearchEngine {
     }
 
     /**
-     * Searches transaction payees
+     * Searches transaction payees.
      *
      * @param pattern       Search pattern, may include wild cards
      * @param transactions  Collection of transactions to search through

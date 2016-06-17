@@ -31,7 +31,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 
 /**
- * Message object
+ * Message object.
  *
  * @author Craig Cavanaugh
  */
@@ -46,7 +46,7 @@ public class Message implements Serializable, Cloneable {
     transient private EnumMap<MessageProperty, StoredObject> properties = new EnumMap<>(MessageProperty.class);
 
     /**
-     * Used to flag message sent remotely
+     * Used to flag message sent remotely.
      */
     private transient boolean remote;
 
@@ -90,7 +90,7 @@ public class Message implements Serializable, Cloneable {
     }
 
     /**
-     * Returns a {@code StoredObject} given a property key
+     * Returns a {@code StoredObject} given a property key.
      *
      * @param key {@code MessageProperty} to search for
      * @param <T> instance of {@code StoredObject}
@@ -139,7 +139,7 @@ public class Message implements Serializable, Cloneable {
     }
 
     /**
-     * Read a Message from an ObjectInputStream
+     * Read a Message from an ObjectInputStream.
      *
      * @param s input stream
      * @throws java.io.IOException    io exception
@@ -181,7 +181,7 @@ public class Message implements Serializable, Cloneable {
     }
 
     /**
-     * Returns the event and channel for this message
+     * Returns the event and channel for this message.
      *
      * @return event and channel information
      * @see java.lang.Object#toString()

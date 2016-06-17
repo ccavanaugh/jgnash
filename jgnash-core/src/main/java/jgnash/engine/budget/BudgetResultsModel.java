@@ -50,7 +50,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.message.MessageProxy;
 
 /**
- * Model for budget results
+ * Model for budget results.
  *
  * @author Craig Cavanaugh
  */
@@ -79,7 +79,7 @@ public class BudgetResultsModel implements MessageListener {
     private final Map<BudgetPeriodDescriptor, Map<AccountGroup, BudgetPeriodResults>> descriptorAccountGroupResultsCache;
 
     /**
-     * Message proxy
+     * Message proxy.
      */
     private final MessageProxy proxy = new MessageProxy();
 
@@ -109,7 +109,7 @@ public class BudgetResultsModel implements MessageListener {
 
     /**
      * Returns the depth of the account relative to topmost account in the
-     * budget hierarchy
+     * budget hierarchy.
      *
      * @param account Account to get depth for
      * @return depth depth relative to accounts to be shown in the budget
@@ -168,7 +168,7 @@ public class BudgetResultsModel implements MessageListener {
     }
 
     /**
-     * Determines if the account will be added to the model
+     * Determines if the account will be added to the model.
      *
      * @param account Account to test
      * @return true if it should be added
@@ -332,7 +332,7 @@ public class BudgetResultsModel implements MessageListener {
     }
 
     /**
-     * Gets results by descriptor and account (per account results)
+     * Gets results by descriptor and account (per account results).
      *
      * @param descriptor BudgetPeriodDescriptor descriptor
      * @param account    Account
@@ -364,7 +364,7 @@ public class BudgetResultsModel implements MessageListener {
 
     /**
      * Gets summary result by descriptor and account group (column summary by
-     * AccountGroup)
+     * AccountGroup).
      *
      * @param descriptor BudgetPeriodDescriptor for summary
      * @param group      AccountGroup for summary
@@ -395,7 +395,7 @@ public class BudgetResultsModel implements MessageListener {
     }
 
     /**
-     * Gets summary result by account (row summary)
+     * Gets summary result by account (row summary).
      *
      * @param account Account for summary
      * @return summary results
@@ -418,7 +418,7 @@ public class BudgetResultsModel implements MessageListener {
     }
 
     /**
-     * Gets summary result by account group (corner summary)
+     * Gets summary result by account group (corner summary).
      *
      * @param accountGroup AccountGroup for summary
      * @return summary results

@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 
 /**
- * A one time only reminder
+ * A one time only reminder.
  *
  * @author Craig Cavanaugh
  */
@@ -33,7 +33,7 @@ public class OneTimeReminder extends Reminder {
     }
 
     /**
-     * @see jgnash.engine.recurring.Reminder#getIterator()
+     * {@inheritDoc}
      */
     @Override
     public RecurringIterator getIterator() {
@@ -41,7 +41,7 @@ public class OneTimeReminder extends Reminder {
     }
 
     /**
-     * @see jgnash.engine.recurring.Reminder#getReminderType()
+     * {@inheritDoc}
      */
     @Override
     public ReminderType getReminderType() {
@@ -53,7 +53,7 @@ public class OneTimeReminder extends Reminder {
         private boolean end = false; // one time only trigger
 
         /**
-         * @see jgnash.engine.recurring.RecurringIterator#next()
+         * {@inheritDoc}
          */
         @Override
         public LocalDate next() {

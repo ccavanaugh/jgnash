@@ -23,11 +23,11 @@ import jgnash.engine.recurring.Reminder;
 import java.util.List;
 
 /**
- * Recurring XML DAO
+ * Recurring XML DAO.
  *
  * @author Craig Cavanaugh
  */
-public class XStreamRecurringDAO extends AbstractXStreamDAO implements RecurringDAO {
+class XStreamRecurringDAO extends AbstractXStreamDAO implements RecurringDAO {
 
     XStreamRecurringDAO(final AbstractXStreamContainer container) {
         super(container);

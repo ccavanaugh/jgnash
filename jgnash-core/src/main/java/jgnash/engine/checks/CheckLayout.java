@@ -24,7 +24,7 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 
 /**
- * Check layout object
+ * Check layout object.
  *
  * @author Craig Cavanaugh
  */

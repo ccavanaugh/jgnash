@@ -27,8 +27,9 @@ import jgnash.util.ClassPathUtils;
 import org.junit.Test;
 
 /**
- * @author Craig Cavanaugh
+ * Unit test for classpath utilities.
  *
+ * @author Craig Cavanaugh
  */
 public class ClassPathTest {
 

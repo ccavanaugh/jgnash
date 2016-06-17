@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Investment Performance Summary Class
+ * Investment Performance Summary Class.
  * 
  * @author Craig Cavanaugh
  */
@@ -111,7 +111,7 @@ public class InvestmentPerformanceSummary {
     }
 
     /**
-     * Calculates the cost basis of a given security which is the average cost including fees
+     * Calculates the cost basis of a given security which is the average cost including fees.
      * 
      * @param data SecurityPerformanceData object to save the result in
      * @param transactions transactions to calculate cost basis against
@@ -163,7 +163,7 @@ public class InvestmentPerformanceSummary {
     }
 
     /**
-     * Calculates the realized gains of a given Security
+     * Calculates the realized gains of a given Security.
      * 
      * @param data SecurityPerformanceData object to save the result in
      * @param transactions transactions to calculate the realized gains
@@ -228,7 +228,7 @@ public class InvestmentPerformanceSummary {
     }
 
     /**
-     * Sums the number of given security shares
+     * Sums the number of given security shares.
      * 
      * @param data SecurityPerformanceData object to save the result in
      * @param transactions transactions to count shares against

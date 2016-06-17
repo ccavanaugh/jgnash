@@ -46,6 +46,8 @@ import static org.hamcrest.number.BigDecimalCloseTo.closeTo;
 import static org.junit.Assert.*;
 
 /**
+ * Abstract base class for testing the Engine API.
+ *
  * @author Craig Cavanaugh
  */
 public abstract class EngineTest {

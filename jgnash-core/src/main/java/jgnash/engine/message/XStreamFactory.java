@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
- * Utility class to generate an XStream instance
+ * Utility class to generate an XStream instance.
  *
  * @author Craig Cavanaugh
  */
@@ -29,7 +29,7 @@ class XStreamFactory {
     private XStreamFactory() {}
 
     static XStream getInstance() {
-        XStream xstream = new XStream(new StaxDriver());
+        final XStream xstream = new XStream(new StaxDriver());
         xstream.alias("Message", Message.class);
         xstream.alias("MessageProperty", MessageProperty.class);
 

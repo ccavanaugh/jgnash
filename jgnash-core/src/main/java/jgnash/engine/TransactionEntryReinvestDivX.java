@@ -25,7 +25,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * Reinvest dividend transaction
+ * Reinvest dividend transaction.
  * 
  * @author Craig Cavanaugh
  */
@@ -41,7 +41,8 @@ public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrea
     public TransactionEntryReinvestDivX() {
     }
 
-    public TransactionEntryReinvestDivX(final Account investmentAccount, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity) {
+    TransactionEntryReinvestDivX(final Account investmentAccount, final SecurityNode securityNode,
+                                 final BigDecimal price, final BigDecimal quantity) {
 
         if (investmentAccount.getAccountType().getAccountGroup() != AccountGroup.INVEST) {
             throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidAccountGroup"));

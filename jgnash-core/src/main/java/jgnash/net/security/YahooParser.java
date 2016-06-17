@@ -102,6 +102,8 @@ public abstract class YahooParser implements SecurityParser {
     }
 
     /**
+     * Gets the parser date.
+     *
      * @return the date
      */
     @Override
@@ -110,6 +112,8 @@ public abstract class YahooParser implements SecurityParser {
     }
 
     /**
+     * Set the parser date.
+     *
      * @param date the date to set
      */
     private void setDate(LocalDate date) {

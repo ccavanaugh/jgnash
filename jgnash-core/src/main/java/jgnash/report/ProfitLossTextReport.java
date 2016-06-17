@@ -44,7 +44,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.util.ResourceUtils;
 
 /**
- * Dumps a simple Profit/Loss report to a text file
+ * Dumps a simple Profit/Loss report to a text file.
  *
  * @author Michael Mueller
  * @author Craig Cavanaugh
@@ -79,7 +79,7 @@ public class ProfitLossTextReport {
     private final String fileName;
 
     /**
-     * Report constructor
+     * Report constructor.
      *
      * @param fileName         file name to save to
      * @param startDate        start date for the report
@@ -199,7 +199,7 @@ public class ProfitLossTextReport {
     }
 
     /**
-     * Format decimal amount
+     * Format decimal amount.
      *
      * @param balance the BigDecimal value to format
      * @return formatted string
@@ -221,7 +221,7 @@ public class ProfitLossTextReport {
     }
 
     /**
-     * Format account name
+     * Format account name.
      *
      * @param name the account name to format
      * @return the formatted account name

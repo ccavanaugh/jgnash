@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import javax.persistence.Entity;
 
 /**
- * Class for representing currency nodes
+ * Class for representing currency nodes.
  * 
  * @author Craig Cavanaugh
  */
@@ -36,6 +36,8 @@ public class CurrencyNode extends CommodityNode {
     }
 
     /**
+     * Returns the {@code ExchangeRateDAO}.
+     *
      * @return the exchangeRateStore
      */
     synchronized private ExchangeRateDAO getExchangeRateDAO() {
@@ -43,6 +45,8 @@ public class CurrencyNode extends CommodityNode {
     }
 
     /**
+     * Sets the {@code ExchangeRateDAO}.
+     *
      * @param exchangeRateStore the exchangeRateStore to set
      */
     synchronized void setExchangeRateDAO(final ExchangeRateDAO exchangeRateStore) {

@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import jgnash.util.NotNull;
 
 /**
- * Used to wrap a reminder and it's event date to aid sorting and display
+ * Used to wrap a reminder and it's event date to aid sorting and display.
  * 
  * @author Craig Cavanaugh
  */
@@ -31,12 +31,12 @@ public class PendingReminder implements Comparable<PendingReminder> {
     private Reminder reminder = null;
 
     /**
-     * The date for the register if a transaction is generated
+     * The date for the register if a transaction is generated.
      */
     private LocalDate commitDate = null;
 
     /**
-     * Approved state of the reminder
+     * Approved state of the reminder.
      */
     private boolean approved;
 
@@ -46,7 +46,7 @@ public class PendingReminder implements Comparable<PendingReminder> {
     }
 
     /**
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     * {@inheritDoc}
      */
     @Override
     public int compareTo(final @NotNull PendingReminder o) {
@@ -78,6 +78,8 @@ public class PendingReminder implements Comparable<PendingReminder> {
     }
 
     /**
+     * Returns true if approved for execution of the {@code Reminder}.
+     *
      * @return Returns the approved.
      */
     public synchronized final boolean isApproved() {
@@ -85,6 +87,8 @@ public class PendingReminder implements Comparable<PendingReminder> {
     }
 
     /**
+     * Controls approval state of the {@code Reminder}.
+     *
      * @param approved The approved to set.
      */
     public synchronized final void setApproved(final boolean approved) {
@@ -92,6 +96,8 @@ public class PendingReminder implements Comparable<PendingReminder> {
     }
 
     /**
+     * Gets the commit date for the associated {@code Reminder}.
+     *
      * @return Returns the commitDate.
      */
     public synchronized final LocalDate getCommitDate() {
@@ -99,6 +105,8 @@ public class PendingReminder implements Comparable<PendingReminder> {
     }
 
     /**
+     * Gets the {@code Reminder}.
+     *
      * @return Returns the reminder.
      */
     public synchronized final Reminder getReminder() {

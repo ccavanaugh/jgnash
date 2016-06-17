@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Commodity test
+ * Commodity test.
  *
  * @author Craig Cavanaugh
  */

@@ -57,7 +57,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     }
 
     /**
-     * public constructor
+     * Constructor.
      *
      * @param localDate date for this history node.  The date will be trimmed
      * @param rate exchange rate for the given date

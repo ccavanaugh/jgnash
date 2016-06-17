@@ -20,7 +20,7 @@ package jgnash.engine;
 import jgnash.util.ResourceUtils;
 
 /**
- * Tagging enumeration for special transaction types
+ * Tagging enumeration for special transaction types.
  * 
  * @author Craig Cavanaugh
  */

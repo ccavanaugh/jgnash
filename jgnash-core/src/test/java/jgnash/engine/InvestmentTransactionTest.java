@@ -14,7 +14,7 @@ import static jgnash.engine.TransactionFactory.*;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for investment account transactions
+ * Unit tests for investment account transactions.
  *
  * @author Peti
  * @author Craig Cavanaugh
@@ -541,7 +541,9 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
-    public static TransactionEntry createTransactionEntry(final Account debitAccount, final Account creditAccount, final BigDecimal amount, final String memo, final TransactionTag transactionTag) {
+    static TransactionEntry createTransactionEntry(final Account debitAccount, final Account creditAccount,
+                                                   final BigDecimal amount, final String memo,
+                                                   final TransactionTag transactionTag) {
         TransactionEntry entry = new TransactionEntry();
 
         entry.setMemo(memo);

@@ -36,19 +36,19 @@ import jgnash.util.NotNull;
 public class TrashObject extends StoredObject implements Comparable<TrashObject> {
 
     /**
-     * Date object was added
+     * Date object was added.
      */
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private final LocalDateTime date = LocalDateTime.now();
 
     /**
-     * The stored object
+     * The stored object.
      */
     @OneToOne(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private StoredObject object;
 
     /**
-     * Public no-argument constructor for reflection purposes
+     * Public no-argument constructor for reflection purposes.
      */
     @SuppressWarnings("unused")
     public TrashObject() {

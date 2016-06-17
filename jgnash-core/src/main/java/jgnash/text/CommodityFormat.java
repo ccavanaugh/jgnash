@@ -33,7 +33,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.util.NotNull;
 
 /**
- * Formats commodities for display
+ * Formats commodities for display.
  *
  * @author Craig Cavanaugh
  */
@@ -50,7 +50,7 @@ public class CommodityFormat {
     private static final boolean DEBUG = false;
 
     /**
-     * Pre-compiled currency sign pattern
+     * Pre-compiled currency sign pattern.
      */
     private static final Pattern CURRENCY_SIGN_PATTERN = Pattern.compile("¤");
 
@@ -102,7 +102,7 @@ public class CommodityFormat {
     }
 
     /**
-     * Returns a thread safe simplified {@code NumberFormat} for a given {@code CommodityNode}
+     * Returns a thread safe simplified {@code NumberFormat} for a given {@code CommodityNode}.
      *
      * @param node CommodityNode to format to
      * @return thread safe {@code NumberFormat}
@@ -146,7 +146,7 @@ public class CommodityFormat {
     }
 
     /**
-     * Returns a thread safe {@code NumberFormat} for a given {@code CommodityNode}
+     * Returns a thread safe {@code NumberFormat} for a given {@code CommodityNode}.
      *
      * @param node CommodityNode to format to
      * @return thread safe {@code NumberFormat}

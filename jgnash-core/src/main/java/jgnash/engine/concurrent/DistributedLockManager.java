@@ -55,7 +55,7 @@ import jgnash.util.EncryptionManager;
 import jgnash.util.NotNull;
 
 /**
- * Lock manager for distributed engine instances
+ * Lock manager for distributed engine instances.
  *
  * @author Craig Cavanaugh
  */
@@ -70,7 +70,7 @@ public class DistributedLockManager implements LockManager {
     private final Lock latchLock = new ReentrantLock();
 
     /**
-     * lock_action, lock_id, thread_id, lock_type
+     * lock_action, lock_id, thread_id, lock_type.
      */
     private static final String PATTERN = "{0},{1},{2},{3}";
 
@@ -91,7 +91,7 @@ public class DistributedLockManager implements LockManager {
     private EncryptionManager encryptionManager = null;
 
     /**
-     * Unique id to differentiate remote threads
+     * Unique id to differentiate remote threads.
      */
     private static final String uuid = UUID.randomUUID().toString();
 
@@ -112,7 +112,7 @@ public class DistributedLockManager implements LockManager {
     }
 
     /**
-     * Starts the connection with the lock server
+     * Starts the connection with the lock server.
      *
      * @param password connection password
      * @return {@code true} if successful
@@ -152,7 +152,7 @@ public class DistributedLockManager implements LockManager {
     }
 
     /**
-     * Disconnects from the lock server
+     * Disconnects from the lock server.
      */
     public void disconnectFromServer() {
 

@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * XML trash DAO
+ * XML trash DAO.
  *
  * @author Craig Cavanaugh
  */
-public class XStreamTrashDAO extends AbstractXStreamDAO implements TrashDAO {
+class XStreamTrashDAO extends AbstractXStreamDAO implements TrashDAO {
 
     private static final Logger logger = Logger.getLogger(XStreamTrashDAO.class.getName());
 

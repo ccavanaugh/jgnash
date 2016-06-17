@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import jgnash.util.ResourceUtils;
 
 /**
- * Account type enumeration
+ * Account type enumeration.
  * 
  * @author Craig Cavanaugh
  */
@@ -65,7 +65,7 @@ public enum AccountType {
     }
 
     /**
-     * Returns all AccountTypes that fit the supplied AccountGroup
+     * Returns all AccountTypes that fit the supplied AccountGroup.
      * 
      * @param group AccountGroup to match
      * @return array of AccountTypes that fit the supplied group

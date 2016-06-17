@@ -22,6 +22,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * Unit for the Config API.
+ *
  * @author Craig Cavanaugh
  */
 public class ConfigTest {

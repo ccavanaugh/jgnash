@@ -54,14 +54,17 @@ public class BudgetGoal implements Cloneable, Serializable {
     @Id @GeneratedValue(strategy= GenerationType.TABLE)
     public long id;
 
-    /** 366 days per year */
+    /**
+     * 366 days per year.
+     */
     public static final int PERIODS = 366;
 
     // cache the hash code
     private transient int hash;
 
     /**
-     * Do not used, this will be removed
+     * Do not used, this will be removed.
+     *
      * @deprecated
      */
     @SuppressWarnings("JpaAttributeTypeInspection")
@@ -104,7 +107,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     /**
-     * Returns the entry / display period for this budget goal
+     * Returns the entry / display period for this budget goal.
      * 
      * @return the BudgetPeriod
      */
@@ -113,7 +116,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     /**
-     * Sets the global entry / display period for this budget goal
+     * Sets the global entry / display period for this budget goal.
      * 
      * @param budgetPeriod The budget period
      */
@@ -199,14 +202,16 @@ public class BudgetGoal implements Cloneable, Serializable {
         return budgetPeriod == other.budgetPeriod && budgetGoals.equals(other.budgetGoals);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * {@inheritDoc}
+     */
     protected Object readResolve() {
         postLoad();
         return this;
     }
 
     /**
-     * Update the file
+     * Update the file.
      */
     @SuppressWarnings("deprecation")
     @PostLoad

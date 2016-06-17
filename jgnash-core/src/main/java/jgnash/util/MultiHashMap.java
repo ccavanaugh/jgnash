@@ -67,7 +67,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
     }
 
     /**
-     * By default the last value in, is the first value out
+     * By default the last value in, is the first value out.
      */
     @SuppressWarnings("rawtypes")
     @Override
@@ -136,7 +136,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
     }
 
     /**
-     * Removes a specific value
+     * Removes a specific value.
      *
      * @param key   The key of the value to remove
      * @param value The specific value to remove

@@ -32,6 +32,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * Abstract base for testing the core engine API's.
+ *
  * @author Craig Cavanaugh
  */
 public abstract class AbstractEngineTest {

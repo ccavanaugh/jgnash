@@ -26,6 +26,8 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
+ * Predicate for the reconciled state of a transaction.
+ *
  * @author Craig Cavanaugh
  */
 public class ReconciledPredicate implements Predicate<Transaction> {

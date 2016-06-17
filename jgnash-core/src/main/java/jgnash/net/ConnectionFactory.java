@@ -46,7 +46,7 @@ public class ConnectionFactory {
     }
 
     /**
-     * Sets the network timeout in seconds
+     * Sets the network timeout in seconds.
      * 
      * @param seconds time in seconds before a timeout occurs
      */
@@ -61,7 +61,7 @@ public class ConnectionFactory {
     }
 
     /**
-     * Return the network connection timeout in seconds
+     * Return the network connection timeout in seconds.
      * 
      * @return timeout in seconds
      */

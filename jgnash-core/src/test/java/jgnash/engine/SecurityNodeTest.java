@@ -28,6 +28,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * JUnit test for SecurityNode API.
+ *
  * @author Craig Cavanaugh
  */
 public class SecurityNodeTest extends AbstractEngineTest {

@@ -75,7 +75,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
- * Abstract XStream container
+ * Abstract XStream container.
  *
  * @author Craig Cavanaugh
  */

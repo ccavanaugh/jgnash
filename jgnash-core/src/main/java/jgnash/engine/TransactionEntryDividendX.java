@@ -46,7 +46,7 @@ public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntr
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param incomeAccount         Debit account
      * @param investmentAccount     Credit/Investment  account

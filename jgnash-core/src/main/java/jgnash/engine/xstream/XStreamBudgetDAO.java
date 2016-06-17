@@ -23,11 +23,11 @@ import jgnash.engine.dao.BudgetDAO;
 import java.util.List;
 
 /**
- * XML Budget DAO
+ * XML Budget DAO.
  *
  * @author Craig Cavanaugh
  */
-public class XStreamBudgetDAO extends AbstractXStreamDAO implements BudgetDAO {
+class XStreamBudgetDAO extends AbstractXStreamDAO implements BudgetDAO {
 
     XStreamBudgetDAO(final AbstractXStreamContainer container) {
         super(container);

@@ -20,10 +20,9 @@ package jgnash.util;
 import java.util.regex.Pattern;
 
 /**
- * Search Utility class
+ * Search Utility class.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class SearchUtils {
 
@@ -31,7 +30,7 @@ public class SearchUtils {
     }
 
     /**
-     * Creates a Pattern given a DOS style wildcard search pattern
+     * Creates a Pattern given a DOS style wildcard search pattern.
      * 
      * @param pattern search pattern
      * @param caseSensitive true if the Pattern should be case sensitive

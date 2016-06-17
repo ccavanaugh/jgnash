@@ -45,7 +45,7 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
- * Export monthly balance information as a CSV (comma-separated variable) file
+ * Export monthly balance information as a CSV (comma-separated variable) file.
  *
  * @author Craig Cavanaugh
  * @author Tom Edelson
@@ -69,7 +69,7 @@ public class BalanceByMonthCSVReport {
     private final CurrencyNode baseCommodity;
 
     /**
-     * Report constructor
+     * Report constructor.
      *
      * @param fileName         file name to save to
      * @param startDate        start date for the report

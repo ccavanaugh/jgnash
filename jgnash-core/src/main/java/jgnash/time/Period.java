@@ -20,7 +20,7 @@ package jgnash.time;
 import jgnash.util.ResourceUtils;
 
 /**
- * Period Enum
+ * Period Enum.
  * 
  * @author Craig Cavanaugh
  */

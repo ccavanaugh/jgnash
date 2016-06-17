@@ -20,7 +20,7 @@ package jgnash.engine.budget;
 import java.math.BigDecimal;
 
 /**
- * A simple wrapper for calculated budget results
+ * A simple wrapper for calculated budget results.
  *
  * @author Craig Cavanaugh
  *
@@ -58,7 +58,7 @@ public class BudgetPeriodResults {
     }
 
     /**
-     * @see Object#toString()
+     * {@inheritDoc}
      */
     @Override
     public String toString() {

@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import jgnash.engine.MathConstants;
 
 /**
- * Returns a "word" representation of a BigDecimal
+ * Returns a "word" representation of a BigDecimal.
  * 
  * @author Craig Cavanaugh
  */

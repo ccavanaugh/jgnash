@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import jgnash.util.NotNull;
 
 /**
- * Abstract class for representing a commodity
+ * Abstract class for representing a commodity.
  * 
  * @author Craig Cavanaugh
  */
@@ -104,7 +104,9 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
     }
 
     /**
-     * Determines if given node matches this node. The UUID is not used for comparison if equals fails
+     * Determines if given node matches this node.
+     * <p>
+     * The UUID is not used for comparison if equals fails.
      * 
      * @param other CurrencyNode to compare against
      * @return true if objects match
@@ -119,7 +121,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
     }
 
     /**
-     * Rounds a supplied double to the correct scale and returns a BigDecimal
+     * Rounds a supplied double to the correct scale and returns a BigDecimal.
      * 
      * @param value double to round
      * @return properly scaled BigDecimal

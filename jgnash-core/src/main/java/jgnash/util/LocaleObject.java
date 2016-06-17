@@ -24,7 +24,9 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Utility Class for display and ordering of {@code Locale} objects in a nice readable and sorted order
+ * Utility Class for display and ordering of {@code Locale} objects in a nice readable and sorted order.
+ *
+ * @author Craig Cavanaugh
  */
 public class LocaleObject implements Comparable<LocaleObject> {
 

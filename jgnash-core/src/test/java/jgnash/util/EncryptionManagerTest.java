@@ -23,7 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * EncryptionManager test
+ * EncryptionManager test.
  *
  * @author Craig Cavanaugh
  */

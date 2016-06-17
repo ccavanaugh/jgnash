@@ -37,7 +37,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Unit test for binary xstream
+ * Unit test for binary xstream.
  *
  * @author Craig Cavanaugh
  */

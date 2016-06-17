@@ -210,7 +210,7 @@ public class Comparators {
     }
 
     /**
-     * Comparator for sorting transactions by account
+     * Comparator for sorting transactions by account.
      */
     public static class TransactionByAccount implements Comparator<Transaction>, Serializable {
 
@@ -358,7 +358,7 @@ public class Comparators {
     }
 
     /**
-     * Explicit order Comparator
+     * Explicit order Comparator.
      *
      * @param <T> object type that is being sorted
      */

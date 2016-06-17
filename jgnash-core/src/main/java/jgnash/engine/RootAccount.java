@@ -20,7 +20,7 @@ package jgnash.engine;
 import javax.persistence.Entity;
 
 /**
- * The RootAccount class
+ * The RootAccount class.
  *
  * @author Craig Cavanaugh
  */

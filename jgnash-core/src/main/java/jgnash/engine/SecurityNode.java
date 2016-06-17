@@ -44,7 +44,7 @@ import javax.persistence.PostLoad;
 import jgnash.time.DateUtils;
 
 /**
- * Security Node
+ * Security Node.
  *
  * @author Craig Cavanaugh
  */
@@ -55,13 +55,13 @@ public class SecurityNode extends CommodityNode {
     private CurrencyNode reportedCurrency;
 
     /**
-     * The currency that security values are reported in
+     * The currency that security values are reported in.
      */
     @Enumerated(EnumType.STRING)
     private QuoteSource quoteSource = QuoteSource.NONE;
 
     /**
-     * ISIN or CUSIP.  Used for OFX and quote downloads
+     * ISIN or CUSIP,  Used for OFX and quote downloads.
      */
     private String isin;
 
@@ -89,7 +89,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Prefix is deferred to the reported currency
+     * Prefix is deferred to the reported currency.
      *
      * @return prefix of the reported currency
      */
@@ -103,7 +103,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Suffix is deferred to the reported currency
+     * Suffix is deferred to the reported currency.
      *
      * @return suffix of the reported currency
      */
@@ -117,7 +117,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Returns the quote download source
+     * Returns the quote download source.
      *
      * @return quote download source
      */
@@ -126,7 +126,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Sets the quote download source
+     * Sets the quote download source.
      *
      * @param source QuoteSource to use
      */
@@ -143,7 +143,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Set the CurrencyNode that security histories are reported in
+     * Set the CurrencyNode that security histories are reported in.
      *
      * @param node reported CurrencyNode
      */
@@ -152,7 +152,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Returns the CurrencyNode that security histories are reported in
+     * Returns the CurrencyNode that security histories are reported in.
      *
      * @return reported CurrencyNode
      */
@@ -326,7 +326,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Returns the history node events split into groups by historical splits or reverse splits
+     * Returns the history node events split into groups by historical splits or reverse splits.
      *
      * @return a List of Lists of SecurityHistoryNodes
      */
@@ -370,7 +370,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Get an unmodifiable copy of the SecurityHistoryEvents for this security
+     * Get an unmodifiable copy of the SecurityHistoryEvents for this security.
      *
      * @return returns a shallow copy of the SecurityHistoryEvents to protect against modification
      */
@@ -394,7 +394,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Returns the {@code SecurityHistoryNode} with the matching date
+     * Returns the {@code SecurityHistoryNode} with the matching date.
      *
      * @param date Date to match
      * @return {@code Optional} contain a matching node
@@ -422,7 +422,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Returns the {@code SecurityHistoryNode} with the closet matching date without exceeding the request date
+     * Returns the {@code SecurityHistoryNode} with the closet matching date without exceeding the request date.
      *
      * @param date {@code Date} to match
      * @return {@code Optional} containing a {@code SecurityHistoryNode} if a match is found
@@ -464,7 +464,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Returns the latest market price exchanged to the specified currency
+     * Returns the latest market price exchanged to the specified currency.
      *
      * @param date date to find closest matching rate without exceeding
      * @param node currency to exchange to
@@ -495,12 +495,11 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    /**
+    /**.
      * Required by XStream for proper initialization
      *
      * @return Properly initialized SecurityNode
      */
-    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;

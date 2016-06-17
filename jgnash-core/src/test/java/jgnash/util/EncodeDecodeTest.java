@@ -24,6 +24,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
+ * Unit test for Encoding and Decoding arrays of doubles.
+ *
  * @author Craig Cavanaugh
  */
 public class EncodeDecodeTest {

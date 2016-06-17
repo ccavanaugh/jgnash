@@ -41,7 +41,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.util.FileUtils;
 
 /**
- * Utility class to perform low level SQL related stuff with the database
+ * Utility class to perform low level SQL related stuff with the database.
  *
  * @author Craig Cavanaugh
  */
@@ -50,8 +50,8 @@ public class SqlUtils {
     private static final Logger logger = Logger.getLogger(SqlUtils.class.getName());
 
     /**
-     * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2 seconds,
-     * but unit tests or large databases can sometimes take longer
+     * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2
+     * seconds, but unit tests or large databases can sometimes take longer
      */
     private static final long MAX_LOCK_RELEASE_TIME = 30 * 1000;
 
@@ -178,7 +178,7 @@ public class SqlUtils {
     }
 
     /**
-     * Utility function to dump a list of table names and columns to the console
+     * Utility function to dump a list of table names and columns to the console.
      *
      * @param fileName name of file to open
      * @param password connection password
@@ -223,7 +223,7 @@ public class SqlUtils {
     }
 
     /**
-     * Forces a database closed and waits for the lock file to disappear indicating the database server is closed
+     * Forces a database closed and waits for the lock file to disappear indicating the database server is closed.
      *
      * @param dataStoreType     DataStoreType to connect to
      * @param fileName          path of the file to close

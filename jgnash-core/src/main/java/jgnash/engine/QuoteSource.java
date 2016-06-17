@@ -30,7 +30,7 @@ import jgnash.net.security.YahooUSParser;
 import jgnash.util.ResourceUtils;
 
 /**
- * Enumeration for quote download source
+ * Enumeration for quote download source.
  *
  * @author Craig Cavanaugh
  */
@@ -57,7 +57,7 @@ public enum QuoteSource {
     }
 
     /**
-     * Return a new SecurityParser instance appropriate for the QuoteSource
+     * Return a new SecurityParser instance appropriate for the QuoteSource.
      *
      * @return a new SecurityParser instance.  Null if not able to create it
      */

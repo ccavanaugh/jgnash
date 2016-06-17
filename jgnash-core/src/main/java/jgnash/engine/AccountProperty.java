@@ -18,13 +18,13 @@
 package jgnash.engine;
 
 /**
- * Specialized account properties
+ * Specialized account properties.
  *
  * @author Craig Cavanaugh
  */
 @SuppressWarnings("UnusedDeclaration")
 @Deprecated
-public enum AccountProperty {
+enum AccountProperty {
     AMORTIZEOBJECT,
     CREDITLIMIT,
     VATOBJECT

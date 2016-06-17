@@ -31,6 +31,8 @@ import org.junit.Test;
 import static org.junit.Assert.fail;
 
 /**
+ * H2 Relational database engine test.
+ *
  * @author Craig Cavanaugh
  */
 public class JpaH2EngineTest extends EngineTest {
