@@ -29,7 +29,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.util.NotNull;
 
 /**
- * Commodity DAO Interface
+ * Commodity DAO Interface.
  *
  * @author Craig Cavanaugh
  */
@@ -67,7 +67,7 @@ public interface CommodityDAO {
     boolean addSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent);
 
     /**
-     * Returns the active currencies
+     * Returns the active currencies.
      *
      * @return set of active currencies
      */

@@ -22,7 +22,7 @@ import java.util.List;
 import jgnash.engine.TrashObject;
 
 /**
- * Trash DAO Interface
+ * Trash DAO Interface.
  *
  * @author Craig Cavanaugh
  */

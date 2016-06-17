@@ -24,7 +24,7 @@ import jgnash.engine.RootAccount;
 import jgnash.engine.SecurityNode;
 
 /**
- * Account DAO Interface
+ * Account DAO Interface.
  *
  * @author Craig Cavanaugh
  */
@@ -39,7 +39,7 @@ public interface AccountDAO {
     boolean addRootAccount(RootAccount account);
 
     /**
-     * Adds a SecurityNode from a InvestmentAccount
+     * Adds a SecurityNode from a InvestmentAccount.
      *
      * @param account account to add security to
      * @param node    security to add
@@ -48,21 +48,21 @@ public interface AccountDAO {
     boolean addAccountSecurity(final Account account, final SecurityNode node);
 
     /**
-     * Returns a list of IncomeAccounts
+     * Returns a list of IncomeAccounts.
      *
      * @return list of income accounts
      */
     List<Account> getIncomeAccountList();
 
     /**
-     * Returns a list of ExpenseAccounts
+     * Returns a list of ExpenseAccounts.
      *
      * @return list of expense accounts
      */
     List<Account> getExpenseAccountList();
 
     /**
-     * Returns a list of InvestmentAccounts
+     * Returns a list of InvestmentAccounts.
      *
      * @return list of investment accounts
      */

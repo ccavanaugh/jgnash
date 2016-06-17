@@ -22,7 +22,7 @@ import java.util.List;
 import jgnash.engine.Transaction;
 
 /**
- * Transaction DAO Interface
+ * Transaction DAO Interface.
  *
  * @author Craig Cavanaugh
  */
@@ -30,7 +30,7 @@ public interface TransactionDAO {
 
     /**
      * Returns a list of transactions.
-     * 
+     *
      * @return List of transactions
      */
     List<Transaction> getTransactions();
@@ -42,11 +42,12 @@ public interface TransactionDAO {
     boolean removeTransaction(Transaction transaction);
 
     /**
-     * Transactions are generally immutable and should not be updated
+     * Transactions are generally immutable and should not be updated.
+     * <p>
      * This is intended for fix in place data errors
      *
      * @param transaction {@code Transaction} to update
-       */
+     */
     void updateTransaction(Transaction transaction);
 
     /**

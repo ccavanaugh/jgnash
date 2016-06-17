@@ -22,7 +22,7 @@ import java.util.List;
 import jgnash.engine.budget.Budget;
 
 /**
- * Budget DAO
+ * Budget DAO.
  *
  * @author Craig Cavanaugh
  */

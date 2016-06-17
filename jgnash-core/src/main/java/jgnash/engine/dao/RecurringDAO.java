@@ -22,7 +22,7 @@ import java.util.List;
 import jgnash.engine.recurring.Reminder;
 
 /**
- * Reminder DAO Interface
+ * Reminder DAO Interface.
  *
  * @author Craig Cavanaugh
  */

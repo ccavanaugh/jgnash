@@ -22,7 +22,7 @@ import java.util.List;
 import jgnash.engine.StoredObject;
 
 /**
- * Engine DAO Interface
+ * Engine DAO Interface.
  *
  * @author Craig Cavanaugh
  */
@@ -49,8 +49,9 @@ public interface EngineDAO {
     <T extends StoredObject> List<T> getStoredObjects(Class<T> tClass);
 
     /**
-     * Force the object to be reloaded from the underlying database
-     * Intended for client / server use
+     * Force the object to be reloaded from the underlying database.
+     * <p>
+     * Intended for client / server use.
      *
      * @param object object to refresh
      */

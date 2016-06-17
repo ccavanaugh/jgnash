@@ -23,7 +23,7 @@ import java.util.List;
 import jgnash.engine.StoredObject;
 
 /**
- * Basic DAO
+ * Basic DAO.
  *
  * @author Craig Cavanaugh
  */

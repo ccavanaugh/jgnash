@@ -20,7 +20,7 @@ package jgnash.engine.dao;
 import jgnash.engine.Config;
 
 /**
- * Configuration DAO Interface
+ * Configuration DAO Interface.
  *
  * @author Craig Cavanaugh
  */
