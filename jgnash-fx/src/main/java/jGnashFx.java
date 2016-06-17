@@ -240,8 +240,8 @@ public class jGnashFx extends Application {
                 acceptsAll(asList(PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG), "Enable portable preferences");
                 accepts(PORTABLE_FILE_OPTION, "Enable portable preferences and specify the file")
                         .withRequiredArg().ofType(File.class);
-                accepts(PORT_OPTION, "Network port server is running on (default: 5300)").withRequiredArg()
-                        .ofType(Integer.class);
+                accepts(PORT_OPTION, "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT
+                        + ")").withRequiredArg().ofType(Integer.class);
                 accepts(HOST_OPTION, "Server host name or address").requiredIf(PORT_OPTION).withRequiredArg();
                 accepts(SERVER_OPTION, "Runs as a server using the specified file")
                         .withRequiredArg().ofType(File.class);
