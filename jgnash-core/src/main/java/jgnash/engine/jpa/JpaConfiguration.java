@@ -25,7 +25,7 @@ import jgnash.engine.DataStoreType;
 import jgnash.util.FileUtils;
 
 /**
- * Utility class to help with JPA configuration
+ * Utility class to help with JPA configuration.
  *
  * @author Craig Cavanaugh
  */
@@ -64,7 +64,8 @@ class JpaConfiguration {
         return properties;
     }
 
-    static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password, final boolean readOnly) {
+    static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password,
+                                         final boolean readOnly) {
         Objects.requireNonNull(password);
 
         final StringBuilder urlBuilder = new StringBuilder();
@@ -115,7 +116,7 @@ class JpaConfiguration {
     }
 
     /**
-     * Generates and a JPA properties to connect to a remote database
+     * Generates and a JPA properties to connect to a remote database.
      *
      * @param database DataStoreType type
      * @param fileName remote file to connect to, ignored for HSQL_DATABASE connections
@@ -124,7 +125,8 @@ class JpaConfiguration {
      * @param password database password
      * @return   JPA properties
      */
-    static Properties getClientProperties(final DataStoreType database, final String fileName, final String host, final int port, final char[] password) {
+    static Properties getClientProperties(final DataStoreType database, final String fileName, final String host,
+                                          final int port, final char[] password) {
         Objects.requireNonNull(password);
 
         final StringBuilder urlBuilder = new StringBuilder();

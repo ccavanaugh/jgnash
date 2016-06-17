@@ -47,18 +47,18 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     static final ReentrantLock emLock = new ReentrantLock();
 
     /**
-     * Entity manager reference
+     * Entity manager reference.
      */
     final EntityManager em;
 
     /**
-     * Remote connection if {@code true}
+     * Remote connection if {@code true}.
      */
     boolean isRemote = false;
 
     /**
      * This ExecutorService is to be used whenever the entity manager is
-     * accessed because and EntityManager is not thread safe
+     * accessed because and EntityManager is not thread safe.
      */
     static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
@@ -90,7 +90,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     }
 
     /**
-     * Merge / Update the object in place
+     * Merge / Update the object in place.
      *
      * @param object {@link StoredObject} to merge
      * @param <T>    the type of the value being merged
@@ -120,7 +120,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     }
 
     /**
-     * Persists an object
+     * Persists an object.
      *
      * @param objects {@link Object} to persist
      */

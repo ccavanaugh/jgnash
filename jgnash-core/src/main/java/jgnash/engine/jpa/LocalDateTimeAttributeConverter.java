@@ -24,6 +24,8 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 /**
+ * JPA attribute converter for {@code LocalDateTime} objects.
+ *
  * @author Craig Cavanaugh
  */
 @Converter(autoApply = true)

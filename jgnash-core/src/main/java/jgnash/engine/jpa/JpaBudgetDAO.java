@@ -26,17 +26,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import jgnash.engine.budget.Budget;
 import jgnash.engine.dao.BudgetDAO;
 
 /**
- * Budget DAO
+ * Budget DAO.
  *
  * @author Craig Cavanaugh
  */
-public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
+class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     private final static Logger logger = Logger.getLogger(JpaBudgetDAO.class.getName());
 
@@ -55,7 +55,6 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Budget> getBudgets() {
         List<Budget> budgetList = Collections.emptyList();
 
@@ -63,7 +62,8 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
         try {
             Future<List<Budget>> future = executorService.submit(() -> {
-                Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
+                TypedQuery<Budget> q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false",
+                        Budget.class);
 
                 return new ArrayList<>(q.getResultList());
             });

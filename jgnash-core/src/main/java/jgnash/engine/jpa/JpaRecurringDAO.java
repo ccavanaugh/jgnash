@@ -36,7 +36,7 @@ import jgnash.engine.dao.RecurringDAO;
 import jgnash.engine.recurring.Reminder;
 
 /**
- * Reminder DAO
+ * JPA Reminder DAO.
  *
  * @author Craig Cavanaugh
  */
@@ -52,7 +52,6 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
      * @see jgnash.engine.ReminderDAOInterface#getReminderList()
      */
     @Override
-    @SuppressWarnings("unchecked")
     public List<Reminder> getReminderList() {
 
         List<Reminder> reminderList = Collections.emptyList();
@@ -60,14 +59,14 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
         emLock.lock();
 
         try {
-            Future<List<Reminder>> future = executorService.submit(() -> {
+            final Future<List<Reminder>> future = executorService.submit(() -> {
 
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
-                Root<Reminder> root = cq.from(Reminder.class);
+                final CriteriaBuilder cb = em.getCriteriaBuilder();
+                final CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
+                final Root<Reminder> root = cq.from(Reminder.class);
                 cq.select(root);
 
-                TypedQuery<Reminder> q = em.createQuery(cq);
+                final TypedQuery<Reminder> q = em.createQuery(cq);
 
                 return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
             });

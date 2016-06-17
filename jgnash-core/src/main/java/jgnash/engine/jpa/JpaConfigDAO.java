@@ -31,7 +31,7 @@ import javax.persistence.criteria.Root;
 import jgnash.engine.Config;
 import jgnash.engine.dao.ConfigDAO;
 
-/**
+/**.
  * Config DAO
  *
  * @author Craig Cavanaugh

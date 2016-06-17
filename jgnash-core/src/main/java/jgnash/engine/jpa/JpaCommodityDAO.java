@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -46,7 +45,7 @@ import jgnash.engine.dao.CommodityDAO;
 import jgnash.util.NotNull;
 
 /**
- * Commodity DAO
+ * Commodity DAO.
  *
  * @author Craig Cavanaugh
  */
@@ -284,11 +283,10 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         return getObjectByUuid(SecurityNode.class, uuid);
     }
 
-    /**
+    /*
      * @see jgnash.engine.dao.CommodityDAO#getSecurities()
      */
     @Override
-    @SuppressWarnings("unchecked")
     @NotNull public List<SecurityNode> getSecurities() {
         List<SecurityNode> securityNodeList = Collections.emptyList();
 
@@ -317,7 +315,6 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ExchangeRate> getExchangeRates() {
         List<ExchangeRate> exchangeRateList = Collections.emptyList();
 
@@ -383,7 +380,6 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      * @see jgnash.engine.CommodityDAOInterface#getActiveAccountCommodities()
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Set<CurrencyNode> getActiveCurrencies() {
         Set<CurrencyNode> currencyNodeSet = Collections.emptySet();
 
@@ -391,7 +387,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
         try {
             Future<Set<CurrencyNode>> future = executorService.submit(() -> {
-                final Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
+                final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
+                        Account.class);
 
                 final List<Account> accountList = q.getResultList();
                 final Set<CurrencyNode> currencies = new HashSet<>();

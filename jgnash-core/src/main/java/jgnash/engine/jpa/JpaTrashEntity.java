@@ -29,7 +29,7 @@ import javax.persistence.Id;
 
 /**
  * A Trash entity for generic cleanup of typed entities that need to be cleanup up
- * at a later date because of how JPA operates, but the object is not a StoredObject
+ * at a later date because of how JPA operates, but the object is not a StoredObject.
  *
  * @author Craig Cavanaugh
  */
@@ -44,7 +44,7 @@ public class JpaTrashEntity {
     private long entityId;
 
     /**
-     * Date object was added
+     * Date object was added.
      */
     private final LocalDateTime date = LocalDateTime.now();
 

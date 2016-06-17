@@ -26,13 +26,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import jgnash.engine.Transaction;
 import jgnash.engine.dao.TransactionDAO;
 
 /**
- * Transaction DAO
+ * Transaction DAO.
  *
  * @author Craig Cavanaugh
  */
@@ -45,19 +45,19 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
         logger.setLevel(Level.ALL);
     }
 
-    /**
+    /*
      * @see jgnash.engine.dao.TransactionDAO#getTransactions()
      */
     @Override
-    @SuppressWarnings("unchecked")
     public List<Transaction> getTransactions() {
         List<Transaction> transactionList = Collections.emptyList();
 
         emLock.lock();
 
         try {
-            Future<List<Transaction>> future = executorService.submit(() -> {
-                Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false");
+            final Future<List<Transaction>> future = executorService.submit(() -> {
+                final TypedQuery<Transaction> q = em
+                        .createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false", Transaction.class);
 
                 return new ArrayList<>(q.getResultList());
             });
@@ -82,7 +82,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(() -> {
+            final Future<Boolean> future = executorService.submit(() -> {
                 em.getTransaction().begin();
                 em.persist(transaction);
 
@@ -117,7 +117,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(() -> {
+            final Future<Boolean> future = executorService.submit(() -> {
                 em.getTransaction().begin();
 
                 // look at accounts this transaction impacted and update the accounts
@@ -144,7 +144,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(() -> {
+            final Future<Void> future = executorService.submit(() -> {
                 em.getTransaction().begin();
                 em.persist(transaction);
                 em.getTransaction().commit();
@@ -161,15 +161,16 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Transaction> getTransactionsWithAttachments() {
         List<Transaction> transactionList = Collections.emptyList();
 
         emLock.lock();
 
         try {
-            Future<List<Transaction>> future = executorService.submit(() -> {
-                Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false AND t.attachment is not null");
+            final Future<List<Transaction>> future = executorService.submit(() -> {
+                final TypedQuery<Transaction> q = em
+                        .createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false AND t.attachment is not null",
+                                Transaction.class);
 
                 return new ArrayList<>(q.getResultList());
             });

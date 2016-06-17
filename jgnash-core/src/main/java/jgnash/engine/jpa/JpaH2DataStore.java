@@ -28,7 +28,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
 /**
- * JPA specific code for data storage and creating an engine
+ * JPA specific code for data storage and creating an engine.
  *
  * @author Craig Cavanaugh
  */
@@ -39,7 +39,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
     public static final String LOCK_EXT = ".lock.db";
 
     /**
-     * Creates an empty database with the assumed default user name
+     * Creates an empty database with the assumed default user name.
      *
      * @param fileName file name to use
      * @return true if successful

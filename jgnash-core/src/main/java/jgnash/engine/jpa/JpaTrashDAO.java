@@ -42,7 +42,7 @@ import jgnash.engine.dao.TrashDAO;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
- * Trash DAO
+ * JPA Trash DAO.
  *
  * @author Craig Cavanaugh
  */
@@ -75,20 +75,19 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<TrashObject> getTrashObjects() {
         List<TrashObject> trashObjectList = Collections.emptyList();
 
         emLock.lock();
 
         try {
-            Future<List<TrashObject>> future = executorService.submit(() -> {
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
-                Root<TrashObject> root = cq.from(TrashObject.class);
+            final Future<List<TrashObject>> future = executorService.submit(() -> {
+                final CriteriaBuilder cb = em.getCriteriaBuilder();
+                final CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
+                final Root<TrashObject> root = cq.from(TrashObject.class);
                 cq.select(root);
 
-                TypedQuery<TrashObject> q = em.createQuery(cq);
+                final TypedQuery<TrashObject> q = em.createQuery(cq);
 
                 return new ArrayList<>(q.getResultList());
             });
@@ -108,7 +107,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(() -> {
+            final Future<Void> future = executorService.submit(() -> {
                 em.getTransaction().begin();
 
                 em.persist(trashObject.getObject());
@@ -131,10 +130,10 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(() -> {
+            final Future<Void> future = executorService.submit(() -> {
                 em.getTransaction().begin();
 
-                StoredObject object = trashObject.getObject();
+                final StoredObject object = trashObject.getObject();
 
                 em.remove(object);
                 em.remove(trashObject);
@@ -158,7 +157,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(() -> {
+            final Future<Void> future = executorService.submit(() -> {
                 em.getTransaction().begin();
                 em.persist(entity);
                 em.persist(new JpaTrashEntity(entity));
