@@ -17,19 +17,16 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyEvent;
 
 import jgnash.uifx.control.autocomplete.AutoCompleteModel;
 import jgnash.uifx.util.JavaFXUtils;
 
 /**
- * Text field for auto completion of values
+ * Text field for auto completion of values.
  *
  * @author Craig Cavanaugh
  */
@@ -38,16 +35,6 @@ public class AutoCompleteTextField<E> extends TextFieldEx {
     private final ObjectProperty<AutoCompleteModel<E>> autoCompleteModelObjectProperty = new SimpleObjectProperty<>();
 
     public AutoCompleteTextField() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("AutoCompleteTextField.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
         // If the enter key is pressed to accept the auto complete,
         // simulate a tab key press to focus the next field
         addEventFilter(KeyEvent.KEY_PRESSED, event -> {

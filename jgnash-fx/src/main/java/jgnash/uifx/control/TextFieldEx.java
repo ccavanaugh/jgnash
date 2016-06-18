@@ -17,20 +17,17 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 
 import jgnash.uifx.Options;
 
 /**
- * TextField with expanded capabilities
+ * TextField with expanded capabilities.
  *
  * @author Craig Cavanaugh
  */
@@ -39,7 +36,7 @@ public class TextFieldEx extends TextField {
     private static final BooleanProperty selectOnFocus;
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final ChangeListener<Boolean> focusChangeListener;
@@ -50,16 +47,6 @@ public class TextFieldEx extends TextField {
     }
 
     public TextFieldEx() {
-        final FXMLLoader loader = new FXMLLoader(TextFieldEx.class.getResource("TextFieldEx.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
         // If the select on focus property is enabled, select the text when focus is received
         focusChangeListener = (observable, oldValue, newValue) -> {
             if (selectOnFocus.get()) {

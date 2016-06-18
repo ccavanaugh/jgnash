@@ -17,10 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
-
-import javafx.fxml.FXMLLoader;
-
 /**
  * Text field for entering integer values.
  *
@@ -29,16 +25,6 @@ import javafx.fxml.FXMLLoader;
 public class IntegerTextField extends TextFieldEx {
 
     public IntegerTextField() {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("IntegerTextField.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
     }
 
     /**
@@ -94,12 +80,12 @@ public class IntegerTextField extends TextFieldEx {
     }
 
     @Override
-    public void deleteText(int start, int end) {
+    public void deleteText(final int start, final int end) {
         super.replaceText(start, end, "");
     }
 
     @Override
-    public void replaceText(int start, int end, String text) {
+    public void replaceText(final int start, final int end, final String text) {
         // If the replaced text would end up being invalid, then simply
         // ignore this call!
 

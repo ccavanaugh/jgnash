@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -36,7 +35,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -108,16 +106,6 @@ public class DecimalTextField extends TextFieldEx {
     }
 
     public DecimalTextField() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("DecimalTextField.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
         format = NumberFormat.getInstance();
 
         /* Disable grouping for output formatting on all locales.

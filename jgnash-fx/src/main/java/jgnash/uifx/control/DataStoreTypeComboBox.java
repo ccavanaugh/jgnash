@@ -17,34 +17,21 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 
 import jgnash.engine.DataStoreType;
 
 /**
- * ComboBox that allows selection of a CurrencyNode and manages it's own model
+ * ComboBox that allows selection of a CurrencyNode and manages it's own model.
  *
  * @author Craig Cavanaugh
  */
 public class DataStoreTypeComboBox extends ComboBox<DataStoreType> {
 
     public DataStoreTypeComboBox() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("DataStoreTypeComboBox.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
         setEditable(false);
 
         Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster

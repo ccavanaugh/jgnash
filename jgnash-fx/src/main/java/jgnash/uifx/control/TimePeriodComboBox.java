@@ -17,18 +17,17 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 
 import jgnash.util.ResourceUtils;
 
 /**
- * ComboBox that allows for selection of predetermined periods of times
+ * ComboBox that allows for selection of predetermined periods of times.
+ * <p>
  * The period returned is in milliseconds.  getPeriods and getDescriptions
  * can be overridden to change the available periods
  *
@@ -41,16 +40,6 @@ public class TimePeriodComboBox extends ComboBox<String> {
     private final ReadOnlyIntegerWrapper periodProperty = new ReadOnlyIntegerWrapper();
 
     public TimePeriodComboBox() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("TimePeriodComboBox.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
         loadModel();
 
         // Update the period property automatically

@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,7 +28,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 
 import jgnash.engine.Account;
@@ -43,7 +41,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 
 /**
- * ComboBox that allows selection of a SecurityNode and manages it's own model
+ * ComboBox that allows selection of a SecurityNode and manages it's own model.
  * <p>
  * The default operation is to load all known {@code SecurityNodes}.  If the
  * {@code accountProperty} is set, then only the account's {@code SecurityNodes}
@@ -54,28 +52,19 @@ import jgnash.engine.message.MessageProperty;
 public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageListener {
 
     /**
-     * Model for the ComboBox
+     * Model for the ComboBox.
      */
     final private ObservableList<SecurityNode> items;
 
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     public SecurityComboBox() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("SecurityComboBox.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
 
         // extract and reuse the default model
         items = getItems();
 
         // warp in a sorted list
         setItems(new SortedList<>(items, null));
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
 
         Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
 

@@ -17,34 +17,21 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 
 import jgnash.engine.SecurityHistoryEventType;
 
 /**
- * ComboBox that allows selection of a {@code SecurityHistoryEventType}
+ * ComboBox that allows selection of a {@code SecurityHistoryEventType}.
  *
  * @author Craig Cavanaugh
  */
 public class SecurityHistoryEventTypeComboBox extends ComboBox<SecurityHistoryEventType> {
 
     public SecurityHistoryEventTypeComboBox() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("SecurityHistoryEventTypeComboBox.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
         setEditable(false);
 
         Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster

@@ -17,9 +17,13 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+import javafx.scene.control.ComboBox;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
@@ -29,12 +33,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ComboBox;
 
 /**
  * ComboBox that allows selection of a CurrencyNode and manages it's own model.
@@ -47,16 +45,6 @@ public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageL
     private ObservableList<CurrencyNode> items;
 
     public CurrencyComboBox() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("CurrencyComboBox.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (final IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
         Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
     }
 

@@ -1,2 +1,0 @@
-<?import javafx.scene.control.ComboBox?>
-<fx:root type="javafx.scene.control.ComboBox" xmlns:fx="http://javafx.com/fxml"></fx:root>
