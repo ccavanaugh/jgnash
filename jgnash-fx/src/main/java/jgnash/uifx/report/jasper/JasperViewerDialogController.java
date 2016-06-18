@@ -123,7 +123,8 @@ public final class JasperViewerDialogController {
 
     private double zoom = 0;
 
-    public StackPane reportControllerPane;
+    @FXML
+    private StackPane reportControllerPane;
 
     @FXML
     private ToggleButton fitPageButton;
