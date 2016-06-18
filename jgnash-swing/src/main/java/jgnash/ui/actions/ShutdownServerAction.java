@@ -26,7 +26,7 @@ import jgnash.ui.components.RemoteConnectionDialog;
 import jgnash.ui.util.builder.Action;
 
 /**
- * UI Action to gracefully shutdown a remote server
+ * UI Action to gracefully shutdown a remote server.
  * 
  * @author Craig Cavanaugh
  */
@@ -50,10 +50,11 @@ public class ShutdownServerAction extends AbstractEnabledAction {
         });
     }
 
-    @Override
+
     /**
-     * Inverts the enabled operation
+     * Inverts the enabled operation.
      */
+    @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(!enabled);
     }
