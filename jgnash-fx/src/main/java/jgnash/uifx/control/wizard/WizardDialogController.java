@@ -47,7 +47,7 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;
 
 /**
- * Controller for the wizard dialog
+ * Controller for the wizard dialog.
  *
  * @author Craig Cavanaugh
  */
@@ -252,7 +252,8 @@ public class WizardDialogController<K extends Enum<?>> {
     }
 
     /**
-     * Determines the preferred width of the {@code ListCell} for a better visual width of the task list
+     * Determines the preferred width of the {@code ListCell} for a better visual width of the task list.
+     *
      * @param item controller we need the optimal width off
      * @return preferred width
      */

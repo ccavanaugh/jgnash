@@ -25,7 +25,7 @@ import jgnash.engine.recurring.WeeklyReminder;
 import jgnash.util.NotNull;
 
 /**
- * Weekly repeating reminder controller
+ * Weekly repeating reminder controller.
  *
  * @author Craig Cavanaugh
  */

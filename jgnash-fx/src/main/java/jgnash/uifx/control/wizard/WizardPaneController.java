@@ -22,7 +22,7 @@ import java.util.Map;
 import javafx.beans.property.ObjectProperty;
 
 /**
- * Interface for a task pane in a {@code WizardPane}
+ * Interface for a task pane in a {@code WizardPane}.
  *
  * @author Craig Cavanaugh
  */

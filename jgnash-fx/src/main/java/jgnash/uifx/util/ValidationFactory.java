@@ -36,7 +36,7 @@ import org.controlsfx.control.decoration.Decorator;
 import org.controlsfx.control.decoration.GraphicDecoration;
 
 /**
- * Validation factory methods
+ * Validation factory methods.
  *
  * @author Craig Cavanaugh
  */
@@ -63,7 +63,7 @@ public class ValidationFactory {
     }
 
     /**
-     * Show a validation error on a control
+     * Show a validation error on a control.
      *
      * @param control {@code Control} to attach to
      * @param error tooltip to display
@@ -73,7 +73,7 @@ public class ValidationFactory {
     }
 
     /**
-     * Show a validation warning on a control
+     * Show a validation warning on a control.
      *
      * @param control {@code Control} to attach to
      * @param error tooltip to display
@@ -83,7 +83,7 @@ public class ValidationFactory {
     }
 
     /**
-     * Show a validation error on a control
+     * Show a validation error on a control.
      *
      * @param control {@code Control} to attach to
      * @param decoration {@code Decoration} to be displayed with failed validation
@@ -112,7 +112,7 @@ public class ValidationFactory {
     }
 
     /**
-     * Show a validation error on a control
+     * Show a validation error on a control.
      *
      * @param control {@code Control} to attach to
      * @param error tooltip to display
@@ -130,7 +130,7 @@ public class ValidationFactory {
     }
 
     /**
-     * Show a validation error on the first control that is not a label
+     * Show a validation error on the first control that is not a label.
      *
      * @param pane pane
      * @param error tooltip error

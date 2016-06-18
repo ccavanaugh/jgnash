@@ -25,7 +25,7 @@ import jgnash.engine.recurring.YearlyReminder;
 import jgnash.util.NotNull;
 
 /**
- * Yearly repeating reminder controller
+ * Yearly repeating reminder controller.
  *
  * @author Craig Cavanaugh
  */
