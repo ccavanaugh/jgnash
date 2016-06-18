@@ -34,7 +34,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.time.DateUtils;
 
 /**
- * Investment Register Table with stats controller
+ * Investment Register Table with stats controller.
  *
  * @author Craig Cavanaugh
  */
@@ -130,7 +130,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         }
     }
 
-    private class TransactionSymbolWrapper extends SimpleStringProperty {
+    private static class TransactionSymbolWrapper extends SimpleStringProperty {
         TransactionSymbolWrapper(final Transaction t) {
             super();
 
@@ -142,7 +142,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         }
     }
 
-    private class MemoWrapper extends SimpleStringProperty {
+    private static class MemoWrapper extends SimpleStringProperty {
         MemoWrapper(final Transaction t) {
             super();
             setValue(t.getMemo());
