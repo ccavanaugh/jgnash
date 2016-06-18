@@ -474,17 +474,14 @@ public class MenuBarController implements MessageListener {
                 FXMLUtils.load(RemoteConnectionDialogController.class.getResource("RemoteConnectionDialog.fxml"),
                         resources.getString("Title.ConnectServer"));
 
-        pair.getStage().showAndWait();
-
         final RemoteConnectionDialogController controller = pair.getController();
 
+        pair.getStage().showAndWait();
+
         if (controller.getResult()) {
-            try {
-                MessageBus.getInstance().shutDownRemoteServer(controller.getHost(), controller.getPort(),
-                        controller.getPassword());
-            } catch (final Exception e) {
-                StaticUIMethods.displayError(e.getMessage());
-            }
+            // Message buss is on port + 1
+            Platform.runLater(() -> MessageBus.getInstance().shutDownRemoteServer(controller.getHost(),
+                    controller.getPort() + 1, controller.getPassword()));
         }
     }
 
