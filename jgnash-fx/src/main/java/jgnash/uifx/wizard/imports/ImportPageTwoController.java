@@ -44,7 +44,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.util.Callback;
 
 import jgnash.convert.imports.BayesImportClassifier;
 import jgnash.convert.imports.GenericImport;
@@ -62,7 +61,7 @@ import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 /**
- * Import Wizard, imported transaction wizard
+ * Import Wizard, imported transaction wizard.
  *
  * @author Craig Cavanaugh
  */
@@ -104,61 +103,29 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         final TableColumn<ImportTransaction, ImportState> stateColumn = new TableColumn<>();
         stateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getState()));
 
-        stateColumn.setCellFactory(new Callback<TableColumn<ImportTransaction, ImportState>,
-                TableCell<ImportTransaction, ImportState>>() {
-            @Override
-            public TableCell<ImportTransaction, ImportState> call(TableColumn<ImportTransaction,
-                    ImportState> param) {
-                TableCell<ImportTransaction, ImportState> cell =
-                        new TableCell<ImportTransaction, ImportState>() {
-                            @Override
-                            public void updateItem(final ImportState item, final boolean empty) {
-                                super.updateItem(item, empty);
+        stateColumn.setCellFactory(param -> {
+            TableCell<ImportTransaction, ImportState> cell =
+                    new ImportStateTableCell();
 
-                                if (empty) {
-                                    setText(null);
-                                    setGraphic(null);
-                                } else if (item != null) {
-                                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                                    setText(null);
+            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() > 1) {
+                    final ImportTransaction t = tableView.getItems().get(((TableCell<?,?>)event.getSource())
+                            .getTableRow().getIndex());
 
-                                    switch (item) {
-                                        case IGNORE:
-                                            setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.MINUS_CIRCLE)));
-                                            break;
-                                        case NEW:
-                                            setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
-                                            break;
-                                        case EQUAL:
-                                            setGraphic(new StackPane(new Label("=")));
-                                            break;
-                                        case NOT_EQUAL:
-                                            setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
-                                            break;
-                                    }
-                                }
-                            }
-                        };
-
-                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-                    if (event.getClickCount() > 1) {                       
-                        final ImportTransaction t = tableView.getItems().get(((TableCell<?,?>)event.getSource()).getTableRow().getIndex());
-
-                        if (t.getState() == ImportState.EQUAL) {
-                            t.setState(ImportState.NOT_EQUAL);
-                        } else if (t.getState() == ImportState.NOT_EQUAL) {
-                            t.setState(ImportState.EQUAL);
-                        } else if (t.getState() == ImportState.NEW) {
-                            t.setState(ImportState.IGNORE);
-                        } else if (t.getState() == ImportState.IGNORE) {
-                            t.setState(ImportState.NEW);
-                        }
-
-                        Platform.runLater(tableView::refresh);
+                    if (t.getState() == ImportState.EQUAL) {
+                        t.setState(ImportState.NOT_EQUAL);
+                    } else if (t.getState() == ImportState.NOT_EQUAL) {
+                        t.setState(ImportState.EQUAL);
+                    } else if (t.getState() == ImportState.NEW) {
+                        t.setState(ImportState.IGNORE);
+                    } else if (t.getState() == ImportState.IGNORE) {
+                        t.setState(ImportState.NEW);
                     }
-                });
-                return cell;
-            }
+
+                    Platform.runLater(tableView::refresh);
+                }
+            });
+            return cell;
         });
 
         tableView.getColumns().add(stateColumn);
@@ -265,5 +232,35 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     @FXML
     private void handleDeleteAction() {
         tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+    }
+
+    private static class ImportStateTableCell extends TableCell<ImportTransaction, ImportState> {
+        @Override
+        public void updateItem(final ImportState item, final boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty) {
+                setText(null);
+                setGraphic(null);
+            } else if (item != null) {
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                setText(null);
+
+                switch (item) {
+                    case IGNORE:
+                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.MINUS_CIRCLE)));
+                        break;
+                    case NEW:
+                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
+                        break;
+                    case EQUAL:
+                        setGraphic(new StackPane(new Label("=")));
+                        break;
+                    case NOT_EQUAL:
+                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
+                        break;
+                }
+            }
+        }
     }
 }

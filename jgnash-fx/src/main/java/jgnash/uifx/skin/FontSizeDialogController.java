@@ -28,6 +28,8 @@ import javafx.util.StringConverter;
 import jgnash.uifx.util.InjectFXML;
 
 /**
+ * Font size dialog controller.
+ *
  * @author Craig Cavanaugh
  */
 public class FontSizeDialogController {
@@ -43,17 +45,7 @@ public class FontSizeDialogController {
         // Match the current value so it's not reset
         slider.setValue(ThemeManager.getFontScaleProperty().get() * 100);
 
-        slider.labelFormatterProperty().setValue(new StringConverter<Double>() {
-            @Override
-            public String toString(Double object) {
-                return String.format("%.1f%%", object);
-            }
-
-            @Override
-            public Double fromString(String string) {
-                return null;
-            }
-        });
+        slider.labelFormatterProperty().setValue(new DoubleStringConverter());
 
         // Bind the font size to the slider
         ThemeManager.getFontScaleProperty().bind(slider.valueProperty().divide(100));
@@ -66,5 +58,17 @@ public class FontSizeDialogController {
                         ThemeManager.getFontScaleProperty().unbind()));
             }
         });
+    }
+
+    private static class DoubleStringConverter extends StringConverter<Double> {
+        @Override
+        public String toString(Double object) {
+            return String.format("%.1f%%", object);
+        }
+
+        @Override
+        public Double fromString(String string) {
+            return null;
+        }
     }
 }

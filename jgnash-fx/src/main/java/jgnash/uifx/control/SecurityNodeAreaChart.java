@@ -34,7 +34,7 @@ import jgnash.uifx.Options;
 import jgnash.time.DateUtils;
 
 /**
- * Extends and AreaChart to encapsulate generation of a SecurityNode chart
+ * Extends and AreaChart to encapsulate generation of a SecurityNode chart.
  *
  * @author Craig Cavanaugh
  */
@@ -55,20 +55,7 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
 
         xAxis = (NumberAxis) getXAxis();
 
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
-
-            final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
-
-            @Override
-            public String toString(final Number value) {
-                return formatter.format(LocalDate.ofEpochDay(value.longValue()));
-            }
-
-            @Override
-            public Number fromString(final String string) {
-                return LocalDate.parse(string, formatter).toEpochDay();
-            }
-        });
+        xAxis.setTickLabelFormatter(new NumberDateStringConverter());
 
         xAxis.tickLabelRotationProperty().setValue(-60);
         xAxis.setAutoRanging(false);
@@ -114,6 +101,21 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
                     }
                 }
             }).start();
+        }
+    }
+
+    private static class NumberDateStringConverter extends StringConverter<Number> {
+
+        final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
+
+        @Override
+        public String toString(final Number value) {
+            return formatter.format(LocalDate.ofEpochDay(value.longValue()));
+        }
+
+        @Override
+        public Number fromString(final String string) {
+            return LocalDate.parse(string, formatter).toEpochDay();
         }
     }
 }
