@@ -23,8 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
