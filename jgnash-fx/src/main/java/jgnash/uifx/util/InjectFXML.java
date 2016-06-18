@@ -24,7 +24,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * A simple Injection annotation
+ * A simple Injection annotation.
  */
 @Target({FIELD})
 @Retention(RUNTIME)

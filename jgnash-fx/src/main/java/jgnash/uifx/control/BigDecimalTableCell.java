@@ -42,7 +42,7 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
     private DecimalTextField decimalTextField = null;
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Boolean> focusChangeListener;
@@ -83,9 +83,6 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
         return numberFormatProperty;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void startEdit() {
         if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
@@ -101,9 +98,6 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
         decimalTextField.requestFocus();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancelEdit() {
         super.cancelEdit();

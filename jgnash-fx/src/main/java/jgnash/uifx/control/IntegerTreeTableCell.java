@@ -35,7 +35,7 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
     private IntegerTextField integerTextField = null;
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Boolean> focusChangeListener;
@@ -62,9 +62,6 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void startEdit() {
         if (!isEditable() || !getTreeTableView().isEditable() || !getTableColumn().isEditable()) {
@@ -80,9 +77,6 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
         decimalTextField.requestFocus();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancelEdit() {
         super.cancelEdit();

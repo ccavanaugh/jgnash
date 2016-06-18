@@ -37,13 +37,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 
 /**
- * ComboBox that allows selection of a CurrencyNode and manages it's own model
+ * ComboBox that allows selection of a CurrencyNode and manages it's own model.
  *
  * @author Craig Cavanaugh
  */
 public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageListener{
 
-    /** Model for the ComboBox */
+    /** Model for the ComboBox. */
     private ObservableList<CurrencyNode> items;
 
     public CurrencyComboBox() {

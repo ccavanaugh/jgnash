@@ -34,7 +34,7 @@ import javafx.stage.Window;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
- * Saves and restores Stage sizes
+ * Saves and restores Stage sizes.
  *
  * @author Craig Cavanaugh
  */
@@ -55,7 +55,7 @@ public class StageUtils {
     private static final int UPDATE_PERIOD = 2; // update period in seconds
 
     /**
-     * Restores and saves the size and location of a stage
+     * Restores and saves the size and location of a stage.
      *
      * @param stage    The stage to save and restore size and position
      * @param prefNode This should typically be the calling controller

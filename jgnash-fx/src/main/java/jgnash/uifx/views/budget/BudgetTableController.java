@@ -69,6 +69,8 @@ import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 
 /**
+ * Controller for budget tables.
+ *
  * @author Craig Cavanaugh
  */
 public class BudgetTableController implements MessageListener {
@@ -143,17 +145,17 @@ public class BudgetTableController implements MessageListener {
     private final DoubleProperty rowHeightProperty = new SimpleDoubleProperty();
 
     /**
-     * Bind the max and minimum values of every column to this width
+     * Bind the max and minimum values of every column to this width.
      */
     private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
-     * The is the minimum column width required to display the largest numeric value
+     * The is the minimum column width required to display the largest numeric value.
      */
     private final DoubleProperty minColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
-     * Bind the max and minimum values of every summary column to this width
+     * Bind the max and minimum values of every summary column to this width.
      */
     private final DoubleProperty summaryColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
@@ -163,19 +165,19 @@ public class BudgetTableController implements MessageListener {
     private int index;
 
     /**
-     * The number of visible columns
+     * The number of visible columns.
      */
     private final IntegerProperty visibleColumnCountProperty = new SimpleIntegerProperty(1);
 
     /**
-     * The number of periods in the model
+     * The number of periods in the model.
      */
     private final IntegerProperty periodCountProperty = new SimpleIntegerProperty(1);
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
-     * Listens to changes to the width of the period table and optimizes the column widths
+     * Listens to changes to the width of the period table and optimizes the column widths.
      */
     private ChangeListener<Number> tableWidthChangeListener;
 
@@ -401,7 +403,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     /**
-     * Maintains the list of expanded accounts
+     * Maintains the list of expanded accounts.
      */
     private synchronized void updateExpandedAccountList() {
         final int count = accountTreeView.getExpandedItemCount();
@@ -504,6 +506,8 @@ public class BudgetTableController implements MessageListener {
     }
 
     /**
+     * Constructs the tree table.
+     *
      * @see Stage#showAndWait() for need to push {@code handleEditAccountGoals(account)} to the platform thread
      */
     private void buildAccountTreeTable() {
@@ -658,7 +662,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     /**
-     * The period table must be rebuilt because of JavaFx issues
+     * The period table must be rebuilt because of JavaFx issues.
      */
     private void buildPeriodTable() {
         // remove the old listener so it does not leak
@@ -751,7 +755,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     /**
-     * The period summary table must be rebuilt because of JavaFx issues
+     * The period summary table must be rebuilt because of JavaFx issues.
      */
     private void buildPeriodSummaryTable() {
         // recreate the table and load the new one into the grid pane

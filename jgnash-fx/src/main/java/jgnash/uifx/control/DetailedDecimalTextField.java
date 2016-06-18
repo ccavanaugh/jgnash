@@ -14,7 +14,7 @@ import jgnash.util.NotNull;
 
 /**
  * A {@code DecimalTextField} that supports use of a popup or dialog by overriding
- * {@code show()} and {@code hide()}
+ * {@code show()} and {@code hide()}.
  *
  * @author Craig Cavanaugh
  */
@@ -49,8 +49,9 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
     }
 
     /**
-     * @see DecimalTextField#decimalProperty()
+     * Decimal property.
      *
+     * @see DecimalTextField#decimalProperty()
      * @return BigDecimal object property
      */
     public ObjectProperty<BigDecimal> decimalProperty() {
@@ -58,6 +59,8 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
     }
 
     /**
+     * Gets the decimal value.
+     *
      * @see DecimalTextField#getDecimal()
      *
      * @return BigDecimal value
@@ -68,6 +71,8 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
     }
 
     /**
+     * Sets the value for the field.
+     *
      * @see DecimalTextField#setDecimal(BigDecimal)
      * @param decimal BigDecimal value to display.  May not be null
      */

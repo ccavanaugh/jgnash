@@ -44,7 +44,7 @@ import jgnash.engine.MathConstants;
 import jgnash.util.NotNull;
 
 /**
- * Text field for entering decimal values
+ * Text field for entering decimal values.
  *
  * @author Craig Cavanaugh
  */
@@ -53,12 +53,12 @@ public class DecimalTextField extends TextFieldEx {
     private static final int DEFAULT_SCALE = 2;
 
     /**
-     * Allowable character in input
+     * Allowable character in input.
      */
     private static final String FLOAT;
 
     /**
-     * Allowable math operators in input
+     * Allowable math operators in input.
      */
     private static final String MATH_OPERATORS = "()+*/";
 
@@ -67,12 +67,12 @@ public class DecimalTextField extends TextFieldEx {
     private static char fraction = '.';
 
     /**
-     * Used for output of parsed input
+     * Used for output of parsed input.
      */
     private final NumberFormat format;
 
     /**
-     * Used to track state of fractional separator input on numeric pad
+     * Used to track state of fractional separator input on numeric pad.
      */
     private volatile boolean forceFraction = false;
 
@@ -82,22 +82,22 @@ public class DecimalTextField extends TextFieldEx {
     private final ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
 
     /**
-     * Controls the maximum number of displayed decimal places
+     * Controls the maximum number of displayed decimal places.
      */
     private final SimpleIntegerProperty scaleProperty = new SimpleIntegerProperty();
 
     /**
-     * Controls the minimum number of displayed decimal places
+     * Controls the minimum number of displayed decimal places.
      */
     private final SimpleIntegerProperty minScaleProperty = new SimpleIntegerProperty();
 
     /**
-     * Displays an empty field if {@code decimalProperty} is zero
+     * Displays an empty field if {@code decimalProperty} is zero.
      */
     private final BooleanProperty emptyWhenZeroProperty = new SimpleBooleanProperty(true);
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final ChangeListener<Boolean> focusChangeListener;
@@ -201,7 +201,7 @@ public class DecimalTextField extends TextFieldEx {
     }
 
     /**
-     * Sets the decimal value for the field
+     * Sets the decimal value for the field.
      *
      * @param decimal {@code BigDecimal}
      */
@@ -223,7 +223,7 @@ public class DecimalTextField extends TextFieldEx {
     }
 
     /**
-     * Determines if the field is empty
+     * Determines if the field is empty.
      *
      * @return {@code false} if empty
      */

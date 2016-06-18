@@ -52,9 +52,7 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
         fuzzyMatchEnabled.bind(Options.useFuzzyMatchForAutoCompleteProperty());
     }
 
-    /**
-     * @see AutoCompleteModel#doLookAhead(String)
-     */
+
     @Override
     public String doLookAhead(final String content) {
         if (autoCompleteEnabled.get()) {
@@ -64,7 +62,7 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
     }
 
     /**
-     * Perform a brute force linear search top down for the best match
+     * Perform a brute force linear search top down for the best match.
      *
      * @param content content to search for
      * @param ignoreCase true is search is case insensitive
@@ -94,7 +92,7 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
         return null;
     }
 
-    public void addString(final String content) {
+    void addString(final String content) {
         if (content != null && !content.isEmpty()) {
             synchronized (list) {
                 if (fuzzyMatchEnabled.get()) {
@@ -114,9 +112,9 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
     }
 
     /**
-     * Removes all of the strings that have been remembered
+     * Removes all of the strings that have been remembered.
      */
-    public void purge() {
+    void purge() {
         synchronized (list) {
             list.clear();
         }

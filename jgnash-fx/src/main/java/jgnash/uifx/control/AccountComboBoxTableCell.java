@@ -22,7 +22,7 @@ import javafx.scene.control.TableCell;
 import jgnash.engine.Account;
 
 /**
- * Editable TableCell for selecting an account
+ * Editable TableCell for selecting an account.
  *
  * @author Craig Cavanaugh
  */
@@ -43,9 +43,6 @@ public class AccountComboBoxTableCell<S> extends TableCell<S, Account> {
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void startEdit() {
         if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
@@ -59,9 +56,6 @@ public class AccountComboBoxTableCell<S> extends TableCell<S, Account> {
         setGraphic(comboBox);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancelEdit() {
         super.cancelEdit();
@@ -70,9 +64,6 @@ public class AccountComboBoxTableCell<S> extends TableCell<S, Account> {
         setGraphic(null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateItem(final Account item, final boolean empty) {
         super.updateItem(item, empty);

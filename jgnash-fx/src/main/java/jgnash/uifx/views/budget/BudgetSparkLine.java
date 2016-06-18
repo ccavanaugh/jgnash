@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import jgnash.uifx.skin.ThemeManager;
 
 /**
- * Spark line Canvas for budgets
+ * Spark line Canvas for budgets.
  *
  * @author Craig Cavanaugh
  */

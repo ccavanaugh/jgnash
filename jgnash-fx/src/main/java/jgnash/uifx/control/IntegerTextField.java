@@ -22,7 +22,7 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 
 /**
- * Text field for entering integer values
+ * Text field for entering integer values.
  *
  * @author Craig Cavanaugh
  */
@@ -42,7 +42,7 @@ public class IntegerTextField extends TextFieldEx {
     }
 
     /**
-     * Sets the {@code Integer} value of the field
+     * Sets the {@code Integer} value of the field.
      *
      * @param value {@code Integer} value, if null, the field will be cleared
      */
@@ -55,7 +55,7 @@ public class IntegerTextField extends TextFieldEx {
     }
 
     /**
-     * Sets the {@code Long} value of the field
+     * Sets the {@code Long} value of the field.
      *
      * @param value {@code Long} value, if null, the field will be cleared
      */
@@ -68,7 +68,7 @@ public class IntegerTextField extends TextFieldEx {
     }
 
     /**
-     * Returns the {@code Integer} value of the field
+     * Returns the {@code Integer} value of the field.
      *
      * @return the {@code Integer}, zero if the field is empty
      */
@@ -81,7 +81,7 @@ public class IntegerTextField extends TextFieldEx {
     }
 
     /**
-     * Returns the {@code Long} value of the field
+     * Returns the {@code Long} value of the field.
      *
      * @return the {@code Long}, zero if the field is empty
      */

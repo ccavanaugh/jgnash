@@ -93,7 +93,7 @@ import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 
 /**
- * Viewer controller for Jasper Reports
+ * Viewer controller for Jasper Reports.
  *
  * @author Craig Cavanaugh
  */
@@ -201,7 +201,7 @@ public final class JasperViewerDialogController {
     private final IntegerProperty pageCount = new SimpleIntegerProperty();
 
     /**
-     * Used to limit report update rates
+     * Used to limit report update rates.
      */
     private final ScheduledThreadPoolExecutor reportExecutor = new ScheduledThreadPoolExecutor(1,
             new DefaultDaemonThreadFactory(), new ThreadPoolExecutor.DiscardPolicy());

@@ -45,7 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * FXML Utility methods
+ * FXML Utility methods.
  *
  * @author Craig Cavanaugh
  */
@@ -56,7 +56,7 @@ public class FXMLUtils {
     }
 
     /**
-     * A pair consisting of the Stage and fxml controller
+     * A pair consisting of the Stage and fxml controller.
      *
      * @param <C> the fxml controller type
      */
@@ -107,7 +107,7 @@ public class FXMLUtils {
     }
 
     /**
-     * Reduces boilerplate code to load a fxml file
+     * Reduces boilerplate code to load a fxml file.
      *
      * @param consumer       {@code Consumer to pass to the parent node},
      * @param fileName       name of the fxml file.  It's assumed to be in the same package as the consumer
@@ -215,7 +215,7 @@ public class FXMLUtils {
     }
 
     /**
-     * Simple FXML loader that handles exceptions
+     * Simple FXML loader that handles exceptions.
      *
      * @param fxmlUrl        the fxml {@code URL}
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}

@@ -99,8 +99,8 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private final Map<Account, Double> percentileMap = new HashMap<>();
 
-    /**
-     * Report Data **
+    /*
+     * Report Data
      */
     private final ArrayList<LocalDate> startDates = new ArrayList<>();
 
@@ -137,7 +137,7 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
     }
 
     /**
-     * Returns the subtitle for the report
+     * Returns the subtitle for the report.
      *
      * @return subtitle
      */
@@ -365,7 +365,7 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
     }
 
     /**
-     * Creates a JasperPrint object
+     * Creates a JasperPrint object.
      *
      * @return JasperPrint
      */
@@ -392,33 +392,21 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
             return baseCurrency;
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getRowCount()
-         */
         @Override
         public int getRowCount() {
             return accountList.size();
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getColumnCount()
-         */
         @Override
         public int getColumnCount() {
             return columns.length;
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getColumnName(int)
-         */
         @Override
         public String getColumnName(int columnIndex) {
             return columns[columnIndex].columnName;
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getColumnClass(int)
-         */
         @Override
         public Class<?> getColumnClass(int columnIndex) {
             return columns[columnIndex].columnClass;
@@ -434,9 +422,6 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
             return columns[columnIndex].headerStyle;
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getValueAt(int, int)
-         */
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             return columns[columnIndex].getValue(rowIndex);
