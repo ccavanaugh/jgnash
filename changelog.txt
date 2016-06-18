@@ -26,6 +26,7 @@ Change the base highlight color for the FX interface
 
 Release 2.24.0
 ----------------------
+06/18/16 Shutdown of server was not working correctly. (Fx)
 06/09/16 Implemented the Payee Pie chart for the FX interface.  (Fx)
 06/02/16 The Income and Expense Pie chart now uses a DoughnutChart variation. (Fx)
 05/27/16 Update to the latest Netty and include only the needed dependencies. (Swing, Fx)
