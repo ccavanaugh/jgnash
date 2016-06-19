@@ -57,6 +57,10 @@ public class JpaNetworkServer {
 
     public static final String STOP_SERVER_MESSAGE = "<STOP_SERVER>";
 
+    private static final String LOCALHOST = "localhost";
+
+    private static final String UNIT_NAME = "jgnash";
+
     private volatile boolean stop = false;
 
     private static final int BACKUP_PERIOD = 2;
@@ -226,7 +230,7 @@ public class JpaNetworkServer {
             server = org.h2.tools.Server.createTcpServer(serverArgs.toArray(new String[serverArgs.size()]));
             server.start();
 
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
@@ -244,7 +248,7 @@ public class JpaNetworkServer {
         org.hsqldb.server.Server hsqlServer = new org.hsqldb.server.Server();
 
         hsqlServer.setPort(port);
-        hsqlServer.setDatabaseName(0, "jgnash");    // the alias
+        hsqlServer.setDatabaseName(0, UNIT_NAME);    // the alias
         hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName));
 
         hsqlServer.start();
@@ -268,7 +272,7 @@ public class JpaNetworkServer {
     private Engine createEngine(final DataStoreType dataStoreType, final String fileName, final int port,
                                 final char[] password) {
 
-        final Properties properties = JpaConfiguration.getClientProperties(dataStoreType, fileName, "localhost", port,
+        final Properties properties = JpaConfiguration.getClientProperties(dataStoreType, fileName, LOCALHOST, port,
                 password);
 
         logger.log(Level.INFO, "Local connection url is: {0}",
@@ -277,19 +281,18 @@ public class JpaNetworkServer {
         Engine engine = null;
 
         try {
-            factory = Persistence.createEntityManagerFactory("jgnash", properties);
+            factory = Persistence.createEntityManagerFactory(UNIT_NAME, properties);
 
             em = factory.createEntityManager();
 
-            distributedLockManager = new DistributedLockManager("localhost", port + 2);
+            distributedLockManager = new DistributedLockManager(LOCALHOST, port + 2);
             distributedLockManager.connectToServer(password);
 
-            distributedAttachmentManager = new DistributedAttachmentManager("localhost", port + 3);
+            distributedAttachmentManager = new DistributedAttachmentManager(LOCALHOST, port + 3);
             distributedAttachmentManager.connectToServer(password);
 
             logger.info("Created local JPA container and engine");
 
-            // this is blocking and not returning
             engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager,
                     SERVER_ENGINE); // treat as a remote engine
 
