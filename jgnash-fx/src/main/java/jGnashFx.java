@@ -184,6 +184,11 @@ public class jGnashFx extends Application {
         password = new char[]{};    // clear the password to protect against malicious code
     }
 
+    @Override
+    public void stop() throws Exception {
+        System.exit(0); // Platform.exit() is not always enough for a complete shutdown, force closure
+    }
+
     private static void startServer() {
         try {
             if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {

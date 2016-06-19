@@ -26,6 +26,7 @@ Change the base highlight color for the FX interface
 
 Release 2.24.0
 ----------------------
+06/19/16 The Fx UI would not completely shut down in some rare instances. (Fx)
 06/18/16 Shutdown of server was not working correctly. (Fx)
 06/09/16 Implemented the Payee Pie chart for the FX interface.  (Fx)
 06/02/16 The Income and Expense Pie chart now uses a DoughnutChart variation. (Fx)

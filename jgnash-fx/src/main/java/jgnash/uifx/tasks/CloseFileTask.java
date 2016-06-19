@@ -27,7 +27,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.util.ResourceUtils;
 
 /**
- * Task to close a file while updating progress
+ * Task to close a file while updating progress.
  *
  * @author Craig Cavanaugh
  */
@@ -49,10 +49,7 @@ public class CloseFileTask extends Task<String> {
 
     public static void initiateShutdown() {
         final CloseFileTask closeFileTask = new CloseFileTask();
-        closeFileTask.setOnSucceeded(event -> {
-            Platform.exit();
-            System.exit(0); // Platform.exit() is not always enough for a complete shutdown.
-        });
+        closeFileTask.setOnSucceeded(event -> Platform.exit());
 
         final Thread thread = new Thread(closeFileTask);
         thread.setDaemon(true);
