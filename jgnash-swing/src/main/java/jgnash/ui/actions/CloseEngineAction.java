@@ -27,10 +27,9 @@ import jgnash.ui.util.builder.Action;
 import jgnash.util.ResourceUtils;
 
 /**
- * UI Action to close the current database
+ * UI Action to close the current database.
  * 
  * @author Craig Cavanaugh
- *
  */
 @SuppressWarnings("WeakerAccess")
 @Action("close-command")
