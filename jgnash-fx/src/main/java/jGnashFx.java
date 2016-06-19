@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.net.Authenticator;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,7 +103,7 @@ public class jGnashFx extends Application {
 
         configureLogging();
 
-        final OptionParser parser = buildParser();
+       OptionParser parser = buildParser();
 
         try {
             final OptionSet options = parser.parse(args);
@@ -167,13 +168,17 @@ public class jGnashFx extends Application {
             //parser.printHelpOn(System.err);
 
             if (serverFile != null) {
+                parser = null;  // not needed anymore, trigger GC
                 startServer();
             } else {
+                parser = null;  // not needed anymore, trigger GC
                 setupNetworking();
                 launch(args);
             }
         } catch (final Exception exception) {
-            parser.printHelpOn(System.err);
+            if (parser != null) {
+                parser.printHelpOn(System.err);
+            }
         }
     }
 
@@ -181,7 +186,7 @@ public class jGnashFx extends Application {
     public void start(final Stage primaryStage) throws Exception {
         final MainView mainView = new MainView();
         mainView.start(primaryStage, dataFile, password, host, port);
-        password = new char[]{};    // clear the password to protect against malicious code
+        Arrays.fill(password, (char) 0);    // clear the password to protect against malicious code
     }
 
     @Override
@@ -194,13 +199,14 @@ public class jGnashFx extends Application {
             if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {
                 JpaNetworkServer networkServer = new JpaNetworkServer();
                 networkServer.startServer(serverFile.getAbsolutePath(), port, password);
+                Arrays.fill(password, (char) 0);    // clear the password to protect against malicious code
             } else {
                 System.err.println(ResourceUtils.getString("Message.FileIsLocked"));
             }
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             Logger.getLogger(jGnashFx.class.getName()).log(Level.SEVERE, e.toString(), e);
             System.err.println("File " + serverFile.getAbsolutePath() + " was not found");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Logger.getLogger(jGnashFx.class.getName()).log(Level.SEVERE, e.toString(), e);
         }
     }

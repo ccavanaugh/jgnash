@@ -49,8 +49,7 @@ import jgnash.util.ResourceUtils;
 /**
  * Factory class for obtaining an engine instance.
  * <p>
- * The filename of the database or remote server must be explicitly set before
- * an Engine instance will be returned
+ * The filename of the database or remote server must be explicitly set before an Engine instance will be returned
  *
  * @author Craig Cavanaugh
  */
@@ -321,7 +320,9 @@ public class EngineFactory {
         Engine engine = null;
 
         // start the client message bus
-        if (MessageBus.getInstance(engineName).setRemote(host, port + 1, password)) {
+        if (MessageBus.getInstance(engineName).setRemote(host, port + JpaNetworkServer.MESSAGE_SERVER_INCREMENT,
+                password)) {
+
             pref.putInt(LAST_PORT, port);
             pref.put(LAST_HOST, host);
             pref.putBoolean(LAST_REMOTE, true);
@@ -354,7 +355,7 @@ public class EngineFactory {
                 // remember if the user used a password for the last session
                 pref.putBoolean(USED_PASSWORD, password.length > 0);
 
-                Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_LOAD_SUCCESS, engine);
+                final Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_LOAD_SUCCESS, engine);
                 MessageBus.getInstance(engineName).fireEvent(message);
             }
         }
@@ -363,7 +364,7 @@ public class EngineFactory {
     }
 
     private static DataStoreType getDataStoreByType(final File file) {
-        FileType type = FileMagic.magic(file);
+        final FileType type = FileMagic.magic(file);
 
         if (type == FileType.jGnash2XML) {
             return DataStoreType.XML;
@@ -385,7 +386,7 @@ public class EngineFactory {
     public static float getFileVersion(final File file, final char[] password) {
         float version = 0;
 
-        FileType type = FileMagic.magic(file);
+        final FileType type = FileMagic.magic(file);
 
         if (type == FileType.jGnash2XML) {
             version = XMLDataStore.getFileVersion(file);
@@ -422,7 +423,7 @@ public class EngineFactory {
      * @return Last open or default database
      */
     public static synchronized String getLastDatabase() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.get(LAST_DATABASE, getDefaultDatabase());
     }
@@ -442,7 +443,7 @@ public class EngineFactory {
      * @return Last remote database host or default
      */
     public static synchronized String getLastHost() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.get(LAST_HOST, "localhost");
     }
@@ -454,7 +455,7 @@ public class EngineFactory {
      * @return Last remote database port or default
      */
     public static synchronized int getLastPort() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getInt(LAST_PORT, JpaNetworkServer.DEFAULT_PORT);
     }
@@ -465,25 +466,25 @@ public class EngineFactory {
      * @return true if the last connection was made to a remote host
      */
     public static synchronized boolean getLastRemote() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getBoolean(LAST_REMOTE, false);
     }
 
     public static synchronized boolean usedPassword() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getBoolean(USED_PASSWORD, false);
     }
 
     public static synchronized void setOpenLastOnStartup(final boolean last) {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         pref.putBoolean(OPEN_LAST, last);
     }
 
     public static synchronized boolean openLastOnStartup() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getBoolean(OPEN_LAST, true);
     }

@@ -59,7 +59,11 @@ public class JpaNetworkServer {
 
     private static final String LOCALHOST = "localhost";
 
-    private static final String UNIT_NAME = "jgnash";
+    public static final int MESSAGE_SERVER_INCREMENT = 1;
+
+    static final int LOCK_SERVER_INCREMENT = 2;
+
+    static final int TRANSFER_SERVER_INCREMENT = 3;
 
     private volatile boolean stop = false;
 
@@ -121,10 +125,11 @@ public class JpaNetworkServer {
 
         boolean result = false;
 
-        final DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
+        final DistributedLockServer distributedLockServer = new DistributedLockServer(port + LOCK_SERVER_INCREMENT);
         final boolean lockServerStarted = distributedLockServer.startServer(password);
 
-        final AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3,
+        final AttachmentTransferServer attachmentTransferServer
+                = new AttachmentTransferServer(port + TRANSFER_SERVER_INCREMENT,
                 AttachmentUtils.getAttachmentDirectory(Paths.get(fileName)));
         final boolean attachmentServerStarted = attachmentTransferServer.startServer(password);
 
@@ -134,7 +139,7 @@ public class JpaNetworkServer {
             if (engine != null) {
 
                 // Start the message bus and pass the file name so it can be reported to the client
-                final MessageBusServer messageBusServer = new MessageBusServer(port + 1);
+                final MessageBusServer messageBusServer = new MessageBusServer(port + MESSAGE_SERVER_INCREMENT);
                 result = messageBusServer.startServer(dataStoreType, fileName, password);
 
                 if (result) { // don't continue if the server is not started successfully
@@ -189,7 +194,6 @@ public class JpaNetworkServer {
                     distributedAttachmentManager.disconnectFromServer();
 
                     distributedLockServer.stopServer();
-
                     attachmentTransferServer.stopServer();
 
                     em.close();
@@ -248,7 +252,7 @@ public class JpaNetworkServer {
         org.hsqldb.server.Server hsqlServer = new org.hsqldb.server.Server();
 
         hsqlServer.setPort(port);
-        hsqlServer.setDatabaseName(0, UNIT_NAME);    // the alias
+        hsqlServer.setDatabaseName(0, JpaConfiguration.UNIT_NAME);    // the alias
         hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName));
 
         hsqlServer.start();
@@ -281,21 +285,24 @@ public class JpaNetworkServer {
         Engine engine = null;
 
         try {
-            factory = Persistence.createEntityManagerFactory(UNIT_NAME, properties);
+            // An exception will be thrown if the password is not correct, or the database did not have a password
+            if (SqlUtils.isConnectionValid(properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL))) {
 
-            em = factory.createEntityManager();
+                factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
 
-            distributedLockManager = new DistributedLockManager(LOCALHOST, port + 2);
-            distributedLockManager.connectToServer(password);
+                em = factory.createEntityManager();
 
-            distributedAttachmentManager = new DistributedAttachmentManager(LOCALHOST, port + 3);
-            distributedAttachmentManager.connectToServer(password);
+                distributedLockManager = new DistributedLockManager(LOCALHOST, port + LOCK_SERVER_INCREMENT);
+                distributedLockManager.connectToServer(password);
 
-            logger.info("Created local JPA container and engine");
+                distributedAttachmentManager = new DistributedAttachmentManager(LOCALHOST, port + TRANSFER_SERVER_INCREMENT);
+                distributedAttachmentManager.connectToServer(password);
 
-            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager,
-                    SERVER_ENGINE); // treat as a remote engine
+                logger.info("Created local JPA container and engine");
 
+                engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager,
+                        SERVER_ENGINE); // treat as a remote engine
+            }
         } catch (final Exception e) {
             logger.log(Level.SEVERE, e.toString(), e);
         }

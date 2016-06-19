@@ -26,6 +26,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -115,7 +116,7 @@ public class SqlUtils {
                         }
                     }
                     // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                    try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
                         statement.execute();
                     }
                 } catch (final SQLException e) {
@@ -141,10 +142,10 @@ public class SqlUtils {
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
-                    final DatabaseMetaData metaData = connection.getMetaData();                   
-                    
+                    final DatabaseMetaData metaData = connection.getMetaData();
+
                     try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
-                    	while (resultSet.next()) {
+                        while (resultSet.next()) {
                             // table name is TRANSACT_TRANSACTIONENTRY
                             // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
                             if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID") && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
@@ -154,11 +155,11 @@ public class SqlUtils {
                                 }
                             }
                         }
-                    	
+
                     }
-                
+
                     // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                    try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
                         statement.execute();
                     }
                 } catch (final SQLException e) {
@@ -196,16 +197,16 @@ public class SqlUtils {
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
                     final DatabaseMetaData metaData = connection.getMetaData();
-                    
-                     try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
-                    	 while (resultSet.next()) {
-                             tableNames.add(resultSet.getString(TABLE_NAME).toUpperCase(Locale.ROOT) + ","
-                                     + resultSet.getString(COLUMN_NAME).toUpperCase(Locale.ROOT));
-                         }                    	 
-                     }
-                                                                            
+
+                    try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
+                        while (resultSet.next()) {
+                            tableNames.add(resultSet.getString(TABLE_NAME).toUpperCase(Locale.ROOT) + ","
+                                    + resultSet.getString(COLUMN_NAME).toUpperCase(Locale.ROOT));
+                        }
+                    }
+
                     // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                    try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
                         statement.execute();
                     }
                 } catch (final SQLException e) {
@@ -219,7 +220,33 @@ public class SqlUtils {
         }
 
         return tableNames;
+    }
 
+    /**
+     * Returns true of the url is valid.
+     *
+     * @param url url to validate
+     * @return {@code true} if valid
+     * @throws Exception exception is thrown if the url is not valid.  Exception can be checked for root cause.
+     */
+    static boolean isConnectionValid(final String url) throws Exception {
+
+        try {
+            DriverManager.getConnection(url);
+        } catch (final Exception e) {
+            if (e instanceof SQLSyntaxErrorException) {
+                if (e.toString().contains("Unknown database")) {
+                    throw new Exception("Unknown database", e);
+                }
+            } else if (e instanceof SQLException) {
+                throw new Exception("Password is not valid", e);
+            } else {
+                throw new Exception(e.toString(), e);
+            }
+            throw new Exception(e.toString(), e);
+        }
+
+        return true;
     }
 
     /**
@@ -243,7 +270,7 @@ public class SqlUtils {
             // Send shutdown to close the database
             try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password))) {
                 // must issue a shutdown for correct file closure
-                try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
                     statement.execute();
                 }
             } catch (final SQLException e) {
@@ -258,7 +285,7 @@ public class SqlUtils {
 
             while (Files.exists(Paths.get(lockFile))) {
 
-                if (Duration.between(start, LocalDateTime.now()).toMillis() > MAX_LOCK_RELEASE_TIME){
+                if (Duration.between(start, LocalDateTime.now()).toMillis() > MAX_LOCK_RELEASE_TIME) {
                     logger.warning("Exceeded the maximum wait time for the file lock release");
                     break;
                 }

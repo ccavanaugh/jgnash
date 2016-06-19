@@ -51,6 +51,8 @@ import jgnash.util.FileUtils;
  */
 public abstract class AbstractJpaDataStore implements DataStore {
 
+    private static final String SHUTDOWN = "SHUTDOWN";
+
     private EntityManager em;
 
     private EntityManagerFactory factory;
@@ -96,36 +98,49 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
     @Override
     public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(getType(), dataBasePath, host, port, password);
+        final Properties properties
+                = JpaConfiguration.getClientProperties(getType(), dataBasePath, host, port, password);
 
         Engine engine = null;
 
-        factory = Persistence.createEntityManagerFactory("jgnash", properties);
+        try {
+            if (SqlUtils.isConnectionValid(properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL))) {
 
-        em = factory.createEntityManager();
+                factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
 
-        if (em != null) {
-            distributedLockManager = new DistributedLockManager(host, port + 2);
-            boolean lockManagerResult = distributedLockManager.connectToServer(password);
+                em = factory.createEntityManager();
 
-            distributedAttachmentManager = new DistributedAttachmentManager(host, port + 3);
-            boolean attachmentManagerResult = distributedAttachmentManager.connectToServer(password);
+                if (em != null) {
+                    distributedLockManager = new DistributedLockManager(host, port
+                            + JpaNetworkServer.LOCK_SERVER_INCREMENT);
 
-            if (attachmentManagerResult && lockManagerResult) {
-                engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, EngineFactory.DEFAULT);
+                    boolean lockManagerResult = distributedLockManager.connectToServer(password);
 
-                logger.info("Created local JPA container and engine");
-                fileName = null;
-                remote = true;
-            } else {
-                distributedLockManager.disconnectFromServer();
-                distributedAttachmentManager.disconnectFromServer();
+                    distributedAttachmentManager = new DistributedAttachmentManager(host, port
+                            + JpaNetworkServer.TRANSFER_SERVER_INCREMENT);
 
-                em.close();
-                factory.close();
-                em = null;
-                factory = null;
+                    boolean attachmentManagerResult = distributedAttachmentManager.connectToServer(password);
+
+                    if (attachmentManagerResult && lockManagerResult) {
+                        engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager,
+                                distributedAttachmentManager, EngineFactory.DEFAULT);
+
+                        logger.info("Created local JPA container and engine");
+                        fileName = null;
+                        remote = true;
+                    } else {
+                        distributedLockManager.disconnectFromServer();
+                        distributedAttachmentManager.disconnectFromServer();
+
+                        em.close();
+                        factory.close();
+                        em = null;
+                        factory = null;
+                    }
+                }
             }
+        } catch (final Exception e) {
+            logger.log(Level.SEVERE, e.toString(), e);
         }
 
         return engine;
@@ -148,12 +163,13 @@ public abstract class AbstractJpaDataStore implements DataStore {
         try {
             if (!FileUtils.isFileLocked(fileName)) {
                 try {
-                    factory = Persistence.createEntityManagerFactory("jgnash", properties);
+                    factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
 
                     em = factory.createEntityManager();
 
                     logger.info("Created local JPA container and engine");
-                    engine = new Engine(new JpaEngineDAO(em, false), new LocalLockManager(), new LocalAttachmentManager(), engineName);
+                    engine = new Engine(new JpaEngineDAO(em, false), new LocalLockManager(),
+                            new LocalAttachmentManager(), engineName);
 
                     this.fileName = fileName;
                     this.password = password.clone();   // clone to protect against side effects
@@ -192,13 +208,14 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         initEmptyDatabase(file.getAbsolutePath());
 
-        Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(), new char[]{}, false);
+        final Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(),
+                new char[]{}, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
 
         try {
-            factory = Persistence.createEntityManagerFactory("jgnash", properties);
+            factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
             em = factory.createEntityManager();
 
             em.getTransaction().begin();
@@ -244,13 +261,14 @@ public abstract class AbstractJpaDataStore implements DataStore {
         final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
         try (final Connection connection = DriverManager.getConnection(url, "sa", "")) {
-            try (final PreparedStatement statement = connection.prepareStatement("CREATE USER " + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN")) {
+            try (final PreparedStatement statement = connection.prepareStatement("CREATE USER "
+                    + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN")) {
                 statement.execute();
                 connection.commit();
             }
 
             // absolutely required for a correct shutdown
-            try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+            try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
                 statement.execute();
             }
         } catch (SQLException e) {
@@ -264,7 +282,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
             }
 
             // absolutely required for a correct shutdown
-            try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+            try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
                 statement.execute();
             }
 

@@ -31,6 +31,9 @@ import jgnash.util.FileUtils;
  */
 class JpaConfiguration {
 
+    static final String UNIT_NAME = "jgnash";
+    static final String DEFAULT_USER = "JGNASH";
+
     static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
 
     private static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
@@ -38,8 +41,6 @@ class JpaConfiguration {
     private static final String JAVAX_PERSISTENCE_JDBC_PASSWORD = "javax.persistence.jdbc.password";
     private static final String HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
-
-    static final String DEFAULT_USER = "JGNASH";
 
     private static final String UNKNOWN_DATABASE_TYPE = "Unknown database type";
 
