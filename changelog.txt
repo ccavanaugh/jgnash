@@ -20,6 +20,7 @@ Budgeting
 - an option for Total Year OR YTD Total – this is actually quite useful, since the user can be under / over budget in any given period, but on-budget YTD.
 - annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 - flexible start / end period for different fiscal years
+- flexible start date for the week
 Reinstate archive capability.
 
 Change the base highlight color for the FX interface
