@@ -42,7 +42,7 @@ import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
 /**
- * Transaction Entry Controller for Credits and Debits
+ * Transaction Entry Controller for Credits and Debits.
  *
  * @author Craig Cavanaugh
  */
