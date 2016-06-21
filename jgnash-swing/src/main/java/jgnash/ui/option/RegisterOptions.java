@@ -45,7 +45,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import org.jdesktop.swingx.JXColorSelectionButton;
 
 /**
- * Register view options panel
+ * Register view options panel.
  * 
  * @author Craig Cavanaugh
  * @author Peter Vida
@@ -80,7 +80,7 @@ class RegisterOptions extends JPanel implements ActionListener {
 
     private JRadioButton disableAutoReconcileButton;
 
-    public RegisterOptions() {
+    RegisterOptions() {
         layoutMainPanel();
 
         evenButton.setBackground(RegisterFactory.getEvenColor());
