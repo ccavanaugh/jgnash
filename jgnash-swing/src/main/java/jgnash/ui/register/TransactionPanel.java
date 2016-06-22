@@ -160,10 +160,16 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
             if (splits.isEmpty()) {
                 splits = null; // set to null to clear
             }
+
+            if (RegisterFactory.getConcatenateMemos() && splits.size() > 0) {
+                memoField.setEnabled(false);
+                memoField.setText(Transaction.getMemo(splits));
+            } else {
+                memoField.setEnabled(true);
+            }
         }
     }
 
-    // FIXME: Duplicate of code in SplitTransactionEntryPanel
     private TransactionEntry buildTransactionEntry() {
         TransactionEntry entry = new TransactionEntry();
         entry.setMemo(memoField.getText());
@@ -204,7 +210,11 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
 
             transaction.setDate(datePanel.getLocalDate());
             transaction.setNumber(numberField.getText());
-            transaction.setMemo(memoField.getText());
+
+            //transaction.setMemo(memoField.getText());
+            transaction.setMemo(RegisterFactory.getConcatenateMemos() ? Transaction.CONCATENATE
+                    : memoField.getText());
+
             transaction.setPayee(payeeField.getText());
 
             transaction.addTransactionEntries(splits);
@@ -248,7 +258,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
     }
 
     /**
-     * Modifies an existing transaction
+     * Modifies an existing transaction.
      */
     @Override
     public void modifyTransaction(final Transaction t) {
@@ -266,10 +276,15 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
 
         modTrans = attachmentPanel.modifyTransaction(modTrans);
 
+        // disable editing if already concatenated
+        memoField.setEnabled(!modTrans.isMemoConcatenated());
+
         if (!canModifyTransaction(t) && t.getTransactionType() == TransactionType.SPLITENTRY) {
             for (TransactionEntry entry : t.getTransactionEntries()) {
                 if (entry.getCreditAccount().equals(getAccount()) || entry.getDebitAccount().equals(getAccount())) {
                     modEntry = entry;
+
+                    memoField.setEnabled(true); // override to allow editing the entry
                     break;
                 }
             }
@@ -289,7 +304,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         // handles any exchange rate that may exist
         amountField.setDecimal(t.getAmount(getAccount()).abs());
 
-        memoField.setText(t.getMemo(getAccount()));
+        memoField.setText(t.getMemo());
         payeeField.setText(t.getPayee());
         numberField.setText(t.getNumber());
         datePanel.setDate(t.getLocalDate());
@@ -319,6 +334,9 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                 payeeField.setEditable(false);
                 numberField.setEnabled(false);
                 datePanel.setEditable(false);
+
+                memoField.setText(t.getMemo(getAccount()));   // Override
+                //memoField.setEnabled(true);
 
                 amountField.setEditable(true);
                 amountField.setDecimal(t.getAmount(this.getAccount()).abs());
@@ -367,7 +385,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
     }
 
     /**
-     * Determines if the transaction can be modified with this transaction panel
+     * Determines if the transaction can be modified with this transaction panel.
      *
      * @param t The transaction to modify
      * @return True if the transaction can be modified in this panel
@@ -419,11 +437,14 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         getReconcileCheckBox().setEnabled(true);
         payeeField.setEditable(true);
 
+        // Enable editing
+        memoField.setEnabled(true);
+
         super.clearForm();
     }
 
     /**
-     * Action notification
+     * Action notification.
      *
      * @param e the action event to process
      */

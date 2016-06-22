@@ -69,6 +69,10 @@ public class RegisterFactory {
 
     private static final String RESTORE_LAST_TRANSACTION_TAB = "restoreTab";
 
+    private static final String CONCATENATE_MEMOS = "concatenateMemos";
+
+    private static boolean concatenateMemos;
+
     private static Color evenBackgroundColor;
 
     private static Color oddBackgroundColor;
@@ -77,6 +81,7 @@ public class RegisterFactory {
 
     static {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
+        concatenateMemos = p.getBoolean(CONCATENATE_MEMOS, false);
         sortable = p.getBoolean(SORTABLE, true);
         useAccountingTerms = p.getBoolean(ACCOUNTING_TERMS, false);
         confirmTransactionDelete = p.getBoolean(CONFIRM_ON_DELETE, true);
@@ -169,6 +174,17 @@ public class RegisterFactory {
     private RegisterFactory() {
     }
 
+    static void setConcatenateMemos(final boolean value) {
+        Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
+        p.putBoolean(CONCATENATE_MEMOS, value);
+
+        concatenateMemos = value;
+    }
+
+    static boolean getConcatenateMemos() {
+        return concatenateMemos;
+    }
+
     public static void setOddColor(final Color color) {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
         p.putInt(ODD_COLOR, color.getRGB());
@@ -192,7 +208,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Sets the availability of sortable registers
+     * Sets the availability of sortable registers.
      * 
      * @param enabled true if sorting it enabled
      */
@@ -203,7 +219,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Returns the availability of sortable registers
+     * Returns the availability of sortable registers.
      * 
      * @return true if auto completion is enabled, false otherwise
      */
@@ -212,7 +228,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Sets if confirm on transaction delete is enabled
+     * Sets if confirm on transaction delete is enabled.
      * 
      * @param enabled true if deletion confirmation is required
      */
@@ -223,7 +239,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Returns the availability of sortable registers
+     * Returns the availability of sortable registers.
      * 
      * @return true if confirm on transaction delete is enabled, false otherwise
      */
@@ -252,7 +268,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Creates and returns a GenericRegisterTable of the appropriate type
+     * Creates and returns a GenericRegisterTable of the appropriate type.
      * 
      * @param account the account to create a new table for
      * @return returns a GenericRegisterTable of the appropriate type
@@ -328,7 +344,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Creates and returns a GenericRegisterTable of the appropriate type
+     * Creates and returns a GenericRegisterTable of the appropriate type.
      * 
      * @param account the account to create a new table for
      * @param splits transaction entries to display
@@ -363,7 +379,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Creates and returns a RegisterTable for investment transaction fees
+     * Creates and returns a RegisterTable for investment transaction fees.
      * 
      * @param account the account to create a new table for
      * @param splits transaction entries to display
@@ -386,7 +402,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Creates and returns a RegisterTable for investment transaction fees
+     * Creates and returns a RegisterTable for investment transaction fees.
      * 
      * @param account the account to create a new table for
      * @param splits transaction entries to display
@@ -409,7 +425,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Creates the appropriate register panel given an account
+     * Creates the appropriate register panel given an account.
      * 
      * @param account the account to create a register panel for
      * @return the register panel
@@ -428,7 +444,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Generates tab names for transaction forms
+     * Generates tab names for transaction forms.
      * 
      * @param account account to generate tab names for
      * @return tab names with increase name at 0 and decrease name at 1
@@ -462,7 +478,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Generates tab names for investment gains and loss
+     * Generates tab names for investment gains and loss.
      * 
      * @return tab names with increase name at 0 and decrease name at 1
      */

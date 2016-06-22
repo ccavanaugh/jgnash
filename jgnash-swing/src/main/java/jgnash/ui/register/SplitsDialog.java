@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -87,6 +88,8 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
 
     private JButton cancelButton;
 
+    private JCheckBox concatenateMemoCheckBox;
+
     static SplitsDialog getSplitsDialog(Component c, Account account, List<TransactionEntry> splits, PanelType defaultTab) {
 
         Window parent = SwingUtilities.getWindowAncestor(c);
@@ -142,6 +145,8 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
         deleteAllButton = new JButton(rb.getString("Button.DeleteAll"));
         okButton = new JButton(rb.getString("Button.Ok"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
+        concatenateMemoCheckBox = new JCheckBox(rb.getString("Button.ConcatenateMemos"));
+        concatenateMemoCheckBox.setSelected(RegisterFactory.getConcatenateMemos());
 
         okButton.addActionListener(this);
         cancelButton.addActionListener(this);
@@ -160,6 +165,9 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
         tabbedPane.add(tabNames[1], debitPanel);
 
         table.getSelectionModel().addListSelectionListener(this);
+
+        concatenateMemoCheckBox.addActionListener(e ->
+                RegisterFactory.setConcatenateMemos(concatenateMemoCheckBox.isSelected()));
     }
 
     private void layoutMainPanel() {
@@ -180,7 +188,9 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
         bbb.addButton(deleteAllButton);
 
         builder.append(bbb.getPanel());
-
+        builder.nextLine();
+        builder.append(concatenateMemoCheckBox);
+        builder.nextLine();
         builder.append(tabbedPane);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
@@ -191,7 +201,7 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
     }
 
     /**
-     * Closes the dialog
+     * Closes the dialog.
      */
     private void closeDialog() {
         // dispatch an event so that the closing event can be monitored
@@ -211,7 +221,7 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
     }
 
     /**
-     * Delete all of the splits
+     * Delete all of the splits.
      */
     private void deleteAllAction() {
         for (int i = model.getRowCount() - 1; i >= 0; i--) {
@@ -237,12 +247,12 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
         }
     }
 
-    public List<TransactionEntry> getSplits() {
+    List<TransactionEntry> getSplits() {
         return model.getSplits();
     }
 
     /**
-     * Calculate the balance of the splits
+     * Calculate the balance of the splits.
      *
      * @return balance of the splits
      */
@@ -251,7 +261,7 @@ class SplitsDialog extends JDialog implements ListSelectionListener, ActionListe
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e) {
+    public void valueChanged(final ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
             return;
         } // ignore extra messages

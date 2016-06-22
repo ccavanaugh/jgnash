@@ -37,7 +37,7 @@ class RegisterTableModel extends AbstractRegisterTableModel {
     private static final int[] PREF_COLUMN_WEIGHTS = { 0, 0, 20, 20, 20, 0, 0, 0, 0 };
 
     /**
-     * Default column classes
+     * Default column classes.
      */
     static final Class<?>[] _clazz = { LocalDate.class, String.class, String.class, String.class, String.class,
                     String.class, ShortCommodityStyle.class, ShortCommodityStyle.class, FullCommodityStyle.class };
@@ -66,7 +66,7 @@ class RegisterTableModel extends AbstractRegisterTableModel {
             case 2:
                 return t.getPayee();
             case 3:
-                return t.getMemo(getAccount());
+                return t.getMemo();
             case 4:
                 if (t instanceof InvestmentTransaction) {
                     return ((InvestmentTransaction) t).getInvestmentAccount().getName();
