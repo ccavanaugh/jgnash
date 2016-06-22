@@ -694,8 +694,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         Transaction tran;
 
         try {
-
             tran = (Transaction) super.clone();
+
+            tran.concatMemo = null; // force a reset of the concatenated memo, the entries of the clone may change
 
             // deep clone
             tran.transactionEntries = new HashSet<>(); // deep clone
@@ -717,7 +718,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @return Properly initialized Transaction
      */
-    @SuppressWarnings("unused")
     protected Object readResolve() {
         postLoad();
         return this;
@@ -730,7 +730,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder();
+        final StringBuilder b = new StringBuilder();
 
         final String lineSep = System.getProperty("line.separator");
 
@@ -741,7 +741,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         b.append(lineSep);
 
-        for (TransactionEntry entry : getTransactionEntries()) {
+        for (final TransactionEntry entry : getTransactionEntries()) {
             b.append(entry).append(lineSep);
         }
 
