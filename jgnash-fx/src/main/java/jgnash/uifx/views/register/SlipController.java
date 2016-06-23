@@ -260,7 +260,6 @@ public class SlipController extends AbstractSlipController {
         setReconciledState(t.getReconciled(accountProperty().get()));
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
-            accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
 
             if (canModifyTransaction(t)) { // split common account is the same as the base account
 
