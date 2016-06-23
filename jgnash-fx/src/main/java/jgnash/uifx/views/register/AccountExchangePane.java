@@ -44,7 +44,7 @@ import jgnash.util.ResourceUtils;
 import org.controlsfx.control.PopOver;
 
 /**
- * Controller for handling the exchange of currencies
+ * Controller for handling the exchange of currencies.
  *
  * @author Craig Cavanaugh
  */
@@ -72,7 +72,7 @@ public class AccountExchangePane extends GridPane {
     private Label exchangeLabel;
 
     /**
-     * Account property may be null
+     * Account property may be null.
      */
     final private ObjectProperty<Account> baseAccountProperty = new SimpleObjectProperty<>();
 
@@ -87,18 +87,18 @@ public class AccountExchangePane extends GridPane {
     final private ObjectProperty<Account> selectedAccountProperty = new SimpleObjectProperty<>();
 
     /**
-     * Determines if the base account will be visible for selection
+     * Determines if the base account will be visible for selection.
      */
     final private SimpleBooleanProperty filterBaseAccountProperty = new SimpleBooleanProperty(true);
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Boolean> amountFocusChangeListener;
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Boolean> rateFocusChangeListener;
