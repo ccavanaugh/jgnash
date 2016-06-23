@@ -27,7 +27,7 @@ Change the base highlight color for the FX interface
 
 Release 2.24.0
 ----------------------
-06/22/16 Fixed a split entry editing bug. (Fx)
+06/22/16 Fixed some obscure bugs related to editing of split transactions. (Fx)
 06/22/16 Enable use of concatenated memos within the Swing interface. (Swing)
 06/19/16 Improve handling of JDBC connection errors. (Swing, Fx)
 06/19/16 The Fx UI would not completely shut down in some rare instances. (Fx)
