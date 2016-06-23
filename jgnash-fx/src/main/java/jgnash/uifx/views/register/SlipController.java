@@ -18,6 +18,7 @@
 package jgnash.uifx.views.register;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,11 +26,14 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconcileManager;
 import jgnash.engine.Transaction;
@@ -65,7 +69,7 @@ public class SlipController extends AbstractSlipController {
 
     private SlipType slipType;
 
-    private TransactionEntry modEntry = null;
+    private final SimpleObjectProperty<TransactionEntry> modEntry = new SimpleObjectProperty<>();
 
     private final BooleanProperty concatenatedProperty = new SimpleBooleanProperty();
 
@@ -86,7 +90,8 @@ public class SlipController extends AbstractSlipController {
         }
 
         amountField.editableProperty().bind(transactionEntriesProperty.emptyProperty());
-        accountExchangePane.disableProperty().bind(transactionEntriesProperty.emptyProperty().not());
+        accountExchangePane.disableProperty().bind(transactionEntriesProperty.emptyProperty().not()
+                .or(modEntry.isNotNull()));
 
         memoTextField.disableProperty().bind(concatenatedProperty);
     }
@@ -114,12 +119,14 @@ public class SlipController extends AbstractSlipController {
         if (!canModifyTransaction(transaction) && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
             for (final TransactionEntry entry : transaction.getTransactionEntries()) {
                 if (entry.getCreditAccount().equals(accountProperty().get()) || entry.getDebitAccount().equals(accountProperty().get())) {
-                    modEntry = entry;
+                    modEntry.setValue(entry);
+
+                    concatenatedProperty.setValue(false); // override to allow editing the entry
                     break;
                 }
             }
 
-            if (modEntry == null) {
+            if (modEntry.get() == null) {
                 Logger logger = Logger.getLogger(SlipController.class.getName());
                 logger.warning("Was not able to modify the transaction");
             }
@@ -156,7 +163,7 @@ public class SlipController extends AbstractSlipController {
             transaction.setPayee(payeeTextField.getText());
 
             transaction.addTransactionEntries(transactionEntriesProperty);
-        } else {
+        } else {  // double entry transaction
             final int signum = amountField.getDecimal().signum();
 
             final Account selectedAccount;
@@ -197,6 +204,37 @@ public class SlipController extends AbstractSlipController {
         return transaction;
     }
 
+    private TransactionEntry buildTransactionEntry() {
+        final TransactionEntry entry = new TransactionEntry();
+        entry.setMemo(memoTextField.getText());
+
+        final int signum = amountField.getDecimal().signum();
+
+        if (slipType == SlipType.DECREASE && signum >= 0 || slipType == SlipType.INCREASE && signum < 0) {
+            entry.setCreditAccount(accountExchangePane.getSelectedAccount());
+            entry.setDebitAccount(accountProperty.get());
+
+            if (hasEqualCurrencies()) {
+                entry.setAmount(amountField.getDecimal().abs());
+            } else {
+                entry.setDebitAmount(accountExchangePane.exchangeAmountProperty().get().abs().negate());
+            }
+        } else {
+            entry.setCreditAccount(accountProperty.get());
+            entry.setDebitAccount(accountExchangePane.getSelectedAccount());
+
+            if (hasEqualCurrencies()) {
+                entry.setAmount(amountField.getDecimal().abs());
+            } else {
+                entry.setCreditAmount(accountExchangePane.exchangeAmountProperty().get().abs());
+            }
+        }
+
+        entry.setReconciled(accountProperty.get(), getReconciledState());
+
+        return entry;
+    }
+
     private boolean hasEqualCurrencies() {
         return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
@@ -218,9 +256,7 @@ public class SlipController extends AbstractSlipController {
         memoTextField.setText(t.getMemo());
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
-
         datePicker.setValue(t.getLocalDate());
-
         setReconciledState(t.getReconciled(accountProperty().get()));
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
@@ -234,7 +270,7 @@ public class SlipController extends AbstractSlipController {
                 for (final TransactionEntry entry : t.getTransactionEntries()) {
                     try {
                         transactionEntriesProperty.add((TransactionEntry) entry.clone());
-                    } catch (CloneNotSupportedException e) {
+                    } catch (final CloneNotSupportedException e) {
                         Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
                 }
@@ -290,7 +326,7 @@ public class SlipController extends AbstractSlipController {
 
         transactionEntriesProperty.clear();   // clear an old transaction entries
 
-        modEntry = null;
+        modEntry.setValue(null);
 
         accountExchangePane.setExchangedAmount(null);
 
@@ -328,6 +364,44 @@ public class SlipController extends AbstractSlipController {
         }
 
         return result;
+    }
+
+    @Override
+    public void handleEnterAction() {
+        if (validateForm()) {
+            if (modEntry.get() != null && modTrans != null) {
+                try {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    // clone the transaction
+                    final Transaction t = (Transaction) modTrans.clone();
+
+                    // remove the modifying entry from the clone
+                    t.removeTransactionEntry(modEntry.get());
+
+                    // generate new TransactionEntry
+                    final TransactionEntry e = buildTransactionEntry();
+
+                    // add it to the clone
+                    t.addTransactionEntry(e);
+
+                    ReconcileManager.reconcileTransaction(accountProperty.get(), t, getReconciledState());
+
+                    if (engine.removeTransaction(modTrans)) {
+                        engine.addTransaction(t);
+                    }
+
+                    clearForm();
+                    focusFirstComponent();
+                } catch (CloneNotSupportedException e) {
+                    Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            } else {
+                super.handleEnterAction();
+            }
+        }
+
     }
 
     @FXML

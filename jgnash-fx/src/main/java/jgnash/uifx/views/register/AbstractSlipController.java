@@ -53,7 +53,7 @@ import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
 /**
- * Abstract bank transaction entry slip controller
+ * Abstract bank transaction entry slip controller.
  *
  * @author Craig Cavanaugh
  */
@@ -89,13 +89,13 @@ abstract class AbstractSlipController implements Slip {
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Boolean> focusChangeListener;
 
     /**
-     * Holds a reference to a transaction being modified
+     * Holds a reference to a transaction being modified.
      */
     Transaction modTrans = null;
 
@@ -151,7 +151,7 @@ abstract class AbstractSlipController implements Slip {
     }
 
     /**
-     * Determines is this form can be used to modify a transaction
+     * Determines is this form can be used to modify a transaction.
      *
      * @param transaction {@code Transaction} to confirm
      * @return {@code true} if the {@code Transaction} can be modified
@@ -194,11 +194,7 @@ abstract class AbstractSlipController implements Slip {
     @Override
     public void handleCancelAction() {
         clearForm();
-        if (payeeTextField != null) {
-            payeeTextField.requestFocus();
-        } else {
-            memoTextField.requestFocus();
-        }
+        focusFirstComponent();
     }
 
     @FXML
@@ -245,13 +241,20 @@ abstract class AbstractSlipController implements Slip {
                     engine.addTransaction(newTrans);
                 }
             }
-            clearForm();
 
-            if (payeeTextField != null) {
-                payeeTextField.requestFocus();
-            } else {
-                memoTextField.requestFocus();
-            }
+            clearForm();
+            focusFirstComponent();
+        }
+    }
+
+    /**
+     *  Focuses the first component the user will interact with.
+     */
+    void focusFirstComponent() {
+        if (payeeTextField != null) {
+            payeeTextField.requestFocus();
+        } else {
+            memoTextField.requestFocus();
         }
     }
 
