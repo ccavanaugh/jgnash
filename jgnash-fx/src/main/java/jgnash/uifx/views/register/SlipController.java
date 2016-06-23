@@ -153,7 +153,7 @@ public class SlipController extends AbstractSlipController {
 
         final LocalDate date = datePicker.getValue();
 
-        if (transactionEntriesProperty.size() > 0) { // build a split transaction
+        if (!transactionEntriesProperty.isEmpty()) { // build a split transaction
             transaction = new Transaction();
 
             transaction.setDate(date);
@@ -417,7 +417,7 @@ public class SlipController extends AbstractSlipController {
 
             // If valid splits exist and the user has requested concatenation, show a preview of what will happen
             concatenatedProperty.setValue(Options.concatenateMemosProperty().get()
-                    && transactionEntriesProperty.size() > 0);
+                    && !transactionEntriesProperty.isEmpty());
 
             if (concatenatedProperty.get()) {
                 memoTextField.setText(Transaction.getMemo(transactionEntriesProperty));
