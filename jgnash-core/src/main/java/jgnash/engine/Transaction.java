@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import javax.persistence.Basic;
@@ -39,20 +36,20 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
 
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
- * Base class for transactions.
+ * Base class for transactions.  Transaction should be treated as immutable as in not modified if they have
+ * been persisted within the database.
  *
  * @author Craig Cavanaugh
  */
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-@Table(name="TRANSACT") // cannot use "Transaction" as the table name or it causes an SQL error!!!!
+@Table(name = "TRANSACT") // cannot use "Transaction" as the table name or it causes an SQL error!!!!
 public class Transaction extends StoredObject implements Comparable<Transaction> {
 
     private static final transient String EMPTY = "";
@@ -69,7 +66,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Date transaction was created.
-     *
+     * <p>
      * TODO: Replace with LocalDateTime
      */
     LocalDate dateEntered = LocalDate.now();
@@ -113,21 +110,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     Set<TransactionEntry> transactionEntries = new HashSet<>();
 
     /**
-     * ReadWrite lock.
-     *
-     * TODO, change API so this is not needed... reduce memory usage
-     */
-    private transient ReadWriteLock lock;
-
-    /**
      * Public constructor.
      */
     public Transaction() {
-        lock = new ReentrantReadWriteLock(true);
-    }
-
-    ReadWriteLock getLock() {
-        return lock;
     }
 
     /**
@@ -139,18 +124,11 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      */
     @NotNull
     public Set<Account> getAccounts() {
-        Set<Account> accounts = new TreeSet<>();
+        final Set<Account> accounts = new TreeSet<>();
 
-        Lock l = getLock().readLock();
-        l.lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                accounts.add(e.getCreditAccount());
-                accounts.add(e.getDebitAccount());
-            }
-        } finally {
-            l.unlock();
+        for (final TransactionEntry e : transactionEntries) {
+            accounts.add(e.getCreditAccount());
+            accounts.add(e.getDebitAccount());
         }
 
         return accounts;
@@ -201,32 +179,24 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public Account getCommonAccount() {
         Account account = null;
 
-        Lock l = getLock().readLock();
-        l.lock();
+        if (size() >= 2) {
+            Set<Account> accounts = getAccounts();
 
-        try {
-
-            if (size() >= 2) {
-                Set<Account> accounts = getAccounts();
-
-                for (Account a : accounts) {
-                    boolean success = true;
-                    for (TransactionEntry e : transactionEntries) {
-                        if (!e.getCreditAccount().equals(a) && !e.getDebitAccount().equals(a)) {
-                            success = false;
-                            break;
-                        }
-                    }
-                    if (success) {
-                        account = a;
+            for (Account a : accounts) {
+                boolean success = true;
+                for (TransactionEntry e : transactionEntries) {
+                    if (!e.getCreditAccount().equals(a) && !e.getDebitAccount().equals(a)) {
+                        success = false;
                         break;
                     }
                 }
-            } else { // double entry transaction, return the credit account by default
-                account = transactionEntries.iterator().next().getCreditAccount();
+                if (success) {
+                    account = a;
+                    break;
+                }
             }
-        } finally {
-            l.unlock();
+        } else { // double entry transaction, return the credit account by default
+            account = transactionEntries.iterator().next().getCreditAccount();
         }
 
         return account;
@@ -244,27 +214,13 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         assert !transactionEntries.contains(entry);
 
-        Lock l = getLock().writeLock();
-        l.lock();
-
-        try {
-            transactionEntries.add(entry);
-        } finally {
-            l.unlock();
-        }
+        transactionEntries.add(entry);
     }
 
     public void removeTransactionEntry(@NotNull final TransactionEntry entry) {
         Objects.requireNonNull(entry);
 
-        Lock l = getLock().writeLock();
-        l.lock();
-
-        try {
-            transactionEntries.remove(entry);
-        } finally {
-            l.unlock();
-        }
+        transactionEntries.remove(entry);
     }
 
     /**
@@ -275,14 +231,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @see TransactionEntry
      */
     public int size() {
-        Lock l = getLock().readLock();
-        l.lock();
-
-        try {
-            return transactionEntries.size();
-        } finally {
-            l.unlock();
-        }
+        return transactionEntries.size();
     }
 
     public void setDate(@NotNull final LocalDate localDate) {
@@ -350,15 +299,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public BigDecimal getAmount(final Account account) {
         BigDecimal balance = BigDecimal.ZERO;
 
-        final Lock l = getLock().readLock();
-        l.lock();
-
-        try {
-            for (TransactionEntry entry : transactionEntries) {
-                balance = balance.add(entry.getAmount(account));
-            }
-        } finally {
-            l.unlock();
+        for (final TransactionEntry entry : transactionEntries) {
+            balance = balance.add(entry.getAmount(account));
         }
 
         return balance;
@@ -370,8 +312,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @param tran the {@code Transaction} to be compared.
      * @return the value {@code 0} if the argument Transaction is equal to this Transaction; a value less than
-     *         {@code 0} if this Transaction is before the Transaction argument; and a value greater than
-     *         {@code 0} if this Transaction is after the Transaction argument.
+     * {@code 0} if this Transaction is before the Transaction argument; and a value greater than
+     * {@code 0} if this Transaction is after the Transaction argument.
      */
     @Override
     public int compareTo(final @NotNull Transaction tran) {
@@ -427,27 +369,23 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
 
         if (!getAmount(getCommonAccount()).equals(tran.getAmount(tran.getCommonAccount()))) {
-             return false;
+            return false;
         }
 
         return getNumber().equalsIgnoreCase(tran.getNumber());
 
     }
 
+    /**
+     * Returns a sorted defensive copy of the transaction entries.
+     *
+     * @return list of transaction entries
+     */
     public List<TransactionEntry> getTransactionEntries() {
 
-        List<TransactionEntry> list = null;
-
-        final Lock l = getLock().readLock();
-        l.lock();
-
-        try {
-            // protect against write through by creating a new ArrayList
-            list = new ArrayList<>(transactionEntries);
-            Collections.sort(list);
-        } finally {
-            l.unlock();
-        }
+        // protect against write through by creating a new ArrayList
+        final List<TransactionEntry> list = new ArrayList<>(transactionEntries);
+        Collections.sort(list);
 
         return list;
     }
@@ -455,20 +393,12 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private List<TransactionEntry> getTransactionEntries(final Account account) {
         final List<TransactionEntry> list = new ArrayList<>();
 
-        final Lock l = getLock().readLock();
-        l.lock();
-
-        try {
-            list.addAll(transactionEntries.stream()
-                    .filter(transactionEntry -> transactionEntry.getCreditAccount().equals(account)
-                            || transactionEntry.getDebitAccount().equals(account)).collect(Collectors.toList()));
-        } finally {
-            l.unlock();
-        }
+        list.addAll(transactionEntries.stream()
+                .filter(transactionEntry -> transactionEntry.getCreditAccount().equals(account)
+                        || transactionEntry.getDebitAccount().equals(account)).collect(Collectors.toList()));
 
         return list;
     }
-
 
 
     /**
@@ -479,17 +409,10 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * returned if none are found
      */
     List<TransactionEntry> getTransactionEntriesByTag(final TransactionTag tag) {
-        List<TransactionEntry> list = new ArrayList<>();
+        final List<TransactionEntry> list = new ArrayList<>();
 
-        final Lock l = getLock().readLock();
-        l.lock();
-
-        try {
-            list.addAll(transactionEntries.stream()
-                    .filter(e -> e.getTransactionTag() == tag).collect(Collectors.toList()));
-        } finally {
-            l.unlock();
-        }
+        list.addAll(transactionEntries.stream()
+                .filter(e -> e.getTransactionTag() == tag).collect(Collectors.toList()));
 
         return list;
     }
@@ -539,7 +462,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     @NotNull
-    public String getMemo() {
+    synchronized public String getMemo() {
         if (memo != null) {
             if (isMemoConcatenated()) {
                 if (concatMemo == null) {
@@ -555,6 +478,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Returns the concatenated memo given an Account.
+     *
      * @param account base account to generate a memo for
      * @return Concatenated string of split entry memos
      */
@@ -610,31 +534,17 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         Objects.requireNonNull(account);
         Objects.requireNonNull(state);
 
-        final Lock l = getLock().writeLock();
-        l.lock();
-
-        try {
-            for (final TransactionEntry e : transactionEntries) {
-                e.setReconciled(account, state);
-            }
-        } finally {
-            l.unlock();
+        for (final TransactionEntry e : transactionEntries) {
+            e.setReconciled(account, state);
         }
     }
 
     public void setReconciled(@NotNull final ReconciledState state) {
         Objects.requireNonNull(state);
 
-        final Lock l = getLock().writeLock();
-        l.lock();
-
-        try {
-            for (final TransactionEntry e : transactionEntries) {
-                e.setCreditReconciled(state);
-                e.setDebitReconciled(state);
-            }
-        } finally {
-            l.unlock();
+        for (final TransactionEntry e : transactionEntries) {
+            e.setCreditReconciled(state);
+            e.setDebitReconciled(state);
         }
     }
 
@@ -642,25 +552,16 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public ReconciledState getReconciled(final Account account) {
         ReconciledState state = ReconciledState.NOT_RECONCILED; // default is not reconciled
 
-        final Lock l = getLock().readLock();
-        l.lock();
-
-        try {
-
-            for (final TransactionEntry e : transactionEntries) {
-                if (e.getCreditAccount().equals(account)) {
-                    state = e.getCreditReconciled();
-                    break;
-                }
-
-                if (e.getDebitAccount().equals(account)) {
-                    state = e.getDebitReconciled();
-                    break;
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e.getCreditAccount().equals(account)) {
+                state = e.getCreditReconciled();
+                break;
             }
 
-        } finally {
-            l.unlock();
+            if (e.getDebitAccount().equals(account)) {
+                state = e.getDebitReconciled();
+                break;
+            }
         }
 
         return state;
@@ -688,44 +589,20 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        Lock l = getLock().readLock();
-        l.lock();
 
-        Transaction tran;
+        final Transaction tran = (Transaction) super.clone();
 
-        try {
-            tran = (Transaction) super.clone();
+        tran.concatMemo = null; // force a reset of the concatenated memo, the entries of the clone may change
 
-            tran.concatMemo = null; // force a reset of the concatenated memo, the entries of the clone may change
+        // deep clone
+        tran.transactionEntries = new HashSet<>(); // deep clone
+        //tran.lock = new ReentrantReadWriteLock(true);
 
-            // deep clone
-            tran.transactionEntries = new HashSet<>(); // deep clone
-            tran.lock = new ReentrantReadWriteLock(true);
-
-            for (TransactionEntry entry : transactionEntries) {
-                tran.addTransactionEntry((TransactionEntry) entry.clone());
-            }
-
-        } finally {
-            l.unlock();
+        for (TransactionEntry entry : transactionEntries) {
+            tran.addTransactionEntry((TransactionEntry) entry.clone());
         }
 
         return tran;
-    }
-
-    /**
-     * Required by XStream for proper initialization.
-     *
-     * @return Properly initialized Transaction
-     */
-    protected Object readResolve() {
-        postLoad();
-        return this;
-    }
-
-    @PostLoad
-    private void postLoad() {
-        lock = new ReentrantReadWriteLock(true);
     }
 
     @Override

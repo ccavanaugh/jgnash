@@ -50,17 +50,11 @@ public class InvestmentTransaction extends Transaction {
     public TransactionType getTransactionType() {
         TransactionType type = TransactionType.INVALID;
 
-        getLock().readLock().lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e instanceof AbstractInvestmentTransactionEntry) {
-                    type = ((AbstractInvestmentTransactionEntry) e).getTransactionType();
-                    break;
-                }
+        for (TransactionEntry e : transactionEntries) {
+            if (e instanceof AbstractInvestmentTransactionEntry) {
+                type = ((AbstractInvestmentTransactionEntry) e).getTransactionType();
+                break;
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return type;
@@ -70,18 +64,12 @@ public class InvestmentTransaction extends Transaction {
 
         Account account = null;
 
-        getLock().readLock().lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e.getCreditAccount().getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-                    account = e.getCreditAccount();
-                } else if (e.getDebitAccount().getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-                    account = e.getDebitAccount();
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e.getCreditAccount().getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+                account = e.getCreditAccount();
+            } else if (e.getDebitAccount().getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+                account = e.getDebitAccount();
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return account;
@@ -112,17 +100,11 @@ public class InvestmentTransaction extends Transaction {
     public BigDecimal getPrice() {
         BigDecimal price = BigDecimal.ZERO;
 
-        getLock().readLock().lock();
-
-        try {
-            for (final TransactionEntry e : transactionEntries) {
-                if (e instanceof AbstractInvestmentTransactionEntry) {
-                    price = ((AbstractInvestmentTransactionEntry) e).getPrice();
-                    break;
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e instanceof AbstractInvestmentTransactionEntry) {
+                price = ((AbstractInvestmentTransactionEntry) e).getPrice();
+                break;
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return price;
@@ -137,16 +119,10 @@ public class InvestmentTransaction extends Transaction {
     public BigDecimal getQuantity() {
         BigDecimal quantity = BigDecimal.ZERO;
 
-        getLock().readLock().lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e instanceof AbstractInvestmentTransactionEntry) {
-                    quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getQuantity());
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e instanceof AbstractInvestmentTransactionEntry) {
+                quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getQuantity());
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return quantity;
@@ -161,16 +137,10 @@ public class InvestmentTransaction extends Transaction {
     private BigDecimal getSignedQuantity() {
         BigDecimal quantity = BigDecimal.ZERO;
 
-        getLock().readLock().lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e instanceof AbstractInvestmentTransactionEntry) {
-                    quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getSignedQuantity());
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e instanceof AbstractInvestmentTransactionEntry) {
+                quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getSignedQuantity());
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return quantity;
@@ -179,16 +149,10 @@ public class InvestmentTransaction extends Transaction {
     public SecurityNode getSecurityNode() {
         SecurityNode node = null;
 
-        getLock().readLock().lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e instanceof AbstractInvestmentTransactionEntry) {
-                    node = ((AbstractInvestmentTransactionEntry) e).getSecurityNode();
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e instanceof AbstractInvestmentTransactionEntry) {
+                node = ((AbstractInvestmentTransactionEntry) e).getSecurityNode();
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return node;
@@ -212,16 +176,10 @@ public class InvestmentTransaction extends Transaction {
     private BigDecimal getFees(final Account account) {
         BigDecimal fees = BigDecimal.ZERO;
 
-        getLock().readLock().lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e.getTransactionTag() == TransactionTag.INVESTMENT_FEE) {
-                    fees = fees.add(e.getAmount(account));
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e.getTransactionTag() == TransactionTag.INVESTMENT_FEE) {
+                fees = fees.add(e.getAmount(account));
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return fees.negate();
@@ -282,18 +240,12 @@ public class InvestmentTransaction extends Transaction {
 
         BigDecimal total = BigDecimal.ZERO;
 
-        getLock().readLock().lock();
-
-        try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e instanceof AbstractInvestmentTransactionEntry) {
-                    total = total.add(((AbstractInvestmentTransactionEntry) e).getTotal());
-                } else {
-                    total = total.add(e.getAmount(account));
-                }
+        for (final TransactionEntry e : transactionEntries) {
+            if (e instanceof AbstractInvestmentTransactionEntry) {
+                total = total.add(((AbstractInvestmentTransactionEntry) e).getTotal());
+            } else {
+                total = total.add(e.getAmount(account));
             }
-        } finally {
-            getLock().readLock().unlock();
         }
 
         return total;
