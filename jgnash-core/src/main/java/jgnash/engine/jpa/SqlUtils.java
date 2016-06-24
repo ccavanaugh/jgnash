@@ -223,12 +223,13 @@ public class SqlUtils {
     }
 
     /**
-     * Returns true of the url is valid.
+     * Returns true if the url is valid, throws an exception otherwise.
      *
      * @param url url to validate
      * @return {@code true} if valid
      * @throws Exception exception is thrown if the url is not valid.  Exception can be checked for root cause.
      */
+    @SuppressWarnings("SameReturnValue")
     static boolean isConnectionValid(final String url) throws Exception {
 
         try {
