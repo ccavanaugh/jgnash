@@ -235,7 +235,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
-     * Returns true is this {@code Reminder} is executed without user interation.
+     * Returns true is this {@code Reminder} is executed without user interaction.
      *
      * @return Returns the autoCreate.
      */
@@ -271,7 +271,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
-     * Sets the descrption for this {@code Reminder}.
+     * Sets the description for this {@code Reminder}.
      *
      * @param description The description to set.
      */
@@ -323,7 +323,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
-     * Assign the transaction to be enterd upon acceptable of the reminder.
+     * Assign the transaction to be entered upon acceptable of the reminder.
      *
      * @param transaction The transaction to set.
      */

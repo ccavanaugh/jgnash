@@ -60,7 +60,8 @@ public final class FileUtils {
 
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
 
-    private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT, JpaH2DataStore.LOCK_EXT, ".lock"};
+    private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
+            JpaH2DataStore.LOCK_EXT, ".lock"};
 
     private FileUtils() {
     }
@@ -76,7 +77,7 @@ public final class FileUtils {
 
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
-                public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult visitFile(final Path file, final BasicFileAttributes attributes) throws IOException {
                     Files.delete(file);
                     return FileVisitResult.CONTINUE;
                 }
