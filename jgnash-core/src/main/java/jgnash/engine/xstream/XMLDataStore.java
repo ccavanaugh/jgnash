@@ -140,9 +140,6 @@ public class XMLDataStore implements DataStore {
         return ResourceUtils.getString("DataStoreType.XML");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void saveAs(final File file, final Collection<StoredObject> objects) {
         XMLContainer.writeXML(objects, file);

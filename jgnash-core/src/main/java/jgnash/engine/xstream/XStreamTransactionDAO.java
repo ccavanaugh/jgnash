@@ -34,9 +34,6 @@ class XStreamTransactionDAO extends AbstractXStreamDAO implements TransactionDAO
         super(container);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Transaction> getTransactions() {
         return stripMarkedForRemoval(container.query(Transaction.class));

@@ -36,17 +36,11 @@ public class WeeklyReminder extends Reminder {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ReminderType getReminderType() {
         return ReminderType.WEEKLY;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public RecurringIterator getIterator() {
         return new WeeklyIterator();
@@ -68,9 +62,6 @@ public class WeeklyReminder extends Reminder {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public LocalDate next() {
             if (isEnabled()) {

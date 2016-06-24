@@ -49,9 +49,6 @@ public class MonthlyReminder extends Reminder {
     public MonthlyReminder() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public RecurringIterator getIterator() {
         return new MonthlyIterator();
@@ -66,9 +63,6 @@ public class MonthlyReminder extends Reminder {
         return type;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ReminderType getReminderType() {
         return ReminderType.MONTHLY;
@@ -118,9 +112,6 @@ public class MonthlyReminder extends Reminder {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public LocalDate next() {
             if (isEnabled()) {

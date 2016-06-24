@@ -35,17 +35,11 @@ public class YearlyReminder extends Reminder {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public RecurringIterator getIterator() {
         return new YearlyIterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ReminderType getReminderType() {
         return ReminderType.YEARLY;
@@ -69,9 +63,6 @@ public class YearlyReminder extends Reminder {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public LocalDate next() {
             if (isEnabled()) {

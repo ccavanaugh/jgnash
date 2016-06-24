@@ -202,9 +202,6 @@ public class BudgetGoal implements Cloneable, Serializable {
         return budgetPeriod == other.budgetPeriod && budgetGoals.equals(other.budgetGoals);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected Object readResolve() {
         postLoad();
         return this;

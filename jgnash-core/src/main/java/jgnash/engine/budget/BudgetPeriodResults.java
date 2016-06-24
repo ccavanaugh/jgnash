@@ -57,9 +57,6 @@ public class BudgetPeriodResults {
         this.remaining = balance;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return String.format("Budgeted: %f Change: %f Remaining: %f", budgeted, change, remaining);

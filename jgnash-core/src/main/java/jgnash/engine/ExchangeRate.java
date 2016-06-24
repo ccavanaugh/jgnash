@@ -236,9 +236,6 @@ public class ExchangeRate extends StoredObject {
         return this == other || other instanceof ExchangeRate && rateId.equals(((ExchangeRate) other).rateId);
     }
 
-    /**
-     *  {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return super.hashCode() * 67 + rateId.hashCode();

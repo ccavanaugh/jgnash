@@ -42,81 +42,51 @@ class MapBasedPreferences extends AbstractPreferences {
         newNode = true;
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     public boolean isUserNode() {
         return isUserNode;
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected void putSpi(final String key, final String value) {
         map.put(key, value);
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected String getSpi(final String key) {
         return map.get(key);
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected void removeSpi(final String key) {
         map.remove(key);
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected void removeNodeSpi() throws BackingStoreException {
         map.clear();
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected String[] keysSpi() throws BackingStoreException {
         return map.keySet().toArray(new String[map.size()]);
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected String[] childrenNamesSpi() throws BackingStoreException {
         return new String[0];
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected AbstractPreferences childSpi(final String name) {
         return new MapBasedPreferences(this, name, isUserNode);
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected void syncSpi() throws BackingStoreException {
 
     }
 
-    /**
-     {@inheritDoc}
-     */
     @Override
     protected void flushSpi() throws BackingStoreException {
 

@@ -32,17 +32,11 @@ public class OneTimeReminder extends Reminder {
     public OneTimeReminder() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public RecurringIterator getIterator() {
         return new OneTimeIterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ReminderType getReminderType() {
         return ReminderType.ONETIME;
@@ -52,9 +46,6 @@ public class OneTimeReminder extends Reminder {
 
         private boolean end = false; // one time only trigger
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public LocalDate next() {
             if (isEnabled()) {

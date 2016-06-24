@@ -34,17 +34,11 @@ public class DailyReminder extends Reminder {
     public DailyReminder() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public RecurringIterator getIterator() {
         return new DailyIterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ReminderType getReminderType() {
         return ReminderType.DAILY;
@@ -61,9 +55,6 @@ public class DailyReminder extends Reminder {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public LocalDate next() {
             if (isEnabled()) {

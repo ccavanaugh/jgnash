@@ -181,9 +181,6 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
                 DateUtils.asDate(startDate), DateUtils.asDate(endDate), periodDescription, budgetPeriod);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         int h = hash;
@@ -199,9 +196,6 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
         return h;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

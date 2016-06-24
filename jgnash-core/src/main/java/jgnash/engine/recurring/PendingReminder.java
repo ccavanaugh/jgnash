@@ -45,9 +45,6 @@ public class PendingReminder implements Comparable<PendingReminder> {
         commitDate = date;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(final @NotNull PendingReminder o) {
         if (o.reminder == reminder && o.commitDate.equals(commitDate)) {
