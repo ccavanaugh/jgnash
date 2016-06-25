@@ -36,7 +36,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
- * Various static UI support methods
+ * Various static UI support methods.
  *
  * @author Craig Cavanaugh
  */
@@ -51,7 +51,8 @@ public class StaticUIMethods {
     }
 
     public static void showOpenDialog() {
-        final FXMLUtils.Pair<OpenDatabaseController> pair = FXMLUtils.load(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
+        final FXMLUtils.Pair<OpenDatabaseController> pair
+                = FXMLUtils.load(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
                 ResourceUtils.getBundle().getString("Title.Open"));
 
         pair.getStage().setResizable(false);
@@ -89,7 +90,7 @@ public class StaticUIMethods {
     }
 
     /**
-     * Displays a Yes and No dialog requesting confirmation
+     * Displays a Yes and No dialog requesting confirmation.
      *
      * @param title   Dialog title
      * @param message Dialog message
@@ -119,7 +120,7 @@ public class StaticUIMethods {
 
 
     /**
-     * Returns the primary application icon
+     * Returns the primary application icon.
      *
      * @return {@code} Image or {@code null} if not found
      */
@@ -139,13 +140,14 @@ public class StaticUIMethods {
     }
 
     /**
-     * Handler for displaying uncaught exceptions
+     * Handler for displaying uncaught exceptions.
      */
     public static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         @Override
         public void uncaughtException(final Thread t, final Throwable throwable) {
-            Logger.getLogger(ExceptionHandler.class.getName()).log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
+            Logger.getLogger(ExceptionHandler.class.getName())
+                    .log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
 
             displayException(throwable);
         }

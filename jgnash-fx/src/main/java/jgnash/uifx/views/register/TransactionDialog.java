@@ -46,7 +46,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
- * A Dialog for creating and editing new transactions
+ * A Dialog for creating and editing new transactions.
  *
  * @author Craig Cavanaugh
  */

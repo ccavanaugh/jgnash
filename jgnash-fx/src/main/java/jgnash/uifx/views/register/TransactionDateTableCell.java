@@ -27,6 +27,10 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.time.DateUtils;
 
 /**
+ * Table cell for Transaction dates.
+ * <p>
+ * Applies a style if the transaction occurs in the future.
+ *
  * @author Craig Cavanaugh
  */
 class TransactionDateTableCell extends TableCell<Transaction, LocalDate> {

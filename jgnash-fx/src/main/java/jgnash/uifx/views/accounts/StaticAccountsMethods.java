@@ -39,7 +39,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
- * Static support methods for Account manipulation
+ * Static support methods for Account manipulation.
  *
  * @author Craig Cavanaugh
  */

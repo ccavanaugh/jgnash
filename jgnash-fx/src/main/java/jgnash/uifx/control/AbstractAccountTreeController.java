@@ -41,7 +41,7 @@ import jgnash.uifx.util.TreeSearch;
 import jgnash.util.Nullable;
 
 /**
- * Abstract Controller handling a {@code TreeView} of {@code Account}s
+ * Abstract Controller handling a {@code TreeView} of {@code Account}s.
  *
  * @author Craig Cavanaugh
  */
@@ -52,7 +52,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
     protected abstract TreeView<Account> getTreeView();
 
     /**
-     * Determines account visibility
+     * Determines account visibility.
      *
      * @param account {@code Account} to determine visibility based on filter state
      * @return {@code true} if the {@code Account} should be visible
@@ -64,7 +64,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
     final private ObservableSet<Account> filteredAccounts = FXCollections.observableSet(new TreeSet<>());
 
     /**
-     * Adds accounts to be excluded from the list of selectable accounts
+     * Adds accounts to be excluded from the list of selectable accounts.
      *
      * @param filteredAccountsList collection of {@code Account} that should be excluded regardless
      *                             of {@code isAccountVisible()}

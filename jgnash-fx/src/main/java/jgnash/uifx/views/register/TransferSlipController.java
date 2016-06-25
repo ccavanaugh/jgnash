@@ -27,7 +27,7 @@ import jgnash.engine.TransactionFactory;
 import jgnash.util.NotNull;
 
 /**
- * Transaction Entry Controller for Transfers
+ * Transaction Entry Controller for Transfers.
  *
  * @author Craig Cavanaugh
  */

@@ -29,7 +29,7 @@ import jgnash.net.security.UpdateFactory;
 import jgnash.uifx.Options;
 
 /**
- * Controller for Startup and Shutdown options
+ * Controller for Startup and Shutdown options.
  *
  * @author Craig Cavanaugh
  */

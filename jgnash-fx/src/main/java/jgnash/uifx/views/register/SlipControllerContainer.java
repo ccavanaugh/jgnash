@@ -20,7 +20,7 @@ package jgnash.uifx.views.register;
 import javafx.scene.layout.Pane;
 
 /**
- * Utility class to hold the controller, slip, and slip description
+ * Utility class to hold the controller, slip, and slip description.
  *
  * @author Craig Cavanaugh
  */

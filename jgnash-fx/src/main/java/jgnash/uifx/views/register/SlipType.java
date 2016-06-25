@@ -18,10 +18,10 @@
 package jgnash.uifx.views.register;
 
 /**
- * Panel type enumeration
+ * Panel type enumeration.
  *
  * @author Craig Cavanaugh
  */
-public enum SlipType {
+enum SlipType {
     INCREASE, DECREASE
 }

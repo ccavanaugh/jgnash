@@ -42,7 +42,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
- * Return of Capital entry controller
+ * Return of Capital entry controller.
  *
  * @author Craig Cavanaugh
  */

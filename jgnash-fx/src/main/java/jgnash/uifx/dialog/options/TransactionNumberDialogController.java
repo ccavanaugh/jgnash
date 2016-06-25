@@ -39,7 +39,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 /**
- * Controller for editing the list of available transaction numbers
+ * Controller for editing the list of available transaction numbers.
  *
  * @author Craig Cavanaugh
  */

@@ -34,7 +34,7 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.ResourceUtils;
 
 /**
- * Status bar
+ * Status bar.
  *
  * @author Craig Cavanaugh
  */
@@ -46,7 +46,7 @@ class StatusBar extends StackPane {
 
     private final DoubleProperty progress = new SimpleDoubleProperty(this, "progress");
 
-    public StatusBar() {
+    StatusBar() {
         getStyleClass().add("status-bar");
 
         final Label label = new Label();
@@ -85,7 +85,7 @@ class StatusBar extends StackPane {
      *
      * @return the property used for storing a graphic node
      */
-    public final ObjectProperty<Node> graphicProperty() {
+    final ObjectProperty<Node> graphicProperty() {
         return graphic;
     }
 
@@ -95,7 +95,7 @@ class StatusBar extends StackPane {
      *
      * @return the property used to store the progress of a task
      */
-    public final DoubleProperty progressProperty() {
+    final DoubleProperty progressProperty() {
         return progress;
     }
 }

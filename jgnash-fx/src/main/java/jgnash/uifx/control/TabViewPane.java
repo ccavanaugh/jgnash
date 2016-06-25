@@ -28,7 +28,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 
 /**
- * Extended TabPane for consistent view creation
+ * Extended TabPane for consistent view creation.
  *
  * @author Craig Cavanaugh
  */

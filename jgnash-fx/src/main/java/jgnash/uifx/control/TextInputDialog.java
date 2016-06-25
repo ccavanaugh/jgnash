@@ -43,7 +43,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 /**
- * A better behaved TextInputDialog
+ * A better behaved TextInputDialog.
  *
  * @author Craig Cavanaugh
  */

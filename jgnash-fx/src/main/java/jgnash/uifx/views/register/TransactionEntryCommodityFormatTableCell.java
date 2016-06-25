@@ -26,13 +26,17 @@ import jgnash.engine.TransactionEntry;
 import jgnash.uifx.skin.StyleClass;
 
 /**
+ * Table cell for Transaction amounts.
+ * <p>
+ * Applies a style if the amount is negative
+ *
  * @author Craig Cavanaugh
  */
 class TransactionEntryCommodityFormatTableCell extends TableCell<TransactionEntry, BigDecimal> {
 
     private final NumberFormat format;
 
-    public TransactionEntryCommodityFormatTableCell(final NumberFormat format) {
+    TransactionEntryCommodityFormatTableCell(final NumberFormat format) {
         this.format = format;
 
         // Right align

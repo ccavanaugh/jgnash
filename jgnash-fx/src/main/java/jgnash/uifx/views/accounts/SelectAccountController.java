@@ -31,7 +31,7 @@ import jgnash.uifx.control.AbstractAccountTreeController;
 import jgnash.util.NotNull;
 
 /**
- * Controller for selecting an account from a tree
+ * Controller for selecting an account from a tree.
  *
  * @author Craig Cavanaugh
  */

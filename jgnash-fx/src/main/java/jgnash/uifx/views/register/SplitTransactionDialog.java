@@ -29,7 +29,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * Split Transaction entry dialog
+ * Split Transaction entry dialog.
  *
  * @author Craig Cavanaugh
  */

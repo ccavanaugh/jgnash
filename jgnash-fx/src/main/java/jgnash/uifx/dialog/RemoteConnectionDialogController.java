@@ -35,7 +35,7 @@ import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.util.InjectFXML;
 
 /**
- * Utility Dialog/Controller for collection remote database connection information
+ * Utility Dialog/Controller for collection remote database connection information.
  *
  * @author Craig Cavanaugh
  */

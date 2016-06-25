@@ -48,7 +48,7 @@ import jgnash.util.NotNull;
 import jgnash.util.OS;
 
 /**
- * Theme manager
+ * Theme manager.
  *
  * @author Craig Cavanaugh
  */
@@ -203,7 +203,7 @@ public class ThemeManager {
     }
 
     /**
-     * Utility method to discover the {@code Paint} used for {@code Button} text
+     * Utility method to discover the {@code Paint} used for {@code Button} text.
      *
      * @return Base Paint used for Buttons
      */
@@ -216,7 +216,7 @@ public class ThemeManager {
     }
 
     /**
-     * Utility method to discover the base font size in pixels
+     * Utility method to discover the base font size in pixels.
      *
      * @return font size in pixels
      */

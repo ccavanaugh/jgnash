@@ -38,7 +38,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * Save File As Task
+ * Save File As Task.
  *
  * @author Craig Cavanaugh
  */

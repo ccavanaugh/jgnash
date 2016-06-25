@@ -21,13 +21,17 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 
 /**
+ * Table cell for Transaction amounts.
+ * <p>
+ * Applies a style to transaction amounts
+ *
  * @author Craig Cavanaugh
  */
 class TransactionCommodityFormatTableCell extends AbstractTransactionTableCell {
 
     private final NumberFormat format;
 
-    public TransactionCommodityFormatTableCell(final NumberFormat format) {
+    TransactionCommodityFormatTableCell(final NumberFormat format) {
         super();
 
         this.format = format;

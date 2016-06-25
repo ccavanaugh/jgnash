@@ -48,7 +48,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * About Dialog
+ * About Dialog.
  *
  * @author Craig Cavanaugh
  */

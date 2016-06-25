@@ -23,7 +23,7 @@ import javafx.scene.text.Font;
 import jgnash.ui.report.jasper.ReportFactory;
 
 /**
- * Controller for Report Options
+ * Controller for Report Options.
  *
  * @author Craig Cavanaguh
  */

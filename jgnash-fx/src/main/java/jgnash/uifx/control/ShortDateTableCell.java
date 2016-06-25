@@ -26,7 +26,7 @@ import javafx.scene.control.TableCell;
 import jgnash.time.DateUtils;
 
 /**
- * {@code TableCell} for {@code Dates} formatted in a simplified manner
+ * {@code TableCell} for {@code Dates} formatted in a simplified manner.
  *
  * @author Craig Cavanaugh
  */

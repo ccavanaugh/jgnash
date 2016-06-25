@@ -21,19 +21,21 @@ import jgnash.engine.Transaction;
 import jgnash.util.NotNull;
 
 /**
- * @author Craig Cavanaugh
+ * Transaction slip interface.
+ *
+ * @author Craig Cavanaugh.
  */
-public interface Slip extends BaseSlip {
+interface Slip extends BaseSlip {
 
     /**
-     * Loads a {@code Transaction} into the form and sets it up for modification
+     * Loads a {@code Transaction} into the form and sets it up for modification.
      *
      * @param transaction {@code Transaction} to load for modification
      */
     void modifyTransaction(@NotNull final Transaction transaction);
 
     /**
-     * Builds and returns a new {@code Transaction} based on form contents
+     * Builds and returns a new {@code Transaction} based on form contents.
      *
      * @return new {@code Transaction} instance
      */

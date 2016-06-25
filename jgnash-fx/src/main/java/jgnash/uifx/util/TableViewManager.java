@@ -73,7 +73,7 @@ public class TableViewManager<S> {
     private static final Logger logger = Logger.getLogger(TableViewManager.class.getName());
 
     /**
-     * Limits number of processed visibility change events ensuring the most recent is executed
+     * Limits number of processed visibility change events ensuring the most recent is executed.
      */
     private final ThreadPoolExecutor updateColumnVisibilityExecutor;
 
@@ -119,7 +119,7 @@ public class TableViewManager<S> {
     }
 
     /**
-     * Determines the preferred width of the column including contents
+     * Determines the preferred width of the column including contents.
      *
      * @param column {@code TableColumn} to measure content
      * @return preferred width

@@ -18,7 +18,7 @@
 package jgnash.uifx.skin;
 
 /**
- * Global Styles
+ * Global Styles.
  *
  * @author Craig Cavanaugh
  */

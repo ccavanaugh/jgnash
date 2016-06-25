@@ -74,7 +74,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 /**
- * Security history controller
+ * Security history controller.
  *
  * @author Craig Cavanaugh
  */

@@ -29,7 +29,7 @@ import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
 
 /**
- * Transaction Entry Controller for Split and Merges shares
+ * Transaction Entry Controller for Split and Merges shares.
  *
  * @author Craig Cavanaugh
  */

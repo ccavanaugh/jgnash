@@ -20,7 +20,7 @@ package jgnash.uifx.views.register;
 import jgnash.engine.TransactionEntry;
 
 /**
- * Split Transaction Entry Controller for Credits and Debits
+ * Split Transaction Entry Controller for Credits and Debits.
  *
  * @author Craig Cavanaugh
  */

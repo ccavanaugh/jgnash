@@ -25,6 +25,10 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.skin.StyleClass;
 
 /**
+ * Table cell for Transaction strings.
+ * <p>
+ * Applies a style if the transaction occurs in the future.
+ *
  * @author Craig Cavanaugh
  */
 class TransactionStringTableCell extends TableCell<Transaction, String> {

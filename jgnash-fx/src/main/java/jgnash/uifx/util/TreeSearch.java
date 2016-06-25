@@ -20,7 +20,7 @@ package jgnash.uifx.util;
 import javafx.scene.control.TreeItem;
 
 /**
- * Utility class to search through a JavaFX tree
+ * Utility class to search through a JavaFX tree.
  *
  * @author Craig Cavanaugh
  */
