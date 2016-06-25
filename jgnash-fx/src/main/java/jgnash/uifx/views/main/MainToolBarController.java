@@ -33,7 +33,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
 
 /**
- * Primary ToolBar Controller
+ * Primary ToolBar Controller.
  *
  * @author Craig Cavanaugh
  */

@@ -27,7 +27,7 @@ import jgnash.util.ResourceUtils;
 import java.util.ResourceBundle;
 
 /**
- * Gains / Loss entry dialog
+ * Gains / Loss entry dialog.
  *
  * @author Craig Cavanaugh
  */

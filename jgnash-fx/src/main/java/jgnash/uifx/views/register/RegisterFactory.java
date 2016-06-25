@@ -221,7 +221,7 @@ public class RegisterFactory {
     }
 
     /**
-     * Generates tab names for transaction forms
+     * Generates tab names for transaction forms.
      *
      * @param accountType {@code AccountType} to generate tab names for
      * @return tab names with increase name at 0 and decrease name at 1

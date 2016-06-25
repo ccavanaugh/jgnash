@@ -25,7 +25,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 
 /**
- * Locked Investment Register pane controller
+ * Locked Investment Register pane controller.
  *
  * @author Craig Cavanaugh
  */

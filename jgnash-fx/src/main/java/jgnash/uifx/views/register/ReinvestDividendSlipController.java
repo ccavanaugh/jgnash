@@ -33,7 +33,7 @@ import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
 
 /**
- * Transaction Entry Controller for Reinvested dividends
+ * Transaction Entry Controller for Reinvested dividends.
  *
  * @author Craig Cavanaugh
  */

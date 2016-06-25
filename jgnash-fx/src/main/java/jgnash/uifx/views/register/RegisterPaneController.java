@@ -34,7 +34,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
- * Register pane controller
+ * Register pane controller.
  *
  * @author Craig Cavanaugh
  */
@@ -50,7 +50,7 @@ abstract class RegisterPaneController {
     protected Button deleteButton;
 
     /**
-     * The register table and labels should be loaded into this pane
+     * The register table and labels should be loaded into this pane.
      */
     @FXML
     protected StackPane registerTablePane;
@@ -62,12 +62,12 @@ abstract class RegisterPaneController {
     protected TitledPane titledPane;
 
     /**
-     * Active account for the pane
+     * Active account for the pane.
      */
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     /**
-     * This will be bound to the register table selection
+     * This will be bound to the register table selection.
      */
     final ObjectProperty<Transaction> selectedTransactionProperty = new SimpleObjectProperty<>();
 
@@ -137,7 +137,7 @@ abstract class RegisterPaneController {
     }
 
     /**
-     * Default empty implementation to modify a transaction when selected
+     * Default empty implementation to modify a transaction when selected.
      *
      * @param transaction {@code Transaction} to be modified
      */

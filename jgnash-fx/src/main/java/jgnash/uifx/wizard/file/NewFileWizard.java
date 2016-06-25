@@ -38,7 +38,7 @@ import jgnash.util.NewFileUtility;
 import jgnash.util.ResourceUtils;
 
 /**
- * Dialog for creating a new file
+ * Dialog for creating a new file.
  *
  * @author Craig Cavanaugh
  */

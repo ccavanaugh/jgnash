@@ -37,7 +37,7 @@ import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.tasks.BootEngineTask;
 
 /**
- * FXML Controller for opening a file or database
+ * FXML Controller for opening a file or database.
  *
  * @author Craig Cavanaugh
  */

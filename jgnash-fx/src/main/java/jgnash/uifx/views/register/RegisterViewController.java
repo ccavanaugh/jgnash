@@ -48,7 +48,7 @@ import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
- * Top level view for account registers
+ * Top level view for account registers.
  *
  * @author Craig Cavanaugh
  */

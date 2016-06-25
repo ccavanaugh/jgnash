@@ -38,7 +38,9 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
- * Very simple dialog for displaying an image
+ * Very simple dialog for displaying an image.
+ *
+ * TODO: Add print button
  *
  * @author Craig Cavanaugh
  */

@@ -36,7 +36,7 @@ import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 /**
- * New file wizard panel
+ * New file wizard panel.
  *
  * @author Craig Cavanaugh
  */

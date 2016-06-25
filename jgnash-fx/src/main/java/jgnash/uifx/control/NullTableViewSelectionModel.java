@@ -7,7 +7,7 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 
 /**
- * Disables selection
+ * Disables selection.
  *
  * @author Craig Cavanaugh
  */

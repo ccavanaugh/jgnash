@@ -22,8 +22,10 @@ import java.math.BigDecimal;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
-* @author Craig Cavanaugh
-*/
+ * UI helper. If a BigDecimal is negative, do not show it.
+ *
+ * @author Craig Cavanaugh
+ */
 class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
     IncreaseAmountProperty(final BigDecimal value) {
         if (value.signum() >= 0) {

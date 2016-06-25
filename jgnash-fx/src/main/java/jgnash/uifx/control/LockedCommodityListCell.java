@@ -7,7 +7,7 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.util.LockedCommodityNode;
 
 /**
- * Provides visual feedback that items are locked and may not be moved
+ * Provides visual feedback that items are locked and may not be moved.
  *
  * @author Craig Cavanaugh
  */

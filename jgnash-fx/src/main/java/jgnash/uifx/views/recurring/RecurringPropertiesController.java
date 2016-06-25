@@ -42,11 +42,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Controller for creating and modifying a reminder
+ * Controller for creating and modifying a reminder.
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class RecurringPropertiesController {
 
     @InjectFXML

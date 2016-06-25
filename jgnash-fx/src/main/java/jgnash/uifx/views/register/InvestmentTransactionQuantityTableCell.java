@@ -25,7 +25,7 @@ import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
 
 /**
- * {@code TableCell} for rendering investment transaction quantities
+ * {@code TableCell} for rendering investment transaction quantities.
  *
  * @author Craig Cavanaugh
  */

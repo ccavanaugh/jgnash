@@ -32,7 +32,7 @@ import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.ResourceUtils;
 
 /**
- * New file wizard pane, shows summary
+ * New file wizard pane, shows summary.
  *
  * @author Craig Cavanaugh
  */

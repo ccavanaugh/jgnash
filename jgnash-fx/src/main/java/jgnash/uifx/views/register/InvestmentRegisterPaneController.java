@@ -34,7 +34,7 @@ import jgnash.uifx.views.accounts.SelectAccountSecuritiesDialog;
 import jgnash.util.NotNull;
 
 /**
- * Investment Register pane controller
+ * Investment Register pane controller.
  *
  * @author Craig Cavanaugh
  */

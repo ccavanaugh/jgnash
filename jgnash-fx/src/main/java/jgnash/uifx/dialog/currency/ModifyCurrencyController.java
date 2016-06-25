@@ -48,7 +48,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 /**
- * Controller of modifying currencies
+ * Controller of modifying currencies.
  *
  * @author Craig Cavanaugh
  */

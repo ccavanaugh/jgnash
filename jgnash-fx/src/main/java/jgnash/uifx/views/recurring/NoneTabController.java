@@ -22,7 +22,7 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.util.NotNull;
 
 /**
- * None repeating reminder controller
+ * None repeating reminder controller.
  *
  * @author Craig Cavanaugh
  */

@@ -41,7 +41,7 @@ import jgnash.util.Nullable;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
- * Portfolio report controller
+ * Portfolio report controller.
  *
  * @author Craig Cavanaugh
  */

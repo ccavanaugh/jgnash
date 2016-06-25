@@ -24,7 +24,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.uifx.report.jasper.AbstractCrosstabReport;
 
 /**
- * Profit and Loss Report
+ * Profit and Loss Report.
  *
  * @author Craig Cavanaugh
  */

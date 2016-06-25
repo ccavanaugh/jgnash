@@ -29,7 +29,7 @@ import jgnash.util.ResourceUtils;
 public class RegisterStage extends Stage {
 
     /**
-     * Static list of register stages
+     * Static list of register stages.
      */
     final private static ListProperty<RegisterStage> registerStageListProperty
             = new SimpleListProperty<>(FXCollections.observableArrayList());

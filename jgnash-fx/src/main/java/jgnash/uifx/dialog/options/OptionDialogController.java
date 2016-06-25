@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 import jgnash.uifx.util.InjectFXML;
 
 /**
- * Controller for application options
+ * Controller for application options.
  *
  * @author Craig Cavanaugh
  */

@@ -24,7 +24,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.uifx.report.jasper.AbstractSumByTypeReport;
 
 /**
- * Net Worth Report Controller
+ * Net Worth Report Controller.
  *
  * @author Craig Cavanaugh
  */
@@ -53,7 +53,7 @@ public class NetWorthReportController extends AbstractSumByTypeReport {
     }
 
     /**
-     * Returns the legend for the grand total
+     * Returns the legend for the grand total.
      *
      * @return report name
      */

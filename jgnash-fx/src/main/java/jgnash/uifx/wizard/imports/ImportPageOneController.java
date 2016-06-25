@@ -38,7 +38,7 @@ import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 /**
- * Import Wizard, base account selection
+ * Import Wizard, base account selection.
  *
  * @author Craig Cavanaugh
  */

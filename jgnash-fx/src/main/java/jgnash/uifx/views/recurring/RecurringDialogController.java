@@ -30,7 +30,7 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 
 /**
- * Dialog Controller for Recurring transactions
+ * Dialog Controller for Recurring transactions.
  *
  * @author Craig Cavanaugh
  */

@@ -58,7 +58,7 @@ import jgnash.util.ResourceUtils;
 import org.controlsfx.control.CheckListView;
 
 /**
- * Historical import controller
+ * Historical import controller.
  *
  * @author Craig Cavanaugh
  */

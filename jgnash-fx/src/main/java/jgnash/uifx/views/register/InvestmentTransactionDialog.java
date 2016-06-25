@@ -41,7 +41,7 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * A Dialog for creating and editing new investment transactions
+ * A Dialog for creating and editing new investment transactions.
  *
  * @author Craig Cavanaugh
  */

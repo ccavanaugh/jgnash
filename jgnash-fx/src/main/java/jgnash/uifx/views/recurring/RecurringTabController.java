@@ -27,14 +27,14 @@ import jgnash.engine.recurring.Reminder;
 interface RecurringTabController {
 
     /**
-     * Returns the {@code Reminder} for this tab
+     * Returns the {@code Reminder} for this tab.
      *
      * @return return {@code Reminder}
      */
     Reminder getReminder();
 
     /**
-     * Sets the {@code Reminder} for this tab
+     * Sets the {@code Reminder} for this tab.
      *
      * @param reminder new {@code Reminder}
      */

@@ -39,7 +39,7 @@ import jgnash.uifx.wizard.imports.ImportWizard;
 import jgnash.util.ResourceUtils;
 
 /**
- * Utility class to import an OFX file
+ * Utility class to import an OFX file.
  *
  * @author Craig Cavanaugh
  */
@@ -154,7 +154,7 @@ public class ImportQifAction {
         private final Account account;
         private final List<ImportTransaction> transactions;
 
-        public ImportTransactionsTask(final Account account, final List<ImportTransaction> transactions) {
+        ImportTransactionsTask(final Account account, final List<ImportTransaction> transactions) {
             this.account = account;
             this.transactions = transactions;
         }

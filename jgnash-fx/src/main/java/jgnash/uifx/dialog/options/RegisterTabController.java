@@ -27,7 +27,7 @@ import jgnash.engine.ReconcileManager;
 import jgnash.uifx.Options;
 
 /**
- * Controller for Register Options
+ * Controller for Register Options.
  *
  * @author Craig Cavanaguh
  */

@@ -32,7 +32,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * UI Action to import a tree of accounts
+ * UI Action to import a tree of accounts.
  *
  * @author Craig Cavanaugh
  */

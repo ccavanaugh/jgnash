@@ -33,7 +33,7 @@ import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.ResourceUtils;
 
 /**
- * Import Wizard, base account selection
+ * Import Wizard, base account selection.
  *
  * @author Craig Cavanaugh
  */

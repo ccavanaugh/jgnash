@@ -40,11 +40,10 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.util.TextResource;
 
 /**
- * A mini wizard for creating a new budget based on historical data
+ * A mini wizard for creating a new budget based on historical data.
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class HistoricalBudgetDialogController {
 
     @FXML

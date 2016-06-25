@@ -58,7 +58,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ShortDateTableCell;
 
 /**
- * Controller for recurring events
+ * Controller for recurring events.
  *
  * @author Craig Cavanaugh
  */

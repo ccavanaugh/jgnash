@@ -29,7 +29,7 @@ import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.net.NetworkAuthenticator;
 
 /**
- * Controller for Network Options
+ * Controller for Network Options.
  *
  * @author Craig Cavanaugh
  */

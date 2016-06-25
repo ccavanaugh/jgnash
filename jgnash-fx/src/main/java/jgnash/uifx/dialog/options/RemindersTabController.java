@@ -23,7 +23,7 @@ import javafx.scene.control.CheckBox;
 import jgnash.uifx.Options;
 
 /**
- * Controller for Reminder Options
+ * Controller for Reminder Options.
  *
  * @author Craig Cavanaguh
  */

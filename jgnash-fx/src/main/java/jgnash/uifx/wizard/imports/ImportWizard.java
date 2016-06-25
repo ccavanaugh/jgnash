@@ -36,7 +36,7 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * Import Wizard Dialog
+ * Import Wizard Dialog.
  *
  * @author Craig Cavanaugh
  */

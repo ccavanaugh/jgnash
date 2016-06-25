@@ -48,6 +48,8 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
+ * Register actions utility class.
+ *
  * @author Craig Cavanaugh
  */
 public class RegisterActions {

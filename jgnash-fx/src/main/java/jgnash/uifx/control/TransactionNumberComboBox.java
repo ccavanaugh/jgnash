@@ -46,7 +46,7 @@ public class TransactionNumberComboBox extends ComboBox<String> {
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Boolean> focusChangeListener = null;

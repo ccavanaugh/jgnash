@@ -22,7 +22,7 @@ import jgnash.engine.TransactionTag;
 
 
 /**
- * Split Transaction Entry Controller for investment gains and loss
+ * Split Transaction Entry Controller for investment gains and loss.
  *
  * @author Craig Cavanaugh
  */
