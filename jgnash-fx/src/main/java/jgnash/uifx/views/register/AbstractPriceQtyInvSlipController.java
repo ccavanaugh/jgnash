@@ -35,9 +35,11 @@ import jgnash.uifx.util.ValidationFactory;
 import jgnash.uifx.views.main.MainView;
 
 /**
+ * Base Investment Slip controller.
+ *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipController {
+abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipController {
 
     @FXML
     DatePickerEx datePicker;

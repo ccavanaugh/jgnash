@@ -27,11 +27,13 @@ import jgnash.text.CommodityFormat;
 import jgnash.uifx.skin.StyleClass;
 
 /**
+ * TreeTable cell for styling positive/negative monetary values.
+ *
  * @author Craig Cavanaugh
  */
 class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDecimal> {
 
-    public AccountCommodityFormatTreeTableCell() {
+    AccountCommodityFormatTreeTableCell() {
         setStyle("-fx-alignment: center-right;");  // Right align
     }
 

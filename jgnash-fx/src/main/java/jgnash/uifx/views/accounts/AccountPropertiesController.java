@@ -50,7 +50,7 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
- * Loads all account properties into a form and returns a template Account based on the form properties
+ * Loads all account properties into a form and returns a template Account based on the form properties.
  *
  * @author Craig Cavanaugh
  */
@@ -285,7 +285,7 @@ public class AccountPropertiesController {
     }
 
     /**
-     * Disables selection of the account type if it is not within the same account group as the account being modified
+     * Disables selection of the account type if it is not within the same account group as the account being modified.
      */
     private class DisabledListCell extends ListCell<AccountType> {
 

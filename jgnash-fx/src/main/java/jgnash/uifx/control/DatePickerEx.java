@@ -42,7 +42,7 @@ public class DatePickerEx extends DatePicker {
     private final DateTimeFormatter dateFormatter;
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final ChangeListener<Boolean> focusChangeListener;

@@ -42,7 +42,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
- * Dividend entry controller
+ * Dividend entry controller.
  *
  * @author Craig Cavanaugh
  */

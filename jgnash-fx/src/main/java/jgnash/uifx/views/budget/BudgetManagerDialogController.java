@@ -48,6 +48,8 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
 
 /**
+ * Controller for budget management.
+ *
  * @author Craig Cavanaugh
  */
 public class BudgetManagerDialogController implements MessageListener{

@@ -43,7 +43,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * A Better behaved Alert class
+ * A Better behaved Alert class.
  *
  * @author Craig Cavanaugh
  */

@@ -59,6 +59,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * UI controls test application.
+ *
  * @author Craig Cavanaugh
  */
 @SuppressWarnings({"restriction", "WeakerAccess"})

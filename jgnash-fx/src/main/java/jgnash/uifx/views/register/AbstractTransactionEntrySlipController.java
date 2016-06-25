@@ -42,7 +42,7 @@ import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
 /**
- * Abstract controller for spit transaction entries of various types
+ * Abstract controller for spit transaction entries of various types.
  *
  * @author Craig Cavanaugh
  */

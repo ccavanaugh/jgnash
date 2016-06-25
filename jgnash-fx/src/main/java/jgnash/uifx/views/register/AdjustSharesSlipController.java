@@ -29,7 +29,7 @@ import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
 
 /**
- * Transaction Entry Controller for Adding and Removing shares
+ * Transaction Entry Controller for Adding and Removing shares.
  *
  * @author Craig Cavanaugh
  */

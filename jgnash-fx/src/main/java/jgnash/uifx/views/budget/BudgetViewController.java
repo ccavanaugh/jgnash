@@ -45,6 +45,8 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.main.MainView;
 
 /**
+ * Primary controller for the Budget view.
+ *
  * @author Craig Cavanaugh
  */
 public class BudgetViewController implements MessageListener {

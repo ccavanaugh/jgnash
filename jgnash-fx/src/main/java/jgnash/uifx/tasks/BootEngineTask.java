@@ -14,7 +14,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * Boots the engine with a local file or connection to a remote server
+ * Boots the engine with a local file or connection to a remote server.
  *
  * @author Craig Cavanaugh
  */
@@ -97,10 +97,10 @@ public class BootEngineTask extends Task<String> {
     }
 
     /**
-     * Check and determine if the file is an old format and backup in necessary
+     * Check and determine if the file is an old format and backup in necessary.
+     *
      * @param fileName fileName to verify
      * @param password assumed password
-     *
      * @return true if no errors are encountered
      */
     private static boolean checkAndBackupOldVersion(final String fileName, final char[] password) {

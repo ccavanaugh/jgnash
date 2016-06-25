@@ -34,9 +34,10 @@ import jgnash.time.Period;
 import jgnash.uifx.Options;
 
 /**
+ * Controller for budget properties.
+ *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class BudgetPropertiesDialogController {
 
     @FXML

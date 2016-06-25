@@ -39,7 +39,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.main.MainView;
 
 /**
- * Utility Dialog/Controller for changing the password of a relational database
+ * Utility Dialog/Controller for changing the password of a relational database.
  *
  * @author Craig Cavanaugh
  */

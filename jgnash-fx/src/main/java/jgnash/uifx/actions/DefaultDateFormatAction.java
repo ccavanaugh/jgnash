@@ -32,7 +32,7 @@ import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * UI Action to change the default locale
+ * UI Action to change the default locale.
  *
  * @author Craig Cavanaugh
  */

@@ -69,7 +69,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 /**
- * Controller for editing currency exchange rates
+ * Controller for editing currency exchange rates.
  *
  * @author Craig Cavanaugh
  */

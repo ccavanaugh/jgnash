@@ -27,7 +27,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 
 /**
- * Account Type Filter class
+ * Account Type Filter class.
  *
  * @author Craig Cavanaugh
  */
@@ -81,7 +81,7 @@ public class AccountTypeFilter {
     }
 
     /**
-     * Determines if an account is visible
+     * Determines if an account is visible.
      *
      * @param a account to check for visibility
      * @return true is account should be displayed
@@ -106,7 +106,7 @@ public class AccountTypeFilter {
     }
 
     /**
-     * Adds a single {@code InvalidationListener} to all visibility properties
+     * Adds a single {@code InvalidationListener} to all visibility properties.
      *
      * @param listener {@code InvalidationListener} to add
      */

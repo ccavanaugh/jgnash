@@ -56,7 +56,7 @@ import jgnash.uifx.views.register.RegisterStage;
 import jgnash.util.EncodeDecode;
 
 /**
- * Accounts view controller
+ * Accounts view controller.
  *
  * @author Craig Cavanaugh
  */

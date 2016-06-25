@@ -98,7 +98,7 @@ public class FeePane extends DetailedDecimalTextField {
     }
 
     /**
-     * Clones a {@code List} of {@code TransactionEntry(s)}
+     * Clones a {@code List} of {@code TransactionEntry(s)}.
      *
      * @param fees {@code List} of fees to clone
      */
@@ -144,7 +144,7 @@ public class FeePane extends DetailedDecimalTextField {
     }
 
     /**
-     * Clear the form and remove all entries
+     * Clear the form and remove all entries.
      */
     void clearForm() {
         feeDialog.getTransactionEntries().clear();

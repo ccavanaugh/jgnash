@@ -28,7 +28,7 @@ import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
 /**
- * Base slip interface
+ * Base slip interface.
  *
  * @author Craig Cavanaugh
  */
@@ -41,7 +41,7 @@ interface BaseSlip {
     void handleEnterAction();
 
     /**
-     * Validates the form
+     * Validates the form.
      *
      * @return return {@code true} if the form entry is valid, {@code false} otherwise
      */
@@ -74,6 +74,12 @@ interface BaseSlip {
         return ReconciledState.NOT_RECONCILED;
     }
 
+    /**
+     * Default implementation for intelligent handling for escape and enter keys within a Slip form.
+     * This should be called by the implementing class.
+     *
+     * @param parent Parent node to attach handler to.
+     */
     default void installKeyPressedHandler(final Parent parent) {
 
         parent.addEventHandler(KeyEvent.KEY_PRESSED, event -> {

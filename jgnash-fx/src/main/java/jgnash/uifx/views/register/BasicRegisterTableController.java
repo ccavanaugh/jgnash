@@ -37,7 +37,7 @@ import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.time.DateUtils;
 
 /**
- * Register Table with stats controller
+ * Register Table with stats controller.
  *
  * @author Craig Cavanaugh
  */

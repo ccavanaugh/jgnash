@@ -30,17 +30,19 @@ import static javafx.scene.input.KeyCode.*;
 import static javafx.scene.input.KeyEvent.KEY_RELEASED;
 
 /**
+ * UI behavior of displaying a popup within a decimal field.
+ *
  * @author Craig Cavanaugh
  */
 public class DetailedDecimalTextFieldBehavior extends ComboBoxBaseBehavior<BigDecimal> {
 
     /**
-     * Opens the Popup
+     * Opens the Popup.
      */
     private static final String OPEN_ACTION = "Open";
 
     /**
-     * Closes the Popup
+     * Closes the Popup.
      */
     private static final String CLOSE_ACTION = "Close";
 

@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Transaction Entry Controller for Credits and Debits
+ * Transaction Entry Controller for Credits and Debits.
  *
  * @author Craig Cavanaugh
  */

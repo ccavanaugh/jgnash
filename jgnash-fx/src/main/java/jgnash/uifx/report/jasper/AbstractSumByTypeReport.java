@@ -53,7 +53,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  * Abstract Report that groups and sums by {@code AccountGroup} and has a
- * line for a global sum
+ * line for a global sum.
  * 
  * @author Craig Cavanaugh
  */
@@ -180,7 +180,7 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     }
 
     /**
-     * Creates a JasperPrint object
+     * Creates a JasperPrint object.
      * 
      * @return JasperPrint
      */
@@ -244,9 +244,6 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             return baseCurrency;
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getColumnClass(int)
-         */
         @Override
         public Class<?> getColumnClass(final int columnIndex) {
             if (columnIndex == 0) { // accounts column
@@ -257,9 +254,6 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             return BigDecimal.class;
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getColumnName(int)
-         */
         @Override
         public String getColumnName(final int columnIndex) {
             if (columnIndex == 0) {

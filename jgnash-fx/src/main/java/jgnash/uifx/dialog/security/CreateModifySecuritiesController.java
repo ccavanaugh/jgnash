@@ -51,7 +51,7 @@ import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.ResourceUtils;
 
 /**
- * Controller for creating and modifying securities
+ * Controller for creating and modifying securities.
  *
  * @author Craig Cavanaugh
  */

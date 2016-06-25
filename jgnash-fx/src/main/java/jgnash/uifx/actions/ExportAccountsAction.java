@@ -31,7 +31,7 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
- * UI Action to export the current account tree
+ * UI Action to export the current account tree.
  *
  * @author Craig Cavanaugh
  */

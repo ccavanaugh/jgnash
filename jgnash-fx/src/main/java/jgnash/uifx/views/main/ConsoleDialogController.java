@@ -54,6 +54,8 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 /**
+ * Controller for the console dialog.
+ *
  * @author Craig Cavanaugh
  */
 @SuppressWarnings("WeakerAccess")

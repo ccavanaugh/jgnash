@@ -27,7 +27,7 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.skin.StyleClass;
 
 /**
- * Abstract {@code TableCell} for rendering numeric transaction values
+ * Abstract {@code TableCell} for rendering numeric transaction values.
  *
  * @author Craig Cavanaugh
  */

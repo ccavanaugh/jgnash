@@ -27,6 +27,8 @@ import javafx.stage.WindowEvent;
 import jgnash.uifx.util.InjectFXML;
 
 /**
+ * Controller for selecting the base color for the Fx interface.
+ *
  * @author Craig Cavanaugh
  */
 public class BaseColorDialogController {

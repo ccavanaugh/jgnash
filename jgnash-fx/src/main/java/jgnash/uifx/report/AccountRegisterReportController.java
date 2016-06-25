@@ -59,7 +59,7 @@ import jgnash.util.ResourceUtils;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
- * Account Register Report
+ * Account Register Report.
  *
  * @author Craig Cavanaugh
  */

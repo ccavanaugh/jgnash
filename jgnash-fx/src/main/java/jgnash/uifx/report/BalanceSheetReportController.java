@@ -32,7 +32,7 @@ import jgnash.ui.report.Row;
 import jgnash.uifx.report.jasper.AbstractSumByTypeReport;
 
 /**
- * Balance Sheet Report
+ * Balance Sheet Report.
  * 
  * @author Craig Cavanaugh
  */
@@ -65,7 +65,7 @@ public class BalanceSheetReportController extends AbstractSumByTypeReport {
     }
 
     /**
-     * Returns the name of the report
+     * Returns the name of the report.
      * 
      * @return report name
      */
@@ -75,7 +75,7 @@ public class BalanceSheetReportController extends AbstractSumByTypeReport {
     }
 
     /**
-     * Returns the legend for the grand total
+     * Returns the legend for the grand total.
      * 
      * @return report name
      */
@@ -90,7 +90,7 @@ public class BalanceSheetReportController extends AbstractSumByTypeReport {
     }
 
     /**
-     * Internal class to return a row the calculates the retained earnings for an account   
+     * Internal class to return a row the calculates the retained earnings for an account.
      */
     private class RetainedEarningsRow extends Row<Void> {
 
@@ -99,7 +99,7 @@ public class BalanceSheetReportController extends AbstractSumByTypeReport {
         }
 
         /**
-         * Returns values for retained earnings
+         * Returns values for retained earnings.
          */
         @Override
         public Object getValueAt(final int columnIndex) {
@@ -126,7 +126,7 @@ public class BalanceSheetReportController extends AbstractSumByTypeReport {
         }
 
         /**
-         * Returns the retained profit or loss for the given period
+         * Returns the retained profit or loss for the given period.
          * 
          * @param startDate Start date for the period
          * @param endDate End date for the period

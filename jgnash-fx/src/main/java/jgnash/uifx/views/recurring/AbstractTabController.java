@@ -28,11 +28,11 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.util.NotNull;
 
 /**
- * Abstract repeating reminder controller
+ * Abstract repeating reminder controller.
  *
  * @author Craig Cavanaugh
  */
-public class AbstractTabController implements RecurringTabController {
+class AbstractTabController implements RecurringTabController {
 
     @FXML
     private RadioButton noEndDateToggleButton;

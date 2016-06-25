@@ -30,7 +30,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
- * Utility class request database path from the user
+ * Utility class request database path from the user.
  *
  * @author Craig Cavanaugh
  */

@@ -44,7 +44,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 /**
- * Exception dialog
+ * Exception dialog.
  *
  * @author Craig Cavanaugh
  */

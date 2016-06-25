@@ -28,7 +28,7 @@ import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.AccountBalanceDisplayMode;
 
 /**
- * Controller for Account options
+ * Controller for Account options.
  *
  * @author Craig Cavanaugh
  */

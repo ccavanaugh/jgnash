@@ -44,6 +44,8 @@ import jgnash.util.LockedCommodityNode;
 import jgnash.uifx.util.ValidationFactory;
 
 /**
+ * Add / remove currency controller.
+ *
  * @author Craig Cavanaugh
  */
 public class AddRemoveCurrencyController {

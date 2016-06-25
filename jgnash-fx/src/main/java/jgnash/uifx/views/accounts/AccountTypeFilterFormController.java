@@ -24,9 +24,10 @@ import javafx.stage.Stage;
 import jgnash.uifx.util.AccountTypeFilter;
 
 /**
+ * Controller for filter by account type.
+ *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class AccountTypeFilterFormController {
 
     @FXML

@@ -27,7 +27,7 @@ import jgnash.util.ResourceUtils;
 import java.util.ResourceBundle;
 
 /**
- * Fees entry dialog
+ * Fees entry dialog.
  *
  * @author Craig Cavanaugh
  */

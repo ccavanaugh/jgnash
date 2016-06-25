@@ -38,7 +38,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
- * Utility class to run a javascript file
+ * Utility class to run a javascript file.
  *
  * @author Craig Cavanaugh
  */

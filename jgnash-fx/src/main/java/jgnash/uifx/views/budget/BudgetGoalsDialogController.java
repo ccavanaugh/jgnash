@@ -53,6 +53,8 @@ import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DecimalTextField;
 
 /**
+ * Controller for budget goals.
+ *
  * @author Craig Cavanaugh
  */
 public class BudgetGoalsDialogController {

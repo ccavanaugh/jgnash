@@ -38,7 +38,7 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
 
 /**
- * Register pane controller
+ * Register pane controller.
  *
  * @author Craig Cavanaugh
  */

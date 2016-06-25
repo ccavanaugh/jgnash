@@ -10,6 +10,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * Font width unit test.
+ *
  * @author Craig Cavanaugh
  */
 public class FontTest {

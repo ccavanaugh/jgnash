@@ -59,7 +59,7 @@ public class AutoCompleteFactory {
     private static final Object synchronizationObject = new Object();
 
     /**
-     * Use an ExecutorService to manage the number of running threads
+     * Use an ExecutorService to manage the number of running threads.
      */
     private static final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
@@ -68,7 +68,8 @@ public class AutoCompleteFactory {
     }
 
     /**
-     * Sets the {@code AutoCompleteModel} for {@code Transaction} memos to an {@code AutoCompleteTextField<Transaction>}
+     * Sets the {@code AutoCompleteModel} for {@code Transaction} memos to
+     * an {@code AutoCompleteTextField<Transaction>}.
      *
      * @param autoCompleteTextField text field to bind to
      */
@@ -84,7 +85,8 @@ public class AutoCompleteFactory {
     }
 
     /**
-     * Sets the {@code AutoCompleteModel} for {@code Transaction} payees to an {@code AutoCompleteTextField<Transaction>}
+     * Sets the {@code AutoCompleteModel} for {@code Transaction} payees to
+     * an {@code AutoCompleteTextField<Transaction>}.
      *
      * @param account base Account for payee model
      * @param autoCompleteTextField text field to bind to
@@ -99,7 +101,7 @@ public class AutoCompleteFactory {
 
         volatile boolean load = false;
 
-        public TransactionModel() {
+        TransactionModel() {
             init();
         }
 
@@ -177,7 +179,7 @@ public class AutoCompleteFactory {
 
         private final Account account;
 
-        public PayeeAccountModel(final Account account) {
+        PayeeAccountModel(final Account account) {
             super();
             this.account = account;
         }

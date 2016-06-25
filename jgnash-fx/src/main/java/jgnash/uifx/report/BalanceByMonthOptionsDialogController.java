@@ -36,7 +36,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 
 /**
- * Simple date range input controller
+ * Simple date range input controller.
  *
  * @author Craig Cavanaugh
  */

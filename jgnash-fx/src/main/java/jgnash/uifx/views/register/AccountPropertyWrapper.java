@@ -41,7 +41,7 @@ import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
- * Account properties wrapper to making binding of long running processes easier
+ * Account properties wrapper to making binding of long running processes easier.
  *
  * @author Craig Cavanaugh
  */

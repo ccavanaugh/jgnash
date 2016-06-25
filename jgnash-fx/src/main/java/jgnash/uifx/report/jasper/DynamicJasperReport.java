@@ -23,7 +23,7 @@ import jgnash.ui.report.jasper.BaseDynamicJasperReport;
 import jgnash.uifx.StaticUIMethods;
 
 /**
- * Abstract report controller base class that may be extended to create a report
+ * Abstract report controller base class that may be extended to create a report.
  * 
  * @author Craig Cavanaugh
  */

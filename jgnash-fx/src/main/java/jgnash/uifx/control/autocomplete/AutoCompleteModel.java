@@ -20,7 +20,7 @@ package jgnash.uifx.control.autocomplete;
 import java.util.Collection;
 
 /**
- * Auto complete model interface
+ * Auto complete model interface.
  *
  * @author Craig Cavanaugh
  * @author Don Brown

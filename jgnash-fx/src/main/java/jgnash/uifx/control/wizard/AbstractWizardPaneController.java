@@ -38,7 +38,7 @@ public abstract class AbstractWizardPaneController<K extends Enum<?>> implements
     }
 
     /**
-     * Should be called when a change to validity occurs
+     * Should be called when a change to validity occurs.
      */
     protected void updateDescriptor() {
         descriptorProperty().get().setIsValid(isPaneValid());

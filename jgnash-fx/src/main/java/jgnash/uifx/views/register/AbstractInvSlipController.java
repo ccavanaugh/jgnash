@@ -36,6 +36,8 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
 
 /**
+ * Base Slip controller.
+ *
  * @author Craig Cavanaugh
  */
 abstract class AbstractInvSlipController implements Slip {
@@ -50,7 +52,7 @@ abstract class AbstractInvSlipController implements Slip {
     private CheckBox reconciledButton;
 
     /**
-     * Holds a reference to a transaction being modified
+     * Holds a reference to a transaction being modified.
      */
     Transaction modTrans = null;
 

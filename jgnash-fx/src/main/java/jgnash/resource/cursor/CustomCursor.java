@@ -22,7 +22,7 @@ import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 
 /**
- * Custom cursor factory
+ * Custom cursor factory.
  *
  * @author Craig Cavanaugh
  */

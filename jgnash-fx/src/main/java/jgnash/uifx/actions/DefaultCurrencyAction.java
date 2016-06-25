@@ -35,7 +35,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
- * UI Action to change the default currency
+ * UI Action to change the default currency.
  *
  * @author Craig Cavanaugh
  */

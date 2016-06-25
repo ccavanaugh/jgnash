@@ -21,7 +21,7 @@ import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
 
 /**
- * Fees Entry Controller for investment fees
+ * Fees Entry Controller for investment fees.
  *
  * @author Craig Cavanaugh
  */

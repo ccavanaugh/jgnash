@@ -22,6 +22,8 @@ import java.math.BigDecimal;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
+ * UI helper.  A negative BigDecimal is shown as positive or not shown at all.
+ *
 * @author Craig Cavanaugh
 */
 class DecreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {

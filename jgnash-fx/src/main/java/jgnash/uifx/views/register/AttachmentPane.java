@@ -53,7 +53,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
- * Controller for handling transaction attachments
+ * Controller for handling transaction attachments.
  *
  * @author Craig Cavanaugh
  */
@@ -106,7 +106,8 @@ public class AttachmentPane extends GridPane {
     }
 
     /**
-     * Builder method for extracting an attachment from an existing {@code Transaction}
+     * Builder method for extracting an attachment from an existing {@code Transaction}.
+     *
      * @param transaction {@code Transaction} to extract attachment information from
      * @return the provided {@code Transaction}
      */
@@ -132,7 +133,8 @@ public class AttachmentPane extends GridPane {
     }
 
     /**
-     * Builder method for binding an attachment to a {@code Transaction}
+     * Builder method for binding an attachment to a {@code Transaction}.
+     *
      * @param transaction {@code Transaction} to update
      * @return the provided {@code Transaction}
      */

@@ -42,7 +42,7 @@ import java.math.BigDecimal;
 import java.util.ResourceBundle;
 
 /**
- * Abstract dialog for split transactions
+ * Abstract dialog for split transactions.
  *
  * @author Craig Cavanaugh
  */
@@ -79,7 +79,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
     abstract String getPrefNode();
 
     /**
-     * This will be called after the dialog is closed
+     * This will be called after the dialog is closed.
      */
     private Runnable closeRunnable;
 
@@ -137,7 +137,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
     abstract void modifyTransactionEntry(@NotNull final TransactionEntry transactionEntry);
 
     /**
-     * Delete all of the transaction entries
+     * Delete all of the transaction entries.
      */
     private void deleteAllAction() {
         tableView.getSelectionModel().clearSelection();

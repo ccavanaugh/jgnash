@@ -34,6 +34,8 @@ import jgnash.uifx.control.behavior.DetailedDecimalTextFieldBehavior;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
 
 /**
+ * Skin for a decimal field with a popup.
+ *
  * @author Craig Cavanaugh
  */
 public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecimal> {
@@ -43,13 +45,13 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
     private DecimalTextField textField;
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final ChangeListener<Boolean> detailedDecimalFocusChangeListener;
 
     /**
-     * Reference is needed to prevent premature garbage collection
+     * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Boolean> focusChangeListener;
