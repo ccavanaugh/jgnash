@@ -56,7 +56,6 @@ import jgnash.util.function.ParentAccountPredicate;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class IncomeExpensePieChartDialogController {
 
     @InjectFXML

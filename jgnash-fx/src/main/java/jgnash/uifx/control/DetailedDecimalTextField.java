@@ -76,8 +76,7 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
      * @see DecimalTextField#setDecimal(BigDecimal)
      * @param decimal BigDecimal value to display.  May not be null
      */
-    @SuppressWarnings("WeakerAccess")
-    public void setDecimal(@NotNull final BigDecimal decimal) {
+    protected void setDecimal(@NotNull final BigDecimal decimal) {
         Objects.requireNonNull(decimal);
 
         getEditor().setDecimal(decimal);

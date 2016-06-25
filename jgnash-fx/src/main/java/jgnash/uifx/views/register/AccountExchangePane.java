@@ -285,8 +285,7 @@ public class AccountExchangePane extends GridPane {
         return selectedAccountProperty;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public ObjectProperty<CurrencyNode> baseCurrencyProperty() {
+    ObjectProperty<CurrencyNode> baseCurrencyProperty() {
         return baseCurrencyProperty;
     }
 

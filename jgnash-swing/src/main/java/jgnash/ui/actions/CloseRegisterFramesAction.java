@@ -24,7 +24,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 
 /**
- * UI Action to close all open register frames
+ * UI Action to close all open register frames.
  *
  * @author Craig Cavanaugh
  */

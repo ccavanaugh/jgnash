@@ -40,7 +40,6 @@ import jgnash.uifx.util.InjectFXML;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class BalanceByMonthOptionsDialogController {
 
     @InjectFXML

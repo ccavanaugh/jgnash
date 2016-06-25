@@ -56,7 +56,6 @@ import jgnash.time.DateUtils;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class IncomeExpenseBarChartDialogController {
 
     private static final String CHART_CSS = "jgnash/skin/incomeExpenseBarChart.css";

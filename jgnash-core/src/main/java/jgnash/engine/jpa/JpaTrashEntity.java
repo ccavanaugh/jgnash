@@ -33,7 +33,6 @@ import javax.persistence.Id;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 @Entity
 public class JpaTrashEntity {
 

@@ -343,7 +343,6 @@ public class DecimalTextField extends TextFieldEx {
         return "";
     }
 
-    @SuppressWarnings("WeakerAccess")
     public BooleanProperty emptyWhenZeroProperty() {
         return emptyWhenZeroProperty;
     }
