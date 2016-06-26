@@ -16,7 +16,6 @@ package net.bzzt.swift.mt940;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class Mt940File {
 		this.records = records;
 	}
 
-	public List<Mt940Entry> getEntries() {
+	List<Mt940Entry> getEntries() {
 		List<Mt940Entry> retval = new ArrayList<>();
 		for (Mt940Record record : getRecords())
 		{

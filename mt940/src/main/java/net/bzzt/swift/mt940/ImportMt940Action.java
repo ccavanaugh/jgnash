@@ -46,14 +46,14 @@ import net.bzzt.swift.mt940.exporter.Mt940Exporter;
 import net.bzzt.swift.mt940.parser.Mt940Parser;
 
 /**
- * UI Action to import an mt940 file
+ * UI Action to import an mt940 file.
  *
  * @author Arnout Engelen
  * @author Craig Cavanaugh
  */
 class ImportMt940Action extends AbstractEnabledAction {
 
-    public ImportMt940Action() {
+    ImportMt940Action() {
 
         final ResourceBundle rb = ResourceUtils.getBundle();
 

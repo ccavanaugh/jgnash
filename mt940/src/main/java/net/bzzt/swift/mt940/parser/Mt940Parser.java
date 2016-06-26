@@ -31,12 +31,14 @@ import net.bzzt.swift.mt940.Mt940File;
 import net.bzzt.swift.mt940.Mt940Record;
 
 /**
+ * MT940 Parser.
+ *
  * @author Arnout Engelen
  * @author Miroslav Holubec
  */
 public class Mt940Parser {
 
-    /**
+    /*
      * Invoke the Mt940-parser stand alone: for testing.
      *
      * @param args
@@ -168,7 +170,7 @@ public class Mt940Parser {
     }
 
     /**
-     * adds the current entry to the result as a side-effect, if available
+     * Adds the current entry to the result as a side-effect, if available.
      *
      * @param entries       entry list
      * @param previousEntry entry to add if not null;
@@ -182,7 +184,7 @@ public class Mt940Parser {
     }
 
     /**
-     * BuchungsDatum is a 4-character optional field - but how can we check whether it was included?
+     * BuchungsDatum is a 4-character optional field - but how can we check whether it was included.
      * <p>
      * The field is directly followed by the mandatory 'soll/haben-kennung' character, so
      * we assume that when the string starts with a digit that's probably the buchungsdatum
