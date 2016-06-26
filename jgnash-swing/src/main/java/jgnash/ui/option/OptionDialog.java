@@ -33,6 +33,7 @@ import javax.swing.WindowConstants;
 
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
+import jgnash.plugin.SwingPlugin;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.ThemeManager;
 import jgnash.ui.UIApplication;
@@ -44,7 +45,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * Options Dialog
+ * Options Dialog.
  * 
  * @author Craig Cavanaugh
  */
@@ -87,11 +88,11 @@ public class OptionDialog extends JDialog implements ActionListener {
         tabbedPane.addTab(rb.getString("Tab.Report"), new ReportOptions());
         tabbedPane.addTab(rb.getString("Tab.StartupShutdown"), new StartupOptions());
 
-        for (Plugin plugin : PluginFactory.getPlugins()) {
-            JPanel optionsPanel = plugin.getOptionsPanel();
+        for (final Plugin plugin : PluginFactory.getPlugins()) {
+            final JPanel optionsPanel = ((SwingPlugin)plugin).getOptionsPanel();
 
             if (optionsPanel != null) {
-                Object name = optionsPanel.getClientProperty(Plugin.OPTIONSNAME);
+                Object name = optionsPanel.getClientProperty(Plugin.OPTIONS_NAME);
 
                 if (name != null) {
                     tabbedPane.addTab((String) name, optionsPanel);
@@ -139,7 +140,7 @@ public class OptionDialog extends JDialog implements ActionListener {
 
         private final int oldNimbusFontSize;
 
-        public LFWindowAdapter(int oldNimbusFontSize) {
+        LFWindowAdapter(int oldNimbusFontSize) {
             this.oldNimbusFontSize = oldNimbusFontSize;
         }
 

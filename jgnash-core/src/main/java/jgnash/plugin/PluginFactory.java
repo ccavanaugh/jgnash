@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.jar.Attributes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +45,7 @@ public final class PluginFactory {
 
     private static String pluginDirectory = null;
     private final static String PLUGIN_DIRECTORY_NAME = "plugins";
-    private final static BigDecimal INTERFACE_VERSION = new BigDecimal("2.5");
+    private final static BigDecimal INTERFACE_VERSION = new BigDecimal("2.25");
     private static final Logger logger = Logger.getLogger(PluginFactory.class.getName());
 
     private static final List<Plugin> plugins = new ArrayList<>();
@@ -74,7 +75,9 @@ public final class PluginFactory {
                 logger.log(Level.SEVERE, null, ex);
             }
 
-            pluginDirectory = new File(pluginDirectory).getParent();
+            // starting path will be the lib directory because that is where jgnash-core lives.
+
+            pluginDirectory = new File(pluginDirectory).getParentFile().getParent();
             pluginDirectory += File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
 
             logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
@@ -85,8 +88,7 @@ public final class PluginFactory {
 
     public static void startPlugins() {
         if (!pluginsStarted) {
-
-            for (Plugin plugin : plugins) {
+            for (final Plugin plugin : plugins) {
                 logger.log(Level.INFO, "Starting plugin: {0}", plugin.getName());
                 plugin.start();
             }
@@ -106,7 +108,12 @@ public final class PluginFactory {
         }
     }
 
-    public static void loadPlugins() {
+    /**
+     * Loads Plugins.
+     *
+     * @param predicate Predicate allows filtering and control of loading plugins
+     */
+    public static void loadPlugins(final Predicate<Plugin> predicate) {
         if (!pluginsLoaded) {
             final String[] paths = getPluginPaths();
 
@@ -115,9 +122,12 @@ public final class PluginFactory {
                     try {
                         final Plugin p = loadPlugin(plugin);
                         if (p != null) {
-                            plugins.add(p);
+                            if (predicate.test(p)) {
+                                plugins.add(p);
+                            }
                         }
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IOException ex) {
+                    } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException
+                            | IOException ex) {
                         logger.log(Level.SEVERE, null, ex);
                     }
                 }
@@ -188,8 +198,11 @@ public final class PluginFactory {
                     logger.log(Level.SEVERE, null, ex);
                 }
 
-                if (version != null && INTERFACE_VERSION.compareTo(version) >= 0) {
+                if (version != null && INTERFACE_VERSION.compareTo(version) == 0) {
                     activator = attr.getValue(PLUGIN_ACTIVATOR);
+                } else {
+                    logger.log(Level.WARNING, "Plugin version not compatible; not loaded: "
+                            + attr.getValue(PLUGIN_ACTIVATOR));
                 }
             }
 

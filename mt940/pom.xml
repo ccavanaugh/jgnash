@@ -40,7 +40,7 @@
                     <archive>
                         <manifestEntries>
                             <Plugin-Activator>net.bzzt.swift.mt940.Mt940Plugin</Plugin-Activator>
-                            <Plugin-Version>2.5</Plugin-Version>
+                            <Plugin-Version>2.25</Plugin-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>

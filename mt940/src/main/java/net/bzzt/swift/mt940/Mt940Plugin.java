@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 
 import jgnash.plugin.*;
 
-public class Mt940Plugin implements Plugin {
+public class Mt940Plugin implements SwingPlugin {
 
     @Override
     public void start() {
@@ -40,9 +40,9 @@ public class Mt940Plugin implements Plugin {
     @Override
     public JMenuItem[] getMenuItems() {
 
-        JMenuItem menuItem = new JMenuItem();
+        final JMenuItem menuItem = new JMenuItem();
 
-        menuItem.putClientProperty(Plugin.PRECEDINGMENUIDREF, "ofximport-command");
+        menuItem.putClientProperty(SwingPlugin.PRECEDING_MENU_IDREF, "ofximport-command");
 
         Logger.getLogger(Mt940Plugin.class.getName()).info("Loading mt940 plugin");
 

@@ -70,6 +70,7 @@ import jgnash.net.security.UpdateFactory;
 import jgnash.net.security.YahooParser;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
+import jgnash.plugin.SwingPlugin;
 import jgnash.ui.account.ExpandingAccountTablePanel;
 import jgnash.ui.actions.AbstractEnabledAction;
 import jgnash.ui.actions.OpenAction;
@@ -211,7 +212,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     /**
      * Performs a controlled shutdown to ensure the file is written and closed
-     * before the UI disappears
+     * before the UI disappears.
      */
     private void performControlledShutdown() {
 
@@ -254,16 +255,15 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void loadPlugins() {
-        PluginFactory.loadPlugins();
+        PluginFactory.loadPlugins(plugin -> plugin instanceof SwingPlugin); // Only load Swing based plugins
         PluginFactory.startPlugins();
 
         for (final Plugin plugin : PluginFactory.getPlugins()) {
-
-            final JMenuItem[] menuItems = plugin.getMenuItems();
+            final JMenuItem[] menuItems = ((SwingPlugin) plugin).getMenuItems();
 
             if (menuItems != null) {
                 for (JMenuItem menuItem : menuItems) {
-                    final Object precedingId = menuItem.getClientProperty(Plugin.PRECEDINGMENUIDREF);
+                    final Object precedingId = menuItem.getClientProperty(SwingPlugin.PRECEDING_MENU_IDREF);
 
                     if (precedingId != null && precedingId instanceof String) {
                         addMenuItem((String) precedingId, menuItem);
@@ -284,9 +284,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         pref.putBoolean(REGISTER_FOLLOWS_LIST, follow);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         Object source = e.getSource();
@@ -530,7 +527,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     /**
-     * Dispose the UI with an option to prevent complete program shutdown
+     * Dispose the UI with an option to prevent complete program shutdown.
      *
      * @param shutDown true if UI should be shutdown when dispose is called
      */
@@ -749,7 +746,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     /**
      * The engine could be busy with something else, so run in the background
-     * and do not block the EDT
+     * and do not block the EDT.
      */
     private final class UpdateTitleWorker extends SwingWorker<Engine, Void> {
 

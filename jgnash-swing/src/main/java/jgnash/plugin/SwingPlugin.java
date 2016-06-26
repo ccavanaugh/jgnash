@@ -42,43 +42,19 @@ import javax.swing.JPanel;
  * @author Leif-Erik Dörr
  * @author Craig Cavanaugh
  */
-public interface Plugin {
+public interface SwingPlugin extends Plugin {
 
     /**
-     * Client property key for the idref of the preceding menu item when adding a plugin specific menu item
+     * Client property key for the idref of the preceding menu item when adding a plugin specific menu item.
      */
-    String PRECEDINGMENUIDREF = "PrecedingMenuIdref";
-
-    /**
-     * Client property key for the name of the options tab to add
-     */
-    String OPTIONSNAME = "OptionsName";
-
-    /**
-     * Return a descriptive name for the plugin
-     *
-     * @return name of the plugin
-     */
-    String getName();
-
-    /**
-     * Called by the PluginFactory to start the plugin
-     */
-    @SuppressWarnings("EmptyMethod")
-    void start();
-
-    /**
-     * Called by the PluginFactory to stop the plugin
-     */
-    @SuppressWarnings("EmptyMethod")
-    void stop();
+    String PRECEDING_MENU_IDREF = "PrecedingMenuIdref";
 
     /**
      * This will add a {@code JMenuItem} to the primary application menu. The {@code PRECEDINGMENUIDREF}
      * client property must be set on the returned {@code JMenuItem}.
      *
      * @return a {@code JMenuItem} to perform an action. May be {@code null} if no action is to be performed
-     * @see javax.swing.JMenuItem
+     * @see JMenuItem
      */
     JMenuItem[] getMenuItems();
 
@@ -89,5 +65,4 @@ public interface Plugin {
      * @return a {@code JPanel}. May be {@code null} if no panel is to be added
      */
     JPanel getOptionsPanel();
-
 }

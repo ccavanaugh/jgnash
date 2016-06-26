@@ -27,6 +27,7 @@ Change the base highlight color for the FX interface
 
 Release 2.25.0
 ----------------------
+06/26/16 Plugins were not being loaded from the correct location.  This prevented the mt940 plugin from loading. (Swing)
 06/26/16 Added print capability and a status bar to the transaction attachment viewer. (Fx)
 
 Release 2.24.0
