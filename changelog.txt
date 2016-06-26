@@ -25,6 +25,10 @@ Reinstate archive capability.
 
 Change the base highlight color for the FX interface
 
+Release 2.25.0
+----------------------
+06/26/16 Added print capability and a status bar to the transaction attachment viewer. (Fx)
+
 Release 2.24.0
 ----------------------
 06/23/16 Improved performance for loading large files, working with large accounts and reports. (Swing, Fx)
