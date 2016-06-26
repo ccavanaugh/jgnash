@@ -35,6 +35,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Plugin Factory methods.
+ *
  * @author Leif-Erik Dörr
  * @author Craig Cavanaugh
  */
@@ -95,7 +97,7 @@ public final class PluginFactory {
 
     public static void stopPlugins() {
         if (pluginsStarted) {
-            for (Plugin plugin : plugins) {
+            for (final Plugin plugin : plugins) {
                 logger.log(Level.INFO, "Stopping plugin: {0}", plugin.getName());
                 plugin.stop();
             }
@@ -132,18 +134,19 @@ public final class PluginFactory {
         return dir.list(new PluginFilenameFilter());
     }
 
-    private static Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+    private static Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, IOException {
 
         // If classLoader is closed, the plugin is not able to load new classes...
-        @SuppressWarnings("resource")
-        JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + getPluginDirectory() + jarFileName));
+        final JarURLClassLoader classLoader
+                = new JarURLClassLoader(new URL("file:///" + getPluginDirectory() + jarFileName));
+
+        final String pluginActivator = classLoader.getActivator();
 
         Plugin plugin = null;
 
-        String pluginActivator = classLoader.getActivator();
-
         if (pluginActivator != null) {
-            Object object = classLoader.loadClass(pluginActivator).newInstance();
+            final Object object = classLoader.loadClass(pluginActivator).newInstance();
 
             if (object instanceof Plugin) {
                 plugin = (Plugin) object;
@@ -155,27 +158,22 @@ public final class PluginFactory {
         return plugin;
     }
 
-    /**
-     * @see java.net.URLClassLoader
-     */
     private static class JarURLClassLoader extends URLClassLoader {
 
         private static final String PLUGIN_ACTIVATOR = "Plugin-Activator";
         private static final String PLUGIN_VERSION = "Plugin-Version";
 
-        public JarURLClassLoader(final URL url) {
+        JarURLClassLoader(final URL url) {
             super(new URL[]{url});
         }
 
-        public String getActivator() throws IOException {
+        String getActivator() throws IOException {
 
             String activator = null;
 
-            URL u = new URL("jar", "", getURLs()[0] + "!/");
-
-            JarURLConnection uc = (JarURLConnection) u.openConnection();
-
-            Attributes attr = uc.getMainAttributes();
+            final URL u = new URL("jar", "", getURLs()[0] + "!/");
+            final JarURLConnection uc = (JarURLConnection) u.openConnection();
+            final Attributes attr = uc.getMainAttributes();
 
             if (attr != null) {
 
