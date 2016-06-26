@@ -57,6 +57,7 @@ import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
+import jgnash.uifx.control.StatusBar;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.BootEngineTask;

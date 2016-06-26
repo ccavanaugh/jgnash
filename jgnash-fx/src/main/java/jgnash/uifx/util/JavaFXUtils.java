@@ -9,16 +9,23 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
@@ -136,5 +143,42 @@ public class JavaFXUtils {
         text.applyCss();
 
         return Math.ceil(text.getLayoutBounds().getWidth());
+    }
+
+    /**
+     * Sends an {@code ImageView} to a printer.
+     *
+     * @param imageView {@code ImageView} to print
+     */
+    public static void printImageView(final ImageView imageView) {
+        final PrinterJob job = PrinterJob.createPrinterJob();
+
+        if (job != null) {
+            // Get the default page layout
+            final Printer printer = Printer.getDefaultPrinter();
+            PageLayout pageLayout = job.getJobSettings().getPageLayout();
+
+            // Request landscape orientation by default
+            pageLayout = printer.createPageLayout(pageLayout.getPaper(), PageOrientation.LANDSCAPE,
+                    Printer.MarginType.DEFAULT);
+
+            job.getJobSettings().setPageLayout(pageLayout);
+
+            if (job.showPageSetupDialog(MainView.getInstance().getPrimaryStage())) {
+                pageLayout = job.getJobSettings().getPageLayout();
+
+                // determine the scaling factor to fit the page
+                final double scale = Math.min(pageLayout.getPrintableWidth() / imageView.getBoundsInParent().getWidth(),
+                        pageLayout.getPrintableHeight() / imageView.getBoundsInParent().getHeight());
+
+                imageView.getTransforms().add(new Scale(scale, scale));
+
+                if (job.printPage(imageView)) {
+                    job.endJob();
+                }
+            } else {
+                job.cancelJob();
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.views.main;
+package jgnash.uifx.control;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -38,7 +38,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-class StatusBar extends StackPane {
+public class StatusBar extends StackPane {
 
     private final StringProperty text = new SimpleStringProperty(this, "text");
 
@@ -46,7 +46,7 @@ class StatusBar extends StackPane {
 
     private final DoubleProperty progress = new SimpleDoubleProperty(this, "progress");
 
-    StatusBar() {
+    public StatusBar() {
         getStyleClass().add("status-bar");
 
         final Label label = new Label();
@@ -85,7 +85,7 @@ class StatusBar extends StackPane {
      *
      * @return the property used for storing a graphic node
      */
-    final ObjectProperty<Node> graphicProperty() {
+    public final ObjectProperty<Node> graphicProperty() {
         return graphic;
     }
 
@@ -95,7 +95,7 @@ class StatusBar extends StackPane {
      *
      * @return the property used to store the progress of a task
      */
-    final DoubleProperty progressProperty() {
+    public final DoubleProperty progressProperty() {
         return progress;
     }
 }

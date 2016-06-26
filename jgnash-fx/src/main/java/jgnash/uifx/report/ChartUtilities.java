@@ -26,10 +26,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.print.PageLayout;
-import javafx.print.PageOrientation;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.Chart;
 import javafx.scene.image.ImageView;
@@ -41,6 +37,7 @@ import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
@@ -119,37 +116,6 @@ class ChartUtilities {
 
     static void printChart(final Pane pane) {
         // Manipulate a snapshot of the pane instead of the pane itself to avoid visual artifacts when scaling
-        final ImageView imageView = new ImageView(takeSnapshot(pane));
-
-        final PrinterJob job = PrinterJob.createPrinterJob();
-
-        if (job != null) {
-
-            // Get the default page layout
-            final Printer printer = Printer.getDefaultPrinter();
-            PageLayout pageLayout = job.getJobSettings().getPageLayout();
-
-            // Request landscape orientation by default
-            pageLayout = printer.createPageLayout(pageLayout.getPaper(), PageOrientation.LANDSCAPE,
-                    Printer.MarginType.DEFAULT);
-
-            job.getJobSettings().setPageLayout(pageLayout);
-
-            if (job.showPageSetupDialog(MainView.getInstance().getPrimaryStage())) {
-                pageLayout = job.getJobSettings().getPageLayout();
-
-                // determine the scaling factor to fit the page
-                final double scale = Math.min(pageLayout.getPrintableWidth() / imageView.getBoundsInParent().getWidth(),
-                        pageLayout.getPrintableHeight() / imageView.getBoundsInParent().getHeight());
-
-                imageView.getTransforms().add(new Scale(scale, scale));
-
-                if (job.printPage(imageView)) {
-                    job.endJob();
-                }
-            } else {
-                job.cancelJob();
-            }
-        }
+        JavaFXUtils.printImageView(new ImageView(takeSnapshot(pane)));
     }
 }

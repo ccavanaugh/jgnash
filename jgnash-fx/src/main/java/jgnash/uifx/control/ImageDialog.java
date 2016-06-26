@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.control;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,33 +27,40 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
- * Very simple dialog for displaying an image.
- *
- * TODO: Add print button
+ * A dialog for displaying and printing an image.
  *
  * @author Craig Cavanaugh
  */
 public class ImageDialog {
 
-    private final Stage dialog;
+    private static final int MARGIN = 20;
+    private static final int MIN_SIZE = 100;
 
+    private final Stage dialog;
     private final ImageView imageView = new ImageView();
+    private final StatusBar statusBar = new StatusBar();
 
     public static void showImage(final Path path) {
-        ImageDialog imageDialog = new ImageDialog();
+        final ImageDialog imageDialog = new ImageDialog();
         imageDialog.setImage(path);
 
         imageDialog.dialog.show();
@@ -69,17 +78,31 @@ public class ImageDialog {
         dialog.setWidth(450);
         dialog.setHeight(350);
 
+        final BorderPane borderPane = new BorderPane();
+        final ToolBar toolBar = new ToolBar();
+
+        final Button printButton = new Button(resources.getString("Button.Print"),
+                new FontAwesomeLabel(FontAwesomeIcon.PRINT));
+
+        printButton.setOnAction(event -> JavaFXUtils.printImageView(imageView));
+
+        toolBar.getItems().add(printButton);
+
         final StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(imageView);
 
-        imageView.fitWidthProperty().bind(dialog.widthProperty().subtract(20));
-        imageView.fitHeightProperty().bind(dialog.heightProperty().subtract(20));
+        stackPane.setMinSize(MIN_SIZE, MIN_SIZE);
 
-        stackPane.getChildren().addAll(imageView);
+        imageView.fitWidthProperty().bind(stackPane.widthProperty().subtract(MARGIN));
+        imageView.fitHeightProperty().bind(stackPane.heightProperty().subtract(MARGIN));
 
-        dialog.setScene(new Scene(stackPane));
+        borderPane.setTop(toolBar);
+        borderPane.setCenter(stackPane);
+        borderPane.setBottom(statusBar);
+        borderPane.styleProperty().bind(ThemeManager.getStyleProperty());
 
+        dialog.setScene(new Scene(borderPane));
         dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
-        dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         // Remember dialog size and location
         StageUtils.addBoundsListener(dialog, ImageDialog.class);
@@ -91,6 +114,7 @@ public class ImageDialog {
                 final Image image = new Image(path.toUri().toURL().toString(), true);
                 imageView.setPreserveRatio(true);
                 imageView.setImage(image);
+                statusBar.textProperty().setValue(path.toString());
             } catch (final MalformedURLException e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             }
