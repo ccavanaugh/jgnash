@@ -21,21 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
-import jgnash.plugin.*;
+import jgnash.plugin.SwingPlugin;
 
 public class Mt940Plugin implements SwingPlugin {
-
-    @Override
-    public void start() {
-        // ignored
-    }
-
-    @Override
-    public void stop() {
-        // ignored        
-    }
 
     @Override
     public JMenuItem[] getMenuItems() {
@@ -54,11 +43,6 @@ public class Mt940Plugin implements SwingPlugin {
             Logger.getLogger(Mt940Plugin.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             return null;
         }
-    }
-
-    @Override
-    public JPanel getOptionsPanel() {
-        return null;
     }
 
     @Override

@@ -56,7 +56,9 @@ public interface SwingPlugin extends Plugin {
      * @return a {@code JMenuItem} to perform an action. May be {@code null} if no action is to be performed
      * @see JMenuItem
      */
-    JMenuItem[] getMenuItems();
+    default JMenuItem[] getMenuItems() {
+        return null;
+    }
 
     /**
      * This will add an additional option panel to the standard options dialog. The {@code OPTIONSNAME} client
@@ -64,5 +66,8 @@ public interface SwingPlugin extends Plugin {
      *
      * @return a {@code JPanel}. May be {@code null} if no panel is to be added
      */
-    JPanel getOptionsPanel();
+    @SuppressWarnings("SameReturnValue")
+    default JPanel getOptionsPanel() {
+        return null;
+    }
 }

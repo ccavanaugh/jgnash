@@ -279,6 +279,7 @@
                 <module>jgnash-fx</module>
                 <module>jgnash-report-core</module>
                 <module>jgnash-convert</module>
+                <module>jgnash-fx-test-plugin</module>
                 <module>mt940</module>
             </modules>
         </profile>

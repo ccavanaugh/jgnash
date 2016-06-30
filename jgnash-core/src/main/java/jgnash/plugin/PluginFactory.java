@@ -35,6 +35,8 @@ import java.util.jar.Attributes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.util.OS;
+
 /**
  * Plugin Factory methods.
  *
@@ -43,7 +45,6 @@ import java.util.logging.Logger;
  */
 public final class PluginFactory {
 
-    private static String pluginDirectory = null;
     private final static String PLUGIN_DIRECTORY_NAME = "plugins";
     private final static BigDecimal INTERFACE_VERSION = new BigDecimal("2.25");
     private static final Logger logger = Logger.getLogger(PluginFactory.class.getName());
@@ -51,10 +52,6 @@ public final class PluginFactory {
     private static final List<Plugin> plugins = new ArrayList<>();
     private static boolean pluginsStarted = false;
     private static boolean pluginsLoaded = false;
-
-    static {
-        pluginDirectory = getPluginDirectory();
-    }
 
     private PluginFactory() {
         // Utility class
@@ -64,24 +61,48 @@ public final class PluginFactory {
         return Collections.unmodifiableList(plugins);
     }
 
-    private static synchronized String getPluginDirectory() {
-        if (pluginDirectory == null) {
-            pluginDirectory = PluginFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+    private static synchronized String getDefaultPluginDirectory() {
 
-            // decode to correctly handle spaces, etc. in the returned path
-            try {
-                pluginDirectory = URLDecoder.decode(pluginDirectory, StandardCharsets.UTF_8.name());
-            } catch (UnsupportedEncodingException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+        String pluginDirectory = PluginFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
-            // starting path will be the lib directory because that is where jgnash-core lives.
-
-            pluginDirectory = new File(pluginDirectory).getParentFile().getParent();
-            pluginDirectory += File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
-
-            logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
+        // decode to correctly handle spaces, etc. in the returned path
+        try {
+            pluginDirectory = URLDecoder.decode(pluginDirectory, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException ex) {
+            logger.log(Level.SEVERE, null, ex);
         }
+
+        // starting path will be the lib directory because that is where jgnash-core lives.
+
+        pluginDirectory = new File(pluginDirectory).getParentFile().getParent();
+        pluginDirectory += File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+
+        logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
+
+
+        return pluginDirectory;
+    }
+
+    private static synchronized String getUserPluginDirectory() {
+
+        String pluginDirectory = System.getProperty("user.home");
+
+        // decode to correctly handle spaces, etc. in the returned path
+        try {
+            pluginDirectory = URLDecoder.decode(pluginDirectory, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+
+        if (OS.isSystemWindows()) {
+            pluginDirectory += File.separator + "AppData" + File.separator + "Local" + File.separator
+                    + "jgnash" + File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+        } else { // unix, osx
+            pluginDirectory += File.separator + ".jgnash" + File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+        }
+
+        logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
+
 
         return pluginDirectory;
     }
@@ -115,9 +136,9 @@ public final class PluginFactory {
      */
     public static void loadPlugins(final Predicate<Plugin> predicate) {
         if (!pluginsLoaded) {
-            final String[] paths = getPluginPaths();
+            final List<String> paths = getPluginPaths();
 
-            if (paths != null) {
+            if (!paths.isEmpty()) {
                 for (final String plugin : paths) {
                     try {
                         final Plugin p = loadPlugin(plugin);
@@ -139,30 +160,58 @@ public final class PluginFactory {
         }
     }
 
-    private static String[] getPluginPaths() {
-        final File dir = new File(getPluginDirectory());
-        return dir.list(new PluginFilenameFilter());
+    private static List<String> getPluginPaths() {
+        final List<String> paths = new ArrayList<>();
+
+        {
+            final String root = getDefaultPluginDirectory();
+            final String[] files = new File(root).list(new PluginFilenameFilter());
+
+            if (files != null) {
+                for (final String file : files) {
+                    paths.add(root + file);
+                }
+            }
+        }
+
+        {
+            final String root = getUserPluginDirectory();
+            final String[] files = new File(root).list(new PluginFilenameFilter());
+
+            if (files != null) {
+                for (final String file : files) {
+                    paths.add(root + file);
+                }
+            }
+        }
+
+        return paths;
     }
 
     private static Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException,
             IllegalAccessException, IOException {
 
         // If classLoader is closed, the plugin is not able to load new classes...
-        final JarURLClassLoader classLoader
-                = new JarURLClassLoader(new URL("file:///" + getPluginDirectory() + jarFileName));
+        final JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + jarFileName));
 
         final String pluginActivator = classLoader.getActivator();
 
         Plugin plugin = null;
 
-        if (pluginActivator != null) {
-            final Object object = classLoader.loadClass(pluginActivator).newInstance();
+        try {
 
-            if (object instanceof Plugin) {
-                plugin = (Plugin) object;
+            if (pluginActivator != null) {
+                final Object object = classLoader.loadClass(pluginActivator).newInstance();
+
+                if (object instanceof Plugin) {
+                    plugin = (Plugin) object;
+                }
+            } else {
+                logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
             }
-        } else {
-            logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
+        } catch (final NoClassDefFoundError e) {
+            // This is expected when a Swing instance tries to load a Fx instance of a plugin
+            logger.log(Level.INFO, "Plugin type was not compatible; not loaded: " + jarFileName);
         }
 
         return plugin;

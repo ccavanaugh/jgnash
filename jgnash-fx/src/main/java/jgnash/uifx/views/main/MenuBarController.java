@@ -36,6 +36,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.plugin.PluginFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialogController;
 import jgnash.uifx.actions.DefaultCurrencyAction;
@@ -195,6 +196,8 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleExitAction() {
+        PluginFactory.stopPlugins();    // Stop plugins
+
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
             CloseFileTask.initiateShutdown();
         } else {

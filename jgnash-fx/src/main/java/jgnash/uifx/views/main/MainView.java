@@ -53,6 +53,8 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
 import jgnash.net.security.YahooParser;
+import jgnash.plugin.FxPlugin;
+import jgnash.plugin.PluginFactory;
 import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
@@ -226,6 +228,8 @@ public class MainView implements MessageListener {
             }).start();
         }
 
+        loadPlugins();
+
         checkForLatestRelease();
     }
 
@@ -291,6 +295,8 @@ public class MainView implements MessageListener {
 
         // Close the file cleanly if it is still open
         getPrimaryStage().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
+            PluginFactory.stopPlugins();    // Stop plugins
+
             if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
                 windowEvent.consume();  // consume the event and let the shutdown handler deal with closure
                 CloseFileTask.initiateShutdown();
@@ -324,6 +330,11 @@ public class MainView implements MessageListener {
      */
     public void setBusy(@Nullable final Task<?> task) {
         busyPane.setTask(task);
+    }
+
+    private void loadPlugins() {
+        PluginFactory.loadPlugins(plugin -> plugin instanceof FxPlugin);    // Load only the Fx based plugins
+        PluginFactory.startPlugins();
     }
 
     @Override

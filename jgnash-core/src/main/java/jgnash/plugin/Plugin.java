@@ -56,12 +56,12 @@ public interface Plugin {
     /**
      * Called by the PluginFactory to start the plugin.
      */
-    @SuppressWarnings("EmptyMethod")
-    void start();
+    default void start() {
+    }
 
     /**
      * Called by the PluginFactory to stop the plugin.
      */
-    @SuppressWarnings("EmptyMethod")
-    void stop();
+    default void stop() {
+    }
 }
