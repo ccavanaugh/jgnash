@@ -1,10 +1,14 @@
 package jgnash.uifx.plugin;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import jgnash.plugin.FxPlugin;
+import jgnash.uifx.views.main.MainView;
 
 /**
  * Test plugin.
@@ -25,11 +29,30 @@ public class TestFxPlugin implements FxPlugin {
 
     @Override
     public void start() {
-        System.out.println("Starting");
+        System.out.println("Starting test plugin");
+
+        Platform.runLater(() -> {
+
+            //for API test.  Lookup allows plugins to find nodes within the application scene
+            final Node node = MainView.getInstance().lookup("#fileMenu");
+            if (node != null) {
+                System.out.println("found the file menu");
+                System.out.println(node.getClass().toString()); // Not really a node, but the skin for the node,
+            }
+
+            // Install a menu item
+            final MenuBar menuBar = MainView.getInstance().getMenuBar();
+
+            menuBar.getMenus().stream().filter(menu -> menu.getId().equals("fileMenu")).forEach(menu -> {
+                System.out.println("found the file menu");
+                menu.getItems().add(new MenuItem("Plugin Menu"));
+            });
+        });
+
     }
 
     @Override
     public void stop() {
-        System.out.println("Stopping");
+        System.out.println("Stopping test plugin");
     }
 }

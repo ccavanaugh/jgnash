@@ -7,10 +7,10 @@
 <?import jgnash.resource.font.FontAwesomeLabel?>
 <?import javafx.scene.input.KeyCodeCombination?>
 
-<MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<MenuBar fx:id="menuBar" id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="jgnash.uifx.views.main.MenuBarController">
 
-    <Menu text="%Menu.File.Name">
+    <Menu text="%Menu.File.Name" id="fileMenu">
         <MenuItem onAction="#handleNewAction" text="%Menu.New.Name">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
@@ -34,13 +34,13 @@
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>
-        <Menu text="%Menu.Import.Name">
+        <Menu text="%Menu.Import.Name" id="importMenu">
             <MenuItem text="%Menu.ImportOfx.Name" fx:id="importOfxMenuItem" onAction="#handleImportOFXAction"/>
             <MenuItem text="%Menu.ImportQif.Name" fx:id="importQifMenuItem" onAction="#handleImportQIFAction"/>
             <SeparatorMenuItem/>
             <MenuItem text="%Menu.ImportAccounts.Name"  fx:id="importAccountsMenuItem" onAction="#handleImportAccountsAction"/>
         </Menu>
-        <Menu text="%Menu.Export.Name">
+        <Menu text="%Menu.Export.Name" id="exportMenu">
             <MenuItem text="%Menu.ExportAccounts.Name"  fx:id="exportAccountsMenuItem" onAction="#handleExportAccountsAction"/>
         </Menu>
         <SeparatorMenuItem/>
@@ -73,7 +73,7 @@
         </MenuItem>
     </Menu>
 
-    <Menu fx:id="reportMenu" text="%Menu.Reports.Name">
+    <Menu fx:id="reportMenu" id="reportMenu" text="%Menu.Reports.Name">
         <Menu text="%Menu.Export.Name">
             <MenuItem text="%Menu.ProfitLossTXT.Name" onAction="#handleExportProfitLoss"/>
             <MenuItem text="%Menu.MonthEndBalanceCSV.Name" onAction="#handleExportBalanceByMonthCSVReport"/>
@@ -95,7 +95,7 @@
         </Menu>
     </Menu>
 
-    <Menu text="%Menu.View.Name">
+    <Menu text="%Menu.View.Name" id="viewMenu">
         <Menu fx:id="themesMenu" text="%Menu.Themes.Name"/>
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.FontSize.Name" onAction="#handleFontSizeAction">
@@ -106,8 +106,8 @@
         <MenuItem text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
     </Menu>
 
-    <Menu text="%Menu.Tools.Name">
-        <Menu fx:id="securitiesMenu" text="%Menu.Securities.Name">
+    <Menu text="%Menu.Tools.Name" id="toolsMenu">
+        <Menu fx:id="securitiesMenu" text="%Menu.Securities.Name" id="securitiesMenu">
             <MenuItem text="%Menu.ModifyCommodity.Name"
                       onAction="#handleCreateModifySecuritiesAction"/>
             <MenuItem text="%Menu.HistoryCommodity.Name"
@@ -122,7 +122,7 @@
                 </graphic>
             </MenuItem>
         </Menu>
-        <Menu fx:id="currenciesMenu" text="%Menu.Currency.Name">
+        <Menu fx:id="currenciesMenu" id="currenciesMenu" text="%Menu.Currency.Name">
             <MenuItem text="%Menu.AddRemoveCurrency.Name" onAction="#handleAddRemoveCurrenciesAction"/>
             <MenuItem text="%Menu.ModifyCurrency.Name" onAction="#handleModifyCurrenciesAction"/>
             <MenuItem text="%Menu.ModifyExchangeRates.Name" onAction="#handleEditExchangeRatesAction"/>
@@ -177,7 +177,7 @@
         <MenuItem text="%Menu.CloseAllWindows.Name" onAction="#closeAllWindows"/>
     </Menu>
 
-    <Menu text="%Menu.Help.Name">
+    <Menu text="%Menu.Help.Name" id="helpMenu">
         <MenuItem text="%Menu.About.Name" onAction="#handleAboutAction">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>

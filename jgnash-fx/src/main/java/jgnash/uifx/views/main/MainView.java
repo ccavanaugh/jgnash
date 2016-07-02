@@ -105,6 +105,8 @@ public class MainView implements MessageListener {
 
     private TabViewPane tabViewPane;
 
+    private MenuBar menuBar;
+
     private BusyPane busyPane;
 
     private final Preferences preferences = Preferences.userNodeForPackage(MainView.class);
@@ -136,6 +138,27 @@ public class MainView implements MessageListener {
         return logger;
     }
 
+    /**
+     * Allows lookup for a scene node.  Intended for plugin use.
+     *
+     * @param selector node id to look for
+     *
+     * @return the first first node with the matching id.  Returns null if not found
+     * @see Node#lookup(String)
+     */
+    public Node lookup(@NotNull String selector) {
+        return primaryStage.getScene().lookup(selector);
+    }
+
+    /**
+     * Provides access to the application MenuBar for plugins.
+     *
+     * @return Application {@code MenuBar}
+     */
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
     public void start(final Stage stage, @Nullable final File dataFile, final char[] password,
                       @Nullable final String host, final int port) throws Exception {
         ThemeManager.restoreLastUsedTheme();
@@ -145,8 +168,7 @@ public class MainView implements MessageListener {
         busyPane = new BusyPane();
 
         final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), resources);
-
-        final MenuBar menuBar = fxmlLoader.load();
+        menuBar = fxmlLoader.load();
 
         final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), resources);
 
