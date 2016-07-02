@@ -1,6 +1,8 @@
 package jgnash.uifx.plugin;
 
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import jgnash.plugin.FxPlugin;
 
@@ -13,7 +15,7 @@ public class TestFxPlugin implements FxPlugin {
 
     @Override
     public Node getOptionsNode() {
-        return null;
+        return new Rectangle(100, 100, Color.LIGHTSTEELBLUE);
     }
 
     @Override

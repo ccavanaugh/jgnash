@@ -17,12 +17,18 @@
  */
 package jgnash.uifx.dialog.options;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
+import jgnash.plugin.FxPlugin;
+import jgnash.plugin.PluginFactory;
 import jgnash.uifx.util.InjectFXML;
 
 /**
@@ -34,6 +40,22 @@ public class OptionDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private TabPane tabPane;
+
+    @FXML
+    void initialize() {
+
+        // Load the plugin tabs into the dialog
+        Platform.runLater(() -> PluginFactory.getPlugins().stream().filter(plugin -> plugin instanceof FxPlugin)
+                .forEachOrdered(plugin -> {
+                    final Node tab = ((FxPlugin) plugin).getOptionsNode();
+                    if (tab != null) {
+                        tabPane.getTabs().add(new Tab(plugin.getName(), tab));
+                    }
+                }));
+    }
 
     @FXML
     private void handleCloseAction() {

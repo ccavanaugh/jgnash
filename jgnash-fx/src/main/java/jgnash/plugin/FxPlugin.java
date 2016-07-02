@@ -19,6 +19,8 @@ package jgnash.plugin;
 
 import javafx.scene.Node;
 
+import jgnash.util.Nullable;
+
 /**
  * This is the interface for jGnashFx application plugins.
  *
@@ -27,12 +29,12 @@ import javafx.scene.Node;
 public interface FxPlugin extends Plugin {
 
     /**
-     * This will add an additional option panel to the standard options dialog. The {@code OPTIONSNAME} client
-     * property must be set on the returned {@code Node}.
+     * This will add an additional option panel to the standard options dialog. The plugin name will be used for the
+     * tab.
      *
      * @return a {@code Node}. May be {@code null} if no panel is to be added
      */
-    @SuppressWarnings("SameReturnValue")
+    @Nullable
     default Node getOptionsNode() {
         return null;
     }

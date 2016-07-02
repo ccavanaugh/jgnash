@@ -19,7 +19,7 @@
     </rowConstraints>
 
     <!--suppress JavaFxUnresolvedStyleClassReference -->
-    <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="floating">
+    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" styleClass="floating">
         <Tab text="%Tab.StartupShutdown">
             <fx:include source="StartupShutdownTab.fxml"/>
         </Tab>
