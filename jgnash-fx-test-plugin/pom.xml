@@ -45,7 +45,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
@@ -56,10 +56,10 @@
                         <configuration>
                             <target>
                                 <property name="zipfile" location="./../jgnash-fx/target/jgnash-${project.version}-fx-bin.zip"/>
-                                <!--suppress MavenModelInspection -->
+                                &lt;!&ndash;suppress MavenModelInspection &ndash;&gt;
                                 <echo message="zipfile: ${zipfile}"/>
 
-                                <!--suppress MavenModelInspection -->
+                                &lt;!&ndash;suppress MavenModelInspection &ndash;&gt;
                                 <zip destfile="${zipfile}" update = "true">
                                     <zipfileset prefix="jgnash-${project.version}/plugins" dir="${basedir}/target" includes="jgnash-fx-textplugin*.jar"/>
                                 </zip>
@@ -71,7 +71,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
