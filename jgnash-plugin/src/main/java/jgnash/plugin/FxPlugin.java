@@ -19,8 +19,6 @@ package jgnash.plugin;
 
 import javafx.scene.Node;
 
-import jgnash.util.Nullable;
-
 /**
  * This is the interface for jGnashFx application plugins.
  *
@@ -34,7 +32,6 @@ public interface FxPlugin extends Plugin {
      *
      * @return a {@code Node}. May be {@code null} if no panel is to be added
      */
-    @Nullable
     default Node getOptionsNode() {
         return null;
     }

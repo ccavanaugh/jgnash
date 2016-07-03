@@ -138,6 +138,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>jgnash-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>jgnash-fx-test-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -267,6 +272,7 @@
                 <module>jgnash-report-core</module>
                 <module>jgnash-swing</module>
                 <module>jgnash-convert</module>
+                <module>jgnash-plugin</module>
                 <module>jidesoft</module>
                 <module>mt940</module>
             </modules>
@@ -284,6 +290,7 @@
                 <module>jgnash-fx</module>
                 <module>jgnash-report-core</module>
                 <module>jgnash-convert</module>
+                <module>jgnash-plugin</module>
                 <module>jgnash-fx-test-plugin</module>
                 <module>mt940</module>
             </modules>
