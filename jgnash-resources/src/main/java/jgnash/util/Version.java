@@ -29,7 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Utility class for application version
+ * Utility class for application version.
  *
  * @author Craig Cavanaugh
  */
