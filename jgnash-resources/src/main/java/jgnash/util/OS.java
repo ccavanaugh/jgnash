@@ -18,7 +18,7 @@
 package jgnash.util;
 
 /**
- * OS specific detection code
+ * OS specific detection code.
  * 
  * @author Craig Cavanaugh
  */
@@ -31,14 +31,9 @@ public final class OS {
     private static final String JAVA_VERSION = "java.version";
 
     /**
-     * The minimum working release to use for JavaFx due to needed API changes
+     * The minimum working release to use for JavaFx due to needed API changes.
      */
     public static final int JVM_RELEASE_60 = 60;
-
-    /**
-     * JVM Release 72 has some focus bugs (JDK-8136838) that impacts the UI.
-     */
-    //public static final int JVM_RELEASE_72 = 72;
 
     static {
         final String os = System.getProperty("os.name");
@@ -52,7 +47,7 @@ public final class OS {
     }
 
     /**
-     * Determines if running on OSX
+     * Determines if running on OSX.
      * 
      * @return true if running on OSX
      */
@@ -61,7 +56,7 @@ public final class OS {
     }
 
     /**
-     * Determines if running on Windows
+     * Determines if running on Windows.
      * 
      * @return true if running on Windows
      */
@@ -70,7 +65,7 @@ public final class OS {
     }
 
     /**
-     * Returns the version of the JVM
+     * Returns the version of the JVM.
      *
      * @return returns 1.8 given 1.8.0_60
      */
@@ -79,7 +74,7 @@ public final class OS {
     }
 
     /**
-     * Returns the release of the JVM
+     * Returns the release of the JVM.
      *
      * @return returns 60 given 1.8.0_60
      */
