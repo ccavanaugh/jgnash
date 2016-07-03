@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jgnash-fx-testplugin</artifactId>
+    <artifactId>jgnash-fx-test-plugin</artifactId>
 
     <dependencies>
         <dependency>
