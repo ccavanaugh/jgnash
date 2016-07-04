@@ -27,6 +27,8 @@ Change the base highlight color for the FX interface
 
 Release 2.25.0
 ----------------------
+07/04/16 The mt940 import now works with the Fx interface. (Fx)
+07/04/16 Plugin API has been changed to allow a plugin to support the Swing and Fx interface. (Swing, Fx)
 07/02/16 Plugin API implemented for the Fx interface. (Fx)
 06/30/16 Plugins may now be placed in $HOME/.jgnash/plugins for *nix based OS's or
          C:\Users\user\AppData\Local\jgnash\plugins for Windows users. This makes upgrades easier for custom plugins.

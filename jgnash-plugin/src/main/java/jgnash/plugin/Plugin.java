@@ -56,12 +56,19 @@ public interface Plugin {
     /**
      * Called by the PluginFactory to start the plugin.
      */
-    default void start() {
+    default void start(PluginPlatform pluginPlatform) {
     }
 
     /**
      * Called by the PluginFactory to stop the plugin.
      */
     default void stop() {
+    }
+
+    /**
+     * Plugin platform identifier.
+     */
+    enum PluginPlatform {
+        Fx, Swing
     }
 }

@@ -28,8 +28,12 @@ public class TestFxPlugin implements FxPlugin {
     }
 
     @Override
-    public void start() {
+    public void start(final PluginPlatform pluginPlatform) {
         System.out.println("Starting test plugin");
+
+        if (pluginPlatform != PluginPlatform.Fx) {
+            throw new RuntimeException("Invalid platform");
+        }
 
         Platform.runLater(() -> {
 
@@ -39,6 +43,8 @@ public class TestFxPlugin implements FxPlugin {
                 System.out.println("found the file menu");
                 System.out.println(node.getClass().toString()); // Not really a node, but the skin for the node,
             }
+
+            assert MainView.getInstance().lookup("#importMenu") != null;
 
             // Install a menu item
             final MenuBar menuBar = MainView.getInstance().getMenuBar();

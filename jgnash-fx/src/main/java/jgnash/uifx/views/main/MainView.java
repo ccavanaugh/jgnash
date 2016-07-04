@@ -54,6 +54,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
 import jgnash.net.security.YahooParser;
 import jgnash.plugin.FxPlugin;
+import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
 import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.Options;
@@ -355,8 +356,14 @@ public class MainView implements MessageListener {
     }
 
     private void loadPlugins() {
-        PluginFactory.loadPlugins(plugin -> plugin instanceof FxPlugin);    // Load only the Fx based plugins
-        PluginFactory.startPlugins();
+
+        // Wrap in an exception handler so a poorly behaving plugin does not prevent application startup
+        try {
+            PluginFactory.loadPlugins(plugin -> plugin instanceof FxPlugin);    // Load only the Fx based plugins
+            PluginFactory.startPlugins(Plugin.PluginPlatform.Fx);
+        } catch (final Exception e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 
     @Override

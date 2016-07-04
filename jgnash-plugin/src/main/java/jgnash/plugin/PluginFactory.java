@@ -107,11 +107,11 @@ public final class PluginFactory {
         return pluginDirectory;
     }
 
-    public static void startPlugins() {
+    public static void startPlugins(final Plugin.PluginPlatform pluginPlatform) {
         if (!pluginsStarted) {
             for (final Plugin plugin : plugins) {
                 logger.log(Level.INFO, "Starting plugin: {0}", plugin.getName());
-                plugin.start();
+                plugin.start(pluginPlatform);
             }
 
             pluginsStarted = true;

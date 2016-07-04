@@ -256,7 +256,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private void loadPlugins() {
         PluginFactory.loadPlugins(plugin -> plugin instanceof SwingPlugin); // Only load Swing based plugins
-        PluginFactory.startPlugins();
+        PluginFactory.startPlugins(Plugin.PluginPlatform.Swing);
 
         for (final Plugin plugin : PluginFactory.getPlugins()) {
             final JMenuItem[] menuItems = ((SwingPlugin) plugin).getMenuItems();
