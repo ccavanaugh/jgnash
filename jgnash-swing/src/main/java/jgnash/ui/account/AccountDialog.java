@@ -57,12 +57,10 @@ class AccountDialog extends JDialog implements ActionListener {
 
     private JButton okButton;
 
-    private JButton helpButton;
-
-    public AccountDialog() {
+    AccountDialog() {
         super(UIApplication.getFrame(), true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        layoutMainPanel();        
+        layoutMainPanel();
     }
 
     private void initComponents() {
@@ -70,9 +68,6 @@ class AccountDialog extends JDialog implements ActionListener {
 
         okButton = new JButton(rb.getString("Button.Ok"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
-        helpButton = new JButton(rb.getString("Button.Help"));
-
-        UIApplication.enableHelpOnButton(helpButton, UIApplication.NEWACCOUNT_ID);
 
         cancelButton.addActionListener(this);
         okButton.addActionListener(this);
@@ -92,7 +87,7 @@ class AccountDialog extends JDialog implements ActionListener {
 
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(StaticUIMethods.buildHelpOKCancelBar(helpButton, okButton, cancelButton));
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
@@ -110,55 +105,55 @@ class AccountDialog extends JDialog implements ActionListener {
         return returnStatus;
     }
 
-    public Account getParentAccount() {
+    Account getParentAccount() {
         return accountPanel.getParentAccount();
     }
 
-    public void setParentAccount(final Account account) {
+    void setParentAccount(final Account account) {
         accountPanel.setParentAccount(account);
     }
 
-    public String getAccountName() {
+    String getAccountName() {
         return accountPanel.getAccountName();
     }
 
-    public void setAccountName(final String name) {
+    void setAccountName(final String name) {
         accountPanel.setAccountName(name);
     }
 
-    public String getAccountDescription() {
+    String getAccountDescription() {
         return accountPanel.getAccountDescription();
     }
 
-    public void setAccountDescription(final String desc) {
+    void setAccountDescription(final String desc) {
         accountPanel.setAccountDescription(desc);
     }
 
-    public String getAccountNotes() {
+    String getAccountNotes() {
         return accountPanel.getAccountNotes();
     }
 
-    public void setAccountLocked(final boolean b) {
+    void setAccountLocked(final boolean b) {
         accountPanel.setAccountLocked(b);
     }
 
-    public boolean isAccountLocked() {
+    boolean isAccountLocked() {
         return accountPanel.isAccountLocked();
     }
 
-    public void setAccountPlaceholder(final boolean b) {
+    void setAccountPlaceholder(final boolean b) {
         accountPanel.setPlaceholder(b);
     }
 
-    public boolean isAccountPlaceholder() {
+    boolean isAccountPlaceholder() {
         return accountPanel.isPlaceholder();
     }
 
-    public void setPlaceholderEnabled(final boolean enabled) {
+    void setPlaceholderEnabled(final boolean enabled) {
         accountPanel.placeholderCheckBox.setEnabled(enabled);
     }
 
-    public void setAccountNotes(final String notes) {
+    void setAccountNotes(final String notes) {
         accountPanel.setAccountNotes(notes);
     }
 
@@ -174,59 +169,59 @@ class AccountDialog extends JDialog implements ActionListener {
         return accountPanel.getAccountType();
     }
 
-    public void setAccountType(final AccountType type) {
+    void setAccountType(final AccountType type) {
         accountPanel.setAccountType(type);
     }
 
-    public void setAccountCode(final int accountCode) {
+    void setAccountCode(final int accountCode) {
         accountPanel.setAccountCode(accountCode);
     }
 
-    public int getAccountCode() {
+    int getAccountCode() {
         return accountPanel.getAccountCode();
     }
 
-    public void setAccountNumber(final String accountNumber) {
+    void setAccountNumber(final String accountNumber) {
         accountPanel.setAccountNumber(accountNumber);
     }
 
-    public String getAccountNumber() {
+    String getAccountNumber() {
         return accountPanel.getAccountNumber();
     }
 
-    public void setBankId(final String id) {
+    void setBankId(final String id) {
         accountPanel.setBankId(id);
     }
 
-    public String getBankId() {
+    String getBankId() {
         return accountPanel.getBankId();
     }
 
-    public boolean isAccountVisible() {
+    boolean isAccountVisible() {
         return !accountPanel.isAccountHidden();
     }
 
-    public void setAccountVisible(final boolean visible) {
+    void setAccountVisible(final boolean visible) {
         accountPanel.setAccountHidden(!visible);
     }
 
-    public void setModifyingAccount(final Account account) {
+    void setModifyingAccount(final Account account) {
         accountPanel.setModifyingAccount(account);
     }
 
-    public boolean isExcludedFromBudget() {
+    boolean isExcludedFromBudget() {
         return accountPanel.isExcludedFromBudget();
     }
 
-    public void setExcludedFromBudget(boolean excludedFromBudget) {
+    void setExcludedFromBudget(boolean excludedFromBudget) {
         accountPanel.setExcludedFromBudget(excludedFromBudget);
     }
 
-    public Set<SecurityNode> getAccountSecurities() {
+    Set<SecurityNode> getAccountSecurities() {
         return accountPanel.getAccountSecurities();
     }
 
-    public void setAccountSecurities(final Set<SecurityNode> list) {
+    void setAccountSecurities(final Set<SecurityNode> list) {
         accountPanel.setAccountSecurities(list);
     }
 

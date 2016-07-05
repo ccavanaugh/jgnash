@@ -17,25 +17,12 @@
  */
 package jgnash.ui;
 
-import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-
-import javax.help.HelpBroker;
-import javax.help.HelpSet;
-import javax.help.JHelp;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.SwingConstants;
 
 import jgnash.Main;
 import jgnash.engine.Engine;
@@ -46,7 +33,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.splash.AboutDialog;
-import jgnash.ui.util.DialogUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -56,36 +42,13 @@ import jgnash.util.ResourceUtils;
  */
 public class UIApplication implements Thread.UncaughtExceptionHandler {
 
-    private static final String helpHS = "default/jhelpset.hs";
-
     private static final String ACCEPT_LICENSE = "licenseaccepted";
-
-    /**
-     * Help ID
-     */
-    public static final String NEWACCOUNT_ID = "NewAccount";
-
-    /**
-     * Help ID
-     */
-    public static final String INTRODUCTION_ID = "Introduction";
-
-    /**
-     * Help ID
-     */
-    public static final String REPORTS_ID = "Reports";
 
     private final Preferences pref = Preferences.userNodeForPackage(UIApplication.class);
 
     private static MainFrame mainFrame;
 
-    private static volatile HelpBroker helpBroker;
-
     private static final Logger logger = Logger.getLogger(UIApplication.class.getName());
-
-    private static JDialog helpDialog;
-
-    private static JHelp jHelp;
 
     public UIApplication(final File file, final char[] password) {
 
@@ -157,71 +120,6 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         return mainFrame;
     }
 
-    public synchronized static HelpBroker getHelpBroker() {
-        if (helpBroker == null) {
-            ClassLoader cl = UIApplication.class.getClassLoader();
-            try {
-                URL hsURL = HelpSet.findHelpSet(cl, helpHS);
-                HelpSet hs = new HelpSet(null, hsURL);
-                helpBroker = hs.createHelpBroker();
-            } catch (Exception ee) {
-                System.err.println("HelpSet " + ee.getMessage());
-                System.err.println("HelpSet " + helpHS + " not found");
-            }
-        }
-
-        return helpBroker;
-    }
-
-    public static void enableHelpOnButton(final JButton button, final String id) {
-
-        button.addActionListener(e -> showHelp(id));
-    }
-
-    public static synchronized void showHelp(final String id) {
-        HelpBroker broker = UIApplication.getHelpBroker();
-
-        if (broker != null) {
-
-            if (jHelp == null) {
-                jHelp = new JHelp(broker.getHelpSet());
-            }
-
-            try {
-                if (id != null) {
-                    jHelp.setCurrentID(id);
-                }
-            } catch (javax.help.BadIDException e) {
-                logger.log(Level.INFO, "Invalid help ID: " + id, e);
-            }
-
-            if (helpDialog == null) {
-
-                helpDialog = new JDialog((Frame) null, ResourceUtils.getString("Title.Help"), false);
-
-                helpDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                helpDialog.getContentPane().add(jHelp, SwingConstants.CENTER);
-                helpDialog.setMinimumSize(new Dimension(500, 400));
-                helpDialog.setSize(new Dimension(500, 640));
-                helpDialog.setModalExclusionType(Dialog.ModalExclusionType.TOOLKIT_EXCLUDE);
-
-                DialogUtils.addBoundsListener(helpDialog);
-
-                // remove the reference when closed
-                helpDialog.addWindowListener(new WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(WindowEvent evt) {
-                        helpDialog = null;
-                        jHelp = null;
-                    }
-                });
-            }
-
-            helpDialog.setVisible(true);
-        }
-    }
-
     public static void repaint() {
         EventQueue.invokeLater(mainFrame::repaint);
     }
@@ -253,8 +151,6 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
                 messageBus.fireEvent(message);
             }
-
-            helpBroker = null;
 
             mainFrame.setVisible(false);
             mainFrame.dispose(false);

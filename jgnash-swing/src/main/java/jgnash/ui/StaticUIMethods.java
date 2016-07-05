@@ -213,19 +213,6 @@ public class StaticUIMethods {
 
     /**
      * Builds and returns a button bar with
-     * Help, OK and Cancel.
-     *
-     * @param help   the Help button
-     * @param ok     the OK button
-     * @param cancel the Cancel button
-     * @return a panel that contains the button(s)
-     */
-    public static JPanel buildHelpOKCancelBar(final JButton help, final JButton ok, final JButton cancel) {
-        return buildHelpBar(help, ok, cancel);
-    }
-
-    /**
-     * Builds and returns a button bar with
      * Help and Close.
      *
      * @param help  the Help button

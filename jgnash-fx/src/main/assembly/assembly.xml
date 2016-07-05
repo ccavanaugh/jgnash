@@ -19,7 +19,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../${project.basedir}/jgnash-help/target/docbkx/pdf</directory>
+            <directory>../${project.basedir}/jgnash-help/target/generated-docs</directory>
             <outputDirectory/>
             <includes>
                 <include>*.pdf</include>

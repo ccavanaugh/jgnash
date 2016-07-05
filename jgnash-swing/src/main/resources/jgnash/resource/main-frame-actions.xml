@@ -261,13 +261,6 @@
             icon="/jgnash/resource/dialog-information.png"
             desc="Menu.About.Tooltip"/>
 
-    <action id="help-command"
-            name="Menu.HelpTopics.Name"
-            accel="Menu.HelpTopics.KeyStroke"
-            smicon="/jgnash/resource/help-browser.png"
-            icon="/jgnash/resource/help-browser.png"
-            desc="Menu.HelpTopics.Tooltip"/>
-
     <action id="console-command"
             name="Menu.Console.Name"
             smicon="/jgnash/resource/utilities-system-monitor.png"
@@ -378,7 +371,6 @@
 
         <!-- Help menu -->
         <action-node id="help-menu" idref="help-menu-command">
-            <action-node idref="help-command"/>
             <action-node idref="about-command"/>
             <empty/>
             <action-node idref="console-command"/>

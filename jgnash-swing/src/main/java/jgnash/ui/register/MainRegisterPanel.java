@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import javax.help.CSH;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -91,8 +90,6 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
     private RegisterTree registerTree;
 
     public MainRegisterPanel() {
-        CSH.setHelpIDString(this, "MainRegisterPanel"); // add context sensitive help id
-
         layoutMainPanel();
         showLast();
     }
@@ -411,7 +408,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
 
     private final class RegisterTree extends AccountListTreePane {
 
-        public RegisterTree() {
+        RegisterTree() {
             super("tree", false);
             disablePlaceHolders(); // disable place holder accounts
         }

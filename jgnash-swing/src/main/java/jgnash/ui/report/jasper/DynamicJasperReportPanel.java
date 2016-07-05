@@ -67,7 +67,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
-import jgnash.ui.UIApplication;
 import jgnash.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JRException;
@@ -158,8 +157,6 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     private JButton zoomInButton;
 
     private JButton zoomOutButton;
-
-    private JButton helpButton;
 
     private JComboBox<String> zoomComboBox;
 
@@ -365,14 +362,6 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         zoomOutButton.setFocusable(false);
         zoomOutButton.addActionListener(this);
         toolBar.add(zoomOutButton);
-
-        helpButton = new JButton(new ImageIcon(getClass().getResource("/jgnash/resource/help-browser.png")));
-        helpButton.setToolTipText(ResourceUtils.getString("ToolTip.Help"));
-        helpButton.setFocusable(false);
-        helpButton.addActionListener(this);
-
-        toolBar.add(new JToolBar.Separator());
-        toolBar.add(helpButton);
 
         JPanel reportController = report.getReportController();
 
@@ -947,8 +936,6 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                 zoomAction();
             } else if (e.getSource() == fontSizeComboBox) {
                 fontAction();
-            } else if (e.getSource() == helpButton) {
-                UIApplication.showHelp(UIApplication.REPORTS_ID);
             }
         });
     }

@@ -13,454 +13,68 @@
 	<description>help module</description>
 	<inceptionYear>2001</inceptionYear>
 
-	<dependencies>
-        <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.help</groupId>
-            <artifactId>javahelp</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>net.sf.docbook</groupId>
-			<artifactId>docbook-xsl</artifactId>
-			<type>zip</type>
-			<classifier>ns-resources</classifier>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.docbook</groupId>
-			<artifactId>docbook-xml</artifactId>
-			<type>zip</type>
-			<classifier>resources</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-utils</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.3</version>
-        </dependency>
-    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <asciidoctor.maven.plugin.version>1.5.3</asciidoctor.maven.plugin.version>
+        <asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
+        <asciidoctorj.version>1.5.4</asciidoctorj.version>
+        <jruby.version>1.7.21</jruby.version>
+    </properties>
 
 	<build>
+        <defaultGoal>process-resources</defaultGoal>
 		<plugins>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.maven.plugin.version}</version>
 
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<!-- Extract the docbook resources for javahelp generation. -->
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-
-					<execution>
-						<id>unpack-shared-resources-xsl</id>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
-							<includeGroupIds>net.sf.docbook</includeGroupIds>
-							<includeArtifactIds>docbook-xsl</includeArtifactIds>
-							<includeClassifiers>ns-resources</includeClassifiers>
-							<excludeTransitive>true</excludeTransitive>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<!-- The javadoc transform insists on dumping the results into the src 
-				directory. -->
-			<!-- Copy the src files to the output and transform there -->
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
-				<executions>
-					<execution>
-						<id>default-testResources</id>
-						<phase>none</phase>
-					</execution>
-					<execution>
-						<id>copy-resources</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/javahelp</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src</directory>
-									<excludes>
-										<exclude>main/**</exclude>
-										<exclude>docbkx-stylesheet/**</exclude>
-									</excludes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<!-- Transform into javahelp files. -->
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>xml-maven-plugin</artifactId>
-				<version>1.0</version>
-				<executions>
-					<execution>
-						<id>generate-help</id>
-						<goals>
-							<goal>transform</goal>
-						</goals>
-						<phase>compile</phase>
-						<configuration>
-							<transformationSets>
-								<transformationSet>
-									<dir>${basedir}/target/javahelp/default</dir>
-
-									<stylesheet>${basedir}/target/javahelp/javahelp-ex.xsl</stylesheet>
-
-									<includes>
-										<include>guide.xml</include>
-									</includes>
-
-								</transformationSet>
-							</transformationSets>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>xalan</groupId>
-						<artifactId>xalan</artifactId>
-						<version>2.7.2</version>
-					</dependency>
-					<dependency>
-						<groupId>xerces</groupId>
-						<artifactId>xercesImpl</artifactId>
-						<version>2.11.0</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<!-- Index the javahelp files and packages the files. -->
-			<!-- Assumes jhindexer is installed and in execution path -->
-			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<id>index-javahelp</id>
-						<phase>process-classes</phase>
-						<configuration>
-							<target>
-								<delete>
-									<fileset dir="${basedir}/target/javahelp" includes="**/*.xml"
-										excludes="**/jhelp*" />
-								</delete>
-
-								<delete>
-									<fileset dir="${basedir}/target/javahelp" includes="**/*.xsl" />
-								</delete>
-
-								<delete>
-									<fileset dir="${basedir}/target/javahelp" includes="**/.directory" />
-								</delete>
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-
-					<execution>
-						<id>jar</id>
-						<phase>package</phase>
-						<configuration>
-							<target>
-								<jar
-									jarfile="${basedir}/target/${project.artifactId}-${project.version}.jar"
-									basedir="${basedir}/target/javahelp" index="false" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.4.0</version>
-				<executions>
-					<execution>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>jgnash.tools.HelpIndexer</mainClass>
-					<workingDirectory>${basedir}/target/javahelp/default</workingDirectory>
-					<arguments>
-						<argument>-source</argument>
-						<argument>${basedir}/target/javahelp/default/</argument>
-						<argument>-db</argument>
-						<argument>${basedir}/target/javahelp/default/JavaHelpSearch</argument>
-					</arguments>
-				</configuration>
-			</plugin>
-
-			<!-- ~~~~~~~~~~~~~ -->
-			<!-- Create a PDF. -->
-			<!-- ~~~~~~~~~~~~~ -->
-			<plugin>
-				<groupId>com.agilejava.docbkx</groupId>
-				<artifactId>docbkx-maven-plugin</artifactId>
-				<version>2.0.16</version>
-				<dependencies>
-					<dependency>
-						<groupId>net.sf.offo</groupId>
-						<artifactId>fop-hyph</artifactId>
-						<version>2.0</version>
-					</dependency>
-					<dependency>
-						<groupId>net.sf.docbook</groupId>
-						<artifactId>docbook-xml</artifactId>
-						<version>5.1b4-all</version>
-						<classifier>resources</classifier>
-						<type>zip</type>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>pdf</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate-pdf</goal>
-						</goals>
-						<configuration>
-							<!-- per execution configuration -->
-							<includes>guide.xml</includes>
-							<draftMode>no</draftMode>
-						</configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<!-- shared configuration -->
-					<generatedSourceDirectory>${project.build.directory}/docbkx/generated</generatedSourceDirectory>
-					<xincludeSupported>true</xincludeSupported>
-					<admonGraphics>true</admonGraphics>
-					<paperType>USletter</paperType>
-					<fop1Extensions>1</fop1Extensions>
-					<sourceDirectory>${basedir}/src/default</sourceDirectory>
-					<foCustomization>${basedir}/src/docbkx-stylesheet/fo/docbook.xsl</foCustomization>
-                    <admonGraphicsPath>${basedir}/src/images/</admonGraphicsPath>                   
-					<customizationParameters>
-						<!-- additional XSLT parameters -->
-						<parameter>
-							<name>name</name>
-							<value>value</value>
-						</parameter>
-					</customizationParameters>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<version>2.5.2</version>
-				<executions>
-					<execution>
-						<id>generated-install</id>
-						<phase>package</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
-							<repositoryLayout>default</repositoryLayout>
-							<groupId>jgnash</groupId>
-							<artifactId>${project.artifactId}</artifactId>
-							<version>${project.version}</version>
-							<packaging>jar</packaging>
-						</configuration>
-					</execution>
-					<execution>
-						<id>default-install</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>${java-version}</source>
-					<target>${java-version}</target>
-				</configuration>
-				<executions>
-					<execution>
-						<id>default-testCompile</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18.1</version>
-				<executions>
-					<execution>
-						<id>default-test</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.4</version>
-				<configuration>
-
-				</configuration>
-			</plugin>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-pdf</artifactId>
+                        <version>${asciidoctorj.pdf.version}</version>
+                    </dependency>
+                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>${jruby.version}</version>
+                    </dependency>
+                    <!-- Comment this section to use the default AsciidoctorJ artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj</artifactId>
+                        <version>${asciidoctorj.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-pdf-doc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>pdf</backend>
+                            <!-- Since 1.5.0-alpha.9 PDF back-end can use 'rouge' as well as 'coderay'
+                            source highlighting -->
+                            <sourceHighlighter>rouge</sourceHighlighter>
+                            <attributes>
+                                <icons>font</icons>
+                                <pagenums/>
+                                <toc/>
+                                <idprefix/>
+                                <idseparator>-</idseparator>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											com.agilejava.docbkx
-										</groupId>
-										<artifactId>
-											docbkx-maven-plugin
-										</artifactId>
-										<versionRange>
-											[2.0.14,)
-										</versionRange>
-										<goals>
-											<goal>generate-pdf</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore/>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-antrun-plugin
-										</artifactId>
-										<versionRange>
-											[1.8,)
-										</versionRange>
-										<goals>
-											<goal>run</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore/>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-dependency-plugin
-										</artifactId>
-										<versionRange>
-											[2.1,)
-										</versionRange>
-										<goals>
-											<goal>
-												unpack-dependencies
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore/>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											exec-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.2.1,)
-										</versionRange>
-										<goals>
-											<goal>java</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore/>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											xml-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.0,)
-										</versionRange>
-										<goals>
-											<goal>transform</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore/>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 </project>

@@ -1,0 +1,1140 @@
+= jGnash 2.25.x User Manual
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+
+[[_legal]]
+== Legal
+[big]*jGnash 2.25.x User Guide*
+
+Copyright (C) 2001-2016 Craig Cavanaugh
+
+jGnash comes with *ABSOLUTELY NO WARRANTY*.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not,
+see http://www.gnu.org/licenses/
+
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation
+License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections,
+no Front-Cover Texts and no Back-Cover Texts.
+
+A copy of the license is included in the section entitled ''GNU Free Documentation License''.
+
+Linux(R) is the registered trademark of Linus Torvalds in the U.S. and other countries. Windows is a registered trademark
+of Microsoft Corporation in the United States and other countries. Java(TM) and OpenJDK(TM) are registered trademarks of
+Oracle and/or its affiliates.
+
+[[_introduction]]
+== Introduction
+
+image::../images/jgnash-logo-small.png[]
+
+jGnash is an open source application for personal finances.
+jGnash enables you to record detailed account and transaction information using proven double entry accounting principles. 
+
+You do not have to be an accountant to understand or use jGnash, but jGnash provides options to make new and experienced users feel comfortable using it. 
+
+jGnash's mission is personal fiance and it is not tailored for use as a business accounting application.
+jGnash is being used by small businesses and clubs, but if you require business specific features, you may be better served looking for a different solution. 
+
+=== Features
+
+A brief list of features is below:
+
+* Double Entry Accounting with reconciliation tools. 
+* Budgeting with multiple scenario options and export to spreadsheet capability. 
+* Investment Accounts and automatic import of Stocks, Bond, and Funds price history. 
+* Nestable accounts with automatic rollup of totals and intelligent handling of mixed currencies. 
+* OFX, QFX, mt940, and QIF import capabilities. 
+* Reminders and automatic transaction entry and notifications. 
+* Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates. 
+* Printable reports with PDF and spreadsheet export capability. 
+* XML and relational database file formats 
+* Operates on any main-stream PC operating system. 
+
+
+[[_installation]]
+=== Installation
+
+
+jGnash is not currently distributed with an automatic installation tool.
+You will be required to perform a couple of manual operations that are easily performed for those with a basic
+understanding of how to use a zip file.  Also, you must have Java(TM) 8 or newer installed on your computer.
+
+Java can be downloaded and installed from http://java.com.
+Java installation is a simple matter of downloading the correct version for your operating system and using the
+automated installer.
+
+****
+If you are using a Linux(R) based operating system, OpenJDK(TM) or IcedTea may have been pre-installed. jGnash will
+run on the latest version of OpenJDK or IcedTea, but you may experience some minor glitches with the appearance of
+jGnash depending on the version installed and fonts available.
+
+If in doubt, install Java(TM) 8 or newer and configure your system accordingly.
+****
+
+After Java is installed, you are ready to install jGnash.
+Simply open the zip file and extract the [path]_jGnash_ directory and it's complete contents to a directory of your
+choice, and do not alter the files or locations. I usually create a directory named "bin" in my home directory and keep
+the [path]_jGnash_ directory in it to better organize my computer.
+When upgrading between versions of jGnash, do not unzip to the same location and overwrite the existing files.
+Use a new location or delete the existing files first. 
+
+[[_starting]]
+=== Starting jGnash
+
+After the [path]_jGnash_ directory has been extracted from the zip file, you should see several files in the directory.
+Of interest at this point are the jar and exe files. 
+
+If you are running on a Windows(TM) based computer, you can simply double click on the [path]_jGnash2.exe_ file to
+start jGnash. If you want, you can also double click on the [path]_jGnash2.jar_ file as an alternate means for starting
+the application.
+
+If you are running on a Unix based system you can start jGnash from a terminal as shown below.
+Alternatively, you can create your own application launcher in your desktop environment of choice. 
+
+
+----
+java -jar jGnash2.jar
+----
+jGnash has several advanced features such as running as a portable application or using jGnash as a multi-user home
+networked application.
+These advanced features are accessible via the command line.
+Please see <<_commandline,Command Line Options
+        >> for more details. 
+
+=== Running for the First Time
+
+A license acceptance screen will be displayed the first time you start jGnash.
+jGnash will not run unless the license is accepted.
+The short of the license agreement is jGnash is a freely available program comprised of other freely available software, and should anything bad happen during use, the authors involved are not libel for any damages.
+The license also details how jGnash may be distributed and used. 
+
+[sidebar]
+If the license agreement sounds daunting, take a look at the license agreements of commercially available personal finance applications and you will see similar agreements.
+Myself and just about every other person making software available for free or purchase tries their best to ensure the software they create works well and as intended.
+Sometimes bugs do creep in and it does not work quite as planned.
+The advantage of free software is you generally have direct access to the authors, and you have a much larger voice in helping the application grow and evolve over time. 
+
+=== Getting Help and Giving Back
+
+The intent of this user guide is to get you off to a good start using jGnash.
+Despite my best attempts, there are those who need a little bit of extra help or have a special need or circumstance and
+require the help of others that have already been around the block a few times.
+
+The best place to start is the jGnash user group hosted at
+http://groups.google.com/group/jgnash-user[http://groups.google.com/group/jgnash-user].
+The user group contains a well rounded group of individuals who can help answer just about any question. As a courtesy
+to others, I encourage you to search the group prior to asking a question to see if it's already been answered.
+
+If you have found a bug, or have suggestions for improvement, the group page has links to a bug and feature request
+tracker that can be used to log and track your requests.  The group forum can be used to post a bug or request, but use
+of the tracker ensures the request is not lost in the mix of discussions.
+
+If you are well versed in use of jGnash and other personal finance applications, you are encouraged to give back a
+little time and contribute your experience to the group and help others.
+
+[[_gettingstarted]]
+== Getting Started
+
+Every account is assigned a currency and every transaction is associated with at least one account. 
+
+Transactions are used to record daily expenditures as well as income from the sale of personal items, investments, or
+paychecks.
+
+Most of the effort involved in getting started with jGnash is creating a personalized income and expense account structure that best suits your needs. 
+
+If you are familiar with other personal finance applications, you may notice that jGnash uses income and expense
+_accounts_ instead of income and expense __categories__.
+Functionally, there is no difference, other than jGnash allows you see a detailed transaction register of the income
+and expense accounts as easily as you would look at your bank accounts.
+
+[[_newfile]]
+=== Creating a New File
+
+
+When you start jGnash for the first time, you will be presented with a very simple screen.
+At the bottom of the screen, program notifications and memory consumption information are displayed. 
+
+[float]
+==== Creating a new file is done in 5 steps using the wizard
+
+. Create a new file using the menu:File[New] command and follow the prompts in the new file wizard.
+When given the choice to select the <<_filetypes,storage type>>, leave it as the default value for now. A default file name and location will be provided that you can change if desired. If the file already exists, you will be warned you are about to overwrite it.
+. After selecting the storage type and file name, you will be asked to choose the default currency. The default currency can be changed at a latter time, and if for some reason your currency of choice is not available, you can create a custom currency and set it as the default after the file is created. 
+. Next you can choose the currencies that are available for use. Currencies may be added and removed as needed at a later time if needed. 
++ 
+If needed, custom currencies may be added using the menu:Currencies[Add/Remove]
+command.
+As locales change, default currency availability will change as Java is updated.
+The typical need for a custom currency is to support legacy accounting information as countries standardize on the Euro. 
++
+. After choosing the available currencies, default accounts can be selected if desired. If you are new to personal finance software, the defaults will be a good starting point. The accounts structure can be easily changed as needed to accommodate your own personal needs. 
+. The last step is the Summary page of the wizard. Verify everything is to your liking and click on the Finish button to create your new file. 
+
+
+After the file is created, you are now ready to change, add, or remove accounts as need and begin entering transactions. 
+
+****
+Encryption and password protection options do not exist in jGnash with the exception of a clear text password for client/server operation.
+Encryption becomes a sticky subject when it involves exporting and distributing software throughout the world.
+jGnash is designed to support many nationalities, so control of distribution would be become very difficult if encryption was integrated. 
+
+If you do have the desire to encrypt your jGnash data, the best choice is to use the encryption capabilities of your operating system or install a freely available third party encryption tool. 
+****
+
+[[_accounts]]
+=== Accounts
+
+
+Accounts are what you use to organize how you spend your money and where it comes from.
+Account structure can be changed to organize the display of information to suit your specific needs. 
+
+Typically, you will have a separate jGnash account for each savings, checking, investment account, etc.
+that you have at a financial institution.
+Accounts can be organized under "placeholder" accounts to add different levels of organization. 
+
+For example, if you would like to see a summary of your accounts by financial institution, you can create a placeholder account that represents a single financial institution and group your savings and checking accounts from that particular institution. 
+
+Maybe you want to see all savings accounts grouped together and checking accounts grouped together.
+It's just a mater of creating placeholder accounts for checking and savings and placing the respective accounts under them. 
+
+The account structure can be easily changed at any time with the exception of removing accounts after they have transaction in them.
+Transactions must be manually deleted from an account before you can remove it. 
+
+[[_newaccount]]
+==== Creating Accounts
+
+
+A new account is created by clicking on the btn:[New]
+ button in the account list view. 
+
+image:../images/new-account.png[]
+
+A new dialog box will be displayed that allows you to create a new account to suit your particular needs. 
+
+image:../images/account-dialog.png[]
+
+[float]
+===== Account Information
+
+Name::
+The name for the account.
+The name will be used to identify the account when creating transactions.
+Account names do not have to be unique, but may not be left blank. 
+
+Description::
+A description for the account.
+This field may be left blank if desired. 
+
+Account Number::
+The Account Number field is generally used for storing the account number provided by your financial institution.
+This field may be left blank if desired. 
+
+Account Code (General Ledger Code)::
+The Account Code field will default to a value of 0 and must be a numerical value.
+This value will also control the displayed order of accounts within the same branch.
+If the account code is left as a value of zero, sort order will be deferred to an alphanumeric sort against the account names.
+Best practice is to either use an assigned Account Code for all accounts within the same branch or leave the code as a value of 0 for all accounts.
+Otherwise, sort order may appear to be random. 
+
+Bank ID::
+This is the identification number of the financial institution and is generally used as an identifier when importing OFX files.
+This field may be left blank if desired. 
+
+Currency::
+The currency for the account.
+Account currencies cannot be changed if the account contains transactions. 
+
+Securities::
+This button will display a dialog that allows you to add and remove the available Securities for the account.
+This applies only to Investment accounts. 
+
+Account Type::
+Account Type determines what the account can be used for and the type of transactions that can be created.
+An Account's type may be changed after it is created to another type only if it is similar in function.
+For example, an Investment Account can be change to a Mutual Fund account and vice-versa, buy they may not be changed into Bank or Credit accounts. 
+
+Account Options::
+
++
+
+Locked::
+If selected, the account will be locked and further changes will be prevented.
+This is useful to lock accounts that have been closed while retaining your historical data. 
+
+Placeholder::
+If selected, child accounts may be placed under this account and the account will not accept transactions.
+This is useful for organizing accounts into a hierarchical structure. 
+
+Hide Account::
+If selected, the account is hidden from view if the hide account filter is enabled.
+
+Exclude From Budgets::
+If selected, the account is hidden from view of the budgeting tool.
+
+Parent Account::
+Clicking on this button will display a dialog that lets you select the account this account resides under.
+If you want the account to be placed at the top most level, then choose the Root account as the parent.
+Parent accounts may be changed as needed to suit your needs. 
+
+Notes::
+Room for extra information about the account if desired. 
+
+
+At any later time, the btn:[Modify]
+ button may be used to change an existing account.
+If the account contains transactions, certain options may not be changed. 
+
+****
+jGnash does not have a place to specify an opening balance in keeping with correct practices for double entry accounting. 
+
+However, it is still possible to set and opening balance.
+To add an opening balance, create a transaction with an appropriate deposit or withdrawal against an Equity Account of your choice.
+Most people will choose or create an "Opening Balance" account.
+This follows well known accounting practices.
+If you are not concerned about correct accounting practices, you can create an Adjustment Transaction instead. 
+****
+
+[[_accounttypes]]
+=== Account Types
+
+
+jGnash offers several account types to make organization easier.
+The account type chosen can have a significant impact on how reports are generated and displayed, and the types of transactions you can create. 
+
+==== Asset
+
+
+Asset accounts are intended to be used to track the value of durable items such as houses, cars, boats, collections, etc.
+Value of items can be adjusted over time against Income accounts to show gain or loss of value.
+If you were to sell an item and convert it cash, the sale of the item can be tracked against the Asset accounts containing the item. 
+
+==== Bank
+
+
+Bank accounts are used for the savings accounts you would have at a bank. 
+
+==== Cash
+
+
+Cash accounts represent the cash you carry with you.
+Cash accounts are also good for representing deposits and withdrawals from Flexible Spending Accounts. 
+
+==== Checking
+
+
+Checking accounts are used for the checking account you would have at a bank. 
+
+==== Credit
+
+
+Credit accounts are used to record purchases and payments made to a credit card account.
+Credit accounts are primary used for short-term liabilities and great for representing overdraft and line of credit accounts at banks. 
+
+==== Equity
+
+
+Equity accounts are used to record opening account balances against.
+Typically, you will have only one Equity account.
+Equity accounts are representative of another accounts net worth at the time you begin tracking it's value. 
+
+==== Expense
+
+
+Expense accounts are used to record expenses such as food, utilities, taxes, investment expenses, etc. 
+
+==== Income
+
+
+Income accounts are used to record income such as salary, dividends, investment income, etc. 
+
+==== Investment
+
+
+Investment accounts are used to buy and sell Securities.
+Investment accounts can be used to track 401k, IRA's, etc. 
+
+* Investment Accounts have a cash balance if you buy or sell transactions against the account. 
+* Investment purchases and sales fees can be made against the cash balance of the investment account or other specified accounts. 
+* Multiple investment fee entries per transaction may be entered. 
+* Multiple gains/loss entries per transaction may be entered. 
+* Investment Accounts support multiple securities.
+* Investment Accounts can be used to model an on-line brokerage account. 
+
+
+==== Liability
+
+
+Liability accounts are used to track long term loans or liabilities.
+Liability accounts have the added feature of allowing you to set-up a loan payment that takes some of the effort out of entering periodic loan payment transactions. 
+
+==== Money Market
+
+
+Money Market accounts are typically a high interest yield account with withdrawal rules or limitations.
+They are generally used for long term savings accounts with the intent of keeping your cash readily accessible. 
+
+==== Mutual Fund
+
+
+Mutual fund accounts are a specialized version of an Investment account and generally used to track mutual fund type
+investments.
+
+==== Simple Investment
+
+
+Simple investment accounts are for investments where you do not actively manage or are able to track purchases and
+sales of securities.
+The typical scenario would be a company pension plan that only provides cash balance information.
+Sometimes, these types of investment accounts are called Annuities or Guaranteed Retirement Accounts 
+
+==== Root
+
+
+The root account is the top level account that holds all other accounts.
+You cannot remove or modify the root account.
+Normally, it is not visible unless you are changing the account structure. 
+
+[[_editing]]
+=== Editing Environment
+
+
+The jGnash editing environment is not much different then in other application with the exception that it provides a
+few shortcuts to speed up entry of transactions.
+
+jGnash knows and understands just about any known locale and country setting.
+Depending on your settings, the decimal symbol will change accordingly as well as the displayed format of dates. 
+
+[[_datefields]]
+==== Date Fields
+
+
+The date field is freely editable and jGnash will make the best attempt at interpreting an invalid entry, but the results are indeterminate.
+Clicking on the button to the right of the field will display a calendar dialog where you can select a date as well. 
+
+image:../images/date-entry.png[]
+
+Also, dates can be modified using the keyboard shortcuts defined in the <<_dateshortcuts,appendix>>.
+
+[[_numberfields]]
+==== Number Fields
+
+
+Numerical entry in jGnash is as easy as typing the desired value into the field.
+Decimal separators are handled according to the configured locale. 
+
+image:../images/basic-decimal-entry.png[]
+
+You may also enter arithmetic operators and calculate values within the entry field. 
+
+The arithmetic operators that may be used are () + − ∗ /.
+
+Traditional arithmetic operator precedence is followed for all calculations. 
+
+image:../images/advanced-decimal-entry.png[]
+
+[[_filetypes]]
+=== File Types
+
+
+jGnash supports different file types for storing data.
+File types can be easily changed by using the menu:File[Save As]
+ command and naming the new file with the appropriate file extension. 
+
+The current file will be saved in the new format and automatically opened. 
+
+Regardless of file type used, jGnash automatically saves the data if changed every 30 seconds to minimize the chance of accidental data loss. 
+
+.Client/Server
+[NOTE]
+====
+If you are using jGnash in the Client/Server mode, all changes are committed immediately. 
+====
+
+==== H2 and HyperSql Relational Database
+
+
+An H2 or HyperSql relational database is required when using the client / server functionality of jGnash.
+jGnash already embeds the database server so that no additional configuration or installation of software is required to use a relational database. 
+
+The relational database may be used for a single user.
+If startup and shutdown performance is important to you, then the binary file format described below is a better choice. 
+
+The advantage of the relational database outside the requirement for client / server capability is the ability to use several available tools to browse and query your jGnash data.
+Also, a relational database will be more fault tolerant of system crashes or power outages vs.
+use of an XML or Binary file. 
+
+The disadvantage of the relational database is a bit slower operation and more memory consumption. 
+
+If using the H2 Database and operating over a network using Client/Server mode, you have the option of enabling encryption for network communication.
+This will not encrypt your database file.
+See the Command line options for specifics. 
+
+.Database Administrator
+[NOTE]
+====
+The default administrator for a jGnash relational databases is JGNASH and is not configurable at this time. 
+====
+
+==== XML File
+
+XML file format is human readable and easily read by other applications at the expense of a considerably larger file size.
+Memory usage is less when using the XML file format, but certain operations may take longer.
+The advantage of the XML file is easier parsing and manipulation of the file using another program external to jGnash.
+If you have a large amount of data, jGnash will use less system memory when using the XML file format. 
+
+.Backups
+[NOTE]
+====
+The XML format is also used for saving automatic backups of jGnash files if enabled. 
+====
+
+==== Binary File
+
+The binary file format is the most compact file format and will open and close the quickest.
+This is the recommended file format if you do not need client / server functionality. 
+
+[[_budgets]]
+== Budgets
+
+jGnash has a budgeting feature that makes it easy for you to define spending and income goals by account and bump those goals up against your actual transactions.
+A compact graphical overview of each budgeting period is provided to highlight how well you are following your budget based on selectable periods. 
+
+Tracking how well you follow your budget can be an eye opening experience and can lead to better financial health. 
+
+[float]
+=== Budget Features
+
+* Multiple budgets are supported and may be copied making it easy to try out different scenarios and create year specific budgets if desired. 
+* Allowed accounts for budget are limited to Income and Expense accounts. 
+* Accounts may be excluded from budgets by setting the exclude flag in the account properties dialog. Sub-accounts will not be displayed if the parent account is excluded. 
+* The reporting period for budgets may be daily, weekly, bi-weekly, monthly, or quarterly and can be changed as needed. 
+* The per account budget goals may also be entered in daily, weekly, bi-weekly, monthly, or quarterly periods and are independent of the budget reporting period. 
+* The budget may be exported to a spreadsheet.
+
+
+.Budget Periods
+[TIP]
+====
+The reported period of the budget is independent of the per account budget goal period. 
+
+Example: Your salary is paid in bi-weekly intervals, but you want to see your budget reported by month.
+You can change the period for the income account to weekly or daily and enter your salary. 
+
+When reported by month, jGnash automatically handles the difference in the periods 1and distributes your bi-weekly salary income across monthly boundaries. 
+====
+
+=== Graphical Overview
+
+
+The main budget panel is shown below.
+
+image:../images/budget-overview.png[width="620"]
+
+The width of the account column is adjustable by placing the cursor between the Account header and the period header
+columns and then clicking and dragging the mouse cursor right or left.
+
+At the top of the panel, a toolbar exists that allows you to change how much information is displayed, modify the
+budgets, and export the active budget to a spreadsheet.
+
+The budget drop down list lets you quickly select between different budgets you have created.
+The btn:[Budget Manager
+        ]
+ button displays a dialog that let you create, duplicate, and delete budgets. 
+
+The btn:[Properties]
+ button will display the dialog shown below with various options for the active budget. 
+
+image:../images/budget-properties.png[]
+
+The period used for the budget display can be changed in this dialog as well as the budget description.
+You may also select the account groups that are visible for the selected budget. 
+
+The year spinner allows you to bump the selected budget up against the selected year's transaction data.
+The selected year also effects the calendar periods when editing period amounts. 
+
+Double clicking on an account name to the left of the panel will display a dialog that allows you to change the account
+specific budget period and period amounts.
+
+image:../images/budget-goal-dialog.png[]
+
+The Smart Fill panel may used to enter repeating patterns or fill in the amounts automatically based on the last
+12 months.
+Alternatively, you may directly edit the amount of each period by clicking and typing in a table cell. 
+
+The per account budget amounts as well as the *Change
+        * and *Remaining
+        * values are hierarchical in that the values of the child account are summed and are added to the parent account.
+If a parent account is not configured has a placeholder, it may also be assigned period goals that are inclusive of any
+children.
+
+At the bottom of each reported budget period, a summary by account group is displayed.
+To the right, a summary by account is displayed.
+The summary's made be disabled if desired by unselecting the appropriate checkboxes. 
+
+The btn:[Export Spreadsheet]
+ button will export a file to your choice of an [path]_xls_
+ or [path]_xlsx_
+ file.
+The exported spreadsheet does contain formulas which makes it easier to manipulate the file externally. 
+
+=== Budgeting Tips
+
+
+When planing a budget, you need to consider how you spend and receive your money versus how you want to report your budget. 
+
+jGnash has to make assumptions when entering per account period amounts.
+Internally, jGnash is keeping a list of 366 days (365 + 1 leap day) per account with the list starting at the first
+calendar day of the year.
+
+When a period goal for an account is entered, the amount is averaged across each day of the period.
+Entry of amounts is also sensitive to the current year.
+If you select Monthly for the account period, the monthly boundary for days is established by the current year calendar
+months and the amount is then averaged across the number of days per each month.
+
+Averaging of periods has an impact on how exact the tracking of your budget is.
+If you choose to enter a monthly average for income, but are paid on certain days on the month, your budget will show
+slight variations through the year.
+
+If you want the budgeted vs.
+Remaining amounts to be exact for a particular account, then you will want to set the account period to be Daily and
+take the effort to enter your daily amount goals.
+
+You will not be able to export a spreadsheet when the report period is daily due to memory requirements and limitations of some spreadsheet applications. 
+
+[[_reconciliation]]
+== Reconciliation
+
+
+Reconciliation is a simple and visual process of matching up the transactions listed in an account's register against a paper or electronic statement provided by a financial institution.
+If differences do exist, then any missing or erroneous transactions must be addressed until the differences are resolved.
+Statements should come from you bank, investment broker, credit card issuer, etc.
+on a periodic basis. 
+
+Periodically reconciling an account helps ensure transaction entry errors do not creep in  over time. _Reconciliation is
+        also a great tool for monitoring your accounts for fraudulent transactions.
+      _
+
+Accounts may be reconciled using a manual process or using the Reconciliation Wizard.
+For any given reconciliation period, using a combination of both methods will be difficult. 
+
+Regardless of the Reconciliation process used, it is good practice to reconcile all accounts periodically. 
+
+=== Basics
+
+
+Every transaction entry will have two independent reconciliation states that applies to both of the related crediting and debiting accounts.
+Split transactions may have even more reconciliation states depending on how many accounts it touches.
+Reconciliation states are explained a bit later in this chapter. 
+
+The default assumed reconciliation states can be configured depending on your preferred method of reconciliation.
+Taking time to understand these options is important for a successful reconciliation process. 
+
+[sidebar]
+By default, jGnash comes configured to favor use of the Reconciliation Wizard. 
+
+[TIP]
+====
+If this is your first time reconciling an account and you have prior transaction history with a mix of Reconciled and Cleared transactions, you may need to manually reconcile prior transaction history. 
+====
+
+==== Reconcile Settings
+
+
+jGnash makes it easier to manage reconciliation by providing some options described below.
+These can be access in the _Register_ options tabs using the menu:Tools[Options]
+ menu. 
+
+image:../images/reconcile-options.png[]
+
+Unless you have very specific needs, it is recommend that you choose to have the option *All transaction accounts have same reconciled state* or *Automatically reconcile Income and Expense Accounts* selected as the default. 
+
+Selecting *Automatically reconcile Income and Expense Accounts* requires a bit more work on your part in that you are required to reconcile all institution statements, but it will not create any issues when transferring between accounts. _This is the
+          recommended option if you are using the Reconciliation Wizard.
+        _
+
+Selecting *All transaction accounts have same reconciled state* will reduce the effort of reconciling transactions, but can create problems reconciling transfers between bank accounts later.
+If you manually reconcile your accounts and do not use the Reconciliation Wizard, this option saves a significant amount of work at the risk of making an assuming a transaction occurred correctly between two institutions. _Use of this option in conjunction with use of the Reconciliation Wizard
+        can create problems with bank transfers when you reconcile both accounts._
+
+Choosing to disable automatic reconciliation will require you to reconcile Income and Expense accounts for which you may not have been provided a reconciliation statement. 
+
+==== Reconcile States
+
+jGnash transactions have three reconciliation states that are presented in order below:
+
+Not Reconciled::
+The transaction has not been cleared or reconciled.
+
+Cleared::
+The transaction has been marked by the user to have been cleared during a manual or unfinished reconciliation process.
+A transaction may be marked as cleared to draw attention to it without impairing use of the reconciliation wizard. 
+
+Reconciled::
+The transaction has been reconciled or manually reconciled.
+
+[sidebar]
+
+Manually marking transactions is not recommended if you are going to use the Reconcile Wizard. 
+
+=== Manual Reconciliation
+
+
+Manual reconciliation is the process of individually comparing the account register against the institution provided statement and marking the matching transactions as  reconciled. 
+
+The downside to manual reconciliation is not all checks and balances are performed against the reported opening and closing balance for a given period.
+This increases the likely-hood of missing a recorded transaction or incorrectly entered amount. 
+
+To manually mark a transaction as reconciled, use the context menu in the register to display options to change the
+reconciled state.
+
+image:../images/manual-reconcile-context.png[]
+
+[sidebar]
+Use of the context menu is currently the only means of marking a transaction as reconciled other than using the reconciliation tool.
+It may also be used to clear transaction erroneously marked as reconciled. 
+
+Transactions may also be marked as *Cleared* through the transaction form.
+Some users may prefer to clear certain transactions manually during a given period to draw attention to them.
+ *Cleared* transactions will still be visible within the Reconciliation Wizard if used later while manually
+ *Reconciled* transactions will not.
+
+image:../images/transaction-form.png[width="620"]
+
+=== Reconciliation Wizard
+Use of the Reconciliation Wizard helps to simplify the reconciliation process by comparing opening and closing balances reported by the institution against the sum of the transactions as you mark them as reconciled.
+You receive instantaneous visual feedback as you mark transactions, and at the end of the process you should have a net difference of zero. 
+
+[sidebar]
+The Reconcile Wizard has a nice feature that is not immediately obvious.
+While the wizard is displayed, you can still go back to the account register and enter missing transactions, correct erroneous amounts, or modify and delete transactions if entered into the wrong account.
+The Wizard's credit and debit lists are fully dynamic.
+You are not required to exit the Wizard without completing the process if you discover missing transactions or errors.
+
+The image of the account register shown next is representative of a small but typical reconciliation period.
+The amounts and balances shown correspond with the other images as the  Reconcile Wizard is explained in this chapter.
+Refer back to this image as necessary for clarification. 
+
+Take note of the _Reconciled Balance: $2,614.43_ and that it is the last transaction marked as reconciled.
+Also, take note of the transaction dated _03/25/14_ and the corresponding balance of _$1,369.70._  You will see these same values later in the Reconcile Settings dialog. 
+
+image:../images/reconcile-register.png[width="620"]
+
+The Reconcile Wizard is started by using the context menu in the Account List, or by clicking the btn:[Reconcile]
+ button in the transaction register.
+A small dialog will be shown requesting some information.
+
+Statement Date::
+This is the closing date for the reconciliation period.
+This should be reported on your account statement.
+The date will typically be the end of the month, but may be different due to institution or locale rules.
+Transactions entered after this date will not appear within the Reconciliation Wizard
+
+Opening Balance::
+The opening balance should also be provided by your institution and should be equal to the closing balance of the last reconciliation period.
+In your account register, this will also be the account balance of the last reconciled transaction. 
+
+Ending Balance::
+This amount should also be provided by you institution.
+
+_These values should be provided to you by your banking institution in paper or electronic format and it's important
+these values are entered correctly, otherwise balances will not zero out._
+
+Pay special attention to the account type, the selected option for _Reverse Displayed Account Balances_ and if you are
+entering a positive or negative opening and ending balance.
+
+image:../images/reconcile-settings.png[]
+
+After clicking the btn:[OK] button, the settings dialog will be replaced by a dialog showing all of the transactions prior and inclusive of the statement date that have not been marked as Reconciled. _Transactions marked as cleared will be shown._
+
+The next step is to go through the institution provided statement and mark every matching transaction as reconcilable by clicking on the transactions.
+As you click each transaction, totals will update and you should see the [label]#Difference# value approach zero.
+The symbol in the _Clr_ column will also change when marked as **Reconciled**.
+When the [label]#Difference# is zero, the btn:[Finish] button will become active.
+Transactions marked as cleared will also need to be selected if they are to be reconciled. 
+
+It is not unusual to find transactions that go unmarked for reconciliation near the end of the statement period.
+These are transactions you have entered that were not processed through the system fast enough to show up on your statement and impact your account balance.
+Simply ignore these transactions and they will be captured at the start of the next statement and reconciliation cycle. 
+
+image:../images/reconcile-dialog.png[width="620"]
+
+Clicking on the btn:[Finish] button will close the dialog and will mark the selected transactions as Reconciled.
+Depending on the number of transactions and type of file format being used, it could take awhile for the changes to be saved.
+A wait message will be displayed during the change process. 
+
+What do you do if you have marked all transactions as reconciled and the difference is not zero? 
+
+* Not all paper and electronic statements clearly identify fees, earned interest, etc. Make sure you have captured these transactions. 
+* Were any transactions amounts entered incorrectly? 
+* Transactions manually marked as Reconciled during the statement period will not show in the transaction columns and are guaranteed to throw off balances. Mark the transactions as *Cleared* instead. 
+* Do you have your Reconcile Settings configured appropriately for the process you are using? If in doubt, use **Automatically reconcile Income and Expense Accounts**. 
+* Incorrectly entered  opening and ending balances will cause errors in calculated balances. 
+
+
+If you need to to exit the Reconciliation Wizard before finishing, the btn:[Finish Later] button may be used.
+This will close the dialog and mark selected transactions as **Cleared**.
+This makes it easy to restart the process with transaction you have already marked as reconcilable identified.
+You will still need to reselect those transactions when you restart the process. 
+
+[[_reports]]
+== Reports
+A variety of reports exist that present your financial history and status in different ways.
+There are currently three classes of reports available.
+Text reports can be exported and easily imported into a spreadsheet for advanced manipulation.
+Chart based reports may be altered and exported to a graphic file, or printed using the context sensitive pop-up menu.
+Tabular type reports may be printed or saved to various file formats including [path]_CSV_ or [path]_PDF_ files.
+
+=== Tabular Reports
+Tabular reports are displayed in a specialized viewer that allows you to change the page and print or export the report.
+The font size of the displayed report can be changed from the toolbar of the report window. 
+
+The fonts used to display the report may be changed in the menu:Tools[Options]
+ dialog shown below.
+The [label]#Proportional#
+ font is typically used for report headers and footers.
+The [label]#Monospace#
+ font, also called a fixed-width font, is used to display the reported values. 
+
+image:../images/font-options.png[]
+
+If a proportional spaced font is chosen for the [label]#Monospace#
+ font, numeric report values may not line up correctly in the report. 
+
+.Font Information
+[TIP]
+====
+Information on font types as well as a wide selection of freely available fonts can be found on the Internet.
+Once a new font is properly installed in your operating system, it will be available for use in jGnash the next time it is started. 
+====
+
+=== Tips
+Depending on your operating system, you may need to change the font type and font size to achieve the best looking report.
+The font size can be changed on the report toolbar and is remember for each report type. 
+
+==== Nothing displays in the report and I'm not getting any errors
+Try increasing your font size, and if that does not work, choose a different font.
+Depending on your operation system, fonts may not render correctly at reduced sizes. 
+
+==== I get an error that tells me to reduce my font size
+The selected font size is too large to display the report correctly.
+You will need to choose a smaller font size.
+Many times, the column heading text may dictate the displayed width of a column.
+Try choosing a proportional font with condensed spacing.
+You may also want to check the default paper size and adjust if needed. 
+
+==== My PDF exports are missing information or don't look correct ona different computers
+Not all fonts are able to be embedded within a [path]_PDF_ file.
+You may need to experiment with different fonts to achieve good portability.
+In most cases, the defaults jGnash chooses will give you good results. 
+
+[[_administration]]
+== Administration
+Several administration options and tools are provided to help with management of your data. 
+
+[[_saveas]]
+=== File | Save As
+An open file may be saved as a new file of the same type, or a new file with a new file type.
+To save the file as a different type, you must change the file extension to a supported type.
+Correct file extensions are shown below. 
+
+.File Formats
+[cols="1,1"]
+|===
+
+|XML File
+|.xml
+
+|Binary File
+|.bxds
+
+|H2 Relational Database
+|.h2.db
+
+|HyperSql (hslqb) Relational Database
+|.script (.lobs, .log, .properties are used as support
+                files)
+              
+|===
+
+=== File | Export | Export Accounts and File | Import | ImportAccounts
+Use of these commands allows you to export your account structure and import it back into and new file.
+This is handy if you want to start a new file without manually recreating your accounts. 
+
+=== Change Database Password
+By default, when a new relational database is created, a password is not specified. This allows you to password protect
+your file.  This does not encrypt your data, so a person with the right tools can easily access your data.
+It is useful for casual protection only. If encryption is important, use OS level encryption capability available on
+any modern operating system. This is disabled while a file is open.
+
+=== Shutdown Server
+Issues a shutdown request to a remote server.
+This is disabled while a file is open. 
+
+[[_pluginsjavascript]]
+== Plugins and JavaScript
+jGnash support the addition of JavaScript and Plugins to add additional functionality to the application. 
+
+=== Plugins
+Plugins are tightly integrated into jGnash, and once loaded, behave as if they are a standard part of the application.
+Plugins are coded in Java using a jGnash specific API as the entry point so they may be loaded into jGnash. 
+
+Plugins are packaged into [path]_JAR_ files and are located within the [path]_plugins_ directory located in the
+directory jGnash is installed.
+Installation of a Plugin is as simple as placing the supplied JAR file into the [path]_plugins_ directory and restarting
+jGnash.
+
+The jGnash JavaDoc may be referenced if you are interested in creating a jGnash Plugin.
+The MT940 import is written as a standard Plugin and may be referenced as an example of how to write one. 
+
+=== JavaScript
+In addition to use of Plugins, jGnash allows you to create and run JavaScript programs.
+The internals of the jGnash engine and some user interface functions can be accessed to create custom reports, create and modify transactions, etc. 
+
+Running a JavaScript program is as simple as using menu:Tools[Run JavaScript]
+ command from the menu bar. 
+
+Below is an example JavaScript program that displays the accounts in the currently loaded file and demonstrates how to display a simple dialog.
+To try the program, create a text file using your favorite editor with a name of your choice that ends with a .js extension.
+After creating the file, simply using the menu:Tools[Run JavaScript]
+ command to select the program and run it. 
+
+[source,java]
+----
+importPackage(javax.swing);
+        importPackage(Packages.jgnash.ui);
+        importPackage(Packages.jgnash.engine);
+
+        // helper function to print messages to the console
+        function debug(message) {
+        java.lang.System.out.println(message);
+        }
+
+        // show the console dialog to see the debug information
+        ConsoleDialog.show();
+
+        // this is how to get the default Engine instance
+        var engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        // get a list of accounts
+        var accountList = engine.getAccountList();
+
+        // loop and print the account names to the console
+        for (i = 0; i; accountList.size(); i++)
+        {
+        var account = accountList.get(i);
+        debug(account.getName());
+        }
+
+        // just to show how to use Swing
+        var optionPane = JOptionPane.showMessageDialog(null, 'Hello, world!');
+----
+
+
+JavaScript programs have the advantage of not requiring the use of an IDE or Java compiler to create and test a program.
+The disadvantage is troubleshooting syntax and logic errors can be more difficult than writing a jGnash Plugin. 
+
+[[_commandline]]
+== Command Line Options
+
+
+jGnash has several command line options for advanced users. 
+
+[float]
+=== Options
+
+-enableEDT::
+Primarily used for development and debugging the graphical user interface.
+When enabled, this detects and warns of bad UI programing practice. 
+
+-file [option]``filename``::
+Specifies a file to load at startup.
+
+-opengl::
+Enables OpenGL support for platforms and video drivers that support it.
+Disable use if strange graphics errors occur. 
+
+-xrender::
+Enables 2D rendering pipeline for modern X11 based desktop environments.
+The performance improvement can be significant for some systems.
+This has no effect on OSX or Windows systems. 
+
+-portable::
+If portable is specified on the command line, jGnash preferences will be stored to a file name**pref.xml**instead of using the system registry.
+Use of this option is intended for users who want to run jGnash from a thumb drive on multiple computers and maintain their preferences without using the system registry.
+The *pref.xml
+* file will usually be stored at the location jGnash was started from. 
+
+-portableFile [option]``filename``::
+If you don't like the location the *pref.xml
+* file is stored, or wish to use a different name, use this option to change location and name to suit. 
+
+-uninstall::
+Removes all registry and configuration settings jGnash has created.
+This will not have any effect if you have been using the *-portable* option. 
+
+[float]
+=== Client/Server Options
+
+-server [option]``filename``::
+Starts the jGnash server using the specified file.
+The file must exist and not be in use by another program.
+A user interface will not be displayed.
+The file must be in the Object Database (jdb) format. 
+
+-host [option]``servername``::
+Specifies the name of the remote server.
+This starts jGnash and automatically connects to the specified server.
+If running on the same computer as the server, localhost may be used as the name of the server. 
+
+-shutdown::
+Issues a shutdown request to a server.
+If -host is not specified, then localhost is assumed for the server name 
+
+-encrypt::
+Enables encrypted client / server communication if supported by the relational database (H2 Only). Remote file transfers and client communications, etc will be encrypted.
+This will not encrypt your database file.
+A password must be used, otherwise encryption will be disabled.
+Depending on your locale and export laws, encryption may not be available and will fail if not supported in your installed JVM. 
+
+-password [option]``password``::
+The password that the client must correctly specify to connect to the jGnash database.
+This is not required if the database is not protected. 
+
+-port [option]``port``::
+An empty port for network communications.
+The specified port and port + 1 may not be used by any other application at the same time.
+The default port is 5300. 
+
+.Open Dialog
+[TIP]
+====
+It is possible to start the jGnash client and specify the server, and password settings from the menu:File[Open]
+ dialog. 
+====
+
+[float]
+=== Client/Server Examples
+
+Start the jGnash server using the default port with a password protected database
+----
+java -jar jGnash2.jar -server /home/craig/jgnash.jdb -password fh56dy
+----
+
+Start the jGnash client and connect to the local server running a password protected database
+----
+java -jar jGnash2.jar -host localhost -passwordfh56dy
+----
+
+Issue a shutdown request to a remote server that is password protected
+----
+java -jar jGnash2.jar -shutdown -host localhost -password fh56dy
+----
+
+Issue a shutdown request to a local server that is not password protected
+----
+java -jar jGnash2.jar -shutdown
+----
+
+[[_faq]]
+== Frequently Asked Questions
+
+=== What happened to transaction categories?
+Most commercial personal finance applications use categories to help track spending and income.
+jGnash uses Income and Expense accounts instead of categories for tracking where your money
+comes from and where it goes.
+
+=== Can I use multiple currencies?
+Yes! The Tools|Currencies|Add/Remove menu will let you add additional currencies.
+
+After adding new currencies, simple create new accounts that use the new currency. When creating a
+transaction between accounts with different currencies, a field for the exchange rate will be enabled.
+
+=== How do I add Securities / Stocks to my Investment and Mutual Fund Account?
+First, you need to have created your stocks/securities. Tools|Commodities:Create / Modify
+
+When creating the securities, the scale field must be filled in and the prefix field should be filled
+in. The scale will general be the same scale as the currency the securities value is reported in. In
+most cases, a scale of 2 will work fine. For the prefix, the currency prefix of the reported value
+should be used.
+
+After creating your securities, you can go back and modify the existing account or select the securities when
+creating a new account. Use the Securities button in the dialog to make changes.
+
+[appendix]
+[[_keyboard]]
+== Keyboard Shortcuts
+
+
+This Appendix contains application keyboard shortcuts that are available to you throughout jGnash 
+
+Depending on your operating system and how you have it configured, other shortcuts may be available that perform the same function. 
+
+.Shortcut Keys
+[cols="1,1", options="header"]
+|===
+| Keys
+| Function
+
+|kbd:[CTRL-F4]
+|Closes the active register window if you have one open
+            
+
+|kbd:[F1]
+|Displays the Help dialog
+|===
+
+.Editing Keys
+[cols="1,1", options="header"]
+|===
+| Keys
+| Function
+
+|kbd:[CTRL-C]
+|Copy
+
+|kbd:[CTRL-X]
+|Cut
+
+|kbd:[CTRL-V]
+|Paste
+|===
+
+.Date Entry Shortcut Keys
+[cols="1,1", options="header"]
+|===
+| Keys
+| Function
+
+|kbd:[+]
+, kbd:[↑]
+|Increase the date by one day
+
+|kbd:[-]
+, kbd:[↓]
+|Decrease the date by one day
+
+|kbd:[PgUp]
+|Increase the date by one month
+
+|kbd:[PgDn]
+|Decrease the date by one month
+
+|kbd:[t]
+, kbd:[T]
+|Change to todays date
+|===
+
+include::_gpl-3.0.adoc[]
+
+include::_fdl.adoc[]
+
