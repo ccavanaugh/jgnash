@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>mt940</artifactId>
-    <name>mt940</name>
+    <name>mt940 Plugin</name>
     <description>mt940 Import Plugin</description>
 
     <dependencies>

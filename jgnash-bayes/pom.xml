@@ -8,7 +8,8 @@
         <version>2.24.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>jgnash-bayes</artifactId>
+    <description>Naive Bayes BayesClassifier for transaction import</description>
+    <name>jGnash Bayes</name>
 
 </project>
