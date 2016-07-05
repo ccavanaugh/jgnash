@@ -141,11 +141,11 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         toolBar = new JToolBar();
         toolBar.setRollover(true);
 
-        openButton = new RollOverButton(rb.getString("Menu.Open.Name"), IconUtils.getIcon("/jgnash/resource/document-open.png"));
-        openButton.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Open.Mnemonic"));
+        openButton = new RollOverButton(rb.getString("Menu.Open.Name").replace("_", ""),
+                IconUtils.getIcon("/jgnash/resource/document-open.png"));
 
-        saveButton = new RollOverButton(rb.getString("Menu.Save.Name"), IconUtils.getIcon("/jgnash/resource/document-save.png"));
-        saveButton.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Save.Mnemonic"));
+        saveButton = new RollOverButton(rb.getString("Menu.Save.Name").replace("_", ""),
+                IconUtils.getIcon("/jgnash/resource/document-save.png"));
 
         toolBar.add(openButton);
         toolBar.add(saveButton);
@@ -303,7 +303,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
     private void saveLayout() {
         String fileName;
 
-        JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
+        final JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
         chooser.setMultiSelectionEnabled(false);
 
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -324,7 +324,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
     }
 
     private void openLayout() {
-        JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
+        final JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
         chooser.setMultiSelectionEnabled(false);
 
         String fn = null;

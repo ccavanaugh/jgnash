@@ -29,6 +29,7 @@ Release 2.25.0
 ----------------------
 07/05/16 Integrated help has been removed from the Swing interface.  Help is provided with the supplied Manual.pdf.
          The old help system was limiting the type and quality of documentation that could be generated. (Swing)
+07/05/16 The Check Designer Dialog button texts were not displayed correctly. (Swing)
 07/04/16 The mt940 import now works with the Fx interface. (Fx)
 07/04/16 Plugin API has been changed to allow a plugin to support the Swing and Fx interface. (Swing, Fx)
 07/02/16 Plugin API implemented for the Fx interface. (Fx)
