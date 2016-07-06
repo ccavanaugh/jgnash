@@ -44,6 +44,7 @@ public class Version {
     private static final String JSON_NAME = "name";
 
     private static final String TAG_URL = "https://api.github.com/repos/ccavanaugh/jgnash/tags";
+
     private static final String REGEX = "\"(.+?)\"";
 
     private static final int CONNECT_TIMEOUT = 5000;
@@ -102,12 +103,12 @@ public class Version {
         boolean currentRelease = true;
 
         final Optional<String> release = getLatestGitHubRelease();
+
         if (release.isPresent()) {
-
-            System.out.println(release.get());
-
             // quick check
             if (version.equals(release.get())) {
+                return true;
+            } else if (version.startsWith("${")) {   // running withing a development environment
                 return true;
             } else {
                 final String gitVersion[] = release.get().split("\\.");
