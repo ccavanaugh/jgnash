@@ -11,3 +11,4 @@ target/
 nb-configuration.xml
 *.backup
 /pref.xml
+/gradle-app.setting
