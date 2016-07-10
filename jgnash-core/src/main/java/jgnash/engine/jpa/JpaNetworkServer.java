@@ -57,7 +57,7 @@ public class JpaNetworkServer {
 
     public static final String STOP_SERVER_MESSAGE = "<STOP_SERVER>";
 
-    private static final String LOCALHOST = "localhost";
+    public static final String LOCALHOST = "localhost";
 
     public static final int MESSAGE_SERVER_INCREMENT = 1;
 
