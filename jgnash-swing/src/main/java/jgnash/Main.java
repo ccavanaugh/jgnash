@@ -17,8 +17,14 @@
  */
 package jgnash;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,17 +46,36 @@ import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
 import jgnash.util.prefs.PortablePreferences;
 
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
+import static java.util.Arrays.asList;
 
 /**
  * This is the main entry point for the jGnash application.
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("CanBeFinal")
 public final class Main {
+
+    private static final String FILE_OPTION_SHORT = "f";
+    private static final String FILE_OPTION_LONG = "file";
+    private static final String VERBOSE_OPTION_SHORT = "v";
+    private static final String VERBOSE_OPTION_LONG = "verbose";
+    private static final String PORTABLE_FILE_OPTION = "portableFile";
+    private static final String PORTABLE_OPTION_SHORT = "p";
+    private static final String PORTABLE_OPTION_LONG = "portable";
+    private static final String UNINSTALL_OPTION_SHORT = "u";
+    private static final String UNINSTALL_OPTION_LONG = "uninstall";
+    private static final String HELP_OPTION_SHORT = "h";
+    private static final String HELP_OPTION_LONG = "help";
+    private static final String PORT_OPTION = "port";
+    private static final String HOST_OPTION = "host";
+    private static final String PASSWORD_OPTION = "password";
+    private static final String SERVER_OPTION = "server";
+    private static final String XRENDER_OPTION = "xrender";
+    private static final String OPEN_GL_OPTION = "opengl";
+    private static final String EDT_OPTION = "enableEDT";
+    private static final String HANG_DETECT_OPTION = "enableHangDetect";
+    private static final String SHUTDOWN_OPTION = "shutdown";
+    private static final String ENCRYPT_OPTION = "encrypt";
 
     public static final String VERSION;
 
@@ -59,50 +84,25 @@ public final class Main {
         System.setProperty("awt.useSystemAAFontSettings", "lcd"); // force proper antialias setting
     }
 
-    @Option(name = "-xrender", usage = "Enable the XRender-based Java 2D rendering pipeline")
-    private boolean xrender;
+    private boolean portable = false;
 
-    @Option(name = "-opengl", usage = "Enable OpenGL acceleration")
-    private boolean opengl;
+    private File portableFile = null;
 
-    @Option(name = "-uninstall", usage = "Remove registry settings")
-    private boolean uninstall;
+    private int port = JpaNetworkServer.DEFAULT_PORT;
 
-    @Option(name = "-portable", usage = "Enable portable preferences")
-    private boolean portable;
+    private String hostName = null;
 
-    @Option(name = "-portableFile", usage = "Enable portable preferences and specify the file", metaVar = "<file>")
-    private String portableFile;
+    private File file = null;
 
-    @Option(name = "-shutdown", usage = "Issues a shutdown request to a server")
-    private boolean shutdown;
+    private File serverFile = null;
 
-    @Option(name = "-port", usage = "Network port server is running on; default is " + JpaNetworkServer.DEFAULT_PORT)
-    private int port;
+    private char[] password = new char[]{};
 
-    @Option(name = "-host", usage = "Server host name or address")
-    private String hostName;
+    private static boolean enableEDT = false;
 
-    @Option(name = "-file", usage = "File to load at start",  metaVar = "<file>")
-    private File file;
+    private static boolean verbose = false;
 
-    @Option(name = "-server", usage = "Act as a server using the specified file",  metaVar = "<file>")
-    private File serverFile;
-
-    @Option(name = "-password", usage = "Client or Server password")
-    private String password;
-
-    @Option(name = "-encrypt", usage = "Enable encryption for network communication")
-    private boolean encrypt;
-
-    @Option(name = "-enableEDT", usage = "Check for EDT violations")
-    private static boolean enableEDT;
-
-    @Option(name = "-verbose", usage = "Enable verbose application messages")
-    private static boolean verbose;
-
-    @Option(name = "-enableHangDetect", usage = "Enable hang detection on the EDT")
-    private static boolean hangDetect;
+    private static boolean hangDetect = false;
 
     public static boolean checkEDT() {
         return enableEDT;
@@ -187,55 +187,97 @@ public final class Main {
         }
     }
 
-    @SuppressWarnings({ "ResultOfObjectAllocationIgnored", "unused" })
     private void init(final String args[]) {
         configureLogging();
 
-        CmdLineParser parser = new CmdLineParser(this);
+        final OptionParser parser = buildParser();
 
         try {
-            parser.parseArgument(args);
+            final OptionSet options = parser.parse(args);
 
             /* handle a file name passed in as an argument without use of the -file argument
                assumed behavior for windows users */
-            if (args.length == 1 && args[0].charAt(0) != '-') {
-                File testFile = new File(args[0]);
-
-                if (testFile.exists()) {
-                    file = testFile;
-                } else {
-                    System.err.println(args[0] + " was not a valid file");
+            if (!options.nonOptionArguments().isEmpty()) {
+                // Check for no-option version of a file load
+                for (final Object object : options.nonOptionArguments()) {
+                    if (object instanceof String) {
+                        if (Files.exists(Paths.get((String)object))) {
+                            file = new File((String) object);
+                            break;
+                        } else {
+                            System.err.println(object + " was not a valid file");
+                        }
+                    }
                 }
             }
 
-            // Set encrypt as a system property
-            //System.getProperties().put(EncryptionManager.ENCRYPTION_FLAG, Boolean.toString(encrypt));
-            //System.getProperties().put("ssl", Boolean.toString(encrypt));
-
-            if (port <= 0) {
-                port = JpaNetworkServer.DEFAULT_PORT;
+            if (options.has(EDT_OPTION)) {
+                enableEDT = true;
             }
 
-            if (password == null) {
-                password = JpaNetworkServer.DEFAULT_PASSWORD;
+            if (options.has(VERBOSE_OPTION_SHORT)) {
+                verbose = true;
+            }
+
+            if (options.has(HANG_DETECT_OPTION)) {
+                hangDetect = true;
+            }
+
+            /*if (options.has(ENCRYPT_OPTION)) {
+                // Set encrypt as a system property
+                System.getProperties().put(EncryptionManager.ENCRYPTION_FLAG, Boolean.toString(encrypt));
+                System.getProperties().put("ssl", Boolean.toString(encrypt));
+            }*/
+
+            if (options.has(PORT_OPTION)) {
+                port = (Integer)options.valueOf(PORT_OPTION);
+            }
+
+            if (options.has(PASSWORD_OPTION)) {
+                password = ((String)options.valueOf(PASSWORD_OPTION)).toCharArray();
+            }
+
+            if (options.has(HOST_OPTION)) {
+                hostName = (String)options.valueOf(HOST_OPTION);
+            }
+
+            if (options.has(FILE_OPTION_SHORT) && file == null) {
+                file = (File) options.valueOf(FILE_OPTION_SHORT);
+                if (!file.exists()) {
+                    file = null;
+                }
+            }
+
+            if (options.has(SERVER_OPTION)) {
+                final File file = (File) options.valueOf(SERVER_OPTION);
+                if (file.exists()) {
+                    serverFile = file;
+                }
+            }
+
+            // Check to see if portable preferences are being used
+            if (options.has(PORTABLE_FILE_OPTION)) {
+                final File file = (File) options.valueOf(PORTABLE_FILE_OPTION);
+                if (file.exists()) {
+                    portableFile = file;
+                }
+            } else if (options.has(PORTABLE_OPTION_SHORT)) {  // simple use of portable preferences
+                portable = true;
             }
 
             /* If a shutdown request is found, it trumps any other commandline options */
-            if (shutdown) {
-                String serverName = "localhost";
-
-                if (hostName != null) {
-                    serverName = hostName;
+            if (options.has(SHUTDOWN_OPTION)) {
+                if (hostName == null) {
+                    hostName = JpaNetworkServer.LOCALHOST;
                 }
-
-                MessageBus.getInstance().shutDownRemoteServer(serverName, port + 1, password.toCharArray());
-            } else if (uninstall) { /* Dump the registry settings if requested */
+                MessageBus.getInstance().shutDownRemoteServer(hostName, port + 1, password);
+            } else if (options.has(UNINSTALL_OPTION_SHORT)) { /* Dump the registry settings if requested */
                 PortablePreferences.deleteUserPreferences();
             } else if (serverFile != null) {
                 try {
                     if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {
                         JpaNetworkServer networkServer = new JpaNetworkServer();
-                        networkServer.startServer(serverFile.getAbsolutePath(), port, password.toCharArray());
+                        networkServer.startServer(serverFile.getAbsolutePath(), port, password);
                     } else {
                         System.err.println(ResourceUtils.getString("Message.FileIsLocked"));
                     }
@@ -248,16 +290,16 @@ public final class Main {
             } else { // start the UI
                 if (portable || portableFile != null) { // must hook in the preferences implementation first
                     // for best operation
-                    PortablePreferences.initPortablePreferences(portableFile);
+                    PortablePreferences.initPortablePreferences(portableFile.getAbsolutePath());
                 }
 
                 enableAntialiasing();
 
-                if (opengl) {
+                if (options.has(OPEN_GL_OPTION)) {
                     System.setProperty("sun.java2d.opengl", "True");
                 }
 
-                if (xrender) {
+                if (options.has(XRENDER_OPTION)) {
                     System.setProperty("sun.java2d.xrender", "True");
                 }
 
@@ -268,16 +310,51 @@ public final class Main {
                 setupNetworking();
 
                 if (hostName != null) {
-                    new UIApplication(hostName, port, password.toCharArray());
+                    new UIApplication(hostName, port, password);
                 } else if (file != null && file.exists()) {
-                    new UIApplication(file, password.toCharArray());
+                    new UIApplication(file, password);
                 } else {
                     new UIApplication(null, null);
                 }
             }
-        } catch (CmdLineException e) {
-            System.err.println(e.getMessage());
-            parser.printUsage(System.err);
+        } catch (final Exception e) {
+            try {
+                parser.printHelpOn(System.err);
+            } catch (final IOException ioe) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, ioe.toString(), ioe);
+            }
+
         }
+    }
+
+    private static OptionParser buildParser() {
+        final OptionParser parser = new OptionParser() {
+            {
+                acceptsAll(asList(HELP_OPTION_SHORT, HELP_OPTION_LONG), "This help").forHelp();
+                acceptsAll(asList(UNINSTALL_OPTION_SHORT, UNINSTALL_OPTION_LONG), "Remove registry settings");
+                acceptsAll(asList(VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG), "Enable verbose application messages");
+                acceptsAll(asList(FILE_OPTION_SHORT, FILE_OPTION_LONG), "File to load at start").withRequiredArg()
+                        .ofType(File.class);
+                accepts(PASSWORD_OPTION, "Password for a local File, server or client").withRequiredArg();
+                acceptsAll(asList(PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG), "Enable portable preferences");
+                accepts(PORTABLE_FILE_OPTION, "Enable portable preferences and specify the file")
+                        .withRequiredArg().ofType(File.class);
+                accepts(PORT_OPTION, "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT
+                        + ")").withRequiredArg().ofType(Integer.class);
+                accepts(HOST_OPTION, "Server host name or address").requiredIf(PORT_OPTION).withRequiredArg();
+                accepts(SERVER_OPTION, "Runs as a server using the specified file")
+                        .withRequiredArg().ofType(File.class);
+                accepts(XRENDER_OPTION, "Enable the XRender-based Java 2D rendering pipeline");
+                accepts(OPEN_GL_OPTION, "Enable OpenGL acceleration");
+                accepts(HANG_DETECT_OPTION, "Enable hang detection on the EDT");
+                accepts(SHUTDOWN_OPTION, "Issues a shutdown request to a server");
+                accepts(EDT_OPTION, "Check for EDT violations");
+                accepts(ENCRYPT_OPTION, "Enable encryption for network communication");
+            }
+        };
+
+        parser.allowsUnrecognizedOptions();
+
+        return parser;
     }
 }

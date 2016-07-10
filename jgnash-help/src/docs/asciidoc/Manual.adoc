@@ -964,67 +964,66 @@ jGnash has several command line options for advanced users.
 
 [float]
 === Options
-
--enableEDT::
+--enableEDT::
 Primarily used for development and debugging the graphical user interface.
 When enabled, this detects and warns of bad UI programing practice. 
 
--file [option]``filename``::
+--file [option]``filename``::
 Specifies a file to load at startup.
 
--opengl::
+--opengl::
 Enables OpenGL support for platforms and video drivers that support it.
 Disable use if strange graphics errors occur. 
 
--xrender::
+--xrender::
 Enables 2D rendering pipeline for modern X11 based desktop environments.
 The performance improvement can be significant for some systems.
 This has no effect on OSX or Windows systems. 
 
--portable::
+--portable::
 If portable is specified on the command line, jGnash preferences will be stored to a file name**pref.xml**instead of
 using the system registry. Use of this option is intended for users who want to run jGnash from a thumb drive on
 multiple computers and maintain their preferences without using the system registry. The *pref.xml* file will usually
 be stored at the location jGnash was started from.
 
--portableFile [option]``filename``::
+--portableFile [option]``filename``::
 If you don't like the location the *pref.xml* file is stored, or wish to use a different name, use this option to
 change the location and name to suit.
 
--uninstall::
+--uninstall::
 Removes all registry and configuration settings jGnash has created.
 This will not have any effect if you have been using the *-portable* option. 
 
 [float]
 === Client/Server Options
 
--server [option]``filename``::
+--server [option]``filename``::
 Starts the jGnash server using the specified file.
 The file must exist and not be in use by another program.
 A user interface will not be displayed.
 The file must be in the Object Database (jdb) format. 
 
--host [option]``servername``::
+--host [option]``servername``::
 Specifies the name of the remote server.
 This starts jGnash and automatically connects to the specified server.
 If running on the same computer as the server, localhost may be used as the name of the server. 
 
--shutdown::
+--shutdown::
 Issues a shutdown request to a server.
 If -host is not specified, then localhost is assumed for the server name 
 
--encrypt::
+--encrypt::
 Enables encrypted client / server communication if supported by the relational database (H2 Only). Remote file transfers
 and client communications, etc will be encrypted. This will not encrypt your database file.
 A password must be used, otherwise encryption will be disabled.
 Depending on your locale and export laws, encryption may not be available and will fail if not supported in your
 installed JVM.
 
--password [option]``password``::
+--password [option]``password``::
 The password that the client must correctly specify to connect to the jGnash database.
 This is not required if the database is not protected. 
 
--port [option]``port``::
+--port [option]``port``::
 An empty port for network communications.
 The specified port and port + 1 may not be used by any other application at the same time.
 The default port is 5300. 
@@ -1041,22 +1040,22 @@ It is possible to start the jGnash client and specify the server, and password s
 
 Start the jGnash server using the default port with a password protected database
 ----
-java -jar jGnash2.jar -server /home/craig/jgnash.jdb -password fh56dy
+java -jar jGnash2.jar --server /home/craig/jgnash.jdb --password fh56dy
 ----
 
 Start the jGnash client and connect to the local server running a password protected database
 ----
-java -jar jGnash2.jar -host localhost -passwordfh56dy
+java -jar jGnash2.jar --host localhost --password fh56dy
 ----
 
 Issue a shutdown request to a remote server that is password protected
 ----
-java -jar jGnash2.jar -shutdown -host localhost -password fh56dy
+java -jar jGnash2.jar --shutdown --host localhost --password fh56dy
 ----
 
 Issue a shutdown request to a local server that is not password protected
 ----
-java -jar jGnash2.jar -shutdown
+java -jar jGnash2.jar --shutdown
 ----
 
 [[_faq]]
