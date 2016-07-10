@@ -148,7 +148,7 @@ blockquote:
 code:
   font_color: $base_font_color
   font_family: $literal_font_family
-  font_size: ceil($base_font_size)
+  font_size: ceil($base_font_size * 0.85)
   padding: $code_font_size
   line_height: 1.25
   background_color: f5f5f5

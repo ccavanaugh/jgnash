@@ -58,13 +58,11 @@ A brief list of features is below:
 * Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates. 
 * Printable reports with PDF and spreadsheet export capability. 
 * XML and relational database file formats 
-* Operates on any main-stream PC operating system. 
+* Operates on most all modern PC operating system __(Java(TM) 8 is required)__.
 
 
 [[_installation]]
 === Installation
-
-
 jGnash is not currently distributed with an automatic installation tool.
 You will be required to perform a couple of manual operations that are easily performed for those with a basic
 understanding of how to use a zip file.  Also, you must have Java(TM) 8 or newer installed on your computer.
@@ -206,20 +204,22 @@ operating system or install a freely available third party encryption tool.
 
 [[_accounts]]
 === Accounts
-Accounts are what you use to organize how you spend your money and where it comes from.
-Account structure can be changed to organize the display of information to suit your specific needs. 
+Accounts are what you use to organize how you save and spend your money, and where it comes from.
+Account structures can be changed to organize the display of information to suit your specific needs.
 
 Typically, you will have a separate jGnash account for each savings, checking, investment account, etc.
 that you have at a financial institution.
 Accounts can be organized under "placeholder" accounts to add different levels of organization. 
 
-For example, if you would like to see a summary of your accounts by financial institution, you can create a placeholder account that represents a single financial institution and group your savings and checking accounts from that particular institution. 
+For example, if you would like to see a summary of your accounts by financial institution, you can create a placeholder
+account that represents a single financial institution and group your savings and checking accounts from that particular
+institution.
 
 Maybe you want to see all savings accounts grouped together and checking accounts grouped together.
 It's just a mater of creating placeholder accounts for checking and savings and placing the respective accounts under them. 
 
-The account structure can be easily changed at any time with the exception of removing accounts after they have transaction in them.
-Transactions must be manually deleted from an account before you can remove it. 
+The account structure can be easily changed at any time with the exception of removing accounts after they have
+transaction in them.  Transactions must be manually deleted from an account before you can remove it.
 
 [[_newaccount]]
 ==== Creating Accounts
@@ -317,7 +317,7 @@ _If you are not concerned about correct accounting practices, you can create an 
 
 [[_accounttypes]]
 === Account Types
-jGnash offers several account types to make organization easier.
+jGnash allows use of several account types to make organization easier.
 The account type chosen can have a significant impact on how reports are generated and displayed, and the types of transactions you can create. 
 
 ==== Asset
@@ -361,7 +361,6 @@ Investment accounts can be used to track 401k, IRA's, etc.
 * Investment Accounts support multiple securities.
 * Investment Accounts can be used to model an on-line brokerage account. 
 
-
 ==== Liability
 Liability accounts are used to track long term loans or liabilities.
 Liability accounts have the added feature of allowing you to set-up a loan payment that takes some of the effort out of entering periodic loan payment transactions. 
@@ -396,13 +395,38 @@ Depending on your settings, the decimal symbol will change accordingly as well a
 [[_datefields]]
 ==== Date Fields
 
-
-The date field is freely editable and jGnash will make the best attempt at interpreting an invalid entry, but the results are indeterminate.
-Clicking on the button to the right of the field will display a calendar dialog where you can select a date as well. 
+The date field is freely editable and jGnash will make the best attempt at interpreting an invalid entry, but the results
+are indeterminate. Clicking on the button to the right of the field will display a calendar dialog where you can select
+a date as well.
 
 image:../images/date-entry.png[]
 
-Also, dates can be modified using the keyboard shortcuts defined in the <<_dateshortcuts,appendix>>.
+Also, dates can be modified using the keyboard shortcuts defined below.
+
+.Date Entry Shortcut Keys
+[cols="1,1", options="header"]
+|===
+| Keys / Mouse
+| Function
+
+|kbd:[+]
+, kbd:[↑], Mouse Scroll Up
+|Increase the date by one day
+
+|kbd:[-]
+, kbd:[↓], Mouse Scroll Down
+|Decrease the date by one day
+
+|kbd:[PgUp], Mouse Thumb Wheel Up
+|Increase the date by one month
+
+|kbd:[PgDn], Mouse Thumb Wheel Down
+|Decrease the date by one month
+
+|kbd:[t]
+, kbd:[T]
+|Change to todays date
+|===
 
 [[_numberfields]]
 ==== Number Fields
@@ -1095,31 +1119,6 @@ Depending on your operating system and how you have it configured, other shortcu
 
 |kbd:[CTRL-V]
 |Paste
-|===
-
-.Date Entry Shortcut Keys
-[cols="1,1", options="header"]
-|===
-| Keys
-| Function
-
-|kbd:[+]
-, kbd:[↑]
-|Increase the date by one day
-
-|kbd:[-]
-, kbd:[↓]
-|Decrease the date by one day
-
-|kbd:[PgUp]
-|Increase the date by one month
-
-|kbd:[PgDn]
-|Decrease the date by one month
-
-|kbd:[t]
-, kbd:[T]
-|Change to todays date
 |===
 
 include::_gpl-3.0.adoc[]
