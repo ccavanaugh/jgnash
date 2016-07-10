@@ -103,7 +103,7 @@ public class jGnashFx extends Application {
 
         configureLogging();
 
-       OptionParser parser = buildParser();
+        OptionParser parser = buildParser();
 
         try {
             final OptionSet options = parser.parse(args);
@@ -130,11 +130,11 @@ public class jGnashFx extends Application {
             }
 
             if (options.has(PORT_OPTION)) {
-                port = (Integer)options.valueOf(PORT_OPTION);
+                port = (Integer) options.valueOf(PORT_OPTION);
             }
 
             if (options.has(PASSWORD_OPTION)) {
-                password = ((String)options.valueOf(PASSWORD_OPTION)).toCharArray();
+                password = ((String) options.valueOf(PASSWORD_OPTION)).toCharArray();
             }
 
             if (options.has(FILE_OPTION_SHORT)) {
@@ -144,18 +144,21 @@ public class jGnashFx extends Application {
                 }
             } else if (!options.nonOptionArguments().isEmpty() && dataFile == null) {
                 // Check for no-option version of a file load
-                for (Object object : options.nonOptionArguments()) {
+                for (final Object object : options.nonOptionArguments()) {
                     if (object instanceof String) {
-                        if (Files.exists(Paths.get((String)object))) {
+                        if (Files.exists(Paths.get((String) object))) {
                             dataFile = new File((String) object);
                             break;
+                        } else {
+                            System.err.println(object + " was not a valid file");
+                            System.exit(1); // force an exit with an error
                         }
                     }
                 }
             }
 
             if (options.has(HOST_OPTION)) {
-                host = (String)options.valueOf(HOST_OPTION);
+                host = (String) options.valueOf(HOST_OPTION);
             }
 
             if (options.has(SERVER_OPTION)) {
