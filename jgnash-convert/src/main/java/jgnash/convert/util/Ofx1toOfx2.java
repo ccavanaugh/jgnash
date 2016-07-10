@@ -17,6 +17,9 @@
  */
 package jgnash.convert.util;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,9 +32,7 @@ import java.util.logging.Logger;
 import jgnash.convert.imports.ofx.OfxV1ToV2;
 import jgnash.util.NotNull;
 
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
+import static java.util.Arrays.asList;
 
 /**
  * Commandline class to convert OFX version 1 (SGML) to OFX version 2 (XML)
@@ -39,12 +40,10 @@ import org.kohsuke.args4j.Option;
  * @author Craig Cavanaugh
  */
 class Ofx1toOfx2 {
-
-    @Option(name = "-in", usage = "File to convert")
-    private final File inFile = null;
-
-    @Option(name = "-out", usage = "File to save to")
-    private final File outFile = null;
+    private static final String HELP_OPTION_SHORT = "h";
+    private static final String HELP_OPTION_LONG = "help";
+    private static final String IN_OPTION = "in";
+    private static final String OUT_OPTION = "out";
 
     public static void main(final String args[]) {
         Ofx1toOfx2 main = new Ofx1toOfx2();
@@ -52,17 +51,26 @@ class Ofx1toOfx2 {
     }
 
     private void convert(final String args[]) {
-        CmdLineParser parser = new CmdLineParser(this);
+        final OptionParser parser = buildParser();
 
         try {
-            parser.parseArgument(args);
+            final OptionSet options = parser.parse(args);
+
+            final File inFile = (File) options.valueOf(IN_OPTION);
+            final File outFile = (File) options.valueOf(OUT_OPTION);
 
             Objects.requireNonNull(inFile, "Input file must be specified");
             Objects.requireNonNull(outFile, "Output file must be specified");
 
             convertToXML(inFile, outFile);
-        } catch (NullPointerException | CmdLineException e) {
-            Logger.getLogger(Ofx1toOfx2.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } catch (final Exception exception) {
+            if (parser != null) {
+                try {
+                    parser.printHelpOn(System.err);
+                } catch (IOException e) {
+                    Logger.getLogger(Ofx1toOfx2.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }
         }
     }
 
@@ -75,5 +83,19 @@ class Ofx1toOfx2 {
         } catch (IOException e) {
             Logger.getLogger(Ofx1toOfx2.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
+    }
+
+    private static OptionParser buildParser() {
+        final OptionParser parser = new OptionParser() {
+            {
+                acceptsAll(asList(HELP_OPTION_SHORT, HELP_OPTION_LONG), "This help").forHelp();
+                accepts(IN_OPTION, "File to convert").withRequiredArg().required().ofType(File.class);
+                accepts(OUT_OPTION, "File to save to").withRequiredArg().required().ofType(File.class);
+            }
+        };
+
+        parser.allowsUnrecognizedOptions();
+
+        return parser;
     }
 }
