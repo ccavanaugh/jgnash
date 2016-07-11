@@ -84,35 +84,37 @@ public class RecurringViewController implements MessageListener {
 
     private Timeline timeline = null;
 
-    private static final int START_UP_DELAY = 2 * 60 * 1000;
+    private static final int START_UP_DELAY = 45;   // 45 seconds
 
     final private AtomicBoolean dialogShowing = new AtomicBoolean(false);
 
     @FXML
-    @SuppressWarnings("unchecked")
     private void initialize() {
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         final TableColumn<Reminder, String> descriptionColumn = new TableColumn<>(resources.getString("Column.Description"));
         descriptionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDescription()));
+        tableView.getColumns().add(descriptionColumn);
 
         final TableColumn<Reminder, String> frequencyColumn = new TableColumn<>(resources.getString("Column.Freq"));
         frequencyColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getReminderType().toString()));
+        tableView.getColumns().add(frequencyColumn);
 
         final TableColumn<Reminder, Boolean> enabledColumn = new TableColumn<>(resources.getString("Column.Enabled"));
         enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isEnabled()));
         enabledColumn.setCellFactory(CheckBoxTableCell.forTableColumn(enabledColumn));
+        tableView.getColumns().add(enabledColumn);
 
         final TableColumn<Reminder, LocalDate> lastPosted = new TableColumn<>(resources.getString("Column.LastPosted"));
         lastPosted.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLastDate()));
-        lastPosted.setCellFactory(cell -> new ShortDateTableCell<>());        
+        lastPosted.setCellFactory(cell -> new ShortDateTableCell<>());
+        tableView.getColumns().add(lastPosted);
 
         final TableColumn<Reminder, LocalDate> due = new TableColumn<>(resources.getString("Column.Due"));
         due.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getIterator().next()));
         due.setCellFactory(cell -> new ShortDateTableCell<>());
-
-        tableView.getColumns().addAll(descriptionColumn, frequencyColumn, enabledColumn, lastPosted, due);
+        tableView.getColumns().add(due);
 
         sortedReminderList.comparatorProperty().bind(tableView.comparatorProperty());
 
@@ -151,7 +153,7 @@ public class RecurringViewController implements MessageListener {
                     ae -> Platform.runLater(this::showReminderDialog)));
 
             timeline.setCycleCount(Animation.INDEFINITE);
-            timeline.setDelay(Duration.millis(START_UP_DELAY));
+            timeline.setDelay(Duration.seconds(START_UP_DELAY));
             timeline.play();
         }
     }
@@ -262,7 +264,7 @@ public class RecurringViewController implements MessageListener {
                 }
 
             }
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             Logger.getLogger(RecurringViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
