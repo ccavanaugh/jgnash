@@ -89,9 +89,7 @@ public class CurrencyUpdateFactory {
 
                         final Optional<BigDecimal> rate = CurrencyUpdateFactory.getExchangeRate(source, target);
 
-                        if (rate.isPresent()) {
-                            engine.setExchangeRate(source, target, rate.get());
-                        }
+                        rate.ifPresent(value -> engine.setExchangeRate(source, target, value));
                     });
                 }
             }

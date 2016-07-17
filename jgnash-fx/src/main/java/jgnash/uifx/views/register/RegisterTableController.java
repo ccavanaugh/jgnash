@@ -343,9 +343,7 @@ abstract class RegisterTableController {
 
         final Optional<Reminder> optional = RecurringEntryDialog.showAndWait(reminder);
 
-        if (optional.isPresent()) {
-            engine.addReminder(optional.get());
-        }
+        optional.ifPresent(engine::addReminder);
     }
 
     void handleJumpAction() {

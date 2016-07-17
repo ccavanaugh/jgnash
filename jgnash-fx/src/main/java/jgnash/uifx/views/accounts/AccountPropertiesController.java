@@ -138,9 +138,8 @@ public class AccountPropertiesController {
     @FXML
     private void handleParentAccountAction() {
         final Optional<Account> optional = StaticAccountsMethods.selectAccount(parentAccount, baseAccount);
-        if (optional.isPresent()) {
-            setParentAccount(optional.get());
-        }
+
+        optional.ifPresent(this::setParentAccount);
     }
 
     public boolean getResult() {
