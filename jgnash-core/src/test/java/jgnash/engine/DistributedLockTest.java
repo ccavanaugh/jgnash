@@ -51,15 +51,13 @@ public class DistributedLockTest {
 
     @Before
     public void setUp() {
-        final char[] password = new char[]{};
-
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         server = new DistributedLockServer(PORT);
-        assertTrue(server.startServer(password));
+        assertTrue(server.startServer(EngineFactory.EMPTY_PASSWORD));
 
-        manager = new DistributedLockManager("localhost", PORT);
-        manager.connectToServer(password);
+        manager = new DistributedLockManager(EngineFactory.LOCALHOST, PORT);
+        manager.connectToServer(EngineFactory.EMPTY_PASSWORD);
     }
 
     @After

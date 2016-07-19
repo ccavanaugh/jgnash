@@ -71,7 +71,7 @@ public class OpenAction {
 
             final private OpenDatabaseDialog dialog;
 
-            BootEngine(final OpenDatabaseDialog dialog) {
+            private BootEngine(final OpenDatabaseDialog dialog) {
                 this.dialog = dialog;
             }
 
@@ -217,14 +217,15 @@ public class OpenAction {
                     final String host = EngineFactory.getLastHost();
                     final int port = EngineFactory.getLastPort();
 
-                    engine = EngineFactory.bootClientEngine(host, port, new char[]{}, EngineFactory.DEFAULT);
+                    engine = EngineFactory.bootClientEngine(host, port, EngineFactory.EMPTY_PASSWORD, EngineFactory.DEFAULT);
 
                     if (engine == null) {
                         appLogger.warning(rb.getString("Message.Error.ServerConnection"));
                     }
                 } else {    // must be a local file with a user name and password
-                    if (checkAndBackupOldVersion(EngineFactory.getLastDatabase(), new char[]{})) {
-                        engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, new char[]{});
+                    if (checkAndBackupOldVersion(EngineFactory.getLastDatabase(), EngineFactory.EMPTY_PASSWORD)) {
+                        engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT,
+                                EngineFactory.EMPTY_PASSWORD);
                     }
 
                     if (engine == null) {

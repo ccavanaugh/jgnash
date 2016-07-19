@@ -57,8 +57,6 @@ public class JpaNetworkServer {
 
     public static final String STOP_SERVER_MESSAGE = "<STOP_SERVER>";
 
-    public static final String LOCALHOST = "localhost";
-
     public static final int MESSAGE_SERVER_INCREMENT = 1;
 
     static final int LOCK_SERVER_INCREMENT = 2;
@@ -80,8 +78,6 @@ public class JpaNetworkServer {
     private DistributedAttachmentManager distributedAttachmentManager;
 
     public static final int DEFAULT_PORT = 5300;
-
-    public static final String DEFAULT_PASSWORD = "";
 
     private static final String SERVER_ENGINE = "server";
 
@@ -276,7 +272,7 @@ public class JpaNetworkServer {
     private Engine createEngine(final DataStoreType dataStoreType, final String fileName, final int port,
                                 final char[] password) {
 
-        final Properties properties = JpaConfiguration.getClientProperties(dataStoreType, fileName, LOCALHOST, port,
+        final Properties properties = JpaConfiguration.getClientProperties(dataStoreType, fileName, EngineFactory.LOCALHOST, port,
                 password);
 
         logger.log(Level.INFO, "Local connection url is: {0}",
@@ -292,10 +288,10 @@ public class JpaNetworkServer {
 
                 em = factory.createEntityManager();
 
-                distributedLockManager = new DistributedLockManager(LOCALHOST, port + LOCK_SERVER_INCREMENT);
+                distributedLockManager = new DistributedLockManager(EngineFactory.LOCALHOST, port + LOCK_SERVER_INCREMENT);
                 distributedLockManager.connectToServer(password);
 
-                distributedAttachmentManager = new DistributedAttachmentManager(LOCALHOST, port + TRANSFER_SERVER_INCREMENT);
+                distributedAttachmentManager = new DistributedAttachmentManager(EngineFactory.LOCALHOST, port + TRANSFER_SERVER_INCREMENT);
                 distributedAttachmentManager.connectToServer(password);
 
                 logger.info("Created local JPA container and engine");

@@ -61,7 +61,8 @@ public class JpaHsqlEngineTest extends EngineTest {
         Files.delete(Paths.get(testFile));
 
         try {
-            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.HSQL_DATABASE);
+            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.HSQL_DATABASE);
         } catch (final Exception e) {
             fail(e.getMessage());
             return null;
@@ -72,7 +73,7 @@ public class JpaHsqlEngineTest extends EngineTest {
     public void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
+        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, EngineFactory.EMPTY_PASSWORD);
 
         tableNames.forEach(System.out::println);
     }

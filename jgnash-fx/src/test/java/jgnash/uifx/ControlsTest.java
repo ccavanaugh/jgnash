@@ -70,8 +70,6 @@ public class ControlsTest extends Application {
 
     private String tempFile;
 
-    private static final char[] PASSWORD = new char[]{};
-
     public static void main(final String[] args) {
         //Locale.setDefault(Locale.FRANCE);
 
@@ -164,7 +162,8 @@ public class ControlsTest extends Application {
 
         EngineFactory.deleteDatabase(testFile);
 
-        Engine engine = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+        final Engine engine = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT,
+                EngineFactory.EMPTY_PASSWORD, DataStoreType.BINARY_XSTREAM);
 
         Objects.requireNonNull(engine);
 

@@ -42,8 +42,6 @@ import static org.junit.Assert.*;
 
      private CurrencyNode cadCurrency;
 
-     private static final char[] PASSWORD = new char[]{};
-
      @Test
      public void testExchangeRate() {
          assertEquals(new BigDecimal("0.5"), usdCurrency.getExchangeRate(cadCurrency));
@@ -224,7 +222,8 @@ import static org.junit.Assert.*;
              database = File.createTempFile("jgnash", ".bxds").getAbsolutePath();
              EngineFactory.deleteDatabase(database);
 
-             e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+             e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                     DataStoreType.BINARY_XSTREAM);
              e.setCreateBackups(false);
 
              // Creating currencies

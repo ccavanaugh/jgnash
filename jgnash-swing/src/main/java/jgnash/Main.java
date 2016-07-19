@@ -33,6 +33,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 
 import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.message.MessageBus;
 import jgnash.net.security.YahooParser;
@@ -96,7 +97,7 @@ public final class Main {
 
     private File serverFile = null;
 
-    private char[] password = new char[]{};
+    private char[] password = EngineFactory.EMPTY_PASSWORD;
 
     private static boolean enableEDT = false;
 
@@ -268,7 +269,7 @@ public final class Main {
             /* If a shutdown request is found, it trumps any other commandline options */
             if (options.has(SHUTDOWN_OPTION)) {
                 if (hostName == null) {
-                    hostName = JpaNetworkServer.LOCALHOST;
+                    hostName = EngineFactory.LOCALHOST;
                 }
                 MessageBus.getInstance().shutDownRemoteServer(hostName, port + 1, password);
             } else if (options.has(UNINSTALL_OPTION_SHORT)) { /* Dump the registry settings if requested */

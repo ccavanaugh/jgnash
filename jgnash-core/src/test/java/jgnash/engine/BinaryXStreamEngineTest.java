@@ -49,7 +49,8 @@ public class BinaryXStreamEngineTest extends EngineTest {
 
         EngineFactory.deleteDatabase(testFile);
 
-        return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+        return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                DataStoreType.BINARY_XSTREAM);
     }
 
     @AfterClass

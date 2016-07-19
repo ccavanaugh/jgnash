@@ -54,7 +54,8 @@ public class JpaH2EngineTest extends EngineTest {
         EngineFactory.deleteDatabase(testFile);
 
         try {
-            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.H2_DATABASE);
+            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.H2_DATABASE);
         } catch (final Exception e) {
             fail(e.getMessage());
             return null;
@@ -65,7 +66,7 @@ public class JpaH2EngineTest extends EngineTest {
     public void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
+        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, EngineFactory.EMPTY_PASSWORD);
 
         tableNames.forEach(System.out::println);
     }

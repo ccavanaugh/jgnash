@@ -70,11 +70,12 @@ public class FileTransferTest {
         }
 
         // Start an engine and close so we have a populated file
-        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, new char[]{}, DataStoreType.H2_DATABASE);
+        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                DataStoreType.H2_DATABASE);
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         // Change the password
-        SqlUtils.changePassword(testFile, new char[]{}, password);
+        SqlUtils.changePassword(testFile, EngineFactory.EMPTY_PASSWORD, password);
 
         final JpaNetworkServer networkServer = new JpaNetworkServer();
 
@@ -86,7 +87,8 @@ public class FileTransferTest {
         Thread.sleep(4000);
 
         try {
-            Engine e = EngineFactory.bootClientEngine("localhost", JpaNetworkServer.DEFAULT_PORT, password, EngineFactory.DEFAULT);
+            Engine e = EngineFactory.bootClientEngine(EngineFactory.LOCALHOST, JpaNetworkServer.DEFAULT_PORT,
+                    password, EngineFactory.DEFAULT);
 
             Account account = new Account(AccountType.CASH, e.getDefaultCurrency());
             account.setName("test");
@@ -135,7 +137,6 @@ public class FileTransferTest {
 
     @Test
     public void networkedTest() throws Exception {
-        final char[] password = new char[]{};
         final int port = JpaNetworkServer.DEFAULT_PORT + 100;
 
         //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
@@ -156,7 +157,9 @@ public class FileTransferTest {
         }
 
         // Start an engine and close so we have a populated file
-        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, password, DataStoreType.HSQL_DATABASE);
+        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                DataStoreType.HSQL_DATABASE);
+
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         final JpaNetworkServer networkServer = new JpaNetworkServer();
@@ -164,12 +167,13 @@ public class FileTransferTest {
         final String serverFile = testFile;
 
         Logger.getLogger(FileTransferTest.class.getName()).info("Starting Server");
-        new StartServerThread(networkServer, serverFile, port, password).start();
+        new StartServerThread(networkServer, serverFile, port, EngineFactory.EMPTY_PASSWORD).start();
 
         Thread.sleep(4000);
 
         try {
-            Engine e = EngineFactory.bootClientEngine("localhost", port, password, EngineFactory.DEFAULT);
+            Engine e = EngineFactory.bootClientEngine(EngineFactory.LOCALHOST, port, EngineFactory.EMPTY_PASSWORD,
+                    EngineFactory.DEFAULT);
 
             Account account = new Account(AccountType.CASH, e.getDefaultCurrency());
             account.setName("test");

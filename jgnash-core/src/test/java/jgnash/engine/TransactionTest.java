@@ -19,8 +19,6 @@ public class TransactionTest {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
-    private static final char[] PASSWORD = new char[]{};
-
     @Test
     public void testBackEnd() throws IOException {
 
@@ -28,7 +26,8 @@ public class TransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.XML);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
@@ -86,7 +85,8 @@ public class TransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.XML);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 

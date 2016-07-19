@@ -49,7 +49,8 @@ public class YahooEventParserTest extends AbstractEngineTest {
         database = testFolder.newFile("yahoo-test.bxds").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
-        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                DataStoreType.BINARY_XSTREAM);
     }
 
     @Test

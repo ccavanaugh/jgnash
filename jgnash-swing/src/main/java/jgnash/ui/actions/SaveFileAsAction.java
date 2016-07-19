@@ -136,7 +136,8 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                                 // Boot the engine with the temporary file
-                                EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                                EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                                        EngineFactory.EMPTY_PASSWORD);
 
                                 engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -150,7 +151,8 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                                     // Boot the engine with the new file
-                                    EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                                    EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                                            EngineFactory.EMPTY_PASSWORD);
                                 }
 
                                 if (!tempFile.delete()) {
@@ -161,11 +163,12 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                             Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
                             if (engine != null) {
-                                Collection<StoredObject> objects = engine.getStoredObjects();
+                                final Collection<StoredObject> objects = engine.getStoredObjects();
                                 newFileType.getDataStore().saveAs(newFile, objects);
                                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                                EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                                EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                                        EngineFactory.EMPTY_PASSWORD);
                             }
                         }
                     }

@@ -27,7 +27,8 @@ public class ApiTest extends AbstractEngineTest {
         database = testFolder.newFile("api-test.bxds").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
-        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                DataStoreType.BINARY_XSTREAM);
     }
 
     private void closeEngine() {
@@ -56,7 +57,8 @@ public class ApiTest extends AbstractEngineTest {
         // close and reopen to force check for persistence
         closeEngine();
 
-        e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD);
+        e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT,
+                EngineFactory.EMPTY_PASSWORD);
 
         assertEquals("myValue", e.getPreference("myKey"));
 
@@ -95,7 +97,7 @@ public class ApiTest extends AbstractEngineTest {
         // close and reopen to force check for persistence
         closeEngine();
 
-        e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD);
+        e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
         b = e.getAccountByUuid(a.getUuid());
         assertEquals("gobbleDeGook", e.getAccountAttribute(b, "myStuff"));

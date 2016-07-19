@@ -29,7 +29,8 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         database = testFolder.newFile("invest-transaction-test.xml").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
-        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                DataStoreType.XML);
     }
 
     @Test

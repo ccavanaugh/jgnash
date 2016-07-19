@@ -42,7 +42,6 @@ public class CommodityNodeTest {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
-    private static final char[] PASSWORD = new char[]{};
 
     @Test
     public void ExchangeTest1() {
@@ -51,7 +50,8 @@ public class CommodityNodeTest {
             final String database = testFolder.newFile("exchange-test.xml").getAbsolutePath();
             EngineFactory.deleteDatabase(database);
 
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -88,7 +88,8 @@ public class CommodityNodeTest {
             EngineFactory.deleteDatabase(database);
 
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -125,7 +126,8 @@ public class CommodityNodeTest {
             EngineFactory.deleteDatabase(database);
 
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.XML);
             Objects.requireNonNull(e);
 
             CurrencyNode node = new CurrencyNode();

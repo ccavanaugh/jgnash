@@ -66,7 +66,7 @@ import com.thoughtworks.xstream.io.xml.CompactWriter;
  * @author Craig Cavanaugh
  */
 class MessageBusClient {
-    private String host = "localhost";
+    private String host = EngineFactory.LOCALHOST;
 
     private int port = 0;
 

@@ -47,7 +47,7 @@ public class EncryptedDistributedLockTest extends DistributedLockTest {
         server = new DistributedLockServer(PORT);
         assertTrue(server.startServer(password));
 
-        manager = new DistributedLockManager("localhost", PORT);
+        manager = new DistributedLockManager(EngineFactory.LOCALHOST, PORT);
         manager.connectToServer(password);
     }
 }

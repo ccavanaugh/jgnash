@@ -36,6 +36,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.net.security.YahooParser;
 import jgnash.uifx.StaticUIMethods;
@@ -76,7 +77,7 @@ public class jGnashFx extends Application {
 
     private static File dataFile = null;
     private static File serverFile = null;
-    private static char[] password = new char[]{};
+    private static char[] password = EngineFactory.EMPTY_PASSWORD;
     private static int port = JpaNetworkServer.DEFAULT_PORT;
     private static String host = null;
 

@@ -44,10 +44,11 @@ public class BootEngineTask extends Task<String> {
 
         // must be a remote connection without use of a password
         if (EngineFactory.getLastRemote() && !EngineFactory.usedPassword()) {
-            bootTask = new BootEngineTask(null, new char[]{}, true, EngineFactory.getLastHost(),
+            bootTask = new BootEngineTask(null, EngineFactory.EMPTY_PASSWORD, true, EngineFactory.getLastHost(),
                     EngineFactory.getLastPort());
         } else {
-            bootTask = new BootEngineTask(EngineFactory.getLastDatabase(), new char[]{}, false, null, 0);
+            bootTask = new BootEngineTask(EngineFactory.getLastDatabase(), EngineFactory.EMPTY_PASSWORD, false,
+                    null, 0);
         }
 
         new Thread(bootTask ).start();

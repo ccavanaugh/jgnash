@@ -35,8 +35,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class BudgetResultsExportTest {
 
-    private static final char[] PASSWORD = new char[]{};
-
     @Test
     public void testExportBudgetResultsModel() throws Exception {
 
@@ -45,7 +43,8 @@ public class BudgetResultsExportTest {
 
         EngineFactory.deleteDatabase(file);
 
-        Engine e = EngineFactory.bootLocalEngine(file, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+        Engine e = EngineFactory.bootLocalEngine(file, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                DataStoreType.XML);
         e.setCreateBackups(false);
 
         CurrencyNode node = e.getDefaultCurrency();

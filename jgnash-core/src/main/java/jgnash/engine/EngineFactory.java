@@ -55,6 +55,10 @@ import jgnash.util.ResourceUtils;
  */
 public class EngineFactory {
 
+    public static final char[] EMPTY_PASSWORD = new char[]{};
+
+    public static final String LOCALHOST = "localhost";
+
     private static final String LAST_DATABASE = "LastDatabase";
 
     private static final String LAST_HOST = "LastHost";
@@ -445,7 +449,7 @@ public class EngineFactory {
     public static synchronized String getLastHost() {
         final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
-        return pref.get(LAST_HOST, "localhost");
+        return pref.get(LAST_HOST, EngineFactory.LOCALHOST);
     }
 
     /**

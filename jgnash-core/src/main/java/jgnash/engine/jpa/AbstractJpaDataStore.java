@@ -257,7 +257,9 @@ public abstract class AbstractJpaDataStore implements DataStore {
     boolean initEmptyDatabase(final String fileName) {
         boolean result = false;
 
-        final Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName, new char[]{}, false);
+        final Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName,
+                EngineFactory.EMPTY_PASSWORD, false);
+
         final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
         try (final Connection connection = DriverManager.getConnection(url, "sa", "")) {
@@ -291,7 +293,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
-        waitForLockFileRelease(fileName, new char[]{});
+        waitForLockFileRelease(fileName, EngineFactory.EMPTY_PASSWORD);
 
         logger.log(Level.INFO, "Initialized an empty database for {0}", FileUtils.stripFileExtension(fileName));
 
