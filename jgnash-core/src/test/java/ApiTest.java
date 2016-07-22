@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import jgnash.engine.AbstractEngineTest;
 import jgnash.engine.Account;
@@ -76,6 +77,11 @@ public class ApiTest extends AbstractEngineTest {
 
         e.addSecurity(securityNode);
         assertEquals(securityNode, e.getSecurity("GGG"));
+
+        assertEquals(0, securityNode.getHistoryNodes().size());
+        assertFalse(securityNode.getClosestHistoryNode(LocalDate.now()).isPresent());
+        assertFalse(securityNode.getHistoryNode(LocalDate.now()).isPresent());
+        assertEquals(BigDecimal.ZERO, securityNode.getMarketPrice(LocalDate.now(), e.getDefaultCurrency()));
     }
 
     @Test
