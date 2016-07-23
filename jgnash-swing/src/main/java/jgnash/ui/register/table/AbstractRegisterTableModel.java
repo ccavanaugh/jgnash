@@ -34,7 +34,6 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.BigDecimalCache;
 import jgnash.util.ResourceUtils;
 
 /**

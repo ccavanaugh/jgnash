@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.util;
+package jgnash.ui.register.table;
 
 import java.math.BigDecimal;
 
@@ -26,13 +26,13 @@ import java.math.BigDecimal;
  *
  * @author Craig Cavanaugh
  */
-public final class BigDecimalCache {
+final class BigDecimalCache {
 
     private static final int CAPACITY_BUMP_SIZE = 5;
 
     private BigDecimal cache[] = new BigDecimal[0];
 
-    public BigDecimalCache(final int capacity) {
+    BigDecimalCache(final int capacity) {
         ensureCapacity(capacity);
     }
 
@@ -42,7 +42,7 @@ public final class BigDecimalCache {
      *
      * @param minCapacity the desired minimum capacity.
      */
-    public void ensureCapacity(final int minCapacity) {
+    void ensureCapacity(final int minCapacity) {
         if (minCapacity > cache.length) {
             int oldCapacity = cache.length;
             BigDecimal oldCache[] = cache;
