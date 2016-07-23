@@ -105,7 +105,8 @@ public class SqlUtils {
         try {
             if (!FileUtils.isFileLocked(fileName)) {
                 final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
+                        true);
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
@@ -138,7 +139,8 @@ public class SqlUtils {
         try {
             if (!FileUtils.isFileLocked(fileName)) {
                 final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
+                        false);
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
@@ -148,8 +150,10 @@ public class SqlUtils {
                         while (resultSet.next()) {
                             // table name is TRANSACT_TRANSACTIONENTRY
                             // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
-                            if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID") && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
-                                try (final PreparedStatement statement = connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
+                            if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID")
+                                    && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
+                                try (final PreparedStatement statement =
+                                             connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
                                     statement.execute();
                                     logger.info("Correcting column name for Hibernate HHH-9389");
                                 }
@@ -192,7 +196,8 @@ public class SqlUtils {
         try {
             if (!FileUtils.isFileLocked(fileName)) {
                 final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
+                        true);
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
@@ -258,7 +263,8 @@ public class SqlUtils {
      * @param lockFileExtension lock file extension
      * @param password          password for the database
      */
-    static void waitForLockFileRelease(final DataStoreType dataStoreType, final String fileName, final String lockFileExtension, final char[] password) {
+    static void waitForLockFileRelease(final DataStoreType dataStoreType, final String fileName,
+                                       final String lockFileExtension, final char[] password) {
 
         final String lockFile = FileUtils.stripFileExtension(fileName) + lockFileExtension;
         logger.log(Level.INFO, "Searching for lock file: {0}", lockFile);
@@ -269,7 +275,8 @@ public class SqlUtils {
             final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
             // Send shutdown to close the database
-            try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password))) {
+            try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER,
+                    new String(password))) {
                 // must issue a shutdown for correct file closure
                 try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
                     statement.execute();
