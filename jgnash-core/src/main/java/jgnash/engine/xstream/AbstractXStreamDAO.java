@@ -23,6 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
+import jgnash.engine.dao.DAO;
 import jgnash.util.NotNull;
 
 /**
@@ -30,7 +31,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-abstract class AbstractXStreamDAO extends AbstractDAO {
+abstract class AbstractXStreamDAO extends AbstractDAO implements DAO {
 
     /**
      * Maximum time in seconds before a commit will occur.
@@ -55,6 +56,7 @@ abstract class AbstractXStreamDAO extends AbstractDAO {
         return container.get(uuid);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getObjectByUuid(final Class<T> clazz, final String uuid) {
         Object o = getObjectByUuid(uuid);

@@ -32,6 +32,7 @@ import javax.persistence.NoResultException;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
+import jgnash.engine.dao.DAO;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
@@ -39,7 +40,7 @@ import jgnash.util.DefaultDaemonThreadFactory;
  *
  * @author Craig Cavanaugh
  */
-abstract class AbstractJpaDAO extends AbstractDAO {
+abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
 
     /**
      * The {@link EntityManager} is not thread safe.  All interaction should be wrapped with this lock
@@ -153,6 +154,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     }
 
 
+    @Override
     public <T> T getObjectByUuid(final Class<T> tClass, final String uuid) {
         T object = null;
 
