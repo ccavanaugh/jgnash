@@ -403,7 +403,7 @@ class MessageBusClient {
         }
 
         /* Flag the message as remote */
-        message.setRemote(true);
+        message.setRemote();
 
         logger.fine("fire remote message");
         MessageBus.getInstance(name).fireEvent(message);

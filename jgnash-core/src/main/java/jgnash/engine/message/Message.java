@@ -105,8 +105,8 @@ public class Message implements Serializable, Cloneable {
         return source;
     }
 
-    public void setRemote(final boolean remote) {
-        this.remote = remote;
+    void setRemote() {
+        remote = true;
     }
 
     public boolean isRemote() {
