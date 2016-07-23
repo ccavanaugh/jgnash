@@ -68,7 +68,7 @@ public class TransactionDialog extends Stage {
     private TransactionDialog() {
         FXMLUtils.loadFXML(this, "TransactionDialog.fxml", ResourceUtils.getBundle());
 
-        setTitle(ResourceUtils.getBundle().getString("Title.NewTrans"));
+        setTitle(ResourceUtils.getString("Title.NewTrans"));
     }
 
     private ObjectProperty<Account> accountProperty() {

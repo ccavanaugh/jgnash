@@ -49,7 +49,7 @@ class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
     SplitTransactionDialog() {
         FXMLUtils.loadFXML(this, "SplitTransactionDialog.fxml", ResourceUtils.getBundle());
-        setTitle(ResourceUtils.getBundle().getString("Title.SpitTran"));
+        setTitle(ResourceUtils.getString("Title.SpitTran"));
     }
 
     @Override

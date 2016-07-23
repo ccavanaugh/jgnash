@@ -69,7 +69,7 @@ class GainsPanel extends JPanel implements ActionListener {
 
         gainsButton.addActionListener(this);
         gainsButton.setFocusPainted(false);
-        gainsButton.setToolTipText(ResourceUtils.getBundle().getString("ToolTip.ShowDetails"));
+        gainsButton.setToolTipText(ResourceUtils.getString("ToolTip.ShowDetails"));
 
         if (ThemeManager.isLookAndFeelNimbus()) {
             NimbusUtils.reduceNimbusButtonMargin(gainsButton);
@@ -107,7 +107,7 @@ class GainsPanel extends JPanel implements ActionListener {
      *
      * @param gains {@code List} of gains to clone
      */
-    public void setTransactionEntries(final List<TransactionEntry> gains) {
+    void setTransactionEntries(final List<TransactionEntry> gains) {
         gainsList = new ArrayList<>();
 
         for (TransactionEntry entry : gains) { // clone the provided set's entries

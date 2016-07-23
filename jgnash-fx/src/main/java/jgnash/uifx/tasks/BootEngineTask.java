@@ -112,7 +112,7 @@ public class BootEngineTask extends Task<String> {
             float version = EngineFactory.getFileVersion(new File(fileName), password);
 
             if (version <= 0) {
-                final String errorMessage = ResourceUtils.getBundle().getString("Message.Error.InvalidUserPass");
+                final String errorMessage = ResourceUtils.getString("Message.Error.InvalidUserPass");
 
                 Platform.runLater(() -> StaticUIMethods.displayError(errorMessage));
 

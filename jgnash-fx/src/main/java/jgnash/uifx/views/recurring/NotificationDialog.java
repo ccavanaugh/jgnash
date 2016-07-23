@@ -69,7 +69,7 @@ class NotificationDialog extends Stage {
 
     NotificationDialog() {
         FXMLUtils.loadFXML(this, "NotificationDialog.fxml", ResourceUtils.getBundle());
-        setTitle(ResourceUtils.getBundle().getString("Title.Reminder"));
+        setTitle(ResourceUtils.getString("Title.Reminder"));
     }
 
     void setReminders(final Collection<PendingReminder> pendingReminders) {

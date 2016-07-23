@@ -53,7 +53,7 @@ public final class StaticAccountsMethods {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(MainView.getInstance().getPrimaryStage());
-        dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
+        dialog.setTitle(ResourceUtils.getString("Title.VisibleAccountTypes"));
 
         final AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountTypeFilterForm.fxml", ResourceUtils.getBundle());
@@ -73,7 +73,7 @@ public final class StaticAccountsMethods {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(MainView.getInstance().getPrimaryStage());
-        dialog.setTitle(ResourceUtils.getBundle().getString("Title.NewAccount"));
+        dialog.setTitle(ResourceUtils.getString("Title.NewAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
@@ -104,7 +104,7 @@ public final class StaticAccountsMethods {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(MainView.getInstance().getPrimaryStage());
-        dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
+        dialog.setTitle(ResourceUtils.getString("Title.ModifyAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
@@ -126,12 +126,12 @@ public final class StaticAccountsMethods {
             Account template = controller.getTemplate();
 
             if (!engine.modifyAccount(template, account)) {
-                StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.AccountUpdate"));
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.AccountUpdate"));
             }
 
             if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
                 if (!engine.updateAccountSecurities(account, controller.getSecurityNodes())) {
-                    StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.SecurityAccountUpdate"));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityAccountUpdate"));
                 }
             }
         }

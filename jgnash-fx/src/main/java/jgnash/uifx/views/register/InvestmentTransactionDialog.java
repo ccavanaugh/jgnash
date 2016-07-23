@@ -74,7 +74,7 @@ class InvestmentTransactionDialog extends Stage {
     private InvestmentTransactionDialog() {
         FXMLUtils.loadFXML(this, "InvestmentTransactionDialog.fxml", ResourceUtils.getBundle());
 
-        setTitle(ResourceUtils.getBundle().getString("Title.NewTrans"));
+        setTitle(ResourceUtils.getString("Title.NewTrans"));
     }
 
     private ObjectProperty<Account> accountProperty() {
@@ -117,7 +117,7 @@ class InvestmentTransactionDialog extends Stage {
         Objects.requireNonNull(engine);
 
         if (engine.isStored(transaction)) {
-            setTitle(ResourceUtils.getBundle().getString("Title.ModifyTransaction"));
+            setTitle(ResourceUtils.getString("Title.ModifyTransaction"));
         }
 
         investmentSlipManager.modifyTransaction(transaction);

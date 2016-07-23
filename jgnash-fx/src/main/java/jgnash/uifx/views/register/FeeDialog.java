@@ -46,7 +46,7 @@ class FeeDialog extends AbstractTransactionEntryDialog {
 
     FeeDialog() {
         FXMLUtils.loadFXML(this, "FeeDialog.fxml", ResourceUtils.getBundle());
-        setTitle(ResourceUtils.getBundle().getString("Title.InvFees"));
+        setTitle(ResourceUtils.getString("Title.InvFees"));
     }
 
     @Override

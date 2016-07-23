@@ -53,7 +53,7 @@ public class StaticUIMethods {
     public static void showOpenDialog() {
         final FXMLUtils.Pair<OpenDatabaseController> pair
                 = FXMLUtils.load(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
-                ResourceUtils.getBundle().getString("Title.Open"));
+                ResourceUtils.getString("Title.Open"));
 
         pair.getStage().setResizable(false);
 
@@ -65,7 +65,7 @@ public class StaticUIMethods {
     public static void displayError(final String message) {
         final Alert alert = new Alert(Alert.AlertType.ERROR, message);
 
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
+        alert.setTitle(ResourceUtils.getString("Title.Error"));
         alert.initOwner(MainView.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
@@ -74,7 +74,7 @@ public class StaticUIMethods {
     public static void displayMessage(final String message) {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
 
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.Information"));
+        alert.setTitle(ResourceUtils.getString("Title.Information"));
         alert.initOwner(MainView.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
@@ -83,7 +83,7 @@ public class StaticUIMethods {
     public static void displayWarning(final String message) {
         final Alert alert = new Alert(Alert.AlertType.WARNING, message);
 
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.Warning"));
+        alert.setTitle(ResourceUtils.getString("Title.Warning"));
         alert.initOwner(MainView.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);

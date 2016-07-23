@@ -79,7 +79,7 @@ class FeePanel extends JPanel implements ActionListener {
 
         feeButton.addActionListener(this);
         feeButton.setFocusPainted(false);
-        feeButton.setToolTipText(ResourceUtils.getBundle().getString("ToolTip.ShowDetails"));
+        feeButton.setToolTipText(ResourceUtils.getString("ToolTip.ShowDetails"));
 
         if (ThemeManager.isLookAndFeelNimbus()) {
             NimbusUtils.reduceNimbusButtonMargin(feeButton);

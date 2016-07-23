@@ -34,20 +34,20 @@ import jgnash.util.ResourceUtils;
  */
 public enum AccountType {
 
-    ASSET(ResourceUtils.getBundle().getString("AccountType.Asset"), AccountGroup.ASSET, AccountProxy.class, true),
-    BANK(ResourceUtils.getBundle().getString("AccountType.Bank"), AccountGroup.ASSET, AccountProxy.class, true),
-    CASH(ResourceUtils.getBundle().getString("AccountType.Cash"), AccountGroup.ASSET, AccountProxy.class, true),
-    CHECKING(ResourceUtils.getBundle().getString("AccountType.Checking"), AccountGroup.ASSET, AccountProxy.class, true),
-    CREDIT(ResourceUtils.getBundle().getString("AccountType.Credit"), AccountGroup.LIABILITY, AccountProxy.class, true),
-    EQUITY(ResourceUtils.getBundle().getString("AccountType.Equity"), AccountGroup.EQUITY, AccountProxy.class, true),
-    EXPENSE(ResourceUtils.getBundle().getString("AccountType.Expense"), AccountGroup.EXPENSE, AccountProxy.class, true),
-    INCOME(ResourceUtils.getBundle().getString("AccountType.Income"), AccountGroup.INCOME, AccountProxy.class, true),
-    INVEST(ResourceUtils.getBundle().getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
-    SIMPLEINVEST(ResourceUtils.getBundle().getString("AccountType.SimpleInvestment"), AccountGroup.SIMPLEINVEST, AccountProxy.class, true),
-    LIABILITY(ResourceUtils.getBundle().getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
-    MONEYMKRT(ResourceUtils.getBundle().getString("AccountType.MoneyMarket"), AccountGroup.ASSET, AccountProxy.class, true),
-    MUTUAL(ResourceUtils.getBundle().getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
-    ROOT(ResourceUtils.getBundle().getString("AccountType.Root"), AccountGroup.ROOT, AccountProxy.class, true);
+    ASSET(ResourceUtils.getString("AccountType.Asset"), AccountGroup.ASSET, AccountProxy.class, true),
+    BANK(ResourceUtils.getString("AccountType.Bank"), AccountGroup.ASSET, AccountProxy.class, true),
+    CASH(ResourceUtils.getString("AccountType.Cash"), AccountGroup.ASSET, AccountProxy.class, true),
+    CHECKING(ResourceUtils.getString("AccountType.Checking"), AccountGroup.ASSET, AccountProxy.class, true),
+    CREDIT(ResourceUtils.getString("AccountType.Credit"), AccountGroup.LIABILITY, AccountProxy.class, true),
+    EQUITY(ResourceUtils.getString("AccountType.Equity"), AccountGroup.EQUITY, AccountProxy.class, true),
+    EXPENSE(ResourceUtils.getString("AccountType.Expense"), AccountGroup.EXPENSE, AccountProxy.class, true),
+    INCOME(ResourceUtils.getString("AccountType.Income"), AccountGroup.INCOME, AccountProxy.class, true),
+    INVEST(ResourceUtils.getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
+    SIMPLEINVEST(ResourceUtils.getString("AccountType.SimpleInvestment"), AccountGroup.SIMPLEINVEST, AccountProxy.class, true),
+    LIABILITY(ResourceUtils.getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
+    MONEYMKRT(ResourceUtils.getString("AccountType.MoneyMarket"), AccountGroup.ASSET, AccountProxy.class, true),
+    MUTUAL(ResourceUtils.getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
+    ROOT(ResourceUtils.getString("AccountType.Root"), AccountGroup.ROOT, AccountProxy.class, true);
 
     private final transient String description;
 

@@ -46,7 +46,7 @@ class GainLossDialog extends AbstractTransactionEntryDialog {
 
     GainLossDialog() {
         FXMLUtils.loadFXML(this, "GainLossDialog.fxml", ResourceUtils.getBundle());
-        setTitle(ResourceUtils.getBundle().getString("Title.InvGainsLoss"));
+        setTitle(ResourceUtils.getString("Title.InvGainsLoss"));
     }
 
     @Override
