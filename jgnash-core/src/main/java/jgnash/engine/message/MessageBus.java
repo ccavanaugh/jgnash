@@ -33,7 +33,6 @@ import java.util.logging.Logger;
 
 import jgnash.engine.DataStoreType;
 import jgnash.util.DefaultDaemonThreadFactory;
-import jgnash.util.LogUtils;
 
 /**
  * Thread safe Message Bus.
@@ -191,11 +190,21 @@ public class MessageBus {
 
             if (containsListener(listener, channel)) {
                 logger.severe("An attempt was made to install a duplicate listener");
-                LogUtils.logStackTrace(logger, Level.SEVERE);
+                logStackTrace();
             } else {
                 set.add(new WeakReference<>(listener));
             }
         }
+    }
+
+    private static void logStackTrace() {
+        final StringBuilder trace = new StringBuilder("Stack Trace" + System.lineSeparator());
+
+        for (final StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            trace.append("\tat ").append(element).append(System.lineSeparator());
+        }
+
+        logger.log(Level.SEVERE, trace.toString());
     }
 
     public void unregisterListener(final MessageListener listener, final MessageChannel... channels) {
