@@ -46,7 +46,7 @@ public class BasicRegisterTableController extends RegisterTableController {
     @FXML
     private Label reconciledBalanceLabel;
 
-    final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 34, 0, 0, 0, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 34, 0, 0, 0, 0};
 
     @FXML
     @Override
@@ -62,7 +62,6 @@ public class BasicRegisterTableController extends RegisterTableController {
         return param -> PREF_COLUMN_WEIGHTS[param];
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void buildTable() {
         final String[] columnNames = RegisterFactory.getColumnNames(getAccountProperty().get().getAccountType());
@@ -70,34 +69,47 @@ public class BasicRegisterTableController extends RegisterTableController {
         final TableColumn<Transaction, LocalDate> dateColumn = new TableColumn<>(columnNames[0]);
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
+        tableView.getColumns().add(dateColumn);
 
         final TableColumn<Transaction, String> numberColumn = new TableColumn<>(columnNames[1]);
         numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
         numberColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(numberColumn);
 
         final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(columnNames[2]);
         payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
         payeeColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(payeeColumn);
 
         final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[3]);
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
         memoColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(memoColumn);
 
         final TableColumn<Transaction, String> accountColumn = new TableColumn<>(columnNames[4]);
         accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
         accountColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(accountColumn);
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[5]);
-        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.get()).toString()));
+        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()
+                .getReconciled(accountProperty.get()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(reconciledColumn);
 
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(columnNames[6]);
-        increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
-        increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue()
+                .getAmount(getAccountProperty().getValue())));
+        increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
+                .getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        tableView.getColumns().add(increaseColumn);
 
         final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[7]);
-        decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
-        decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue()
+                .getAmount(getAccountProperty().getValue())));
+        decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
+                .getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        tableView.getColumns().add(decreaseColumn);
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(columnNames[8]);
         balanceColumn.setCellValueFactory(param -> {
@@ -107,10 +119,11 @@ public class BasicRegisterTableController extends RegisterTableController {
                     convertToSelectedBalanceMode(accountType, getBalanceAt(param.getValue())));
         });
 
-        balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
+        balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
+                .getFullNumberFormat(accountProperty.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
+        tableView.getColumns().add(balanceColumn);
 
-        tableView.getColumns().addAll(dateColumn, numberColumn, payeeColumn, memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tableViewManager.setColumnFormatFactory(param -> {
