@@ -222,7 +222,7 @@ abstract class RegisterTableController {
             payeeFilterTextField.textProperty().addListener(filterChangeListener);
         }
 
-        // Listen for engine events
+        // Listen for transaction events
         MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
     }
 
@@ -352,7 +352,8 @@ abstract class RegisterTableController {
         if (t != null) {
             if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
                 final Set<Account> set = t.getAccounts();
-                set.stream().filter(a -> !accountProperty.get().equals(a)).forEach(a -> RegisterStage.getRegisterStage(a).show(t));
+                set.stream().filter(a -> !accountProperty.get().equals(a))
+                        .forEach(a -> RegisterStage.getRegisterStage(a).show(t));
             } else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
                 final Account common = t.getCommonAccount();
 
@@ -435,20 +436,22 @@ abstract class RegisterTableController {
                     switch (event.getEvent()) {
                         case TRANSACTION_REMOVE:
                             // clear the selection of the transaction is currently selected
-                            if (tableView.getSelectionModel().getSelectedItems().contains(event.getObject(MessageProperty.TRANSACTION))) {
+                            if (tableView.getSelectionModel().getSelectedItems()
+                                    .contains(event.getObject(MessageProperty.TRANSACTION))) {
                                 Platform.runLater(RegisterTableController.this::clearTableSelection);
                             }
 
                             Platform.runLater(() -> {
                                 observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION));
-                                tableView.refresh();  // this will for the running balance to recalculate
+                                tableView.refresh();  // this will force the running balance to recalculate
                             });
                             break;
                         case TRANSACTION_ADD:
                             Platform.runLater(() -> {
                                 final Transaction transaction = event.getObject(MessageProperty.TRANSACTION);
 
-                                final int index = Collections.binarySearch(observableTransactions, transaction, tableView.getComparator());
+                                final int index = Collections.binarySearch(observableTransactions, transaction,
+                                        tableView.getComparator());
 
                                 if (index < 0) {
                                     observableTransactions.add(-index - 1, transaction);
@@ -457,7 +460,7 @@ abstract class RegisterTableController {
                                 // scroll to the new transaction
                                 scrollToTransaction(event.getObject(MessageProperty.TRANSACTION));
 
-                                // this will for the running balance to recalculate
+                                // this will force the running balance to recalculate
                                 Platform.runLater(() -> tableView.refresh());
                             });
                             break;
