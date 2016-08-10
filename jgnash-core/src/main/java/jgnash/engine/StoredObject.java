@@ -81,11 +81,11 @@ public abstract class StoredObject implements Cloneable, Serializable {
     /**
      * Override hashCode to use uuid.
      *
-     * @see java.lang.Object#hashCode()
+     * @see java.lang.String#hashCode()
      */
     @Override
     public int hashCode() {
-        return getUuid().hashCode();
+        return getUuid().hashCode();    // String caches the hashcode for improved performance
     }
 
     /**
@@ -108,7 +108,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
             o = (StoredObject) super.clone();
             o.setUuid(UUIDUtil.getUID());   // force a unique id
             o.markedForRemoval = false;
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             Logger.getLogger(StoredObject.class.getName()).log(Level.SEVERE, e.toString(), e);
         }
 
