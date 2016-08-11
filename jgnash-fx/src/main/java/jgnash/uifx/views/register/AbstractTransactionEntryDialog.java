@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -108,14 +109,19 @@ abstract class AbstractTransactionEntryDialog extends Stage {
             }
         });
 
-        // If the list changes, clear the selection
-        transactionEntries.addListener((ListChangeListener<TransactionEntry>) c -> tableView.getSelectionModel().clearSelection());
-
         // repack when the list contents change and this dialog is showing
         transactionEntries.addListener((ListChangeListener<TransactionEntry>) c -> {
+
+            // If the list changes, clear the selection
+            tableView.getSelectionModel().clearSelection();
+
+            // Repack when the list contents change and this dialog is showing
             if (isShowing()) {
                 tableViewManager.packTable();
             }
+
+            // Force a table view refresh, running totals will need to be recalculated
+            Platform.runLater(() -> tableView.refresh());
         });
 
         closeButton.setOnAction(event -> closeAction());
