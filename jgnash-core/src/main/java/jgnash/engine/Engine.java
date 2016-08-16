@@ -2687,7 +2687,7 @@ public class Engine {
 
     public boolean isTransactionValid(final Transaction transaction) {
 
-        for (Account a : transaction.getAccounts()) {
+        for (final Account a : transaction.getAccounts()) {
             if (a.isLocked()) {
                 logWarning(rb.getString("Message.TransactionAccountLocked"));
                 return false;
@@ -2709,21 +2709,21 @@ public class Engine {
             return false;
         }
 
-        for (TransactionEntry e : transaction.getTransactionEntries()) {
+        for (final TransactionEntry e : transaction.getTransactionEntries()) {
             if (e == null) {
                 logger.log(Level.WARNING, "Null TransactionEntry");
                 return false;
             }
         }
 
-        for (TransactionEntry e : transaction.getTransactionEntries()) {
+        for (final TransactionEntry e : transaction.getTransactionEntries()) {
             if (e.getTransactionTag() == null) {
                 logger.log(Level.WARNING, "Null TransactionTag");
                 return false;
             }
         }
 
-        for (TransactionEntry e : transaction.getTransactionEntries()) {
+        for (final TransactionEntry e : transaction.getTransactionEntries()) {
             if (e.getCreditAccount() == null) {
                 logger.log(Level.WARNING, "Null Credit Account");
                 return false;
@@ -2766,6 +2766,7 @@ public class Engine {
     public boolean addTransaction(final Transaction transaction) {
 
         accountLock.writeLock().lock();
+        commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
 
         try {
             boolean result = isTransactionValid(transaction);
@@ -2803,6 +2804,7 @@ public class Engine {
 
             return result;
         } finally {
+            commodityLock.writeLock().unlock();
             accountLock.writeLock().unlock();
         }
     }
@@ -2810,9 +2812,10 @@ public class Engine {
     public boolean removeTransaction(final Transaction transaction) {
 
         accountLock.writeLock().lock();
+        commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
 
         try {
-            for (Account account : transaction.getAccounts()) {
+            for (final Account account : transaction.getAccounts()) {
                 if (account.isLocked()) {
                     logWarning(rb.getString("Message.TransactionRemoveLocked"));
                     return false;
@@ -2837,6 +2840,7 @@ public class Engine {
 
             return result;
         } finally {
+            commodityLock.writeLock().unlock();
             accountLock.writeLock().unlock();
         }
     }
