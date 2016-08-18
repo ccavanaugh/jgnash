@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jgnash.engine.AbstractEngineTest;
 import jgnash.engine.Account;
@@ -9,6 +11,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 
 import org.junit.Test;
@@ -82,6 +85,29 @@ public class ApiTest extends AbstractEngineTest {
         assertFalse(securityNode.getClosestHistoryNode(LocalDate.now()).isPresent());
         assertFalse(securityNode.getHistoryNode(LocalDate.now()).isPresent());
         assertEquals(BigDecimal.ZERO, securityNode.getMarketPrice(LocalDate.now(), e.getDefaultCurrency()));
+
+        // Add the security node to the account
+        final List<SecurityNode> securitiesList = new ArrayList<>();
+        securitiesList.addAll(investAccount.getSecurities());
+        final int securityCount = securitiesList.size();
+        securitiesList.add(securityNode);
+        e.updateAccountSecurities(investAccount, securitiesList);
+        assertEquals(securityCount + 1, investAccount.getSecurities().size());
+
+        // Returned market price should be zero
+        assertEquals(BigDecimal.ZERO, Engine.getMarketPrice(new ArrayList<>(), securityNode, e.getDefaultCurrency(),
+                LocalDate.now()));
+
+        // Create and add some security history
+        final SecurityHistoryNode historyNode = new SecurityHistoryNode(LocalDate.now(), BigDecimal.TEN, 10000,
+                BigDecimal.TEN, BigDecimal.TEN);
+
+        e.addSecurityHistory(securityNode, historyNode);
+        assertEquals(1, securityNode.getHistoryNodes().size());
+
+        // Returned market price should be 10
+        assertEquals(BigDecimal.TEN, Engine.getMarketPrice(new ArrayList<>(), securityNode, e.getDefaultCurrency(),
+                LocalDate.now()));
     }
 
     @Test

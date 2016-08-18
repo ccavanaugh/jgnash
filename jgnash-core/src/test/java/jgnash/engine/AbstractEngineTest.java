@@ -53,7 +53,7 @@ public abstract class AbstractEngineTest {
 
     Account equityAccount;
 
-    Account investAccount;
+    protected Account investAccount;
 
     SecurityNode securityNode1;
 
