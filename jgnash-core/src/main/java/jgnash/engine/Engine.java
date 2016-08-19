@@ -113,8 +113,6 @@ public class Engine {
 
     private final static long MAXIMUM_TRASH_AGE = 2 * 60 * 1000; // 2 minutes
 
-    private static final float EPSILON = .001f;
-
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final ReentrantReadWriteLock accountLock;
@@ -586,8 +584,10 @@ public class Engine {
                 }
             }
 
-            // if the file version is not current, then update it
-            if (!nearlyEquals(getConfig().getFileVersion(), CURRENT_VERSION, EPSILON)) {
+            // update the file version if it is not current
+            if (getConfig().getMajorFileFormatVersion() != CURRENT_MAJOR_VERSION
+                    || getConfig().getMinorFileFormatVersion() != CURRENT_MINOR_VERSION) {
+
                 final Config localConfig = getConfig();
                 localConfig.updateFileVersion();
                 getConfigDAO().update(localConfig);
@@ -598,18 +598,6 @@ public class Engine {
             budgetLock.writeLock().unlock();
             commodityLock.writeLock().unlock();
         }
-    }
-
-    /**
-     * Checks double values for equality.
-     *
-     * @param a       float value to test for equality
-     * @param b       float value to test for equality
-     * @param epsilon allowed error
-     * @return {@code true} if the values are equal or very close
-     */
-    private static boolean nearlyEquals(final double a, final double b, final double epsilon) {
-        return a == b || Math.abs(a - b) <= epsilon;
     }
 
     /**
