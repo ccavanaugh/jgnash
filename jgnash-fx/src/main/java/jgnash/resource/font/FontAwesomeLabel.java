@@ -90,8 +90,7 @@ public class FontAwesomeLabel extends Label {
      * Set the glyphName to display.
      *
      * @param value This can either be the Glyph Name or a unicode character representing the glyph.
-     */
-    @FXML
+     */   
     public void setGlyphName(final Object value) {
         glyphName.set(value);
 
@@ -108,8 +107,7 @@ public class FontAwesomeLabel extends Label {
     public Object getGlyphName() {
         return glyphName.get();
     }
-
-    @FXML
+    
     public void setSize(final Double value) {
         size.setValue(value);
     }
