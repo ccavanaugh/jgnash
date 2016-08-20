@@ -58,9 +58,9 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             try {
                 EventQueue.invokeAndWait(() -> {
                     if (file != null) {
-                        mainFrame.loadFile(file, password);
+                        MainFrame.loadFile(file, password);
                     } else if (EngineFactory.openLastOnStartup()) {
-                        mainFrame.loadLast();
+                        MainFrame.loadLast();
                     }
                 });
             } catch (final InterruptedException | InvocationTargetException e) {
@@ -73,7 +73,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         if (initFrame()) {         
 
             // try to connect to the remove host
-            EventQueue.invokeLater(() -> mainFrame.openRemote(host, port, password));
+            EventQueue.invokeLater(() -> MainFrame.openRemote(host, port, password));
         }
     }
 

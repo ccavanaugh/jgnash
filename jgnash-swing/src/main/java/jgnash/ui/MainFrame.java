@@ -546,11 +546,11 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         super.dispose();
     }
 
-    void loadFile(final File file, final char[] password) {
+    static void loadFile(final File file, final char[] password) {
         OpenAction.openAction(file, password);
     }
 
-    void loadLast() {
+    static void loadLast() {
         OpenAction.openLastAction();
     }
 
@@ -603,7 +603,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     }
 
-    void openRemote(final String host, final int port, final char[] password) {
+    static void openRemote(final String host, final int port, final char[] password) {
         OpenAction.openRemote(host, port, password);
     }
 
