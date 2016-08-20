@@ -73,7 +73,7 @@ public class JpaHsqlEngineTest extends EngineTest {
     public void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, EngineFactory.EMPTY_PASSWORD);
+        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile);
 
         tableNames.forEach(System.out::println);
     }
