@@ -52,6 +52,7 @@ public class InvestmentPerformanceSummary {
         this(account, null, null, recursive);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private InvestmentPerformanceSummary(final Account account, final LocalDate startDate, final LocalDate endDate,
                                          final boolean recursive) {
         Objects.requireNonNull(account, "Account may not be null");
