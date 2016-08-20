@@ -192,7 +192,7 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     protected class ReportModel extends AbstractReportTableModel {
 
-        private final List<Row> rowList = new ArrayList<>();
+        private final List<Row<?>> rowList = new ArrayList<>();
 
         private final CurrencyNode baseCurrency;
 
@@ -208,7 +208,7 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             accounts.forEach(this::addAccount);
         }
 
-        public void addRow(final Row row) {
+        public void addRow(final Row<?> row) {
             rowList.add(row);
         }
 
