@@ -153,7 +153,8 @@ public class SqlUtils {
                             if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID")
                                     && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
                                 try (final PreparedStatement statement =
-                                             connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
+                                             connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY " +
+                                                     "ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
                                     statement.execute();
                                     logger.info("Correcting column name for Hibernate HHH-9389");
                                 }
@@ -183,21 +184,21 @@ public class SqlUtils {
     }
 
     /**
-     * Utility function to dump a list of table names and columns to the console.
+     * Diagnostic utility method to dump a list of table names and columns to the console.
+     * Assumes the file is not password protected.
      *
      * @param fileName name of file to open
-     * @param password connection password
      * @return a {@code Set} of strings with the table names and columns, comma separated
      */
-    public static Set<String> getTableAndColumnNames(final String fileName, final char[] password) {
+    public static Set<String> getTableAndColumnNames(final String fileName) {
 
         final Set<String> tableNames = new TreeSet<>();
 
         try {
             if (!FileUtils.isFileLocked(fileName)) {
                 final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
-                        true);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName,
+                        EngineFactory.EMPTY_PASSWORD, true);
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
