@@ -53,7 +53,7 @@ For Mac OS X users, a minimum of Mac OS X 10.7 is required unless you want to ex
 3. Create the following script:
 
         try
-            do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/ 1.7.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/jgnash2.jar"
+            do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/jgnash2.jar"
         end try
 
 4. Save it as an Application called ```jGnash.app``` in ```/Applications/jGnash```
@@ -85,34 +85,30 @@ To create the distribution zip file, return to the main directory (```cd ..```) 
 The distribution zip file will be produced at ```jgnash-swing/target/jgnash-```_version_```-bin.zip```.
 
 
-# jGnashFx Early Access Version
-The distribution now contains an early access version of jGnash that utilizes JavaFX for the user interface.  When 
-feature complete and stable, this version will eventually replace the Java Swing based version that jGnash was first 
-based on. The advantages of JavaFX over Swing are an improved appearance with better utilization of the systems 
-graphics hardware including Hi-DPI systems.
+# jGnashFx Version
+The distribution now contains a version of jGnash that utilizes JavaFX for the user interface.  Long term this version
+will replace the Java Swing based version that jGnash was first based on. The advantages of JavaFX over Swing are an
+improved appearance with better utilization of the systems graphics hardware including Hi-DPI systems.
   
 The core/engine of jGnash remains the same and is shared by both the Swing and JavaFx versions.  This means stability
 and protection of your valuable data remains the same.  This also allows you to switch between versions without issue.
 
 The advantages for jGnash is a smaller code base for the user interface, access to better components such as improved 
-table support, HTML pages, functional animations, modern controls, etc.  Experienced jGnash users will notice subtle 
+table support, HTML pages, functional animations, modern controls, etc.  Experienced jGnash users will notice
 interface improvements.  For example, try using the vertical and horizontal scroll wheels in a date picker and the
 collapsible transaction forms.
 
-Features and capabilities will be added with each major release.  Missing features primarily consist of Budgeting,
-Reports, Imports, and Help.  The transaction register and account management is feature complete and fully functional.
-
 ## Java 8 Requirements
 
-[JDK 8u60](https://jdk8.java.net/download.html) or later is required for the jGnashFx early release.  The 8u60 release 
+[JDK 8u60](https://jdk8.java.net/download.html) or later is required for the jGnashFx interface.  The 8u60 release 
 fixed several JavaFX bugs and jGnashFx is dependent on several recent API changes.
 
 ## Linux Users
-Linux users may use the jGnashFx Early Access version if you have the Oracle release of Java installed or if you are
+Linux users may use the jGnashFx interface if you have the Oracle release of Java installed or if you are
 using OpenJDK with OpenJFX 8u60 or later installed.  OpenJFX 8u40 and u45 packages are generally available for most 
 mainstream distributions, but will not work.  You will need the 8u60 packages.
 
 ## OpenJFX
-jGnashFx Early Access has been heavily tested against OpenJFX.  There are no noticeable differences in performance or
- stability with the Oracle release or OpenJDK with OpenJFX.
+jGnashFx has been heavily tested against OpenJFX.  There are no noticeable differences in performance or
+stability with the Oracle release or OpenJDK with OpenJFX.
 

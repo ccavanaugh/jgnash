@@ -98,7 +98,7 @@
                             <Application-Name>jGnash</Application-Name>
                         </manifestEntries>
                     </archive>
-                    <finalName>jgnashFx-ea</finalName>
+                    <finalName>jgnashFx</finalName>
                 </configuration>
             </plugin>
 
@@ -114,8 +114,8 @@
                         <configuration>
                             <dontWrapJar>true</dontWrapJar>
                             <headerType>gui</headerType>
-                            <jar>jGnashFx-ea.jar</jar>
-                            <outfile>target/jGnashFx-ea.exe</outfile>
+                            <jar>jGnashFx.jar</jar>
+                            <outfile>target/jGnashFx.exe</outfile>
                             <errTitle/>
                             <cmdLine/>
                             <chdir/>
