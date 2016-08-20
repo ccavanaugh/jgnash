@@ -244,9 +244,8 @@ public class OpenAction {
             protected void done() {
                 logger.info("openLastAction() done");
 
-                try {
-                    long time = get(5, TimeUnit.SECONDS);
-                    logger.log(Level.INFO, "Boot time was: {0} seconds", ((float)time) / 1000f);
+                try {                  
+                    logger.log(Level.INFO, "Boot time was: {0} seconds", get(5, TimeUnit.SECONDS) / 1000f);
                 } catch (final InterruptedException | ExecutionException | TimeoutException e) {
                     logger.log(Level.SEVERE, e.toString(), e);
                 } finally {

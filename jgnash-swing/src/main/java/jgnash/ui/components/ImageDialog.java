@@ -146,8 +146,8 @@ public class ImageDialog extends JDialog {
 
             int _width, _height;
 
-            _width = (int) ((float) originalImage.getWidth() * ratio) - MARGIN * 2;
-            _height = (int) ((float) originalImage.getHeight() * ratio) - MARGIN * 2;
+            _width = (int) (originalImage.getWidth() * ratio) - MARGIN * 2;
+            _height = (int) (originalImage.getHeight() * ratio) - MARGIN * 2;
 
             if (_width >= originalImage.getWidth() || _height >= originalImage.getHeight()) {
                 Graphics2D g2 = null;
