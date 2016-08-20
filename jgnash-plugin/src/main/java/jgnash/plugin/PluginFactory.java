@@ -190,9 +190,20 @@ public final class PluginFactory {
 
     private static Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException,
             IllegalAccessException, IOException {
-
-        // If classLoader is closed, the plugin is not able to load new classes...
+       
         final JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + jarFileName));
+        
+        // Add a shutdown hook to properly close the classLoader.  It needs to remain open for the duration of 
+        // the application otherwise the plugin will not be able to load any needed classes.
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+        	public void run() {
+        		try {
+					classLoader.close();					
+				} catch (final IOException e) {
+					logger.log(Level.SEVERE, null, e);
+				}
+        	}
+        });
 
         final String pluginActivator = classLoader.getActivator();
 
