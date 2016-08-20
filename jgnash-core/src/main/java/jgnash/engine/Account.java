@@ -17,13 +17,11 @@
  */
 package jgnash.engine;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -105,9 +103,6 @@ public class Account extends StoredObject implements Comparable<Account> {
      * String delimiter for reported account structure.
      */
     private static String accountSeparator = ":";
-
-    @Transient  // we don't want this to be persisted by JPA and will become obsolete
-    private final Map<String, Serializable> propertyMap = new HashMap<>();
 
     @ManyToOne
     Account parentAccount;
@@ -266,57 +261,6 @@ public class Account extends StoredObject implements Comparable<Account> {
             proxy = getAccountType().getProxy(this);
         }
         return proxy;
-    }
-
-    /**
-     * Sets / Adds an AccountProperty.
-     *
-     * @param key   AccountProperty
-     * @param value actual object to add or set
-     */
-    @Deprecated
-    @SuppressWarnings({"unused", "deprecation"})
-    public void setProperty(final AccountProperty key, final Serializable value) {
-        propertyMap.put(key.name(), value);
-    }
-
-    /**
-     * Remove an AccountProperty from this account.
-     *
-     * @param key AccountProperty to remove
-     * @return true if this account contained the AccountProperty
-     */
-    @Deprecated
-    @SuppressWarnings({"deprecation", "SameParameterValue", "UnusedReturnValue"})
-    boolean removeProperty(final AccountProperty key) {
-        return propertyMap.remove(key.name()) != null;
-    }
-
-    /**
-     * Gets an account property.
-     *
-     * @param key AccountProperty to get
-     * @return not null if the account contained the property
-     */
-    @Deprecated
-    @SuppressWarnings({"deprecation", "SameParameterValue"})
-    public Serializable getProperty(final AccountProperty key) {
-        return propertyMap.get(key.name());
-    }
-
-    /**
-     * Returns account Set of AccountProperties added to this account.
-     *
-     * @return Set of AccountProperties. An empty Set will be returned in none exist.
-     */
-    @Deprecated
-    @SuppressWarnings({"deprecation", "unused"})
-    public Set<AccountProperty> getProperties() {
-        Set<AccountProperty> properties = EnumSet.noneOf(AccountProperty.class);
-
-        properties.addAll(propertyMap.keySet().stream().map(AccountProperty::valueOf).collect(Collectors.toList()));
-
-        return properties;
     }
 
     /**

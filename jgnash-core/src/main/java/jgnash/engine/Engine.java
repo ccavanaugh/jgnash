@@ -301,7 +301,6 @@ public class Engine {
         }
 
         // Nothing found yet, continue searching for something better
-        //Date priceDate = new Date(0);
         LocalDate priceDate = LocalDate.ofEpochDay(0);
         BigDecimal price = BigDecimal.ZERO;
 
@@ -540,9 +539,8 @@ public class Engine {
                         });
             }
 
-            // migrate amortization object to new storage format and remove and orphaned transactions from removal and modifications of reminders
+            // remove any orphaned transactions from removal and modifications of reminders
             if (getConfig().getMinorRevision() < 0.3f) {
-                migrateAmortizeObjects();
                 removeOrphanedTransactions();
             }
 
@@ -2329,28 +2327,6 @@ public class Engine {
 
     public boolean removeAttachment(final String attachment) {
         return attachmentManager.removeAttachment(attachment);
-    }
-
-    @SuppressWarnings("deprecation")
-    private void migrateAmortizeObjects() {
-
-        accountLock.writeLock().lock();
-
-        try {
-            getAccounts(AccountGroup.LIABILITY).stream()
-                    .filter(account -> account.getProperty(AccountProperty.AMORTIZEOBJECT) != null)
-                    .forEach(account -> {
-
-                        AmortizeObject oldAmortizeObject = (AmortizeObject) account.getProperty(AccountProperty.AMORTIZEOBJECT);
-
-                        account.setAmortizeObject(oldAmortizeObject);
-
-                        account.removeProperty(AccountProperty.AMORTIZEOBJECT);
-                        getAccountDAO().removeAccountProperty(account, oldAmortizeObject);
-                    });
-        } finally {
-            accountLock.writeLock().unlock();
-        }
     }
 
     /**
