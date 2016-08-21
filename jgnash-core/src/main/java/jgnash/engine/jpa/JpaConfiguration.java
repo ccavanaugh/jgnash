@@ -32,6 +32,7 @@ import jgnash.util.FileUtils;
 class JpaConfiguration {
 
     static final String UNIT_NAME = "jgnash";
+    static final String OLD_UNIT_NAME = "jgnash-old";
     static final String DEFAULT_USER = "JGNASH";
 
     static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";

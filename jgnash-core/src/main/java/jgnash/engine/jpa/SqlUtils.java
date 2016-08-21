@@ -133,53 +133,44 @@ public class SqlUtils {
         return fileVersion;
     }
 
-    public static boolean checkAndFixHibernate_HHH_9389(final String fileName, final char[] password) {
-        boolean result = true;  // return false only if an error occurs
+    static boolean useOldPersistenceUnit(final String fileName, final char[] password) {
+        boolean result = false;  // return false only if an error occurs
 
         try {
-            if (!FileUtils.isFileLocked(fileName)) {
-                final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
-                        false);
-                final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+            if (!Files.exists(Paths.get(fileName))) {
+                if (!FileUtils.isFileLocked(fileName)) {
+                    final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
+                    final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
+                            false);
+                    final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
-                try (final Connection connection = DriverManager.getConnection(url)) {
-                    final DatabaseMetaData metaData = connection.getMetaData();
+                    try (final Connection connection = DriverManager.getConnection(url)) {
+                        final DatabaseMetaData metaData = connection.getMetaData();
 
-                    try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
-                        while (resultSet.next()) {
-                            // table name is TRANSACT_TRANSACTIONENTRY
-                            // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
-                            if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID")
-                                    && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
-                                try (final PreparedStatement statement =
-                                             connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY " +
-                                                     "ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
-                                    statement.execute();
-                                    logger.info("Correcting column name for Hibernate HHH-9389");
+                        try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
+                            while (resultSet.next()) {
+                                if (resultSet.getString(COLUMN_NAME).equals("SEQUENCE_NEXT_HI_VALUE")
+                                        && resultSet.getString(TABLE_NAME).equals("HIBERNATE_SEQUENCES")) {
+
+                                    result = true;
                                 }
                             }
                         }
 
+                        // must issue a shutdown for correct file closure
+                        try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+                            statement.execute();
+                        }
+                    } catch (final SQLException e) {
+                        logger.log(Level.SEVERE, e.getMessage(), e);
                     }
-
-                    // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
-                        statement.execute();
-                    }
-                } catch (final SQLException e) {
-                    logger.log(Level.SEVERE, e.getMessage(), e);
-                    result = false;
+                } else {
+                    logger.severe("File was locked");
                 }
-            } else {
-                logger.severe("File was locked");
-                result = false;
             }
         } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-            result = false;
         }
-
         return result;
     }
 

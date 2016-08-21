@@ -284,7 +284,12 @@ public class JpaNetworkServer {
             // An exception will be thrown if the password is not correct, or the database did not have a password
             if (SqlUtils.isConnectionValid(properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL))) {
 
-                factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
+                if (SqlUtils.useOldPersistenceUnit(fileName, password)) {
+                    System.out.println("Using old persistence unit");
+                    factory = Persistence.createEntityManagerFactory(JpaConfiguration.OLD_UNIT_NAME, properties);
+                } else {
+                    factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
+                }
 
                 em = factory.createEntityManager();
 

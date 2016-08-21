@@ -255,9 +255,8 @@ public class EngineFactory {
     }
 
     /**
-     * Boots a local Engine for a file. If the file does not exist, it will be
-     * created. Otherwise it will be loaded. If successful, a new
-     * {@code Engine} instance will be returned.
+     * Boots a local Engine for a file. If the file does not exist, it will be created. Otherwise it will be loaded.
+     * If successful, a new {@code Engine} instance will be returned.
      *
      * @param fileName   filename to load or create
      * @param engineName engine identifier
@@ -278,22 +277,9 @@ public class EngineFactory {
         MessageBus.getInstance(engineName).setLocal();
 
         final DataStore dataStore = type.getDataStore();
-
-        // If a relational database is being used for a file prior to 2.15, correct the column name
-        if ((type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE) && doesDatabaseExist(fileName)) {
-            if (SqlUtils.getFileVersion(fileName, password) < 2.15) {
-                if (!SqlUtils.checkAndFixHibernate_HHH_9389(fileName, password)) {
-                    logger.severe("Database scheme upgrade failed");
-                }
-            }
-        }
-
         final Engine engine = dataStore.getLocalEngine(fileName, engineName, password);
 
-
         if (engine != null) {
-
-
             logger.info(ResourceUtils.getString("Message.EngineStart"));
             engineMap.put(engineName, engine);
             dataStoreMap.put(engineName, dataStore);

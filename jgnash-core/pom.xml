@@ -19,8 +19,8 @@
 
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate-entitymanager.version}</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate-core.version}</version>
         </dependency>
 
         <dependency>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-c3p0</artifactId>
-            <version>${hibernate-entitymanager.version}</version>
+            <version>${hibernate-core.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>c3p0</artifactId>
