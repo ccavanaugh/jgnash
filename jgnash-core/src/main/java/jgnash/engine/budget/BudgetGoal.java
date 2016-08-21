@@ -39,16 +39,17 @@ import jgnash.time.Period;
 
 /**
  * Budget Goal Object
- * 
+ * <p>
  * 366 days per year are assumed and static for goals. The 366th day will not be used if not a leap year
- * 
+ *
  * @author Craig Cavanaugh
  */
 @Entity
 public class BudgetGoal implements Cloneable, Serializable {
 
     @SuppressWarnings("unused")
-    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
     public long id;
 
     /**
@@ -60,7 +61,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     private transient int hash;
 
     @ElementCollection
-    @OrderColumn(name="INDEX")
+    @OrderColumn(name = "INDEX")
     private List<BigDecimal> budgetGoals = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -95,7 +96,7 @@ public class BudgetGoal implements Cloneable, Serializable {
 
     /**
      * Returns the entry / display period for this budget goal.
-     * 
+     *
      * @return the BudgetPeriod
      */
     public Period getBudgetPeriod() {
@@ -104,7 +105,7 @@ public class BudgetGoal implements Cloneable, Serializable {
 
     /**
      * Sets the global entry / display period for this budget goal.
-     * 
+     *
      * @param budgetPeriod The budget period
      */
     public void setBudgetPeriod(final Period budgetPeriod) {
@@ -149,7 +150,8 @@ public class BudgetGoal implements Cloneable, Serializable {
 
         // deep copy
         goal.budgetGoals = new ArrayList<>(Collections.nCopies(PERIODS, BigDecimal.ZERO));
-        for (int i = 0; i< PERIODS; i++) {
+
+        for (int i = 0; i < PERIODS; i++) {
             goal.budgetGoals.set(i, budgetGoals.get(i));
         }
 
@@ -171,7 +173,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -187,9 +189,5 @@ public class BudgetGoal implements Cloneable, Serializable {
         final BudgetGoal other = (BudgetGoal) obj;
 
         return budgetPeriod == other.budgetPeriod && budgetGoals.equals(other.budgetGoals);
-    }
-
-    protected Object readResolve() {
-        return this;
     }
 }
