@@ -20,7 +20,6 @@ package jgnash.engine.budget;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +32,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.OrderColumn;
-import javax.persistence.PostLoad;
 
 import jgnash.engine.MathConstants;
 import jgnash.time.Period;
@@ -61,16 +58,6 @@ public class BudgetGoal implements Cloneable, Serializable {
 
     // cache the hash code
     private transient int hash;
-
-    /**
-     * Do not used, this will be removed.
-     *
-     * @deprecated
-     */
-    @SuppressWarnings("JpaAttributeTypeInspection")
-    @Lob    // must be stored as a blob
-    @Deprecated
-    private BigDecimal[] goals;
 
     @ElementCollection
     @OrderColumn(name="INDEX")
@@ -203,20 +190,6 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     protected Object readResolve() {
-        postLoad();
         return this;
-    }
-
-    /**
-     * Update the file.
-     */
-    @SuppressWarnings("deprecation")
-    @PostLoad
-    private void postLoad() {
-        if (budgetGoals == null || budgetGoals.isEmpty() && goals != null) {
-            budgetGoals = new ArrayList<>();
-            budgetGoals.addAll(Arrays.asList(goals));
-            goals = null;
-        }
     }
 }
