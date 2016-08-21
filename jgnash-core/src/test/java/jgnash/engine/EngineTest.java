@@ -91,6 +91,19 @@ public abstract class EngineTest {
 
             assertTrue(e.addCurrency(node));
         }
+
+        // close the file/engine
+        closeEngine();
+
+        // check for correct file version
+        final float version = EngineFactory.getFileVersion(new File(testFile), EngineFactory.EMPTY_PASSWORD);
+        final Config config = new Config();
+        assertEquals(Float.valueOf(config.getFileFormat()), version, .0001);
+
+        // reopen the file for more tests
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+
+        assertNotNull(e);
     }
 
     @After

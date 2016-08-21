@@ -111,9 +111,9 @@ public class SqlUtils {
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
                     try (final Statement statement = connection.createStatement()) {
-                        try (final ResultSet resultSet = statement.executeQuery("SELECT FILEVERSION FROM CONFIG")) {
+                        try (final ResultSet resultSet = statement.executeQuery("SELECT FILEFORMAT FROM CONFIG")) {
                             resultSet.next();
-                            fileVersion = resultSet.getFloat("fileversion");
+                            fileVersion = Float.valueOf(resultSet.getString("fileformat"));
                         }
                     }
                     // must issue a shutdown for correct file closure

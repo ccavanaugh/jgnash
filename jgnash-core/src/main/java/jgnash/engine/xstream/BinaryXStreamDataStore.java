@@ -167,9 +167,9 @@ public class BinaryXStreamDataStore implements DataStore {
                 List<Config> list = container.query(Config.class);
 
                 if (list.size() == 1) {
-                    fileVersion = list.get(0).getFileVersion();
+                    fileVersion = Float.valueOf(list.get(0).getFileFormat());
                 } else {
-                    fileVersion = list.get(0).getFileVersion();
+                    fileVersion = Float.valueOf(list.get(0).getFileFormat());
                     logger.severe("A duplicate config object was found");
                 }
             } finally {
