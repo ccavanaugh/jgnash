@@ -25,6 +25,12 @@ Reinstate archive capability.
 
 Change the base highlight color for the FX interface
 
+
+Release 2.26.0 (File format change)
+----------------------
+08/21/16 Removed support for corrections to older file formats (Prior to release 2.22.0).  Existing files must have been
+         loaded with jGnash release 2.22 - 2.25 prior to using with this release.
+
 Release 2.25.0
 ----------------------
 08/20/16 JavaFx interface is now considered stable for daily use.  Remove -ea suffix off executables. (Fx)

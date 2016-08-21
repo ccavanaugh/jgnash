@@ -26,11 +26,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -444,7 +442,7 @@ public class Engine {
     /**
      * Corrects minor issues with a database that may occur because of prior bugs or file format upgrades.
      */
-    @SuppressWarnings("ConstantConditions")
+    //@SuppressWarnings("ConstantConditions")
     private void checkAndCorrect() {
 
         commodityLock.writeLock().lock();
@@ -453,134 +451,6 @@ public class Engine {
         configLock.writeLock().lock();
 
         try {
-            /* Check for more than one config object */
-            final List<Config> list = eDAO.getStoredObjects(Config.class);
-            if (list.size() > 1) {
-                // Delete all but the first found config object
-                for (int i = 1; i < list.size(); i++) {
-                    moveObjectToTrash(list.get(i));
-                }
-            }
-
-            /* Check for null account number strings */
-            if (getConfig().getMinorRevision() < 0.01f) {
-                logInfo("Checking for null account numbers");
-                getAccountDAO().getAccountList().stream().filter(account -> account.getAccountNumber() == null)
-                        .forEach(account -> {
-                            account.setAccountNumber("");
-                            getAccountDAO().updateAccount(account);
-                            logInfo("Fixed null account number");
-                        });
-            }
-
-            /* Check for detached accounts */
-            if (getConfig().getMinorRevision() < 0.02f) {
-                getAccountDAO().getAccountList().stream()
-                        .filter(account -> account.getParent() == null && !account.instanceOf(AccountType.ROOT))
-                        .forEach(account -> {
-                            account.setParent(getRootAccount());
-
-                            getAccountDAO().updateAccount(account);
-                            getAccountDAO().updateAccount(getRootAccount());
-                            logInfo("Fixing a detached account: " + account.getName());
-                        });
-
-                logInfo("Checking for a recursive account structure");
-                getAccountDAO().getAccountList().stream()
-                        .filter(account -> account.equals(account.getParent()))
-                        .forEach(account -> {
-                            logWarning("Correcting recursive account structure:" + account.getName());
-                            account.setParent(getRootAccount());
-
-                            getAccountDAO().updateAccount(account);
-                            getAccountDAO().updateAccount(getRootAccount());
-                        });
-            }
-
-            if (getConfig().getMinorRevision() < 0.03f) {
-                clearObsoleteExchangeRates();
-            }
-
-            // check for multiple root accounts
-            if (getConfig().getMinorRevision() < 0.04f) {
-                final List<RootAccount> roots = getStoredObjects().stream()
-                        .filter(o -> o instanceof RootAccount).map(o -> (RootAccount) o).collect(Collectors.toList());
-
-                if (roots.size() > 1) {
-                    logger.warning("Removing extra root accounts");
-
-                    RootAccount root = roots.get(0);
-
-                    // use the root at 0 as the default
-                    for (int i = 1; i < roots.size(); i++) {
-                        RootAccount extraRoot = roots.get(i);
-
-                        extraRoot.getChildren().stream().filter(child -> !moveAccount(child, root))
-                                .forEach(child -> logWarning(rb.getString("Message.Error.MoveAccount")));
-
-                        moveObjectToTrash(extraRoot);
-                    }
-                }
-            }
-
-            // cleanup currencies
-            if (getConfig().getMinorRevision() < 0.1f) {
-                System.out.println(getConfig().getFileVersion());
-                removeDuplicateCurrencies();
-            }
-
-            // force income and expense account to only be display in a budget by default
-            if (getConfig().getMinorRevision() < 0.2f) {
-                getAccountList().stream()
-                        .filter(account -> !account.memberOf(AccountGroup.INCOME) && !account.memberOf(AccountGroup.EXPENSE))
-                        .forEach(account -> {
-                            account.setExcludedFromBudget(true);
-                            getAccountDAO().updateAccount(account);
-                        });
-            }
-
-            // remove any orphaned transactions from removal and modifications of reminders
-            if (getConfig().getMinorRevision() < 0.3f) {
-                removeOrphanedTransactions();
-            }
-
-            // purge stale budget goals for place holder accounts
-            if (getConfig().getMinorRevision() < 1.4f) {
-                getAccountList().stream().filter(Account::isPlaceHolder).forEach(this::purgeBudgetGoal);
-            }
-
-            // check for improperly set default currency
-            if (getConfig().getMinorRevision() < 1.7f) {
-                if (getDefaultCurrency() == null) {
-                    setDefaultCurrency(getRootAccount().getCurrencyNode());
-                    logger.warning("Forcing default currency");
-                }
-            }
-
-            // fix transaction incorrectly marked for removal
-            if (getConfig().getMinorRevision() < 1.7f) {
-                fixMarkedRemovalTransactions();
-            }
-
-            // fix detached securities caused by a prior JPA relationship bug
-            if (getConfig().getMinorRevision() < 1.8f) {
-                for (Account account : getInvestmentAccountList()) {
-                    account.getSortedTransactionList().stream().filter(transaction
-                            -> transaction instanceof InvestmentTransaction).filter(transaction
-                            -> !account.containsSecurity(((InvestmentTransaction) transaction).getSecurityNode()))
-                            .forEach(transaction -> {
-                                addAccountSecurity(account, ((InvestmentTransaction) transaction).getSecurityNode());
-                                logInfo("Fixed detached security node");
-                            });
-                }
-            }
-
-            // Persist budget format update
-            if (getConfig().getMinorRevision() < 1.8f) {
-                for (final Budget budget : getBudgetList()) {
-                    getBudgetDAO().update(budget);
-                }
-            }
 
             // update the file version if it is not current
             if (getConfig().getMajorFileFormatVersion() != CURRENT_MAJOR_VERSION
@@ -598,99 +468,10 @@ public class Engine {
         }
     }
 
-    /**
-     * Removes any duplicate currencies by symbol and fixes up references to them.
-     */
-    private void removeDuplicateCurrencies() {
-
-        final Map<String, CurrencyNode> keepMap = new HashMap<>();
-        final List<CurrencyNode> discard = new ArrayList<>();
-
-        final CurrencyNode defaultCurrency = getDefaultCurrency();
-
-        // pre-load the default so the root does not have to be changed
-        keepMap.put(defaultCurrency.getSymbol(), defaultCurrency);
-
-        for (final CurrencyNode node : getCurrencies()) {
-            if (!keepMap.containsKey(node.getSymbol())) {
-                keepMap.put(node.getSymbol(), node);
-            } else if (node != defaultCurrency) {
-                discard.add(node);
-            }
-        }
-
-        for (final CurrencyNode node : discard) {
-            getAccountList().stream().filter(account -> account.getCurrencyNode() == node).forEach(account -> {
-                account.setCurrencyNode(keepMap.get(node.getSymbol()));
-                getAccountDAO().updateAccount(account);
-            });
-
-            getSecurities().stream().filter(sNode -> sNode.getReportedCurrencyNode() == node).forEach(sNode -> {
-                sNode.setReportedCurrencyNode(keepMap.get(node.getSymbol()));
-                getCommodityDAO().updateCommodityNode(sNode);
-            });
-
-            removeCommodity(node);
-        }
-    }
-
     private void clearObsoleteExchangeRates() {
         getCommodityDAO().getExchangeRates().stream()
                 .filter(rate -> getBaseCurrencies(rate.getRateId()) == null)
                 .forEach(this::removeExchangeRate);
-    }
-
-    private void fixMarkedRemovalTransactions() {
-        for (final Account account : getAccountList()) {
-            account.getSortedTransactionList().stream()
-                    .filter(StoredObject::isMarkedForRemoval)
-                    .forEach(transaction -> {
-                        transaction.setMarkedForRemoval(false);
-                        getTransactionDAO().updateTransaction(transaction);
-                        logger.warning("Fixed transaction incorrectly marked for removal");
-                    });
-
-            getReminders().stream()
-                    .filter(reminder -> reminder.getTransaction() != null) // reminder transaction may be null
-                    .forEach(reminder -> {
-                        final Transaction transaction = reminder.getTransaction();
-                        if (transaction.isMarkedForRemoval()) {
-                            transaction.setMarkedForRemoval(false);
-                            getTransactionDAO().updateTransaction(transaction);
-                            logger.warning("Fixed transaction incorrectly marked for removal");
-                        }
-                    });
-        }
-    }
-
-    /**
-     * Search and remove orphaned transactions left behind when reminders were removed.
-     */
-    private void removeOrphanedTransactions() {
-        for (final Transaction transaction : getTransactions()) {
-            boolean orphaned = true;
-
-            for (final Account account : transaction.getAccounts()) {
-                if (account.contains(transaction)) {
-                    orphaned = false;
-                    break;
-                }
-            }
-
-            if (orphaned) { // still an orphan, check for reminder ownership
-                for (final Reminder reminder : getReminders()) {
-                    if (reminder.contains(transaction)) {    // reminder transaction may be null
-                        orphaned = false;
-                        break;
-                    }
-                }
-            }
-
-            if (orphaned) {
-                moveObjectToTrash(transaction);
-                logInfo("Removed an orphan transaction");
-            }
-        }
     }
 
     private void removeExchangeRate(final ExchangeRate rate) {
