@@ -1,0 +1,3 @@
+These are example JavaScript files that work with the jGnash API.
+
+Use these as a jump off point for writing your own.
