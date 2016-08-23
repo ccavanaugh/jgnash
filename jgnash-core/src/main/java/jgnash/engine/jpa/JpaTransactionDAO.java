@@ -140,27 +140,6 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     }
 
     @Override
-    public void updateTransaction(final Transaction transaction) {
-        emLock.lock();
-
-        try {
-            final Future<Void> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(transaction);
-                em.getTransaction().commit();
-
-                return null;
-            });
-
-            future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-    }
-
-    @Override
     public List<Transaction> getTransactionsWithAttachments() {
         List<Transaction> transactionList = Collections.emptyList();
 

@@ -72,10 +72,6 @@ public interface AccountDAO {
 
     boolean updateAccount(Account account);
 
-    @SuppressWarnings({"UnusedReturnValue", "UnusedParameters"})
-    @Deprecated
-    boolean removeAccountProperty(Account account, Object object);
-
     /**
      * Toggles the visibility of an account given its ID.
      *

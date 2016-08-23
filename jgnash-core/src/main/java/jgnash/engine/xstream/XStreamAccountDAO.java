@@ -114,13 +114,6 @@ class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO {
     }
 
     @Override
-    @Deprecated
-    public boolean removeAccountProperty(final Account account, final Object object) {
-        commit();
-        return true;
-    }
-
-    @Override
     public boolean toggleAccountVisibility(final Account account) {
         commit();
         return true;

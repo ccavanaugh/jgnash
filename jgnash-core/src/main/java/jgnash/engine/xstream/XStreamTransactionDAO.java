@@ -59,11 +59,6 @@ class XStreamTransactionDAO extends AbstractXStreamDAO implements TransactionDAO
     }
 
     @Override
-    public void updateTransaction(final Transaction transaction) {
-        commit();
-    }
-
-    @Override
     public List<Transaction> getTransactionsWithAttachments() {
         return container.query(Transaction.class).parallelStream()
                 .filter(transaction -> !transaction.isMarkedForRemoval() && transaction.getAttachment() != null)

@@ -229,12 +229,6 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         return merge(account) != null;
     }
 
-    @Override
-    @Deprecated
-    public boolean removeAccountProperty(final Account account, final Object object) {
-        return false;
-    }
-
     /*
      * @see jgnash.engine.dao.AccountDAO#toggleAccountVisibility(jgnash.engine.Account)
      */
