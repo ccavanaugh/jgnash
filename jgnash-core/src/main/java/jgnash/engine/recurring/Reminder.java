@@ -199,22 +199,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
         return null;
     }
 
-    /**
-     * Determines if the supplied transaction matches this {@code Reminders} transaction.
-     *
-     * @param transaction {@code Transaction} to check
-     * @return {@code true} if they match
-     */
-    public boolean contains(final Transaction transaction) {
-        boolean result = false;
-
-        if (transaction != null) {
-            result = transaction.equals(this.transaction);
-        }
-
-        return result;
-    }
-
     public abstract ReminderType getReminderType();
 
     /**

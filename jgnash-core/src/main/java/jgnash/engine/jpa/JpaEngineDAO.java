@@ -162,7 +162,7 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         return list;
     }
 
-    @Override
+    /*@Override
     public <T extends StoredObject> List<T> getStoredObjects(final Class<T> tClass) {
         List<T> list = Collections.emptyList();
 
@@ -188,7 +188,7 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         }
 
         return stripMarkedForRemoval(list);
-    }
+    }*/
 
     /**
      * Refresh a managed object.
