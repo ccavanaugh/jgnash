@@ -318,7 +318,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      *
      * @return {@code true} if this is a single entry TransactionEntry
      */
-    public boolean isSingleEntry() {
+    boolean isSingleEntry() {
         return creditAccount.equals(debitAccount) && creditAmount.equals(debitAmount);
     }
 
