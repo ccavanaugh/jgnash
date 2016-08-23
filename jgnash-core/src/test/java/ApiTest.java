@@ -13,6 +13,10 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionFactory;
+import jgnash.engine.TransactionType;
 
 import org.junit.Test;
 
@@ -140,6 +144,30 @@ public class ApiTest extends AbstractEngineTest {
         assertNotNull(attribute);
 
         assertEquals(BigDecimal.TEN, new BigDecimal(attribute));
+    }
+
+    @Test
+    public void testTransactionAPI() {
+        final String ACCOUNT_NAME = "testAccount";
+
+        final CurrencyNode node = e.getDefaultCurrency();
+
+        final Account a = new Account(AccountType.BANK, node);
+        a.setName(ACCOUNT_NAME);
+
+        e.addAccount(e.getRootAccount(), a);
+
+        // Test single entry transaction
+        final Transaction transaction = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(),
+                "memo", "payee", "1");
+
+        e.addTransaction(transaction);
+
+        assertEquals(TransactionType.SINGLENTRY, transaction.getTransactionType());
+
+        for (final TransactionEntry transactionEntry : transaction.getTransactionEntries()) {
+            assertFalse(transactionEntry.isMultiCurrency());
+        }
     }
 
     @Test
