@@ -137,7 +137,7 @@ public class SqlUtils {
         boolean result = false;  // return false only if an error occurs
 
         try {
-            if (!Files.exists(Paths.get(fileName))) {
+            if (Files.exists(Paths.get(fileName))) {
                 if (!FileUtils.isFileLocked(fileName)) {
                     final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
                     final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
