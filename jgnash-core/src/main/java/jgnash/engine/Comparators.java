@@ -362,7 +362,7 @@ public class Comparators {
      *
      * @param <T> object type that is being sorted
      */
-    public static class ExplicitComparator<T> implements Comparator<T> {
+    public static class ExplicitComparator<T> implements Comparator<T>, Serializable {
 
         final List<T> order = new ArrayList<>();
 
