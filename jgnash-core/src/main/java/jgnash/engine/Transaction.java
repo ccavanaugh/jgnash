@@ -483,7 +483,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return Concatenated string of split entry memos
      */
     @NotNull
-    public String getMemo(final Account account) {
+    public synchronized String getMemo(final Account account) {
         return getMemo(getTransactionEntries(account));
     }
 
@@ -494,8 +494,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return concatenated memo
      */
     public static String getMemo(final List<TransactionEntry> transEntries) {
-        String concatenatedMemo = EMPTY;
-
+        final StringBuilder memoBuilder = new StringBuilder();
         final List<String> memoList = new ArrayList<>();
 
         // Create an ordered list of unique memos
@@ -504,20 +503,20 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
                 .forEachOrdered(transactionEntry -> memoList.add(transactionEntry.getMemo()));
 
         for (int i = 0; i < memoList.size(); i++) {
-            concatenatedMemo = concatenatedMemo + memoList.get(i);
+            memoBuilder.append(memoList.get(i));
             if (i < memoList.size() - 1) {
-                concatenatedMemo = concatenatedMemo + ", ";
+                memoBuilder.append(", ");
             }
         }
 
-        return concatenatedMemo;
+        return memoBuilder.toString();
     }
 
     public boolean isMemoConcatenated() {
         return CONCATENATE.equals(memo);
     }
 
-    public void setMemo(final String memo) {
+    public synchronized void setMemo(final String memo) {
         this.memo = memo;
     }
 
