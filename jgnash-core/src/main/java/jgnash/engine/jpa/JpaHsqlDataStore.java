@@ -38,12 +38,6 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
 
     public static final String LOCK_EXT = ".lck";
 
-    /**
-     * Creates an empty database with the assumed default user name.
-     *
-     * @param fileName file name to use
-     * @return true if successful
-     */
     @Override
     public boolean initEmptyDatabase(final String fileName) {
         try {

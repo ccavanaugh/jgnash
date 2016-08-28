@@ -38,16 +38,15 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
 
     public static final String LOCK_EXT = ".lock.db";
 
-    /**
-     * Creates an empty database with the assumed default user name.
-     *
-     * @param fileName file name to use
-     * @return true if successful
-     */
     @Override
     public boolean initEmptyDatabase(final String fileName) {
-        return true;
-        // H2 starts cleanly without an initial file, don't call the super
+        try {
+            Class.forName("org.h2.Driver");
+            return super.initEmptyDatabase(fileName);
+        } catch (final ClassNotFoundException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return false;
     }
 
     @NotNull

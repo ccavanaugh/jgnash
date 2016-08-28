@@ -105,13 +105,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         try {
             if (SqlUtils.isConnectionValid(properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL))) {
-
-                if (SqlUtils.useOldPersistenceUnit(fileName, password)) {
-                    System.out.println("Using old persistence unit");
-                    factory = Persistence.createEntityManagerFactory(JpaConfiguration.OLD_UNIT_NAME, properties);
-                } else {
-                    factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
-                }
+                factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
 
                 em = factory.createEntityManager();
 
@@ -169,9 +163,10 @@ public abstract class AbstractJpaDataStore implements DataStore {
             if (!FileUtils.isFileLocked(fileName)) {
                 try {
                     if (SqlUtils.useOldPersistenceUnit(fileName, password)) {
-                        System.out.println("Using old persistence unit");
+                        System.out.println("Using old database schema");
                         factory = Persistence.createEntityManagerFactory(JpaConfiguration.OLD_UNIT_NAME, properties);
                     } else {
+                        System.out.println("Using new database schema");
                         factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
                     }
 
@@ -264,6 +259,12 @@ public abstract class AbstractJpaDataStore implements DataStore {
         return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + "." + getFileExt()));
     }
 
+    /**
+     * Opens and closes the database in order to create a new file.
+     *
+     * @param fileName database file
+     * @return {@code true} if successful
+     */
     boolean initEmptyDatabase(final String fileName) {
         boolean result = false;
 
@@ -272,26 +273,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
-        try (final Connection connection = DriverManager.getConnection(url, "sa", "")) {
-            try (final PreparedStatement statement = connection.prepareStatement("CREATE USER "
-                    + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN")) {
-                statement.execute();
-                connection.commit();
-            }
-
-            // absolutely required for a correct shutdown
-            try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
-                statement.execute();
-            }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-
-        try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, "")) {
-            try (final PreparedStatement statement = connection.prepareStatement("DROP USER SA")) {
-                statement.execute();
-                connection.commit();
-            }
+        try (final Connection connection = DriverManager.getConnection(url)) {
 
             // absolutely required for a correct shutdown
             try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
@@ -299,7 +281,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
             }
 
             result = true;
-        } catch (final SQLException e) {
+        } catch (SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
