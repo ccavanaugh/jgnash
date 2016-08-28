@@ -38,17 +38,6 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
 
     public static final String LOCK_EXT = ".lock.db";
 
-    @Override
-    public boolean initEmptyDatabase(final String fileName) {
-        try {
-            Class.forName("org.h2.Driver");
-            return super.initEmptyDatabase(fileName);
-        } catch (final ClassNotFoundException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-        return false;
-    }
-
     @NotNull
     @Override
     public String getFileExt() {

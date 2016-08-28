@@ -38,17 +38,6 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
 
     public static final String LOCK_EXT = ".lck";
 
-    @Override
-    public boolean initEmptyDatabase(final String fileName) {
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            return super.initEmptyDatabase(fileName);
-        } catch (final ClassNotFoundException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-        return false;
-    }
-
     @NotNull
     @Override
     public String getFileExt() {

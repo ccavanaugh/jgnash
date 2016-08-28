@@ -49,7 +49,7 @@ import jgnash.util.FileUtils;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractJpaDataStore implements DataStore {
+abstract class AbstractJpaDataStore implements DataStore {
 
     private static final String SHUTDOWN = "SHUTDOWN";
 
@@ -156,7 +156,9 @@ public abstract class AbstractJpaDataStore implements DataStore {
         }
 
         if (!exists(fileName)) {
-            initEmptyDatabase(fileName);
+            if (!initEmptyDatabase(fileName)) {
+                return null;
+            }
         }
 
         try {
@@ -211,38 +213,39 @@ public abstract class AbstractJpaDataStore implements DataStore {
             deleteDatabase(file);
         }
 
-        initEmptyDatabase(file.getAbsolutePath());
+        if (initEmptyDatabase(file.getAbsolutePath())) {
 
-        final Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(),
-                new char[]{}, false);
+            final Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(),
+                    new char[]{}, false);
 
-        EntityManagerFactory factory = null;
-        EntityManager em = null;
+            EntityManagerFactory factory = null;
+            EntityManager em = null;
 
-        try {
-            factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
-            em = factory.createEntityManager();
+            try {
+                factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
+                em = factory.createEntityManager();
 
-            em.getTransaction().begin();
+                em.getTransaction().begin();
 
-            for (StoredObject o : objects) {
-                em.persist(o);
+                for (StoredObject o : objects) {
+                    em.persist(o);
+                }
+
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            } finally {
+                if (em != null) {
+                    em.close();
+                }
+
+                if (factory != null) {
+                    factory.close();
+                }
             }
 
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-
-            if (factory != null) {
-                factory.close();
-            }
+            waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
         }
-
-        waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
     }
 
     /**
@@ -265,7 +268,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
      * @param fileName database file
      * @return {@code true} if successful
      */
-    boolean initEmptyDatabase(final String fileName) {
+    private boolean initEmptyDatabase(final String fileName) {
         boolean result = false;
 
         final Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName,
