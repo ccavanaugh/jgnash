@@ -26,6 +26,7 @@ WANTS
 
 Release 2.26.0 __(File format change)__
 ---------------------------------------
+* 08/28/16 The Open dialog was not behaving correctly if a remote connection was used for the prior session. (Fx)
 * 08/21/16 Updated to latest Hibernate dependency.
 * 08/21/16 Removed support for corrections to older file formats (Prior to release 2.22.0).  Existing files must have been
          loaded with jGnash release 2.22 - 2.25 prior to using with this release.

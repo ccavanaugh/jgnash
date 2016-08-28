@@ -70,12 +70,14 @@ public class OpenDatabaseController {
     private void initialize() {
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
-        updateControlsState();
-
         setDatabaseField(EngineFactory.getLastDatabase());
         databaseServerField.setText(EngineFactory.getLastHost());
         portField.setInteger(EngineFactory.getLastPort());
         remoteServerCheckBox.setSelected(EngineFactory.getLastRemote());
+
+        localDatabaseField.disableProperty().bind(remoteServerCheckBox.selectedProperty());
+        portField.disableProperty().bind(remoteServerCheckBox.selectedProperty().not());
+        databaseServerField.disableProperty().bind(remoteServerCheckBox.selectedProperty().not());
     }
 
     @FXML
@@ -99,11 +101,6 @@ public class OpenDatabaseController {
     }
 
     @FXML
-    protected void handleRemoteAction(final ActionEvent event) {
-        updateControlsState();
-    }
-
-    @FXML
     protected void handleSelectFileAction(final ActionEvent event) {
         final File file = DatabasePathAction.getFileToOpen();
 
@@ -113,11 +110,5 @@ public class OpenDatabaseController {
 
             setDatabaseField(file.getAbsolutePath());
         }
-    }
-
-    private void updateControlsState() {
-        localDatabaseField.setDisable(remoteServerCheckBox.isSelected());
-        portField.setDisable(!remoteServerCheckBox.isSelected());
-        databaseServerField.setDisable(!remoteServerCheckBox.isSelected());
     }
 }
