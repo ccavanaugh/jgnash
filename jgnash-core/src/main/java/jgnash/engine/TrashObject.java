@@ -20,11 +20,9 @@ package jgnash.engine;
 import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
-import jgnash.engine.jpa.LocalDateTimeAttributeConverter;
 import jgnash.util.NotNull;
 
 /**
@@ -38,7 +36,6 @@ public class TrashObject extends StoredObject implements Comparable<TrashObject>
     /**
      * Date object was added.
      */
-    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private final LocalDateTime date = LocalDateTime.now();
 
     /**

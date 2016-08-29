@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -30,7 +29,6 @@ import javax.persistence.OneToOne;
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
 import jgnash.engine.Transaction;
-import jgnash.engine.jpa.LocalDateAttributeConverter;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
@@ -101,7 +99,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * The start date of this reminder.
      */
-    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate startDate = LocalDate.now();
 
     @ManyToOne
