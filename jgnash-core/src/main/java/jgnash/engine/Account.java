@@ -111,7 +111,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * List of transactions for this account.
      */
     @JoinTable
-    @OrderBy("date, number, dateEntered")
+    @OrderBy("date, number, date")
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     final Set<Transaction> transactions = new HashSet<>();
 
