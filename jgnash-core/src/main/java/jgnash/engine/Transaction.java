@@ -19,6 +19,7 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 
 import jgnash.util.NotNull;
@@ -66,10 +68,15 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Date transaction was created.
-     * <p>
-     * TODO: Replace with LocalDateTime
      */
-    LocalDate dateEntered = LocalDate.now();
+    @Deprecated
+    private LocalDate dateEntered;
+
+    /**
+     * Timestamp for transaction creation.
+     */
+    @Column(name = "timestamp", nullable = false, columnDefinition = "long default 0")
+    long timestamp = System.currentTimeMillis();
 
     /**
      * Transaction number.
@@ -182,7 +189,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         if (size() >= 2) {
             Set<Account> accounts = getAccounts();
 
-            for (Account a : accounts) {
+            for (final Account a : accounts) {
                 boolean success = true;
                 for (TransactionEntry e : transactionEntries) {
                     if (!e.getCreditAccount().equals(a) && !e.getDebitAccount().equals(a)) {
@@ -331,7 +338,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
             return result;
         }
 
-        result = dateEntered.compareTo(tran.dateEntered);
+        result = Long.compareUnsigned(timestamp, tran.timestamp);
         if (result != 0) {
             return result;
         }
@@ -433,20 +440,18 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         transactionEntries.clear();
     }
 
-    public LocalDate getDateEntered() {
-        return dateEntered;
+    public long getDateEntered() {
+        return timestamp;
     }
 
-    public void setDateEntered(@NotNull final LocalDate localDate) {
-        Objects.requireNonNull(localDate);
-
-        dateEntered = localDate;
+    public void setDateEntered(@NotNull final long timestamp) {
+        this.timestamp = timestamp;
     }
 
     @NotNull
     public TransactionType getTransactionType() {
         if (size() == 1) {
-            TransactionEntry entry = transactionEntries.iterator().next();
+            final TransactionEntry entry = transactionEntries.iterator().next();
 
             if (entry.isSingleEntry()) {
                 return TransactionType.SINGLENTRY;
@@ -595,7 +600,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         // deep clone
         tran.transactionEntries = new HashSet<>(); // deep clone
-        //tran.lock = new ReentrantReadWriteLock(true);
 
         for (TransactionEntry entry : transactionEntries) {
             tran.addTransactionEntry((TransactionEntry) entry.clone());
@@ -622,5 +626,24 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
 
         return b.toString();
+    }
+
+    /**
+     * Required by XStream for proper initialization.
+     *
+     * @return Properly initialized Transaction
+     */
+    protected Object readResolve() {
+        postLoad();
+        return this;
+    }
+
+    @SuppressWarnings("deprecation")
+    @PostLoad
+    private void postLoad() {
+        if (dateEntered != null) {
+            timestamp = dateEntered.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            dateEntered = null;
+        }
     }
 }

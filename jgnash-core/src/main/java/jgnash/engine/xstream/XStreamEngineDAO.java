@@ -168,4 +168,9 @@ class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
     public void refresh(final StoredObject object) {
         // do nothing for XStream
     }
+
+    @Override
+    public void bulkUpdate(List<? extends StoredObject> objectList) {
+        commit();
+    }
 }

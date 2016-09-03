@@ -212,4 +212,25 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
             emLock.unlock();
         }
     }
+
+    @Override
+    public void bulkUpdate(final List<? extends StoredObject> objectList) {
+        emLock.lock();
+
+        try {
+            final Future<Void> future = executorService.submit(() -> {
+                em.getTransaction().begin();
+                objectList.forEach(em::persist);
+                em.getTransaction().commit();
+
+                return null;
+            });
+
+            future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            emLock.unlock();
+        }
+    }
 }

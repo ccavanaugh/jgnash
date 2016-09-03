@@ -49,7 +49,6 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.FileMagic;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
@@ -124,16 +123,15 @@ class XMLContainer extends AbstractXStreamContainer {
 
         try (final Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            writer.write("<?fileVersion " + Engine.CURRENT_VERSION + "?>\n");
             writer.write("<?fileFormat " + Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION + "?>\n");
 
             final XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new KXml2Driver()));
 
-            try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
+            try (final ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
                 out.writeObject(list);
                 out.flush();     // forcibly flush before letting go of the resources to help older windows systems write correctly
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
@@ -141,16 +139,8 @@ class XMLContainer extends AbstractXStreamContainer {
     }
 
     void readXML() {
-        String encoding = System.getProperty("file.encoding"); // system default encoding
-
-        String version = FileMagic.getXMLVersion(file); // version of the jGnash XML file
-
-        if (Float.parseFloat(version) >= 2.01f) { // 2.01f is hard coded for prior encoding bug
-            encoding = StandardCharsets.UTF_8.name(); // encoding is always UTF-8 for anything greater than 2.0
-        }
-
         try (FileInputStream fis = new FileInputStream(file);
-             Reader reader = new BufferedReader(new InputStreamReader(fis, encoding))) {
+             Reader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8.name()))) {
 
             readWriteLock.writeLock().lock();
 
@@ -159,6 +149,7 @@ class XMLContainer extends AbstractXStreamContainer {
 
             // Filters out any java.sql.Dates that sneaked in when saving from a relational database
             // and forces to a LocalDate
+            // TODO: Remove at a later date
             xstream.alias("sql-date", LocalDate.class);
 
             try (final ObjectInputStream in = xstream.createObjectInputStream(reader);

@@ -72,6 +72,7 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
 import jgnash.time.DateUtils;
+import jgnash.util.CollectionUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -90,11 +91,11 @@ public class Engine {
     /**
      * Current version for the file format.
      */
-    public static final float CURRENT_VERSION = 2.22f;
-
     public static final int CURRENT_MAJOR_VERSION = 2;
 
-    public static final int CURRENT_MINOR_VERSION = 22;
+    public static final int CURRENT_MINOR_VERSION = 25;
+
+    public static final float CURRENT_VERSION = (float)CURRENT_MAJOR_VERSION + ((float)CURRENT_MINOR_VERSION / 100f);
 
     // Lock names
     private static final String ACCOUNT_LOCK = "account";
@@ -442,7 +443,6 @@ public class Engine {
     /**
      * Corrects minor issues with a database that may occur because of prior bugs or file format upgrades.
      */
-    //@SuppressWarnings("ConstantConditions")
     private void checkAndCorrect() {
 
         commodityLock.writeLock().lock();
@@ -451,6 +451,13 @@ public class Engine {
         configLock.writeLock().lock();
 
         try {
+
+            // Transaction timestamps were updated for release 2.25
+            if (getConfig().getMinorFileFormatVersion() < 25) {
+
+                // Update transactions in chunks of 200
+                CollectionUtils.partition(getTransactions(), 200).forEach(eDAO::bulkUpdate);
+            }
 
             // update the file version if it is not current
             if (getConfig().getMajorFileFormatVersion() != CURRENT_MAJOR_VERSION

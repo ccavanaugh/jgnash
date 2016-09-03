@@ -55,5 +55,14 @@ public interface EngineDAO extends DAO {
      */
     void refresh(StoredObject object);
 
+    /**
+     * Allows for a bulk update of StoredObjects
+     * <p>
+     * This is intended for in place data updates and use should be minimal
+     *
+     * @param objectList list of {@code StoredObject} to update
+     */
+    void bulkUpdate(List<? extends StoredObject> objectList);
+
     void shutdown();
 }

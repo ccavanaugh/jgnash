@@ -299,7 +299,7 @@ public class FileMagic {
      * @param file {@code file to check}
      * @return file version as a String
      */
-    public static String getXMLVersion(final File file) {
+    private static String getXMLVersion(final File file) {
         String version = "";
 
         try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
@@ -316,7 +316,8 @@ public class FileMagic {
                         String name = reader.getPITarget();
                         String data = reader.getPIData();
 
-                        if (name.equals("fileVersion")) {
+                        // TODO: fileVersion is depreciated as of release 2.25
+                        if (name.equals("fileVersion") || name.equals("fileFormat")) {
                             version = data;
                             break parse;
                         }

@@ -318,7 +318,7 @@ public class InvestmentTransaction extends Transaction {
             }
         }
 
-        result = dateEntered.compareTo(tran.dateEntered);
+        result = Long.compareUnsigned(timestamp, tran.timestamp);
         if (result != 0) {
             return result;
         }
