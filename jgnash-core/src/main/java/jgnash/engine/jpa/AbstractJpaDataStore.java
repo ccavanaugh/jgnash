@@ -215,6 +215,8 @@ abstract class AbstractJpaDataStore implements DataStore {
 
         if (initEmptyDatabase(file.getAbsolutePath())) {
 
+            System.out.println("here");
+
             final Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(),
                     new char[]{}, false);
 
@@ -290,7 +292,7 @@ abstract class AbstractJpaDataStore implements DataStore {
 
         waitForLockFileRelease(fileName, EngineFactory.EMPTY_PASSWORD);
 
-        logger.log(Level.INFO, "Initialized an empty database for {0}", FileUtils.stripFileExtension(fileName));
+        logger.log(Level.INFO, "Initialized an empty database for {0}", fileName);
 
         return result;
     }
