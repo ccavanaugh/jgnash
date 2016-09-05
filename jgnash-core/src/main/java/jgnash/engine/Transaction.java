@@ -75,7 +75,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Timestamp for transaction creation.
      */
-    @Column(name = "timestamp", nullable = false, columnDefinition = "long default 0")
+    @Column(name = "timestamp", nullable = false, columnDefinition = "BIGINT default 0")
     long timestamp = System.currentTimeMillis();
 
     /**
