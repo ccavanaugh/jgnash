@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.FileChooserFactory;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.main.MainView;
 
@@ -95,28 +96,10 @@ public class ChangeDatabasePasswordDialogController {
 
     @FXML
     private void handleDatabaseButtonAction() {
-        final FileChooser fileChooser = new FileChooser();
+        final FileChooser fileChooser = FileChooserFactory.getDataStoreChooser(DataStoreType.H2_DATABASE,
+                DataStoreType.HSQL_DATABASE);
+
         fileChooser.setTitle(resources.getString("Title.SelFile"));
-
-        final DataStoreType[] types = new DataStoreType[] {DataStoreType.H2_DATABASE, DataStoreType.HSQL_DATABASE};
-        final String[] ext = new String[types.length];
-
-        final StringBuilder description = new StringBuilder(resources.getString("Label.jGnashFiles") + " (");
-
-        for (int i = 0; i < types.length; i++) {
-            ext[i] = "*." + types[i].getDataStore().getFileExt();
-
-            description.append("*.");
-            description.append(types[i].getDataStore().getFileExt());
-
-            if (i < types.length - 1) {
-                description.append(", ");
-            }
-        }
-
-        description.append(')');
-
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description.toString(), ext));
 
         final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
 

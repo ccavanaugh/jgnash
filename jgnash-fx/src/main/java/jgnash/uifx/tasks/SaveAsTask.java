@@ -24,9 +24,9 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
-import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.FileChooserFactory;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
@@ -48,30 +48,11 @@ public class SaveAsTask extends Task<Void> {
 
     public static void start() {
         final ResourceBundle resources = ResourceUtils.getBundle();
-
         final File current = new File(EngineFactory.getActiveDatabase());
 
-        final FileChooser fileChooser = new FileChooser();
+        final FileChooser fileChooser = FileChooserFactory.getDataStoreChooser();
         fileChooser.setInitialDirectory(current.getParentFile());
         fileChooser.setTitle(resources.getString("Title.SaveAs"));
-
-        final DataStoreType[] types = DataStoreType.values();
-        final String[] ext = new String[types.length];
-        final StringBuilder description = new StringBuilder(resources.getString("Label.jGnashFiles") + " (");
-
-        for (int i = 0; i < types.length; i++) {
-            ext[i] = "*." + types[i].getDataStore().getFileExt();
-
-            description.append("*.");
-            description.append(types[i].getDataStore().getFileExt());
-
-            if (i < types.length - 1) {
-                description.append(", ");
-            }
-        }
-        description.append(')');
-
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description.toString(), ext));
 
         final File newFile = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
 
