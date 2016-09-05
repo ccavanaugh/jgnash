@@ -18,23 +18,16 @@
 package jgnash.uifx.tasks;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.util.Collection;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.DataStoreType;
-import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.StoredObject;
-import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -63,9 +56,7 @@ public class SaveAsTask extends Task<Void> {
         fileChooser.setTitle(resources.getString("Title.SaveAs"));
 
         final DataStoreType[] types = DataStoreType.values();
-
         final String[] ext = new String[types.length];
-
         final StringBuilder description = new StringBuilder(resources.getString("Label.jGnashFiles") + " (");
 
         for (int i = 0; i < types.length; i++) {
@@ -96,86 +87,11 @@ public class SaveAsTask extends Task<Void> {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        final File current = new File(EngineFactory.getActiveDatabase());
-
         try {
             updateMessage(resources.getString("Message.PleaseWait"));
             updateProgress(INDETERMINATE, Long.MAX_VALUE);
 
-            final String destination = file.getAbsolutePath();
-
-            final String fileExtension = FileUtils.getFileExtension(destination);
-
-            DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
-
-            if (!fileExtension.isEmpty()) {
-                for (DataStoreType type : DataStoreType.values()) {
-                    if (type.getDataStore().getFileExt().equals(fileExtension)) {
-                        newFileType = type;
-                        break;
-                    }
-                }
-            }
-
-            final File newFile = new File(FileUtils.stripFileExtension(destination)
-                    + "." + newFileType.getDataStore().getFileExt());
-
-            // don't perform the save if the destination is going to overwrite the current database
-            if (!current.equals(newFile)) {
-
-                DataStoreType currentType = EngineFactory.getType(EngineFactory.DEFAULT);
-
-                if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
-                    File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
-
-                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-                    if (engine != null) {
-                        // Get collection of object to persist
-                        Collection<StoredObject> objects = engine.getStoredObjects();
-
-                        // Write everything to a temporary file
-                        DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
-                        EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-                        // Boot the engine with the temporary file
-                        EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT,
-                                EngineFactory.EMPTY_PASSWORD);
-
-                        engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-                        if (engine != null) {
-
-                            // Get collection of object to persist
-                            objects = engine.getStoredObjects();
-
-                            // Write everything to the new file
-                            newFileType.getDataStore().saveAs(newFile, objects);
-                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-                            // Boot the engine with the new file
-                            EngineFactory.bootLocalEngine(newFile.getAbsolutePath(),
-                                    EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
-                        }
-
-                        if (!tempFile.delete()) {
-                            Logger.getLogger(SaveAsTask.class.getName())
-                                    .info(resources.getString("Message.Error.RemoveTempFile"));
-                        }
-                    }
-                } else {    // Simple
-                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-                    if (engine != null) {
-                        final Collection<StoredObject> objects = engine.getStoredObjects();
-                        newFileType.getDataStore().saveAs(newFile, objects);
-                        EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-                        EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT,
-                                EngineFactory.EMPTY_PASSWORD);
-                    }
-                }
-            }
+            EngineFactory.saveAs(file.getAbsolutePath());
 
             updateProgress(1, 1);
             updateMessage(resources.getString("Message.FileSaveComplete"));

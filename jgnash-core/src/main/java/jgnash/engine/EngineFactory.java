@@ -141,7 +141,7 @@ public class EngineFactory {
      * @return the DataStoreType
      * @throws NullPointerException thrown if engine is not found
      */
-    public static synchronized DataStoreType getType(final String name) throws NullPointerException {
+    private static synchronized DataStoreType getType(final String name) throws NullPointerException {
         DataStore dataStore = dataStoreMap.get(name);
 
         return dataStore.getType();
@@ -477,5 +477,88 @@ public class EngineFactory {
         final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getBoolean(OPEN_LAST, true);
+    }
+
+    /**
+     * Saves the active database as a new file/format
+     *
+     * @param destination new file
+     * @throws IOException IO error
+     */
+    public static void saveAs(final String destination) throws IOException {
+
+        final String fileExtension = FileUtils.getFileExtension(destination);
+        DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
+
+        if (!fileExtension.isEmpty()) {
+            for (final DataStoreType type : DataStoreType.values()) {
+                if (type.getDataStore().getFileExt().equals(fileExtension)) {
+                    newFileType = type;
+                    break;
+                }
+            }
+        }
+
+        final File newFile = new File(FileUtils.stripFileExtension(destination)
+                + "." + newFileType.getDataStore().getFileExt());
+
+        final File current = new File(EngineFactory.getActiveDatabase());
+
+        // don't perform the save if the destination is going to overwrite the current database
+        if (!current.equals(newFile)) {
+
+            final DataStoreType currentType = EngineFactory.getType(EngineFactory.DEFAULT);
+
+            if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
+                final File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
+
+                Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null) {
+                    // Get collection of object to persist
+                    Collection<StoredObject> objects = engine.getStoredObjects();
+
+                    // Write everything to a temporary file
+                    DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
+                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                    // Boot the engine with the temporary file
+                    EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                            EngineFactory.EMPTY_PASSWORD);
+
+                    engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                    if (engine != null) {
+
+                        // Get collection of object to persist
+                        objects = engine.getStoredObjects();
+
+                        // Write everything to the new file
+                        newFileType.getDataStore().saveAs(newFile, objects);
+                        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                        // Boot the engine with the new file
+                        EngineFactory.bootLocalEngine(newFile.getAbsolutePath(),
+                                EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+                    }
+
+                    if (!tempFile.delete()) {
+                        Logger.getLogger(EngineFactory.class.getName())
+                                .info(ResourceUtils.getString("Message.Error.RemoveTempFile"));
+                    }
+                }
+            } else {    // Simple
+                Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null) {
+                    final Collection<StoredObject> objects = engine.getStoredObjects();
+                    newFileType.getDataStore().saveAs(newFile, objects);
+                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                    EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                            EngineFactory.EMPTY_PASSWORD);
+                }
+            }
+        }
     }
 }
