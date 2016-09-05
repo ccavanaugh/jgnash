@@ -59,7 +59,7 @@ public class FileMagic {
     private static final String WINDOWS_1252 = "windows-1252";
 
     public enum FileType {
-        db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
+        BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
     }
 
     /**
@@ -84,8 +84,6 @@ public class FileMagic {
             return FileType.OfxV1;
         } else if (isOfxV2(file)) {
             return FileType.OfxV2;
-        } else if (isdb4o(file)) {
-            return FileType.db4o;
         }
 
         return FileType.unknown;
@@ -238,29 +236,6 @@ public class FileMagic {
                     raf.readFully(fileHeader);
 
                     result = Arrays.equals(fileHeader, header);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        return result;
-    }
-
-    static boolean isdb4o(final File file) {
-        boolean result = false;
-
-        if (file.exists()) {
-
-            try (RandomAccessFile di = new RandomAccessFile(file, "r")) {
-                byte[] header = new byte[4];
-
-                if (di.length() > 0) { // must not be a zero length file
-                    di.readFully(header);
-
-                    if (new String(header, StandardCharsets.UTF_8).equals("db4o")) {
-                        result = true;
-                    }
                 }
             } catch (IOException ex) {
                 Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, null, ex);

@@ -36,29 +36,6 @@ import org.junit.Test;
 public class FileMagicTest {
 
     /**
-     * Test for db4o file identification.
-     */
-    @Test
-    public void db4oMagicTest() {
-
-        URL url = Object.class.getResource("/test.yap");
-
-        try {
-            assertTrue(FileMagic.isdb4o(new File(url.toURI())));
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        url = Object.class.getResource("/test1.jgnash.xml");
-
-        try {
-            assertFalse(FileMagic.isdb4o(new File(url.toURI())));
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
      * Test for jGnash 1.x file identification
      */
     @Test
@@ -68,14 +45,6 @@ public class FileMagicTest {
 
         try {
             assertTrue(FileMagic.isValidVersion1File(new File(url.toURI())));
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        url = Object.class.getResource("/test.yap");
-
-        try {
-            assertFalse(FileMagic.isValidVersion1File(new File(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
