@@ -26,6 +26,7 @@ WANTS
 
 Release 2.26.0 __(File format change)__
 ---------------------------------------
+* 09/07/16 Added work around for JavaFx bug JDK-8132897 causing a crash with use of a ComboBox. (Fx)
 * 09/03/16 Improved predictability of the sort order of transactions with the same date without an assigned transaction
            number. (Swing, Fx)
 * 08/29/16 Internal cleanup, removal of duplicated code.

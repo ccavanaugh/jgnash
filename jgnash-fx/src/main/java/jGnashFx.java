@@ -99,6 +99,11 @@ public class jGnashFx extends Application {
             return;
         }
 
+        if (OS.isSystemWindows()) {
+            // Workaround for https://bugs.openjdk.java.net/browse/JDK-8132897
+            System.setProperty("glass.accessible.force", "false");
+        }
+
         // Register the default exception handler
         Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
 
