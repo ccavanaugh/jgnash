@@ -215,8 +215,6 @@ abstract class AbstractJpaDataStore implements DataStore {
 
         if (initEmptyDatabase(file.getAbsolutePath())) {
 
-            System.out.println("here");
-
             final Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(),
                     new char[]{}, false);
 
