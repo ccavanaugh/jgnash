@@ -128,7 +128,7 @@ public final class FileUtils {
     }
 
     /**
-     * Strips the extension off of the supplied filename. If the supplied
+     * Strips the extension off of the supplied filename including the period. If the supplied
      * filename does not contain an extension then the original is returned
      *
      * @param fileName filename to strip the extension off
