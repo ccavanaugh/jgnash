@@ -48,18 +48,16 @@ end try</code></pre></li>
 <p>When upgrading from 1.x to 2.x, you will have to recreate your reminders.</p>
 <p>See the integrated help for command line options.</p>
 <h2 id="building-jgnash">Building jGnash:</h2>
-<p>To build jGnash you'll need the following software installed on your system:</p>
+<p>To build jGnash you'll need the following software installed and correctly configured on your system:</p>
 <ol style="list-style-type: decimal">
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK 8u45</a> or later.</li>
-<li><a href="http://ant.apache.org">Apache Ant</a> 1.7.0 or later</li>
-<li><a href="http://maven.apache.org">Apache Maven</a> 3.0 or later</li>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK 8u60</a> or later.</li>
+<li><a href="http://ant.apache.org">Apache Ant</a> 1.9.0 or later</li>
+<li><a href="http://maven.apache.org">Apache Maven</a> 3.3 or later</li>
 </ol>
-<p>Before running the main build, the Maven-based <code>jgnash-help</code> project must be built and installed into your local Maven repository:</p>
-<pre><code>cd jgnash-help
-mvn install</code></pre>
-<p>To create the distribution zip file, return to the main directory (<code>cd ..</code>) and then run:</p>
-<pre><code>mvn package</code></pre>
-<p>The distribution zip file will be produced at <code>jgnash-swing/target/jgnash-</code><em>version</em><code>-bin.zip</code>.</p>
+<p>To create the distribution zip file, start at the main directory and run:</p>
+<pre><code>mvn package
+ant -f release.xml</code></pre>
+<p>The distribution zip file will be produced at <code>jgnash-</code><em>version</em><code>-bin.zip</code>.</p>
 <h1 id="jgnashfx-version">jGnashFx Version</h1>
 <p>The distribution now contains a version of jGnash that utilizes JavaFX for the user interface. Long term this version will replace the Java Swing based version that jGnash was first based on. The advantages of JavaFX over Swing are an improved appearance with better utilization of the systems graphics hardware including Hi-DPI systems.</p>
 <p>The core/engine of jGnash remains the same and is shared by both the Swing and JavaFx versions. This means stability and protection of your valuable data remains the same. This also allows you to switch between versions without issue.</p>
