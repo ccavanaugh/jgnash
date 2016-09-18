@@ -66,24 +66,18 @@ See the integrated help for command line options.
 
 ## Building jGnash:
 
-To build jGnash you'll need the following software installed on your system:
+To build jGnash you'll need the following software installed and correctly configured on your system:
 
-1. [JDK 8u45](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later.
-1. [Apache Ant](http://ant.apache.org) 1.7.0 or later
-1. [Apache Maven](http://maven.apache.org) 3.0 or later
+1. [JDK 8u60](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later.
+1. [Apache Ant](http://ant.apache.org) 1.9.0 or later
+1. [Apache Maven](http://maven.apache.org) 3.3 or later
 
-Before running the main build, the Maven-based ```jgnash-help``` project
-must be built and installed into your local Maven repository:
-
-    cd jgnash-help
-    mvn install
-
-To create the distribution zip file, return to the main directory (```cd ..```) and then run:
+To create the distribution zip file, start at the main directory and run:
 
     mvn package
+    ant -f release.xml
 
-The distribution zip file will be produced at ```jgnash-swing/target/jgnash-```_version_```-bin.zip```.
-
+The distribution zip file will be produced at ```jgnash-```_version_```-bin.zip```.
 
 # jGnashFx Version
 The distribution now contains a version of jGnash that utilizes JavaFX for the user interface.  Long term this version
