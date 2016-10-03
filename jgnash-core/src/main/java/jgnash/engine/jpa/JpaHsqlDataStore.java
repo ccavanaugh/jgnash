@@ -20,6 +20,7 @@ package jgnash.engine.jpa;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 
@@ -38,6 +39,9 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
 
     public static final String LOCK_EXT = ".lck";
 
+    private static final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup",
+            ".tmp", ".lobs", ".lck"};
+
     @NotNull
     @Override
     public String getFileExt() {
@@ -47,6 +51,18 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
     @Override
     public DataStoreType getType() {
         return DataStoreType.HSQL_DATABASE;
+    }
+
+    @Override
+    public void rename(final String fileName, final String newFileName) throws IOException {
+
+        for (final String extension : extensions) {
+            final Path path = Paths.get(FileUtils.stripFileExtension(fileName) + extension);
+
+            if (Files.exists(path)) {
+                Files.move(path, Paths.get(FileUtils.stripFileExtension(newFileName) + extension));
+            }
+        }
     }
 
     @Override
@@ -65,12 +81,10 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
      * @param fileName one of the database files
      */
     private static void deleteDatabase(final String fileName) {
-        final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp",
-                ".lobs", ".lck"};
 
         final String base = FileUtils.stripFileExtension(fileName);
 
-        for (String extension : extensions) {
+        for (final String extension : extensions) {
             try {
                 Files.deleteIfExists(Paths.get(base + extension));
             } catch (IOException e) {

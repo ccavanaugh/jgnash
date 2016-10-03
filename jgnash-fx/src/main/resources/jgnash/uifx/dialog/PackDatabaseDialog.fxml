@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+
+<?import jgnash.resource.font.FontAwesomeLabel?>
+<BorderPane fx:controller="jgnash.uifx.dialog.PackDatabaseDialogController"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog">
+    <center>
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="120"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Label text="%Label.DatabaseName"/>
+            <TextField fx:id="databaseTextField" editable="false" GridPane.columnIndex="1"/>
+            <Button onAction="#handleDatabaseButtonAction" GridPane.columnIndex="2">
+                <graphic>
+                    <FontAwesomeLabel glyphName="ELLIPSIS_H"/>
+                </graphic>
+            </Button>
+
+            <Label text="%Label.Password" GridPane.rowIndex="1"/>
+            <PasswordField fx:id="passwordField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+            <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="3">
+                <buttons>
+                    <Button fx:id="okayButton" onAction="#handleOkAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+                    <Button onAction="#handleCloseAction" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </center>
+</BorderPane>
+
+

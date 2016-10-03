@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -557,6 +558,90 @@ public class EngineFactory {
 
                     EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT,
                             EngineFactory.EMPTY_PASSWORD);
+                }
+            }
+        }
+    }
+
+    /**
+     * Saves a closed database as a new file/format
+     *
+     * @param newFileName new file
+     * @throws IOException IO error
+     */
+    public static void saveAs(final String fileName, final String newFileName, final char[] password) throws IOException {
+
+        Objects.requireNonNull(fileName);
+        Objects.requireNonNull(newFileName);
+        Objects.requireNonNull(password);
+
+        final String ENGINE = UUIDUtil.getUID();    // create a temporary engine ID for utility use only
+
+        final String fileExtension = FileUtils.getFileExtension(newFileName);
+        DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
+
+        // Determine the data store type given the file extension
+        if (!fileExtension.isEmpty()) {
+            for (final DataStoreType type : DataStoreType.values()) {
+                if (type.getDataStore().getFileExt().equals(fileExtension)) {
+                    newFileType = type;
+                    break;
+                }
+            }
+        }
+
+        final File newFile = new File(FileUtils.stripFileExtension(newFileName)
+                + "." + newFileType.getDataStore().getFileExt());
+
+        final File current = new File(fileName);
+
+        // don't perform the save if the destination is going to overwrite the current database
+        if (!current.equals(newFile)) {
+
+            // Need to know the datastore type for correct behavior
+            final DataStoreType currentType = EngineFactory.getDataStoreByType(fileName);
+
+            // Create a utility engine instead of using the default
+            Engine engine = EngineFactory.bootLocalEngine(fileName, ENGINE, password);
+
+            if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
+                final File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
+
+                if (engine != null) {
+                    // Get collection of object to persist
+                    Collection<StoredObject> objects = engine.getStoredObjects();
+
+                    // Write everything to a temporary file
+                    DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
+                    EngineFactory.closeEngine(ENGINE);
+
+                    // Boot the engine with the temporary file
+                    engine = EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), ENGINE,
+                            EngineFactory.EMPTY_PASSWORD);
+
+                    if (engine != null) {
+
+                        // Get collection of object to persist
+                        objects = engine.getStoredObjects();
+
+                        // Write everything to the new file
+                        newFileType.getDataStore().saveAs(newFile, objects);
+                        EngineFactory.closeEngine(ENGINE);
+
+                        // reset the password
+                        SqlUtils.changePassword(newFileName, EngineFactory.EMPTY_PASSWORD, password);
+                    }
+
+                    if (!tempFile.delete()) {
+                        Logger.getLogger(EngineFactory.class.getName())
+                                .info(ResourceUtils.getString("Message.Error.RemoveTempFile"));
+                    }
+                }
+            } else {    // Simple
+                if (engine != null) {
+                    final Collection<StoredObject> objects = engine.getStoredObjects();
+                    newFileType.getDataStore().saveAs(newFile, objects);
+                    EngineFactory.closeEngine(ENGINE);
                 }
             }
         }

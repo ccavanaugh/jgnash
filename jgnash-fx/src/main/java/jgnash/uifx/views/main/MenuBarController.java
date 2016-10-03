@@ -48,6 +48,7 @@ import jgnash.uifx.actions.ImportAccountsAction;
 import jgnash.uifx.actions.ImportOfxAction;
 import jgnash.uifx.actions.ImportQifAction;
 import jgnash.uifx.dialog.ChangeDatabasePasswordDialogController;
+import jgnash.uifx.dialog.PackDatabaseDialogController;
 import jgnash.uifx.dialog.RemoteConnectionDialogController;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
@@ -74,6 +75,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private  MenuItem packDatabaseMenuItem;
 
     @FXML
     private MenuItem recurringTransactionsMenuItem;
@@ -157,6 +161,7 @@ public class MenuBarController implements MessageListener {
         recurringTransactionsMenuItem.disableProperty().bind(disabled);
         saveAsMenuItem.disableProperty().bind(disabled);
         shutdownServerMenuItem.disableProperty().bind(Bindings.not(disabled));
+        packDatabaseMenuItem.disableProperty().bind(Bindings.not(disabled));
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageList().emptyProperty()));
 
@@ -469,6 +474,15 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleSaveAsAction() {
         SaveAsTask.start();
+    }
+
+    @FXML
+    private void handlePackDatabaseAction() {
+        final FXMLUtils.Pair<PackDatabaseDialogController> pair =
+                FXMLUtils.load(PackDatabaseDialogController.class.getResource("PackDatabaseDialog.fxml"),
+                        resources.getString("Title.PackDatabase"));
+
+        pair.getStage().show();
     }
 
     @FXML

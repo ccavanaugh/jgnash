@@ -49,6 +49,11 @@
                 <FontAwesomeLabel glyphName="KEY"/>
             </graphic>
         </MenuItem>
+        <MenuItem fx:id="packDatabaseMenuItem" onAction="#handlePackDatabaseAction" text="%Menu.PackDatabase.Name">
+            <graphic>
+                <FontAwesomeLabel glyphName="COMPRESS"/>
+            </graphic>
+        </MenuItem>
         <MenuItem fx:id="shutdownServerMenuItem" onAction="#handleShutDownServerAction" text="%Menu.ShutdownServer.Name">
             <graphic>
                 <FontAwesomeLabel glyphName="POWER_OFF"/>

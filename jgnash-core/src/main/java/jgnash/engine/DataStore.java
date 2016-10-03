@@ -18,6 +18,10 @@
 package jgnash.engine;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 
 import jgnash.util.NotNull;
@@ -93,4 +97,17 @@ public interface DataStore {
      * @param objects Collection of StoredObjects to save
      */
     void saveAs(File file, Collection<StoredObject> objects);
+
+    /**
+     * Renames a datastore.
+     *
+     * @param fileName name of the datastore to rename
+     */
+    default void rename(final String fileName, final String newFileName) throws IOException {
+        final Path path = Paths.get(fileName);
+
+        if (Files.exists(path)) {
+            Files.move(path, Paths.get(newFileName));
+        }
+    }
 }
