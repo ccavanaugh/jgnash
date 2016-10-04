@@ -63,9 +63,6 @@ public class PackDatabaseTask extends Task<Void> {
         boolean fileLoaded = false;
 
         try {
-
-            // TODO: Cleanup messages
-
             updateMessage(resources.getString("Message.PleaseWait"));
             updateProgress(INDETERMINATE, Long.MAX_VALUE);
 
@@ -77,8 +74,14 @@ public class PackDatabaseTask extends Task<Void> {
                     fileLoaded = true;
                 }
 
+                updateMessage(resources.getString("Message.PleaseWait") + "\n"
+                        + resources.getString("Message.ClosingFile"));
+
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
             }
+
+            updateMessage(resources.getString("Message.PleaseWait") + "\n"
+                    + resources.getString("Message.PackingFile"));
 
             final DataStore dataStore = EngineFactory.getDataStoreByType(file.getAbsolutePath()).getDataStore();
 
@@ -98,7 +101,7 @@ public class PackDatabaseTask extends Task<Void> {
             }
 
             updateProgress(1, 1);
-            updateMessage(resources.getString("Message.FileSaveComplete"));
+            updateMessage(resources.getString("Message.PackingFileComplete"));
             Thread.sleep(FORCED_DELAY * 2);
         } catch (final Exception exception) {
             Platform.runLater(() -> StaticUIMethods.displayException(exception));
