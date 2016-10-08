@@ -531,7 +531,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     public List<Account> getChildren(final Comparator<? super Account> comparator) {
         List<Account> accountChildren = getChildren();
-        Collections.sort(accountChildren, comparator);
+        accountChildren.sort(comparator);
 
         return accountChildren;
     }

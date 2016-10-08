@@ -22,7 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -155,7 +154,7 @@ public class BudgetResultsExport {
 
             // must sort the accounts, otherwise child structure is not correct
             List<Account> accounts = new ArrayList<>(model.getAccounts());
-            Collections.sort(accounts, Comparators.getAccountByTreePosition(Comparators.getAccountByCode()));
+            accounts.sort(Comparators.getAccountByTreePosition(Comparators.getAccountByCode()));
 
             // create account rows
             for (final Account account : accounts) {

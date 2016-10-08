@@ -19,7 +19,6 @@ package jgnash.engine.budget;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -226,7 +225,7 @@ public class BudgetResultsModel implements MessageListener {
             List<AccountGroup> groups = new ArrayList<>(accountSet);
 
             // Set an explicit sort order
-            Collections.sort(groups, new Comparators.ExplicitComparator<>(AccountGroup.INCOME,
+            groups.sort(new Comparators.ExplicitComparator<>(AccountGroup.INCOME,
                     AccountGroup.EXPENSE, AccountGroup.ASSET, AccountGroup.LIABILITY));
 
             accountGroupList = groups;

@@ -34,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -117,7 +116,7 @@ class XMLContainer extends AbstractXStreamContainer {
         }
 
         // sort the list
-        Collections.sort(list, new StoredObjectComparator());
+        list.sort(new StoredObjectComparator());
 
         logger.info("Writing XML file");
 

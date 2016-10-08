@@ -779,7 +779,7 @@ public class Engine {
                 }
             }
 
-            Collections.sort(objects, new StoredObjectComparator());
+            objects.sort(new StoredObjectComparator());
 
             return objects;
         } finally {

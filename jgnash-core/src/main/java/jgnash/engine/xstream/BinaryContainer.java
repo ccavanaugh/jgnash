@@ -30,7 +30,6 @@ import java.nio.channels.FileLock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -89,7 +88,7 @@ class BinaryContainer extends AbstractXStreamContainer {
      * @param objects Collection of StoredObjects to write
      * @param file    file to write
      */
-    public static synchronized void writeBinary(@NotNull final Collection<StoredObject> objects, @NotNull final File file) {
+    static synchronized void writeBinary(@NotNull final Collection<StoredObject> objects, @NotNull final File file) {
         final Logger logger = Logger.getLogger(BinaryContainer.class.getName());
 
         if (file.getParentFile().mkdirs()) {
@@ -117,7 +116,7 @@ class BinaryContainer extends AbstractXStreamContainer {
         }
 
         // sort the list
-        Collections.sort(list, new StoredObjectComparator());
+        list.sort(new StoredObjectComparator());
 
         logger.info("Writing Binary file");
 
