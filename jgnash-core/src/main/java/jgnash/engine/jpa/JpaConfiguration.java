@@ -66,13 +66,14 @@ class JpaConfiguration {
         return properties;
     }
 
-    static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password,
+    static Properties getLocalProperties(final DataStoreType dataStoreType, final String fileName, final char[] password,
                                          final boolean readOnly) {
         Objects.requireNonNull(password);
+        Objects.requireNonNull(dataStoreType);
 
         final StringBuilder urlBuilder = new StringBuilder();
 
-        switch (database) {
+        switch (dataStoreType) {
             case H2_DATABASE:
                 urlBuilder.append("jdbc:h2:file:");
 
@@ -108,7 +109,7 @@ class JpaConfiguration {
                 throw new RuntimeException(UNKNOWN_DATABASE_TYPE);
         }
 
-        Properties properties = getBaseProperties(database);
+        final Properties properties = getBaseProperties(dataStoreType);
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
@@ -120,22 +121,23 @@ class JpaConfiguration {
     /**
      * Generates and a JPA properties to connect to a remote database.
      *
-     * @param database DataStoreType type
+     * @param dataStoreType DataStoreType type
      * @param fileName remote file to connect to, ignored for HSQL_DATABASE connections
      * @param host remote host
      * @param port remote port
      * @param password database password
      * @return   JPA properties
      */
-    static Properties getClientProperties(final DataStoreType database, final String fileName, final String host,
+    static Properties getClientProperties(final DataStoreType dataStoreType, final String fileName, final String host,
                                           final int port, final char[] password) {
         Objects.requireNonNull(password);
+        Objects.requireNonNull(dataStoreType);
 
         final StringBuilder urlBuilder = new StringBuilder();
 
-        final Properties properties = getBaseProperties(database);
+        final Properties properties = getBaseProperties(dataStoreType);
 
-        switch (database) {
+        switch (dataStoreType) {
             case H2_DATABASE:
                 urlBuilder.append("jdbc:h2");
 
