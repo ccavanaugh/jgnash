@@ -135,9 +135,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
 
         // an recent attempt has been made before, override defaults
         if (lastAttemptDate != null && Math.abs(ChronoUnit.DAYS.between(lastAttemptDate, LocalDate.now())) <= FUZZY_DATE_RANGE) {
-            if (lastStatementDate != null) {
-                statementDate = lastStatementDate; // set the new statement date + 1 month
-            }
+            statementDate = lastStatementDate; // set the new statement date + 1 month
 
             if (lastOpeningBalance != null) {
                 openingBalance = lastOpeningBalance;
