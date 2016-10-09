@@ -246,31 +246,22 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
                             String key = "eo" + indent;
 
-                            cachedIcon = iconCache.get(key);
+                            cachedIcon = iconCache.computeIfAbsent(key, k -> IconUtils
+                                    .createImageIcon(new IndentedIcon(new Icon[]{expandedIcon, openIcon}, indent, iconSpacing)));
 
-                            if (cachedIcon == null) {
-                                cachedIcon = IconUtils.createImageIcon(new IndentedIcon(new Icon[]{expandedIcon, openIcon}, indent, iconSpacing));
-                                iconCache.put(key, cachedIcon);
-                            }                                                     
                         } else {
                             String key = "co" + indent;
 
-                            cachedIcon = iconCache.get(key);
+                            cachedIcon = iconCache.computeIfAbsent(key, k -> IconUtils
+                                    .createImageIcon(new IndentedIcon(new Icon[]{collapsedIcon, closedIcon}, indent, iconSpacing)));
 
-                            if (cachedIcon == null) {
-                                cachedIcon = IconUtils.createImageIcon(new IndentedIcon(new Icon[]{collapsedIcon, closedIcon}, indent, iconSpacing));
-                                iconCache.put(key, cachedIcon);
-                            }                                                   
                         }
                     } else { // child without children
                         String key = "el" + indent;
 
-                        cachedIcon = iconCache.get(key);
+                        cachedIcon = iconCache.computeIfAbsent(key, k -> IconUtils
+                                .createImageIcon(new IndentedIcon(new Icon[]{new EmptyIndentedIcon(new Icon[]{expandedIcon}, 0), leafIcon}, indent, iconSpacing)));
 
-                        if (cachedIcon == null) {
-                            cachedIcon = IconUtils.createImageIcon(new IndentedIcon(new Icon[]{new EmptyIndentedIcon(new Icon[]{expandedIcon}, 0), leafIcon}, indent, iconSpacing));
-                            iconCache.put(key, cachedIcon);
-                        }                                               
                     }
                     
                     ((JLabel) c).setIcon(cachedIcon); 
@@ -331,7 +322,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
         private final int iconSpacing;
 
-        public IndentedIcon(final Icon[] icons, final int indent, final int iconSpacing) {
+        IndentedIcon(final Icon[] icons, final int indent, final int iconSpacing) {
             this.icons = icons;
             this.indent = indent;
             this.iconSpacing = iconSpacing;
@@ -396,7 +387,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
         private int width;
 
-        public EmptyIndentedIcon(final Icon[] referenceIcons, final int indent) {
+        EmptyIndentedIcon(final Icon[] referenceIcons, final int indent) {
 
             // calculate icon width
             for (Icon icon : referenceIcons) {
