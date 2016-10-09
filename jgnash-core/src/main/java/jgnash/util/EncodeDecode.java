@@ -32,7 +32,7 @@ import static java.util.stream.Collectors.joining;
  */
 public class EncodeDecode {
 
-    private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
+    public static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private static final char COMMA_DELIMITER = ',';
 

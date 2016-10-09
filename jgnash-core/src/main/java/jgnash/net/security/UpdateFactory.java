@@ -47,7 +47,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -60,6 +59,8 @@ import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
+import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
+
 /**
  * Fetches latest stock prices in the background.
  *
@@ -70,8 +71,6 @@ public class UpdateFactory {
     private static final String UPDATE_ON_STARTUP = "updateSecuritiesOnStartup";
 
     private static final String RESPONSE_HEADER = "Date,Open,High,Low,Close,Volume,Adj Close";
-
-    private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     // static reference is kept so LogManager cannot garbage collect the logger
     private static final Logger logger = Logger.getLogger(UpdateFactory.class.getName());

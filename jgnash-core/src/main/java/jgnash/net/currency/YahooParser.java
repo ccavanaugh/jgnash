@@ -27,9 +27,10 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import jgnash.net.ConnectionFactory;
+
+import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
 
 /**
  * A CurrencyParser for the Yahoo finance site.
@@ -37,8 +38,6 @@ import jgnash.net.ConnectionFactory;
  * @author Craig Cavanaugh
  */
 public class YahooParser implements CurrencyParser {
-
-    private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private BigDecimal result = null;
 

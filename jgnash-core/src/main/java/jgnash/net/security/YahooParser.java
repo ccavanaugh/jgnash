@@ -30,10 +30,10 @@ import java.time.format.DateTimeParseException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
+import jgnash.util.EncodeDecode;
 
 /**
  * An abstract CommodityParser for the Yahoo! financial web sites.
@@ -43,8 +43,6 @@ import jgnash.net.ConnectionFactory;
 public abstract class YahooParser implements SecurityParser {
 
     public static final Logger logger = Logger.getLogger(YahooParser.class.getName());
-
-    private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private long volume;
 
@@ -162,7 +160,7 @@ public abstract class YahooParser implements SecurityParser {
                     // trim the line.  Yahoo may occasionally include some extra white space
                     line = line.trim();
 
-                    String[] fields = COMMA_DELIMITER_PATTERN.split(line);
+                    String[] fields = EncodeDecode.COMMA_DELIMITER_PATTERN.split(line);
                     in.close();
 
                     if (fields.length >= 7) {

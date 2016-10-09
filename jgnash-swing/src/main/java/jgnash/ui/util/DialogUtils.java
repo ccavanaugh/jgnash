@@ -25,11 +25,12 @@ import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import java.util.regex.Pattern;
 
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.KeyStroke;
+
+import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
 
 /**
  * Static Dialog Utilities
@@ -37,8 +38,6 @@ import javax.swing.KeyStroke;
  * @author Craig Cavanaugh
  */
 public class DialogUtils {
-
-    private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private static final char COMMA_DELIMITER = ',';
 

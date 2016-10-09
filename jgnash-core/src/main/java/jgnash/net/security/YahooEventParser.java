@@ -17,12 +17,6 @@
  */
 package jgnash.net.security;
 
-import jgnash.engine.SecurityHistoryEvent;
-import jgnash.engine.SecurityHistoryEventType;
-import jgnash.engine.SecurityHistoryNode;
-import jgnash.engine.SecurityNode;
-import jgnash.net.ConnectionFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,10 +27,19 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
+
+import jgnash.engine.SecurityHistoryEvent;
+import jgnash.engine.SecurityHistoryEventType;
+import jgnash.engine.SecurityHistoryNode;
+import jgnash.engine.SecurityNode;
+import jgnash.net.ConnectionFactory;
+
+import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
 
 /**
  * Retrieves historical stock dividend and split information from Yahoo.
@@ -46,8 +49,6 @@ import java.util.regex.Pattern;
 public class YahooEventParser {
 
     private static final String RESPONSE_HEADER = "Date,Dividends";
-
-    private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private YahooEventParser() {
         // Utility class
