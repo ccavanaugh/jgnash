@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -171,7 +172,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
     }
 
     private void addAction() {
-        aJList.getSelectedValuesList().stream().filter(obj -> obj != null).forEach(obj -> {
+        aJList.getSelectedValuesList().stream().filter(Objects::nonNull).forEach(obj -> {
             if (aList.removeElement(obj)) {
                 cList.addElement(new CurrencyElement(obj, true));
                 engine.addCurrency(obj);
