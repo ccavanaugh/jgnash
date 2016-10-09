@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
+import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
@@ -312,8 +313,19 @@ public class OpenAction {
 
         if (Files.exists(new File(fileName).toPath())) {
             final float version = EngineFactory.getFileVersion(new File(fileName), password);
+            final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 
-            if (version <= 0) {
+            if (type == DataStoreType.HSQL_DATABASE && version < 2.25) {
+                final String errorMessage = ResourceUtils.getString("Message.Error.OldHsqlFile");
+
+                new Thread() {  // pop an error dialog with the warning for immediate feedback
+                    @Override
+                    public void run() {
+                        StaticUIMethods.displayError(errorMessage);
+                    }
+                }.start();
+
+            } else if (version <= 0) {
                 final String errorMessage = ResourceUtils.getString("Message.Error.InvalidUserPass");
 
                 UIApplication.getLogger().warning(errorMessage);

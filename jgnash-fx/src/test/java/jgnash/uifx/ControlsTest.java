@@ -152,7 +152,7 @@ public class ControlsTest extends Application {
         cleanup();
     }
 
-    private Engine createEngine() {
+    private Engine createEngine() throws IOException {
         try {
             testFile = Files.createTempFile("test", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;

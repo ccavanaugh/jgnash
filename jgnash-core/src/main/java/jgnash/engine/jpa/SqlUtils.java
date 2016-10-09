@@ -133,7 +133,7 @@ public class SqlUtils {
         return fileVersion;
     }
 
-    static boolean useOldPersistenceUnit(final String fileName, final char[] password) {
+    public static boolean useOldPersistenceUnit(final String fileName, final char[] password) {
         boolean result = false;  // return false only if an error occurs
 
         try {

@@ -26,7 +26,11 @@ WANTS
 
 Release 2.26.0 __(File format change)__
 ---------------------------------------
-TODO: Check and prevent load of and old Hsqldb database
+=== Notes:
+H2 databases will be upgraded automatically.
+
+HyperSql (*.script) databases will need to be saved to another file format in the prior release of jGnash.  They may
+be saved back to a HyperSql database afterwards.
 
 * 10/04/16 Add utility method to pack and upgrade older databases. (Fx)
 * 09/07/16 Added work around for JavaFx bug JDK-8132897 causing a crash with use of a ComboBox. (Fx)
@@ -34,10 +38,10 @@ TODO: Check and prevent load of and old Hsqldb database
            number. (Swing, Fx)
 * 08/29/16 Internal cleanup, removal of duplicated code.
 * 08/28/16 The Open dialog was not behaving correctly if a remote connection was used for the prior session. (Fx)
-* 08/21/16 Updated to the latest Hibernate dependency.  Hsqldb (*.script) users will need to save to a different file
-           format before updating to this release.  They may revert back to Hsqldb after the upgrade.
-* 08/21/16 Removed support for corrections to older file formats (Prior to release 2.22.0).  Existing files must have been
-           loaded with jGnash release 2.22 - 2.25 prior to using with this release.
+* 08/21/16 Updated to the latest Hibernate dependency.  HyperSql (*.script) users will need to save to a different file
+           format before updating to this release.  They may revert back to HyperSql after the upgrade.
+* 08/21/16 Removed support for corrections to older file formats (Prior to release 2.22.0).  Existing files must have
+           been loaded with jGnash release 2.22 - 2.25 prior to using with this release.
 
 Release 2.25.0
 --------------

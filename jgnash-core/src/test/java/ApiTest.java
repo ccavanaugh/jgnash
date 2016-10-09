@@ -58,15 +58,14 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testPreferences() {
+    public void testPreferences() throws IOException {
         e.setPreference("myKey", "myValue");
         e.setPreference("myNumber", BigDecimal.TEN.toString());
 
         // close and reopen to force check for persistence
         closeEngine();
 
-        e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT,
-                EngineFactory.EMPTY_PASSWORD);
+        e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
         assertEquals("myValue", e.getPreference("myKey"));
 
@@ -115,7 +114,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testAccountAttributes() {
+    public void testAccountAttributes() throws IOException {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);

@@ -42,7 +42,7 @@ public class PackDatabaseTask extends Task<Void> {
     private final File file;
     private char[] password = new char[]{};
 
-    private PackDatabaseTask(final File file, final char[] password) {
+    PackDatabaseTask(final File file, final char[] password) {
         this.file = file;
         this.password = password;
     }
