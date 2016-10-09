@@ -18,9 +18,12 @@
 package jgnash.util;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Pattern;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * EncodeDecode is used to encode/decode various objects using a String.
@@ -72,14 +75,7 @@ public class EncodeDecode {
     public static String encodeDoubleArray(final double[] doubleArray) {
         final DecimalFormat df = new DecimalFormat("#.##");
 
-        final StringBuilder result = new StringBuilder();
-
-        for (final double value : doubleArray) {
-            result.append(df.format(value));
-            result.append(COMMA_DELIMITER);
-        }
-
-        return result.length() > 0 ? result.substring(0, result.length() - 1) : null;
+        return Arrays.stream(doubleArray).mapToObj(df::format).collect(joining(String.valueOf(COMMA_DELIMITER)));
     }
 
     /**
@@ -150,20 +146,13 @@ public class EncodeDecode {
     public static String encodeStringCollection(final Collection<String> list, final char delimiter) {
 
         // precondition check for the delimiter existence
-        for (String string : list) {
+        for (final String string : list) {
             if (string.indexOf(delimiter) > -1) {
                 throw new RuntimeException("The list of strings may not contain a " + delimiter);
             }
         }
 
-        StringBuilder result = new StringBuilder();
-
-        for (String string : list) {
-            result.append(string);
-            result.append(delimiter);
-        }
-
-        return result.length() > 0 ? result.substring(0, result.length() - 1) : null;
+        return list.stream().collect(joining(String.valueOf(delimiter)));
     }
 
     public static Collection<String> decodeStringCollection(final String string) {

@@ -17,11 +17,12 @@
  */
 package jgnash.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for Encoding and Decoding arrays of doubles.
@@ -42,5 +43,13 @@ public class EncodeDecodeTest {
         final double[] returnResult = EncodeDecode.decodeDoubleArray(result);
 
         assertArrayEquals(base, returnResult, .001);
+    }
+
+    @Test
+    public void testEncodeStringCollection() {
+        List<String> items = Arrays.asList("apple", "pear", "peach", "grapes");
+
+        assertEquals("apple,pear,peach,grapes", EncodeDecode.encodeStringCollection(items));
+
     }
 }
