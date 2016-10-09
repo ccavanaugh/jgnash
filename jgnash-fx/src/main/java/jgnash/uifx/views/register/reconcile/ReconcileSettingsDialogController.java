@@ -109,7 +109,7 @@ public class ReconcileSettingsDialogController {
         final LocalDate lastAttemptDate = ReconcileManager.getAccountDateAttribute(account,
                 Account.RECONCILE_LAST_ATTEMPT_DATE).orElse(null);
 
-        final LocalDate  lastStatementDate = ReconcileManager.getAccountDateAttribute(account,
+        final LocalDate lastStatementDate = ReconcileManager.getAccountDateAttribute(account,
                 Account.RECONCILE_LAST_STATEMENT_DATE).orElse(LocalDate.now());
 
         final BigDecimal lastClosingBalance = ReconcileManager.getAccountBigDecimalAttribute(account,
@@ -131,9 +131,7 @@ public class ReconcileSettingsDialogController {
 
         // an recent attempt has been made before, override defaults
         if (lastAttemptDate != null && Math.abs(ChronoUnit.DAYS.between(lastAttemptDate, LocalDate.now())) <= FUZZY_DATE_RANGE) {
-            if (lastStatementDate != null) {
-                statementDate = lastStatementDate; // set the new statement date + 1 month
-            }
+            statementDate = lastStatementDate; // set the new statement date + 1 month
 
             if (lastOpeningBalance != null) {
                 openingBalance = lastOpeningBalance;
