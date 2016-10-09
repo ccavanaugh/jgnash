@@ -43,6 +43,8 @@ import javax.persistence.Table;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
+import static java.util.stream.Collectors.joining;
+
 /**
  * Base class for transactions.  Transaction should be treated as immutable as in not modified if they have
  * been persisted within the database.
@@ -69,6 +71,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Date transaction was created.
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     private LocalDate dateEntered;
 
@@ -499,22 +502,14 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return concatenated memo
      */
     public static String getMemo(final List<TransactionEntry> transEntries) {
-        final StringBuilder memoBuilder = new StringBuilder();
         final List<String> memoList = new ArrayList<>();
 
-        // Create an ordered list of unique memos
+        // Create an ordered list of unique memos that are not empty
         transEntries.stream().filter(transactionEntry
                 -> !transactionEntry.getMemo().isEmpty() && !memoList.contains(transactionEntry.getMemo()))
                 .forEachOrdered(transactionEntry -> memoList.add(transactionEntry.getMemo()));
 
-        for (int i = 0; i < memoList.size(); i++) {
-            memoBuilder.append(memoList.get(i));
-            if (i < memoList.size() - 1) {
-                memoBuilder.append(", ");
-            }
-        }
-
-        return memoBuilder.toString();
+        return memoList.stream().collect(joining(", "));
     }
 
     public boolean isMemoConcatenated() {
