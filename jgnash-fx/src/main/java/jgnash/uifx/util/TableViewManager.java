@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -137,7 +138,7 @@ public class TableViewManager<S> {
 
         if (cellItems.size() > 0) { // don't try if there is no data or the stream function will throw an error
 
-            final OptionalDouble max = cellItems.parallelStream().filter(s -> s != null).mapToDouble(o -> {
+            final OptionalDouble max = cellItems.parallelStream().filter(Objects::nonNull).mapToDouble(o -> {
                 final Format format = columnFormatFactory.get().call(column);   // thread local format per thread
                 return JavaFXUtils.getDisplayedTextWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
             }).max();
