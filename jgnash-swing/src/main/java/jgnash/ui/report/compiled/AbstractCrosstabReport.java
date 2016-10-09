@@ -251,12 +251,12 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
             if (SORT_ORDER_NAME.equals(sortOrder)) {
                 if (!showLongNamesCheckBox.isSelected()) {
-                    Collections.sort(list, Comparators.getAccountByName());
+                    list.sort(Comparators.getAccountByName());
                 } else {
-                    Collections.sort(list, Comparators.getAccountByPathName());
+                    list.sort(Comparators.getAccountByPathName());
                 }
             } else if (SORT_ORDER_BALANCE_DESC.equals(sortOrder) || SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE.equals(sortOrder)) {
-                Collections.sort(list, Comparators.getAccountByBalance(startDateField.getLocalDate(),
+                list.sort(Comparators.getAccountByBalance(startDateField.getLocalDate(),
                         endDateField.getLocalDate(), baseCurrency, ascendingSortOrder));
             }
 

@@ -94,7 +94,7 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
 
         try {
             transactions = new ArrayList<>(account.getSortedTransactionList());
-            Collections.sort(transactions, comparator);
+            transactions.sort(comparator);
         } finally {
             lock.unlock();
         }
@@ -298,7 +298,7 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
         lock.lock();
 
         try {
-            Collections.sort(transactions, comparator);
+            transactions.sort(comparator);
 
             balanceCache.clear(); // order has changed, clear the balance cache
         } finally {
