@@ -47,7 +47,7 @@ public final class BudgetPeriodDescriptorFactory {
     public static List<BudgetPeriodDescriptor> getDescriptors(final int budgetYear, final Period budgetPeriod) {
         final String cacheKey = budgetYear + budgetPeriod.name();
 
-        List<BudgetPeriodDescriptor> descriptors = null;
+        List<BudgetPeriodDescriptor> descriptors;
 
         rwl.readLock().lock();
         try {

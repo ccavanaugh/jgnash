@@ -81,15 +81,11 @@ public class ExchangeRate extends StoredObject {
 
         lock.readLock().lock();
 
-        boolean result = false;
-
         try {
-            result = historyNodes.contains(node);
+            return historyNodes.contains(node);
         } finally {
             lock.readLock().unlock();
         }
-
-        return result;
     }
 
     public boolean contains(final LocalDate localDate) {
@@ -161,22 +157,19 @@ public class ExchangeRate extends StoredObject {
 
     boolean removeHistoryNode(final ExchangeRateHistoryNode hNode) {
 
-        boolean result = false;
-
         lock.writeLock().lock();
 
         try {
-            result = historyNodes.remove(hNode);
+            final boolean result = historyNodes.remove(hNode);
 
             if (result) {
                 lastRate = null; // force an update
-
             }
+
+            return result;
         } finally {
             lock.writeLock().unlock();
         }
-
-        return result;
     }
 
     public String getRateId() {

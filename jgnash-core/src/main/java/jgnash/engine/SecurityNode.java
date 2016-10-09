@@ -203,17 +203,13 @@ public class SecurityNode extends CommodityNode {
     }
 
     boolean addSecurityHistoryEvent(final SecurityHistoryEvent securityHistoryEvent) {
-        boolean result = false;
-
         lock.writeLock().lock();
 
         try {
-            result = securityHistoryEvents.add(securityHistoryEvent);
+            return securityHistoryEvents.add(securityHistoryEvent);
         } finally {
             lock.writeLock().unlock();
         }
-
-        return result;
     }
 
     boolean removeSecurityHistoryEvent(final SecurityHistoryEvent securityHistoryEvent) {

@@ -290,18 +290,13 @@ abstract class AbstractXStreamContainer {
     }
 
     <T extends StoredObject> List<T> query(final Class<T> clazz) {
-        List<T> list = null;
-
-        Lock l = readWriteLock.readLock();
-        l.lock();
+        readWriteLock.readLock().lock();
 
         try {
-            list = query(objects, clazz);
+            return query(objects, clazz);
         } finally {
-            l.unlock();
+            readWriteLock.readLock().unlock();
         }
-
-        return list;
     }
 
     void close() {
@@ -323,17 +318,13 @@ abstract class AbstractXStreamContainer {
      * @see jgnash.engine.StoredObject
      */
     List<StoredObject> asList() {
-        ArrayList<StoredObject> list = null;
-
         readWriteLock.readLock().lock();
 
         try {
-            list = new ArrayList<>(objects);
+            return new ArrayList<>(objects);
         } finally {
             readWriteLock.readLock().unlock();
         }
-
-        return list;
     }
 
     static class XStreamOut extends XStream {
