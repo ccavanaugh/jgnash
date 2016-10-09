@@ -341,21 +341,10 @@ public class BudgetResultsModel implements MessageListener {
         cacheLock.lock();
 
         try {
-            Map<Account, BudgetPeriodResults> resultsMap = descriptorAccountResultsCache.get(descriptor);
+            final Map<Account, BudgetPeriodResults> resultsMap
+                    = descriptorAccountResultsCache.computeIfAbsent(descriptor, k -> new HashMap<>());
 
-            if (resultsMap == null) {
-                resultsMap = new HashMap<>();
-                descriptorAccountResultsCache.put(descriptor, resultsMap);
-            }
-
-            BudgetPeriodResults results = resultsMap.get(account);
-
-            if (results == null) {
-                results = buildAccountResults(descriptor, account);
-                resultsMap.put(account, results);
-            }
-
-            return results;
+            return resultsMap.computeIfAbsent(account, k -> buildAccountResults(descriptor, account));
         } finally {
             cacheLock.unlock();
         }
@@ -373,21 +362,10 @@ public class BudgetResultsModel implements MessageListener {
         cacheLock.lock();
 
         try {
-            Map<AccountGroup, BudgetPeriodResults> resultsMap = descriptorAccountGroupResultsCache.get(descriptor);
+            final Map<AccountGroup, BudgetPeriodResults> resultsMap = descriptorAccountGroupResultsCache
+                    .computeIfAbsent(descriptor, k -> new EnumMap<>(AccountGroup.class));
 
-            if (resultsMap == null) {
-                resultsMap = new EnumMap<>(AccountGroup.class);
-                descriptorAccountGroupResultsCache.put(descriptor, resultsMap);
-            }
-
-            BudgetPeriodResults results = resultsMap.get(group);
-
-            if (results == null) {
-                results = buildResults(descriptor, group);
-                resultsMap.put(group, results);
-            }
-
-            return results;
+            return resultsMap.computeIfAbsent(group, k -> buildResults(descriptor, group));
         } finally {
             cacheLock.unlock();
         }
@@ -403,14 +381,7 @@ public class BudgetResultsModel implements MessageListener {
         cacheLock.lock();
 
         try {
-            BudgetPeriodResults results = accountResultsCache.get(account);
-
-            if (results == null) {
-                results = buildResults(account);
-                accountResultsCache.put(account, results);
-            }
-
-            return results;
+            return accountResultsCache.computeIfAbsent(account, k -> buildResults(account));
         } finally {
             cacheLock.unlock();
         }
@@ -426,14 +397,7 @@ public class BudgetResultsModel implements MessageListener {
         cacheLock.lock();
 
         try {
-            BudgetPeriodResults results = accountGroupResultsCache.get(accountGroup);
-
-            if (results == null) {
-                results = buildResults(accountGroup);
-                accountGroupResultsCache.put(accountGroup, results);
-            }
-
-            return results;
+            return accountGroupResultsCache.computeIfAbsent(accountGroup, k -> buildResults(accountGroup));
         } finally {
             cacheLock.unlock();
         }

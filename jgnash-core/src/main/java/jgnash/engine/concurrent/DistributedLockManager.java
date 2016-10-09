@@ -173,28 +173,14 @@ public class DistributedLockManager implements LockManager {
 
     @Override
     public synchronized ReentrantReadWriteLock getLock(final String lockId) {
-        DistributedReadWriteLock lock = lockMap.get(lockId);
-
-        if (lock == null) {
-            lock = new DistributedReadWriteLock(lockId);
-            lockMap.put(lockId, lock);
-        }
-
-        return lock;
+        return lockMap.computeIfAbsent(lockId, k -> new DistributedReadWriteLock(lockId));
     }
 
     private CountDownLatch getLatch(final String lockMessage) {
         latchLock.lock();
 
         try {
-            CountDownLatch semaphore = latchMap.get(lockMessage);
-
-            if (semaphore == null) {
-                semaphore = new CountDownLatch(1);
-                latchMap.put(lockMessage, semaphore);
-            }
-
-            return semaphore;
+            return latchMap.computeIfAbsent(lockMessage, k -> new CountDownLatch(1));
         } finally {
             latchLock.unlock();
         }

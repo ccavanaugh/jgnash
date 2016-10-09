@@ -31,13 +31,6 @@ public class LocalLockManager implements LockManager {
 
     @Override
     public ReentrantReadWriteLock getLock(final String lockId) {
-        ReentrantReadWriteLock lock = lockMap.get(lockId);
-
-        if (lock == null) {
-            lock = new ReentrantReadWriteLock();
-            lockMap.put(lockId, lock);
-        }
-
-        return lock;
+        return lockMap.computeIfAbsent(lockId, k -> new ReentrantReadWriteLock());
     }
 }

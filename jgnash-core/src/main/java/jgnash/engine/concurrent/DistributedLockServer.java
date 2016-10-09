@@ -163,14 +163,7 @@ public class DistributedLockServer {
     }
 
     private ReadWriteLock getLock(final String lockId) {
-        ReadWriteLock readWriteLock = lockMap.get(lockId);
-
-        if (readWriteLock == null) {
-            readWriteLock = new ReadWriteLock(lockId);
-            lockMap.put(lockId, readWriteLock);
-        }
-
-        return readWriteLock;
+        return lockMap.computeIfAbsent(lockId, k -> new ReadWriteLock(lockId));
     }
 
     public boolean startServer(final char[] password) {

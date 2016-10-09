@@ -102,13 +102,7 @@ public class MessageBus {
     }
 
     public static synchronized MessageBus getInstance(final String name) {
-        MessageBus bus = busMap.get(name);
-
-        if (bus == null) {
-            bus = new MessageBus(name);
-            busMap.put(name, bus);
-        }
-        return bus;
+        return busMap.computeIfAbsent(name, k -> new MessageBus(name));
     }
 
     public String getRemoteDataBasePath() {
@@ -181,12 +175,9 @@ public class MessageBus {
     }
 
     public void registerListener(final MessageListener listener, final MessageChannel... channels) {
-        for (MessageChannel channel : channels) {
-            Set<WeakReference<MessageListener>> set = map.get(channel);
-            if (set == null) {
-                set = new CopyOnWriteArraySet<>();
-                map.put(channel, set);
-            }
+        for (final MessageChannel channel : channels) {
+            final Set<WeakReference<MessageListener>> set
+                    = map.computeIfAbsent(channel, k -> new CopyOnWriteArraySet<>());
 
             if (containsListener(listener, channel)) {
                 logger.severe("An attempt was made to install a duplicate listener");
