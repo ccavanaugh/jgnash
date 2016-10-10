@@ -22,13 +22,12 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -43,7 +42,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.util.Duration;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -82,9 +80,9 @@ public class RecurringViewController implements MessageListener {
 
     final private ReadOnlyObjectWrapper<Reminder> selectedReminderProperty = new ReadOnlyObjectWrapper<>();
 
-    private Timeline timeline = null;
+    private Timer timer = null;
 
-    private static final int START_UP_DELAY = 45;   // 45 seconds
+    private static final int START_UP_DELAY = 45 * 1000;   // 45 seconds
 
     final private AtomicBoolean dialogShowing = new AtomicBoolean(false);
 
@@ -133,9 +131,10 @@ public class RecurringViewController implements MessageListener {
         startTimer();
 
         // Update the period when the snooze value changes
-        Options.reminderSnoozePeriodProperty().addListener((observable, oldValue, newValue)
-                -> timeline.getKeyFrames().setAll(new KeyFrame(Duration.millis(newValue.intValue()),
-                ae -> Platform.runLater(RecurringViewController.this::showReminderDialog))));
+        Options.reminderSnoozePeriodProperty().addListener((observable, oldValue, newValue) -> {
+            stopTimer();
+            startTimer();
+        });
     }
 
     private void loadTable() {
@@ -147,21 +146,21 @@ public class RecurringViewController implements MessageListener {
     }
 
     private void startTimer() {
-        if (timeline == null) {
-            timeline = new Timeline(new KeyFrame(
-                    Duration.millis(Options.reminderSnoozePeriodProperty().get()),
-                    ae -> Platform.runLater(this::showReminderDialog)));
-
-            timeline.setCycleCount(Animation.INDEFINITE);
-            timeline.setDelay(Duration.seconds(START_UP_DELAY));
-            timeline.play();
+        if (timer == null) {
+            timer = new Timer(true);
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(RecurringViewController.this::showReminderDialog);
+                }
+            }, START_UP_DELAY, Options.reminderSnoozePeriodProperty().get());
         }
     }
 
     private void stopTimer() {
-        if (timeline != null) {
-            timeline.stop();
-            timeline = null;
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
 
             Logger.getLogger(RecurringViewController.class.getName()).info("Recurring timer stopped");
         }

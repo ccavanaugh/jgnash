@@ -32,8 +32,10 @@ H2 databases will be upgraded automatically.
 HyperSql (*.script) databases will need to be saved to another file format in the prior release of jGnash.  They may
 be saved back to a HyperSql database afterwards.
 
+* 10/09/16 The initial check for recurring transactions / reminders was taking too long. (Fx)
 * 10/04/16 Add utility method to pack and upgrade older databases. (Fx)
-* 09/07/16 Added work around for JavaFx bug JDK-8132897 causing a crash with use of a ComboBox. (Fx)
+* 09/07/16 Added work around for JavaFx bug JDK-8132897. Using a ComboBox was causing an application crash when running
+           on the Windows platform. (Fx)
 * 09/03/16 Improved predictability of the sort order of transactions with the same date without an assigned transaction
            number. (Swing, Fx)
 * 08/29/16 Internal cleanup, removal of duplicated code.
