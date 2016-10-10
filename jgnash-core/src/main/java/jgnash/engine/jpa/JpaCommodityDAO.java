@@ -67,123 +67,23 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
     @Override
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
-
         return persist(historyNode, node);
-
-        /*boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-
-                em.getTransaction().begin();
-                em.persist(historyNode);
-                em.persist(node);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;*/
     }
 
     @Override
     public boolean addSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent) {
         return persist(historyEvent, node);
-
-        /*boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-
-                em.getTransaction().begin();
-                em.persist(historyEvent);
-                em.persist(node);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;*/
     }
 
 
     @Override
     public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
-
         return persist(node, historyNode);
-
-        /*boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-
-                em.getTransaction().begin();
-                em.persist(node);
-                em.persist(historyNode);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;*/
     }
 
     @Override
     public boolean removeSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(() -> {
-
-                em.getTransaction().begin();
-                em.persist(node);
-                em.persist(historyEvent);
-                em.getTransaction().commit();
-
-                return true;
-            });
-
-            result = future.get();
-
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return persist(node, historyEvent);
     }
 
     @Override
@@ -347,30 +247,12 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public void addExchangeRate(final ExchangeRate eRate) {
-
         persist(eRate);
-        /*emLock.lock();
-
-        try {
-            Future<Void> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(eRate);
-                em.getTransaction().commit();
-                return null;
-            });
-
-            future.get(); // block
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }*/
     }
 
     /*
      * @see jgnash.engine.CommodityDAOInterface#updateCommodityNode(jgnash.engine.CommodityNode)
      */
-
     @Override
     public boolean updateCommodityNode(final CommodityNode node) {
         return merge(node) != null;
