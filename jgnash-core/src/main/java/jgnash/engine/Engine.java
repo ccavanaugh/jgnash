@@ -933,6 +933,7 @@ public class Engine {
      */
     public boolean addSecurityHistory(@NotNull final SecurityNode node, @NotNull final SecurityHistoryNode hNode) {
         commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
 
         try {
             // Remove old history of the same date if it exists
@@ -963,6 +964,7 @@ public class Engine {
 
             return status;
         } finally {
+            accountLock.writeLock().unlock();
             commodityLock.writeLock().unlock();
         }
     }
@@ -977,6 +979,7 @@ public class Engine {
      */
     public boolean addSecurityHistoryEvent(@NotNull final SecurityNode node, @NotNull final SecurityHistoryEvent historyEvent) {
         commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
 
         try {
 
@@ -1005,6 +1008,7 @@ public class Engine {
 
             return status;
         } finally {
+            accountLock.writeLock().unlock();
             commodityLock.writeLock().unlock();
         }
     }
@@ -1303,6 +1307,7 @@ public class Engine {
     public boolean removeSecurityHistory(@NotNull final SecurityNode node, @NotNull final LocalDate date) {
 
         commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
 
         boolean status = false;
 
@@ -1332,6 +1337,7 @@ public class Engine {
 
             return status;
         } finally {
+            accountLock.writeLock().unlock();
             commodityLock.writeLock().unlock();
         }
     }
@@ -1345,6 +1351,7 @@ public class Engine {
      */
     public boolean removeSecurityHistoryEvent(@NotNull final SecurityNode node, @NotNull final SecurityHistoryEvent historyEvent) {
         commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
 
         boolean status;
 
@@ -1370,6 +1377,7 @@ public class Engine {
 
             return status;
         } finally {
+            accountLock.writeLock().unlock();
             commodityLock.writeLock().unlock();
         }
     }
