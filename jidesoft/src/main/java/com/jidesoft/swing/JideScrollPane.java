@@ -5,9 +5,15 @@
  */
 package com.jidesoft.swing;
 
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.LayoutManager;
+import java.awt.Point;
+
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingConstants;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
 /**
  * {@code JideScrollPane} is an enhanced version of {@code JScrollPane}. In {@code JScrollPane}, you can
@@ -308,9 +314,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
 
     @Override
     public Component getCorner(String key) {
-        if (key == null) {
-            return null;
-        }
+
         if (key.equals(SUB_UPPER_LEFT)) {
             return _subUpperLeft;
         }
@@ -322,9 +326,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
 
     @Override
     public void setCorner(String key, Component corner) {
-        if (key == null) {
-            return;
-        }
+
         if (key.equals(SUB_UPPER_LEFT) || key.equals(SUB_UPPER_RIGHT)) {
             Component old;
             if (key.equals(SUB_UPPER_LEFT)) {
@@ -420,19 +422,4 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
             doLayout();
         }
     }
-    
-    /**
-     * Get the flag indicating if JideScrollPane should keep the corner visible when it has corner components defined
-     * even when the scroll bar is not visible.
-     * <p>
-     * This flag will take effect only when the scroll bar policy is {@code HORIZONTAL_SCROLLBAR_AS_NEEDED} or
-     * {@code VERTICAL_SCROLLBAR_AS_NEEDED}
-     * <p>
-     * The default value of this flag is false.
-     *
-     * @return the flag.
-     */
-    /*public boolean isKeepCornerVisible() {
-        return false;
-    }*/
 }
