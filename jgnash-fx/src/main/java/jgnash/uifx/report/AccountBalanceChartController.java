@@ -45,6 +45,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -79,6 +80,8 @@ public class AccountBalanceChartController {
 
     private static final String SELECTED_ACCOUNTS = "selectedAccounts";
 
+    private static final String INVERT_BALANCES = "invertBalances";
+
     private static final int BAR_GAP = 1;
 
     private static final int CATEGORY_GAP = 20;
@@ -88,6 +91,9 @@ public class AccountBalanceChartController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private CheckBox invertBalanceCheckBox;
 
     @FXML
     private StackPane chartPane;
@@ -177,6 +183,7 @@ public class AccountBalanceChartController {
         includeSubAccounts.setSelected(preferences.getBoolean(SUB_ACCOUNTS, true));
         runningBalance.setSelected(preferences.getBoolean(RUNNING_BALANCE, true));
         monthlyBalance.setSelected(preferences.getBoolean(MONTHLY_BALANCE, false));
+        invertBalanceCheckBox.setSelected(preferences.getBoolean(INVERT_BALANCES, true));
 
         restoreSelectedAccounts();
 
@@ -199,6 +206,7 @@ public class AccountBalanceChartController {
                 preferences.putBoolean(RUNNING_BALANCE, runningBalance.isSelected());
                 preferences.putBoolean(SUB_ACCOUNTS, includeSubAccounts.isSelected());
                 preferences.putInt(REPORT_PERIOD, periodComboBox.getValue().ordinal());
+                preferences.putBoolean(INVERT_BALANCES, invertBalanceCheckBox.isSelected());
             }
         };
 
@@ -210,6 +218,7 @@ public class AccountBalanceChartController {
         runningBalance.selectedProperty().addListener(listener);
         monthlyBalance.selectedProperty().addListener(listener);
         includeSubAccounts.selectedProperty().addListener(listener);
+        invertBalanceCheckBox.selectedProperty().addListener(listener);
 
         // Push the initial load to the end of the platform thread for better startup and a nicer visual effect
         Platform.runLater(this::updateChart);
@@ -347,13 +356,32 @@ public class AccountBalanceChartController {
                     }
                 }
 
-                series.getData().add(new XYChart.Data<>(descriptor.getLabel(), income));
+                series.getData().add(new XYChart.Data<>(descriptor.getLabel(),
+                        invertBalance(income, account.getAccountType())));
             }
 
             for (final XYChart.Data<String, Number> data : series.getData()) {
                 Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
             }
         }
+    }
+
+    /**
+     * Inverts the account balance based on account type
+     * @param amount account balance to invert
+     * @param type the account type
+     * @return the corrected account balance
+     */
+    private BigDecimal invertBalance(final BigDecimal amount, final AccountType type) {
+        if (invertBalanceCheckBox.isSelected()) {
+            if (type == AccountType.INCOME || type == AccountType.EQUITY || type == AccountType.CREDIT
+                    || type == AccountType.LIABILITY) {
+
+                return amount.negate();
+            }
+        }
+
+        return amount;
     }
 
     @FXML

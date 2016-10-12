@@ -21,6 +21,7 @@
 
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Tooltip?>
 <BorderPane fx:controller="jgnash.uifx.report.AccountBalanceChartController" minWidth="850" minHeight="600"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <fx:define>
@@ -55,6 +56,7 @@
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
@@ -77,15 +79,21 @@
             <RadioButton fx:id="runningBalance" text="%Button.RunningBalance" toggleGroup="$toggleGroup"
                          GridPane.columnIndex="7" GridPane.halignment="LEFT"/>
 
+            <CheckBox fx:id="invertBalanceCheckBox" text="%Button.InvertBalances" GridPane.columnIndex="8">
+                <tooltip>
+                    <Tooltip text="%ToolTip.ReversedCredit"/>
+                </tooltip>
+            </CheckBox>
+
             <Label text="%Label.Account" GridPane.rowIndex="1" GridPane.valignment="BASELINE"/>
 
-            <VBox fx:id="accountComboVBox" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="6"
+            <VBox fx:id="accountComboVBox" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="7"
                   GridPane.valignment="BASELINE" styleClass="form">
                 <AccountComboBox fx:id="accountComboBox" maxWidth="Infinity"/>
             </VBox>
 
             <CheckBox text="%Button.IncludeSubAccounts" fx:id="includeSubAccounts" GridPane.valignment="BASELINE"
-                      GridPane.rowIndex="1" GridPane.columnIndex="7"/>
+                      GridPane.rowIndex="1" GridPane.columnIndex="8"/>
 
             <StackPane GridPane.rowIndex="2" GridPane.columnSpan="9" fx:id="chartPane">
                 <BarChart fx:id="barChart" title="%Title.AccountBalance" legendSide="RIGHT">
@@ -98,7 +106,7 @@
                 </BarChart>
             </StackPane>
 
-            <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="8">
+            <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="9">
                 <buttons>
                     <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
                             ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
