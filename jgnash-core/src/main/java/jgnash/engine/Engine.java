@@ -93,7 +93,7 @@ public class Engine {
      */
     public static final int CURRENT_MAJOR_VERSION = 2;
 
-    public static final int CURRENT_MINOR_VERSION = 25;
+    public static final int CURRENT_MINOR_VERSION = 26;
 
     public static final float CURRENT_VERSION = (float)CURRENT_MAJOR_VERSION + ((float)CURRENT_MINOR_VERSION / 100f);
 
