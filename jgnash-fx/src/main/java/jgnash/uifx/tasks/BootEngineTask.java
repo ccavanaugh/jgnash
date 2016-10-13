@@ -117,7 +117,11 @@ public class BootEngineTask extends Task<String> {
             final float version = EngineFactory.getFileVersion(new File(fileName), password);
             final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 
-            final boolean oldSchema = SqlUtils.useOldPersistenceUnit(fileName, password);
+            boolean oldSchema = false;
+
+            if (type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE) {
+                oldSchema = SqlUtils.useOldPersistenceUnit(fileName, password);
+            }
 
             if (type == DataStoreType.H2_DATABASE && oldSchema) {
                 Platform.runLater(()
