@@ -23,17 +23,16 @@ import jgnash.convert.imports.ImportTransaction;
  * OFX Transaction object
  *
  * @author Craig Cavanaugh
- *
  */
 public class OfxTransaction extends ImportTransaction {
 
-    public String transactionType;
+    String transactionType;
 
-    public String sic; // automatic category assignment
+    String sic; // automatic category assignment
 
-    public String refNum;
+    String refNum;
 
-    public String payeeId;
+    String payeeId;
 
     public String currency;
 

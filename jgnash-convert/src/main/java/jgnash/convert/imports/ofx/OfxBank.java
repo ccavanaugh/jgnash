@@ -22,10 +22,11 @@ import java.time.LocalDate;
 
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
+import jgnash.util.Nullable;
 
 /**
  * OFX Bank Object
- * 
+ *
  * @author Craig Cavanaugh
  * @author Nicolas Bouillon
  */
@@ -33,34 +34,35 @@ public class OfxBank extends ImportBank<OfxTransaction> {
 
     public String currency;
 
-    public String bankId;
+    String bankId;
 
     /**
      * Branch identifier. May be required for some non-US banks
      */
-    public String branchId;
+    String branchId;
 
     public String accountId;
 
-    public String accountType;
+    String accountType;
 
-    public LocalDate dateStart;
+    LocalDate dateStart;
 
-    public LocalDate dateEnd;
+    LocalDate dateEnd;
 
-    public BigDecimal ledgerBalance;
+    BigDecimal ledgerBalance;
 
-    public LocalDate ledgerBalanceDate;
+    LocalDate ledgerBalanceDate;
 
-    public BigDecimal availBalance;
+    BigDecimal availBalance;
 
-    public LocalDate availBalanceDate;
+    LocalDate availBalanceDate;
 
-    public int statusCode;
+    int statusCode;
 
-    public String statusSeverity;
+    String statusSeverity;
 
-    @jgnash.util.Nullable public String statusMessage;
+    @Nullable
+    String statusMessage;
 
     @Override
     public String toString() {
