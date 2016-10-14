@@ -51,6 +51,7 @@ import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
+import jgnash.engine.CurrencyNode;
 import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.AccountComboBoxTableCell;
 import jgnash.uifx.control.BigDecimalTableCell;
@@ -83,6 +84,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     private TableViewManager<ImportTransaction> tableViewManager;
 
+    private NumberFormat numberFormat = NumberFormat.getNumberInstance();
+
     private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
 
     private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0};
@@ -99,6 +102,18 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         tableView.getItems().addListener((ListChangeListener<ImportTransaction>) c ->
                 valid.setValue(tableView.getItems().size() > 0));
+
+        buildTableView();
+
+        tableViewManager = new TableViewManager<>(tableView, PREF_NODE);
+        tableViewManager.setColumnWeightFactory(column -> PREF_COLUMN_WEIGHTS[column]);
+
+        updateDescriptor();
+    }
+
+    private void buildTableView() {
+
+        tableView.getColumns().clear();
 
         final TableColumn<ImportTransaction, ImportState> stateColumn = new TableColumn<>();
         stateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getState()));
@@ -153,6 +168,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         final TableColumn<ImportTransaction, Account> accountColumn =
                 new TableColumn<>(resources.getString("Column.Account"));
+
         accountColumn.setCellValueFactory(param -> {
             if (param.getValue() != null && param.getValue().getAccount() != null) {
                 return new SimpleObjectProperty<>(param.getValue().getAccount());
@@ -170,14 +186,10 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         final TableColumn<ImportTransaction, BigDecimal> amountColumn =
                 new TableColumn<>(resources.getString("Column.Amount"));
+
         amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getAmount()));
-        amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(NumberFormat.getNumberInstance()));
+        amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(numberFormat));
         tableView.getColumns().add(amountColumn);
-
-        tableViewManager = new TableViewManager<>(tableView, PREF_NODE);
-        tableViewManager.setColumnWeightFactory(column -> PREF_COLUMN_WEIGHTS[column]);
-
-        updateDescriptor();
     }
 
     @Override
@@ -195,6 +207,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             final List<ImportTransaction> list = bank.getTransactions();
 
             final Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
+
+            final CurrencyNode currencyNode = account.getCurrencyNode();
+
+            // rescale for consistency
+            numberFormat.setMinimumFractionDigits(currencyNode.getScale());
+            numberFormat.setMaximumFractionDigits(currencyNode.getScale());
 
             // set to sane account assuming it's going to be a single entry
             for (final ImportTransaction t : list) {

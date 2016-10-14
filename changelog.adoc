@@ -24,6 +24,10 @@ WANTS
 * Reinstate archive capability.
 * Change the base highlight color for the FX interface
 
+Release 2.27.0
+--------------
+* 10/14/16 The OFX/QIF/MT940 dialog was not displaying a consistent precision for transaction amounts. (Fx)
+
 Release 2.26.1
 --------------
 * 10/13/16 Binary and XML files were not loading in the Fx interface. (Fx)
