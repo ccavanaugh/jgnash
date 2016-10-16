@@ -64,7 +64,7 @@ class ImportTable extends FormattedJTable {
     private List<? extends ImportTransaction> transactions = Collections.emptyList();
 
     @SuppressWarnings("rawtypes")
-    public ImportTable() {
+    ImportTable() {
         super();
         model = new Model();
         setAutoCreateRowSorter(true);
@@ -155,7 +155,7 @@ class ImportTable extends FormattedJTable {
         this.transactions = transactions;
     }
 
-    public void deleteSelected() {
+    void deleteSelected() {
         int row = getSelectedRow();
 
         transactions.remove(row);
@@ -193,7 +193,7 @@ class ImportTable extends FormattedJTable {
 
         private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
-        public Model() {
+        Model() {
             notEqualIcon = IconUtils.getIcon("/jgnash/resource/not-equal.png");
             notEqualIcon.setDescription("not");
 

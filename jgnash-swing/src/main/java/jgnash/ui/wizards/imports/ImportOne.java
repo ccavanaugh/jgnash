@@ -49,7 +49,7 @@ public class ImportOne extends JPanel implements WizardPage {
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
-    public ImportOne() {
+    ImportOne() {
         layoutMainPanel();
     }
 

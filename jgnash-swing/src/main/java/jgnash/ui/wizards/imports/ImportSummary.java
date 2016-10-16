@@ -53,7 +53,7 @@ public class ImportSummary extends JPanel implements WizardPage {
 
     private List<ImportTransaction> transactions;
 
-    public ImportSummary() {
+    ImportSummary() {
         layoutMainPanel();
     }
 

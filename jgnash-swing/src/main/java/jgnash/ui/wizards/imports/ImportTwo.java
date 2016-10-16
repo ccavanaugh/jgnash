@@ -61,7 +61,7 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
 
     private ImportTable table;
 
-    public ImportTwo() {
+    ImportTwo() {
         layoutMainPanel();
     }
 
