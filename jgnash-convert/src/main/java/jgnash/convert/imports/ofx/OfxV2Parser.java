@@ -70,7 +70,7 @@ public class OfxV2Parser implements OfxTags {
 
     private OfxBank bank;
 
-    public OfxV2Parser() {
+    OfxV2Parser() {
         if (debug) {
             try {
                 final Handler fh = new FileHandler("%h/jgnash-ofx%g.log");
@@ -374,6 +374,8 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case MEMO:
                             tran.setMemo(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
+                            break;
+                        case CATEGORY:  // Chase bank mucking up the OFX standard
                             break;
                         case SIC:
                             tran.sic = reader.getElementText();
@@ -730,11 +732,11 @@ public class OfxV2Parser implements OfxTags {
         }
     }
 
-    public int getStatusCode() {
+    int getStatusCode() {
         return statusCode;
     }
 
-    public String getStatusSeverity() {
+    String getStatusSeverity() {
         return statusSeverity;
     }
 

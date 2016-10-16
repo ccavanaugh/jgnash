@@ -194,6 +194,11 @@ public interface OfxTags {
      */
     String MEMO = "MEMO";
 
+    /**
+     * Chase bank mucking up the OFX standard
+     */
+    String CATEGORY = "CATEGORY";
+
     String MESSAGE = "MESSAGE";
 
     /**
