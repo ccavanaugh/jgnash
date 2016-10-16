@@ -167,7 +167,7 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
             GenericImport.matchTransactions(list, account);
 
             // classify the transactions
-            BayesImportClassifier.classifyTransactions(list, account);
+            BayesImportClassifier.classifyTransactions(list, account.getSortedTransactionList(), account);
 
             table.setTransactions(list);
 

@@ -227,7 +227,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             GenericImport.matchTransactions(list, account);
 
             // classify the transactions
-            BayesImportClassifier.classifyTransactions(list, account);
+            BayesImportClassifier.classifyTransactions(list, account.getSortedTransactionList(), account);
 
             tableView.getItems().setAll(list);
             FXCollections.sort(tableView.getItems());
