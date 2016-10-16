@@ -53,7 +53,7 @@ import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.resource.font.FontAwesomeLabel;
-import jgnash.uifx.control.AccountComboBoxTableCell;
+import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
@@ -84,11 +84,13 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     private TableViewManager<ImportTransaction> tableViewManager;
 
-    private NumberFormat numberFormat = NumberFormat.getNumberInstance();
+    private final NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
     private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
 
     private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0};
+
+    private Account lastAccount;
 
     @FXML
     private void initialize() {
@@ -180,6 +182,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         accountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setAccount(event.getNewValue());
+            lastAccount = event.getNewValue();
             Platform.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(accountColumn);
@@ -198,9 +201,9 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
 
+        @SuppressWarnings("unchecked")
         final ImportBank<ImportTransaction> bank = (ImportBank<ImportTransaction>) map.get(ImportWizard.Settings.BANK);
 
         if (bank != null) {
@@ -277,6 +280,68 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                     case NOT_EQUAL:
                         setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
                         break;
+                }
+            }
+        }
+    }
+
+    class AccountComboBoxTableCell<S> extends TableCell<S, Account> {
+
+        private final AccountComboBox comboBox;
+
+        AccountComboBoxTableCell() {
+            this.getStyleClass().add("combo-box-table-cell");
+
+            comboBox = new AccountComboBox();
+
+            comboBox.setMaxWidth(Double.MAX_VALUE);
+            comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+                if (isEditing()) {
+                    commitEdit(newValue);
+                }
+            });
+        }
+
+        @Override
+        public void startEdit() {
+            if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
+                return;
+            }
+
+            if (lastAccount != null) {
+                comboBox.getSelectionModel().select(lastAccount);
+            } else {
+                comboBox.getSelectionModel().select(getItem());
+            }
+
+            super.startEdit();
+            setText(null);
+            setGraphic(comboBox);
+        }
+
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+
+            setText(getItem().getName());
+            setGraphic(null);
+        }
+
+        @Override
+        public void updateItem(final Account item, final boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                if (isEditing()) {
+                    comboBox.getSelectionModel().select(getItem());
+                    setText(null);
+                    setGraphic(comboBox);
+                } else {
+                    setText(getItem().getName());
+                    setGraphic(null);
                 }
             }
         }
