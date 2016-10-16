@@ -69,6 +69,8 @@ public class Options {
 
     private final static String REGEX_FOR_FILTERS = "regexForFilters";
 
+    private final static String GLOBAL_BAYES_ENABLED = "globalBayesEnabled";
+
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -98,6 +100,8 @@ public class Options {
     private static final SimpleBooleanProperty concatenateMemos;
 
     private static final SimpleBooleanProperty regexForFilters;
+
+    private static final SimpleBooleanProperty globalBayesEnabled;
 
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
@@ -133,6 +137,7 @@ public class Options {
         animationsEnabled = createBooleanProperty(ANIMATIONS_ENABLED, true);
         restoreLastRegisterTab = createBooleanProperty(RESTORE_LAST_TAB, true);
         regexForFilters = createBooleanProperty(REGEX_FOR_FILTERS, false);
+        globalBayesEnabled = createBooleanProperty(GLOBAL_BAYES_ENABLED, false);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
 
@@ -192,6 +197,10 @@ public class Options {
 
     public static BooleanProperty useAccountingTermsProperty() {
         return useAccountingTerms;
+    }
+
+    public static BooleanProperty globalBayesProperty() {
+        return globalBayesEnabled;
     }
 
     /**

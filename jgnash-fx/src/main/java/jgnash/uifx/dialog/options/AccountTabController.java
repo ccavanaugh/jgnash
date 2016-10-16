@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.Options;
@@ -33,6 +34,12 @@ import jgnash.uifx.views.AccountBalanceDisplayMode;
  * @author Craig Cavanaugh
  */
 public class AccountTabController {
+
+    @FXML
+    private RadioButton accountOnlyRadioButton;
+
+    @FXML
+    private RadioButton allRadioButton;
 
     @FXML
     private RadioButton noAccountsRadioButton;
@@ -79,6 +86,12 @@ public class AccountTabController {
                 break;
         }
 
+        if (Options.globalBayesProperty().get()) {
+            allRadioButton.setSelected(true);
+        } else {
+            accountOnlyRadioButton.setSelected(true);
+        }
+
         noAccountsRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 AccountBalanceDisplayManager.setDisplayMode(AccountBalanceDisplayMode.NONE);
@@ -94,6 +107,18 @@ public class AccountTabController {
         incomeExpenseAccountsRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 AccountBalanceDisplayManager.setDisplayMode(AccountBalanceDisplayMode.REVERSE_INCOME_EXPENSE);
+            }
+        });
+
+        allRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Options.globalBayesProperty().setValue(true);
+            }
+        });
+
+        accountOnlyRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Options.globalBayesProperty().setValue(false);
             }
         });
     }

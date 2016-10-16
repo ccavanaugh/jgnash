@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -52,7 +53,11 @@ import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
 import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
@@ -227,7 +232,17 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             GenericImport.matchTransactions(list, account);
 
             // classify the transactions
-            BayesImportClassifier.classifyTransactions(list, account.getSortedTransactionList(), account);
+            if (Options.globalBayesProperty().get()) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                final List<Transaction> transactions = engine.getTransactions();
+                transactions.sort(null);
+
+                BayesImportClassifier.classifyTransactions(list, transactions, account);
+            } else {
+                BayesImportClassifier.classifyTransactions(list, account.getSortedTransactionList(), account);
+            }
 
             tableView.getItems().setAll(list);
             FXCollections.sort(tableView.getItems());

@@ -17,6 +17,7 @@
 
     <fx:define>
         <ToggleGroup fx:id="toggleGroup"/>
+        <ToggleGroup fx:id="importToggleGroup"/>
     </fx:define>
 
     <TitledPane text="%Title.Display" collapsible="false">
@@ -60,5 +61,20 @@
             <RadioButton text="%Button.CreditAccounts" fx:id="creditAccountsRadioButton" toggleGroup="$toggleGroup" GridPane.rowIndex="1"/>
             <RadioButton text="%Button.IncomeAndExpense" fx:id="incomeExpenseAccountsRadioButton" toggleGroup="$toggleGroup" GridPane.rowIndex="2"/>
         </GridPane>
+    </TitledPane>
+
+    <TitledPane text="%Title.TransactionImport" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <RadioButton text="%Button.MatchAccountOnly" fx:id="accountOnlyRadioButton" toggleGroup="$importToggleGroup"/>
+            <RadioButton text="%Button.MatchAllTrans" fx:id="allRadioButton" toggleGroup="$importToggleGroup" GridPane.rowIndex="1"/>
+        </GridPane>
+
     </TitledPane>
 </VBox>
