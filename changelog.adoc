@@ -26,6 +26,8 @@ WANTS
 
 Release 2.27.0
 --------------
+* 10/17/16 Prevent an IllegalArgumentException from occurring if a default or prior directory is missing when attempting
+           to select a file. (Fx)
 * 10/16/16 Added an option to control how Bayesian model matches transaction. (Fx)
 * 10/16/16 Make the last selected transaction account sticky for the OFX/QIF/MT940 Import wizard. (Fx)
 * 10/14/16 The OFX/QIF/MT940 Import wizard was not displaying a consistent precision for transaction amounts. (Fx)

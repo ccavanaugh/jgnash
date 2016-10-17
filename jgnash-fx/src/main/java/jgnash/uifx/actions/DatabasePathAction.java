@@ -81,9 +81,14 @@ public class DatabasePathAction {
 
         final FileChooser fileChooser = new FileChooser();
 
-        fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
+        final File initialDirectory = new File(pref.get(LAST_DIR, System.getProperty("user.home")));
 
-        List<String> types = new ArrayList<>();
+        // Protect against an IllegalArgumentException
+        if (initialDirectory.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
+        final List<String> types = new ArrayList<>();
 
         for (final DataStoreType dataStoreType : DataStoreType.values()) {
             types.add("*." + dataStoreType.getDataStore().getFileExt());
