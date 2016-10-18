@@ -353,7 +353,7 @@ public abstract class BaseDynamicJasperReport {
                         String pattern = ((DecimalFormat) nf).toPattern();
                         builder.setPattern(pattern);
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_DATE) {
-                        builder.setTextFormatter(DateUtils.getShortDateTimeFormat().toFormat());
+                        builder.setTextFormatter(DateUtils.getShortDateFormatter().toFormat());
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_AMOUNT) {
                         String pattern = CommodityFormat.getShortNumberPattern(model.getCurrency());
                         builder.setPattern(pattern);

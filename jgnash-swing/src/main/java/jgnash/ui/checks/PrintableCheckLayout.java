@@ -274,7 +274,7 @@ class PrintableCheckLayout implements Printable {
     }
 
     private void drawDate(final Graphics2D g2, final CheckObject object, final float offset, final LocalDate date) {
-        final DateTimeFormatter df = DateUtils.getShortDateTimeFormat();
+        final DateTimeFormatter df = DateUtils.getShortDateFormatter();
 
         float dateX = object.getX();
         float dateY = object.getY() + offset;

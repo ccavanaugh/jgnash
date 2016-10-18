@@ -154,7 +154,7 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
                 }
             }
         } else if (getColumnStyle(columnIndex) == ColumnStyle.SHORT_DATE) {
-            final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
+            final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
             for (int i = 0; i < getRowCount(); i++) {
                 try {

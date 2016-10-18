@@ -89,7 +89,7 @@ public class RecurringPropertiesController {
 
     private Transaction transaction;
 
-    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
 
     private final HashMap<Class<?>, Integer> tabMap = new HashMap<>();
 

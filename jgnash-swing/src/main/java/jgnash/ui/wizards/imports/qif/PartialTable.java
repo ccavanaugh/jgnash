@@ -78,7 +78,7 @@ class PartialTable extends FormattedJTable {
 
         private final Class<?>[] cClass = { String.class, String.class, String.class, BigDecimal.class };
 
-        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
         @Override
         public String getColumnName(final int column) {

@@ -41,7 +41,7 @@ class ReminderObjectTableModel extends AbstractTableModel {
 
     private List<PendingReminder> reminders = null;
 
-    private final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
+    private final DateTimeFormatter formatter = DateUtils.getShortDateFormatter();
 
     private char enabledSymbol = '\u2713';
 

@@ -145,9 +145,9 @@ public class BasicRegisterTableController extends RegisterTableController {
             } else if (param == increaseColumn || param == decreaseColumn) {
                 return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
-                return DateUtils.getShortDateTimeFormat().toFormat();
+                return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {
-                return DateUtils.getShortDateTimeFormat().toFormat();
+                return DateUtils.getShortDateFormatter().toFormat();
             }
 
             return null;

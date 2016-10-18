@@ -57,7 +57,7 @@ public class RegisterTable extends FormattedJTable {
 
     private NumberFormat shortFormat;
 
-    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
 
     public RegisterTable(final AccountTableModel dm) {
         super(dm);

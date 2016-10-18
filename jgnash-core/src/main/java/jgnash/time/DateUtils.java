@@ -63,9 +63,9 @@ public class DateUtils {
 
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
-    private static DateTimeFormatter shortDateTimeFormatter;
+    private static DateTimeFormatter shortDateFormatter;
 
-    private static DateTimeFormatter shortDateTimeEntryFormatter;
+    private static DateTimeFormatter shortDateManualEntryFormatter;
 
     /**
      * Pattern for a {@code java.time.format.DateTimeFormatter} to parse and format to the default.  DateTimeFormatter
@@ -78,10 +78,10 @@ public class DateUtils {
     public static final String DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
 
     static {
-        shortDateTimeFormatter = DateTimeFormatter.ofPattern(getDateFormatPattern())
+        shortDateFormatter = DateTimeFormatter.ofPattern(getShortDatePattern())
                 .withResolverStyle(ResolverStyle.SMART);
 
-        shortDateTimeEntryFormatter = DateTimeFormatter.ofPattern(getDateFormatEntryPattern())
+        shortDateManualEntryFormatter = DateTimeFormatter.ofPattern(getShortDateManualEntryPattern())
                 .withResolverStyle(ResolverStyle.SMART);
     }
 
@@ -95,9 +95,9 @@ public class DateUtils {
         preferences.put(DATE_FORMAT, pattern);
 
         try {
-            shortDateTimeFormatter = DateTimeFormatter.ofPattern(pattern).withResolverStyle(ResolverStyle.SMART);
+            shortDateFormatter = DateTimeFormatter.ofPattern(pattern).withResolverStyle(ResolverStyle.SMART);
 
-            shortDateTimeEntryFormatter = DateTimeFormatter.ofPattern(getDateFormatEntryPattern())
+            shortDateManualEntryFormatter = DateTimeFormatter.ofPattern(getShortDateManualEntryPattern())
                     .withResolverStyle(ResolverStyle.SMART);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e);
@@ -118,7 +118,7 @@ public class DateUtils {
         return dateFormats;
     }
 
-    public static String getDateFormatPattern() {
+    public static String getShortDatePattern() {
         final Preferences preferences = Preferences.userNodeForPackage(DateUtils.class);
 
         String pattern = preferences.get(DATE_FORMAT, "");
@@ -142,8 +142,8 @@ public class DateUtils {
      *
      * @return date format
      */
-    private static String getDateFormatEntryPattern() {
-        String pattern = getDateFormatPattern();
+    private static String getShortDateManualEntryPattern() {
+        String pattern = getShortDatePattern();
 
         if (pattern.contains("dd")) {
             pattern = pattern.replace("dd", "d");
@@ -529,12 +529,12 @@ public class DateUtils {
         return result;
     }
 
-    public static DateTimeFormatter getShortDateTimeFormat() {
-        return shortDateTimeFormatter;
+    public static DateTimeFormatter getShortDateFormatter() {
+        return shortDateFormatter;
     }
 
-    public static DateTimeFormatter getShortDateTimeEntryFormat() {
-        return shortDateTimeEntryFormatter;
+    public static DateTimeFormatter getShortDateManualEntryFormatter() {
+        return shortDateManualEntryFormatter;
     }
 
     /**

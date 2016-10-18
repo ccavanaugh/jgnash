@@ -217,7 +217,7 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
         private final String[] columnNames = { rb.getString("Column.Print"), rb.getString("Column.Date"),
                         rb.getString("Column.Payee"), rb.getString("Column.Account"), rb.getString("Column.Amount") };
 
-        private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
+        private final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
 
         Model(final List<Transaction> list) {
             wrapperList.addAll(list.stream().map(Wrapper::new).collect(Collectors.toList()));

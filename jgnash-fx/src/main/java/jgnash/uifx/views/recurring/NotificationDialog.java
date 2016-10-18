@@ -128,7 +128,7 @@ class NotificationDialog extends Stage {
     }
 
     private static class DateTableCell extends TableCell<PendingReminder, LocalDate> {
-        private final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
+        private final DateTimeFormatter formatter = DateUtils.getShortDateFormatter();
 
         @Override
         protected void updateItem(final LocalDate date, final boolean empty) {

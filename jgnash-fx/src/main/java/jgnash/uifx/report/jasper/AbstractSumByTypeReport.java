@@ -196,7 +196,7 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private final CurrencyNode baseCurrency;
 
-        private final DateTimeFormatter dateFormat = DateUtils.getShortDateTimeFormat();
+        private final DateTimeFormatter dateFormat = DateUtils.getShortDateFormatter();
 
         private final ResourceBundle rb = ResourceUtils.getBundle();
 

@@ -191,7 +191,7 @@ class ImportTable extends FormattedJTable {
         private final Class<?>[] cClass = {String.class, String.class, String.class, String.class, String.class,
                 String.class, BigDecimal.class};
 
-        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
         Model() {
             notEqualIcon = IconUtils.getIcon("/jgnash/resource/not-equal.png");

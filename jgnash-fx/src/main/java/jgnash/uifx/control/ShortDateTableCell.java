@@ -32,7 +32,7 @@ import jgnash.time.DateUtils;
  */
 public class ShortDateTableCell<S> extends TableCell<S, LocalDate> {
 
-    private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
+    private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
     @Override
     protected void updateItem(final LocalDate date, final boolean empty) {

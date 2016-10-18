@@ -156,7 +156,7 @@ public class HistoricalImportController {
     private void handleStartAction() {
         disableUIProperty.setValue(true);
 
-        final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
+        final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);

@@ -106,7 +106,7 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
 
     private static class NumberDateStringConverter extends StringConverter<Number> {
 
-        final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
+        final DateTimeFormatter formatter = DateUtils.getShortDateFormatter();
 
         @Override
         public String toString(final Number value) {

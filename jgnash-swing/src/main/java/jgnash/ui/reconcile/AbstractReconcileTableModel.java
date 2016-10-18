@@ -70,7 +70,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
     private final int[] columnWidths = {0, 0, 0, 99, 0};
 
-    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 

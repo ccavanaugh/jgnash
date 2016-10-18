@@ -56,7 +56,7 @@ public class DefaultDateFormatAction {
                 super.succeeded();
 
                 Platform.runLater(() -> {
-                    final ChoiceDialog<String> dialog = new ChoiceDialog<>(DateUtils.getDateFormatPattern(), dateFormats);
+                    final ChoiceDialog<String> dialog = new ChoiceDialog<>(DateUtils.getShortDatePattern(), dateFormats);
                     dialog.setTitle(resources.getString("Title.SelDefDateFormat"));
 
                     dialog.getDialogPane().getStylesheets().addAll(MainView.DEFAULT_CSS);

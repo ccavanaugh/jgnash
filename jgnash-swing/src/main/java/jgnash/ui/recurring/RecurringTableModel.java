@@ -58,7 +58,7 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
 
     private char enabledSymbol = '\u2713';
 
-    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
 
     /**
      * Creates a new instance of RecurringTableModel

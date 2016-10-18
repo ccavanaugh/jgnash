@@ -129,9 +129,9 @@ public class InvestmentRegisterTableController extends RegisterTableController {
             } else if (param == quantityColumn || param == priceColumn) {
                 return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
-                return DateUtils.getShortDateTimeFormat().toFormat();
+                return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {
-                return DateUtils.getShortDateTimeFormat().toFormat();
+                return DateUtils.getShortDateFormatter().toFormat();
             }
 
             return null;

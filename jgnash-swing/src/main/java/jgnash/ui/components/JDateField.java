@@ -56,7 +56,7 @@ public final class JDateField extends JTextFieldEx {
     public JDateField() {
         super(0);
 
-        formatter = DateUtils.getShortDateTimeEntryFormat();
+        formatter = DateUtils.getShortDateManualEntryFormatter();
 
         StringBuilder buf = new StringBuilder("0123456789");
         char[] chars = formatter.format(LocalDate.now()).toCharArray();

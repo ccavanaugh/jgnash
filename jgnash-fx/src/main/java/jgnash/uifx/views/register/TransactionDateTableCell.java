@@ -35,7 +35,7 @@ import jgnash.time.DateUtils;
  */
 class TransactionDateTableCell extends TableCell<Transaction, LocalDate> {
 
-    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
 
     @Override
     protected void updateItem(final LocalDate date, final boolean empty) {

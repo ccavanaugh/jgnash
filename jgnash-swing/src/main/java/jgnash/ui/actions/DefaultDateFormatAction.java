@@ -69,7 +69,7 @@ public class DefaultDateFormatAction extends AbstractAction {
         public void done() {
             try {
                 final JComboBox<String> combo = new JComboBox<>(get());
-                combo.setSelectedItem(DateUtils.getDateFormatPattern());
+                combo.setSelectedItem(DateUtils.getShortDatePattern());
 
                 final int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo,
                         rb.getString("Title.SelDefDateFormat"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,

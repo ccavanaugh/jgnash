@@ -405,7 +405,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private static class HistoryTable extends FormattedJTable {
-        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
         private final NumberFormat volumeFormat = NumberFormat.getIntegerInstance();
 

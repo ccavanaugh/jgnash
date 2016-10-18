@@ -410,7 +410,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
     }
 
     private static class HistoryTable extends FormattedJTable {
-        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
         private final NumberFormat decimalFormat;
 

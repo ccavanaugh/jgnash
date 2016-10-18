@@ -52,7 +52,7 @@ public class DatePickerEx extends DatePicker {
 
         final StringBuilder buf = new StringBuilder("0123456789");
 
-        dateFormatter = DateUtils.getShortDateTimeEntryFormat();
+        dateFormatter = DateUtils.getShortDateManualEntryFormatter();
 
         final char[] chars = dateFormatter.format(LocalDate.now()).toCharArray();
 
