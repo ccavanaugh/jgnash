@@ -19,6 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,9 +47,9 @@ public class BasicRegisterTableController extends RegisterTableController {
     @FXML
     private Label reconciledBalanceLabel;
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 34, 0, 0, 0, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 33, 33, 34, 0, 0, 0, 0};
 
-    private static final boolean[] DEFAULT_COLUMN_VISIBILITY = {true, true, true, true, true, true, true, true, true};
+    private static final boolean[] DEFAULT_COLUMN_VISIBILITY = {true, false, true, true, true, true, true, true, true, true};
 
     @FXML
     @Override
@@ -78,47 +79,52 @@ public class BasicRegisterTableController extends RegisterTableController {
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
         tableView.getColumns().add(dateColumn);
 
-        final TableColumn<Transaction, String> numberColumn = new TableColumn<>(columnNames[1]);
+        final TableColumn<Transaction, LocalDateTime> dateTimeColumn = new TableColumn<>(columnNames[1]);
+        dateTimeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getEntryDate()));
+        dateTimeColumn.setCellFactory(cell -> new TransactionDateTimeTableCell());
+        tableView.getColumns().add(dateTimeColumn);
+
+        final TableColumn<Transaction, String> numberColumn = new TableColumn<>(columnNames[2]);
         numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
         numberColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(numberColumn);
 
-        final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(columnNames[2]);
+        final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(columnNames[3]);
         payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
         payeeColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(payeeColumn);
 
-        final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[3]);
+        final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[4]);
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
         memoColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(memoColumn);
 
-        final TableColumn<Transaction, String> accountColumn = new TableColumn<>(columnNames[4]);
+        final TableColumn<Transaction, String> accountColumn = new TableColumn<>(columnNames[5]);
         accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
         accountColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(accountColumn);
 
-        final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[5]);
+        final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[6]);
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()
                 .getReconciled(accountProperty.get()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(reconciledColumn);
 
-        final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(columnNames[6]);
+        final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(columnNames[7]);
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue()
                 .getAmount(getAccountProperty().getValue())));
         increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
                 .getShortNumberFormat(accountProperty.get().getCurrencyNode())));
         tableView.getColumns().add(increaseColumn);
 
-        final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[7]);
+        final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[8]);
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue()
                 .getAmount(getAccountProperty().getValue())));
         decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
                 .getShortNumberFormat(accountProperty.get().getCurrencyNode())));
         tableView.getColumns().add(decreaseColumn);
 
-        final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(columnNames[8]);
+        final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(columnNames[9]);
         balanceColumn.setCellValueFactory(param -> {
             final AccountType accountType = getAccountProperty().getValue().getAccountType();
 
@@ -139,6 +145,8 @@ public class BasicRegisterTableController extends RegisterTableController {
             } else if (param == increaseColumn || param == decreaseColumn) {
                 return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
+                return DateUtils.getShortDateTimeFormat().toFormat();
+            } else if (param == dateTimeColumn) {
                 return DateUtils.getShortDateTimeFormat().toFormat();
             }
 

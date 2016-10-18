@@ -18,7 +18,9 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -110,7 +112,15 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @Column(columnDefinition = "VARCHAR(1024)")
     private String memo;
 
+    /**
+     * Cache the concatenated memo
+     */
     private transient String concatMemo;
+
+    /**
+     * Cache the generated LocalDateTime
+     */
+    private transient LocalDateTime timeStampDate;
 
     /**
      * Transaction entries.
@@ -445,6 +455,14 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     public long getDateEntered() {
         return timestamp;
+    }
+
+    public LocalDateTime getEntryDate() {
+        if (timeStampDate == null) {
+            timeStampDate =  LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+        }
+
+        return timeStampDate;
     }
 
     public void setDateEntered(@NotNull final long timestamp) {

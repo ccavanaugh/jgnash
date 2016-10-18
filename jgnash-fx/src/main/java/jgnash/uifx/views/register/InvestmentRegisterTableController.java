@@ -19,6 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,9 +47,9 @@ public class InvestmentRegisterTableController extends RegisterTableController {
     @FXML
     private Label marketValueLabel;
 
-    final private double[] PREF_COLUMN_WEIGHTS = {0, 33, 33, 34, 0, 0, 0, 0};
+    final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 34, 0, 0, 0, 0};
 
-    private static final boolean[] DEFAULT_COLUMN_VISIBILITY = {true, true, true, true, true, true, true, true};
+    private static final boolean[] DEFAULT_COLUMN_VISIBILITY = {true, false, true, true, true, true, true, true, true};
 
     @FXML
     @Override
@@ -70,7 +71,6 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         return param -> DEFAULT_COLUMN_VISIBILITY[param];
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void buildTable() {
         final String[] columnNames = RegisterFactory.getColumnNames(getAccountProperty().get().getAccountType());
@@ -78,36 +78,49 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         final TableColumn<Transaction, LocalDate> dateColumn = new TableColumn<>(columnNames[0]);
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
+        tableView.getColumns().add(dateColumn);
 
-        final TableColumn<Transaction, String> typeColumn = new TableColumn<>(columnNames[1]);
+        final TableColumn<Transaction, LocalDateTime> dateTimeColumn = new TableColumn<>(columnNames[1]);
+        dateTimeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getEntryDate()));
+        dateTimeColumn.setCellFactory(cell -> new TransactionDateTimeTableCell());
+        tableView.getColumns().add(dateTimeColumn);
+
+        final TableColumn<Transaction, String> typeColumn = new TableColumn<>(columnNames[2]);
         typeColumn.setCellValueFactory(param -> new TransactionTypeWrapper(param.getValue()));
         typeColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(typeColumn);
 
-        final TableColumn<Transaction, String> investmentColumn = new TableColumn<>(columnNames[2]);
+        final TableColumn<Transaction, String> investmentColumn = new TableColumn<>(columnNames[3]);
         investmentColumn.setCellValueFactory(param -> new TransactionSymbolWrapper(param.getValue()));
         investmentColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
-        final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[3]);
+        final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[4]);
         memoColumn.setCellValueFactory(param -> new MemoWrapper(param.getValue()));
         memoColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(memoColumn);
 
-        final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[4]);
-        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
+        final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[5]);
+        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()
+                .getReconciled(accountProperty.getValue()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(reconciledColumn);
 
-        final TableColumn<Transaction, BigDecimal> quantityColumn = new TableColumn<>(columnNames[5]);
+        final TableColumn<Transaction, BigDecimal> quantityColumn = new TableColumn<>(columnNames[6]);
         quantityColumn.setCellValueFactory(param -> new QuantityProperty(param.getValue()));
         quantityColumn.setCellFactory(cell -> new InvestmentTransactionQuantityTableCell());
+        tableView.getColumns().add(quantityColumn);
 
-        final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[6]);
+        final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[7]);
         priceColumn.setCellValueFactory(param -> new PriceProperty(param.getValue()));
         priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        tableView.getColumns().add(priceColumn);
 
-        final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[7]);
+        final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[8]);
         netColumn.setCellValueFactory(param -> new AmountProperty(param.getValue()));
         netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        tableView.getColumns().add(netColumn);
 
-        tableView.getColumns().addAll(dateColumn, typeColumn, investmentColumn, memoColumn, reconciledColumn, quantityColumn, priceColumn, netColumn);
+        //tableView.getColumns().addAll(dateColumn, dateTimeColumn, typeColumn, investmentColumn, memoColumn, reconciledColumn, quantityColumn, priceColumn, netColumn);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tableViewManager.setColumnFormatFactory(param -> {
@@ -116,6 +129,8 @@ public class InvestmentRegisterTableController extends RegisterTableController {
             } else if (param == quantityColumn || param == priceColumn) {
                 return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
+                return DateUtils.getShortDateTimeFormat().toFormat();
+            } else if (param == dateTimeColumn) {
                 return DateUtils.getShortDateTimeFormat().toFormat();
             }
 
