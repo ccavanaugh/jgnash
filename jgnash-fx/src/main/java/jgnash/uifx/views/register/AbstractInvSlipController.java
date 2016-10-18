@@ -101,8 +101,6 @@ abstract class AbstractInvSlipController implements Slip {
             } else {
                 final Transaction newTrans = buildTransaction();
 
-                newTrans.setDateEntered(modTrans.getDateEntered());
-
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
                  */

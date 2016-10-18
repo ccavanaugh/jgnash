@@ -218,8 +218,6 @@ abstract class AbstractSlipController implements Slip {
             } else {
                 Transaction newTrans = buildTransaction();
 
-                newTrans.setDateEntered(modTrans.getDateEntered());
-
                 // restore the reconciled state of the previous old transaction
                 for (final Account a : modTrans.getAccounts()) {
                     if (!a.equals(accountProperty.get())) {

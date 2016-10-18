@@ -453,20 +453,12 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         transactionEntries.clear();
     }
 
-    public long getDateEntered() {
-        return timestamp;
-    }
-
     public LocalDateTime getEntryDate() {
         if (timeStampDate == null) {
             timeStampDate =  LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
         }
 
         return timeStampDate;
-    }
-
-    public void setDateEntered(@NotNull final long timestamp) {
-        this.timestamp = timestamp;
     }
 
     @NotNull
@@ -610,6 +602,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         final Transaction tran = (Transaction) super.clone();
 
         tran.concatMemo = null; // force a reset of the concatenated memo, the entries of the clone may change
+
+        tran.timestamp = System.currentTimeMillis();    // force the clone to have a new timestamp
+        tran.timeStampDate = null;                      // clear the cached value
 
         // deep clone
         tran.transactionEntries = new HashSet<>(); // deep clone

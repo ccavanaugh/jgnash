@@ -65,7 +65,7 @@ import jgnash.ui.util.ValidationFactory;
  * @author Craig Cavanaugh
  * @author axnotizes
  */
-public abstract class AbstractBankTransactionPanel extends AbstractTransactionPanel implements ActionListener, MessageListener {
+abstract class AbstractBankTransactionPanel extends AbstractTransactionPanel implements ActionListener, MessageListener {
 
     final JButton enterButton;
 
@@ -191,7 +191,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
      *
      * @param complete true to allow auto fill to happen
      */
-    public void setAutoComplete(final boolean complete) {
+    void setAutoComplete(final boolean complete) {
         autoComplete = complete;
     }
 
@@ -239,8 +239,6 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                 }
             } else {
                 Transaction newTrans = buildTransaction();
-
-                newTrans.setDateEntered(modTrans.getDateEntered());
 
                 // restore the reconciled state of the previous old transaction
                 for (Account a : modTrans.getAccounts()) {

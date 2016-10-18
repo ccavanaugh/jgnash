@@ -36,7 +36,7 @@ import jgnash.ui.register.AbstractTransactionPanel;
  * 
  * @author Craig Cavanaugh
  */
-public abstract class AbstractInvTransactionPanel extends AbstractTransactionPanel {
+abstract class AbstractInvTransactionPanel extends AbstractTransactionPanel {
 
     private IndeterminateCheckBox reconciledButton;
 
@@ -85,8 +85,6 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
                 engine.addTransaction(newTrans);
             } else {
                 final Transaction newTrans = buildTransaction();
-
-                newTrans.setDateEntered(modTrans.getDateEntered());
 
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
