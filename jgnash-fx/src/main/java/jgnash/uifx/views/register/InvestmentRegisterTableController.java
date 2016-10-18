@@ -48,6 +48,8 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
     final private double[] PREF_COLUMN_WEIGHTS = {0, 33, 33, 34, 0, 0, 0, 0};
 
+    private static final boolean[] DEFAULT_COLUMN_VISIBILITY = {true, true, true, true, true, true, true, true};
+
     @FXML
     @Override
     void initialize() {
@@ -61,6 +63,11 @@ public class InvestmentRegisterTableController extends RegisterTableController {
     @Override
     Callback<Integer, Double> getColumnWeightFactory() {
         return param -> PREF_COLUMN_WEIGHTS[param];
+    }
+
+    @Override
+    Callback<Integer, Boolean> getColumnVisibilityFactory() {
+        return param -> DEFAULT_COLUMN_VISIBILITY[param];
     }
 
     @SuppressWarnings("unchecked")

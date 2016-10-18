@@ -249,6 +249,7 @@ abstract class RegisterTableController {
     private void loadAccount() {
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
         tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
+        tableViewManager.setDefaultColumnVisibilityFactory(getColumnVisibilityFactory());
         tableViewManager.setPreferenceKeyFactory(() -> getAccountProperty().get().getUuid());
 
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
@@ -258,6 +259,8 @@ abstract class RegisterTableController {
     }
 
     abstract Callback<Integer, Double> getColumnWeightFactory();
+
+    abstract Callback<Integer, Boolean> getColumnVisibilityFactory();
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;

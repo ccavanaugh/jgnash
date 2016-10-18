@@ -65,6 +65,8 @@ public class TableViewManager<S> {
 
     private final ObjectProperty<Callback<TableColumnBase<S, ?>, Format>> columnFormatFactory = new SimpleObjectProperty<>();
 
+    private final ObjectProperty<Callback<Integer, Boolean>> columnVisibilityFactory = new SimpleObjectProperty<>();
+
     private final ObjectProperty<Callback<Integer, Double>> columnWeightFactory = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Supplier<String>> preferenceKeyFactory = new SimpleObjectProperty<>();
@@ -185,9 +187,19 @@ public class TableViewManager<S> {
                 }
 
                 tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            } else {  // no preference has been set, so force all columns to be visible
-                for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
-                    column.visibleProperty().setValue(true);
+            } else {  // no preference has been set, so force all columns to be the default
+                final Callback<Integer, Boolean> visibilityCallBack = columnVisibilityFactory.get();
+
+                if (visibilityCallBack != null) {   // use a factory method
+                    int i = 0;
+
+                    for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
+                        column.visibleProperty().setValue(visibilityCallBack.call(i++));
+                    }
+                } else {
+                    for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
+                        column.visibleProperty().setValue(true);
+                    }
                 }
             }
         }
@@ -275,6 +287,10 @@ public class TableViewManager<S> {
 
     public void setColumnWeightFactory(final Callback<Integer, Double> weightFactory) {
         this.columnWeightFactory.set(weightFactory);
+    }
+
+    public void setDefaultColumnVisibilityFactory(final Callback<Integer, Boolean> visibilityFactoryCallback) {
+        columnVisibilityFactory.set(visibilityFactoryCallback);
     }
 
     public void setPreferenceKeyFactory(final Supplier<String> keyFactory) {
