@@ -131,7 +131,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
             } else if (param == dateColumn) {
                 return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {
-                return DateUtils.getShortDateFormatter().toFormat();
+                return DateUtils.getShortDateTimeFormatter().toFormat();
             }
 
             return null;

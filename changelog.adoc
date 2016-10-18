@@ -26,7 +26,7 @@ WANTS
 
 Release 2.27.0
 --------------
-* 10/18/16 An Entry/Creation Date column has been added to the register.  It is hidden by default. (Fx)
+* 10/18/16 A transaction entry timestamp column has been added to the register.  It is hidden by default. (Fx)
 * 10/17/16 Prevent an IllegalArgumentException from occurring if a default or prior directory is missing when attempting
            to select a file. (Fx)
 * 10/16/16 Added an option to control how Bayesian model matches transaction. (Fx)

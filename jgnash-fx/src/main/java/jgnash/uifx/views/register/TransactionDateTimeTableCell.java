@@ -35,7 +35,7 @@ import jgnash.uifx.skin.StyleClass;
  */
 class TransactionDateTimeTableCell extends TableCell<Transaction, LocalDateTime> {
 
-    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormatter();
 
     @Override
     protected void updateItem(final LocalDateTime date, final boolean empty) {

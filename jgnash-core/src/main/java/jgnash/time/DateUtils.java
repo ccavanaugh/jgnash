@@ -63,7 +63,11 @@ public class DateUtils {
 
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
+    private static final Pattern HOUR_PATTERN = Pattern.compile("h{1,2}");
+
     private static DateTimeFormatter shortDateFormatter;
+
+    private static DateTimeFormatter shortDateTimeFormatter;
 
     private static DateTimeFormatter shortDateManualEntryFormatter;
 
@@ -78,7 +82,9 @@ public class DateUtils {
     public static final String DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
 
     static {
-        shortDateFormatter = DateTimeFormatter.ofPattern(getShortDatePattern())
+        shortDateFormatter = DateTimeFormatter.ofPattern(getShortDatePattern()).withResolverStyle(ResolverStyle.SMART);
+
+        shortDateTimeFormatter = DateTimeFormatter.ofPattern(getShortDateTimePattern())
                 .withResolverStyle(ResolverStyle.SMART);
 
         shortDateManualEntryFormatter = DateTimeFormatter.ofPattern(getShortDateManualEntryPattern())
@@ -133,6 +139,16 @@ public class DateUtils {
                 throw new RuntimeException("Unexpected class");
             }
         }
+
+        return pattern;
+    }
+
+    private static String getShortDateTimePattern() {
+        final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+
+        String pattern = ((SimpleDateFormat) df).toPattern();
+        pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
+        pattern = HOUR_PATTERN.matcher(pattern).replaceAll("hh");
 
         return pattern;
     }
@@ -531,6 +547,10 @@ public class DateUtils {
 
     public static DateTimeFormatter getShortDateFormatter() {
         return shortDateFormatter;
+    }
+
+    public static DateTimeFormatter getShortDateTimeFormatter() {
+        return shortDateTimeFormatter;
     }
 
     public static DateTimeFormatter getShortDateManualEntryFormatter() {
