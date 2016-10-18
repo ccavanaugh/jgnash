@@ -81,7 +81,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         tableView.getColumns().add(dateColumn);
 
         final TableColumn<Transaction, LocalDateTime> dateTimeColumn = new TableColumn<>(columnNames[1]);
-        dateTimeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getEntryDate()));
+        dateTimeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTimestamp()));
         dateTimeColumn.setCellFactory(cell -> new TransactionDateTimeTableCell());
         tableView.getColumns().add(dateTimeColumn);
 

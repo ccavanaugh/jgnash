@@ -453,7 +453,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         transactionEntries.clear();
     }
 
-    public LocalDateTime getEntryDate() {
+    public LocalDateTime getTimestamp() {
         if (timeStampDate == null) {
             timeStampDate =  LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
         }
