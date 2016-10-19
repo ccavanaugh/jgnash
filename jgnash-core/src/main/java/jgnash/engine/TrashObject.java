@@ -53,8 +53,8 @@ public class TrashObject extends StoredObject implements Comparable<TrashObject>
 
     TrashObject(final StoredObject object) {
         this.object = object;
-        object.setMarkedForRemoval(true);
-        setMarkedForRemoval(true);
+        object.setMarkedForRemoval();
+        setMarkedForRemoval();
     }
 
     public StoredObject getObject() {
