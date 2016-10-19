@@ -135,19 +135,6 @@ public class EngineFactory {
         return engineMap.get(name);
     }
 
-    /**
-     * Returns the DataStoreType for a given engine name.
-     *
-     * @param name engine name to look for
-     * @return the DataStoreType
-     * @throws NullPointerException thrown if engine is not found
-     */
-    private static synchronized DataStoreType getType(final String name) throws NullPointerException {
-        DataStore dataStore = dataStoreMap.get(name);
-
-        return dataStore.getType();
-    }
-
     private static void exportCompressedXML(final String engineName) {
         final Engine oldEngine = engineMap.get(engineName);
         final DataStore oldDataStore = dataStoreMap.get(engineName);
@@ -515,8 +502,7 @@ public class EngineFactory {
 
         // don't perform the save if the destination is going to overwrite the current database
         if (!current.equals(newFile)) {
-
-            final DataStoreType currentType = EngineFactory.getType(EngineFactory.DEFAULT);
+            final DataStoreType currentType = dataStoreMap.get(EngineFactory.DEFAULT).getType();
 
             if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
                 final File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
