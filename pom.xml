@@ -43,7 +43,7 @@
         <dynamic-jasper.version>5.0.4</dynamic-jasper.version>
         <plexus-utils.version>3.0.10</plexus-utils.version>
         <opencsv.version>2.3</opencsv.version>
-        <netty.version>4.1.5.Final</netty.version>
+        <netty.version>4.1.6.Final</netty.version>
         <controlsfx.version>8.40.12</controlsfx.version>
         <jopt-simple.version>5.0.2</jopt-simple.version>
     </properties>
