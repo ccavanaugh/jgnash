@@ -67,7 +67,7 @@ public class DateUtils {
 
     private static DateTimeFormatter shortDateFormatter;
 
-    private static DateTimeFormatter shortDateTimeFormatter;
+    private static final DateTimeFormatter shortDateTimeFormatter;
 
     private static DateTimeFormatter shortDateManualEntryFormatter;
 
