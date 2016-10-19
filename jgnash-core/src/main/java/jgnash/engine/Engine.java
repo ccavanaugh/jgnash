@@ -1726,16 +1726,6 @@ public class Engine {
     }
 
     /**
-     * Returns a list of Accounts that are members of the group.
-     *
-     * @param group the requested AccountGroup
-     * @return member accounts
-     */
-    public List<Account> getAccounts(final AccountGroup group) {
-        return getAccountList().parallelStream().filter(account -> account.memberOf(group)).collect(Collectors.toList());
-    }
-
-    /**
      * Returns a list of all accounts excluding the rootAccount and IncomeAccounts and ExpenseAccounts.
      *
      * @return List of investment accounts
