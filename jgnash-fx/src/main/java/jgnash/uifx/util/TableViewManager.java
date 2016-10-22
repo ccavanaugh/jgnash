@@ -56,7 +56,7 @@ public class TableViewManager<S> {
 
     private static final String PREF_NODE_REG_VIS = "/visibility";
 
-    private static final int COLUMN_PADDING = 16; // margins need padding to prevent truncated display
+    private static final int COLUMN_PADDING = 10; // margins need extra padding to prevent truncated display
 
     @NotNull
     private final TableView<S> tableView;

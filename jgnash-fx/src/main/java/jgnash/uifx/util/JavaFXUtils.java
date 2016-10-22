@@ -25,6 +25,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -142,7 +143,7 @@ public class JavaFXUtils {
         text.setStyle(style);
         text.applyCss();
 
-        return Math.ceil(text.getLayoutBounds().getWidth());
+        return Math.ceil(text.getLayoutBounds().getWidth()) * ThemeManager.getFontScaleProperty().doubleValue();
     }
 
     /**
