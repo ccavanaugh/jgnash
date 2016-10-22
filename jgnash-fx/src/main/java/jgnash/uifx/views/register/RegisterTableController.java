@@ -71,6 +71,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
@@ -221,6 +222,10 @@ abstract class RegisterTableController {
         if (payeeFilterTextField != null) { // payee filter may not have been initialized for all register types
             payeeFilterTextField.textProperty().addListener(filterChangeListener);
         }
+
+        // Repack the table if the font scale changes
+        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue)
+                -> tableViewManager.packTable());
 
         // Listen for transaction events
         MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
