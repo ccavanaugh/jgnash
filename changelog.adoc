@@ -26,6 +26,7 @@ WANTS
 
 Release 2.27.0
 --------------
+* 10/22/16 Corrected some font scaling issues withing the UI. (Fx)
 * 10/22/16 Improved column layout behavior when changing the default font scale. (Fx)
 * 10/18/16 Transaction timestamps are now strictly controlled.  Alternation of a transaction including reconciliation
            will alter the timestamp.

@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import jgnash.util.Nullable;
-
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.geometry.Pos;
@@ -28,6 +26,11 @@ import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+
+import jgnash.uifx.skin.ThemeManager;
+import jgnash.util.Nullable;
 
 /**
  * A busy pane.  Intended to overlay the main ui and blur the display when a long running operation is occurring
@@ -36,8 +39,6 @@ import javafx.scene.layout.StackPane;
  */
 public class BusyPane extends StackPane {
 
-    private static final String BUSY_PANE_STYLE = "busy-pane";
-
     private final ImageView imageView;
 
     private final Label messageLabel;
@@ -45,8 +46,6 @@ public class BusyPane extends StackPane {
     private final ProgressIndicator progressIndicator;
 
     public BusyPane() {
-
-        getStyleClass().add(BUSY_PANE_STYLE);
 
         imageView = new ImageView();
         imageView.setFocusTraversable(false);
@@ -61,9 +60,18 @@ public class BusyPane extends StackPane {
         gridPane.add(progressIndicator, 0, 0);
         gridPane.add(messageLabel, 1, 0);
 
+        updateFont();
+
+        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> updateFont());
+
         getChildren().addAll(gridPane);
 
         setVisible(false);
+    }
+
+    private void updateFont() {
+        messageLabel.fontProperty().setValue(Font.font(null, FontWeight.BOLD, null,
+                ThemeManager.getBaseTextHeight() * 1.2));
     }
 
     public void setTask(@Nullable final Task<?> task) {
