@@ -26,8 +26,9 @@ WANTS
 
 Release 2.27.0
 --------------
-* 10/18/16 Transaction timestamps are strictly controlled.  Alternation of a transaction including reconciliation will
-           alter the timestamp.
+* 10/22/16 Improved column layout behavior when changing the default font scale. (Fx)
+* 10/18/16 Transaction timestamps are now strictly controlled.  Alternation of a transaction including reconciliation
+           will alter the timestamp.
 * 10/18/16 A transaction entry timestamp column has been added to the register.  It is hidden by default. (Fx)
 * 10/17/16 Prevent an IllegalArgumentException from occurring if a default or prior directory is missing when attempting
            to select a file. (Fx)
