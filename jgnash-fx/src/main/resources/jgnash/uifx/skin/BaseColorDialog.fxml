@@ -6,21 +6,34 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Label?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-            fx:controller="jgnash.uifx.skin.BaseColorDialogController" prefWidth="350.0"
+            fx:controller="jgnash.uifx.skin.BaseColorDialogController" prefWidth="450.0"
             styleClass="form, dialog">
    <center>
        <GridPane styleClass="form">
            <columnConstraints>
+               <ColumnConstraints hgrow="NEVER"/>
                <ColumnConstraints hgrow="ALWAYS"/>
                <ColumnConstraints hgrow="NEVER"/>
            </columnConstraints>
            <rowConstraints>
                <RowConstraints vgrow="NEVER"/>
+               <RowConstraints vgrow="NEVER"/>
+               <RowConstraints vgrow="NEVER"/>
            </rowConstraints>
 
-           <ColorPicker fx:id="colorPicker" maxWidth="Infinity"/>
-           <Button text="%Button.RestoreDefault" onAction="#handleDefaultColorAction" GridPane.columnIndex="1"/>
+           <Label text="%Label.BaseColor"/>
+           <ColorPicker fx:id="colorPicker" maxWidth="Infinity" GridPane.columnIndex="1"/>
+           <Button text="%Button.RestoreDefault" onAction="#handleDefaultColorAction" GridPane.columnIndex="2"/>
+
+           <Label text="%Label.AccentColor" GridPane.rowIndex="1"/>
+           <ColorPicker fx:id="accentColorPicker" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+           <Button text="%Button.RestoreDefault" onAction="#handleDefaultAccentColorAction" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+           <Label text="%Label.FocusColor" GridPane.rowIndex="2"/>
+           <ColorPicker fx:id="focusColorPicker" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+           <Button text="%Button.RestoreDefault" onAction="#handleDefaultFocusColorAction" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
        </GridPane>
    </center>
 </BorderPane>

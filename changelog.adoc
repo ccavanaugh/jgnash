@@ -22,10 +22,10 @@ WANTS
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
 * Reinstate archive capability.
-* Change the base highlight color for the FX interface
 
 Release 2.27.0
 --------------
+* 10/23/16 The focus and accent colors for the Fx UI can now be changed. (Fx)
 * 10/22/16 Corrected some font scaling issues withing the UI. (Fx)
 * 10/22/16 Improved column layout behavior when changing the default font scale. (Fx)
 * 10/18/16 Transaction timestamps are now strictly controlled.  Alternation of a transaction including reconciliation
