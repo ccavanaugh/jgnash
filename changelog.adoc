@@ -25,6 +25,7 @@ WANTS
 
 Release 2.27.0
 --------------
+* 10/24/16 The Periodic Account Balance chart was improved with more selectable periods and better button names. (Fx)
 * 10/24/16 The Income and Expense bar chart was freezing due to an infinite loop. (Fx) _[Pranay Kumar]_
 * 10/24/16 Improved stability of test and build for slow or virtualized systems.
 * 10/23/16 The focus and accent colors for the Fx UI can now be changed. (Fx)
@@ -52,7 +53,7 @@ HyperSql (*.script) databases will need to be saved to another file format in th
 be saved back to a HyperSql database afterwards.
 
 * 10/12/16 Added an option to invert the sign of Credit, Liability, Equity, and Income accounts for the Periodic
-           Account balance chart.
+           Account Balance chart.
 * 10/10/16 Fixed another transaction and security history concurrency bug for relational databases. (Swing, Fx)
 * 10/09/16 The initial check for recurring transactions / reminders was taking too long. (Fx)
 * 10/04/16 Add utility method to pack and upgrade older databases. (Fx)

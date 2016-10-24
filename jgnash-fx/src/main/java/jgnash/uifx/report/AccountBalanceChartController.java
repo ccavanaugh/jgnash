@@ -74,7 +74,7 @@ public class AccountBalanceChartController {
 
     private static final String RUNNING_BALANCE = "runningBalance";
 
-    private static final String MONTHLY_BALANCE = "monthlyBalance";
+    private static final String ENDING_BALANCE = "endingBalance";
 
     private static final String SUB_ACCOUNTS = "subAccounts";
 
@@ -102,10 +102,10 @@ public class AccountBalanceChartController {
     private VBox accountComboVBox;
 
     @FXML
-    private RadioButton monthlyBalance;
+    private RadioButton endingBalanceRadioButton;
 
     @FXML
-    private RadioButton runningBalance;
+    private RadioButton runningBalanceRadioButton;
 
     @FXML
     private AccountComboBox accountComboBox;
@@ -159,7 +159,7 @@ public class AccountBalanceChartController {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        periodComboBox.getItems().addAll(ReportPeriod.MONTHLY, ReportPeriod.QUARTERLY);
+        periodComboBox.getItems().addAll(ReportPeriod.MONTHLY, ReportPeriod.QUARTERLY, ReportPeriod.YEARLY);
         periodComboBox.setValue(ReportPeriod.values()[preferences.getInt(REPORT_PERIOD,
                 ReportPeriod.MONTHLY.ordinal())]);
 
@@ -181,8 +181,8 @@ public class AccountBalanceChartController {
 
         // Force a defaults
         includeSubAccounts.setSelected(preferences.getBoolean(SUB_ACCOUNTS, true));
-        runningBalance.setSelected(preferences.getBoolean(RUNNING_BALANCE, true));
-        monthlyBalance.setSelected(preferences.getBoolean(MONTHLY_BALANCE, false));
+        runningBalanceRadioButton.setSelected(preferences.getBoolean(RUNNING_BALANCE, true));
+        endingBalanceRadioButton.setSelected(preferences.getBoolean(ENDING_BALANCE, false));
         invertBalanceCheckBox.setSelected(preferences.getBoolean(INVERT_BALANCES, true));
 
         restoreSelectedAccounts();
@@ -202,8 +202,8 @@ public class AccountBalanceChartController {
             if (newValue != null) {
                 Platform.runLater(AccountBalanceChartController.this::updateChart);
 
-                preferences.putBoolean(MONTHLY_BALANCE, monthlyBalance.isSelected());
-                preferences.putBoolean(RUNNING_BALANCE, runningBalance.isSelected());
+                preferences.putBoolean(ENDING_BALANCE, endingBalanceRadioButton.isSelected());
+                preferences.putBoolean(RUNNING_BALANCE, runningBalanceRadioButton.isSelected());
                 preferences.putBoolean(SUB_ACCOUNTS, includeSubAccounts.isSelected());
                 preferences.putInt(REPORT_PERIOD, periodComboBox.getValue().ordinal());
                 preferences.putBoolean(INVERT_BALANCES, invertBalanceCheckBox.isSelected());
@@ -215,8 +215,8 @@ public class AccountBalanceChartController {
         periodComboBox.valueProperty().addListener(listener);
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
-        runningBalance.selectedProperty().addListener(listener);
-        monthlyBalance.selectedProperty().addListener(listener);
+        runningBalanceRadioButton.selectedProperty().addListener(listener);
+        endingBalanceRadioButton.selectedProperty().addListener(listener);
         includeSubAccounts.selectedProperty().addListener(listener);
         invertBalanceCheckBox.selectedProperty().addListener(listener);
 
@@ -342,15 +342,15 @@ public class AccountBalanceChartController {
 
                 if (!includeSubAccounts.isSelected()) {
 
-                    if (runningBalance.isSelected()) {
+                    if (runningBalanceRadioButton.isSelected()) {
                         income = account.getBalance(descriptor.getEndDate());
-                    } else {
+                    } else {    // ending balance
                         income = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
                     }
                 } else {
-                    if (runningBalance.isSelected()) {
+                    if (runningBalanceRadioButton.isSelected()) {
                         income = account.getTreeBalance(descriptor.getEndDate(), account.getCurrencyNode());
-                    } else {
+                    } else {    // ending balance
                         income = account.getTreeBalance(descriptor.getStartDate(), descriptor.getEndDate(),
                                 account.getCurrencyNode());
                     }
