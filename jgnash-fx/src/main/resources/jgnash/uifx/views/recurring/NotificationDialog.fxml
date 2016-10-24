@@ -11,6 +11,7 @@
 <?import javafx.scene.Scene?>
 <?import javafx.stage.Stage?>
 <?import jgnash.uifx.control.TimePeriodComboBox?>
+
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          minWidth="680" minHeight="380">
     <scene>
@@ -20,6 +21,10 @@
                     <GridPane styleClass="form">
                         <columnConstraints>
                             <ColumnConstraints hgrow="NEVER"/>
+                            <ColumnConstraints hgrow="NEVER"/>
+                            <ColumnConstraints hgrow="NEVER"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="NEVER"/>
                             <ColumnConstraints hgrow="SOMETIMES"/>
                         </columnConstraints>
                         <rowConstraints>
@@ -28,11 +33,17 @@
                             <RowConstraints vgrow="NEVER"/>
                         </rowConstraints>
 
-                        <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true"
+                        <TableView fx:id="tableView" GridPane.columnSpan="6" GridPane.fillWidth="true"
                                    prefHeight="200"/>
-                        <Label text="%Label.RemindLater" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TimePeriodComboBox fx:id="snoozeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="2">
+
+                        <Button text="%Button.SelectAll" fx:id="selectAllButton" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Button text="%Button.ClearAll" fx:id="clearAllButton" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Button text="%Button.InvertSelection" fx:id="invertButton" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                        <Label text="%Label.RemindLater" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                        <TimePeriodComboBox fx:id="snoozeComboBox" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+
+                        <ButtonBar GridPane.rowIndex="2" GridPane.columnSpan="6">
                             <buttons>
                                 <Button fx:id="cancelButton" mnemonicParsing="false"
                                         text="%Button.RemindLater" ButtonBar.buttonData="CANCEL_CLOSE"/>

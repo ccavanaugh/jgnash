@@ -25,6 +25,7 @@ WANTS
 
 Release 2.27.0
 --------------
+* 10/24/16 Added selection buttons to the Reminders notification dialog to reduce required effort. (Fx)
 * 10/24/16 The Periodic Account Balance chart was improved with more selectable periods and better button names. (Fx)
 * 10/24/16 The Income and Expense bar chart was freezing due to an infinite loop. (Fx) _[Pranay Kumar]_
 * 10/24/16 Improved stability of test and build for slow or virtualized systems.
