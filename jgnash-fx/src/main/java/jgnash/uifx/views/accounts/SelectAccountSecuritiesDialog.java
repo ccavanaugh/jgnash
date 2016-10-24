@@ -140,7 +140,7 @@ public class SelectAccountSecuritiesDialog {
 
         dialog.setScene(new Scene(gridPane));
         dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
-        dialog.getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+        dialog.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         StageUtils.addBoundsListener(dialog, this.getClass());

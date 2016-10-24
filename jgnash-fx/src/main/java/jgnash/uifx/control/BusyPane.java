@@ -62,7 +62,7 @@ public class BusyPane extends StackPane {
 
         updateFont();
 
-        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> updateFont());
+        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> updateFont());
 
         getChildren().addAll(gridPane);
 

@@ -192,7 +192,7 @@ public class MainView implements MessageListener {
         final Scene scene = new Scene(stackPane, 640, 480);
         scene.getStylesheets().add(DEFAULT_CSS);
 
-        scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+        scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 
         stage.setTitle(title);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());

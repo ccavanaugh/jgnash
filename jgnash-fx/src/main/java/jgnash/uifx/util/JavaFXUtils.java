@@ -143,7 +143,7 @@ public class JavaFXUtils {
         text.setStyle(style);
         text.applyCss();
 
-        return Math.ceil(text.getLayoutBounds().getWidth()) * ThemeManager.getFontScaleProperty().doubleValue();
+        return Math.ceil(text.getLayoutBounds().getWidth()) * ThemeManager.fontScaleProperty().doubleValue();
     }
 
     /**

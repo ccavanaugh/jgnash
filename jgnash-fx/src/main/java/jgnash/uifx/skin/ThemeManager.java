@@ -253,23 +253,23 @@ public class ThemeManager {
         controlTextFillProperty.setValue(getBaseTextColor());   // force an update after the stylesheet has been applied
     }
 
-    public static ObservableValue<String> getStyleProperty() {
+    public static ObservableValue<String> styleProperty() {
         return styleProperty;
     }
 
-    public static DoubleProperty getFontScaleProperty() {
+    public static DoubleProperty fontScaleProperty() {
         return fontScaleProperty;
     }
 
-    static SimpleObjectProperty<Color> getBaseColorProperty() {
+    static SimpleObjectProperty<Color> baseColorProperty() {
         return baseColorProperty;
     }
 
-    static SimpleObjectProperty<Color> getFocusColorProperty() {
+    static SimpleObjectProperty<Color> focusColorProperty() {
         return focusColorProperty;
     }
 
-    static SimpleObjectProperty<Color> getAccentColorProperty() {
+    static SimpleObjectProperty<Color> accentColorProperty() {
         return accentColorProperty;
     }
 
@@ -289,7 +289,7 @@ public class ThemeManager {
     private static Paint getBaseTextColor() {
         final Button button = new Button(BASE_COLOR);
         final Scene scene = new Scene(new Group(button));
-        scene.getRoot().styleProperty().setValue(getStyleProperty().getValue());
+        scene.getRoot().styleProperty().setValue(styleProperty().getValue());
         button.applyCss();
         return button.getTextFill();
     }
@@ -302,7 +302,7 @@ public class ThemeManager {
     public static double getBaseTextHeight() {
         final Text text = new Text();
         final Scene scene = new Scene(new Group(text));
-        scene.getRoot().styleProperty().setValue(getStyleProperty().getValue());
+        scene.getRoot().styleProperty().setValue(styleProperty().getValue());
         text.applyCss();
 
         return Math.ceil(text.getLayoutBounds().getHeight());

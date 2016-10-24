@@ -47,22 +47,22 @@ public class BaseColorDialogController {
 
     @FXML
     void initialize() {
-        accentColorPicker.setValue(ThemeManager.getAccentColorProperty().getValue());
-        colorPicker.setValue(ThemeManager.getBaseColorProperty().getValue());
-        focusColorPicker.setValue(ThemeManager.getFocusColorProperty().getValue());
+        accentColorPicker.setValue(ThemeManager.accentColorProperty().getValue());
+        colorPicker.setValue(ThemeManager.baseColorProperty().getValue());
+        focusColorPicker.setValue(ThemeManager.focusColorProperty().getValue());
 
-        ThemeManager.getAccentColorProperty().bind(accentColorPicker.valueProperty());
-        ThemeManager.getBaseColorProperty().bind(colorPicker.valueProperty());
-        ThemeManager.getFocusColorProperty().bind(focusColorPicker.valueProperty());
+        ThemeManager.accentColorProperty().bind(accentColorPicker.valueProperty());
+        ThemeManager.baseColorProperty().bind(colorPicker.valueProperty());
+        ThemeManager.focusColorProperty().bind(focusColorPicker.valueProperty());
 
         // Unbind  when the dialog closes
         parentProperty.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
                 scene.windowProperty().addListener((observable1, oldValue1, window)
                         -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
-                    ThemeManager.getAccentColorProperty().unbind();
-                    ThemeManager.getBaseColorProperty().unbind();
-                    ThemeManager.getFocusColorProperty().unbind();
+                    ThemeManager.accentColorProperty().unbind();
+                    ThemeManager.baseColorProperty().unbind();
+                    ThemeManager.focusColorProperty().unbind();
                 }));
             }
         });

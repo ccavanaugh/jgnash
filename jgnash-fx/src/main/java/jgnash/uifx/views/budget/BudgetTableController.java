@@ -276,7 +276,7 @@ public class BudgetTableController implements MessageListener {
             }
         });
 
-        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
+        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
     }
 
     private void rateLimitUpdate(final Runnable runnable) {

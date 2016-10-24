@@ -224,7 +224,7 @@ abstract class RegisterTableController {
         }
 
         // Repack the table if the font scale changes
-        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue)
+        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue)
                 -> tableViewManager.packTable());
 
         // Listen for transaction events

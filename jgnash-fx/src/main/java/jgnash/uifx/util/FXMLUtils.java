@@ -100,7 +100,7 @@ public class FXMLUtils {
 
         stage.initOwner(MainView.getInstance().getPrimaryStage());
         stage.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
-        stage.getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+        stage.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         stage.initStyle(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());
@@ -126,7 +126,7 @@ public class FXMLUtils {
             C controller = fxmlLoader.getController();
             consumer.accept(root);
 
-            root.styleProperty().bind(ThemeManager.getStyleProperty());
+            root.styleProperty().bind(ThemeManager.styleProperty());
 
             // Inject the root into the controller
             injectParent(controller, root);
@@ -197,7 +197,7 @@ public class FXMLUtils {
 
             final Scene scene = new Scene(fxmlLoader.load());
             scene.getStylesheets().addAll(MainView.DEFAULT_CSS);
-            scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+            scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
@@ -254,7 +254,7 @@ public class FXMLUtils {
         try {
             final Scene scene = new Scene(fxmlLoader.load());
             scene.getStylesheets().addAll(MainView.DEFAULT_CSS);
-            scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+            scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 
             final C controller = fxmlLoader.getController();
 
