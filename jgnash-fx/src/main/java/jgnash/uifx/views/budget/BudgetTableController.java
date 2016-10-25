@@ -150,9 +150,10 @@ public class BudgetTableController implements MessageListener {
     private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
-     * The is the minimum column width required to display the largest numeric value.
+     * The is the minimum column width required to display the largest numeric value. Value is cached and only
+     * updated with budget or transaction changes
      */
-    private final DoubleProperty minColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
+    private double minColumnWidth = INITIAL_WIDTH;
 
     /**
      * The is the minimum column width required to display the largest numeric summary value.
@@ -392,7 +393,7 @@ public class BudgetTableController implements MessageListener {
                 minSummaryColumnWidthProperty.setValue(calculateMinSummaryWidthColumnWidth());
 
                 // model has changed, calculate the minimum column width
-                minColumnWidthProperty.setValue(calculateMinPeriodColumnWidth());
+                minColumnWidth = calculateMinPeriodColumnWidth();
 
                 // register with the new model
                 budgetResultsModel.addMessageListener(this);    // register with the new model
@@ -455,7 +456,7 @@ public class BudgetTableController implements MessageListener {
             final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
             // calculate the number of visible columns, period columns are 3 columns wide
-            final int maxVisible = (int) Math.floor(availWidth / (minColumnWidthProperty.get() * 3.0));
+            final int maxVisible = (int) Math.floor(availWidth / (minColumnWidth * 3.0));
 
             // update the number of visible columns factoring in the size of the descriptor list
             visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
