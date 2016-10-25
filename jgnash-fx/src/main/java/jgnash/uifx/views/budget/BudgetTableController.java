@@ -155,6 +155,11 @@ public class BudgetTableController implements MessageListener {
     private final DoubleProperty minColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
+     * The is the minimum column width required to display the largest numeric summary value.
+     */
+    private final DoubleProperty minSummaryColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
+
+    /**
      * Current index to be used for scrolling the display.  If 0 the first period is displayed to the left
      */
     private int index;
@@ -233,6 +238,12 @@ public class BudgetTableController implements MessageListener {
         buildAccountTypeTable();
         buildAccountSummaryTable();
         buildAccountGroupSummaryTable();
+
+        accountSummaryTable.maxWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+        accountGroupPeriodSummaryTable.maxWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+
+        accountSummaryTable.minWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+        accountGroupPeriodSummaryTable.minWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
 
         accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue)
                 -> Platform.runLater(this::updateExpandedAccountList));
@@ -377,12 +388,11 @@ public class BudgetTableController implements MessageListener {
                 budgetResultsModel
                         = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
 
-                // model has changed, calculate the minimum column width
-                minColumnWidthProperty.setValue(calculateMinColumnWidth());
+                // model has changed, calculate the minimum column width for the summary columns
+                minSummaryColumnWidthProperty.setValue(calculateMinSummaryWidthColumnWidth());
 
-                // force the max width of the tables
-                accountSummaryTable.maxWidthProperty().setValue((minColumnWidthProperty.get() + BORDER_MARGIN) * 3);
-                accountGroupPeriodSummaryTable.maxWidthProperty().setValue((minColumnWidthProperty.get() + BORDER_MARGIN) * 3);
+                // model has changed, calculate the minimum column width
+                minColumnWidthProperty.setValue(calculateMinPeriodColumnWidth());
 
                 // register with the new model
                 budgetResultsModel.addMessageListener(this);    // register with the new model
@@ -559,8 +569,8 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        budgetedColumn.minWidthProperty().bind(minColumnWidthProperty);
-        budgetedColumn.maxWidthProperty().bind(minColumnWidthProperty);
+        budgetedColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         budgetedColumn.setSortable(false);
         budgetedColumn.resizableProperty().setValue(false);
 
@@ -574,8 +584,8 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        actualColumn.minWidthProperty().bind(minColumnWidthProperty);
-        actualColumn.maxWidthProperty().bind(minColumnWidthProperty);
+        actualColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        actualColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         actualColumn.setSortable(false);
         actualColumn.resizableProperty().setValue(false);
 
@@ -591,7 +601,8 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        remainingColumn.minWidthProperty().bind(minColumnWidthProperty);
+        remainingColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         remainingColumn.setSortable(false);
         remainingColumn.resizableProperty().setValue(false);
 
@@ -802,8 +813,8 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
-        budgetedColumn.minWidthProperty().bind(minColumnWidthProperty);
-        budgetedColumn.maxWidthProperty().bind(minColumnWidthProperty);
+        budgetedColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         budgetedColumn.setSortable(false);
         budgetedColumn.resizableProperty().setValue(false);
 
@@ -819,8 +830,8 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountGroupTableCell());
-        actualColumn.minWidthProperty().bind(minColumnWidthProperty);
-        actualColumn.maxWidthProperty().bind(minColumnWidthProperty);
+        actualColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        actualColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         actualColumn.setSortable(false);
         actualColumn.resizableProperty().setValue(false);
 
@@ -836,14 +847,35 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
-        remainingColumn.minWidthProperty().bind(minColumnWidthProperty);
-        remainingColumn.maxWidthProperty().bind(minColumnWidthProperty);
+        remainingColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         remainingColumn.setSortable(false);
         remainingColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(remainingColumn);
 
         accountGroupPeriodSummaryTable.getColumns().add(headerColumn);
+    }
+
+    private double calculateMinColumnWidth(final BudgetPeriodDescriptor descriptor, final Account account) {
+        double max = 0;
+        double min = 0;
+
+        BudgetPeriodResults budgetPeriodResults = budgetResultsModel.getResults(descriptor, account);
+
+        max = Math.max(max, budgetPeriodResults.getBudgeted().doubleValue());
+        max = Math.max(max, budgetPeriodResults.getChange().doubleValue());
+        max = Math.max(max, budgetPeriodResults.getRemaining().doubleValue());
+
+        min = Math.min(min, budgetPeriodResults.getBudgeted().doubleValue());
+        min = Math.min(min, budgetPeriodResults.getChange().doubleValue());
+        min = Math.min(min, budgetPeriodResults.getRemaining().doubleValue());
+
+        return Math.max(JavaFXUtils.getDisplayedTextWidth(
+                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
+                        BORDER_MARGIN, null), JavaFXUtils.getDisplayedTextWidth(
+                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
+                        BORDER_MARGIN, null));
     }
 
     private double calculateMinColumnWidth(final Account account) {
@@ -890,7 +922,26 @@ public class BudgetTableController implements MessageListener {
                                 BORDER_MARGIN, null));
     }
 
-    private double calculateMinColumnWidth() {
+    private double calculateMinPeriodColumnWidth() {
+        double max = 0;
+
+        for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
+            for (final Account account: expandedAccountList) {
+                max = Math.max(max, calculateMinColumnWidth(descriptor, account));
+            }
+        }
+
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Budgeted")
+                + BORDER_MARGIN, null));
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Actual")
+                + BORDER_MARGIN, null));
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Remaining")
+                + BORDER_MARGIN, null));
+
+        return Math.ceil(max);
+    }
+
+    private double calculateMinSummaryWidthColumnWidth() {
         double max = 0;
 
         for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
