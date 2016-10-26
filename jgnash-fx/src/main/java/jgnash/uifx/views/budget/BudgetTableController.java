@@ -150,6 +150,11 @@ public class BudgetTableController implements MessageListener {
     private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
+     * Bind the max and minimum values of every column to this width.
+     */
+    private final DoubleProperty remainingColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
+
+    /**
      * The is the minimum column width required to display the largest numeric value. Value is cached and only
      * updated with budget or transaction changes
      */
@@ -465,6 +470,10 @@ public class BudgetTableController implements MessageListener {
                     Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
 
             columnWidthProperty.setValue(width);
+
+            double remainder = availWidth - (maxVisible * 3.0 * width);
+
+            remainingColumnWidthProperty.setValue(Math.floor(width + (remainder / 3.0)));
         } finally {
             lock.writeLock().unlock();
         }
@@ -548,6 +557,9 @@ public class BudgetTableController implements MessageListener {
         headerColumn.getColumns().add(nameColumn);
 
         accountTreeView.getColumns().add(headerColumn);
+
+        headerColumn.minWidthProperty().bind(accountTreeView.widthProperty());
+        headerColumn.maxWidthProperty().bind(accountTreeView.widthProperty());
     }
 
     private void buildAccountTypeTable() {
@@ -665,7 +677,8 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
 
         // the max width is not bound to allow last column to grow and fill any voids
-        remainingColumn.minWidthProperty().bind(columnWidthProperty);
+        remainingColumn.minWidthProperty().bind(remainingColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(remainingColumnWidthProperty);
         remainingColumn.setSortable(false);
         remainingColumn.resizableProperty().setValue(false);
 
@@ -763,7 +776,8 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
 
         // the max width is not bound to allow last column to grow and fill any voids
-        remainingColumn.minWidthProperty().bind(columnWidthProperty);
+        remainingColumn.minWidthProperty().bind(remainingColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(remainingColumnWidthProperty);
         remainingColumn.setSortable(false);
         remainingColumn.resizableProperty().setValue(false);
 
