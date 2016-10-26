@@ -268,23 +268,26 @@ public class BudgetTableController implements MessageListener {
         horizontalScrollBar.disableProperty().bind(periodCountProperty.lessThanOrEqualTo(1));
 
         // shift the table right and left with the ScrollBar value
-        horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
+        horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue)
+                -> Platform.runLater(new Runnable() {   // push update to the end of the platform thread to stability
+            @Override
+            public void run() {
+                // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
+                synchronized (this) {
+                    final int newIndex = (int) Math.round(newValue.doubleValue());
 
-            // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
-            synchronized (this) {
-                final int newIndex = (int) Math.round(newValue.doubleValue());
-
-                if (newIndex > index) {
-                    while (newIndex > index) {
-                        handleShiftRight();
-                    }
-                } else if (newIndex < index) {
-                    while (newIndex < index) {
-                        handleShiftLeft();
+                    if (newIndex > index) {
+                        while (newIndex > index) {
+                            handleShiftRight();
+                        }
+                    } else if (newIndex < index) {
+                        while (newIndex < index) {
+                            handleShiftLeft();
+                        }
                     }
                 }
             }
-        });
+        }));
 
         ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
     }
