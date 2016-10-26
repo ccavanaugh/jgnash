@@ -72,6 +72,9 @@ To build jGnash you'll need the following software installed and correctly confi
 1. [Apache Ant](http://ant.apache.org) 1.9.0 or later
 1. [Apache Maven](http://maven.apache.org) 3.3 or later
 
+_If you are building with a recent 64 bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
+Otherwise, the Maven build may fail when building the windows executables._
+
 To create the distribution zip file, start at the main directory and run:
 
     mvn package
