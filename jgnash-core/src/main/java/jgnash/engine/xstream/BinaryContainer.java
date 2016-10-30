@@ -30,7 +30,6 @@ import java.nio.channels.FileLock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,24 +106,19 @@ class BinaryContainer extends AbstractXStreamContainer {
         list.addAll(query(objects, Reminder.class));
 
         // remove any objects marked for removal
-        Iterator<StoredObject> i = list.iterator();
-        while (i.hasNext()) {
-            StoredObject o = i.next();
-            if (o.isMarkedForRemoval()) {
-                i.remove();
-            }
-        }
+        list.removeIf(StoredObject::isMarkedForRemoval);
 
         // sort the list
         list.sort(new StoredObjectComparator());
 
         logger.info("Writing Binary file");
 
-        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
+        try (final OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
 
-            XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new BinaryStreamDriver()));
+            final XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(),
+                    new BinaryStreamDriver()));
 
-            try (ObjectOutputStream out = xstream.createObjectOutputStream(os)) {
+            try (final ObjectOutputStream out = xstream.createObjectOutputStream(os)) {
                 out.writeObject(list);
                 out.flush();
             }
@@ -138,7 +132,7 @@ class BinaryContainer extends AbstractXStreamContainer {
     }
 
     void readBinary() {
-        try (FileInputStream fis = new FileInputStream(file);
+        try (final FileInputStream fis = new FileInputStream(file);
              BufferedInputStream inputStream = new BufferedInputStream(fis)) {
 
             readWriteLock.writeLock().lock();

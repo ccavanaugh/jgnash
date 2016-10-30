@@ -34,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,13 +106,7 @@ class XMLContainer extends AbstractXStreamContainer {
         list.addAll(query(objects, Reminder.class));
 
         // remove any objects marked for removal
-        Iterator<StoredObject> i = list.iterator();
-        while (i.hasNext()) {
-            StoredObject o = i.next();
-            if (o.isMarkedForRemoval()) {
-                i.remove();
-            }
-        }
+        list.removeIf(StoredObject::isMarkedForRemoval);
 
         // sort the list
         list.sort(new StoredObjectComparator());
@@ -138,7 +131,7 @@ class XMLContainer extends AbstractXStreamContainer {
     }
 
     void readXML() {
-        try (FileInputStream fis = new FileInputStream(file);
+        try (final FileInputStream fis = new FileInputStream(file);
              Reader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8.name()))) {
 
             readWriteLock.writeLock().lock();

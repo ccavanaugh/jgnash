@@ -17,7 +17,6 @@
  */
 package jgnash.engine.dao;
 
-import java.util.Iterator;
 import java.util.List;
 
 import jgnash.engine.StoredObject;
@@ -30,12 +29,7 @@ import jgnash.engine.StoredObject;
 public abstract class AbstractDAO {
 
     protected static <T extends StoredObject> List<T> stripMarkedForRemoval(final List<T> list) {
-        for (Iterator<T> i = list.iterator(); i.hasNext();) {
-            T node = i.next();
-            if (node.isMarkedForRemoval()) {
-                i.remove();
-            }
-        }
+        list.removeIf(StoredObject::isMarkedForRemoval);
         return list;
     }
 }
