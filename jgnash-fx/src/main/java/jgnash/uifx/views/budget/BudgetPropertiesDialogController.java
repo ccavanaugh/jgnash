@@ -106,15 +106,12 @@ public class BudgetPropertiesDialogController {
         }
 
         if (modified) {
-            final Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
+            final Thread thread = new Thread(() -> {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
-                    engine.updateBudget(budget);
-                }
-            };
+                engine.updateBudget(budget);
+            });
 
             thread.start();
         }

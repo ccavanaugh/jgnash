@@ -61,6 +61,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
+import jgnash.time.DateUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
@@ -68,7 +69,6 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterFactory;
-import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
@@ -165,9 +165,9 @@ public class ReconcileDialogController implements MessageListener {
         // Selection listener that toggles the reconciled state
         class ToggleStateChangeListener implements ChangeListener<RecTransaction> {
 
-            final TableView<RecTransaction> tableView;
+            private final TableView<RecTransaction> tableView;
 
-            ToggleStateChangeListener(final TableView<RecTransaction> tableView) {
+            private ToggleStateChangeListener(final TableView<RecTransaction> tableView) {
                 this.tableView = tableView;
             }
 
@@ -337,35 +337,33 @@ public class ReconcileDialogController implements MessageListener {
     }
 
     private void updateCalculatedValues() {
-        new Thread() {
-            public void run() {
+        new Thread(() -> {
 
-                final BigDecimal increaseAmount = getReconciledTotal(increaseList);
-                final BigDecimal decreaseAmount = getReconciledTotal(decreaseList);
+            final BigDecimal increaseAmount = getReconciledTotal(increaseList);
+            final BigDecimal decreaseAmount = getReconciledTotal(decreaseList);
 
-                Platform.runLater(() -> increaseTotalLabel
-                        .setText(numberFormat.format(increaseAmount)));
+            Platform.runLater(() -> increaseTotalLabel
+                    .setText(numberFormat.format(increaseAmount)));
 
-                Platform.runLater(() -> decreaseTotalLabel
-                        .setText(numberFormat.format(decreaseAmount)));
+            Platform.runLater(() -> decreaseTotalLabel
+                    .setText(numberFormat.format(decreaseAmount)));
 
-                final BigDecimal reconciledBalance = increaseAmount.add(decreaseAmount).add(openingBalance);
+            final BigDecimal reconciledBalance = increaseAmount.add(decreaseAmount).add(openingBalance);
 
-                Platform.runLater(() -> reconciledBalanceLabel
-                        .setText(numberFormat.format(reconciledBalance)));
+            Platform.runLater(() -> reconciledBalanceLabel
+                    .setText(numberFormat.format(reconciledBalance)));
 
-                // need to round of the values for difference to work (investment accounts)
-                final int scale = account.getCurrencyNode().getScale();
+            // need to round of the values for difference to work (investment accounts)
+            final int scale = account.getCurrencyNode().getScale();
 
-                final BigDecimal difference = endingBalance.subtract(reconciledBalance).abs()
-                        .setScale(scale, MathConstants.roundingMode);
+            final BigDecimal difference = endingBalance.subtract(reconciledBalance).abs()
+                    .setScale(scale, MathConstants.roundingMode);
 
-                Platform.runLater(() -> differenceLabel
-                        .setText(numberFormat.format(difference)));
+            Platform.runLater(() -> differenceLabel
+                    .setText(numberFormat.format(difference)));
 
-                reconciled.setValue(difference.compareTo(BigDecimal.ZERO) == 0);
-            }
-        }.start();
+            reconciled.setValue(difference.compareTo(BigDecimal.ZERO) == 0);
+        }).start();
     }
 
     private BigDecimal getReconciledTotal(final List<RecTransaction> list) {
