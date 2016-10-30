@@ -366,7 +366,7 @@ public class Ofx2Test {
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
-                assertTrue(false);
+                fail();
             }
         } catch (URISyntaxException e) {
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);

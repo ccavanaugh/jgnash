@@ -17,14 +17,15 @@
  */
 package jgnash.convert.imports.ofx;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit 4 test class
@@ -43,7 +44,7 @@ public class OfxConvertTest {
             System.out.println(result);            
         } catch (IOException e) {
             Logger.getLogger(OfxConvertTest.class.getName()).log(Level.SEVERE, null, e);
-            assertTrue(false);
+            fail();
         }
        
         assertTrue(true);
