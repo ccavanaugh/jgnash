@@ -256,11 +256,7 @@ public class EngineFactory {
      */
     public static synchronized Engine bootLocalEngine(final String fileName, final String engineName,
                                                       final char[] password, final DataStoreType type)
-            throws UnsupportedOperationException, IOException {
-
-        if (!type.supportsLocal) {
-            throw new UnsupportedOperationException("Local operation not supported for this type.");
-        }
+            throws IOException {
 
         MessageBus.getInstance(engineName).setLocal();
 

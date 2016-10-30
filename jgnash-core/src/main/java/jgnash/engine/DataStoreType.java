@@ -37,22 +37,18 @@ public enum DataStoreType {
 
     BINARY_XSTREAM(
             ResourceUtils.getString("DataStoreType.Bxds"),
-            true,
             false,
             BinaryXStreamDataStore.class),
     H2_DATABASE (
             ResourceUtils.getString("DataStoreType.H2"),
             true,
-            true,
             JpaH2DataStore.class),
     HSQL_DATABASE (
             ResourceUtils.getString("DataStoreType.HSQL"),
             true,
-            true,
             JpaHsqlDataStore.class),
     XML(
             ResourceUtils.getString("DataStoreType.XML"),
-            true,
             false,
             XMLDataStore.class);
 
@@ -60,16 +56,12 @@ public enum DataStoreType {
     /* If true, then this DataStoreType can support remote connections */
     public final transient boolean supportsRemote;
 
-    /* If true, then this DataStoreType can support local connections */
-    final transient boolean supportsLocal;
-
     private final transient String description;
 
     private final transient Class<? extends DataStore> dataStore;
 
-    DataStoreType(final String description, final boolean supportsLocal, final boolean supportsRemote, final Class<? extends DataStore> dataStore) {
+    DataStoreType(final String description, final boolean supportsRemote, final Class<? extends DataStore> dataStore) {
         this.description = description;
-        this.supportsLocal = supportsLocal;
         this.supportsRemote = supportsRemote;
         this.dataStore = dataStore;
     }
