@@ -30,6 +30,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
@@ -89,6 +90,9 @@ public class BudgetTableController implements MessageListener {
 
     // Initial column width
     private static final double INITIAL_WIDTH = 75;
+
+    @FXML
+    private CheckBox runningTotalsButton;
 
     @FXML
     private HBox sparkLinePane;
@@ -262,6 +266,16 @@ public class BudgetTableController implements MessageListener {
         budgetProperty.addListener(budgetChangeListener);
         yearSpinner.valueProperty().addListener(budgetChangeListener);
 
+        runningTotalsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+
+            /* Setting the tables as un-managed effectively removes these tables from the GridPane.  The tables are
+               redundant if showing the amounts as running balances. */
+            accountSummaryTable.setManaged(!newValue);
+            accountGroupPeriodSummaryTable.setManaged(!newValue);
+
+            Platform.runLater(BudgetTableController.this::handleBudgetChange);
+        });
+
         horizontalScrollBar.setMin(0);
         horizontalScrollBar.maxProperty().bind(periodCountProperty.subtract(visibleColumnCountProperty));
         horizontalScrollBar.setUnitIncrement(1);
@@ -376,7 +390,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     /**
-     * Model must be rebuilt if the year or budget property is changed.
+     * Model must be rebuilt if the year or a budget property is changed.
      * <p>
      * This method is synchronized to limit more than one update attempt at a time.
      */
@@ -393,8 +407,9 @@ public class BudgetTableController implements MessageListener {
                     budgetResultsModel.removeMessageListener(this); // unregister from the old model
                 }
 
-                budgetResultsModel
-                        = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+                budgetResultsModel = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(),
+                        engine.getDefaultCurrency(), runningTotalsButton.isSelected());
+
 
                 // model has changed, calculate the minimum column width for the summary columns
                 minSummaryColumnWidthProperty.setValue(calculateMinSummaryWidthColumnWidth());
@@ -702,6 +717,7 @@ public class BudgetTableController implements MessageListener {
         final int row = GridPane.getRowIndex(periodTable);
         final int column = GridPane.getColumnIndex(periodTable);
         gridPane.getChildren().remove(periodTable);
+
         periodTable = new TableView<>();
         GridPane.setConstraints(periodTable, column, row);
         gridPane.getChildren().add(periodTable);
@@ -711,7 +727,7 @@ public class BudgetTableController implements MessageListener {
         periodTable.fixedCellSizeProperty().bind(rowHeightProperty);
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
-        // index exceeds allowed value because the user reduced the period count, rest to the maximum allowed value
+        // index exceeds allowed value because the user reduced the period count, reset to the maximum allowed value
         if (index > budgetResultsModel.getDescriptorList().size() - visibleColumnCountProperty.get()) {
             index = budgetResultsModel.getDescriptorList().size() - visibleColumnCountProperty.get();
         }

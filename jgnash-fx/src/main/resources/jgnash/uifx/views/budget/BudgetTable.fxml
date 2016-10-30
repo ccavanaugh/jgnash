@@ -13,12 +13,18 @@
 <?import javafx.scene.control.ToolBar?>
 
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.budget.BudgetTableController" styleClass="form">
     <top>
         <ToolBar>
             <Label text="%Label.Year"/>
             <Spinner fx:id="yearSpinner"/>
+            <Pane prefWidth="8"/>  <!-- Force a little bit of extra space -->
+            <CheckBox text="%Button.RunningBalance" fx:id="runningTotalsButton"/>
+            <Separator/>
             <HBox fx:id="sparkLinePane" styleClass="form"/>
         </ToolBar>
     </top>

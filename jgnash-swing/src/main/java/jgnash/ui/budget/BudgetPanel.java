@@ -350,7 +350,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
             final CurrencyNode baseCurrency = engine.getDefaultCurrency();
 
-            resultsModel = new BudgetResultsModel(activeBudget, budgetYear, baseCurrency);
+            resultsModel = new BudgetResultsModel(activeBudget, budgetYear, baseCurrency, false);
 
             tableModel = new ExpandingBudgetTableModel(resultsModel);
 
