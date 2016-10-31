@@ -17,7 +17,6 @@
  */
 package jgnash.text;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -46,8 +45,6 @@ public class CommodityFormat {
     private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
 
     private static final String[] ESCAPE_CHARS = new String[]{",", ".", "0", "#", "-", ";", "%"};
-
-    private static final boolean DEBUG = false;
 
     /**
      * Pre-compiled currency sign pattern.
@@ -114,31 +111,28 @@ public class CommodityFormat {
             return o.get();
         }
 
-        final ThreadLocal<DecimalFormat> threadLocal = new ThreadLocal<DecimalFormat>() {
-            @Override
-            protected DecimalFormat initialValue() {
-                final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
-                final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-                dfs.setCurrencySymbol("");
-                df.setDecimalFormatSymbols(dfs);
-                df.setMaximumFractionDigits(node.getScale());
+        final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> {
+            final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
+            final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+            dfs.setCurrencySymbol("");
+            df.setDecimalFormatSymbols(dfs);
+            df.setMaximumFractionDigits(node.getScale());
 
-                // required for some locale
-                df.setMinimumFractionDigits(df.getMaximumFractionDigits());
+            // required for some locale
+            df.setMinimumFractionDigits(df.getMaximumFractionDigits());
 
-                // for positive suffix padding for fraction alignment
-                int negSufLen = df.getNegativeSuffix().length();
-                if (negSufLen > 0) {
-                    char[] pad = new char[negSufLen];
-                    for (int i = 0; i < negSufLen; i++) {
-                        pad[i] = ' ';
-                    }
-                    df.setPositiveSuffix(new String(pad));
+            // for positive suffix padding for fraction alignment
+            int negSufLen = df.getNegativeSuffix().length();
+            if (negSufLen > 0) {
+                char[] pad = new char[negSufLen];
+                for (int i = 0; i < negSufLen; i++) {
+                    pad[i] = ' ';
                 }
-
-                return df;
+                df.setPositiveSuffix(new String(pad));
             }
-        };
+
+            return df;
+        });
 
         simpleInstanceMap.put(node, threadLocal);
 
@@ -158,60 +152,42 @@ public class CommodityFormat {
             return o.get();
         }
 
-        final ThreadLocal<DecimalFormat> threadLocal = new ThreadLocal<DecimalFormat>() {
-            @Override
-            protected DecimalFormat initialValue() {
-                final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
+        final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> {
+            final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
 
-                if (DEBUG) {
-                    BigDecimal bd = new BigDecimal("12.34");
-                    System.out.println("Before");
-                    System.out.println(df.format(bd));
-                    System.out.println(df.format(bd.negate()) + '.');
-                    System.out.println(df.getNegativeSuffix() + '.');
-                    System.out.println(df.getPositiveSuffix());
-                }
+            final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+            dfs.setCurrencySymbol(node.getPrefix());
+            df.setDecimalFormatSymbols(dfs);
+            df.setMaximumFractionDigits(node.getScale());
 
-                final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-                dfs.setCurrencySymbol(node.getPrefix());
-                df.setDecimalFormatSymbols(dfs);
-                df.setMaximumFractionDigits(node.getScale());
+            // required for some locale
+            df.setMinimumFractionDigits(df.getMaximumFractionDigits());
 
-                // required for some locale
-                df.setMinimumFractionDigits(df.getMaximumFractionDigits());
-
-                if (node.getSuffix() != null && !node.getSuffix().isEmpty()) {
-                    df.setPositiveSuffix(node.getSuffix() + df.getPositiveSuffix());
-                    df.setNegativeSuffix(node.getSuffix() + df.getNegativeSuffix());
-                }
-
-                // for positive suffix padding for fraction alignment
-                final int negSufLen = df.getNegativeSuffix().length();
-                final int posSufLen = df.getPositiveSuffix().length();
-
-                if (negSufLen > posSufLen) {
-                    StringBuilder buf = new StringBuilder(df.getPositiveSuffix());
-                    for (int i = negSufLen - posSufLen; i <= negSufLen; i++) {
-                        buf.append(' ');
-                    }
-                    df.setPositiveSuffix(buf.toString());
-                } else if (posSufLen > negSufLen) {
-                    StringBuilder buf = new StringBuilder(df.getNegativeSuffix());
-                    for (int i = posSufLen - negSufLen; i <= posSufLen; i++) {
-                        buf.append(' ');
-                    }
-                    df.setNegativeSuffix(buf.toString());
-                }
-
-                if (DEBUG) {
-                    BigDecimal bd = new BigDecimal("12.34");
-                    System.out.println("After");
-                    System.out.println(df.format(bd) + '~');
-                    System.out.println(df.format(bd.negate()) + '~');
-                }
-                return df;
+            if (node.getSuffix() != null && !node.getSuffix().isEmpty()) {
+                df.setPositiveSuffix(node.getSuffix() + df.getPositiveSuffix());
+                df.setNegativeSuffix(node.getSuffix() + df.getNegativeSuffix());
             }
-        };
+
+            // for positive suffix padding for fraction alignment
+            final int negSufLen = df.getNegativeSuffix().length();
+            final int posSufLen = df.getPositiveSuffix().length();
+
+            if (negSufLen > posSufLen) {
+                StringBuilder buf = new StringBuilder(df.getPositiveSuffix());
+                for (int i = negSufLen - posSufLen; i <= negSufLen; i++) {
+                    buf.append(' ');
+                }
+                df.setPositiveSuffix(buf.toString());
+            } else if (posSufLen > negSufLen) {
+                StringBuilder buf = new StringBuilder(df.getNegativeSuffix());
+                for (int i = posSufLen - negSufLen; i <= posSufLen; i++) {
+                    buf.append(' ');
+                }
+                df.setNegativeSuffix(buf.toString());
+            }
+
+            return df;
+        });
 
         fullInstanceMap.put(node, threadLocal);
 

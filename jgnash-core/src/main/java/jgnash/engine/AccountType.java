@@ -20,7 +20,6 @@ package jgnash.engine;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,11 +72,8 @@ public enum AccountType {
     public static Set<AccountType> getAccountTypes(final AccountGroup group) {
         final Set<AccountType> list = getAccountTypeSet();
 
-        for (Iterator<AccountType> i = list.iterator(); i.hasNext();) {
-            if (i.next().getAccountGroup() != group) {
-                i.remove();
-            }
-        }
+        list.removeIf(accountType -> accountType.getAccountGroup() != group);
+
         return list;
     }
 

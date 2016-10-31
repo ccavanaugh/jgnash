@@ -37,20 +37,33 @@ public class BaseColorDialogController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
-    public ColorPicker colorPicker;
+    private ColorPicker accentColorPicker;
+
+    @FXML
+    private ColorPicker focusColorPicker;
+
+    @FXML
+    private ColorPicker colorPicker;
 
     @FXML
     void initialize() {
-        colorPicker.setValue(ThemeManager.getBaseColorProperty().getValue());
+        accentColorPicker.setValue(ThemeManager.accentColorProperty().getValue());
+        colorPicker.setValue(ThemeManager.baseColorProperty().getValue());
+        focusColorPicker.setValue(ThemeManager.focusColorProperty().getValue());
 
-        ThemeManager.getBaseColorProperty().bind(colorPicker.valueProperty());
+        ThemeManager.accentColorProperty().bind(accentColorPicker.valueProperty());
+        ThemeManager.baseColorProperty().bind(colorPicker.valueProperty());
+        ThemeManager.focusColorProperty().bind(focusColorPicker.valueProperty());
 
-        // Unbind the font size when the dialog closes
+        // Unbind  when the dialog closes
         parentProperty.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
                 scene.windowProperty().addListener((observable1, oldValue1, window)
-                        -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event ->
-                        ThemeManager.getBaseColorProperty().unbind()));
+                        -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
+                    ThemeManager.accentColorProperty().unbind();
+                    ThemeManager.baseColorProperty().unbind();
+                    ThemeManager.focusColorProperty().unbind();
+                }));
             }
         });
     }
@@ -58,5 +71,15 @@ public class BaseColorDialogController {
     @FXML
     private void handleDefaultColorAction() {
         colorPicker.setValue(ThemeManager.getDefaultBaseColor(ThemeManager.getCurrentTheme()));
+    }
+
+    @FXML
+    private void handleDefaultAccentColorAction() {
+        accentColorPicker.setValue(ThemeManager.getDefaultAccentColor(ThemeManager.getCurrentTheme()));
+    }
+
+    @FXML
+    private void handleDefaultFocusColorAction() {
+        focusColorPicker.setValue(ThemeManager.getDefaultFocusColor(ThemeManager.getCurrentTheme()));
     }
 }

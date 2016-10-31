@@ -21,7 +21,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -54,9 +53,9 @@ import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.LockedCommodityListCell;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.LockedCommodityNode;
-import jgnash.uifx.util.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -140,7 +139,7 @@ public class SelectAccountSecuritiesDialog {
 
         dialog.setScene(new Scene(gridPane));
         dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
-        dialog.getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+        dialog.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         StageUtils.addBoundsListener(dialog, this.getClass());
@@ -255,15 +254,8 @@ public class SelectAccountSecuritiesDialog {
         final List<LockedCommodityNode<SecurityNode>> selectedItems
                 = new ArrayList<>(sourceView.getSelectionModel().getSelectedItems());
 
-        final Iterator<LockedCommodityNode<SecurityNode>> iterator = selectedItems.iterator();
-
         // filter out any locked items
-        while (iterator.hasNext()) {
-            final LockedCommodityNode<SecurityNode> lockedDecorator = iterator.next();
-            if (lockedDecorator.isLocked()) {
-                iterator.remove();
-            }
-        }
+        selectedItems.removeIf(LockedCommodityNode::isLocked);
 
         moveItems(sourceView, destinationView, selectedItems);
     }

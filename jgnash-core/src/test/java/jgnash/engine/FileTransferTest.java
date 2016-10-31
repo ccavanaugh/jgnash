@@ -84,7 +84,7 @@ public class FileTransferTest {
         System.out.println("starting server");
         new StartServerThread(networkServer, serverFile, JpaNetworkServer.DEFAULT_PORT, password).start();
 
-        Thread.sleep(4000);
+        Thread.sleep(20000);    // give the server enough time to start on slower or virtualized systems
 
         try {
             Engine e = EngineFactory.bootClientEngine(EngineFactory.LOCALHOST, JpaNetworkServer.DEFAULT_PORT,

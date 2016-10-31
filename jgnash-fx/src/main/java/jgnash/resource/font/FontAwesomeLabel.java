@@ -51,7 +51,7 @@ public class FontAwesomeLabel extends Label {
 
     static {
         Font.loadFont(FontAwesomeLabel.class.getResource(FontAwesomeIconView.TTF_PATH).toExternalForm(),
-                ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE);
+                ThemeManager.fontScaleProperty().get() * DEFAULT_SIZE);
     }
 
     @SuppressWarnings("unused")
@@ -60,7 +60,7 @@ public class FontAwesomeLabel extends Label {
     }
 
     public FontAwesomeLabel(final GlyphIcons glyphValue) {
-        this(glyphValue, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, null);
+        this(glyphValue, ThemeManager.fontScaleProperty().get() * DEFAULT_SIZE, null);
     }
 
     public FontAwesomeLabel(final GlyphIcons glyphValue, final Double sizeValue) {
@@ -71,7 +71,7 @@ public class FontAwesomeLabel extends Label {
 
         final StringExpression iconStyleProperty = Bindings.format(Locale.US,
                 "-fx-font-family: FontAwesome; -fx-font-size: %1$.6f;",
-                ThemeManager.getFontScaleProperty().multiply(sizeValue));
+                ThemeManager.fontScaleProperty().multiply(sizeValue));
 
         setGlyphName(glyphValue);
         size.setValue(sizeValue);
@@ -90,7 +90,8 @@ public class FontAwesomeLabel extends Label {
      * Set the glyphName to display.
      *
      * @param value This can either be the Glyph Name or a unicode character representing the glyph.
-     */   
+     */
+    @FXML
     public void setGlyphName(final Object value) {
         glyphName.set(value);
 
@@ -107,7 +108,8 @@ public class FontAwesomeLabel extends Label {
     public Object getGlyphName() {
         return glyphName.get();
     }
-    
+
+    @FXML
     public void setSize(final Double value) {
         size.setValue(value);
     }

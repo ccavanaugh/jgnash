@@ -99,7 +99,7 @@ public class ImageDialog {
         borderPane.setTop(toolBar);
         borderPane.setCenter(stackPane);
         borderPane.setBottom(statusBar);
-        borderPane.styleProperty().bind(ThemeManager.getStyleProperty());
+        borderPane.styleProperty().bind(ThemeManager.styleProperty());
 
         dialog.setScene(new Scene(borderPane));
         dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);

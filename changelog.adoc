@@ -22,12 +22,19 @@ WANTS
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
 * Reinstate archive capability.
-* Change the base highlight color for the FX interface
 
 Release 2.27.0
 --------------
-* 10/18/16 Transaction timestamps are strictly controlled.  Alternation of a transaction including reconciliation will
-           alter the timestamp.
+* 10/26/16 Improved the density and layout stability of the budget view. (Fx)
+* 10/24/16 Added selection buttons to the Reminders notification dialog to reduce required effort. (Fx)
+* 10/24/16 The Periodic Account Balance chart was improved with more selectable periods and better button names. (Fx)
+* 10/24/16 The Income and Expense bar chart was freezing due to an infinite loop. (Fx) _[Pranay Kumar]_
+* 10/24/16 Improved stability of test and build for slow or virtualized systems.
+* 10/23/16 The focus and accent colors for the Fx UI can now be changed. (Fx)
+* 10/22/16 Corrected some font scaling issues withing the UI. (Fx)
+* 10/22/16 Improved column layout behavior when changing the default font scale. (Fx)
+* 10/18/16 Transaction timestamps are now strictly controlled.  Alternation of a transaction including reconciliation
+           will alter the timestamp.
 * 10/18/16 A transaction entry timestamp column has been added to the register.  It is hidden by default. (Fx)
 * 10/17/16 Prevent an IllegalArgumentException from occurring if a default or prior directory is missing when attempting
            to select a file. (Fx)
@@ -48,7 +55,7 @@ HyperSql (*.script) databases will need to be saved to another file format in th
 be saved back to a HyperSql database afterwards.
 
 * 10/12/16 Added an option to invert the sign of Credit, Liability, Equity, and Income accounts for the Periodic
-           Account balance chart.
+           Account Balance chart.
 * 10/10/16 Fixed another transaction and security history concurrency bug for relational databases. (Swing, Fx)
 * 10/09/16 The initial check for recurring transactions / reminders was taking too long. (Fx)
 * 10/04/16 Add utility method to pack and upgrade older databases. (Fx)

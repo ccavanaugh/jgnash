@@ -64,7 +64,7 @@ public class BudgetResultsExportTest {
 
         assertTrue(e.addBudget(budget));
 
-        BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node);
+        BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node, false);
 
         File exportFile = Files.createTempFile("testworkbook", ".xls").toFile();
 

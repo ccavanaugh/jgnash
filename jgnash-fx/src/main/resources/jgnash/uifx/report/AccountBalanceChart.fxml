@@ -74,9 +74,9 @@
 
             <Label text="%Label.Period" GridPane.columnIndex="4"/>
             <ComboBox fx:id="periodComboBox" GridPane.columnIndex="5"/>
-            <RadioButton fx:id="monthlyBalance" text="%Button.MonthlyBalance" toggleGroup="$toggleGroup"
+            <RadioButton fx:id="endingBalanceRadioButton" text="%Button.EndingBalance" toggleGroup="$toggleGroup"
                          GridPane.columnIndex="6"/>
-            <RadioButton fx:id="runningBalance" text="%Button.RunningBalance" toggleGroup="$toggleGroup"
+            <RadioButton fx:id="runningBalanceRadioButton" text="%Button.RunningBalance" toggleGroup="$toggleGroup"
                          GridPane.columnIndex="7" GridPane.halignment="LEFT"/>
 
             <CheckBox fx:id="invertBalanceCheckBox" text="%Button.InvertBalances" GridPane.columnIndex="8">

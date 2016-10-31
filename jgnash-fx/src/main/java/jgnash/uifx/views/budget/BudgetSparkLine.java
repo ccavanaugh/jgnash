@@ -55,7 +55,7 @@ class BudgetSparkLine extends Canvas {
     private double periodGap = DEFAULT_PERIOD_GAP;
 
     BudgetSparkLine(final List<BigDecimal> amounts) {
-        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> draw());
+        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> draw());
 
         setAmounts(amounts);
     }

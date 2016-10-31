@@ -31,11 +31,11 @@ class QifReader extends LineNumberReader {
 
     private static final boolean debug = false;
 
-    public QifReader(Reader in) {
+    QifReader(Reader in) {
         super(in, 8192);
     }
 
-    public void mark() throws IOException {
+    void mark() throws IOException {
         super.mark(256);
     }
 
@@ -53,7 +53,7 @@ class QifReader extends LineNumberReader {
      * @return next readable line, null if at the end of the file
      * @throws IOException IO exception
      */
-    public String peekLine() throws IOException {
+    String peekLine() throws IOException {
         String peek;
         while (true) {
             mark();

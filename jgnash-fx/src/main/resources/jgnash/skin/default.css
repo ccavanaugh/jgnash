@@ -79,7 +79,6 @@
 }
 
 .view-title {
-    -fx-font-size: 0.9583335em;
     -fx-font-weight: bold;
     -fx-padding: 6 6 6 6;
 }
@@ -90,11 +89,6 @@
 
 .list-button {
     -fx-padding: 0.333333em 2.0em 0.333333em 2.0em;
-}
-
-.busy-pane {
-    -fx-font-size: 1.2em;
-    -fx-font-weight: bold;
 }
 
 .dialog {
@@ -118,7 +112,6 @@
     -fx-spacing: 0.5em;
 	-fx-padding: 0.3333em;
     -fx-font-weight: bold;
-    -fx-font-size: 0.916667em;
 }
 
 .summary-bar {

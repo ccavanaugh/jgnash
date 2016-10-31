@@ -576,7 +576,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
-        assertTrue(!e.getAccounts(AccountGroup.ASSET).isEmpty());
+        assertNotNull(e.getAccountByName("Asset"));
     }
 
     @Test

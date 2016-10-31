@@ -69,7 +69,7 @@ public class ReportPeriodUtils {
         switch (reportPeriod) {
             case YEARLY:
                 while (end.isBefore(endDate)) {
-                    end = end.with(TemporalAdjusters.lastDayOfYear());
+                    end = start.with(TemporalAdjusters.lastDayOfYear());
                     descriptors.add(new Descriptor(start, end, "    " + start.getYear()));
                     start = end.plusDays(1);
                 }

@@ -30,6 +30,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
@@ -82,13 +83,16 @@ public class BudgetTableController implements MessageListener {
     private static final int ROW_HEIGHT_MULTIPLIER = 2;
 
     //TODO: Magic number that needs to be fixed or controlled with css
-    private static final int BORDER_MARGIN = 2;
+    private static final double BORDER_MARGIN = 2;
 
     // allow a selection span of +/- the specified number of years
     private static final int YEAR_MARGIN = 15;
 
     // Initial column width
-    private static final int INITIAL_WIDTH = 75;
+    private static final double INITIAL_WIDTH = 75;
+
+    @FXML
+    private CheckBox runningTotalsButton;
 
     @FXML
     private HBox sparkLinePane;
@@ -150,14 +154,20 @@ public class BudgetTableController implements MessageListener {
     private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
-     * The is the minimum column width required to display the largest numeric value.
+     * Bind the max and minimum values of every column to this width.
      */
-    private final DoubleProperty minColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
+    private final DoubleProperty remainingColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
-     * Bind the max and minimum values of every summary column to this width.
+     * The is the minimum column width required to display the largest numeric value. Value is cached and only
+     * updated with budget or transaction changes
      */
-    private final DoubleProperty summaryColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
+    private double minColumnWidth = INITIAL_WIDTH;
+
+    /**
+     * The is the minimum column width required to display the largest numeric summary value.
+     */
+    private final DoubleProperty minSummaryColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
      * Current index to be used for scrolling the display.  If 0 the first period is displayed to the left
@@ -213,7 +223,7 @@ public class BudgetTableController implements MessageListener {
         accountTreeView.fixedCellSizeProperty().bind(rowHeightProperty);
 
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountSummaryTable.getStylesheets().add(HIDE_VERTICAL_CSS);
+        accountSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
         accountSummaryTable.setItems(expandedAccountList);
         accountSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
         accountSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(accountSummaryTable));
@@ -239,6 +249,12 @@ public class BudgetTableController implements MessageListener {
         buildAccountSummaryTable();
         buildAccountGroupSummaryTable();
 
+        accountSummaryTable.maxWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+        accountGroupPeriodSummaryTable.maxWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+
+        accountSummaryTable.minWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+        accountGroupPeriodSummaryTable.minWidthProperty().bind(minSummaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
+
         accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue)
                 -> Platform.runLater(this::updateExpandedAccountList));
 
@@ -250,33 +266,44 @@ public class BudgetTableController implements MessageListener {
         budgetProperty.addListener(budgetChangeListener);
         yearSpinner.valueProperty().addListener(budgetChangeListener);
 
+        runningTotalsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+
+            /* Setting the tables as un-managed effectively removes these tables from the GridPane.  The tables are
+               redundant if showing the amounts as running balances. */
+            accountSummaryTable.setManaged(!newValue);
+            accountGroupPeriodSummaryTable.setManaged(!newValue);
+
+            Platform.runLater(BudgetTableController.this::handleBudgetChange);
+        });
+
         horizontalScrollBar.setMin(0);
         horizontalScrollBar.maxProperty().bind(periodCountProperty.subtract(visibleColumnCountProperty));
         horizontalScrollBar.setUnitIncrement(1);
         horizontalScrollBar.disableProperty().bind(periodCountProperty.lessThanOrEqualTo(1));
 
-        summaryColumnWidthProperty.bind(minColumnWidthProperty);
-
         // shift the table right and left with the ScrollBar value
-        horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
+        horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue)
+                -> Platform.runLater(new Runnable() {   // push update to the end of the platform thread to stability
+            @Override
+            public void run() {
+                // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
+                synchronized (this) {
+                    final int newIndex = (int) Math.round(newValue.doubleValue());
 
-            // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
-            synchronized (this) {
-                final int newIndex = (int) Math.round(newValue.doubleValue());
-
-                if (newIndex > index) {
-                    while (newIndex > index) {
-                        handleShiftRight();
-                    }
-                } else if (newIndex < index) {
-                    while (newIndex < index) {
-                        handleShiftLeft();
+                    if (newIndex > index) {
+                        while (newIndex > index) {
+                            handleShiftRight();
+                        }
+                    } else if (newIndex < index) {
+                        while (newIndex < index) {
+                            handleShiftLeft();
+                        }
                     }
                 }
             }
-        });
+        }));
 
-        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
+        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
     }
 
     private void rateLimitUpdate(final Runnable runnable) {
@@ -345,7 +372,6 @@ public class BudgetTableController implements MessageListener {
      * <p>
      * Synchronize binding, otherwise the ScrollBars get a bit confused and do not respond to a scroll wheel
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private synchronized void bindScrollBars() {
         final Optional<ScrollBar> accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
         final Optional<ScrollBar> vDataScrollBar = JavaFXUtils.findVerticalScrollBar(periodTable);
@@ -364,7 +390,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     /**
-     * Model must be rebuilt if the year or budget property is changed.
+     * Model must be rebuilt if the year or a budget property is changed.
      * <p>
      * This method is synchronized to limit more than one update attempt at a time.
      */
@@ -381,11 +407,15 @@ public class BudgetTableController implements MessageListener {
                     budgetResultsModel.removeMessageListener(this); // unregister from the old model
                 }
 
-                budgetResultsModel
-                        = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+                budgetResultsModel = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(),
+                        engine.getDefaultCurrency(), runningTotalsButton.isSelected());
+
+
+                // model has changed, calculate the minimum column width for the summary columns
+                minSummaryColumnWidthProperty.setValue(calculateMinSummaryWidthColumnWidth());
 
                 // model has changed, calculate the minimum column width
-                minColumnWidthProperty.setValue(calculateMinColumnWidth());
+                minColumnWidth = calculateMinPeriodColumnWidth();
 
                 // register with the new model
                 budgetResultsModel.addMessageListener(this);    // register with the new model
@@ -448,7 +478,7 @@ public class BudgetTableController implements MessageListener {
             final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
             // calculate the number of visible columns, period columns are 3 columns wide
-            final int maxVisible = (int) Math.floor(availWidth / (minColumnWidthProperty.get() * 3.0));
+            final int maxVisible = (int) Math.floor(availWidth / (minColumnWidth * 3.0));
 
             // update the number of visible columns factoring in the size of the descriptor list
             visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
@@ -457,6 +487,10 @@ public class BudgetTableController implements MessageListener {
                     Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
 
             columnWidthProperty.setValue(width);
+
+            double remainder = availWidth - (maxVisible * 3.0 * width);
+
+            remainingColumnWidthProperty.setValue(Math.floor(width + (remainder / 3.0)));
         } finally {
             lock.writeLock().unlock();
         }
@@ -540,6 +574,9 @@ public class BudgetTableController implements MessageListener {
         headerColumn.getColumns().add(nameColumn);
 
         accountTreeView.getColumns().add(headerColumn);
+
+        headerColumn.minWidthProperty().bind(accountTreeView.widthProperty());
+        headerColumn.maxWidthProperty().bind(accountTreeView.widthProperty());
     }
 
     private void buildAccountTypeTable() {
@@ -562,9 +599,10 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        budgetedColumn.minWidthProperty().bind(summaryColumnWidthProperty);
-        budgetedColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
+        budgetedColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         budgetedColumn.setSortable(false);
+        budgetedColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -576,9 +614,10 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        actualColumn.minWidthProperty().bind(summaryColumnWidthProperty);
-        actualColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
+        actualColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        actualColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         actualColumn.setSortable(false);
+        actualColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -592,15 +631,15 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        remainingColumn.minWidthProperty().bind(summaryColumnWidthProperty);
+        remainingColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         remainingColumn.setSortable(false);
+        remainingColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(remainingColumn);
+        headerColumn.resizableProperty().setValue(false);
 
         accountSummaryTable.getColumns().add(headerColumn);
-
-        // the width the summary table needs extra help to size the containing GridPane
-        accountSummaryTable.minWidthProperty().bind(summaryColumnWidthProperty.multiply(3.0).add(BORDER_MARGIN));
     }
 
     private TableColumn<Account, BigDecimal> buildAccountPeriodResultsColumn(final int index) {
@@ -623,6 +662,7 @@ public class BudgetTableController implements MessageListener {
         budgetedColumn.minWidthProperty().bind(columnWidthProperty);
         budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
         budgetedColumn.setSortable(false);
+        budgetedColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -638,6 +678,7 @@ public class BudgetTableController implements MessageListener {
         actualColumn.minWidthProperty().bind(columnWidthProperty);
         actualColumn.maxWidthProperty().bind(columnWidthProperty);
         actualColumn.setSortable(false);
+        actualColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -653,10 +694,14 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
 
         // the max width is not bound to allow last column to grow and fill any voids
-        remainingColumn.minWidthProperty().bind(columnWidthProperty);
+        remainingColumn.minWidthProperty().bind(remainingColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(remainingColumnWidthProperty);
         remainingColumn.setSortable(false);
+        remainingColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(remainingColumn);
+
+        headerColumn.resizableProperty().setValue(false);
 
         return headerColumn;
     }
@@ -672,6 +717,7 @@ public class BudgetTableController implements MessageListener {
         final int row = GridPane.getRowIndex(periodTable);
         final int column = GridPane.getColumnIndex(periodTable);
         gridPane.getChildren().remove(periodTable);
+
         periodTable = new TableView<>();
         GridPane.setConstraints(periodTable, column, row);
         gridPane.getChildren().add(periodTable);
@@ -681,7 +727,7 @@ public class BudgetTableController implements MessageListener {
         periodTable.fixedCellSizeProperty().bind(rowHeightProperty);
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
-        // index exceeds allowed value because the user reduced the period count, rest to the maximum allowed value
+        // index exceeds allowed value because the user reduced the period count, reset to the maximum allowed value
         if (index > budgetResultsModel.getDescriptorList().size() - visibleColumnCountProperty.get()) {
             index = budgetResultsModel.getDescriptorList().size() - visibleColumnCountProperty.get();
         }
@@ -714,6 +760,7 @@ public class BudgetTableController implements MessageListener {
         budgetedColumn.minWidthProperty().bind(columnWidthProperty);
         budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
         budgetedColumn.setSortable(false);
+        budgetedColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -730,6 +777,7 @@ public class BudgetTableController implements MessageListener {
         actualColumn.minWidthProperty().bind(columnWidthProperty);
         actualColumn.maxWidthProperty().bind(columnWidthProperty);
         actualColumn.setSortable(false);
+        actualColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -746,8 +794,10 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
 
         // the max width is not bound to allow last column to grow and fill any voids
-        remainingColumn.minWidthProperty().bind(columnWidthProperty);
+        remainingColumn.minWidthProperty().bind(remainingColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(remainingColumnWidthProperty);
         remainingColumn.setSortable(false);
+        remainingColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(remainingColumn);
 
@@ -796,9 +846,10 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
-        budgetedColumn.minWidthProperty().bind(summaryColumnWidthProperty);
-        budgetedColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
+        budgetedColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         budgetedColumn.setSortable(false);
+        budgetedColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -812,9 +863,10 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountGroupTableCell());
-        actualColumn.minWidthProperty().bind(summaryColumnWidthProperty);
-        actualColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
+        actualColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        actualColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         actualColumn.setSortable(false);
+        actualColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -828,13 +880,35 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
-        remainingColumn.minWidthProperty().bind(summaryColumnWidthProperty);
-        remainingColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
+        remainingColumn.minWidthProperty().bind(minSummaryColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(minSummaryColumnWidthProperty);
         remainingColumn.setSortable(false);
+        remainingColumn.resizableProperty().setValue(false);
 
         headerColumn.getColumns().add(remainingColumn);
 
         accountGroupPeriodSummaryTable.getColumns().add(headerColumn);
+    }
+
+    private double calculateMinColumnWidth(final BudgetPeriodDescriptor descriptor, final Account account) {
+        double max = 0;
+        double min = 0;
+
+        BudgetPeriodResults budgetPeriodResults = budgetResultsModel.getResults(descriptor, account);
+
+        max = Math.max(max, budgetPeriodResults.getBudgeted().doubleValue());
+        max = Math.max(max, budgetPeriodResults.getChange().doubleValue());
+        max = Math.max(max, budgetPeriodResults.getRemaining().doubleValue());
+
+        min = Math.min(min, budgetPeriodResults.getBudgeted().doubleValue());
+        min = Math.min(min, budgetPeriodResults.getChange().doubleValue());
+        min = Math.min(min, budgetPeriodResults.getRemaining().doubleValue());
+
+        return Math.max(JavaFXUtils.getDisplayedTextWidth(
+                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
+                        BORDER_MARGIN, null), JavaFXUtils.getDisplayedTextWidth(
+                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
+                        BORDER_MARGIN, null));
     }
 
     private double calculateMinColumnWidth(final Account account) {
@@ -881,7 +955,26 @@ public class BudgetTableController implements MessageListener {
                                 BORDER_MARGIN, null));
     }
 
-    private double calculateMinColumnWidth() {
+    private double calculateMinPeriodColumnWidth() {
+        double max = 0;
+
+        for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
+            for (final Account account: expandedAccountList) {
+                max = Math.max(max, calculateMinColumnWidth(descriptor, account));
+            }
+        }
+
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Budgeted")
+                + BORDER_MARGIN, null));
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Actual")
+                + BORDER_MARGIN, null));
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Remaining")
+                + BORDER_MARGIN, null));
+
+        return Math.ceil(max);
+    }
+
+    private double calculateMinSummaryWidthColumnWidth() {
         double max = 0;
 
         for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {

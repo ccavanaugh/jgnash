@@ -174,21 +174,20 @@ public class ReconcileSettingsDialogController {
             pair.getStage().setMinHeight(pair.getStage().getHeight());
         });
 
-        new Thread() { // push account updates outside the UI thread to improve performance
-            public void run() {
-                ReconcileManager.setAccountDateAttribute(accountProperty().get(),
-                        Account.RECONCILE_LAST_ATTEMPT_DATE, LocalDate.now());
+        // push account updates outside the UI thread to improve performance
+        new Thread(() -> {
+            ReconcileManager.setAccountDateAttribute(accountProperty().get(),
+                    Account.RECONCILE_LAST_ATTEMPT_DATE, LocalDate.now());
 
-                ReconcileManager.setAccountDateAttribute(accountProperty().get(),
-                        Account.RECONCILE_LAST_STATEMENT_DATE, statementDate);
+            ReconcileManager.setAccountDateAttribute(accountProperty().get(),
+                    Account.RECONCILE_LAST_STATEMENT_DATE, statementDate);
 
-                ReconcileManager.setAccountBigDecimalAttribute(accountProperty().get(),
-                        Account.RECONCILE_LAST_OPENING_BALANCE, openingBalance);
+            ReconcileManager.setAccountBigDecimalAttribute(accountProperty().get(),
+                    Account.RECONCILE_LAST_OPENING_BALANCE, openingBalance);
 
-                ReconcileManager.setAccountBigDecimalAttribute(accountProperty().get(),
-                        Account.RECONCILE_LAST_CLOSING_BALANCE, closingBalance);
-            }
-        }.start();
+            ReconcileManager.setAccountBigDecimalAttribute(accountProperty().get(),
+                    Account.RECONCILE_LAST_CLOSING_BALANCE, closingBalance);
+        }).start();
 
         handleCloseAction(); // close the dialog
     }

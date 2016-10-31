@@ -57,6 +57,15 @@ class NotificationDialog extends Stage {
     private Button okButton;
 
     @FXML
+    private Button selectAllButton;
+
+    @FXML
+    private Button clearAllButton;
+
+    @FXML
+    private Button invertButton;
+
+    @FXML
     private TableView<PendingReminder> tableView;
 
     @FXML
@@ -81,22 +90,22 @@ class NotificationDialog extends Stage {
     }
 
     @FXML
-    @SuppressWarnings("unchecked")
     private void initialize() {
         final TableColumn<PendingReminder, Boolean> enabledColumn = new TableColumn<>(resources.getString("Column.Approve"));
         enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isApproved()));
         enabledColumn.setCellFactory(CheckBoxTableCell.forTableColumn(enabledColumn));
+        tableView.getColumns().add(enabledColumn);
 
         final TableColumn<PendingReminder, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCommitDate()));
         dateColumn.setCellFactory(cell -> new DateTableCell());
+        tableView.getColumns().add(dateColumn);
 
         final TableColumn<PendingReminder, String> descriptionColumn = new TableColumn<>(resources.getString("Column.Description"));
         descriptionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getReminder().getDescription()));
+        tableView.getColumns().add(descriptionColumn);
 
         tableView.setItems(observableReminderList);
-
-        tableView.getColumns().addAll(enabledColumn, dateColumn, descriptionColumn);
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -111,11 +120,35 @@ class NotificationDialog extends Stage {
 
         okButton.onActionProperty().setValue(event -> handleOkayAction());
         cancelButton.onActionProperty().setValue(event -> handleCancelAction());
+        selectAllButton.onActionProperty().setValue(event -> handleSelectAllAction());
+        clearAllButton.onActionProperty().setValue(event -> handleClearAllAction());
+        invertButton.onActionProperty().setValue(event -> handleInvertSelectionAction());
 
         snoozeComboBox.setSelectedPeriod(Options.reminderSnoozePeriodProperty().get());
 
         // Bind options to the snooze period property
         Options.reminderSnoozePeriodProperty().bind(snoozeComboBox.periodProperty());
+    }
+
+    private void handleSelectAllAction() {
+        for (final PendingReminder pendingReminder : observableReminderList) {
+            pendingReminder.setApproved(true);
+        }
+        tableView.refresh();
+    }
+
+    private void handleClearAllAction() {
+        for (final PendingReminder pendingReminder : observableReminderList) {
+            pendingReminder.setApproved(false);
+        }
+        tableView.refresh();
+    }
+
+    private void handleInvertSelectionAction() {
+        for (final PendingReminder pendingReminder : observableReminderList) {
+            pendingReminder.setApproved(!pendingReminder.isApproved());
+        }
+        tableView.refresh();
     }
 
     private void handleCancelAction() {

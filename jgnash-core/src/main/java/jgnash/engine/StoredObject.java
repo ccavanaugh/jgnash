@@ -70,8 +70,8 @@ public abstract class StoredObject implements Cloneable, Serializable {
         this.uuid = uuid;
     }
 
-    void setMarkedForRemoval(final boolean markedForRemoval) {
-        this.markedForRemoval = markedForRemoval;
+    void setMarkedForRemoval() {
+        this.markedForRemoval = true;
     }
 
     public boolean isMarkedForRemoval() {

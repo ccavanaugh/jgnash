@@ -72,7 +72,7 @@ public class DefaultCurrencyAction {
                     dialog.setTitle(resources.getString("Title.SelDefCurr"));
 
                     dialog.getDialogPane().getStylesheets().addAll(MainView.DEFAULT_CSS);
-                    dialog.getDialogPane().getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+                    dialog.getDialogPane().getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
                     dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
                     dialog.setHeaderText(resources.getString("Title.SelDefCurr"));
 

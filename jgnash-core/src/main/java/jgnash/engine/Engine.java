@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -771,13 +770,8 @@ public class Engine {
 
             List<StoredObject> objects = eDAO.getStoredObjects();
 
-            for (Iterator<StoredObject> i = objects.iterator(); i.hasNext(); ) {
-                StoredObject o = i.next();
-
-                if (o instanceof TrashObject || o.isMarkedForRemoval()) {
-                    i.remove();
-                }
-            }
+            // Filter out objects to be removed
+            objects.removeIf(o -> o instanceof TrashObject || o.isMarkedForRemoval());
 
             objects.sort(new StoredObjectComparator());
 
@@ -1723,16 +1717,6 @@ public class Engine {
     @NotNull
     public List<Account> getExpenseAccountList() {
         return getAccountDAO().getExpenseAccountList();
-    }
-
-    /**
-     * Returns a list of Accounts that are members of the group.
-     *
-     * @param group the requested AccountGroup
-     * @return member accounts
-     */
-    public List<Account> getAccounts(final AccountGroup group) {
-        return getAccountList().parallelStream().filter(account -> account.memberOf(group)).collect(Collectors.toList());
     }
 
     /**
