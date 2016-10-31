@@ -80,9 +80,13 @@ public class AboutDialogController {
 
     private Tab addHTMLTab(final String name, final String resource) {
         final WebView webView = new WebView();
-        webView.getEngine().load(HTMLResource.getURL(resource).toExternalForm());
+
         webView.setFontScale(FONT_SCALE);
         webView.setMaxHeight(MAX_HEIGHT);
+
+        // be paranoid, protect against external scripts
+        webView.getEngine().setJavaScriptEnabled(false);
+        webView.getEngine().load(HTMLResource.getURL(resource).toExternalForm());
 
         return new Tab(name, webView);
     }
