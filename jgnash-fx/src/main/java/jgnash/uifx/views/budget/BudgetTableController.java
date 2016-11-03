@@ -370,7 +370,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     private void updateHeights() {
-        rowHeight.setValue(ThemeManager.getBaseTextHeight() * ROW_HEIGHT_MULTIPLIER);
+        rowHeight.set(ThemeManager.getBaseTextHeight() * ROW_HEIGHT_MULTIPLIER);
     }
 
     /**
@@ -419,7 +419,7 @@ public class BudgetTableController implements MessageListener {
 
 
                 // model has changed, calculate the minimum column width for the summary columns
-                minSummaryColumnWidth.setValue(calculateMinSummaryWidthColumnWidth());
+                minSummaryColumnWidth.set(calculateMinSummaryWidthColumnWidth());
 
                 // model has changed, calculate the minimum column width
                 minColumnWidth = calculateMinPeriodColumnWidth();
@@ -427,7 +427,7 @@ public class BudgetTableController implements MessageListener {
                 // register with the new model
                 budgetResultsModel.addMessageListener(this);    // register with the new model
 
-                periodCount.setValue(budgetResultsModel.getDescriptorList().size());
+                periodCount.set(budgetResultsModel.getDescriptorList().size());
                 loadModel();
             } else {
                 accountTreeView.setRoot(null);
@@ -493,11 +493,11 @@ public class BudgetTableController implements MessageListener {
             final double width = Math.floor(availWidth /
                     Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
 
-            columnWidth.setValue(width);
+            columnWidth.set(width);
 
             double remainder = availWidth - (maxVisible * 3.0 * width);
 
-            remainingColumnWidth.setValue(Math.floor(width + (remainder / 3.0)));
+            remainingColumnWidth.set(Math.floor(width + (remainder / 3.0)));
         } finally {
             lock.writeLock().unlock();
         }
@@ -609,7 +609,7 @@ public class BudgetTableController implements MessageListener {
         budgetedColumn.minWidthProperty().bind(minSummaryColumnWidth);
         budgetedColumn.maxWidthProperty().bind(minSummaryColumnWidth);
         budgetedColumn.setSortable(false);
-        budgetedColumn.resizableProperty().setValue(false);
+        budgetedColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -624,7 +624,7 @@ public class BudgetTableController implements MessageListener {
         actualColumn.minWidthProperty().bind(minSummaryColumnWidth);
         actualColumn.maxWidthProperty().bind(minSummaryColumnWidth);
         actualColumn.setSortable(false);
-        actualColumn.resizableProperty().setValue(false);
+        actualColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -641,10 +641,10 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.minWidthProperty().bind(minSummaryColumnWidth);
         remainingColumn.maxWidthProperty().bind(minSummaryColumnWidth);
         remainingColumn.setSortable(false);
-        remainingColumn.resizableProperty().setValue(false);
+        remainingColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(remainingColumn);
-        headerColumn.resizableProperty().setValue(false);
+        headerColumn.resizableProperty().set(false);
 
         accountSummaryTable.getColumns().add(headerColumn);
     }
@@ -669,7 +669,7 @@ public class BudgetTableController implements MessageListener {
         budgetedColumn.minWidthProperty().bind(columnWidth);
         budgetedColumn.maxWidthProperty().bind(columnWidth);
         budgetedColumn.setSortable(false);
-        budgetedColumn.resizableProperty().setValue(false);
+        budgetedColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -685,7 +685,7 @@ public class BudgetTableController implements MessageListener {
         actualColumn.minWidthProperty().bind(columnWidth);
         actualColumn.maxWidthProperty().bind(columnWidth);
         actualColumn.setSortable(false);
-        actualColumn.resizableProperty().setValue(false);
+        actualColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -704,11 +704,11 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.minWidthProperty().bind(remainingColumnWidth);
         remainingColumn.maxWidthProperty().bind(remainingColumnWidth);
         remainingColumn.setSortable(false);
-        remainingColumn.resizableProperty().setValue(false);
+        remainingColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(remainingColumn);
 
-        headerColumn.resizableProperty().setValue(false);
+        headerColumn.resizableProperty().set(false);
 
         return headerColumn;
     }
@@ -767,7 +767,7 @@ public class BudgetTableController implements MessageListener {
         budgetedColumn.minWidthProperty().bind(columnWidth);
         budgetedColumn.maxWidthProperty().bind(columnWidth);
         budgetedColumn.setSortable(false);
-        budgetedColumn.resizableProperty().setValue(false);
+        budgetedColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -784,7 +784,7 @@ public class BudgetTableController implements MessageListener {
         actualColumn.minWidthProperty().bind(columnWidth);
         actualColumn.maxWidthProperty().bind(columnWidth);
         actualColumn.setSortable(false);
-        actualColumn.resizableProperty().setValue(false);
+        actualColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -804,7 +804,7 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.minWidthProperty().bind(remainingColumnWidth);
         remainingColumn.maxWidthProperty().bind(remainingColumnWidth);
         remainingColumn.setSortable(false);
-        remainingColumn.resizableProperty().setValue(false);
+        remainingColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(remainingColumn);
 
@@ -856,7 +856,7 @@ public class BudgetTableController implements MessageListener {
         budgetedColumn.minWidthProperty().bind(minSummaryColumnWidth);
         budgetedColumn.maxWidthProperty().bind(minSummaryColumnWidth);
         budgetedColumn.setSortable(false);
-        budgetedColumn.resizableProperty().setValue(false);
+        budgetedColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -873,7 +873,7 @@ public class BudgetTableController implements MessageListener {
         actualColumn.minWidthProperty().bind(minSummaryColumnWidth);
         actualColumn.maxWidthProperty().bind(minSummaryColumnWidth);
         actualColumn.setSortable(false);
-        actualColumn.resizableProperty().setValue(false);
+        actualColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -890,7 +890,7 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.minWidthProperty().bind(minSummaryColumnWidth);
         remainingColumn.maxWidthProperty().bind(minSummaryColumnWidth);
         remainingColumn.setSortable(false);
-        remainingColumn.resizableProperty().setValue(false);
+        remainingColumn.resizableProperty().set(false);
 
         headerColumn.getColumns().add(remainingColumn);
 
@@ -1044,12 +1044,12 @@ public class BudgetTableController implements MessageListener {
                 FXMLUtils.load(BudgetGoalsDialogController.class.getResource("BudgetGoalsDialog.fxml"),
                         resources.getString("Title.BudgetManager") + " - " + account.getName());
 
-        pair.getController().accountProperty().setValue(account);
-        pair.getController().workingYearProperty().setValue(yearSpinner.getValue());
+        pair.getController().accountProperty().set(account);
+        pair.getController().workingYearProperty().set(yearSpinner.getValue());
 
         try {
             final BudgetGoal oldGoal = (BudgetGoal) budgetProperty().get().getBudgetGoal(account).clone();
-            pair.getController().budgetGoalProperty().setValue(oldGoal);
+            pair.getController().budgetGoalProperty().set(oldGoal);
         } catch (final CloneNotSupportedException e) {
             Logger.getLogger(BudgetTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -1071,11 +1071,11 @@ public class BudgetTableController implements MessageListener {
         switch (message.getEvent()) {
             case FILE_CLOSING:
                 budgetResultsModel.removeMessageListener(this);
-                budgetProperty().setValue(null);
+                budgetProperty().set(null);
                 break;
             case BUDGET_REMOVE:
                 if (budgetProperty().get().equals(message.getObject(MessageProperty.BUDGET))) {
-                    budgetProperty().setValue(null);
+                    budgetProperty().set(null);
                     budgetResultsModel.removeMessageListener(this);
                 }
                 break;
