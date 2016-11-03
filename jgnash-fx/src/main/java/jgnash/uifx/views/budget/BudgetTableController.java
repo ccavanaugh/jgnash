@@ -205,7 +205,7 @@ public class BudgetTableController implements MessageListener {
 
 
         tableWidthChangeListener = (observable, oldValue, newValue) -> {
-            if (newValue != null) {
+            if (newValue != null && !oldValue.equals(newValue)) {
                 optimizeColumnWidths();
             }
         };
@@ -258,23 +258,17 @@ public class BudgetTableController implements MessageListener {
         accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue)
                 -> Platform.runLater(this::updateExpandedAccountList));
 
-        final ChangeListener<Object> budgetChangeListener = (observable, oldValue, newValue) -> {
-            // push change to end of the application thread
-            Platform.runLater(BudgetTableController.this::handleBudgetChange);
-        };
+        final ChangeListener<Object> budgetChangeListener = (observable, oldValue, newValue) -> handleBudgetChange();
 
         budget.addListener(budgetChangeListener);
         yearSpinner.valueProperty().addListener(budgetChangeListener);
+        runningTotalsButton.selectedProperty().addListener(budgetChangeListener);
+        visibleColumnCount.addListener(budgetChangeListener);
 
-        runningTotalsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-
-            /* Setting the tables as un-managed effectively removes these tables from the GridPane.  The tables are
-               redundant if showing the amounts as running balances. */
-            accountSummaryTable.setManaged(!newValue);
-            accountGroupPeriodSummaryTable.setManaged(!newValue);
-
-            Platform.runLater(BudgetTableController.this::handleBudgetChange);
-        });
+        /* Setting the tables as un-managed effectively removes these tables from the GridPane.  The tables are
+           redundant if showing the amounts as running balances. */
+        accountSummaryTable.managedProperty().bind(runningTotalsButton.selectedProperty().not());
+        accountGroupPeriodSummaryTable.managedProperty().bind(runningTotalsButton.selectedProperty().not());
 
         horizontalScrollBar.setMin(0);
         horizontalScrollBar.maxProperty().bind(periodCount.subtract(visibleColumnCount));
@@ -335,12 +329,6 @@ public class BudgetTableController implements MessageListener {
     @FXML
     private void handleShiftRight() {
         lock.writeLock().lock();
-
-        /*
-        System.out.println(periodCountProperty.intValue());
-        System.out.println(index + ", " + visibleColumnCount.get() + ", " + horizontalScrollBar.maxProperty().intValue());
-        System.out.println();
-        */
 
         try {
             // remove leftmost column
@@ -405,29 +393,32 @@ public class BudgetTableController implements MessageListener {
         lock.writeLock().lock();
 
         try {
-
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
             if (budget.get() != null && engine != null) {
-                // unregister from the old model
+
+                // unregister listener from the old model because the model will be replaced
                 if (budgetResultsModel != null) {
                     budgetResultsModel.removeMessageListener(this); // unregister from the old model
                 }
 
+                // Build the new results model
                 budgetResultsModel = new BudgetResultsModel(budget.get(), yearSpinner.getValue(),
                         engine.getDefaultCurrency(), runningTotalsButton.isSelected());
-
 
                 // model has changed, calculate the minimum column width for the summary columns
                 minSummaryColumnWidth.set(calculateMinSummaryWidthColumnWidth());
 
-                // model has changed, calculate the minimum column width
+                // model has changed, calculate the minimum column width the data model needs
                 minColumnWidth = calculateMinPeriodColumnWidth();
 
-                // register with the new model
+                // register the listener with the new model
                 budgetResultsModel.addMessageListener(this);    // register with the new model
 
+                // update the number of periods the budget model has
                 periodCount.set(budgetResultsModel.getDescriptorList().size());
+
+                // load the model
                 loadModel();
             } else {
                 accountTreeView.setRoot(null);
@@ -466,6 +457,7 @@ public class BudgetTableController implements MessageListener {
 
             buildPeriodTable();
             buildPeriodSummaryTable();
+
             updateExpandedAccountList();
 
             updateSparkLines();
@@ -1025,7 +1017,7 @@ public class BudgetTableController implements MessageListener {
     private void updateSparkLines() {
         sparkLinePane.getChildren().clear();
 
-        for (AccountGroup group : accountGroupList) {
+        for (final AccountGroup group : accountGroupList) {
             List<BigDecimal> remaining = budgetResultsModel.getDescriptorList().parallelStream().map(descriptor ->
                     budgetResultsModel.getResults(descriptor, group).getRemaining()).collect(Collectors.toList());
 
