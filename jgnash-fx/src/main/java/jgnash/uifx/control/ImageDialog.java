@@ -114,7 +114,7 @@ public class ImageDialog {
                 final Image image = new Image(path.toUri().toURL().toString(), true);
                 imageView.setPreserveRatio(true);
                 imageView.setImage(image);
-                statusBar.textProperty().setValue(path.toString());
+                statusBar.textProperty().set(path.toString());
             } catch (final MalformedURLException e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             }

@@ -472,8 +472,8 @@ public class MainView implements MessageListener {
 
         private void updateStatus(final String status, final Node glyph) {
             Platform.runLater(() -> {
-                statusBar.textProperty().setValue(status);
-                statusBar.graphicProperty().setValue(glyph);
+                statusBar.textProperty().set(status);
+                statusBar.graphicProperty().set(glyph);
             });
         }
     }

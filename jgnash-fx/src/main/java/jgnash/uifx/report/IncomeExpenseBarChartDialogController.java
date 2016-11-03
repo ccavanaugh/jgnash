@@ -67,7 +67,7 @@ public class IncomeExpenseBarChartDialogController {
     private static final int PERIOD_GAP = 20;
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private StackPane chartPane;
@@ -112,7 +112,7 @@ public class IncomeExpenseBarChartDialogController {
         barChart.setCategoryGap(PERIOD_GAP);
 
         // Respect animation preference
-        barChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
+        barChart.animatedProperty().set(Options.animationsEnabledProperty().get());
 
         startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(endDatePicker.getValue().minusMonths(11)));
 
@@ -211,6 +211,6 @@ public class IncomeExpenseBarChartDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 }

@@ -57,7 +57,7 @@ public class NewFileFourController extends AbstractWizardPaneController<NewFileW
 
     @FXML
     private void initialize() {
-        textArea.textProperty().setValue(TextResource.getString("NewFileFour.txt"));
+        textArea.textProperty().set(TextResource.getString("NewFileFour.txt"));
         accountSetsList.getItems().addAll(AccountTreeXMLFactory.getLocalizedAccountSet());
 
         accountSetsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)

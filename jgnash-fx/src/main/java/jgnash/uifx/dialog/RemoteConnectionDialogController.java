@@ -46,7 +46,7 @@ public class RemoteConnectionDialogController {
     private static final String LAST_HOST = "lastHost";
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private IntegerTextField portTextField;
@@ -84,12 +84,12 @@ public class RemoteConnectionDialogController {
         preferences.put(LAST_HOST, hostTextField.getText());
         preferences.putInt(LAST_PORT, portTextField.getInteger());
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     public char[] getPassword() {

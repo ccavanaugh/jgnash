@@ -70,7 +70,7 @@ public class BusyPane extends StackPane {
     }
 
     private void updateFont() {
-        messageLabel.fontProperty().setValue(Font.font(null, FontWeight.BOLD, null,
+        messageLabel.fontProperty().set(Font.font(null, FontWeight.BOLD, null,
                 ThemeManager.getBaseTextHeight() * 1.2));
     }
 

@@ -73,7 +73,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
     @Override
     protected void buildTable() {
-        final String[] columnNames = RegisterFactory.getColumnNames(getAccountProperty().get().getAccountType());
+        final String[] columnNames = RegisterFactory.getColumnNames(accountProperty().get().getAccountType());
 
         final TableColumn<Transaction, LocalDate> dateColumn = new TableColumn<>(columnNames[0]);
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
@@ -101,7 +101,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[5]);
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()
-                .getReconciled(accountProperty.getValue()).toString()));
+                .getReconciled(account.getValue()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(reconciledColumn);
 
@@ -112,12 +112,12 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
         final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[7]);
         priceColumn.setCellValueFactory(param -> new PriceProperty(param.getValue()));
-        priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(priceColumn);
 
         final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[8]);
         netColumn.setCellValueFactory(param -> new AmountProperty(param.getValue()));
-        netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(netColumn);
 
         //tableView.getColumns().addAll(dateColumn, dateTimeColumn, typeColumn, investmentColumn, memoColumn, reconciledColumn, quantityColumn, priceColumn, netColumn);
@@ -125,9 +125,9 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == netColumn) {
-                return CommodityFormat.getFullNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+                return CommodityFormat.getFullNumberFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == quantityColumn || param == priceColumn) {
-                return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+                return CommodityFormat.getShortNumberFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
                 return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {
@@ -144,7 +144,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
             if (t instanceof InvestmentTransaction) {
                 setValue(t.getTransactionType().toString());
-            } else if (t.getAmount(accountProperty.get()).signum() > 0) {
+            } else if (t.getAmount(account.get()).signum() > 0) {
                 setValue(resources.getString("Item.CashDeposit"));
             } else {
                 setValue(resources.getString("Item.CashWithdrawal"));
@@ -204,7 +204,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
             if (t instanceof InvestmentTransaction) {
                 setValue(((InvestmentTransaction) t).getNetCashValue());
             } else {
-                setValue(t.getAmount(accountProperty.get()));
+                setValue(t.getAmount(account.get()));
             }
         }
     }

@@ -56,7 +56,7 @@ public class StatusBar extends StackPane {
         label.getStyleClass().add("status-label");
         label.textFillProperty().bind(ThemeManager.controlTextFillProperty());
 
-        textProperty().setValue(ResourceUtils.getString("Button.Ok"));
+        textProperty().set(ResourceUtils.getString("Button.Ok"));
 
         final ProgressIndicator progressBar = new ProgressIndicator();
         progressBar.progressProperty().bind(progressProperty());

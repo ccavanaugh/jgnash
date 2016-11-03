@@ -74,11 +74,11 @@ public class GeneralTabController {
 
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == linuxStyleRadioButton) {
-                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_LINUX);
+                Options.buttonOrderProperty().set(ButtonBar.BUTTON_ORDER_LINUX);
             } else if (newValue == macOSStyleRadioButton) {
-                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_MAC_OS);
+                Options.buttonOrderProperty().set(ButtonBar.BUTTON_ORDER_MAC_OS);
             } else {
-                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_WINDOWS);
+                Options.buttonOrderProperty().set(ButtonBar.BUTTON_ORDER_WINDOWS);
             }
         });
     }

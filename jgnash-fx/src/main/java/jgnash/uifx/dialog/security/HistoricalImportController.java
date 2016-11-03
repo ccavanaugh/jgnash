@@ -65,7 +65,7 @@ import org.controlsfx.control.CheckListView;
 public class HistoricalImportController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button stopButton;
@@ -104,7 +104,7 @@ public class HistoricalImportController {
 
     private volatile boolean requestCancel = false;
 
-    private final BooleanProperty disableUIProperty = new SimpleBooleanProperty();
+    private final BooleanProperty disableUI = new SimpleBooleanProperty();
 
     @FXML
     void initialize() {
@@ -120,15 +120,15 @@ public class HistoricalImportController {
 
         startDatePicker.setValue(LocalDate.now().minusMonths(1));
 
-        checkListView.disableProperty().bind(disableUIProperty);
-        endDatePicker.disableProperty().bind(disableUIProperty);
-        startDatePicker.disableProperty().bind(disableUIProperty);
-        startButton.disableProperty().bind(disableUIProperty);
-        selectAllButton.disableProperty().bind(disableUIProperty);
-        clearAllButton.disableProperty().bind(disableUIProperty);
-        invertAllButton.disableProperty().bind(disableUIProperty);
+        checkListView.disableProperty().bind(disableUI);
+        endDatePicker.disableProperty().bind(disableUI);
+        startDatePicker.disableProperty().bind(disableUI);
+        startButton.disableProperty().bind(disableUI);
+        selectAllButton.disableProperty().bind(disableUI);
+        clearAllButton.disableProperty().bind(disableUI);
+        invertAllButton.disableProperty().bind(disableUI);
 
-        stopButton.disableProperty().bind(disableUIProperty.not());
+        stopButton.disableProperty().bind(disableUI.not());
     }
 
     @FXML
@@ -154,7 +154,7 @@ public class HistoricalImportController {
 
     @FXML
     private void handleStartAction() {
-        disableUIProperty.setValue(true);
+        disableUI.set(true);
 
         final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateFormatter();
 
@@ -236,14 +236,14 @@ public class HistoricalImportController {
 
         checkListView.getCheckModel().clearChecks();
 
-        disableUIProperty.setValue(false);
+        disableUI.set(false);
     }
 
     @FXML
     private void handleCloseAction() {
         handleStopAction();
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML

@@ -35,7 +35,7 @@ import jgnash.uifx.util.InjectFXML;
 public class FontSizeDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Slider slider;
@@ -45,13 +45,13 @@ public class FontSizeDialogController {
         // Match the current value so it's not reset
         slider.setValue(ThemeManager.fontScaleProperty().get() * 100);
 
-        slider.labelFormatterProperty().setValue(new DoubleStringConverter());
+        slider.labelFormatterProperty().set(new DoubleStringConverter());
 
         // Bind the font size to the slider
         ThemeManager.fontScaleProperty().bind(slider.valueProperty().divide(100));
 
         // Unbind the font size when the dialog closes
-        parentProperty.addListener((observable, oldValue, scene) -> {
+        parent.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
                 scene.windowProperty().addListener((observable1, oldValue1, window)
                         -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event ->

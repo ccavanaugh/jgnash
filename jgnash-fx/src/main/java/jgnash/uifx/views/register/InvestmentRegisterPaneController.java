@@ -59,7 +59,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
         // Load the register table
-        registerTableControllerProperty.setValue(FXMLUtils.loadFXML(node ->
+        registerTableController.set(FXMLUtils.loadFXML(node ->
                 registerTablePane.getChildren().add(node), "InvestmentRegisterTable.fxml", resources));
 
         investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);

@@ -56,7 +56,7 @@ public class NewFileThreeController extends AbstractWizardPaneController<NewFile
 
     @FXML
     private void initialize() {
-        textArea.textProperty().setValue(TextResource.getString("NewFileThree.txt"));
+        textArea.textProperty().set(TextResource.getString("NewFileThree.txt"));
 
         availableList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

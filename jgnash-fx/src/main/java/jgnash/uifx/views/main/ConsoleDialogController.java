@@ -65,7 +65,7 @@ public class ConsoleDialogController {
     private  static final int REFRESH_PERIOD = 500;
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ProgressBar memoryUsageProgressBar;
@@ -170,7 +170,7 @@ public class ConsoleDialogController {
 
         timeline.stop();
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
         visible.set(false);
     }
 

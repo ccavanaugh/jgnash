@@ -64,14 +64,14 @@ public class SlipController extends AbstractSlipController {
     @FXML
     private AccountExchangePane accountExchangePane;
 
-    private final SimpleListProperty<TransactionEntry> transactionEntriesProperty =
+    private final SimpleListProperty<TransactionEntry> transactionEntries =
             new SimpleListProperty<>(FXCollections.observableArrayList());
 
     private SlipType slipType;
 
     private final SimpleObjectProperty<TransactionEntry> modEntry = new SimpleObjectProperty<>();
 
-    private final BooleanProperty concatenatedProperty = new SimpleBooleanProperty();
+    private final BooleanProperty concatenated = new SimpleBooleanProperty();
 
     @FXML
     @Override
@@ -89,11 +89,11 @@ public class SlipController extends AbstractSlipController {
                     accountExchangePane.selectedAccountProperty().isNull()));
         }
 
-        amountField.editableProperty().bind(transactionEntriesProperty.emptyProperty());
-        accountExchangePane.disableProperty().bind(transactionEntriesProperty.emptyProperty().not()
+        amountField.editableProperty().bind(transactionEntries.emptyProperty());
+        accountExchangePane.disableProperty().bind(transactionEntries.emptyProperty().not()
                 .or(modEntry.isNotNull()));
 
-        memoTextField.disableProperty().bind(concatenatedProperty);
+        memoTextField.disableProperty().bind(concatenated);
     }
 
     void setSlipType(final SlipType slipType) {
@@ -114,14 +114,14 @@ public class SlipController extends AbstractSlipController {
         modTrans = attachmentPane.modifyTransaction(modTrans);
 
         // Set state of memo concatenation
-        concatenatedProperty.setValue(modTrans.isMemoConcatenated());
+        concatenated.setValue(modTrans.isMemoConcatenated());
 
         if (!canModifyTransaction(transaction) && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
             for (final TransactionEntry entry : transaction.getTransactionEntries()) {
                 if (entry.getCreditAccount().equals(accountProperty().get()) || entry.getDebitAccount().equals(accountProperty().get())) {
                     modEntry.setValue(entry);
 
-                    concatenatedProperty.setValue(false); // override to allow editing the entry
+                    concatenated.setValue(false); // override to allow editing the entry
                     break;
                 }
             }
@@ -153,7 +153,7 @@ public class SlipController extends AbstractSlipController {
 
         final LocalDate date = datePicker.getValue();
 
-        if (!transactionEntriesProperty.isEmpty()) { // build a split transaction
+        if (!transactionEntries.isEmpty()) { // build a split transaction
             transaction = new Transaction();
 
             transaction.setDate(date);
@@ -162,7 +162,7 @@ public class SlipController extends AbstractSlipController {
                     : memoTextField.getText());
             transaction.setPayee(payeeTextField.getText());
 
-            transaction.addTransactionEntries(transactionEntriesProperty);
+            transaction.addTransactionEntries(transactionEntries);
         } else {  // double entry transaction
             final int signum = amountField.getDecimal().signum();
 
@@ -177,21 +177,21 @@ public class SlipController extends AbstractSlipController {
             if (slipType == SlipType.DECREASE && signum >= 0 || slipType == SlipType.INCREASE && signum == -1) {
                 if (hasEqualCurrencies()) {
                     transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount,
-                            accountProperty.get(), amountField.getDecimal().abs(), date, memoTextField.getText(),
+                            account.get(), amountField.getDecimal().abs(), date, memoTextField.getText(),
                             payeeTextField.getText(), numberComboBox.getValue());
                 } else {
                     transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount,
-                            accountProperty.get(), accountExchangePane.exchangeAmountProperty().get().abs(),
+                            account.get(), accountExchangePane.exchangeAmountProperty().get().abs(),
                             amountField.getDecimal().abs().negate(), date, memoTextField.getText(),
                             payeeTextField.getText(), numberComboBox.getValue());
                 }
             } else {
                 if (hasEqualCurrencies()) {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(accountProperty.get(),
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(account.get(),
                             selectedAccount, amountField.getDecimal().abs(), date, memoTextField.getText(),
                             payeeTextField.getText(), numberComboBox.getValue());
                 } else {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(accountProperty.get(),
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(account.get(),
                             selectedAccount, amountField.getDecimal().abs(),
                             accountExchangePane.exchangeAmountProperty().get().abs().negate(), date,
                             memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
@@ -199,7 +199,7 @@ public class SlipController extends AbstractSlipController {
             }
         }
 
-        ReconcileManager.reconcileTransaction(accountProperty.get(), transaction, getReconciledState());
+        ReconcileManager.reconcileTransaction(account.get(), transaction, getReconciledState());
 
         return transaction;
     }
@@ -212,7 +212,7 @@ public class SlipController extends AbstractSlipController {
 
         if (slipType == SlipType.DECREASE && signum >= 0 || slipType == SlipType.INCREASE && signum < 0) {
             entry.setCreditAccount(accountExchangePane.getSelectedAccount());
-            entry.setDebitAccount(accountProperty.get());
+            entry.setDebitAccount(account.get());
 
             if (hasEqualCurrencies()) {
                 entry.setAmount(amountField.getDecimal().abs());
@@ -220,7 +220,7 @@ public class SlipController extends AbstractSlipController {
                 entry.setDebitAmount(accountExchangePane.exchangeAmountProperty().get().abs().negate());
             }
         } else {
-            entry.setCreditAccount(accountProperty.get());
+            entry.setCreditAccount(account.get());
             entry.setDebitAccount(accountExchangePane.getSelectedAccount());
 
             if (hasEqualCurrencies()) {
@@ -230,19 +230,19 @@ public class SlipController extends AbstractSlipController {
             }
         }
 
-        entry.setReconciled(accountProperty.get(), getReconciledState());
+        entry.setReconciled(account.get(), getReconciledState());
 
         return entry;
     }
 
     private boolean hasEqualCurrencies() {
-        return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
+        return account.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
 
     private Account getOppositeSideAccount(final Transaction t) {
         TransactionEntry entry = t.getTransactionEntries().get(0);
 
-        if (entry.getCreditAccount().equals(accountProperty.get())) {
+        if (entry.getCreditAccount().equals(account.get())) {
             return entry.getDebitAccount();
         }
         return entry.getCreditAccount();
@@ -264,11 +264,11 @@ public class SlipController extends AbstractSlipController {
             if (canModifyTransaction(t)) { // split common account is the same as the base account
 
                 //  clone the splits for modification
-                transactionEntriesProperty.clear();
+                transactionEntries.clear();
 
                 for (final TransactionEntry entry : t.getTransactionEntries()) {
                     try {
-                        transactionEntriesProperty.add((TransactionEntry) entry.clone());
+                        transactionEntries.add((TransactionEntry) entry.clone());
                     } catch (final CloneNotSupportedException e) {
                         Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
@@ -281,7 +281,7 @@ public class SlipController extends AbstractSlipController {
                 numberComboBox.setDisable(true);
                 datePicker.setEditable(false);
 
-                memoTextField.setText(t.getMemo(accountProperty.get()));   // Override
+                memoTextField.setText(t.getMemo(account.get()));   // Override
 
                 amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
 
@@ -321,11 +321,11 @@ public class SlipController extends AbstractSlipController {
         super.clearForm();
 
         // Not yet a split transaction
-        concatenatedProperty.setValue(false);
+        concatenated.set(false);
 
-        transactionEntriesProperty.clear();   // clear an old transaction entries
+        transactionEntries.clear();   // clear an old transaction entries
 
-        modEntry.setValue(null);
+        modEntry.set(null);
 
         accountExchangePane.setExchangedAmount(null);
 
@@ -354,7 +354,7 @@ public class SlipController extends AbstractSlipController {
 
                 break;
             case SPLITENTRY:
-                if (t.getCommonAccount().equals(accountProperty.get())) {
+                if (t.getCommonAccount().equals(account.get())) {
                     result = true;
                 }
                 break;
@@ -385,7 +385,7 @@ public class SlipController extends AbstractSlipController {
                     // add it to the clone
                     t.addTransactionEntry(e);
 
-                    ReconcileManager.reconcileTransaction(accountProperty.get(), t, getReconciledState());
+                    ReconcileManager.reconcileTransaction(account.get(), t, getReconciledState());
 
                     if (engine.removeTransaction(modTrans)) {
                         engine.addTransaction(t);
@@ -407,19 +407,19 @@ public class SlipController extends AbstractSlipController {
     private void splitsAction() {
         final SplitTransactionDialog splitsDialog = new SplitTransactionDialog();
         splitsDialog.accountProperty().setValue(accountProperty().get());
-        splitsDialog.getTransactionEntries().setAll(transactionEntriesProperty);
+        splitsDialog.getTransactionEntries().setAll(transactionEntries);
 
         // Show the dialog and process the transactions when it closes
         splitsDialog.show(slipType, () -> {
-            transactionEntriesProperty.setAll(splitsDialog.getTransactionEntries());
+            transactionEntries.setAll(splitsDialog.getTransactionEntries());
             amountField.setDecimal(splitsDialog.getBalance().abs());
 
             // If valid splits exist and the user has requested concatenation, show a preview of what will happen
-            concatenatedProperty.setValue(Options.concatenateMemosProperty().get()
-                    && !transactionEntriesProperty.isEmpty());
+            concatenated.setValue(Options.concatenateMemosProperty().get()
+                    && !transactionEntries.isEmpty());
 
-            if (concatenatedProperty.get()) {
-                memoTextField.setText(Transaction.getMemo(transactionEntriesProperty));
+            if (concatenated.get()) {
+                memoTextField.setText(Transaction.getMemo(transactionEntries));
             }
         });
     }

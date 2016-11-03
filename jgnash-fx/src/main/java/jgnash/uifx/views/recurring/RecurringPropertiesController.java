@@ -49,7 +49,7 @@ import java.util.ResourceBundle;
 public class RecurringPropertiesController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ButtonBar buttonBar;
@@ -182,12 +182,12 @@ public class RecurringPropertiesController {
     private void okAction() {
         reminder = generateReminder();
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML
     private void cancelAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML

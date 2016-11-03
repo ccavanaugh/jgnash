@@ -54,7 +54,7 @@ import jgnash.uifx.util.InjectFXML;
 public class WizardDialogController<K extends Enum<?>> {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private TitledPane taskTitlePane;
@@ -82,7 +82,7 @@ public class WizardDialogController<K extends Enum<?>> {
 
     private final Map<K, Object> settings = new HashMap<>();
 
-    private final BooleanProperty validProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty valid = new SimpleBooleanProperty(false);
 
     private final IntegerProperty selectedIndex = new SimpleIntegerProperty();
 
@@ -111,7 +111,7 @@ public class WizardDialogController<K extends Enum<?>> {
     }
 
     public ReadOnlyBooleanProperty validProperty() {
-        return new ReadOnlyBooleanWrapper(validProperty.get());
+        return new ReadOnlyBooleanWrapper(valid.get());
     }
 
     public void addTaskPane(final WizardPaneController<K> wizardPaneController, final Pane pane) {
@@ -135,7 +135,7 @@ public class WizardDialogController<K extends Enum<?>> {
         }
 
         // update the preferred task list width
-        taskListWidth.setValue(Math.max(getControllerDescriptionWidth(wizardPaneController), taskListWidth.get()));
+        taskListWidth.set(Math.max(getControllerDescriptionWidth(wizardPaneController), taskListWidth.get()));
 
         updateButtonState();
     }
@@ -156,7 +156,7 @@ public class WizardDialogController<K extends Enum<?>> {
     }
 
     private void handleTaskChange(final WizardDescriptor descriptor) {
-        taskTitlePane.textProperty().setValue(descriptor.getDescription());
+        taskTitlePane.textProperty().set(descriptor.getDescription());
         updateButtonState();
 
         paneMap.keySet().stream().filter(controller -> controller.descriptorProperty().get().equals(descriptor)).forEach(controller -> {
@@ -205,8 +205,8 @@ public class WizardDialogController<K extends Enum<?>> {
 
     @FXML
     private void handleCancelAction() {
-        validProperty.setValue(false);
-        ((Stage) parentProperty.get().getWindow()).close();
+        valid.set(false);
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML
@@ -236,18 +236,18 @@ public class WizardDialogController<K extends Enum<?>> {
 
     @FXML
     private void handleFinishAction() {
-        validProperty.setValue(true);
+        valid.set(true);
 
         for (WizardPaneController<K> wizardPaneController : paneMap.keySet()) {
             if (!wizardPaneController.isPaneValid()) {
-                validProperty.setValue(false);
+                valid.set(false);
                 break;
             }
             wizardPaneController.putSettings(settings);
         }
 
-        if (validProperty.get()) {
-            ((Stage) parentProperty.get().getWindow()).close();
+        if (valid.get()) {
+            ((Stage) parent.get().getWindow()).close();
         }
     }
 

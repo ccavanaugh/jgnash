@@ -58,7 +58,7 @@ import jgnash.util.ResourceUtils;
 public class CreateModifySecuritiesController implements MessageListener {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button deleteButton;
@@ -210,7 +210,7 @@ public class CreateModifySecuritiesController implements MessageListener {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage)parentProperty.get().getWindow()).close();
+        ((Stage)parent.get().getWindow()).close();
     }
 
     @Override

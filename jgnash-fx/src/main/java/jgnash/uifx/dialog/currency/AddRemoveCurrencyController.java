@@ -51,7 +51,7 @@ import jgnash.uifx.util.ValidationFactory;
 public class AddRemoveCurrencyController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button addButton;
@@ -171,6 +171,6 @@ public class AddRemoveCurrencyController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 }

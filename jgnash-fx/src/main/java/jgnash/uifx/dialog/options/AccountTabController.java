@@ -112,13 +112,13 @@ public class AccountTabController {
 
         allRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                Options.globalBayesProperty().setValue(true);
+                Options.globalBayesProperty().set(true);
             }
         });
 
         accountOnlyRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                Options.globalBayesProperty().setValue(false);
+                Options.globalBayesProperty().set(false);
             }
         });
     }

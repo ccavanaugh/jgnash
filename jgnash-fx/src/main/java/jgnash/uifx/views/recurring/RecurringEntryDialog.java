@@ -17,7 +17,7 @@ import jgnash.util.ResourceUtils;
  */
 public class RecurringEntryDialog {
 
-    private final ObjectProperty<RecurringPropertiesController> controllerProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<RecurringPropertiesController> controller = new SimpleObjectProperty<>();
 
     private RecurringEntryDialog(final Reminder reminder) {
         final FXMLUtils.Pair<RecurringPropertiesController> pair =
@@ -25,10 +25,10 @@ public class RecurringEntryDialog {
                         reminder != null ? ResourceUtils.getString("Title.ModifyReminder")
                                 : ResourceUtils.getString("Title.NewReminder"));
 
-        controllerProperty.setValue(pair.getController());
+        controller.set(pair.getController());
 
         if (reminder != null) {
-            controllerProperty.get().showReminder(reminder);
+            controller.get().showReminder(reminder);
         }
 
         pair.getStage().setResizable(false);
@@ -40,6 +40,6 @@ public class RecurringEntryDialog {
 
     public static Optional<Reminder> showAndWait(final Reminder reminder) {
         final RecurringEntryDialog dialog = new RecurringEntryDialog(reminder);
-        return dialog.controllerProperty.get().getReminder();
+        return dialog.controller.get().getReminder();
     }
 }

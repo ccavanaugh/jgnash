@@ -50,7 +50,7 @@ import jgnash.util.ResourceUtils;
 public class TextInputDialog {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ButtonBar buttonBar;
@@ -108,11 +108,11 @@ public class TextInputDialog {
     }
 
     private void handleOkayAction() {
-        ((Stage)parentProperty.get().getWindow()).close();
+        ((Stage)parent.get().getWindow()).close();
     }
 
     private void handleCancelAction() {
         textField.setText(null);
-        ((Stage)parentProperty.get().getWindow()).close();
+        ((Stage)parent.get().getWindow()).close();
     }
 }

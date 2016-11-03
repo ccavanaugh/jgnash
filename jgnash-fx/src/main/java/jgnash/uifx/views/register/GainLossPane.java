@@ -47,12 +47,13 @@ public class GainLossPane extends DetailedDecimalTextField {
     @FXML
     private ResourceBundle resources;
 
-    private final SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Account> account = new SimpleObjectProperty<>(null);
 
     private GainLossDialog gainLossDialog;
 
     public GainLossPane() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GainLossPane.fxml"), ResourceUtils.getBundle());
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GainLossPane.fxml"),
+                ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -67,8 +68,8 @@ public class GainLossPane extends DetailedDecimalTextField {
     private void initialize() {
         gainLossDialog = new GainLossDialog();
 
-        accountProperty.addListener((observable, oldValue, newValue)
-                -> gainLossDialog.accountProperty().setValue(accountProperty().get()));
+        account.addListener((observable, oldValue, newValue)
+                -> gainLossDialog.accountProperty().set(accountProperty().get()));
     }
 
     @Override
@@ -152,6 +153,6 @@ public class GainLossPane extends DetailedDecimalTextField {
     }
 
     public SimpleObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 }

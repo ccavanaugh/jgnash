@@ -51,7 +51,7 @@ import jgnash.util.ResourceUtils;
 public class ExceptionDialog {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button clipboardButton;
@@ -85,7 +85,7 @@ public class ExceptionDialog {
         message.setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER, Color.DARKRED));
 
-        closeButton.setOnAction(event -> ((Stage) parentProperty.get().getWindow()).close());
+        closeButton.setOnAction(event -> ((Stage) parent.get().getWindow()).close());
 
         clipboardButton.setOnAction(event -> {
             Clipboard clipboard = Clipboard.getSystemClipboard();

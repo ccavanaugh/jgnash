@@ -107,20 +107,21 @@ public class ControlsTest extends Application {
         decimalTextField2.decimalProperty().addListener((observable, oldValue, newValue)
                 -> System.out.println("decimalTextField2: " + newValue));
 
-        ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
-        decimalTextField2.decimalProperty().bindBidirectional(decimalProperty);
-        decimalProperty.setValue(BigDecimal.TEN);
+        ObjectProperty<BigDecimal> decimal = new SimpleObjectProperty<>();
+
+        decimalTextField2.decimalProperty().bindBidirectional(decimal);
+        decimal.set(BigDecimal.TEN);
 
         btn.setOnAction(event -> {
-            decimalProperty.setValue(BigDecimal.ONE);
+            decimal.set(BigDecimal.ONE);
             System.out.println(decimalTextField2.getDecimal());
         });
 
-        System.out.println(decimalProperty.isBound());
+        System.out.println(decimal.isBound());
         System.out.println(decimalTextField2.decimalProperty().isBound());
 
         TransactionNumberComboBox numberComboBox = new TransactionNumberComboBox();
-        numberComboBox.accountProperty().setValue(engine.getAccountList().get(0));
+        numberComboBox.accountProperty().set(engine.getAccountList().get(0));
 
         Button exceptionButton = new Button("Show Exception");
         exceptionButton.setOnAction(event -> StaticUIMethods.displayException(new Exception("Test exception")));

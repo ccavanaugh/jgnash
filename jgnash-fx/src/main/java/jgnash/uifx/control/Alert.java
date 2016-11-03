@@ -52,7 +52,7 @@ public class Alert {
     static final int HEIGHT_MULTIPLIER = 3;
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Label message;
@@ -128,7 +128,7 @@ public class Alert {
 
             button.setOnAction(event -> {
                 Alert.this.buttonType = buttonType;
-                ((Stage)parentProperty.get().getWindow()).close();
+                ((Stage) parent.get().getWindow()).close();
             });
 
             buttonBar.getButtons().add(button);

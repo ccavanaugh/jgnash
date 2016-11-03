@@ -89,7 +89,7 @@ public class BudgetViewController implements MessageListener {
                     preferences.put(LAST_BUDGET, newValue.getUuid());
                 }
 
-                Platform.runLater(() -> budgetTableController.budgetProperty().setValue(newValue));
+                Platform.runLater(() -> budgetTableController.budgetProperty().set(newValue));
             });
 
             loadComboBox();

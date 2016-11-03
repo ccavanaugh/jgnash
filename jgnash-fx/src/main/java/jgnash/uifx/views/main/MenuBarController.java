@@ -255,11 +255,11 @@ public class MenuBarController implements MessageListener {
         Platform.runLater(() -> {
             switch (event.getEvent()) {
                 case FILE_LOAD_SUCCESS:
-                    disabled.setValue(false);
+                    disabled.set(false);
                     break;
                 case FILE_CLOSING:
                     closeAllWindows();
-                    disabled.setValue(true);
+                    disabled.set(true);
                     break;
                 default:
                     break;

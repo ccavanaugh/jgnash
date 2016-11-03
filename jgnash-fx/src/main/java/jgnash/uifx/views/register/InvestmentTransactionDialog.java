@@ -93,7 +93,7 @@ class InvestmentTransactionDialog extends Stage {
     }
 
     private void setTransactionConsumer(final Consumer<Transaction> consumer) {
-        transactionConsumer.setValue(consumer);
+        transactionConsumer.set(consumer);
     }
 
     @FXML
@@ -127,7 +127,7 @@ class InvestmentTransactionDialog extends Stage {
                             final Consumer<Transaction> consumer) {
 
         final InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
-        transactionDialog.accountProperty().setValue(account);
+        transactionDialog.accountProperty().set(account);
         transactionDialog.setTransactionConsumer(consumer);
 
         transactionDialog.setTransaction(transaction);

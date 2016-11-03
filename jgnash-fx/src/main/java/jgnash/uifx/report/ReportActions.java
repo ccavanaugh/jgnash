@@ -231,7 +231,7 @@ public class ReportActions {
                 = FXMLUtils.load(BalanceByMonthOptionsDialogController.class.getResource("BalanceByMonthOptionsDialog.fxml"),
                 ResourceUtils.getString("Title.ReportOptions"));
 
-        pair.getController().forceDefaultCurrencyProperty().setValue(preferences.getBoolean(FORCE_CURRENCY, false));
+        pair.getController().forceDefaultCurrencyProperty().set(preferences.getBoolean(FORCE_CURRENCY, false));
         pair.getStage().setResizable(false);
         pair.getStage().showAndWait();
 

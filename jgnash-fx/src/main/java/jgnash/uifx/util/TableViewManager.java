@@ -188,7 +188,7 @@ public class TableViewManager<S> {
 
                 if (columnVisibility.length == tableView.getColumns().size()) {
                     for (int i = 0; i < columnVisibility.length; i++) {
-                        tableView.getColumns().get(i).visibleProperty().setValue(columnVisibility[i]);
+                        tableView.getColumns().get(i).visibleProperty().set(columnVisibility[i]);
                     }
                 }
 
@@ -200,11 +200,11 @@ public class TableViewManager<S> {
                     int i = 0;
 
                     for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
-                        column.visibleProperty().setValue(visibilityCallBack.call(i++));
+                        column.visibleProperty().set(visibilityCallBack.call(i++));
                     }
                 } else {
                     for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
-                        column.visibleProperty().setValue(true);
+                        column.visibleProperty().set(true);
                     }
                 }
             }
@@ -263,11 +263,11 @@ public class TableViewManager<S> {
                     visibleColumns.get(j).setResizable(true);   // allow resizing
 
                     if (visibleColumnWeights.get(j) == 0) { // fixed width column
-                        visibleColumns.get(j).minWidthProperty().setValue(calculatedWidths[j]);
-                        visibleColumns.get(j).maxWidthProperty().setValue(calculatedWidths[j]);
+                        visibleColumns.get(j).minWidthProperty().set(calculatedWidths[j]);
+                        visibleColumns.get(j).maxWidthProperty().set(calculatedWidths[j]);
                         visibleColumns.get(j).setResizable(false);
                     } else {
-                        visibleColumns.get(j).prefWidthProperty().setValue(calculatedWidths[j]);
+                        visibleColumns.get(j).prefWidthProperty().set(calculatedWidths[j]);
                     }
                 }
 

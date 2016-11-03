@@ -37,7 +37,7 @@ import jgnash.uifx.util.InjectFXML;
 public class RecurringDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private StackPane contentPane;
@@ -53,6 +53,6 @@ public class RecurringDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 }

@@ -98,7 +98,7 @@ public class TransferSlipController extends AbstractSlipController {
     }
 
     private boolean hasEqualCurrencies() {
-        return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
+        return account.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
 
     @Override

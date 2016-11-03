@@ -34,7 +34,7 @@ import jgnash.uifx.util.InjectFXML;
 public class BaseColorDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ColorPicker accentColorPicker;
@@ -56,7 +56,7 @@ public class BaseColorDialogController {
         ThemeManager.focusColorProperty().bind(focusColorPicker.valueProperty());
 
         // Unbind  when the dialog closes
-        parentProperty.addListener((observable, oldValue, scene) -> {
+        parent.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
                 scene.windowProperty().addListener((observable1, oldValue1, window)
                         -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {

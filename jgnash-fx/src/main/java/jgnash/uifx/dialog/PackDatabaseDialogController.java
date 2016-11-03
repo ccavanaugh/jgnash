@@ -45,7 +45,7 @@ import jgnash.uifx.views.main.MainView;
 public class PackDatabaseDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button okayButton;
@@ -67,14 +67,14 @@ public class PackDatabaseDialogController {
 
     @FXML
     private void handleOkAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
 
         PackDatabaseTask.start(databaseTextField.getText(), passwordField.getText().toCharArray());
     }
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML

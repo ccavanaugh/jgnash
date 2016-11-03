@@ -69,7 +69,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
     @FXML
     ResourceBundle resources;
 
-    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     private TableViewManager<TransactionEntry> tableViewManager;
 
@@ -85,7 +85,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
     private Runnable closeRunnable;
 
     ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 
     ObservableList<TransactionEntry> getTransactionEntries() {
@@ -179,7 +179,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
 
         final TableColumn<TransactionEntry, String> reconciledColumn = new TableColumn<>(columnNames[1]);
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().
-                getReconciled(accountProperty.get()).toString()));
+                getReconciled(account.get()).toString()));
 
         final TableColumn<TransactionEntry, String> memoColumn = new TableColumn<>(columnNames[2]);
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
@@ -188,18 +188,18 @@ abstract class AbstractTransactionEntryDialog extends Stage {
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().
                 getAmount(accountProperty().getValue())));
         increaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.
-                getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+                getShortNumberFormat(account.get().getCurrencyNode())));
 
         final TableColumn<TransactionEntry, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[4]);
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().
                 getAmount(accountProperty().getValue())));
         decreaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.
-                getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+                getShortNumberFormat(account.get().getCurrencyNode())));
 
         final TableColumn<TransactionEntry, BigDecimal> balanceColumn = new TableColumn<>(columnNames[5]);
         balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(getBalanceAt(param.getValue())));
         balanceColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.
-                getFullNumberFormat(accountProperty.get().getCurrencyNode())));
+                getFullNumberFormat(account.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
 
         tableView.getColumns().addAll(memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn,
@@ -219,7 +219,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
     private BigDecimal getBalanceAt(final TransactionEntry transactionEntry) {
         BigDecimal balance = BigDecimal.ZERO;
 
-        final Account account = accountProperty.get();
+        final Account account = this.account.get();
 
         if (account != null) {
             final int index = sortedList.indexOf(transactionEntry);

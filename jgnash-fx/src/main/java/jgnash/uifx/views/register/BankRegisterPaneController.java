@@ -64,7 +64,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
         super.initialize();
 
-        jumpButton.disableProperty().bind(selectedTransactionProperty.isNull());
+        jumpButton.disableProperty().bind(selectedTransaction.isNull());
 
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -72,7 +72,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
         final RegisterTableController controller = FXMLUtils.loadFXML(o
                 -> registerTablePane.getChildren().add(o), "BasicRegisterTable.fxml", resources);
 
-        registerTableControllerProperty.setValue(controller);
+        registerTableController.set(controller);
 
         accountProperty().addListener((observable, oldValue, newValue) -> buildTabs());
     }

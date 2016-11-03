@@ -74,7 +74,7 @@ public class FontAwesomeLabel extends Label {
                 ThemeManager.fontScaleProperty().multiply(sizeValue));
 
         setGlyphName(glyphValue);
-        size.setValue(sizeValue);
+        size.set(sizeValue);
         styleProperty().bind(iconStyleProperty);
 
         if (paint != null) {
@@ -111,7 +111,7 @@ public class FontAwesomeLabel extends Label {
 
     @FXML
     public void setSize(final Double value) {
-        size.setValue(value);
+        size.set(value);
     }
 
     @FXML

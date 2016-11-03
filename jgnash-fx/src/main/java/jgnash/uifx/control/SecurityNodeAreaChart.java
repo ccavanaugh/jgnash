@@ -57,7 +57,7 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
 
         xAxis.setTickLabelFormatter(new NumberDateStringConverter());
 
-        xAxis.tickLabelRotationProperty().setValue(-60);
+        xAxis.tickLabelRotationProperty().set(-60);
         xAxis.setAutoRanging(false);
 
         securityNodeProperty().addListener((observable, oldValue, newValue) -> update());

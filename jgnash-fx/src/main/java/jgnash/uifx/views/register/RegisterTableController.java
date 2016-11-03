@@ -117,9 +117,9 @@ abstract class RegisterTableController {
     /**
      * Active account for the pane.
      */
-    final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
-    final private ReadOnlyObjectWrapper<Transaction> selectedTransactionProperty = new ReadOnlyObjectWrapper<>();
+    final private ReadOnlyObjectWrapper<Transaction> selectedTransaction = new ReadOnlyObjectWrapper<>();
 
     /**
      * This is the master list of transactions.
@@ -155,7 +155,7 @@ abstract class RegisterTableController {
     @FXML
     void initialize() {
         // Bind the account property
-        getAccountPropertyWrapper().accountProperty().bind(accountProperty);
+        getAccountPropertyWrapper().accountProperty().bind(account);
 
         accountNameLabel.textProperty().bind(getAccountPropertyWrapper().accountNameProperty());
         balanceLabel.textProperty().bind(getAccountPropertyWrapper().accountBalanceProperty());
@@ -164,7 +164,7 @@ abstract class RegisterTableController {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Load the table on change and set the row factory if the account in not locked
-        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+        accountProperty().addListener((observable, oldValue, newValue) -> {
             loadAccount();
 
             if (!newValue.isLocked()) {
@@ -174,7 +174,7 @@ abstract class RegisterTableController {
             numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
         });
 
-        selectedTransactionProperty.bind(tableView.getSelectionModel().selectedItemProperty());
+        selectedTransaction.bind(tableView.getSelectionModel().selectedItemProperty());
 
         // Update the selection size property when the selection list changes
         tableView.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Transaction>) c ->
@@ -187,11 +187,11 @@ abstract class RegisterTableController {
 
                 for (final Transaction transaction : transactions) {
                     if (transaction != null) {
-                        total = total.add(transaction.getAmount(accountProperty.get()));
+                        total = total.add(transaction.getAmount(account.get()));
                     }
                 }
                 selectionSummaryTooltip.setText(numberFormat.format(AccountBalanceDisplayManager.
-                        convertToSelectedBalanceMode(accountProperty.get().getAccountType(), total)));
+                        convertToSelectedBalanceMode(account.get().getAccountType(), total)));
             } else {
                 selectionSummaryTooltip.setText(null);
             }
@@ -233,7 +233,7 @@ abstract class RegisterTableController {
 
     private void handleFilterChange() {
 
-        Predicate<Transaction> predicate = new ReconciledPredicate(accountProperty.get(),
+        Predicate<Transaction> predicate = new ReconciledPredicate(account.get(),
                 reconciledStateFilterComboBox.valueProperty().get().getReconciledState())
                 .and(new TransactionAgePredicate(transactionAgeFilterComboBox.valueProperty().get().getChronoUnit(),
                         transactionAgeFilterComboBox.valueProperty().get().getAge()));
@@ -255,7 +255,7 @@ abstract class RegisterTableController {
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
         tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         tableViewManager.setDefaultColumnVisibilityFactory(getColumnVisibilityFactory());
-        tableViewManager.setPreferenceKeyFactory(() -> getAccountProperty().get().getUuid());
+        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());
 
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
@@ -267,12 +267,12 @@ abstract class RegisterTableController {
 
     abstract Callback<Integer, Boolean> getColumnVisibilityFactory();
 
-    ObjectProperty<Account> getAccountProperty() {
-        return accountProperty;
+    ObjectProperty<Account> accountProperty() {
+        return account;
     }
 
-    ReadOnlyObjectProperty<Transaction> getSelectedTransactionProperty() {
-        return selectedTransactionProperty.getReadOnlyProperty();
+    ReadOnlyObjectProperty<Transaction> aelectedTransactionProperty() {
+        return selectedTransaction.getReadOnlyProperty();
     }
 
     void clearTableSelection() {
@@ -317,8 +317,8 @@ abstract class RegisterTableController {
     private void loadTable() {
         observableTransactions.clear();
 
-        if (accountProperty.get() != null) {
-            observableTransactions.addAll(accountProperty.get().getSortedTransactionList());
+        if (account.get() != null) {
+            observableTransactions.addAll(account.get().getSortedTransactionList());
 
             tableView.setItems(sortedList);
             tableViewManager.restoreLayout();   // required to table view manager is to work
@@ -340,14 +340,14 @@ abstract class RegisterTableController {
     private void duplicateTransactions() {
         final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
 
-        RegisterActions.duplicateTransaction(accountProperty.get(), transactionList);
+        RegisterActions.duplicateTransaction(account.get(), transactionList);
     }
 
     private void handleCreateNewReminder() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final Reminder reminder = engine.createDefaultReminder(selectedTransactionProperty.get(), accountProperty.get());
+        final Reminder reminder = engine.createDefaultReminder(selectedTransaction.get(), account.get());
 
         final Optional<Reminder> optional = RecurringEntryDialog.showAndWait(reminder);
 
@@ -355,23 +355,23 @@ abstract class RegisterTableController {
     }
 
     void handleJumpAction() {
-        Transaction t = selectedTransactionProperty.get();
+        Transaction t = selectedTransaction.get();
 
         if (t != null) {
             if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
                 final Set<Account> set = t.getAccounts();
-                set.stream().filter(a -> !accountProperty.get().equals(a))
+                set.stream().filter(a -> !account.get().equals(a))
                         .forEach(a -> RegisterStage.getRegisterStage(a).show(t));
             } else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
                 final Account common = t.getCommonAccount();
 
-                if (!accountProperty.get().equals(common)) {
+                if (!account.get().equals(common)) {
                     RegisterStage.getRegisterStage(common).show(t);
                 }
             } else if (t instanceof InvestmentTransaction) {
                 final Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
 
-                if (!accountProperty.get().equals(invest)) {
+                if (!account.get().equals(invest)) {
                     RegisterStage.getRegisterStage(invest).show(t);
                 }
             }
@@ -388,15 +388,15 @@ abstract class RegisterTableController {
 
             final Menu markedAs = new Menu(resources.getString("Menu.MarkAs.Name"));
             final MenuItem markAsClearedItem = new MenuItem(resources.getString("Menu.Cleared.Name"));
-            markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(),
+            markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
                     row.getItem(), ReconciledState.CLEARED));
 
             final MenuItem markAsReconciledItem = new MenuItem(resources.getString("Menu.Reconciled.Name"));
-            markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(),
+            markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
                     row.getItem(), ReconciledState.RECONCILED));
 
             final MenuItem markAsUnreconciledItem = new MenuItem(resources.getString("Menu.Unreconciled.Name"));
-            markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(),
+            markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
                     row.getItem(), ReconciledState.NOT_RECONCILED));
 
             markedAs.getItems().addAll(markAsClearedItem, markAsReconciledItem, markAsUnreconciledItem);
@@ -437,7 +437,7 @@ abstract class RegisterTableController {
         @SuppressWarnings("SuspiciousMethodCalls")
         @Override
         public void messagePosted(final Message event) {
-            final Account account = accountProperty.getValue();
+            final Account account = RegisterTableController.this.account.getValue();
 
             if (account != null) {
                 if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {

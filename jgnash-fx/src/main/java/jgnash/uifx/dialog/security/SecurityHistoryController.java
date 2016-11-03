@@ -81,7 +81,7 @@ import jgnash.util.ResourceUtils;
 public class SecurityHistoryController implements MessageListener {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private SecurityHistoryEventTypeComboBox securityEventTypeComboBox;
@@ -148,9 +148,9 @@ public class SecurityHistoryController implements MessageListener {
 
     private final SimpleObjectProperty<SecurityNode> selectedSecurityNode = new SimpleObjectProperty<>();
 
-    private final SimpleObjectProperty<NumberFormat> numberFormatProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<NumberFormat> numberFormat = new SimpleObjectProperty<>();
 
-    private final SimpleObjectProperty<QuoteSource> quoteSourceProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<QuoteSource> quoteSource = new SimpleObjectProperty<>();
 
     private final ObservableList<SecurityHistoryNode> observableHistoryNodes = FXCollections.observableArrayList();
 
@@ -167,7 +167,7 @@ public class SecurityHistoryController implements MessageListener {
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 
-        numberFormatProperty.setValue(CommodityFormat.getShortNumberFormat(engine.getDefaultCurrency()));
+        numberFormat.set(CommodityFormat.getShortNumberFormat(engine.getDefaultCurrency()));
 
         selectedSecurityHistoryNode.bind(priceTableView.getSelectionModel().selectedItemProperty());
         selectedSecurityNode.bind(securityComboBox.getSelectionModel().selectedItemProperty());
@@ -179,11 +179,11 @@ public class SecurityHistoryController implements MessageListener {
 
         // Disabled the update button if a security is not selected, or it does not have a quote source
         updatePriceButton.disableProperty().bind(Bindings.or(Bindings.isNull(selectedSecurityNode),
-                Bindings.equal(QuoteSource.NONE, quoteSourceProperty)));
+                Bindings.equal(QuoteSource.NONE, quoteSource)));
 
         // Disabled the update button if a security is not selected, or it does not have a quote source
         updateEventButton.disableProperty().bind(Bindings.or(Bindings.isNull(selectedSecurityNode),
-                Bindings.equal(QuoteSource.NONE, quoteSourceProperty)));
+                Bindings.equal(QuoteSource.NONE, quoteSource)));
 
         // Can't add if a security is not selected
         addPriceButton.disableProperty().bind(Bindings.isNull(selectedSecurityNode));
@@ -203,17 +203,17 @@ public class SecurityHistoryController implements MessageListener {
 
         final TableColumn<SecurityHistoryNode, BigDecimal> priceCloseColumn = new TableColumn<>(resources.getString("Column.Close"));
         priceCloseColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getPrice()));
-        priceCloseColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
+        priceCloseColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormat));
         priceTableView.getColumns().add(priceCloseColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> priceLowColumn = new TableColumn<>(resources.getString("Column.Low"));
         priceLowColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLow()));
-        priceLowColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
+        priceLowColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormat));
         priceTableView.getColumns().add(priceLowColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> priceHighColumn = new TableColumn<>(resources.getString("Column.High"));
         priceHighColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getHigh()));
-        priceHighColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
+        priceHighColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormat));
         priceTableView.getColumns().add(priceHighColumn);
 
         final TableColumn<SecurityHistoryNode, Long> priceVolumeColumn = new TableColumn<>(resources.getString("Column.Volume"));
@@ -256,7 +256,7 @@ public class SecurityHistoryController implements MessageListener {
 
         eventTableView.setItems(sortedHistoryEventList);
 
-        eventValueTextField.scaleProperty().setValue(MathConstants.SECURITY_PRICE_ACCURACY);
+        eventValueTextField.scaleProperty().set(MathConstants.SECURITY_PRICE_ACCURACY);
 
         chart = new SecurityNodeAreaChart();
         chart.securityNodeProperty().bind(selectedSecurityNode);
@@ -265,13 +265,13 @@ public class SecurityHistoryController implements MessageListener {
 
         securityComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                numberFormatProperty.setValue(CommodityFormat.getShortNumberFormat(newValue.getReportedCurrencyNode()));
+                numberFormat.set(CommodityFormat.getShortNumberFormat(newValue.getReportedCurrencyNode()));
 
-                closeTextField.scaleProperty().setValue(newValue.getScale());
-                lowTextField.scaleProperty().setValue(newValue.getScale());
-                highTextField.scaleProperty().setValue(newValue.getScale());
+                closeTextField.scaleProperty().set(newValue.getScale());
+                lowTextField.scaleProperty().set(newValue.getScale());
+                highTextField.scaleProperty().set(newValue.getScale());
 
-                quoteSourceProperty.setValue(newValue.getQuoteSource());
+                quoteSource.set(newValue.getQuoteSource());
 
                 Platform.runLater(this::loadTables);
             }
@@ -294,7 +294,7 @@ public class SecurityHistoryController implements MessageListener {
         });
 
         // Install a listener to unregister from the message bus when the window closes
-        parentProperty.addListener((observable, oldValue, scene) -> {
+        parent.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
                 scene.windowProperty().addListener((observable1, oldValue1, window)
                         -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
@@ -372,7 +372,7 @@ public class SecurityHistoryController implements MessageListener {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML

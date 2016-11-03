@@ -165,7 +165,7 @@ public class RegisterViewController {
 
         // Push the account to the controller at the end of the application thread
         Platform.runLater(() -> registerPaneController.accountProperty()
-                .setValue(accountTreeController.getSelectedAccountProperty().get()));
+                .set(accountTreeController.getSelectedAccountProperty().get()));
     }
 
     private void restoreLastSelectedAccount() {
@@ -202,7 +202,7 @@ public class RegisterViewController {
 
     @FXML
     private void handleAccountExport() {
-        RegisterTableController registerTableController = registerPaneController.registerTableControllerProperty.get();
+        RegisterTableController registerTableController = registerPaneController.registerTableController.get();
 
         final Account account = registerPaneController.accountProperty().get();
 

@@ -40,7 +40,7 @@ public class LockedBasicRegisterPaneController extends RegisterPaneController {
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BasicRegisterTable.fxml"), resources);
             registerTablePane.getChildren().add(fxmlLoader.load());
-            registerTableControllerProperty.setValue(fxmlLoader.getController());
+            registerTableController.set(fxmlLoader.getController());
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

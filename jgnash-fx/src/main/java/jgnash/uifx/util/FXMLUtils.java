@@ -160,11 +160,11 @@ public class FXMLUtils {
     @SuppressWarnings("unchecked")
     private static void injectParent(final Object object, final Object value) {
         for (final Field field : getDeclaredFields(object.getClass())) {
-            if (field.isAnnotationPresent(InjectFXML.class) && field.getName().equals("parentProperty")) {
+            if (field.isAnnotationPresent(InjectFXML.class) && field.getName().equals("parent")) {
                 field.setAccessible(true);
                 try {
                     final ObjectProperty<Object> property = (ObjectProperty<Object>) field.get(object);
-                    property.setValue(value);
+                    property.set(value);
                 } catch (IllegalAccessException e) {
                     Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, e.getMessage(), e);
                 }

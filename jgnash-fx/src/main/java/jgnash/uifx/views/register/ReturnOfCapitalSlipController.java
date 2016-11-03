@@ -79,12 +79,12 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
         super.initialize();
 
         // Lazy init when account property is set
-        accountProperty.addListener((observable, oldValue, newValue) -> {
-            returnOfCapitalField.scaleProperty().setValue(newValue.getCurrencyNode().getScale());
-            returnOfCapitalField.minScaleProperty().setValue(newValue.getCurrencyNode().getScale());
+        account.addListener((observable, oldValue, newValue) -> {
+            returnOfCapitalField.scaleProperty().set(newValue.getCurrencyNode().getScale());
+            returnOfCapitalField.minScaleProperty().set(newValue.getCurrencyNode().getScale());
 
-            accountExchangePane.baseCurrencyProperty().setValue(accountProperty().get().getCurrencyNode());
-            incomeExchangePane.baseCurrencyProperty().setValue(accountProperty().get().getCurrencyNode());
+            accountExchangePane.baseCurrencyProperty().set(accountProperty().get().getCurrencyNode());
+            incomeExchangePane.baseCurrencyProperty().set(accountProperty().get().getCurrencyNode());
 
             accountExchangePane.amountProperty().bindBidirectional(returnOfCapitalField.decimalProperty());
             incomeExchangePane.amountProperty().bindBidirectional(returnOfCapitalField.decimalProperty());
@@ -92,7 +92,7 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
             clearForm();
         });
 
-        securityComboBox.accountProperty().bind(accountProperty);
+        securityComboBox.accountProperty().bind(account);
     }
 
     @Override

@@ -77,15 +77,15 @@ public class ThemeManager {
             {"Caspian", Application.STYLESHEET_CASPIAN},
     };
 
-    private static final DoubleProperty fontScaleProperty = new SimpleDoubleProperty(1);
+    private static final DoubleProperty fontScale = new SimpleDoubleProperty(1);
 
-    private static final SimpleObjectProperty<Color> accentColorProperty = new SimpleObjectProperty<>();
+    private static final SimpleObjectProperty<Color> accentColor = new SimpleObjectProperty<>();
 
-    private static final SimpleObjectProperty<Color> baseColorProperty = new SimpleObjectProperty<>();
+    private static final SimpleObjectProperty<Color> baseColor = new SimpleObjectProperty<>();
 
-    private static final SimpleObjectProperty<Color> focusColorProperty = new SimpleObjectProperty<>();
+    private static final SimpleObjectProperty<Color> focusColor = new SimpleObjectProperty<>();
 
-    private static final SimpleObjectProperty<Paint> controlTextFillProperty = new SimpleObjectProperty<>(Color.BLACK);
+    private static final SimpleObjectProperty<Paint> controlTextFill = new SimpleObjectProperty<>(Color.BLACK);
 
     private static final StringExpression styleProperty;
 
@@ -108,78 +108,78 @@ public class ThemeManager {
     static {
         preferences = Preferences.userNodeForPackage(ThemeManager.class);
 
-        final StringProperty _accentColorProperty = new SimpleStringProperty();
-        final StringProperty _baseColorProperty = new SimpleStringProperty();
-        final StringProperty _focusColorProperty = new SimpleStringProperty();
-        final StringProperty _faintFocusColorProperty = new SimpleStringProperty();
+        final StringProperty _accentColor = new SimpleStringProperty();
+        final StringProperty _baseColor = new SimpleStringProperty();
+        final StringProperty _focusColor = new SimpleStringProperty();
+        final StringProperty _faintFocusColor = new SimpleStringProperty();
 
         // restore the old value, default to a smaller value for Windows OS
-        fontScaleProperty.set(preferences.getDouble(FONT_SCALE, OS.isSystemWindows() ? WINDOWS_DEFAULT : 1));
+        fontScale.set(preferences.getDouble(FONT_SCALE, OS.isSystemWindows() ? WINDOWS_DEFAULT : 1));
 
         // Save the value when it changes
-        fontScaleProperty.addListener((observable, oldValue, newValue) -> {
+        fontScale.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 preferences.putDouble(FONT_SCALE, newValue.doubleValue());
             }
         });
 
-        accentColorProperty.setValue(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
-        baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
-        focusColorProperty.setValue(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_MODENA_FOCUS_COLOR)));
+        accentColor.set(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
+        baseColor.set(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
+        focusColor.set(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_MODENA_FOCUS_COLOR)));
 
         // restore the old base color value
         switch (preferences.get(LAST, Application.STYLESHEET_MODENA)) {
             case Application.STYLESHEET_CASPIAN:
-                accentColorProperty.setValue(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_CASPIAN_ACCENT_COLOR)));
-                baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_CASPIAN_BASE_COLOR)));
-                focusColorProperty.setValue(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_CASPIAN_FOCUS_COLOR)));
+                accentColor.set(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_CASPIAN_ACCENT_COLOR)));
+                baseColor.set(Color.web(preferences.get(BASE_COLOR, DEFAULT_CASPIAN_BASE_COLOR)));
+                focusColor.set(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_CASPIAN_FOCUS_COLOR)));
                 break;
             case Application.STYLESHEET_MODENA:
-                accentColorProperty.setValue(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
-                baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
-                focusColorProperty.setValue(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_MODENA_FOCUS_COLOR)));
+                accentColor.set(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
+                baseColor.set(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
+                focusColor.set(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_MODENA_FOCUS_COLOR)));
                 break;
             default:
-                accentColorProperty.setValue(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
-                baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
-                focusColorProperty.setValue(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_MODENA_FOCUS_COLOR)));
+                accentColor.set(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
+                baseColor.set(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
+                focusColor.set(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_MODENA_FOCUS_COLOR)));
         }
 
-        _accentColorProperty.setValue(colorToHex(accentColorProperty.getValue()));
-        _baseColorProperty.setValue(colorToHex(baseColorProperty.getValue()));
-        _focusColorProperty.setValue(colorToHex(focusColorProperty.getValue()));
-        _faintFocusColorProperty.setValue(colorToHex(Color.web(colorToHex(focusColorProperty.getValue()), OPACITY_FACTOR )));
+        _accentColor.set(colorToHex(accentColor.getValue()));
+        _baseColor.set(colorToHex(baseColor.getValue()));
+        _focusColor.set(colorToHex(focusColor.getValue()));
+        _faintFocusColor.set(colorToHex(Color.web(colorToHex(focusColor.getValue()), OPACITY_FACTOR )));
 
-        accentColorProperty.addListener((observable, oldValue, newValue) -> {
+        accentColor.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 preferences.put(ACCENT_COLOR, colorToHex(newValue));
-                _accentColorProperty.setValue(colorToHex(newValue));
+                _accentColor.set(colorToHex(newValue));
             }
         });
 
         // Save the value when it changes
-        baseColorProperty.addListener((observable, oldValue, newValue) -> {
+        baseColor.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 preferences.put(BASE_COLOR, colorToHex(newValue));
-                _baseColorProperty.setValue(colorToHex(newValue));
+                _baseColor.set(colorToHex(newValue));
 
-                controlTextFillProperty.setValue(getBaseTextColor());
+                controlTextFill.set(getBaseTextColor());
             }
         });
 
-        focusColorProperty.addListener((observable, oldValue, newValue) -> {
+        focusColor.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 preferences.put(FOCUS_COLOR, colorToHex(newValue));
-                _focusColorProperty.setValue(colorToHex(newValue));
-                _faintFocusColorProperty.setValue(colorToHex(Color.web(colorToHex(focusColorProperty.getValue()), OPACITY_FACTOR )));
+                _focusColor.set(colorToHex(newValue));
+                _faintFocusColor.set(colorToHex(Color.web(colorToHex(focusColor.getValue()), OPACITY_FACTOR )));
             }
         });
 
         // Create the binding format for the style / font size
         styleProperty = Bindings.format(Locale.US, "-fx-font-size: %1$.6fem; -fx-base: %2$s; -fx-focus-color: %3$s; " +
                         "-fx-faint-focus-color: %4$s; -fx-accent: %5$s",
-                fontScaleProperty, _baseColorProperty, _focusColorProperty, _faintFocusColorProperty,
-                _accentColorProperty);
+                fontScale, _baseColor, _focusColor, _faintFocusColor,
+                _accentColor);
     }
 
     private ThemeManager() {
@@ -250,7 +250,7 @@ public class ThemeManager {
     public static void restoreLastUsedTheme() {
         Application.setUserAgentStylesheet(preferences.get(LAST, Application.STYLESHEET_MODENA));
 
-        controlTextFillProperty.setValue(getBaseTextColor());   // force an update after the stylesheet has been applied
+        controlTextFill.setValue(getBaseTextColor());   // force an update after the stylesheet has been applied
     }
 
     public static ObservableValue<String> styleProperty() {
@@ -258,23 +258,23 @@ public class ThemeManager {
     }
 
     public static DoubleProperty fontScaleProperty() {
-        return fontScaleProperty;
+        return fontScale;
     }
 
     static SimpleObjectProperty<Color> baseColorProperty() {
-        return baseColorProperty;
+        return baseColor;
     }
 
     static SimpleObjectProperty<Color> focusColorProperty() {
-        return focusColorProperty;
+        return focusColor;
     }
 
     static SimpleObjectProperty<Color> accentColorProperty() {
-        return accentColorProperty;
+        return accentColor;
     }
 
     public static SimpleObjectProperty<Paint> controlTextFillProperty() {
-        return controlTextFillProperty;
+        return controlTextFill;
     }
 
     static String getCurrentTheme() {

@@ -41,12 +41,12 @@ public class AccountBalanceDisplayManager {
 
     private static final String ACCOUNT_BALANCE_DISPLAY_MODE = "accountBalanceDisplayMode";
 
-    private static final ObjectProperty<AccountBalanceDisplayMode> accountBalanceDisplayModeProperty
+    private static final ObjectProperty<AccountBalanceDisplayMode> accountBalanceDisplayMode
             = new SimpleObjectProperty<>();
 
     static {
         final Preferences p = Preferences.userNodeForPackage(AccountBalanceDisplayManager.class);
-        accountBalanceDisplayMode().setValue(AccountBalanceDisplayMode.valueOf(p.get(ACCOUNT_BALANCE_DISPLAY_MODE,
+        accountBalanceDisplayMode().set(AccountBalanceDisplayMode.valueOf(p.get(ACCOUNT_BALANCE_DISPLAY_MODE,
                 AccountBalanceDisplayMode.NONE.name())));
     }
 
@@ -72,7 +72,7 @@ public class AccountBalanceDisplayManager {
     }
 
     public static BigDecimal convertToSelectedBalanceMode(final AccountType accountType, final BigDecimal balance) {
-        switch (accountBalanceDisplayModeProperty.get()) {
+        switch (accountBalanceDisplayMode.get()) {
             case REVERSE_INCOME_EXPENSE:
                 return reverseIncomeAndExpense(accountType, balance);
             case REVERSE_CREDIT:
@@ -91,6 +91,6 @@ public class AccountBalanceDisplayManager {
     }
 
     public static ObjectProperty<AccountBalanceDisplayMode> accountBalanceDisplayMode() {
-        return accountBalanceDisplayModeProperty;
+        return accountBalanceDisplayMode;
     }
 }

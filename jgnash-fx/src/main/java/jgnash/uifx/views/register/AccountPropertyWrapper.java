@@ -51,24 +51,24 @@ class AccountPropertyWrapper implements MessageListener {
 
     private final Object numberFormatLock = new Object();
 
-    private final ReadOnlyStringWrapper reconciledAmountProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper reconciledAmount = new ReadOnlyStringWrapper();
 
-    private final ReadOnlyStringWrapper accountBalanceProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper accountBalance = new ReadOnlyStringWrapper();
 
-    private final ReadOnlyStringWrapper cashBalanceProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper cashBalance = new ReadOnlyStringWrapper();
 
-    private final ReadOnlyStringWrapper marketValueProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper marketValue = new ReadOnlyStringWrapper();
 
-    private final ReadOnlyStringWrapper accountNameProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper accountName = new ReadOnlyStringWrapper();
 
-    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     private NumberFormat numberFormat;  // not thread safe
 
     AccountPropertyWrapper() {
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
 
-        accountProperty.addListener((observable, oldValue, newValue) -> {
+        account.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
 
                 // Account changed, update the number format
@@ -88,7 +88,7 @@ class AccountPropertyWrapper implements MessageListener {
             case ACCOUNT_MODIFY:
             case TRANSACTION_ADD:
             case TRANSACTION_REMOVE:
-                if (event.getObject(MessageProperty.ACCOUNT).equals(accountProperty.get())) {
+                if (event.getObject(MessageProperty.ACCOUNT).equals(account.get())) {
                     updateProperties();
                 }
                 break;
@@ -97,25 +97,25 @@ class AccountPropertyWrapper implements MessageListener {
     }
 
     private void updateProperties() {
-        if (accountProperty.get() != null) {
-            Platform.runLater(() -> accountNameProperty.setValue(accountProperty.get().getName()));
+        if (account.get() != null) {
+            Platform.runLater(() -> accountName.set(account.get().getName()));
         } else {
-            Platform.runLater(() -> accountNameProperty.setValue(""));
+            Platform.runLater(() -> accountName.set(""));
         }
 
         executorService.submit(new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 synchronized (numberFormatLock) {
-                    if (accountProperty.get() != null) {
-                        final Account account = accountProperty.get();
+                    if (account.get() != null) {
+                        final Account account = AccountPropertyWrapper.this.account.get();
                         final BigDecimal balance =
                                 AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                                         account.getBalance());
 
-                        Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(balance)));
+                        Platform.runLater(() -> accountBalance.set(numberFormat.format(balance)));
                     } else {
-                        Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
+                        Platform.runLater(() -> accountBalance.set(numberFormat.format(BigDecimal.ZERO)));
                     }
                 }
                 return null;
@@ -126,35 +126,35 @@ class AccountPropertyWrapper implements MessageListener {
             @Override
             protected Void call() throws Exception {
                 synchronized (numberFormatLock) {
-                    if (accountProperty.get() != null) {
-                        final Account account = accountProperty.get();
+                    if (account.get() != null) {
+                        final Account account = AccountPropertyWrapper.this.account.get();
                         final BigDecimal balance =
                                 AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                                         account.getReconciledBalance());
 
-                        Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(balance)));
+                        Platform.runLater(() -> reconciledAmount.set(numberFormat.format(balance)));
                     } else {
-                        Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
+                        Platform.runLater(() -> reconciledAmount.set(numberFormat.format(BigDecimal.ZERO)));
                     }
                 }
                 return null;
             }
         });
 
-        if (accountProperty.get() != null && accountProperty.get().memberOf(AccountGroup.INVEST)) {
+        if (account.get() != null && account.get().memberOf(AccountGroup.INVEST)) {
             executorService.submit(new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
                     synchronized (numberFormatLock) {
-                        if (accountProperty.get() != null) {
-                            final Account account = accountProperty.get();
+                        if (account.get() != null) {
+                            final Account account = AccountPropertyWrapper.this.account.get();
                             final BigDecimal balance =
                                     AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                                             account.getCashBalance());
 
-                            Platform.runLater(() -> cashBalanceProperty.setValue(numberFormat.format(balance)));
+                            Platform.runLater(() -> cashBalance.set(numberFormat.format(balance)));
                         } else {
-                            Platform.runLater(() -> cashBalanceProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
+                            Platform.runLater(() -> cashBalance.set(numberFormat.format(BigDecimal.ZERO)));
                         }
                     }
                     return null;
@@ -165,10 +165,10 @@ class AccountPropertyWrapper implements MessageListener {
                 @Override
                 protected Void call() throws Exception {
                     synchronized (numberFormatLock) {
-                        if (accountProperty.get() != null) {
-                            Platform.runLater(() -> marketValueProperty.setValue(numberFormat.format(accountProperty.get().getMarketValue())));
+                        if (account.get() != null) {
+                            Platform.runLater(() -> marketValue.set(numberFormat.format(account.get().getMarketValue())));
                         } else {
-                            Platform.runLater(() -> marketValueProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
+                            Platform.runLater(() -> marketValue.set(numberFormat.format(BigDecimal.ZERO)));
                         }
                     }
                     return null;
@@ -178,26 +178,26 @@ class AccountPropertyWrapper implements MessageListener {
     }
 
     ReadOnlyStringProperty reconciledAmountProperty() {
-        return reconciledAmountProperty.getReadOnlyProperty();
+        return reconciledAmount.getReadOnlyProperty();
     }
 
     ReadOnlyStringProperty accountBalanceProperty() {
-        return accountBalanceProperty.getReadOnlyProperty();
+        return accountBalance.getReadOnlyProperty();
     }
 
     ReadOnlyStringProperty cashBalanceProperty() {
-        return cashBalanceProperty.getReadOnlyProperty();
+        return cashBalance.getReadOnlyProperty();
     }
 
     ReadOnlyStringProperty marketValueProperty() {
-        return marketValueProperty.getReadOnlyProperty();
+        return marketValue.getReadOnlyProperty();
     }
 
     ReadOnlyStringProperty accountNameProperty() {
-        return accountNameProperty.getReadOnlyProperty();
+        return accountName.getReadOnlyProperty();
     }
 
     public ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 }

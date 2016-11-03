@@ -40,7 +40,7 @@ public class LockedInvestmentRegisterPaneController extends RegisterPaneControll
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentRegisterTable.fxml"), resources);
             registerTablePane.getChildren().add(fxmlLoader.load());
-            registerTableControllerProperty.setValue(fxmlLoader.getController());
+            registerTableController.set(fxmlLoader.getController());
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

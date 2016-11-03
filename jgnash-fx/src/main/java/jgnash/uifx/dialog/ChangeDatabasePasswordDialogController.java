@@ -47,7 +47,7 @@ import jgnash.uifx.views.main.MainView;
 public class ChangeDatabasePasswordDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button okayButton;
@@ -75,7 +75,7 @@ public class ChangeDatabasePasswordDialogController {
 
     @FXML
     private void handleOkAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
 
         final boolean result = SqlUtils.changePassword(databaseTextField.getText(),
                 passwordField.getText().toCharArray(), newPasswordField.getText().toCharArray());
@@ -91,7 +91,7 @@ public class ChangeDatabasePasswordDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML

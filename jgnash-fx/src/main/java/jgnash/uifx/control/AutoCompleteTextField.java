@@ -32,7 +32,7 @@ import jgnash.uifx.util.JavaFXUtils;
  */
 public class AutoCompleteTextField<E> extends TextFieldEx {
 
-    private final ObjectProperty<AutoCompleteModel<E>> autoCompleteModelObjectProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<AutoCompleteModel<E>> autoCompleteModel = new SimpleObjectProperty<>();
 
     public AutoCompleteTextField() {
         // If the enter key is pressed to accept the auto complete,
@@ -48,9 +48,9 @@ public class AutoCompleteTextField<E> extends TextFieldEx {
     public void replaceText(final int start, final int end, final String text) {
         super.replaceText(start, end, text);
 
-        if (autoCompleteModelObjectProperty.get() != null) {
+        if (autoCompleteModel.get() != null) {
             final String currText = getText(); // get the full string
-            final String newText = autoCompleteModelObjectProperty.get().doLookAhead(currText); // look for a match
+            final String newText = autoCompleteModel.get().doLookAhead(currText); // look for a match
 
             if (newText != null && !currText.isEmpty()) { // found a match and the field is not empty
                 clear(); // clear existing text
@@ -76,6 +76,6 @@ public class AutoCompleteTextField<E> extends TextFieldEx {
     }
 
     public ObjectProperty<AutoCompleteModel<E>> autoCompleteModelObjectProperty() {
-        return autoCompleteModelObjectProperty;
+        return autoCompleteModel;
     }
 }

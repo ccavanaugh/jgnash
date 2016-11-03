@@ -37,18 +37,18 @@ public class TimePeriodComboBox extends ComboBox<String> {
 
     private int[] periods = new int[0];
 
-    private final ReadOnlyIntegerWrapper periodProperty = new ReadOnlyIntegerWrapper();
+    private final ReadOnlyIntegerWrapper period = new ReadOnlyIntegerWrapper();
 
     public TimePeriodComboBox() {
         loadModel();
 
         // Update the period property automatically
         valueProperty().addListener((observable, oldValue, newValue)
-                -> periodProperty.setValue(periods[getSelectionModel().getSelectedIndex()]));
+                -> period.setValue(periods[getSelectionModel().getSelectedIndex()]));
     }
 
     public ReadOnlyIntegerProperty periodProperty() {
-        return periodProperty.getReadOnlyProperty();
+        return period.getReadOnlyProperty();
     }
 
     private void loadModel() {

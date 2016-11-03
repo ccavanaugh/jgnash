@@ -64,17 +64,17 @@ abstract class RegisterPaneController {
     /**
      * Active account for the pane.
      */
-    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     /**
      * This will be bound to the register table selection.
      */
-    final ObjectProperty<Transaction> selectedTransactionProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<Transaction> selectedTransaction = new SimpleObjectProperty<>();
 
-    final ObjectProperty<RegisterTableController> registerTableControllerProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<RegisterTableController> registerTableController = new SimpleObjectProperty<>();
 
     ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 
     @FXML
@@ -86,33 +86,33 @@ abstract class RegisterPaneController {
 
         // Buttons should not be enabled if a transaction is not selected
         if (deleteButton != null) {
-            deleteButton.disableProperty().bind(selectedTransactionProperty.isNull());
+            deleteButton.disableProperty().bind(selectedTransaction.isNull());
         }
 
         if (duplicateButton != null) {
-            duplicateButton.disableProperty().bind(selectedTransactionProperty.isNull());
+            duplicateButton.disableProperty().bind(selectedTransaction.isNull());
         }
 
         // Clear the table selection
         if (newButton != null) {
-            newButton.setOnAction(event -> registerTableControllerProperty.get().clearTableSelection());
+            newButton.setOnAction(event -> registerTableController.get().clearTableSelection());
 
             // disable if the titledPane is collapsed
             newButton.disableProperty().bind(titledPane.expandedProperty().not());
         }
 
         // When changed, bind the selected transaction and account properties
-        registerTableControllerProperty.addListener((observable, oldValue, newValue) -> {
+        registerTableController.addListener((observable, oldValue, newValue) -> {
 
             // Bind transaction selection to the register table controller
-            selectedTransactionProperty.bind(newValue.getSelectedTransactionProperty());
+            selectedTransaction.bind(newValue.aelectedTransactionProperty());
 
             // Bind the register pane to this account property
-            newValue.getAccountProperty().bind(accountProperty());
+            newValue.accountProperty().bind(accountProperty());
         });
 
         // When changed, call for transaction modification if not null
-        selectedTransactionProperty.addListener((observable, oldValue, newValue) -> {
+        selectedTransaction.addListener((observable, oldValue, newValue) -> {
 
             /* Push to the end of the application thread to allow other UI controls to update before
             * updating many transaction form controls */
@@ -133,7 +133,7 @@ abstract class RegisterPaneController {
 
     @FXML
     private void handleDeleteAction() {
-        registerTableControllerProperty.get().deleteTransactions();
+        registerTableController.get().deleteTransactions();
     }
 
     /**
@@ -146,7 +146,7 @@ abstract class RegisterPaneController {
     }
 
     void selectTransaction(@NotNull final Transaction transaction) {
-        registerTableControllerProperty.get().selectTransaction(transaction);
+        registerTableController.get().selectTransaction(transaction);
     }
 
     /**
@@ -158,14 +158,14 @@ abstract class RegisterPaneController {
 
     @FXML
     void handleJumpAction() {
-        registerTableControllerProperty.get().handleJumpAction();
+        registerTableController.get().handleJumpAction();
     }
 
     @FXML
     private void handleDuplicateAction() {
         clearForm();
 
-        RegisterActions.duplicateTransaction(accountProperty.get(), registerTableControllerProperty.get().getSelectedTransactions());
+        RegisterActions.duplicateTransaction(account.get(), registerTableController.get().getSelectedTransactions());
 
         // Request focus as it may have been lost
         MainView.getInstance().requestFocus();

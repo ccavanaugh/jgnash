@@ -43,7 +43,7 @@ import jgnash.uifx.util.InjectFXML;
 public class BalanceByMonthOptionsDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private CheckBox defaultCurrencyCheckBox;
@@ -87,13 +87,13 @@ public class BalanceByMonthOptionsDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML
     private void handleOkAction() {
         dates = new LocalDate[] {startDatePicker.getValue(), endDatePicker.getValue()};
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 }

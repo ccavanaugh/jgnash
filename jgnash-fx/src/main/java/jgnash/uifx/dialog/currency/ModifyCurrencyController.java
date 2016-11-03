@@ -55,7 +55,7 @@ import jgnash.util.ResourceUtils;
 public class ModifyCurrencyController implements MessageListener {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button applyButton;
@@ -92,7 +92,7 @@ public class ModifyCurrencyController implements MessageListener {
         selectedCurrency.addListener((observable, oldValue, newValue) -> Platform.runLater(this::loadForm));
 
         // unregister when the window closes
-        parentProperty.addListener((observable, oldValue, newValue)
+        parent.addListener((observable, oldValue, newValue)
                 -> newValue.windowProperty().addListener((observable1, oldValue1, newValue1) -> {
             newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
                     event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
@@ -165,7 +165,7 @@ public class ModifyCurrencyController implements MessageListener {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @Override

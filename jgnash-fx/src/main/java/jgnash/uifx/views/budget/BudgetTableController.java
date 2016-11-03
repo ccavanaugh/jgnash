@@ -130,7 +130,7 @@ public class BudgetTableController implements MessageListener {
     @FXML
     private ResourceBundle resources;
 
-    private final SimpleObjectProperty<Budget> budgetProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Budget> budget = new SimpleObjectProperty<>();
 
     private BudgetResultsModel budgetResultsModel;
 
@@ -263,7 +263,7 @@ public class BudgetTableController implements MessageListener {
             Platform.runLater(BudgetTableController.this::handleBudgetChange);
         };
 
-        budgetProperty.addListener(budgetChangeListener);
+        budget.addListener(budgetChangeListener);
         yearSpinner.valueProperty().addListener(budgetChangeListener);
 
         runningTotalsButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -366,7 +366,7 @@ public class BudgetTableController implements MessageListener {
     }
 
     SimpleObjectProperty<Budget> budgetProperty() {
-        return budgetProperty;
+        return budget;
     }
 
     private void updateHeights() {
@@ -408,13 +408,13 @@ public class BudgetTableController implements MessageListener {
 
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            if (budgetProperty.get() != null && engine != null) {
+            if (budget.get() != null && engine != null) {
                 // unregister from the old model
                 if (budgetResultsModel != null) {
                     budgetResultsModel.removeMessageListener(this); // unregister from the old model
                 }
 
-                budgetResultsModel = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(),
+                budgetResultsModel = new BudgetResultsModel(budget.get(), yearSpinner.getValue(),
                         engine.getDefaultCurrency(), runningTotalsButton.isSelected());
 
 
@@ -1062,7 +1062,7 @@ public class BudgetTableController implements MessageListener {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            engine.updateBudgetGoals(budgetProperty.get(), account, result.get());
+            engine.updateBudgetGoals(budget.get(), account, result.get());
         }
     }
 
@@ -1074,8 +1074,8 @@ public class BudgetTableController implements MessageListener {
                 budgetProperty().set(null);
                 break;
             case BUDGET_REMOVE:
-                if (budgetProperty().get().equals(message.getObject(MessageProperty.BUDGET))) {
-                    budgetProperty().set(null);
+                if (budget.get().equals(message.getObject(MessageProperty.BUDGET))) {
+                    budget.set(null);
                     budgetResultsModel.removeMessageListener(this);
                 }
                 break;
@@ -1084,7 +1084,7 @@ public class BudgetTableController implements MessageListener {
             case ACCOUNT_REMOVE:
             case BUDGET_UPDATE:
             case BUDGET_GOAL_UPDATE:
-                if (budgetProperty().get().equals(message.getObject(MessageProperty.BUDGET))) {
+                if (budget.get().equals(message.getObject(MessageProperty.BUDGET))) {
                     handleBudgetUpdate();
                 }
                 break;

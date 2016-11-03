@@ -78,7 +78,7 @@ public class RecurringViewController implements MessageListener {
 
     private final SortedList<Reminder> sortedReminderList = new SortedList<>(observableReminderList);
 
-    final private ReadOnlyObjectWrapper<Reminder> selectedReminderProperty = new ReadOnlyObjectWrapper<>();
+    final private ReadOnlyObjectWrapper<Reminder> selectedReminder = new ReadOnlyObjectWrapper<>();
 
     private Timer timer = null;
 
@@ -118,11 +118,11 @@ public class RecurringViewController implements MessageListener {
 
         tableView.setItems(sortedReminderList);
 
-        selectedReminderProperty.bind(tableView.getSelectionModel().selectedItemProperty());
+        selectedReminder.bind(tableView.getSelectionModel().selectedItemProperty());
 
         // bind enabled state of the buttons to the selected reminder property
-        deleteButton.disableProperty().bind(Bindings.isNull(selectedReminderProperty));
-        modifyButton.disableProperty().bind(Bindings.isNull(selectedReminderProperty));
+        deleteButton.disableProperty().bind(Bindings.isNull(selectedReminder));
+        modifyButton.disableProperty().bind(Bindings.isNull(selectedReminder));
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
 
@@ -207,7 +207,7 @@ public class RecurringViewController implements MessageListener {
 
     @FXML
     private void handleDeleteAction() {
-        if (selectedReminderProperty.get() != null) {
+        if (selectedReminder.get() != null) {
             if (Options.confirmOnDeleteReminderProperty().get()) {
                 if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"),
                         resources.getString("Message.ConfirmReminderDelete"))
@@ -219,7 +219,7 @@ public class RecurringViewController implements MessageListener {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            engine.removeReminder(selectedReminderProperty.get());
+            engine.removeReminder(selectedReminder.get());
         }
     }
 
@@ -245,7 +245,7 @@ public class RecurringViewController implements MessageListener {
     @FXML
     private void handleModifyAction() {
 
-        final Reminder old = selectedReminderProperty.get();
+        final Reminder old = selectedReminder.get();
 
         try {
             final Optional<Reminder> reminder = RecurringEntryDialog.showAndWait((Reminder) old.clone());

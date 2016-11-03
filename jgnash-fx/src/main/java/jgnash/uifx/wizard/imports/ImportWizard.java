@@ -49,7 +49,7 @@ public class ImportWizard {
         DATE_FORMAT
     }
 
-    private final ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<WizardDialogController<Settings>> wizardController = new SimpleObjectProperty<>();
 
     private final SimpleBooleanProperty dateFormatSelectionEnabled = new SimpleBooleanProperty(false);
 
@@ -64,7 +64,7 @@ public class ImportWizard {
                         resources.getString("Title.ImportTransactions"));
 
         stage = pair.getStage();
-        wizardControllerProperty().setValue(pair.getController());
+        wizardControllerProperty().set(pair.getController());
 
         final WizardDialogController<Settings> wizardController = wizardControllerProperty().get();
 
@@ -100,7 +100,7 @@ public class ImportWizard {
     }
 
     public ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty() {
-        return wizardControllerProperty;
+        return wizardController;
     }
 
     public SimpleBooleanProperty dateFormatSelectionEnabled() {

@@ -31,19 +31,19 @@ public class RegisterStage extends Stage {
     /**
      * Static list of register stages.
      */
-    final private static ListProperty<RegisterStage> registerStageListProperty
+    final private static ListProperty<RegisterStage> registerStageList
             = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     private static final double SCALE_FACTOR = 0.7;
 
-    final private ReadOnlyObjectWrapper<Account> accountProperty = new ReadOnlyObjectWrapper<>();
+    final private ReadOnlyObjectWrapper<Account> account = new ReadOnlyObjectWrapper<>();
 
     private final RegisterPaneController controller;
 
     private RegisterStage(@NotNull final Account account) {
         super(StageStyle.DECORATED);
 
-        accountProperty.setValue(account);
+        this.account.set(account);
 
         final String formResource;
 
@@ -78,22 +78,22 @@ public class RegisterStage extends Stage {
         setHeight(minHeight * SCALE_FACTOR);
 
         // Push the account to the controller at the end of the application thread
-        Platform.runLater(() -> controller.accountProperty().setValue(account));
+        Platform.runLater(() -> controller.accountProperty().set(account));
 
         updateTitle(account);
 
         StageUtils.addBoundsListener(this, account.getUuid());
 
-        registerStageListProperty.get().add(this);
+        registerStageList.get().add(this);
 
-        setOnHidden(event -> registerStageListProperty.get().remove(RegisterStage.this));
+        setOnHidden(event -> registerStageList.get().remove(RegisterStage.this));
     }
 
     public static RegisterStage getRegisterStage(@NotNull final Account account) {
 
         // look for an existing stage first
-        for (final RegisterStage registerStage : registerStageListProperty) {
-            if (registerStage.accountProperty.get().equals(account)) {
+        for (final RegisterStage registerStage : registerStageList) {
+            if (registerStage.account.get().equals(account)) {
                 registerStage.requestFocus();
                 return registerStage;
             }
@@ -108,11 +108,11 @@ public class RegisterStage extends Stage {
     }
 
     public ReadOnlyObjectProperty<Account> accountProperty() {
-        return accountProperty.getReadOnlyProperty();
+        return account.getReadOnlyProperty();
     }
 
     public static ListProperty<RegisterStage> registerStageList() {
-        return registerStageListProperty;
+        return registerStageList;
     }
 
     private void updateTitle(final Account account) {

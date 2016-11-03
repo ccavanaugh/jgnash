@@ -46,7 +46,7 @@ import jgnash.util.ResourceUtils;
 public class TransactionNumberDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ButtonBar buttonBar;
@@ -113,7 +113,7 @@ public class TransactionNumberDialogController {
 
         returnValue = returnedItems;
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     private Optional<List<String>> getItems() {
@@ -122,7 +122,7 @@ public class TransactionNumberDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     public static void showAndWait() {

@@ -80,7 +80,7 @@ public class AutoCompleteFactory {
                     memoModel = new MemoModel();
                 }
             }
-            autoCompleteTextField.autoCompleteModelObjectProperty().setValue(memoModel);
+            autoCompleteTextField.autoCompleteModelObjectProperty().set(memoModel);
         }
     }
 
@@ -93,7 +93,7 @@ public class AutoCompleteFactory {
      */
     public static void setPayeeModel(final AutoCompleteTextField<Transaction> autoCompleteTextField, final Account account) {
         if (Options.useAutoCompleteProperty().get()) {
-            autoCompleteTextField.autoCompleteModelObjectProperty().setValue(new PayeeAccountModel(account));
+            autoCompleteTextField.autoCompleteModelObjectProperty().set(new PayeeAccountModel(account));
         }
     }
 

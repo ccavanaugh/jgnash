@@ -108,7 +108,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         tableView.setEditable(true);
 
         tableView.getItems().addListener((ListChangeListener<ImportTransaction>) c ->
-                valid.setValue(tableView.getItems().size() > 0));
+                valid.set(tableView.getItems().size() > 0));
 
         buildTableView();
 

@@ -70,7 +70,7 @@ public class AttachmentPane extends GridPane {
     @FXML
     protected Button deleteAttachmentButton;
 
-    private final SimpleObjectProperty<Path> attachmentProperty = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Path> attachment = new SimpleObjectProperty<>(null);
 
     private boolean moveAttachment = false;
 
@@ -93,9 +93,9 @@ public class AttachmentPane extends GridPane {
 
     @FXML
     private void initialize() {
-        attachmentButton.disableProperty().bind(Bindings.isNotNull(attachmentProperty));
-        deleteAttachmentButton.disableProperty().bind(Bindings.isNull(attachmentProperty));
-        viewAttachmentButton.disableProperty().bind(Bindings.isNull(attachmentProperty));
+        attachmentButton.disableProperty().bind(Bindings.isNotNull(attachment));
+        deleteAttachmentButton.disableProperty().bind(Bindings.isNull(attachment));
+        viewAttachmentButton.disableProperty().bind(Bindings.isNull(attachment));
 
         attachmentButton.setOnAction(event -> attachmentAction());
         deleteAttachmentButton.setOnAction(event -> handleDeleteAction());
@@ -103,7 +103,7 @@ public class AttachmentPane extends GridPane {
     }
 
     private void handleDeleteAction() {
-        attachmentProperty.setValue(null);
+        attachment.set(null);
     }
 
     /**
@@ -122,7 +122,7 @@ public class AttachmentPane extends GridPane {
 
                 Platform.runLater(() -> {
                     try {
-                        attachmentProperty.setValue(pathFuture.get());
+                        attachment.set(pathFuture.get());
                     } catch (final InterruptedException | ExecutionException e) {
                         Logger.getLogger(AttachmentPane.class.getName()).log(Level.SEVERE, e.getMessage(), e);
                     }
@@ -140,9 +140,9 @@ public class AttachmentPane extends GridPane {
      * @return the provided {@code Transaction}
      */
     Transaction buildTransaction(final Transaction transaction) {
-        if (attachmentProperty.get() != null) {
+        if (attachment.get() != null) {
 
-            final Path path = attachmentProperty.get().getFileName();
+            final Path path = attachment.get().getFileName();
 
             if (moveAttachment) {
                 if (moveAttachment() && path != null) {
@@ -166,21 +166,21 @@ public class AttachmentPane extends GridPane {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        return engine.addAttachment(attachmentProperty.get(), false);
+        return engine.addAttachment(attachment.get(), false);
     }
 
     private void showImageAction() {
-        if (attachmentProperty.get() != null) {
-            if (Files.exists(attachmentProperty.get())) {
-                ImageDialog.showImage(attachmentProperty.get());
+        if (attachment.get() != null) {
+            if (Files.exists(attachment.get())) {
+                ImageDialog.showImage(attachment.get());
             } else {
-                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.MissingAttachment", attachmentProperty.get().toString()));
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.MissingAttachment", attachment.get().toString()));
             }
         }
     }
 
     void clear() {
-        attachmentProperty.set(null);
+        attachment.set(null);
     }
 
     private void attachmentAction() {
@@ -204,8 +204,8 @@ public class AttachmentPane extends GridPane {
             fileChooser.setInitialDirectory(new File(lastDirectory));
         }
 
-        if (attachmentProperty.get() != null) {
-            final Path path = attachmentProperty.get().getFileName();
+        if (attachment.get() != null) {
+            final Path path = attachment.get().getFileName();
             if (path != null) {
                 fileChooser.setInitialFileName(path.toString());
             }
@@ -247,7 +247,7 @@ public class AttachmentPane extends GridPane {
             }
 
             if (result) {
-                attachmentProperty.setValue(selectedFile.toPath());
+                attachment.set(selectedFile.toPath());
             }
         }
     }

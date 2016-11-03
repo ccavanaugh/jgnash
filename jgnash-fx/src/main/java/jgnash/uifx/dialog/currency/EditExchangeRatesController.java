@@ -76,7 +76,7 @@ import jgnash.util.ResourceUtils;
 public class EditExchangeRatesController implements MessageListener {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private DatePickerEx datePicker;
@@ -132,7 +132,7 @@ public class EditExchangeRatesController implements MessageListener {
 
     @FXML
     void initialize() {
-        exchangeRateField.scaleProperty().setValue(MathConstants.EXCHANGE_RATE_ACCURACY);
+        exchangeRateField.scaleProperty().set(MathConstants.EXCHANGE_RATE_ACCURACY);
 
         exchangeRateTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         exchangeRateTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -190,7 +190,7 @@ public class EditExchangeRatesController implements MessageListener {
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 
         // Install a listener to unregister from the message bus when the window closes
-        parentProperty.addListener((observable, oldValue, scene) -> {
+        parent.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
                 scene.windowProperty().addListener((observable1, oldValue1, window)
                         -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
@@ -229,7 +229,7 @@ public class EditExchangeRatesController implements MessageListener {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            selectedExchangeRate.setValue(engine.getExchangeRate(baseCurrencyComboBox.getValue(),
+            selectedExchangeRate.set(engine.getExchangeRate(baseCurrencyComboBox.getValue(),
                     targetCurrencyComboBox.getValue()));
         }
     }
@@ -270,7 +270,7 @@ public class EditExchangeRatesController implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        updateOnlineButton.disableProperty().setValue(true);
+        updateOnlineButton.disableProperty().set(true);
 
         updateTask = new Task<Void>() {
             @Override
@@ -318,7 +318,7 @@ public class EditExchangeRatesController implements MessageListener {
         progressBar.progressProperty().unbind();
         progressBar.progressProperty().set(0);
 
-        updateOnlineButton.disableProperty().setValue(false);
+        updateOnlineButton.disableProperty().set(false);
 
         updateTask = null;
     }
@@ -341,7 +341,7 @@ public class EditExchangeRatesController implements MessageListener {
     private void handleCloseAction() {
         handleStopAction();
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @Override
