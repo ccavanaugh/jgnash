@@ -15,6 +15,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -75,6 +76,8 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  */
 public class BudgetTableController implements MessageListener {
+
+    private static String RUNNING_TOTALS = "runningTotals";
 
     private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
@@ -200,9 +203,12 @@ public class BudgetTableController implements MessageListener {
 
     @FXML
     private void initialize() {
+
+        final Preferences preferences = Preferences.userNodeForPackage(BudgetTableController.class);
+        runningTotalsButton.selectedProperty().setValue(preferences.getBoolean(RUNNING_TOTALS, false));
+
         rateLimitExecutor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
                 new ThreadPoolExecutor.DiscardPolicy());
-
 
         tableWidthChangeListener = (observable, oldValue, newValue) -> {
             if (newValue != null && !oldValue.equals(newValue)) {
@@ -264,6 +270,9 @@ public class BudgetTableController implements MessageListener {
         yearSpinner.valueProperty().addListener(budgetChangeListener);
         runningTotalsButton.selectedProperty().addListener(budgetChangeListener);
         visibleColumnCount.addListener(budgetChangeListener);
+
+        runningTotalsButton.selectedProperty().addListener((observable, oldValue, newValue) ->
+                preferences.putBoolean(RUNNING_TOTALS, newValue));
 
         /* Setting the tables as un-managed effectively removes these tables from the GridPane.  The tables are
            redundant if showing the amounts as running balances. */

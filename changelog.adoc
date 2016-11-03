@@ -17,7 +17,6 @@ WANTS
 * Direct Transaction entry option in the Ledger to avoid Transaction form.
 * Formal Trial Balance report
 * Budgeting
-** an option for Total Year OR YTD Total – this is actually quite useful, since the user can be under / over budget in any given period, but on-budget YTD.
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
@@ -25,6 +24,7 @@ WANTS
 
 Release 2.27.0
 --------------
+* 11/03/16 Budgets results may now be display as running totals instead of per period values. (Fx)
 * 10/26/16 Improved the density and layout stability of the budget view. (Fx)
 * 10/24/16 Added selection buttons to the Reminders notification dialog to reduce required effort. (Fx)
 * 10/24/16 The Periodic Account Balance chart was improved with more selectable periods and better button names. (Fx)
