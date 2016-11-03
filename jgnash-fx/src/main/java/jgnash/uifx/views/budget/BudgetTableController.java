@@ -170,14 +170,14 @@ public class BudgetTableController implements MessageListener {
     private final DoubleProperty minSummaryColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
-     * Current index to be used for scrolling the display.  If 0 the first period is displayed to the left
+     * Current index to be used for scrolling the display.  0 is the first period is displayed to the left
      */
     private int index;
 
     /**
      * The number of visible columns.
      */
-    private int visibleColumnCount = 1;
+    private final IntegerProperty visibleColumnCount = new SimpleIntegerProperty(1);
 
     /**
      * The number of periods in the model.
@@ -281,33 +281,26 @@ public class BudgetTableController implements MessageListener {
         horizontalScrollBar.setUnitIncrement(1);
         horizontalScrollBar.disableProperty().bind(periodCountProperty.lessThanOrEqualTo(1));
 
-        //System.out.println()
-
         // shift the table right and left with the ScrollBar value
-        horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue)
-                -> Platform.runLater(new Runnable() {   // push update to the end of the platform thread to stability
-            @Override
-            public void run() {
-                // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
-                synchronized (this) {
+        horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-                    //System.out.println(newValue + ", " + horizontalScrollBar.maxProperty().get());   // TODO: bad value
+                    // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
+                    synchronized (this) {
 
+                        final int newIndex = (int) Math.round(newValue.doubleValue());
 
-                    final int newIndex = (int) Math.round(newValue.doubleValue());
-
-                    if (newIndex > index) {
-                        while (newIndex > index) {
-                            handleShiftRight();
-                        }
-                    } else if (newIndex < index) {
-                        while (newIndex < index) {
-                            handleShiftLeft();
+                        if (newIndex > index) {
+                            while (newIndex > index) {
+                                handleShiftRight();
+                            }
+                        } else if (newIndex < index) {
+                            while (newIndex < index) {
+                                handleShiftLeft();
+                            }
                         }
                     }
                 }
-            }
-        }));
+        );
 
         ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
     }
@@ -326,8 +319,8 @@ public class BudgetTableController implements MessageListener {
 
         try {
             // remove the right column
-            periodTable.getColumns().remove(visibleColumnCount - 1);
-            periodSummaryTable.getColumns().remove(visibleColumnCount - 1);
+            periodTable.getColumns().remove(visibleColumnCount.get() - 1);
+            periodSummaryTable.getColumns().remove(visibleColumnCount.get() - 1);
 
             index--;
 
@@ -343,14 +336,18 @@ public class BudgetTableController implements MessageListener {
     private void handleShiftRight() {
         lock.writeLock().lock();
 
+        /*
+        System.out.println(periodCountProperty.intValue());
+        System.out.println(index + ", " + visibleColumnCount.get() + ", " + horizontalScrollBar.maxProperty().intValue());
+        System.out.println();
+        */
+
         try {
             // remove leftmost column
             periodTable.getColumns().remove(0);
             periodSummaryTable.getColumns().remove(0);
 
-            //System.out.println(index);
-
-            int newColumn = index + visibleColumnCount;
+            int newColumn = index + visibleColumnCount.get();
 
             newColumn = Math.min(newColumn, budgetResultsModel.getDescriptorList().size() - 1);
 
@@ -491,7 +488,7 @@ public class BudgetTableController implements MessageListener {
             final int maxVisible = (int) Math.floor(availWidth / (minColumnWidth * 3.0));
 
             // update the number of visible columns factoring in the size of the descriptor list
-            visibleColumnCount = (Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
+            visibleColumnCount.set((Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible)));
 
             final double width = Math.floor(availWidth /
                     Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
@@ -738,11 +735,11 @@ public class BudgetTableController implements MessageListener {
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
         // index exceeds allowed value because the user reduced the period count, reset to the maximum allowed value
-        if (index > budgetResultsModel.getDescriptorList().size() - visibleColumnCount) {
-            index = budgetResultsModel.getDescriptorList().size() - visibleColumnCount;
+        if (index > budgetResultsModel.getDescriptorList().size() - visibleColumnCount.get()) {
+            index = budgetResultsModel.getDescriptorList().size() - visibleColumnCount.get();
         }
 
-        final int periodCount = Math.min(visibleColumnCount, budgetResultsModel.getDescriptorList().size());
+        final int periodCount = Math.min(visibleColumnCount.get(), budgetResultsModel.getDescriptorList().size());
 
         for (int i = index; i < index + periodCount; i++) {
             periodTable.getColumns().add(buildAccountPeriodResultsColumn(i));
@@ -833,7 +830,7 @@ public class BudgetTableController implements MessageListener {
                 .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
         periodSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(periodSummaryTable));
 
-        final int periodCount = Math.min(visibleColumnCount, budgetResultsModel.getDescriptorList().size());
+        final int periodCount = Math.min(visibleColumnCount.get(), budgetResultsModel.getDescriptorList().size());
 
         for (int i = index; i < index + periodCount; i++) {
             periodSummaryTable.getColumns().add(buildAccountPeriodSummaryColumn(i));
@@ -969,7 +966,7 @@ public class BudgetTableController implements MessageListener {
         double max = 0;
 
         for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
-            for (final Account account: expandedAccountList) {
+            for (final Account account : expandedAccountList) {
                 max = Math.max(max, calculateMinColumnWidth(descriptor, account));
             }
         }
