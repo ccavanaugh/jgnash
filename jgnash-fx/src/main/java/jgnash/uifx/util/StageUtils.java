@@ -27,7 +27,8 @@ import java.util.prefs.Preferences;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.shape.Rectangle;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -68,26 +69,29 @@ public class StageUtils {
         final String bounds = Preferences.userRoot().node(prefNode).get(DEFAULT_KEY, null);
 
         if (bounds != null) { // restore to previous size and position
-            final Rectangle rectangle = decodeRectangle(bounds);
+            final Rectangle2D rectangle = decodeRectangle(bounds);
 
-            final boolean resizable = stage.isResizable();
+            // Do not try to restore bounds if they exceed available screen space.. user dropped a monitor
+            if (getMaxVisualBounds().contains(rectangle)) {
+                final boolean resizable = stage.isResizable();
 
-            // Stage will not reposition if resizable is false... JavaFx bug?
-            stage.setResizable(false);
+                // Stage will not reposition if resizable is false... JavaFx bug?
+                stage.setResizable(false);
 
-            stage.setX(rectangle.getX());
-            stage.setY(rectangle.getY());
+                stage.setX(rectangle.getMinX());
+                stage.setY(rectangle.getMinY());
 
-            if (resizable) { // don't resize if originally false
-                if (stage.getMinWidth() != stage.getMaxWidth()) {   // width may be locked
-                    stage.setWidth(rectangle.getWidth());
+                if (resizable) { // don't resize if originally false
+                    if (stage.getMinWidth() != stage.getMaxWidth()) {   // width may be locked
+                        stage.setWidth(rectangle.getWidth());
+                    }
+
+                    if (stage.getMinHeight() != stage.getMaxHeight()) { // height may be locked
+                        stage.setHeight(rectangle.getHeight());
+                    }
                 }
-
-                if (stage.getMinHeight() != stage.getMaxHeight()) { // height may be locked
-                    stage.setHeight(rectangle.getHeight());
-                }
+                stage.setResizable(resizable); // restore the resize property
             }
-            stage.setResizable(resizable); // restore the resize property
         }
 
         final ChangeListener<Number> boundsListener = new BoundsListener(stage, prefNode);
@@ -130,18 +134,18 @@ public class StageUtils {
                 + COMMA_DELIMITER + Double.toString(height);
     }
 
-    private static Rectangle decodeRectangle(final String bounds) {
+    private static Rectangle2D decodeRectangle(final String bounds) {
         if (bounds == null) {
             return null;
         }
 
-        Rectangle rectangle = null;
+        Rectangle2D rectangle = null;
 
         final String[] array = bounds.split(String.valueOf(COMMA_DELIMITER));
 
         if (array.length == 4) {
             try {
-                rectangle = new Rectangle(Double.parseDouble(array[X]), Double.parseDouble(array[Y]),
+                rectangle = new Rectangle2D(Double.parseDouble(array[X]), Double.parseDouble(array[Y]),
                         Double.parseDouble(array[WIDTH]), Double.parseDouble(array[HEIGHT]));
             } catch (final NumberFormatException nfe) {
                 Logger.getLogger(StageUtils.class.getName()).log(Level.SEVERE, null, nfe);
@@ -150,5 +154,27 @@ public class StageUtils {
         }
 
         return rectangle;
+    }
+
+    /**
+     * Returns the maximum visual bounds of the users desktop.
+     *
+     * @return maximum usable desktop bounds
+     */
+    private static Rectangle2D getMaxVisualBounds() {
+        double maxX = 0;
+        double maxY = 0;
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+
+        for (final Screen screen : Screen.getScreens()) {
+            minX = Math.min(minX, screen.getVisualBounds().getMinX());
+            minY = Math.min(minY, screen.getVisualBounds().getMinY());
+
+            maxX = Math.max(maxX, screen.getVisualBounds().getMaxX());
+            maxY = Math.max(maxY, screen.getVisualBounds().getMaxY());
+        }
+
+        return new Rectangle2D(minX, minY, maxX - minX, maxY - minY);
     }
 }
