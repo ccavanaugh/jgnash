@@ -66,6 +66,7 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
@@ -1054,6 +1055,8 @@ public class BudgetTableController implements MessageListener {
         } catch (final CloneNotSupportedException e) {
             Logger.getLogger(BudgetTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
+
+        StageUtils.addBoundsListener(pair.getStage(), BudgetGoalsDialogController.class);
 
         pair.getStage().showAndWait();
 

@@ -25,6 +25,7 @@ WANTS
 Release 2.27.0
 --------------
 * 11/05/16 Improved window positioning behavior on multi-monitor systems. (Fx)
+* 11/05/16 The Budget Goals dialog had the wrong title and layout behavior was poor. (Fx)
 * 11/03/16 Budgets results may now be display as running totals instead of per period values. (Fx)
 * 10/26/16 Improved the density and layout stability of the budget view. (Fx)
 * 10/24/16 Added selection buttons to the Reminders notification dialog to reduce required effort. (Fx)
