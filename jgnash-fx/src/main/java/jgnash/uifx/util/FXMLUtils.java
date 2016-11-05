@@ -268,6 +268,8 @@ public class FXMLUtils {
             injectParent(controller, scene);
 
             stage.setOnShown(event -> Platform.runLater(() -> {
+                stage.sizeToScene();    // force the stage to resize to the scene before setting the minimums
+
                 stage.setMinHeight(stage.getHeight());
                 stage.setMinWidth(stage.getWidth());
             }));
