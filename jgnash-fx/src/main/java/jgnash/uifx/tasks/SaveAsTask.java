@@ -54,7 +54,7 @@ public class SaveAsTask extends Task<Void> {
         fileChooser.setInitialDirectory(current.getParentFile());
         fileChooser.setTitle(resources.getString("Title.SaveAs"));
 
-        final File newFile = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File newFile = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (newFile != null) {
             final SaveAsTask saveAsTask = new SaveAsTask(newFile);

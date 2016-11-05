@@ -98,7 +98,7 @@ public class FXMLUtils {
             Logger.getLogger(stage.getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        stage.initOwner(MainView.getInstance().getPrimaryStage());
+        stage.initOwner(MainView.getPrimaryStage());
         stage.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
         stage.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         stage.initStyle(StageStyle.DECORATED);
@@ -189,7 +189,7 @@ public class FXMLUtils {
         stage.initModality(Modality.APPLICATION_MODAL);
 
         if (MainView.getInstance() != null) {    // null check is only necessary to pass unit tests
-            stage.initOwner(MainView.getInstance().getPrimaryStage());
+            stage.initOwner(MainView.getPrimaryStage());
         }
 
         try {
@@ -249,7 +249,7 @@ public class FXMLUtils {
 
         final Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainView.getInstance().getPrimaryStage());
+        stage.initOwner(MainView.getPrimaryStage());
 
         try {
             final Scene scene = new Scene(fxmlLoader.load());

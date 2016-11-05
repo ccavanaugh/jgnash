@@ -38,6 +38,7 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -144,7 +145,8 @@ class InvestmentTransactionDialog extends Stage {
             // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
             Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth() + 1));
 
-            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, InvestmentTransactionDialog.class));
+            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, InvestmentTransactionDialog.class,
+                    MainView.getPrimaryStage()));
         });
     }
 }

@@ -165,7 +165,7 @@ public class JavaFXUtils {
 
             job.getJobSettings().setPageLayout(pageLayout);
 
-            if (job.showPageSetupDialog(MainView.getInstance().getPrimaryStage())) {
+            if (job.showPageSetupDialog(MainView.getPrimaryStage())) {
                 pageLayout = job.getJobSettings().getPageLayout();
 
                 // determine the scaling factor to fit the page

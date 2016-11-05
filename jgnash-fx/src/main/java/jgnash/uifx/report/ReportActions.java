@@ -77,7 +77,7 @@ public class ReportActions {
         reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class, MainView.getPrimaryStage());
 
         // Override the default sizes
         Platform.runLater(() -> {
@@ -119,7 +119,7 @@ public class ReportActions {
         reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class, MainView.getPrimaryStage());
     }
 
     public static void displayProfitLossReport() {
@@ -131,7 +131,7 @@ public class ReportActions {
         reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), ProfitLossReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), ProfitLossReportController.class, MainView.getPrimaryStage());
 
         // Override the default sizes
         Platform.runLater(() -> {
@@ -149,7 +149,7 @@ public class ReportActions {
         reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class, MainView.getPrimaryStage());
 
         // Override the default sizes
         Platform.runLater(() -> {
@@ -167,7 +167,7 @@ public class ReportActions {
         reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), NetWorthReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), NetWorthReportController.class, MainView.getPrimaryStage());
 
         // Override the default sizes
         Platform.runLater(() -> {
@@ -208,7 +208,7 @@ public class ReportActions {
                     new FileChooser.ExtensionFilter("TXT", "*.txt")
             );
 
-            final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+            final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
             if (file != null) {
                 preferences.put(LAST_DIR, file.getParent());
@@ -254,7 +254,7 @@ public class ReportActions {
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
 
-            final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+            final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
             if (file != null) {
                 preferences.put(LAST_DIR, file.getParent());

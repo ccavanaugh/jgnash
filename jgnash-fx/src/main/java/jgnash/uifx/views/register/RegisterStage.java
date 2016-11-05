@@ -82,7 +82,7 @@ public class RegisterStage extends Stage {
 
         updateTitle(account);
 
-        StageUtils.addBoundsListener(this, account.getUuid());
+        StageUtils.addBoundsListener(this, account.getUuid(), null);
 
         registerStageList.get().add(this);
 

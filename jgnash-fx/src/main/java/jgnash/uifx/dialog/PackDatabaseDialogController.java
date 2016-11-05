@@ -84,7 +84,7 @@ public class PackDatabaseDialogController {
 
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getPrimaryStage());
 
         if (file != null && file.exists()) {
             databaseTextField.setText(file.getAbsolutePath());

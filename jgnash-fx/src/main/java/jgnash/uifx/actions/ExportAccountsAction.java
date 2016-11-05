@@ -49,7 +49,7 @@ public class ExportAccountsAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(ExportAccountsAction.class);

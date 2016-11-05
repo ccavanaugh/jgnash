@@ -90,7 +90,7 @@ class ChartUtilities {
                 new FileChooser.ExtensionFilter("PNG", "*.png")
         );
 
-        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             final WritableImage image = takeSnapshot(pane);

@@ -77,7 +77,7 @@ import jgnash.util.NotNull;
  */
 public class BudgetTableController implements MessageListener {
 
-    private static String RUNNING_TOTALS = "runningTotals";
+    private static final String RUNNING_TOTALS = "runningTotals";
 
     private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";

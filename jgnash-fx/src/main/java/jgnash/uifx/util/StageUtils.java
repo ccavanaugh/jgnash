@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.Nullable;
 
 /**
  * Saves and restores Stage sizes.
@@ -62,14 +63,30 @@ public class StageUtils {
      * @param prefNode This should typically be the calling controller
      */
     public static void addBoundsListener(final Stage stage, final Class<?> prefNode) {
-        addBoundsListener(stage, prefNode.getName().replace('.', '/'));
+        addBoundsListener(stage, prefNode.getName().replace('.', '/'), null);
     }
 
-    public static void addBoundsListener(final Stage stage, final String prefNode) {
+    /**
+     * Restores and saves the size and location of a stage.
+     *
+     * @param stage    The stage to save and restore size and position
+     * @param prefNode This should typically be the calling controller
+     */
+    public static void addBoundsListener(final Stage stage, final Class<?> prefNode, @Nullable final Stage parent) {
+        addBoundsListener(stage, prefNode.getName().replace('.', '/'), parent);
+    }
+
+    public static void addBoundsListener(final Stage stage, final String prefNode, @Nullable final Stage parent) {
         final String bounds = Preferences.userRoot().node(prefNode).get(DEFAULT_KEY, null);
 
         if (bounds != null) { // restore to previous size and position
-            final Rectangle2D rectangle = decodeRectangle(bounds);
+            Rectangle2D rectangle = decodeRectangle(bounds);
+
+            // relative window placement requested.  Modify the coordinates to the current parent placement
+            if (parent != null) {
+                rectangle = new Rectangle2D(rectangle.getMinX() + parent.getX(),
+                        rectangle.getMinY() + parent.getY(), rectangle.getWidth(), rectangle.getHeight());
+            }
 
             // Do not try to restore bounds if they exceed available screen space.. user dropped a monitor
             if (getMaxVisualBounds().contains(rectangle)) {
@@ -94,7 +111,7 @@ public class StageUtils {
             }
         }
 
-        final ChangeListener<Number> boundsListener = new BoundsListener(stage, prefNode);
+        final ChangeListener<Number> boundsListener = new BoundsListener(stage, prefNode, parent);
 
         stage.widthProperty().addListener(boundsListener);
         stage.heightProperty().addListener(boundsListener);
@@ -109,12 +126,14 @@ public class StageUtils {
         private final ScheduledThreadPoolExecutor executor;
         private final Preferences p;
         private final Window window;
+        private final Stage parent;
 
-        BoundsListener(final Window window, final String prefNode) {
+        BoundsListener(final Window window, final String prefNode, @Nullable final Stage parent) {
             executor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
                     new ThreadPoolExecutor.DiscardPolicy());
             p = Preferences.userRoot().node(prefNode);
             this.window = window;
+            this.parent = parent;
         }
 
         @Override
@@ -122,8 +141,15 @@ public class StageUtils {
             executor.schedule(() -> {
                 if (executor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
                     // window size and location requests must be pushed to the EDT to prevent a race condition
-                    Platform.runLater(() -> p.put(DEFAULT_KEY, encodeRectangle(window.getX(), window.getY(),
-                            window.getWidth(), window.getHeight())));
+                    Platform.runLater(() -> {
+                        if (parent != null) {
+                            p.put(DEFAULT_KEY, encodeRectangle(window.getX() - parent.getX(),
+                                    window.getY() - parent.getY(), window.getWidth(), window.getHeight()));
+                        } else {
+                            p.put(DEFAULT_KEY, encodeRectangle(window.getX(), window.getY(), window.getWidth(),
+                                    window.getHeight()));
+                        }
+                    });
                 }
             }, UPDATE_PERIOD, TimeUnit.SECONDS);
         }

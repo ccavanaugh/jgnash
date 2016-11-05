@@ -332,8 +332,8 @@ public class MainView implements MessageListener {
      *
      * @return the primary stage
      */
-    public Stage getPrimaryStage() {
-        return primaryStage;
+    public static Stage getPrimaryStage() {
+        return getInstance().primaryStage;
     }
 
     /**

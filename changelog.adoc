@@ -24,6 +24,7 @@ WANTS
 
 Release 2.27.0
 --------------
+* 11/05/16 Improved window positioning behavior on multi-monitor systems. (Fx)
 * 11/03/16 Budgets results may now be display as running totals instead of per period values. (Fx)
 * 10/26/16 Improved the density and layout stability of the budget view. (Fx)
 * 10/24/16 Added selection buttons to the Reminders notification dialog to reduce required effort. (Fx)
@@ -38,7 +39,7 @@ Release 2.27.0
 * 10/18/16 A transaction entry timestamp column has been added to the register.  It is hidden by default. (Fx)
 * 10/17/16 Prevent an IllegalArgumentException from occurring if a default or prior directory is missing when attempting
            to select a file. (Fx)
-* 10/16/16 Added an option to control how Bayesian model matches transaction. (Fx)
+* 10/16/16 Added an option to control how Bayesian model matches transactions to accounts when importing. (Fx)
 * 10/16/16 Make the last selected transaction account sticky for the OFX/QIF/MT940 Import wizard. (Fx)
 * 10/14/16 The OFX/QIF/MT940 Import wizard was not displaying a consistent precision for transaction amounts. (Fx)
 

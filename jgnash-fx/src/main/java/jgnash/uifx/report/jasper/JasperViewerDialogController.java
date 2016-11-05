@@ -469,7 +469,7 @@ public final class JasperViewerDialogController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Document", "*.csv", "*.CSV"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RTF Document", "*.rtf", "*.RTF"));
 
-        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             preferences.put(LAST_DIR, file.getParent());

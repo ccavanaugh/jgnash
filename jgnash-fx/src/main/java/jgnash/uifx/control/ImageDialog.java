@@ -71,7 +71,7 @@ public class ImageDialog {
 
         dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainView.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getPrimaryStage());
         dialog.setTitle(resources.getString("Title.ViewImage"));
 
         // Set a sane default size
@@ -105,7 +105,7 @@ public class ImageDialog {
         dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
 
         // Remember dialog size and location
-        StageUtils.addBoundsListener(dialog, ImageDialog.class);
+        StageUtils.addBoundsListener(dialog, ImageDialog.class, MainView.getPrimaryStage());
     }
 
     private void setImage(final Path path) {

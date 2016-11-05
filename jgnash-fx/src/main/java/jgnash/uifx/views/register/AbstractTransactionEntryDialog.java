@@ -37,6 +37,7 @@ import jgnash.engine.TransactionEntry;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.util.TableViewManager;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 import java.math.BigDecimal;
@@ -266,7 +267,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
         closeRunnable = runnable;
 
         // Reset bounds before showing
-        StageUtils.addBoundsListener(this, getClass());
+        StageUtils.addBoundsListener(this, getClass(), MainView.getPrimaryStage());
 
         super.show();
     }

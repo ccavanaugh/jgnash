@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -33,7 +34,7 @@ public class RecurringEntryDialog {
 
         pair.getStage().setResizable(false);
 
-        StageUtils.addBoundsListener(pair.getStage(), RecurringEntryDialog.class);
+        StageUtils.addBoundsListener(pair.getStage(), RecurringEntryDialog.class, MainView.getPrimaryStage());
 
         pair.getStage().showAndWait();  // must block the UI so the return value is generated correctly
     }

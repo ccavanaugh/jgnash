@@ -132,7 +132,7 @@ public class BudgetViewController implements MessageListener {
                         "*.xls", "*.xlsx")
         );
 
-        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());

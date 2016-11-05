@@ -57,7 +57,7 @@ public class StaticUIMethods {
 
         pair.getStage().setResizable(false);
 
-        StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class);
+        StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class, MainView.getPrimaryStage());
 
         pair.getStage().show();
     }
@@ -66,7 +66,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.ERROR, message);
 
         alert.setTitle(ResourceUtils.getString("Title.Error"));
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -75,7 +75,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
 
         alert.setTitle(ResourceUtils.getString("Title.Information"));
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -84,7 +84,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.WARNING, message);
 
         alert.setTitle(ResourceUtils.getString("Title.Warning"));
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -100,7 +100,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.YES_NO, message);
 
         alert.setTitle(title);
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         final Optional<ButtonType> buttonType = alert.showAndWait();
 
