@@ -34,10 +34,10 @@
     <Label fx:id="currencyLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
     <TableView fx:id="goalTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"
-               prefHeight="200"/>
+               prefHeight="200" minHeight="240"/>
 
     <TitledPane text="%Title.SmartFill" collapsible="false" GridPane.rowIndex="0" GridPane.columnIndex="2"
-                GridPane.rowSpan="3">
+                GridPane.rowSpan="3" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
         <GridPane styleClass="form">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER"/>
