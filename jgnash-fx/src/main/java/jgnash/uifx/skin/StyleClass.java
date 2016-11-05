@@ -35,6 +35,10 @@ public class StyleClass {
 
     public static final String NORMAL_CELL_ID = "normal-label";
 
+    public static final String BOLD_LABEL_ID = "bold-label";
+
+    public static final String BOLD_NEGATIVE_LABEL_ID = "bold-negative-label";
+
     public static final String ITALIC_CELL_ID = "italic-label";
 
     public static final String ITALIC_NEGATIVE_CELL_ID = "italic-negative-label";

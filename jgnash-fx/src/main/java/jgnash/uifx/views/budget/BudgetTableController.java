@@ -1117,10 +1117,18 @@ public class BudgetTableController implements MessageListener {
 
                 setText(format.format(amount));
 
-                if (amount.signum() < 0) {
-                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                if (account.isPlaceHolder()) {
+                    if (amount.signum() < 0) {
+                        setId(StyleClass.BOLD_NEGATIVE_LABEL_ID);
+                    } else {
+                        setId(StyleClass.BOLD_LABEL_ID);
+                    }
                 } else {
-                    setId(StyleClass.NORMAL_CELL_ID);
+                    if (amount.signum() < 0) {
+                        setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                    } else {
+                        setId(StyleClass.NORMAL_CELL_ID);
+                    }
                 }
             } else {
                 setText(null);
@@ -1165,7 +1173,7 @@ public class BudgetTableController implements MessageListener {
                 setText(account.getName());
 
                 if (account.isPlaceHolder()) {
-                    setId(StyleClass.DISABLED_CELL_ID);
+                    setId(StyleClass.BOLD_LABEL_ID);
                 } else {
                     setId(StyleClass.NORMAL_CELL_ID);
                 }
