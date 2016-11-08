@@ -26,6 +26,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.ComboBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -90,6 +92,14 @@ public class TransactionNumberComboBox extends ComboBox<String> {
 
             getEditor().focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
         }
+
+        setOnKeyReleased((final KeyEvent event) -> {
+            if (event.getCode() == KeyCode.DOWN) {
+                getSelectionModel().selectNext();
+            } else if (event.getCode() == KeyCode.UP) {
+                getSelectionModel().selectPrevious();
+            }
+        });
     }
 
     public ObjectProperty<Account> accountProperty() {
