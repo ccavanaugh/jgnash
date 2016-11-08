@@ -301,7 +301,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Convience function to return the upper and lower date bounds.  If
+     * Convience function to return the upper and lower date bounds.
      *
      * @return an array of LocalDate with {@code [0]} being the lower bound and {@code [1]} being the upper bound
      */
