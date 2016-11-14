@@ -162,7 +162,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public boolean areAccountsHidden() {
         boolean accountsHidden = false;
 
-        for (Account account : getAccounts()) {
+        for (final Account account : getAccounts()) {
             if (!account.isVisible()) {
                 accountsHidden = true;
                 break;
@@ -180,7 +180,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public boolean areAccountsLocked() {
         boolean accountsLocked = false;
 
-        for (Account account : getAccounts()) {
+        for (final Account account : getAccounts()) {
             if (account.isLocked()) {
                 accountsLocked = true;
                 break;
@@ -204,7 +204,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
             for (final Account a : accounts) {
                 boolean success = true;
-                for (TransactionEntry e : transactionEntries) {
+                for (final TransactionEntry e : transactionEntries) {
                     if (!e.getCreditAccount().equals(a) && !e.getDebitAccount().equals(a)) {
                         success = false;
                         break;
@@ -317,13 +317,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return Amount of this transaction relative to the supplied account
      */
     public BigDecimal getAmount(final Account account) {
-        BigDecimal balance = BigDecimal.ZERO;
 
-        for (final TransactionEntry entry : transactionEntries) {
-            balance = balance.add(entry.getAmount(account));
-        }
-
-        return balance;
+        return transactionEntries.stream().map(transactionEntry
+                -> transactionEntry.getAmount(account)).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     /**
