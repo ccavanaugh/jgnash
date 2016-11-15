@@ -156,8 +156,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @param creditAmount  amount for the transaction
      * @param debitAmount   amount for the transaction
      */
-    TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount,
-                     final BigDecimal debitAmount) {
+    TransactionEntry(@NotNull final Account creditAccount, @NotNull final Account debitAccount,
+                     @NotNull final BigDecimal creditAmount, @NotNull final BigDecimal debitAmount) {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
         Objects.requireNonNull(creditAmount);
@@ -176,7 +176,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return creditAmount;
     }
 
-    public BigDecimal getAmount(final Account account) {
+    public BigDecimal getAmount(@NotNull final Account account) {
         Objects.requireNonNull(account);
 
         if (account.equals(creditAccount)) {
@@ -193,7 +193,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      *
      * @param amount credit amount of the transaction
      */
-    public final void setAmount(final BigDecimal amount) {
+    public final void setAmount(@NotNull final BigDecimal amount) {
         Objects.requireNonNull(amount);
 
         assert amount.signum() >= 0;
@@ -243,7 +243,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         this.creditAccount = creditAccount;
     }
 
-    void setCreditReconciled(final ReconciledState creditReconciled) {
+    void setCreditReconciled(@NotNull final ReconciledState creditReconciled) {
         Objects.requireNonNull(creditReconciled);
 
         this.creditReconciled = creditReconciled;
@@ -253,7 +253,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         this.debitAccount = debitAccount;
     }
 
-    void setDebitReconciled(final ReconciledState debitReconciled) {
+    void setDebitReconciled(@NotNull final ReconciledState debitReconciled) {
         Objects.requireNonNull(debitReconciled);
 
         this.debitReconciled = debitReconciled;
@@ -282,7 +282,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return debitAmount;
     }
 
-    public void setDebitAmount(final BigDecimal debitAmount) {
+    public void setDebitAmount(@NotNull final BigDecimal debitAmount) {
         Objects.requireNonNull(debitAmount);
 
         this.debitAmount = debitAmount;

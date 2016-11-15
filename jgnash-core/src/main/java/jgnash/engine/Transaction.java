@@ -200,9 +200,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         Account account = null;
 
         if (size() >= 2) {
-            Set<Account> accounts = getAccounts();
-
-            for (final Account a : accounts) {
+            for (final Account a : getAccounts()) {
                 boolean success = true;
                 for (final TransactionEntry e : transactionEntries) {
                     if (!e.getCreditAccount().equals(a) && !e.getDebitAccount().equals(a)) {
@@ -317,7 +315,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return Amount of this transaction relative to the supplied account
      */
     public BigDecimal getAmount(final Account account) {
-
         return transactionEntries.stream().map(transactionEntry
                 -> transactionEntry.getAmount(account)).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -407,13 +404,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     private List<TransactionEntry> getTransactionEntries(final Account account) {
-        final List<TransactionEntry> list = new ArrayList<>();
-
-        list.addAll(transactionEntries.stream()
+        return new ArrayList<>(transactionEntries.stream()
                 .filter(transactionEntry -> transactionEntry.getCreditAccount().equals(account)
                         || transactionEntry.getDebitAccount().equals(account)).collect(Collectors.toList()));
-
-        return list;
     }
 
 
@@ -425,12 +418,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * returned if none are found
      */
     List<TransactionEntry> getTransactionEntriesByTag(final TransactionTag tag) {
-        final List<TransactionEntry> list = new ArrayList<>();
-
-        list.addAll(transactionEntries.stream()
+        return new ArrayList<>(transactionEntries.stream()
                 .filter(e -> e.getTransactionTag() == tag).collect(Collectors.toList()));
-
-        return list;
     }
 
     /**
@@ -605,7 +594,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         // deep clone
         tran.transactionEntries = new HashSet<>(); // deep clone
 
-        for (TransactionEntry entry : transactionEntries) {
+        for (final TransactionEntry entry : transactionEntries) {
             tran.addTransactionEntry((TransactionEntry) entry.clone());
         }
 
