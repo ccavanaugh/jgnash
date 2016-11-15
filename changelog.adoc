@@ -25,6 +25,7 @@ WANTS
 
 Release 2.28.0
 --------------
+* 11/14/16 Corrected a rare ConcurrentModificationException on systems under heavy loads. (Swing, Fx)
 * 11/08/16 Account ComboBox selection can be made using the first letter of the account. (Fx) _[Pranay Kumar]_
 * 11/08/16 Up and Down arrows can be used for selection within the Transaction number box
 * 11/05/16 Improved visual feedback for placeholder accounts and sums in the Budget interface. (Fx) (Feature Request 116)
