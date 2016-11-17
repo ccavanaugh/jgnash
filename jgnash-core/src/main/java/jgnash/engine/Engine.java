@@ -290,7 +290,6 @@ public class Engine {
                                             final CurrencyNode baseCurrency, final LocalDate localDate) {
 
         // Search for the exact history node record
-        //SecurityHistoryNode hNode = node.getHistoryNode(marketDate);
         Optional<SecurityHistoryNode> optional = node.getHistoryNode(localDate);
 
         // not null, must be an exact match, return the value because it has precedence
@@ -701,7 +700,6 @@ public class Engine {
     }
 
     public List<PendingReminder> getPendingReminders() {
-
         final ArrayList<PendingReminder> pendingList = new ArrayList<>();
         final List<Reminder> list = getReminders();
         final LocalDate now = LocalDate.now(); // today's date
@@ -763,7 +761,6 @@ public class Engine {
      * @see StoredObjectComparator
      */
     public Collection<StoredObject> getStoredObjects() {
-
         engineLock.readLock().lock();
 
         try {
@@ -788,7 +785,6 @@ public class Engine {
      * @return true if valid
      */
     private boolean isCommodityNodeValid(final CommodityNode node) {
-
         boolean result = true;
 
         if (node.getUuid() == null) {
@@ -829,7 +825,6 @@ public class Engine {
      * @return {@code true} if the add it successful
      */
     public boolean addCurrency(final CurrencyNode node) {
-
         commodityLock.writeLock().lock();
 
         try {
