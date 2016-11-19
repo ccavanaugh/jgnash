@@ -175,31 +175,19 @@ public class SecurityNode extends CommodityNode {
     }
 
     boolean removeHistoryNode(final LocalDate date) {
-
-        boolean result = false;
-
-        SecurityHistoryNode nodeToRemove = null;
-
         lock.writeLock().lock();
 
         try {
-            for (final SecurityHistoryNode node : historyNodes) {
-                if (node.getLocalDate().compareTo(date) == 0) {
-                    nodeToRemove = node;
-                    break;
-                }
+            final boolean result = historyNodes.removeIf(node -> node.getLocalDate().compareTo(date) == 0);
+
+            if (result) {
+                sortedHistoryNodeCache.removeIf(node -> node.getLocalDate().compareTo(date) == 0);
             }
 
-            // Remove outside the iterator
-            if (nodeToRemove != null) {
-                sortedHistoryNodeCache.remove(nodeToRemove);
-                result = historyNodes.remove(nodeToRemove);
-            }
+            return result;
         } finally {
             lock.writeLock().unlock();
         }
-
-        return result;
     }
 
     boolean addSecurityHistoryEvent(final SecurityHistoryEvent securityHistoryEvent) {
