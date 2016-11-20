@@ -52,23 +52,30 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
     private static final long MAXIMUM_ENTITY_TRASH_AGE = 2000;
 
-    private ScheduledExecutorService trashExecutor;
+    private static final int INITIAL_DELAY = 60;    // Delay start 60 seconds
+
+    private static final int PERIOD = 35;   // Execute every 35 seconds
+
+    private ScheduledExecutorService entityTrashExecutor;
+
+    private static final int MAX_ENTITY_LUMP = 10;
 
     JpaTrashDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
 
-        trashExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+        entityTrashExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
 
-        // run trash cleanup every 2 minutes 1 minute after startup
-        trashExecutor.scheduleWithFixedDelay(JpaTrashDAO.this::cleanupEntityTrash, 1, 2, TimeUnit.MINUTES);
+        // run trash cleanup every 35 seconds 1 minute after startup
+        entityTrashExecutor.scheduleWithFixedDelay(JpaTrashDAO.this::cleanupEntityTrash, INITIAL_DELAY, PERIOD,
+                TimeUnit.SECONDS);
     }
 
     void stopTrashExecutor() {
-        trashExecutor.shutdown();
+        entityTrashExecutor.shutdown();
 
         try {
-            trashExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-            trashExecutor = null;
+            entityTrashExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+            entityTrashExecutor = null;
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -175,8 +182,6 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     }
 
     private void cleanupEntityTrash() {
-        logger.info("Checking for entity trash");
-
         emLock.lock();
 
         try {
@@ -189,8 +194,11 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
                 final TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
 
-                for (final JpaTrashEntity trashEntity : q.getResultList()) {
+                /* limit the number removed at one time to prevent starvation
+                    if there is a large volume of entity trash to remove */
+                q.setMaxResults(MAX_ENTITY_LUMP);
 
+                for (final JpaTrashEntity trashEntity : q.getResultList()) {
                     if (ChronoUnit.MILLIS.between(trashEntity.getDate(), LocalDateTime.now())
                             >= MAXIMUM_ENTITY_TRASH_AGE) {
 
