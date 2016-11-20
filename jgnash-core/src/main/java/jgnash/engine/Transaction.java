@@ -311,10 +311,12 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Calculates the amount of the transaction relative to the supplied account.
      *
+     * This method is synchronized to protect against concurrency issues
+     *
      * @param account reference account
      * @return Amount of this transaction relative to the supplied account
      */
-    public BigDecimal getAmount(final Account account) {
+    public synchronized BigDecimal getAmount(final Account account) {
         return transactionEntries.stream().map(transactionEntry
                 -> transactionEntry.getAmount(account)).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
