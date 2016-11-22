@@ -431,9 +431,11 @@ public class BudgetTableController implements MessageListener {
                 // load the model
                 loadModel();
             } else {
-                accountTreeView.setRoot(null);
-                expandedAccountList.clear();
-                accountGroupList.clear();
+                Platform.runLater(() -> {
+                    accountTreeView.setRoot(null);
+                    expandedAccountList.clear();
+                    accountGroupList.clear();
+                });
             }
         } finally {
             lock.writeLock().unlock();
