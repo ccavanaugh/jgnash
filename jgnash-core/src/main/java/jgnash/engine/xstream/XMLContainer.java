@@ -122,6 +122,8 @@ class XMLContainer extends AbstractXStreamContainer {
             try (final ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
                 out.writeObject(list);
                 out.flush();     // forcibly flush before letting go of the resources to help older windows systems write correctly
+            } catch (final Exception e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
