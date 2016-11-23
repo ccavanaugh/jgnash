@@ -233,4 +233,9 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
             emLock.unlock();
         }
     }
+
+    @Override
+    public boolean isRemote() {
+        return isRemote;
+    }
 }

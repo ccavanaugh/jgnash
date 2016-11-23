@@ -65,4 +65,8 @@ public interface EngineDAO extends DAO {
     void bulkUpdate(List<? extends StoredObject> objectList);
 
     void shutdown();
+
+    default boolean isRemote() {
+        return false;
+    }
 }
