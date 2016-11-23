@@ -198,16 +198,21 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             updateTitle();
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                boolean current = Version.isReleaseCurrent();
+        new Thread(() -> {
 
-                if (!current) {
-                    StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion"));
-                }
+            try {
+                Thread.sleep(20_000); // force a 10 second delay
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
-        }.start();
+
+            boolean current = Version.isReleaseCurrent();
+
+            if (!current) {
+                EventQueue.invokeLater(()
+                        -> StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion")));
+            }
+        }).start();
     }
 
     /**
@@ -225,7 +230,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             try {
                 Thread.sleep(1000); // lets the UI start and get the users attention
             } catch (InterruptedException ex) {
-                logger.log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
@@ -235,7 +240,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             try {
                 Thread.sleep(1000);
             } catch (final InterruptedException ex) {
-                logger.log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         }
 
@@ -527,19 +532,15 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     /**
-     * Dispose the UI with an option to prevent complete program shutdown.
-     *
-     * @param shutDown true if UI should be shutdown when dispose is called
+     * Dispose the UI without a complete program shutdown.
      */
-    void dispose(boolean shutDown) {
+    void doPartialDispose() {
 
         PluginFactory.stopPlugins();
 
-        if (!shutDown) {
-            for (WindowListener listener : getWindowListeners()) {
-                if (listener instanceof ShutdownAdapter) {
-                    removeWindowListener(listener);
-                }
+        for (final WindowListener listener : getWindowListeners()) {
+            if (listener instanceof ShutdownAdapter) {
+                removeWindowListener(listener);
             }
         }
 
@@ -713,12 +714,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         public void windowClosing(final WindowEvent evt) {
 
             // push the shutdown process outside the EDT so the UI effects work correctly
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    performControlledShutdown();
-                }
-            };
+            Thread t = new Thread(MainFrame.this::performControlledShutdown);
 
             t.start();
         }

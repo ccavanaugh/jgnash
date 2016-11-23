@@ -153,11 +153,11 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             }
 
             mainFrame.setVisible(false);
-            mainFrame.dispose(false);
+            mainFrame.doPartialDispose();
 
             // recreate the main UI twice to flush look and feel info from the JXSwing components
             mainFrame = new MainFrame();
-            mainFrame.dispose(false);
+            mainFrame.doPartialDispose();
 
             mainFrame = new MainFrame();
             mainFrame.setVisible(true);
