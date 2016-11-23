@@ -5,7 +5,6 @@ WANTS
 * OFX export
 * VAT/GST UI
 * Command Line interface/Class for loading accounts and transactions
-* Improve Security creation/modification UI
 * Mass selection of destination accounts for imported transactions.
 * Info icon in a sell investment panel that calculate the estimated gains/loss for selling a transaction
 * FIFO, and Lot performance calculations for securities. (http://groups.google.com/group/jgnash-user/browse_thread/thread/fe124ecf806857f3?hl=en)
