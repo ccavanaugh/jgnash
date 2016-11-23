@@ -20,8 +20,10 @@ package jgnash.uifx.dialog.security;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +40,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -66,9 +69,9 @@ import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.IntegerTextField;
-import jgnash.uifx.control.SecurityNodeAreaChart;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.SecurityHistoryEventTypeComboBox;
+import jgnash.uifx.control.SecurityNodeAreaChart;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
@@ -164,8 +167,6 @@ public class SecurityHistoryController implements MessageListener {
     void initialize() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
-
-        MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 
         numberFormat.set(CommodityFormat.getShortNumberFormat(engine.getDefaultCurrency()));
 
@@ -296,13 +297,15 @@ public class SecurityHistoryController implements MessageListener {
         // Install a listener to unregister from the message bus when the window closes
         parent.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
-                scene.windowProperty().addListener((observable1, oldValue1, window)
-                        -> window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
+                scene.windowProperty().get().addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
                     Logger.getLogger(SecurityHistoryController.class.getName()).info("Unregistered from the message bus");
                     MessageBus.getInstance().unregisterListener(SecurityHistoryController.this, MessageChannel.COMMODITY);
-                }));
+                });
             }
         });
+
+        Platform.runLater(()
+                -> MessageBus.getInstance().registerListener(SecurityHistoryController.this, MessageChannel.COMMODITY));
     }
 
     private void loadPriceForm() {
@@ -428,7 +431,7 @@ public class SecurityHistoryController implements MessageListener {
 
 
         final List<SecurityHistoryEvent> events = new ArrayList<>(securityComboBox.getValue().getHistoryEvents());
-        Collections.sort(events);
+        Collections.sort(events);   // events are not sorted
 
         eventTableView.getSelectionModel().clearSelection();
         observableHistoryEventList.setAll(events);
@@ -450,6 +453,47 @@ public class SecurityHistoryController implements MessageListener {
                     break;
                 default:
             }
+        }
+    }
+
+    @FXML
+    private void handleRemoveWeekendsAction() {
+        if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"),
+                resources.getString("Message.ConfirmSecurityHistoryDelete")).getButtonData() == ButtonBar.ButtonData.YES) {
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.removeSecurityHistoryByDayOfWeek(selectedSecurityNode.get(),
+                    Arrays.asList(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY));
+        }
+    }
+
+    @FXML
+    private void handleKeepFridaysOnlyAction() {
+        if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"),
+                resources.getString("Message.ConfirmSecurityHistoryDelete")).getButtonData() == ButtonBar.ButtonData.YES) {
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.removeSecurityHistoryByDayOfWeek(selectedSecurityNode.get(),
+                    Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                            DayOfWeek.SATURDAY, DayOfWeek.SUNDAY));
+        }
+    }
+
+    @FXML
+    private void handleKeepMondaysOnlyAction() {
+        if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"),
+                resources.getString("Message.ConfirmSecurityHistoryDelete")).getButtonData() == ButtonBar.ButtonData.YES) {
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.removeSecurityHistoryByDayOfWeek(selectedSecurityNode.get(),
+                    Arrays.asList(DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY,
+                            DayOfWeek.SATURDAY, DayOfWeek.SUNDAY));
         }
     }
 

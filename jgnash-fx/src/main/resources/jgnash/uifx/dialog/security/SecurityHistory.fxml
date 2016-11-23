@@ -15,6 +15,8 @@
 <?import jgnash.uifx.control.IntegerTextField?>
 <?import jgnash.uifx.control.SecurityComboBox?>
 <?import jgnash.uifx.control.SecurityHistoryEventTypeComboBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tooltip?>
 
 <GridPane prefHeight="400.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
           fx:controller="jgnash.uifx.dialog.security.SecurityHistoryController" styleClass="form, dialog">
@@ -60,6 +62,8 @@
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
             <TableView fx:id="priceTableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
@@ -80,10 +84,14 @@
             <Label text="%Label.Low"  GridPane.rowIndex="2" GridPane.columnIndex="2"/>
             <DecimalTextField fx:id="lowTextField" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
 
-            <ButtonBar GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="6">
+            <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="6">
                 <buttons>
                     <Button fx:id="deletePriceButton" onAction="#handleDeletePriceAction" text="%Button.Delete"
-                            ButtonBar.buttonData="LEFT"/>
+                            ButtonBar.buttonData="LEFT">
+                        <graphic>
+                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                        </graphic>
+                    </Button>
                     <Button onAction="#handleClearPriceAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
                     <Button fx:id="addPriceButton" onAction="#handleAddPriceAction" text="%Button.Add" ButtonBar.buttonData="LEFT"/>
                     <Button fx:id="updatePriceButton" onAction="#handleOnlineUpdate" text="%Button.UpdateOnline"
@@ -94,6 +102,41 @@
                     </Button>
                 </buttons>
             </ButtonBar>
+
+            <Separator GridPane.rowIndex="4" GridPane.columnSpan="6"/>
+
+            <ButtonBar GridPane.rowIndex="5" GridPane.columnSpan="6">
+                <buttons>
+                    <Button text="%Button.DeleteWeekends" onAction="#handleRemoveWeekendsAction" ButtonBar.buttonData="LEFT"
+                            ButtonBar.buttonUniformSize="false">
+                        <graphic>
+                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%ToolTip.DeleteWeekendSecurityHistory"/>
+                        </tooltip>
+                    </Button>
+                    <Button text="%Button.KeepMondays" onAction="#handleKeepMondaysOnlyAction" ButtonBar.buttonData="LEFT"
+                            ButtonBar.buttonUniformSize="false">
+                        <graphic>
+                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%ToolTip.DeleteAllExceptMondaySecurityHistory"/>
+                        </tooltip>
+                    </Button>
+                    <Button text="%Button.KeepFridays" onAction="#handleKeepFridaysOnlyAction" ButtonBar.buttonData="LEFT"
+                            ButtonBar.buttonUniformSize="false">
+                        <graphic>
+                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%ToolTip.DeleteAllExceptFridaySecurityHistory"/>
+                        </tooltip>
+                    </Button>
+                </buttons>
+            </ButtonBar>
+
         </GridPane>
     </TitledPane>
 
@@ -103,7 +146,7 @@
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="105.0" prefWidth="105.0"/>
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
             </columnConstraints>
@@ -128,7 +171,11 @@
             <ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
                 <buttons>
                     <Button fx:id="deleteEventButton" onAction="#handleDeleteEventAction" text="%Button.Delete"
-                            ButtonBar.buttonData="LEFT"/>
+                            ButtonBar.buttonData="LEFT">
+                        <graphic>
+                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                        </graphic>
+                    </Button>
                     <Button onAction="#handleClearEventAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
                     <Button fx:id="addEventButton" onAction="#handleAddEventAction" text="%Button.Add" ButtonBar.buttonData="LEFT"/>
                     <Button fx:id="updateEventButton" onAction="#handleOnlineEventUpdate" text="%Button.UpdateOnline"

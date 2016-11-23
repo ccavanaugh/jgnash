@@ -20,6 +20,7 @@ package jgnash.engine;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -41,6 +42,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -94,7 +97,7 @@ public class Engine {
 
     public static final int CURRENT_MINOR_VERSION = 26;
 
-    public static final float CURRENT_VERSION = (float)CURRENT_MAJOR_VERSION + ((float)CURRENT_MINOR_VERSION / 100f);
+    public static final float CURRENT_VERSION = (float) CURRENT_MAJOR_VERSION + ((float) CURRENT_MINOR_VERSION / 100f);
 
     // Lock names
     private static final String ACCOUNT_LOCK = "account";
@@ -122,6 +125,12 @@ public class Engine {
     private final ReentrantReadWriteLock configLock;
 
     private final ReentrantReadWriteLock engineLock;
+
+    private final AtomicInteger backGroundCounter = new AtomicInteger();
+
+    private Future<Void> backGroundHistoryCleanupFuture;
+
+    private final AtomicBoolean backGroundHistoryCleanupActive = new AtomicBoolean(false);
 
     /**
      * Named identifier for this engine instance.
@@ -496,8 +505,22 @@ public class Engine {
     void stopBackgroundServices() {
         logInfo("Controlled engine shutdown initiated");
 
+        if (backGroundHistoryCleanupFuture != null) {
+            backGroundHistoryCleanupActive.set(false);
+
+            try {
+                backGroundHistoryCleanupFuture.get();   // wait for it to finish
+            } catch (final InterruptedException | ExecutionException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }
+
+        System.out.println("background stopped");
+
         shutDownAndWait(backgroundExecutorService);
         shutDownAndWait(trashExecutor);
+
+        logInfo("Background services have been stopped");
     }
 
     void shutdown() {
@@ -591,7 +614,10 @@ public class Engine {
      */
     private void emptyTrash() {
 
-        messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, this));
+        if (backGroundCounter.incrementAndGet() == 1) {
+            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED,
+                    Engine.this));
+        }
 
         engineLock.writeLock().lock();
         commodityLock.writeLock().lock();
@@ -621,7 +647,10 @@ public class Engine {
             commodityLock.writeLock().unlock();
             engineLock.writeLock().unlock();
 
-            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, this));
+            if (backGroundCounter.decrementAndGet() == 0) {
+                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED,
+                        Engine.this));
+            }
         }
     }
 
@@ -1034,7 +1063,11 @@ public class Engine {
 
         try {
             account.clearCachedBalances();
-            getAccountDAO().updateAccount(account);
+
+            // force a persistence update if working as a client / server
+            if (eDAO.isRemote()) {
+                getAccountDAO().updateAccount(account);
+            }
         } finally {
             accountLock.writeLock().unlock();
         }
@@ -1309,6 +1342,8 @@ public class Engine {
                 if (status) {   // removal was a success, make sure we cleanup properly
                     moveObjectToTrash(optional.get());
                     status = getCommodityDAO().removeSecurityHistory(node, optional.get());
+
+                    logInfo(ResourceUtils.getString("Message.RemovingSecurityHistory", date, node.getSymbol()));
                 }
             }
 
@@ -2815,6 +2850,29 @@ public class Engine {
         }
     }
 
+    public void removeSecurityHistoryByDayOfWeek(final SecurityNode securityNode, final Collection<DayOfWeek> daysOfWeek) {
+
+        backGroundHistoryCleanupActive.set(true);
+
+        backGroundHistoryCleanupFuture
+                = backgroundExecutorService.schedule(new BackgroundCallable<>((Callable<Void>) () -> {
+            for (final SecurityHistoryNode historyNode : new ArrayList<>(securityNode.getHistoryNodes())) {
+                for (final DayOfWeek dayOfWeek : daysOfWeek) {
+                    if (historyNode.getLocalDate().getDayOfWeek() == dayOfWeek) {
+                        if (backGroundHistoryCleanupActive.get()) { // check for thread interruption
+                            removeSecurityHistory(securityNode, historyNode.getLocalDate());
+                        }
+                    }
+                }
+            }
+
+            backGroundHistoryCleanupFuture = null;  // cleanup our own future
+            backGroundHistoryCleanupActive.set(false);
+
+            return null;
+        }), 0, TimeUnit.MILLISECONDS);
+    }
+
     /**
      * Handles background update of securities.
      */
@@ -2872,12 +2930,18 @@ public class Engine {
 
         @Override
         public E call() throws Exception {
-            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, Engine.this));
+            if (backGroundCounter.incrementAndGet() == 1) {
+                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED,
+                        Engine.this));
+            }
 
             try {
                 return callable.call();
             } finally {
-                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, Engine.this));
+                if (backGroundCounter.decrementAndGet() == 0) {
+                    messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED,
+                            Engine.this));
+                }
             }
         }
     }

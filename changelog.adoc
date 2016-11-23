@@ -25,6 +25,8 @@ WANTS
 
 Release 2.28.0
 --------------
+* 11/23/16 Added capability to cull down unneeded securities history as a background operation. This can reduce file
+           size and improve overall performance. (Fx)
 * 11/23/16 Improved performance when using a relational database and updating securities history. (Swing, Fx)
 * 11/20/16 jGnash would stall and appear to be hung if a large group of transactions or security history was being
            removed when using a relational database. (Swing, Fx)

@@ -38,7 +38,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 
 import jgnash.time.DateUtils;
@@ -66,12 +65,10 @@ public class SecurityNode extends CommodityNode {
     private String isin;
 
     @JoinTable
-    @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<SecurityHistoryNode> historyNodes = new HashSet<>();
 
     @JoinTable
-    @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private final Set<SecurityHistoryEvent> securityHistoryEvents = new HashSet<>();
 
@@ -255,7 +252,7 @@ public class SecurityNode extends CommodityNode {
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
 
-        lock.writeLock().lock();
+        lock.readLock().lock();
 
         try {
             final List<SecurityHistoryEvent> splits = getSplitEvents();
@@ -284,7 +281,7 @@ public class SecurityNode extends CommodityNode {
 
             return Collections.unmodifiableList(sortedHistoryNodeCache);
         } finally {
-            lock.writeLock().unlock();
+            lock.readLock().unlock();
         }
     }
 
