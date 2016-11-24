@@ -259,15 +259,13 @@ public class MainView implements MessageListener {
     private void checkForLatestRelease() {
         new Thread(() -> {
             try {
-                Thread.sleep(BootEngineTask.FORCED_DELAY * 2);
+                Thread.sleep(BootEngineTask.FORCED_DELAY * 3);
                 if (Options.checkForUpdatesProperty().get()) {
-                    backgroundExecutor.execute(() -> {
-                        if (!Version.isReleaseCurrent()) {
-                            Platform.runLater(() ->
-                                    StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion")));
-                        }
-                        logger.info("Version check performed");
-                    });
+                    if (!Version.isReleaseCurrent()) {
+                        Platform.runLater(() ->
+                                StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion")));
+                    }
+                    logger.info("Version check performed");
                 }
             } catch (InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);

@@ -24,6 +24,7 @@ WANTS
 
 Release 2.28.0
 --------------
+* 11/24/16 Delay the upgrade notification a bit more for a cleaner startup for some users. (Fx)
 * 11/23/16 Added capability to cull down unneeded securities history as a background operation. This can reduce file
            size and improve overall performance. (Fx)
 * 11/23/16 Improved performance when using a relational database and updating securities history. (Swing, Fx)
