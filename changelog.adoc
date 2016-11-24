@@ -24,6 +24,7 @@ WANTS
 
 Release 2.28.0
 --------------
+* 11/24/16 Columns were not resize correctly when adding or removing transactions. (Fx)
 * 11/24/16 Delay the upgrade notification a bit more for a cleaner startup for some users. (Fx)
 * 11/23/16 Added capability to cull down unneeded securities history as a background operation. This can reduce file
            size and improve overall performance. (Fx)
