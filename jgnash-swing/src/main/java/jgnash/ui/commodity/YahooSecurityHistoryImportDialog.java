@@ -23,7 +23,6 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -99,13 +98,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         if (engine != null) {
             List<SecurityNode> list = engine.getSecurities();
 
-            final Iterator<SecurityNode> i = list.iterator();
-
-            while (i.hasNext()) {
-                if (i.next().getQuoteSource() == QuoteSource.NONE) {
-                    i.remove();
-                }
-            }
+            list.removeIf(securityNode -> securityNode.getQuoteSource() == QuoteSource.NONE);
 
             securityList.setModel(new SortedListModel<>(list));
             securityList.setSelectionModel(new ToggleSelectionModel());
