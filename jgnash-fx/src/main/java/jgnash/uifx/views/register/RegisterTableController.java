@@ -271,7 +271,7 @@ abstract class RegisterTableController {
         return account;
     }
 
-    ReadOnlyObjectProperty<Transaction> aelectedTransactionProperty() {
+    ReadOnlyObjectProperty<Transaction> selectedTransactionProperty() {
         return selectedTransaction.getReadOnlyProperty();
     }
 

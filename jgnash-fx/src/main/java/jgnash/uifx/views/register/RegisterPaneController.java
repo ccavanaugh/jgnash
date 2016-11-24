@@ -105,7 +105,7 @@ abstract class RegisterPaneController {
         registerTableController.addListener((observable, oldValue, newValue) -> {
 
             // Bind transaction selection to the register table controller
-            selectedTransaction.bind(newValue.aelectedTransactionProperty());
+            selectedTransaction.bind(newValue.selectedTransactionProperty());
 
             // Bind the register pane to this account property
             newValue.accountProperty().bind(accountProperty());
