@@ -85,15 +85,7 @@ public class EncodeDecode {
      * @return primitive {@code double} array
      */
     public static double[] decodeDoubleArray(@NotNull final String string) {
-        String[] array = COMMA_DELIMITER_PATTERN.split(string);
-
-        double[] doubles = new double[array.length];
-
-        for (int i = 0; i < doubles.length; i++) {
-            doubles[i] = Double.parseDouble(array[i]);
-        }
-
-        return doubles;
+        return Arrays.stream(COMMA_DELIMITER_PATTERN.split(string)).mapToDouble(Double::parseDouble).toArray();
     }
 
     /**
