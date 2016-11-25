@@ -19,7 +19,6 @@ package jgnash.util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,15 +41,7 @@ public class CollectionUtils {
      */
     public static int[] intListToArray(final List<Integer> integerList)
     {
-        int[] intArray = new int[integerList.size()];        
-        Iterator<Integer> iterator = integerList.iterator();
-        
-        for (int i = 0; i < intArray.length; i++)
-        {
-            intArray[i] = iterator.next();
-        }
-        
-        return intArray;
+        return integerList.stream().mapToInt(value -> value).toArray();
     }
 
     /**
