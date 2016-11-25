@@ -95,21 +95,15 @@ public class TableViewManager<S> {
          *
          * Excess execution requests will be silently discarded
          */
-        updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0,
+                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
         updateColumnVisibilityExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     }
 
     public void restoreLayout() {
-        // Remove listeners while state is being restored so states are not saved during state changes
-        removeColumnListeners();
+        restoreColumnVisibility();  // Restore visibility first
 
-        // Restore visibility first
-        restoreColumnVisibility();
-
-        // Install listeners and save column states
-        installColumnListeners();
-
-        packTable();    // repack the table
+        packTable();                // pack the table
     }
 
     private void installColumnListeners() {
@@ -177,6 +171,10 @@ public class TableViewManager<S> {
 
     private void restoreColumnVisibility() {
         if (preferenceKeyFactory.get() != null) {
+
+            // Remove listeners while state is being restored so states are not saved during state changes
+            removeColumnListeners();
+
             final String uuid = preferenceKeyFactory.get().get();
             final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_VIS);
 
@@ -208,9 +206,15 @@ public class TableViewManager<S> {
                     }
                 }
             }
+
+            // restore listeners
+            installColumnListeners();
         }
     }
 
+    /**
+     * Called when the table columns need to be repacked because of content change
+     */
     public void packTable() {
 
         new Thread(() -> {
