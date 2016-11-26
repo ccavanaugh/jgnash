@@ -288,18 +288,20 @@ public class BudgetTableController implements MessageListener {
         // shift the table right and left with the ScrollBar value
         horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-                    // must be synchronized to prevent a race condition from multiple events and an out of bounds exception
+                    /* must be synchronized to prevent a race condition from multiple events and an out of
+                     * bounds exception */
                     synchronized (this) {
+                        if (periodTable.getColumns().size() > 0) {  // don't try unless columns exist
+                            final int newIndex = (int) Math.round(newValue.doubleValue());
 
-                        final int newIndex = (int) Math.round(newValue.doubleValue());
-
-                        if (newIndex > index) {
-                            while (newIndex > index) {
-                                handleShiftRight();
-                            }
-                        } else if (newIndex < index) {
-                            while (newIndex < index) {
-                                handleShiftLeft();
+                            if (newIndex > index) {
+                                while (newIndex > index) {
+                                    handleShiftRight();
+                                }
+                            } else if (newIndex < index) {
+                                while (newIndex < index) {
+                                    handleShiftLeft();
+                                }
                             }
                         }
                     }
