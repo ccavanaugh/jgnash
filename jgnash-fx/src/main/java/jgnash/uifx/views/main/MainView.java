@@ -308,8 +308,12 @@ public class MainView implements MessageListener {
 
     private void removeViews() {
         tabViewPane.getTabs().clear();
-        tabViewPane.getSelectionModel().selectedIndexProperty().removeListener(tabListener);
-        tabListener = null;
+
+        /* check for null, a race condition triggered by immediate close after load could trigger a NPE */
+        if (tabListener != null) {
+            tabViewPane.getSelectionModel().selectedIndexProperty().removeListener(tabListener);
+            tabListener = null;
+        }
     }
 
     private void installHandlers() {
