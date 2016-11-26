@@ -229,6 +229,7 @@ public abstract class BaseDynamicJasperReport {
     private Style getStyle(final ColumnStyle style, final boolean formatForCSV) {
         switch (style) {
             case SHORT_DATE:
+            case TIMESTAMP:
             case STRING:
                 Style stringStyle = new Style();
                 stringStyle.setFont(ReportFactory.getDefaultMonoFont(getBaseFontSize()));
@@ -354,6 +355,8 @@ public abstract class BaseDynamicJasperReport {
                         builder.setPattern(pattern);
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_DATE) {
                         builder.setTextFormatter(DateUtils.getShortDateFormatter().toFormat());
+                    } else if (model.getColumnStyle(i) == ColumnStyle.TIMESTAMP) {
+                        builder.setTextFormatter(DateUtils.getShortDateTimeFormatter().toFormat());
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_AMOUNT) {
                         String pattern = CommodityFormat.getShortNumberPattern(model.getCurrency());
                         builder.setPattern(pattern);

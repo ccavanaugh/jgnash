@@ -20,6 +20,7 @@ package jgnash.ui.report.jasper;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -162,6 +163,23 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
                     if (date != null) {
                         final String val = dateTimeFormatter.format(date);
+                        if (val.length() > longest.length()) {
+                            longest = val;
+                        }
+                    }
+                } catch (IllegalArgumentException e) {
+                    Logger.getLogger(AbstractReportTableModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
+                }
+            }
+        } else if (getColumnStyle(columnIndex) == ColumnStyle.TIMESTAMP) {
+            final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormatter();
+
+            for (int i = 0; i < getRowCount(); i++) {
+                try {
+                    final LocalDateTime localDateTime = (LocalDateTime) getValueAt(i, columnIndex);
+
+                    if (localDateTime != null) {
+                        final String val = dateTimeFormatter.format(localDateTime);
                         if (val.length() > longest.length()) {
                             longest = val;
                         }

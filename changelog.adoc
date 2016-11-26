@@ -23,8 +23,8 @@ WANTS
 
 Release 2.28.0
 --------------
-TODO: account register report is broken
 
+* 11/26/16 The Account Register report was broken by the addition of Timestamps in Release 2.27.0. (Fx)
 * 11/26/16 An exception was occurring if Budgeting was being used and the window was too small to display data. (Fx)
 * 11/26/16 Corrected sizing issues in the Budget interface if the screen was very wide and the budget was configured to
            use a small number of periods. (Fx)
