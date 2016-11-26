@@ -93,7 +93,7 @@ public class BudgetTableController implements MessageListener {
     private static final int YEAR_MARGIN = 15;
 
     // Initial column width
-    private static final double INITIAL_WIDTH = 75;
+    private static final double INITIAL_WIDTH = 55;
 
     @FXML
     private CheckBox runningTotalsButton;
@@ -291,7 +291,11 @@ public class BudgetTableController implements MessageListener {
                     /* must be synchronized to prevent a race condition from multiple events and an out of
                      * bounds exception */
                     synchronized (this) {
-                        if (periodTable.getColumns().size() > 0) {  // don't try unless columns exist
+
+                        /* don't try unless columns exist.  This can occur if the UI is not large enough to display
+                         * a minimum of one period of information.
+                         */
+                        if (periodTable.getColumns().size() > 0) {
                             final int newIndex = (int) Math.round(newValue.doubleValue());
 
                             if (newIndex > index) {
@@ -490,11 +494,21 @@ public class BudgetTableController implements MessageListener {
         try {
             final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
-            // calculate the number of visible columns, period columns are 3 columns wide
-            final int maxVisible = (int) Math.floor(availWidth / (minColumnWidth * 3.0));
+            /* calculate the number of visible columns, period columns are 3 columns wide
+               the maximum is caped to no more than the number of available periods */
+            final int maxVisible = Math.min((int) Math.floor(availWidth / (minColumnWidth * 3.0)),
+                    budgetResultsModel.getDescriptorList().size());
 
-            // update the number of visible columns factoring in the size of the descriptor list
+            /* update the number of visible columns factoring in the size of the descriptor list */
             visibleColumnCount.set((Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible)));
+
+            if (visibleColumnCount.get() == 0) {
+                periodTable.placeholderProperty()
+                        .setValue(new Label(resources.getString("Message.Warn.WindowWidth")));
+
+                periodSummaryTable.placeholderProperty()
+                        .setValue(new Label(resources.getString("Message.Warn.WindowWidth")));
+            }
 
             final double width = Math.floor(availWidth /
                     Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));

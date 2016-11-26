@@ -23,6 +23,11 @@ WANTS
 
 Release 2.28.0
 --------------
+TODO: account register report is broken
+
+* 11/26/16 An exception was occurring if Budgeting was being used and the window was too small to display data. (Fx)
+* 11/26/16 Corrected sizing issues in the Budget interface if the screen was very wide and the budget was configured to
+           use a small number of periods. (Fx)
 * 11/26/16 Column widths are preserved so automatic column width resizing is less notable. (Fx)
 * 11/26/16 Fixed a NPE triggered by a file load while a file is already being loaded. (Fx)
 * 11/24/16 Columns were not resize correctly when adding or removing transactions. (Fx)
