@@ -274,7 +274,6 @@ public class MainView implements MessageListener {
     }
 
     private void addViews() {
-
         backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"), resources),
                 resources.getString("Tab.Accounts"))));
@@ -307,13 +306,12 @@ public class MainView implements MessageListener {
     }
 
     private void removeViews() {
-        tabViewPane.getTabs().clear();
-
-        /* check for null, a race condition triggered by immediate close after load could trigger a NPE */
-        if (tabListener != null) {
+        // Push to the background executor so that a load before current load is finished won't trigger a NPE
+        backgroundExecutor.execute(() -> Platform.runLater(() -> {
+            tabViewPane.getTabs().clear();
             tabViewPane.getSelectionModel().selectedIndexProperty().removeListener(tabListener);
             tabListener = null;
-        }
+        }));
     }
 
     private void installHandlers() {
