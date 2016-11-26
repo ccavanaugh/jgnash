@@ -39,33 +39,6 @@ public class EncodeDecode {
     private EncodeDecode() {
     }
 
-    /*public static String encodeDimension(Dimension d) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(d.width);
-        buf.append(',');
-        buf.append(d.height);
-        return buf.toString();
-    }
-
-    public static Dimension decodeDimension(String d) {
-        if (d == null) {
-            return null;
-        }
-
-        Dimension rect = null;
-        String[] array = d.split(",");
-        if (array.length == 2) {
-            try {
-                rect = new Dimension();
-                rect.width = Integer.parseInt(array[0]);
-                rect.height = Integer.parseInt(array[1]);
-            } catch (NumberFormatException nfe) {
-                rect = null;
-            }
-        }
-        return rect;
-    }*/
-
     /**
      * Encodes a double array as a comma separated {@code String}. Values will be rounded to 2 decimal places
      *
