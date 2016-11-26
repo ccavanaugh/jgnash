@@ -30,6 +30,7 @@ Release 2.28.0
            use a small number of periods. (Fx)
 * 11/26/16 Column widths are preserved so automatic column width resizing is less notable. (Fx)
 * 11/26/16 Fixed a NPE triggered by a file load while a file is already being loaded. (Fx)
+* 11/26/16 Updated to the latest Hibernate and DynamicJasper dependencies.
 * 11/24/16 Columns were not resize correctly when adding or removing transactions. (Fx)
 * 11/24/16 Delay the upgrade notification a bit more for a cleaner startup for some users. (Fx)
 * 11/23/16 Added capability to cull down unneeded securities history as a background operation. This can reduce file

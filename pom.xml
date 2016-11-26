@@ -40,7 +40,7 @@
         <jfree.version>1.0.19</jfree.version>
         <insubstantial.version>7.3</insubstantial.version>
         <swingx.version>1.6.5-1</swingx.version>
-        <dynamic-jasper.version>5.0.4</dynamic-jasper.version>
+        <dynamic-jasper.version>5.0.11</dynamic-jasper.version>
         <plexus-utils.version>3.0.10</plexus-utils.version>
         <opencsv.version>2.3</opencsv.version>
         <netty.version>4.1.6.Final</netty.version>
