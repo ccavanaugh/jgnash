@@ -461,7 +461,6 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             switch (columnIndex) {
                 case 0:
                 case 1:
-                //case 2:
                 case 4:
                 case 5:
                 case 6:
