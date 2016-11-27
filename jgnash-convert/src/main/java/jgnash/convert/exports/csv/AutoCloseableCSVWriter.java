@@ -17,9 +17,9 @@
  */
 package jgnash.convert.exports.csv;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
 import java.io.Writer;
+
+import com.opencsv.CSVWriter;
 
 /**
  * Wrap CSVWriter to add a little syntactic sugar.
@@ -28,11 +28,11 @@ import java.io.Writer;
  */
 class AutoCloseableCSVWriter extends CSVWriter {
 
-    public AutoCloseableCSVWriter(final Writer writer) {
+    AutoCloseableCSVWriter(final Writer writer) {
         super(writer);
     }
    
-    public void writeNextRow(final String... columns) {
+    void writeNextRow(final String... columns) {
         super.writeNext(columns);
     }
 }

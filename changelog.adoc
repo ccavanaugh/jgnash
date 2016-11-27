@@ -23,13 +23,15 @@ WANTS
 
 Release 2.28.0
 --------------
-* 11/26/16 The Account Register report was broken by the addition of Timestamps in Release 2.27.0. (Fx)
+* 11/27/16 Added the transaction timestamp to the CSV export. (Swing, Fx)
+* 11/27/16 The xls and xlsx Account exports were broken by the addition of timestamps in Release 2.27.0. (Swing, Fx)
+* 11/27/16 Updated to the latest Hibernate, DynamicJasper and OpenCSV dependencies.
+* 11/26/16 The Account Register report was broken by the addition of timestamps in Release 2.27.0. (Fx)
 * 11/26/16 An exception was occurring if Budgeting was being used and the window was too small to display data. (Fx)
 * 11/26/16 Corrected sizing issues in the Budget interface if the screen was very wide and the budget was configured to
            use a small number of periods. (Fx)
 * 11/26/16 Column widths are preserved so automatic column width resizing is less notable. (Fx)
 * 11/26/16 Fixed a NPE triggered by a file load while a file is already being loaded. (Fx)
-* 11/26/16 Updated to the latest Hibernate and DynamicJasper dependencies.
 * 11/24/16 Columns were not resize correctly when adding or removing transactions. (Fx)
 * 11/24/16 Delay the upgrade notification a bit more for a cleaner startup for some users. (Fx)
 * 11/23/16 Added capability to cull down unneeded securities history as a background operation. This can reduce file
