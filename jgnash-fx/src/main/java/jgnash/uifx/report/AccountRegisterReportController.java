@@ -241,6 +241,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
             switch (columnIndex) {
                 case 0:
                 case 1:
+                case 2:
                 case 6:
                 case 7:
                 case 8:
@@ -465,7 +466,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         private final FilteredList<Row<Transaction>> filteredList = new FilteredList<>(transactionRows);
 
-        private String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
+        private String[] columnNames = RegisterFactory.getColumnNames(AccountType.INVEST);
 
         private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.TIMESTAMP,
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
