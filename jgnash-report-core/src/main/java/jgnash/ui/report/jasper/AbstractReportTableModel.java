@@ -31,6 +31,7 @@ import javax.swing.table.AbstractTableModel;
 import jgnash.engine.CurrencyNode;
 import jgnash.text.CommodityFormat;
 import jgnash.time.DateUtils;
+import jgnash.util.NotNull;
 
 /**
  * Report model interface
@@ -64,6 +65,11 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
             }
         }
         return column;
+    }
+
+    @NotNull
+    public int[] getColumnsToHide() {
+        return new int[0];  // return an empty array by default
     }
 
     /**

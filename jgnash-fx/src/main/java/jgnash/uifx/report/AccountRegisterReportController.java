@@ -73,10 +73,13 @@ public class AccountRegisterReportController extends DynamicJasperReport {
     private TextField payeeFilterTextField;
 
     @FXML
-    AccountComboBox accountComboBox;
+    private AccountComboBox accountComboBox;
 
     @FXML
     private CheckBox showSplitsCheckBox;
+
+    @FXML
+    private CheckBox showTimestampCheckBox;
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -86,13 +89,19 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
     private static final String SHOW_SPLITS = "showSplits";
 
+    private static final String SHOW_TIMESTAMP = "showTimestamp";
+
     private static final String INDENT_PREFIX = "  - ";
 
     private static final String SPLIT = ResourceUtils.getString("Button.Splits");
 
-
     @FXML
     private void initialize() {
+        final Preferences preferences = getPreferences();
+
+        showSplitsCheckBox.setSelected(preferences.getBoolean(SHOW_SPLITS, false));
+        showTimestampCheckBox.setSelected(preferences.getBoolean(SHOW_TIMESTAMP, false));
+
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             refreshAccount(newValue);
             handleRefresh();
@@ -105,6 +114,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         endDatePicker.valueProperty().addListener(refreshListener);
         payeeFilterTextField.textProperty().addListener(refreshListener);
         memoFilterTextField.textProperty().addListener(refreshListener);
+        showTimestampCheckBox.selectedProperty().addListener(refreshListener);
     }
 
     public void setAccount(@Nullable final Account account) {
@@ -128,6 +138,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         final Preferences preferences = getPreferences();
 
         preferences.putBoolean(SHOW_SPLITS, showSplitsCheckBox.isSelected());
+        preferences.putBoolean(SHOW_TIMESTAMP, showTimestampCheckBox.isSelected());
 
         if (refreshCallBackProperty().get() != null) {
             refreshCallBackProperty().get().run();
@@ -143,10 +154,11 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
             return new InvestmentAccountReportModel(accountComboBox.getValue(), startDate, endDate,
-                    memoFilterTextField.getText());
+                    memoFilterTextField.getText(), showTimestampCheckBox.isSelected());
         } else {
             return new AccountReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(),
-                    startDate, endDate, memoFilterTextField.getText(), payeeFilterTextField.getText());
+                    startDate, endDate, memoFilterTextField.getText(), payeeFilterTextField.getText(),
+                    showTimestampCheckBox.isSelected());
         }
     }
 
@@ -190,12 +202,15 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         private String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
 
+        private final boolean showTimestamp;
+
         private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.TIMESTAMP,
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
         AccountReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate,
-                           final LocalDate endDate, final String memoFilter, final String payeeFilter) {
+                           final LocalDate endDate, final String memoFilter, final String payeeFilter,
+                           final boolean showTimestamp) {
             this.account = account;
             this.showSplits = showSplits;
 
@@ -207,7 +222,18 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                     .and(new MemoPredicate(memoFilter))
                     .and(new PayeePredicate(payeeFilter)));
 
+            this.showTimestamp = showTimestamp;
+
             loadAccount();
+        }
+
+        @Override
+        public int[] getColumnsToHide() {
+            if (showTimestamp) {
+                return super.getColumnsToHide();
+            }
+
+            return new int[] {1};
         }
 
         @Override
@@ -445,15 +471,28 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
+        private final boolean showTimestamp;
+
         InvestmentAccountReportModel(@Nullable final Account account, final LocalDate startDate,
-                                     final LocalDate endDate, final String memoFilter) {
+                                     final LocalDate endDate, final String memoFilter, final boolean showTimestamp) {
             this.account = account;
 
             filteredList.setPredicate(new TransactionAfterDatePredicate(startDate)
                     .and(new TransactionBeforeDatePredicate(endDate))
                     .and(new MemoPredicate(memoFilter)));
 
+            this.showTimestamp = showTimestamp;
+
             loadAccount();
+        }
+
+        @Override
+        public int[] getColumnsToHide() {
+            if (showTimestamp) {
+                return super.getColumnsToHide();
+            }
+
+            return new int[] {1};
         }
 
         @Override
