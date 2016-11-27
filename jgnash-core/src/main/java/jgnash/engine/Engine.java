@@ -515,8 +515,6 @@ public class Engine {
             }
         }
 
-        System.out.println("background stopped");
-
         shutDownAndWait(backgroundExecutorService);
         shutDownAndWait(trashExecutor);
 
