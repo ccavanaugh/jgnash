@@ -58,8 +58,12 @@ public class CsvExport {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
 
-        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(fileName), StandardCharsets.UTF_8)))) {
+        try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                new FileOutputStream(fileName), StandardCharsets.UTF_8);
+
+             AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(outputStreamWriter))) {
+
+            outputStreamWriter.write('\ufeff'); // write UTF-8 byte order mark to the file for easier imports
 
             writer.writeNextRow("Account", "Number", "Debit", "Credit", "Balance", "Date", "Timestamp",
                     "Memo", "Payee", "Reconciled");
@@ -96,7 +100,7 @@ public class CsvExport {
                 final String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED
                         ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
-               writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date, timeStamp,
+                writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date, timeStamp,
                         transaction.getMemo(), transaction.getPayee(), reconciled);
             }
         } catch (final IOException e) {
