@@ -25,7 +25,7 @@
         <java-version>1.8</java-version>
         <junit-version>4.12</junit-version>
         <hamcrest-version>1.3</hamcrest-version>
-        <jasperreports.version>6.0.4</jasperreports.version>
+        <jasperreports.version>6.3.1</jasperreports.version>
         <xstream.version>1.4.9</xstream.version>
         <h2.version>1.3.176</h2.version>
         <hibernate-core.version>5.2.5.Final</hibernate-core.version>
@@ -36,7 +36,7 @@
         <log4j.version>1.2.17</log4j.version>
         <kxml.version>2.3.0</kxml.version>
         <apachi-poi.version>3.14</apachi-poi.version>
-        <itext.version>2.1.7</itext.version>
+        <itext.version>2.1.7.js5</itext.version>
         <jfree.version>1.0.19</jfree.version>
         <insubstantial.version>7.3</insubstantial.version>
         <swingx.version>1.6.5-1</swingx.version>
@@ -97,6 +97,11 @@
             <id>dynamicjasper</id>
             <name>Dynamic Jasper</name>
             <url>http://nexus.fdvs.com.ar/content/groups/public/</url>
+        </repository>
+
+        <repository>
+            <id>jasperreports</id>
+            <url>http://jasperreports.sourceforge.net/maven2</url>
         </repository>
     </repositories>
 
