@@ -42,7 +42,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Handler;
@@ -127,10 +126,6 @@ public class Engine {
     private final ReentrantReadWriteLock engineLock;
 
     private final AtomicInteger backGroundCounter = new AtomicInteger();
-
-    private Future<Void> backGroundHistoryCleanupFuture;
-
-    private final AtomicBoolean backGroundHistoryCleanupActive = new AtomicBoolean(false);
 
     /**
      * Named identifier for this engine instance.
@@ -504,16 +499,6 @@ public class Engine {
 
     void stopBackgroundServices() {
         logInfo("Controlled engine shutdown initiated");
-
-        if (backGroundHistoryCleanupFuture != null) {
-            backGroundHistoryCleanupActive.set(false);
-
-            try {
-                backGroundHistoryCleanupFuture.get();   // wait for it to finish
-            } catch (final InterruptedException | ExecutionException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-        }
 
         shutDownAndWait(backgroundExecutorService);
         shutDownAndWait(trashExecutor);
@@ -2848,27 +2833,36 @@ public class Engine {
         }
     }
 
+    /**
+     * Handles Background removal of {@code SecurityNode} history.  This can an expensive operation that block normal
+     * operations, so the removal is partitioned into small events to prevent stalling.
+     *
+     * @param securityNode SecurityNode being processed
+     * @param daysOfWeek Collection of {code DayOfWeek} to remove
+     */
     public void removeSecurityHistoryByDayOfWeek(final SecurityNode securityNode, final Collection<DayOfWeek> daysOfWeek) {
 
-        backGroundHistoryCleanupActive.set(true);
+        final Thread thread = new Thread(() -> {
+            long delay = 0;
 
-        backGroundHistoryCleanupFuture
-                = backgroundExecutorService.schedule(new BackgroundCallable<>((Callable<Void>) () -> {
             for (final SecurityHistoryNode historyNode : new ArrayList<>(securityNode.getHistoryNodes())) {
                 for (final DayOfWeek dayOfWeek : daysOfWeek) {
                     if (historyNode.getLocalDate().getDayOfWeek() == dayOfWeek) {
-                        if (backGroundHistoryCleanupActive.get()) { // check for thread interruption
+
+                        backgroundExecutorService.schedule(new BackgroundCallable<>((Callable<Void>) () -> {
                             removeSecurityHistory(securityNode, historyNode.getLocalDate());
-                        }
+                            return null;
+                        }), delay, TimeUnit.MILLISECONDS);
+
+                        delay += 1500;
                     }
                 }
             }
+        });
 
-            backGroundHistoryCleanupFuture = null;  // cleanup our own future
-            backGroundHistoryCleanupActive.set(false);
-
-            return null;
-        }), 0, TimeUnit.MILLISECONDS);
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
     }
 
     /**
