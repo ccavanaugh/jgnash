@@ -23,6 +23,7 @@ WANTS
 
 Release 2.29.0
 --------------
+* 12/01/16 Corrected NPE occurring during import of transactions. (Fx)
 * 11/30/16 Improves behavior of background removal of securities history.
 
 Release 2.28.0
