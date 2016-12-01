@@ -231,13 +231,15 @@ public class TableViewManager<S> {
         double[] columnWidths = new double[0];  // zero length array instead of null to protect against NPE
 
         if (!isFullyInitialized) {  // no need to retrieve old column widths more than once
-            final String uuid = preferenceKeyFactory.get().get();
-            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
+            if (preferenceKeyFactory.get() != null) {
+                final String uuid = preferenceKeyFactory.get().get();
+                final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
 
-            final String widths = preferences.get(uuid, null);
+                final String widths = preferences.get(uuid, null);
 
-            if (widths != null) {
-                columnWidths = EncodeDecode.decodeDoubleArray(widths);
+                if (widths != null) {
+                    columnWidths = EncodeDecode.decodeDoubleArray(widths);
+                }
             }
         }
 
