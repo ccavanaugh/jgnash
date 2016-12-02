@@ -27,7 +27,14 @@ import java.util.List;
  * @author Arnout Engelen
  */
 public class ImportBank<E extends ImportTransaction> {
+
     private List<E> transactions = new ArrayList<>();
+
+    protected List<ImportSecurity> securityList = new ArrayList<>();
+
+    public void addSecurity(final ImportSecurity importSecurity) {
+        securityList.add(importSecurity);
+    }
 
     public void setTransactions(List<E> transactions) {
         this.transactions = transactions;

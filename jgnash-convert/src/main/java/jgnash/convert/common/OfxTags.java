@@ -303,7 +303,7 @@ public interface OfxTags {
 
     String TOTAL = "TOTAL";
 
-    String USERKEY = "USERKEY";
+    //String USERKEY = "USERKEY";
 
     String UNIQUEID = "UNIQUEID";
 
@@ -323,6 +323,26 @@ public interface OfxTags {
     String CREDITCARDMSGSRSV1 = "CREDITCARDMSGSRSV1";
 
     String INVSTMTMSGSRSV1 = "INVSTMTMSGSRSV1";
+
+    String SECLISTMSGSRSV1 = "SECLISTMSGSRSV1";
+
+
+    /**
+     * Security Info
+     */
+    String STOCKINFO = "STOCKINFO";
+
+    String MFINFO = "MFINFO";
+
+    String SECINFO = "SECINFO";
+
+    String SECNAME = "SECNAME";
+
+    String TICKER = "TICKER";
+
+    String SECLIST = "SECLIST";
+
+    String ASSETCLASS = "ASSETCLASS";
 
     /**
      * Intuit mucking up the OFX standard, Bank Id, In signon message

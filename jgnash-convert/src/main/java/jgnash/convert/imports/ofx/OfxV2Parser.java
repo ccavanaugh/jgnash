@@ -44,6 +44,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import jgnash.convert.common.OfxTags;
+import jgnash.convert.imports.ImportSecurity;
 import jgnash.util.FileMagic;
 import jgnash.util.ResourceUtils;
 
@@ -168,6 +169,9 @@ public class OfxV2Parser implements OfxTags {
                         case CREDITCARDMSGSRSV1:
                             parseCreditCardMessageSet(reader);
                             break;
+                        case SECLISTMSGSRSV1:
+                            parseSecuritesMessageSet(reader);
+                            break;
                         default:
                             logger.log(Level.WARNING, "Unknown message set {0}", reader.getLocalName());
                             break;
@@ -283,6 +287,139 @@ public class OfxV2Parser implements OfxTags {
         }
 
         logger.exiting(OfxV2Parser.class.getName(), "parseCreditCardMessageSet");
+    }
+
+    /**
+     * Parses a SECLISTMSGSRSV1 element
+     *
+     * @param reader shared XMLStreamReader
+     * @throws XMLStreamException XML parsing error has occurred
+     */
+    private void parseSecuritesMessageSet(final XMLStreamReader reader) throws XMLStreamException {
+        logger.entering(OfxV2Parser.class.getName(), "parseSecuritesMessageSet");
+
+        final QName parsingElement = reader.getName();
+
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (reader.getLocalName()) {
+                        case SECLIST:
+                            parseSecuritiesList(reader);
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown SECLISTMSGSRSV1 element: {0}", reader.getLocalName());
+                            break;
+                    }
+
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.info("Found the end of the sercurites set");
+                        break;
+                    }
+                default:
+            }
+        }
+
+        logger.exiting(OfxV2Parser.class.getName(), "parseSecuritesMessageSet");
+    }
+
+    private void parseSecuritiesList(final XMLStreamReader reader) throws XMLStreamException {
+        logger.entering(OfxV2Parser.class.getName(), "parseSecuritiesList");
+
+        final QName parsingElement = reader.getName();
+
+        parse:
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (reader.getLocalName()) {
+                        case ASSETCLASS:
+                            break;  // just consume it, not used
+                        case SECINFO:
+                            parseSecurity(reader);
+                            break;
+                        case MFINFO: // just consume it
+                        case STOCKINFO:
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown SECLIST element: {0}", reader.getLocalName());
+                            break;
+                    }
+
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.info("Found the end of the securities list");
+                        break parse;
+                    }
+                default:
+            }
+        }
+
+        logger.exiting(OfxV2Parser.class.getName(), "parseSecuritiesList");
+    }
+
+    private void parseSecurity(final XMLStreamReader reader) throws XMLStreamException {
+        logger.entering(OfxV2Parser.class.getName(), "parseSecurity");
+
+        final QName parsingElement = reader.getName();
+
+        final ImportSecurity importSecurity = new ImportSecurity();
+
+        parse:
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (reader.getLocalName()) {
+                        case SECID: // consume it:
+                            break;
+                        case UNIQUEIDTYPE:
+                            importSecurity.idType = reader.getElementText().trim();
+                            break;
+                        case UNIQUEID:
+                            importSecurity.id = reader.getElementText().trim();
+                            break;
+                        case SECNAME:
+                            importSecurity.securityName = reader.getElementText().trim();
+                            break;
+                        case TICKER:
+                            importSecurity.ticker = reader.getElementText().trim();
+                            break;
+                        case UNITPRICE:
+                            importSecurity.unitPrice = parseAmount(reader.getElementText());
+                            break;
+                        case DTASOF:
+                            importSecurity.localDate = parseDate(reader.getElementText());
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown SECINFO element: {0}", reader.getLocalName());
+                            break;
+                    }
+
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.info("Found the end of the security info");
+
+                        System.out.println(importSecurity.toString());
+
+                        break parse;
+                    }
+                default:
+            }
+        }
+
+        bank.addSecurity(importSecurity);
+
+        logger.exiting(OfxV2Parser.class.getName(), "parseSecurity");
     }
 
     /**

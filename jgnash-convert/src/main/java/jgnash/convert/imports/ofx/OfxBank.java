@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportSecurity;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.util.Nullable;
 
@@ -89,8 +90,12 @@ public class OfxBank extends ImportBank<OfxTransaction> {
             b.append("availBalanceDate: ").append(availBalanceDate).append('\n');
         }
 
-        for (ImportTransaction t : getTransactions()) {
+        for (final ImportTransaction t : getTransactions()) {
             b.append(t).append('\n');
+        }
+
+        for (final ImportSecurity importSecurity : securityList) {
+            b.append(importSecurity.toString()).append('\n');
         }
 
         return b.toString();
