@@ -312,42 +312,48 @@ public class SecurityNode extends CommodityNode {
      * @return a List of Lists of SecurityHistoryNodes
      */
     public List<List<SecurityHistoryNode>> getHistoryNodeGroupsBySplits() {
+        lock.readLock().lock();
 
-        final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
-        final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
+        try {
 
-        if (splitEvents.size() == 0) {
-            groups.add(getHistoryNodes());
-        } else {    // count should be split events + 1 when complete
+            final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
+            final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
 
-            // Create a defensive copy that has the adjustment multiplier set
-            final List<SecurityHistoryNode> securityHistoryNodes = getHistoryNodes();
-            final ListIterator<SecurityHistoryEvent> historyEventIterator = splitEvents.listIterator();
+            if (splitEvents.size() == 0) {
+                groups.add(getHistoryNodes());
+            } else {    // count should be split events + 1 when complete
 
-            LocalDate eventDate = historyEventIterator.next().getDate();
+                // Create a defensive copy that has the adjustment multiplier set
+                final List<SecurityHistoryNode> securityHistoryNodes = getHistoryNodes();
+                final ListIterator<SecurityHistoryEvent> historyEventIterator = splitEvents.listIterator();
 
-            List<SecurityHistoryNode> group = new ArrayList<>();
+                LocalDate eventDate = historyEventIterator.next().getDate();
 
-            for (int i = 0; i < securityHistoryNodes.size(); i++) {
-                if (eventDate == null || securityHistoryNodes.get(i).getLocalDate().isBefore(eventDate)) {
-                    group.add(securityHistoryNodes.get(i));
-                } else {
-                    groups.add(group);                              // save the current group
-                    group = new ArrayList<>();                      // start a new group
-                    group.add(securityHistoryNodes.get(i - 1));      // create continuity with the previous group
-                    group.add(securityHistoryNodes.get(i));          // add the current node
+                List<SecurityHistoryNode> group = new ArrayList<>();
 
-                    if (historyEventIterator.hasNext()) {
-                        eventDate = historyEventIterator.next().getDate();
+                for (int i = 0; i < securityHistoryNodes.size(); i++) {
+                    if (eventDate == null || securityHistoryNodes.get(i).getLocalDate().isBefore(eventDate)) {
+                        group.add(securityHistoryNodes.get(i));
                     } else {
-                        eventDate = null;
+                        groups.add(group);                              // save the current group
+                        group = new ArrayList<>();                      // start a new group
+                        group.add(securityHistoryNodes.get(i - 1));      // create continuity with the previous group
+                        group.add(securityHistoryNodes.get(i));          // add the current node
+
+                        if (historyEventIterator.hasNext()) {
+                            eventDate = historyEventIterator.next().getDate();
+                        } else {
+                            eventDate = null;
+                        }
                     }
                 }
+                groups.add(group);  // add last group
             }
-            groups.add(group);  // add last group
-        }
 
-        return groups;
+            return groups;
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -476,7 +482,8 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    /**.
+    /**
+     * .
      * Required by XStream for proper initialization
      *
      * @return Properly initialized SecurityNode
