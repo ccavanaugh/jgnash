@@ -47,4 +47,8 @@ public class ImportBank<E extends ImportTransaction> {
     public void addTransaction(E transaction) {
         transactions.add(transaction);
     }
+
+    public List<ImportSecurity> getSecurityList() {
+        return securityList;
+    }
 }

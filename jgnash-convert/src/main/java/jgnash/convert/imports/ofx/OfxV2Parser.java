@@ -385,19 +385,19 @@ public class OfxV2Parser implements OfxTags {
                             importSecurity.idType = reader.getElementText().trim();
                             break;
                         case UNIQUEID:
-                            importSecurity.id = reader.getElementText().trim();
+                            importSecurity.setId(reader.getElementText().trim());
                             break;
                         case SECNAME:
-                            importSecurity.securityName = reader.getElementText().trim();
+                            importSecurity.setSecurityName(reader.getElementText().trim());
                             break;
                         case TICKER:
                             importSecurity.ticker = reader.getElementText().trim();
                             break;
                         case UNITPRICE:
-                            importSecurity.unitPrice = parseAmount(reader.getElementText());
+                            importSecurity.setUnitPrice(parseAmount(reader.getElementText()));
                             break;
                         case DTASOF:
-                            importSecurity.localDate = parseDate(reader.getElementText());
+                            importSecurity.setLocalDate(parseDate(reader.getElementText()));
                             break;
                         default:
                             logger.log(Level.WARNING, "Unknown SECINFO element: {0}", reader.getLocalName());

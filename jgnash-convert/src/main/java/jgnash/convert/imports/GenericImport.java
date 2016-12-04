@@ -20,19 +20,24 @@ package jgnash.convert.imports;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import jgnash.convert.imports.ofx.OfxTransaction;
 import jgnash.engine.Account;
+import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.SecurityHistoryNode;
+import jgnash.engine.SecurityNode;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
-import jgnash.convert.imports.ofx.OfxTransaction;
 import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 /**
  * Generic import utility methods
- * 
+ *
  * @author Craig Cavanaugh
  * @author Arnout Engelen
  */
@@ -81,11 +86,9 @@ public class GenericImport {
 
     /**
      * Sets the match state of a list of imported transactions
-     * 
-     * @param list
-     *            list of imported transactions
-     * @param baseAccount
-     *            account to perform match against
+     *
+     * @param list        list of imported transactions
+     * @param baseAccount account to perform match against
      */
     public static void matchTransactions(final List<? extends ImportTransaction> list, @NotNull final Account baseAccount) {
         Objects.requireNonNull(baseAccount);
@@ -144,35 +147,54 @@ public class GenericImport {
         }
     }
 
-    public static Account matchAccount(final String id) {
+    public static Account findFirstAvailableAccount() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        List<Account> accountList = engine.getAccountList();
-
-        if (id != null) {
-            for (final Account account : accountList) {
-                if (account.getUuid().equals(id)) {
-                    return account;
-                }
-
-                if (account.getBankId() != null && account.getBankId().equals(id)) {
-                    return account;
-                }
-
-                if (account.getAccountNumber() != null && account.getAccountNumber().equals(id)) {
-                    return account;
-                }
-            }
-        } else {
-            for (final Account account : accountList) {
-                if (!account.isPlaceHolder() && !account.isLocked()) {
-                    return account;
-                }
+        for (final Account account : engine.getAccountList()) {
+            if (!account.isPlaceHolder() && !account.isLocked()) {
+                return account;
             }
         }
 
         return null;
+    }
+
+    public static void importSecurities(final List<ImportSecurity> importSecurities, final CurrencyNode currencyNode) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        for (final ImportSecurity importSecurity : importSecurities) {
+            if (!ImportUtils.matchSecurity(importSecurity).isPresent()) {   // Import only if a match is not found
+                final SecurityNode securityNode = ImportUtils.createSecurityNode(importSecurity, currencyNode);
+
+                engine.addSecurity(securityNode);
+
+                // if the ImportSecurity has pricing information, import it as well
+                importSecurity.getLocalDate().ifPresent(localDate -> importSecurity.getUnitPrice().ifPresent(price -> {
+                    SecurityHistoryNode securityHistoryNode = new SecurityHistoryNode(localDate, price, 0, price, price);
+                    engine.addSecurityHistory(securityNode, securityHistoryNode);
+                }));
+            } else {    // check to see if the cuspid needs to be updated
+                ImportUtils.matchSecurity(importSecurity)
+                        .ifPresent(securityNode -> importSecurity.getId().ifPresent(securityId -> {
+                            if (securityNode.getISIN() == null || securityNode.getISIN().isEmpty()) {
+                                try {
+                                    final SecurityNode clone = (SecurityNode) securityNode.clone();
+                                    clone.setISIN(securityId);
+
+                                    engine.updateCommodity(securityNode, clone);
+
+                                    Logger.getLogger(GenericImport.class.getName()).info("Assigning CUSPID");
+                                } catch (final CloneNotSupportedException e) {
+                                    Logger.getLogger(GenericImport.class.getName()).log(Level.SEVERE,
+                                            e.getLocalizedMessage(), e);
+                                }
+                            }
+                        }));
+            }
+
+        }
     }
 
     private GenericImport() {

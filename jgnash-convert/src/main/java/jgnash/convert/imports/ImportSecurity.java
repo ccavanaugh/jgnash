@@ -19,6 +19,7 @@ package jgnash.convert.imports;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Security Import Object
@@ -28,10 +29,10 @@ import java.time.LocalDate;
 public class ImportSecurity {
 
     public String ticker;
-    public String securityName;
-    public BigDecimal unitPrice;
-    public LocalDate localDate;
-    public String id;
+    private String securityName;
+    private BigDecimal unitPrice;
+    private LocalDate localDate;
+    private String id;
     public String idType;
 
     @Override
@@ -54,4 +55,35 @@ public class ImportSecurity {
         return b.toString();
     }
 
+    public Optional<String> getId() {
+        return Optional.ofNullable(id);
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    Optional<String> getSecurityName() {
+        return Optional.ofNullable(securityName);
+    }
+
+    public void setSecurityName(String securityName) {
+        this.securityName = securityName;
+    }
+
+    Optional<BigDecimal> getUnitPrice() {
+        return Optional.ofNullable(unitPrice);
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Optional<LocalDate> getLocalDate() {
+        return Optional.ofNullable(localDate);
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
 }

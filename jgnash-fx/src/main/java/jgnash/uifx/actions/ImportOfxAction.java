@@ -26,6 +26,7 @@ import java.util.prefs.Preferences;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
+import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
@@ -75,7 +76,7 @@ public class ImportOfxAction {
         fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx" , "*.OFX", "*.QFX"),
+                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx", "*.OFX", "*.QFX"),
                 new FileChooser.ExtensionFilter("All Files (*.*)", "*.*")
         );
 
@@ -162,8 +163,6 @@ public class ImportOfxAction {
 
             String accountNumber = bank.accountId;
 
-            //TODO: Should this be bankId
-
             /* set the account number if not a match */
             if (accountNumber != null && !accountNumber.equals(account.getAccountNumber())) {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -172,7 +171,12 @@ public class ImportOfxAction {
                 engine.setAccountNumber(account, accountNumber);
             }
 
-                /* Import the transactions */
+            // Import or update securities that were found
+            if (bank.getSecurityList().size() > 0) {
+                GenericImport.importSecurities(bank.getSecurityList(), account.getCurrencyNode());
+            }
+
+            // Import the transactions
             OfxImport.importTransactions(transactions, account);
 
             return null;

@@ -68,8 +68,8 @@ public class ImportWizard {
 
         final WizardDialogController<Settings> wizardController = wizardControllerProperty().get();
 
-        // force a default account before loading tasks to prevent NPE.  The ordered pages should sort out better choices
-        wizardController.setSetting(Settings.ACCOUNT, GenericImport.matchAccount(null));
+        // force a default account before loading tasks to prevent NPE.  The ordered pages will sort out better choices
+        wizardController.setSetting(Settings.ACCOUNT, GenericImport.findFirstAvailableAccount());
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ImportPageOne.fxml"), resources);
