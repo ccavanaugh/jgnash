@@ -55,7 +55,9 @@ class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Returns the cash balance of this account.
+     * Returns the cash balance of this account.  Cash balance may be referred to as the "sweep" account where
+     * the money market fund (cash) does not have it's own account number and the user see's it as a cash balance
+     * in their account statements.
      * 
      * @return cash balance of the account
      */
