@@ -34,6 +34,8 @@ public class ImportSecurity {
     private LocalDate localDate;
     private String id;
     public String idType;
+    public String currency;
+    private BigDecimal currencyRate;
 
     @Override
     public String toString() {
@@ -52,6 +54,10 @@ public class ImportSecurity {
             b.append("idType: ").append(idType).append('\n');
         }
 
+        getCurrency().ifPresent(currency -> b.append("currency: ").append(currency).append('\n'));
+
+        getCurrencyRate().ifPresent(rate -> b.append("currencyRate: ").append(rate).append('\n'));
+
         return b.toString();
     }
 
@@ -67,7 +73,7 @@ public class ImportSecurity {
         return Optional.ofNullable(securityName);
     }
 
-    public void setSecurityName(String securityName) {
+    public void setSecurityName(final String securityName) {
         this.securityName = securityName;
     }
 
@@ -75,7 +81,7 @@ public class ImportSecurity {
         return Optional.ofNullable(unitPrice);
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
+    public void setUnitPrice(final BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
@@ -83,7 +89,24 @@ public class ImportSecurity {
         return Optional.ofNullable(localDate);
     }
 
-    public void setLocalDate(LocalDate localDate) {
+    public void setLocalDate(final LocalDate localDate) {
         this.localDate = localDate;
     }
+
+    public void setCurrencyRate(final BigDecimal unitPrice) {
+        this.currencyRate = unitPrice;
+    }
+
+    public Optional<BigDecimal> getCurrencyRate() {
+        return Optional.ofNullable(currencyRate);
+    }
+
+    public void setCurrency(final String currency) {
+        this.currency = currency;
+    }
+
+    public Optional<String> getCurrency() {
+        return Optional.ofNullable(currency);
+    }
+
 }
