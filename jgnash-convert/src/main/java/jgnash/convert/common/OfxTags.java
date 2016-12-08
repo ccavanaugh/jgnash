@@ -336,6 +336,19 @@ public interface OfxTags {
 
     String SECINFO = "SECINFO";
 
+    /**
+     * ISO-4217 3-letter currency identifier
+     */
+    String CURSYM = "CURSYM";
+
+    /**
+     * Ratio of <CURDEF> currency to <CURSYM> currency, in decimal notation, rate
+     */
+    String CURRATE = "CURRATE";
+
+    /**
+     * Security name, maximum of 120 characters
+     */
     String SECNAME = "SECNAME";
 
     String TICKER = "TICKER";
@@ -343,6 +356,11 @@ public interface OfxTags {
     String SECLIST = "SECLIST";
 
     String ASSETCLASS = "ASSETCLASS";
+
+    /**
+     * Security rating, maximum of 10 characters
+     */
+    String RATING = "RATING";
 
     /**
      * Intuit mucking up the OFX standard, Bank Id, In signon message
