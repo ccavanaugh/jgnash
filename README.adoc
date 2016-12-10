@@ -126,4 +126,6 @@ stability with the Oracle release or OpenJDK with OpenJFX.
 
 == Development Tools
 
-The IDE used for the development of jGnash is: image:https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJIDEA.png["IntelliJIDEA Logo", height=84, link="https://www.jetbrains.com/idea/"]
+The IDE used for the development of jGnash is:
+
+image:https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJIDEA.png["IntelliJIDEA Logo", height=90, link="https://www.jetbrains.com/idea/"]
