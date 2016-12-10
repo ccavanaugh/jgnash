@@ -1,4 +1,4 @@
-image:http://jgnash.github.io/img/jgnash-logo.png[jGnash Logo]
+image:https://jgnash.github.io/img/jgnash-logo.png[jGnash Logo]
 
 = jGnash README
 
@@ -123,3 +123,7 @@ mainstream distributions, but will not work. You will need the 8u60 packages.
 
 jGnashFx has been heavily tested against OpenJFX. There are no noticeable differences in performance or
 stability with the Oracle release or OpenJDK with OpenJFX.
+
+== Development Tools
+
+The IDE used for the development of jGnash is image:https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJIDEA.png[IntelliJIDEA Logo]
