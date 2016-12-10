@@ -1,0 +1,171 @@
+<!-- Example Investment Account taken from the 2.2 Public Draft 3 OFX specification -->
+<OFX>
+    <SIGNONMSGSRSV1>
+        <SONRS>                                                         <!--Beginning of request data-->
+        </SONRS>                                                        <!--End of signon-->
+    </SIGNONMSGSRSV1>
+    <INVSTMTMSGSRSV1>
+        <INVSTMTTRNRS>                                                  <!--First request in file-->
+            <TRNUID>1002</TRNUID>                                       <!--Client ID for this request-->
+            <STATUS>
+                <CODE>0</CODE>                                           <!--0 = accepted, good data follows-->
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <INVSTMTRS>                                                 <!--Beginning of statement download-->
+                <DTASOF>>20060131172605.000[-4:EST]</DTASOF>            <!--Statement as of Jan 31, 2006 5:26pm-->
+                <CURDEF>USD</CURDEF>                                    <!--Default currency is US Dollar-->
+                <INVACCTFROM>                                           <!--Beginning of account information-->
+                    <BROKERID>121099999</BROKERID>                      <!--FI ID-->
+                    <ACCTID>999988</ACCTID>                             <!--Account number-->
+                </INVACCTFROM>                                          <!--End of account information-->
+                <INVTRANLIST>
+                    <DTSTART>20060105172532.000[-5:EST]</DTSTART>
+                    <DTEND>20060131172532.000[-4:EST]</DTEND>
+                    <BUYMF>
+                        <INVBUY>
+                            <INVTRAN>
+                                <FITID>212839062820295310723</FITID>
+                                <DTTRADE>20060119000000.000[-5:EST]</DTTRADE>
+                            </INVTRAN>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <UNITS>14.6860</UNITS>
+                            <UNITPRICE>18.9000</UNITPRICE>
+                            <TOTAL>-277.5700</TOTAL>
+                            <CURRENCY>
+                                <CURRATE>1.0000</CURRATE>
+                                <CURSYM>USD</CURSYM>
+                            </CURRENCY>
+                            <SUBACCTSEC>OTHER</SUBACCTSEC>
+                            <SUBACCTFUND>OTHER</SUBACCTFUND>
+                            <LOANID>2</LOANID>
+                            <LOANPRINCIPAL>277.5700</LOANPRINCIPAL>
+                            <LOANINTEREST>0.0000</LOANINTEREST>
+                            <INV401KSOURCE>ROLLOVER</INV401KSOURCE>
+                            <DTPAYROLL>20060114000000.000[-5:EST]</DTPAYROLL>
+                            <PRIORYEARCONTRIB>N</PRIORYEARCONTRIB>
+                        </INVBUY>
+                        <BUYTYPE>BUY</BUYTYPE>
+                    </BUYMF>
+                    <BUYMF>
+                        <INVBUY>
+                            <INVTRAN>
+                                <FITID>212839062820510822977</FITID>
+                                <DTTRADE>20060119000000.000[-5:EST]</DTTRADE>
+                            </INVTRAN>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <UNITS>2.0220</UNITS>
+                            <UNITPRICE>18.9000</UNITPRICE>
+                            <TOTAL>-38.2200</TOTAL>
+                            <CURRENCY>
+                                <CURRATE>1.0000</CURRATE>
+                                <CURSYM>USD</CURSYM>
+                            </CURRENCY>
+                            <SUBACCTSEC>OTHER</SUBACCTSEC>
+                            <SUBACCTFUND>OTHER</SUBACCTFUND>
+                            <LOANID>2</LOANID>
+                            <LOANPRINCIPAL>0.0000</LOANPRINCIPAL>
+                            <LOANINTEREST>38.2200</LOANINTEREST>
+                            <INV401KSOURCE>ROLLOVER</INV401KSOURCE>
+                            <DTPAYROLL>20060114000000.000[-5:EST]</DTPAYROLL>
+                            <PRIORYEARCONTRIB>N</PRIORYEARCONTRIB>
+                        </INVBUY>
+                        <BUYTYPE>BUY</BUYTYPE>
+                    </BUYMF>
+                    <BUYMF>
+                        <INVBUY>
+                            <INVTRAN>
+                                <FITID>212849815151950488609</FITID>
+                                <DTTRADE>20060106000000.000[-5:EST]</DTTRADE>
+                            </INVTRAN>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <UNITS>4.9010</UNITS>
+                            <UNITPRICE>18.7900</UNITPRICE>
+                            <TOTAL>-92.0900</TOTAL>
+                            <CURRENCY>
+                                <CURRATE>1.0000</CURRATE>
+                                <CURSYM>USD</CURSYM>
+                            </CURRENCY>
+                            <SUBACCTSEC>OTHER</SUBACCTSEC>
+                            <SUBACCTFUND>OTHER</SUBACCTFUND>
+                            <INV401KSOURCE>PRETAX</INV401KSOURCE>
+                            <DTPAYROLL>20051231000000.000[-5:EST]</DTPAYROLL>
+                            <PRIORYEARCONTRIB>Y</PRIORYEARCONTRIB>
+                        </INVBUY>
+                        <BUYTYPE>BUY</BUYTYPE>
+                    </BUYMF>
+                </INVTRANLIST>
+                <INV401KBAL>
+                    <PRETAX>31690.340000</PRETAX>
+                    <PROFITSHARING>10725.640000</PROFITSHARING>
+                    <ROLLOVER>15945.750000</ROLLOVER>
+                    <OTHERVEST>108.800000</OTHERVEST>
+                    <TOTAL>58470.530000</TOTAL>
+                </INV401KBAL>
+                <INV401K>
+                    <EMPLOYERNAME>ELGIN NATIONAL INDUSTRIES INC</EMPLOYERNAME>
+                    <PLANID>4343</PLANID>
+                    <PLANJOINDATE>19940101000000.000[-5:EST]</PLANJOINDATE>
+                    <MATCHINFO>
+                        <MATCHPCT>0.00</MATCHPCT>
+                    </MATCHINFO>
+                    <CONTRIBINFO>
+                        <CONTRIBSECURITY>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <PRETAXCONTRIBPCT>50.0000</PRETAXCONTRIBPCT>
+                            <PROFITSHARINGCONTRIBPCT>100.0000
+                            </PROFITSHARINGCONTRIBPCT>
+                            <ROLLOVERCONTRIBPCT>100.0000</ROLLOVERCONTRIBPCT>
+                            <OTHERVESTPCT>100.0000</OTHERVESTPCT>
+                        </CONTRIBSECURITY>
+                        <CONTRIBSECURITY>
+                            <SECID>
+                                <UNIQUEID>74431M105</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <PRETAXCONTRIBPCT>25.0000</PRETAXCONTRIBPCT>
+                            <PROFITSHARINGCONTRIBPCT>0.0000
+                            </PROFITSHARINGCONTRIBPCT>
+                            <ROLLOVERCONTRIBPCT>0.0000</ROLLOVERCONTRIBPCT>
+                            <OTHERVESTPCT>0.0000</OTHERVESTPCT>
+                        </CONTRIBSECURITY>
+                        <CONTRIBSECURITY>
+                            <SECID>
+                                <UNIQUEID>743969107</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <PRETAXCONTRIBPCT>25.0000</PRETAXCONTRIBPCT>
+                            <PROFITSHARINGCONTRIBPCT>0.0000
+                            </PROFITSHARINGCONTRIBPCT>
+                            <ROLLOVERCONTRIBPCT>0.0000</ROLLOVERCONTRIBPCT>
+                            <OTHERVESTPCT>0.0000</OTHERVESTPCT>
+                        </CONTRIBSECURITY>
+                    </CONTRIBINFO>
+                    <INV401KSUMMARY>
+                        <YEARTODATE>
+                            <DTSTART>20060101000000</DTSTART>
+                            <DTEND>20060131000000</DTEND>
+                            <CONTRIBUTIONS>
+                                <PRETAX>843.2500</PRETAX>
+                                <AFTERTAX>43.4200</AFTERTAX>
+                                <MATCH>421.6200</MATCH>
+                                <TOTAL>1308.2900</TOTAL>
+                            </CONTRIBUTIONS>
+                        </YEARTODATE>
+                    </INV401KSUMMARY>
+                </INV401K>
+            </INVSTMTRS>
+        </INVSTMTTRNRS>
+    </INVSTMTMSGSRSV1>
+</OFX>
