@@ -332,9 +332,30 @@ public interface OfxTags {
      */
     String STOCKINFO = "STOCKINFO";
 
+    /**
+     * Mutual fund information
+     */
     String MFINFO = "MFINFO";
 
+    /**
+     * Security information
+     */
     String SECINFO = "SECINFO";
+
+    /**
+     * Information about an Option
+     */
+    String OPTINFO = "OPTINFO";
+
+    /**
+     * Option type
+     */
+    String OPTTYPE = "OPTTYPE";
+
+    /**
+     * Strike price
+     */
+    String STRIKEPRICE = "STRIKEPRICE";
 
     /**
      * ISO-4217 3-letter currency identifier
@@ -355,7 +376,30 @@ public interface OfxTags {
 
     String SECLIST = "SECLIST";
 
+    /**
+     * Expiration date for an Option
+     */
+    String DTEXPIRE = "DTEXPIRE";
+
+    /**
+     * Number of shares per contract
+     */
+    String SHPERCTRCT = "SHPERCTRCT";
+
+    /**
+     * Asset class of the security
+     */
     String ASSETCLASS = "ASSETCLASS";
+
+    /**
+     * Yield of the security
+     */
+    String YIELD = "YIELD";
+
+    /**
+     * Internal security identifier for the financial institution
+     */
+    String FIID = "FIID";
 
     /**
      * Security rating, maximum of 10 characters
