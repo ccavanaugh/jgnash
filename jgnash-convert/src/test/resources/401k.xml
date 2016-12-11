@@ -1,8 +1,19 @@
-<!-- Example Investment Account taken from the 2.2 Public Draft 3 OFX specification -->
-<OFX>
+<OFX>   <!-- Example Investment Account taken from the 2.2 Public Draft 3 OFX specification -->
     <SIGNONMSGSRSV1>
-        <SONRS>                                                         <!--Beginning of request data-->
-        </SONRS>                                                        <!--End of signon-->
+        <SONRS>                                                         <!-- Begin signon -->
+            <STATUS>                                                    <!-- Begin status aggregate -->
+                <CODE>0</CODE>                                          <!-- OK -->
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <DTSERVER>20060131172532</DTSERVER>
+            <LANGUAGE>ENG</LANGUAGE>                                    <!-- Language used in response -->
+            <DTPROFUP>20060131172532</DTPROFUP>                         <!-- Last update to profile-->
+            <DTACCTUP>20060131172532</DTACCTUP>                         <!-- Last account update -->
+            <FI>                                                        <!-- ID of receiving institution -->
+                <ORG>NCH</ORG>                                          <!-- Name of ID owner -->
+                <FID>1001</FID>                                         <!-- Actual ID -->
+            </FI>
+        </SONRS>
     </SIGNONMSGSRSV1>
     <INVSTMTMSGSRSV1>
         <INVSTMTTRNRS>                                                  <!--First request in file-->
@@ -12,7 +23,7 @@
                 <SEVERITY>INFO</SEVERITY>
             </STATUS>
             <INVSTMTRS>                                                 <!--Beginning of statement download-->
-                <DTASOF>>20060131172605.000[-4:EST]</DTASOF>            <!--Statement as of Jan 31, 2006 5:26pm-->
+                <DTASOF>20060131172605.000[-4:EST]</DTASOF>            <!--Statement as of Jan 31, 2006 5:26pm-->
                 <CURDEF>USD</CURDEF>                                    <!--Default currency is US Dollar-->
                 <INVACCTFROM>                                           <!--Beginning of account information-->
                     <BROKERID>121099999</BROKERID>                      <!--FI ID-->

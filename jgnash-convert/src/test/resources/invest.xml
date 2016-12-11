@@ -1,9 +1,18 @@
-<!-- Example Investment Account taken from the 2.2 Public Draft 3 OFX specification -->
-<OFX>
+<OFX>       <!-- Example Investment Account taken from the 2.2 Public Draft 3 OFX specification -->
     <SIGNONMSGSRSV1>
-        <SONRS>                                                         <!--Beginning of request data-->
-                                                                        <!-- ...Sign on response. For
-                                                                            a complete example, see section 11.14.1-->
+        <SONRS>                                                         <!-- Begin signon -->
+            <STATUS>                                                    <!-- Begin status aggregate -->
+                <CODE>0</CODE>                                          <!-- OK -->
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <DTSERVER>20050828010000</DTSERVER>
+            <LANGUAGE>ENG</LANGUAGE>                                    <!-- Language used in response -->
+            <DTPROFUP>20050828010000</DTPROFUP>                         <!-- Last update to profile-->
+            <DTACCTUP>20050828010000</DTACCTUP>                         <!-- Last account update -->
+            <FI>                                                        <!-- ID of receiving institution -->
+                <ORG>NCH</ORG>                                          <!-- Name of ID owner -->
+                <FID>1001</FID>                                         <!-- Actual ID -->
+            </FI>
         </SONRS>                                                        <!--End of signon-->
     </SIGNONMSGSRSV1>
     <INVSTMTMSGSRSV1>
@@ -152,12 +161,12 @@
                 <YIELD>17</YIELD>                                       <!--17% yield-->
                 <ASSETCLASS>SMALLSTOCK</ASSETCLASS>                     <!--Small Capital Stock asset class-->
             </STOCKINFO>
-            <OPTINFO>                                                   <!--End of security ID-->
+            <OPTINFO>
                 <SECINFO>
                     <SECID>                                             <!--Security ID-->
                         <UNIQUEID>000342222</UNIQUEID>                  <!--CUSIP for the option -->
                         <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
-                    </SECID>
+                    </SECID>                                            <!--End of security ID-->
                     <SECNAME>Lucky Airlines Jan 97 Put</SECNAME>
                     <TICKER>LUAXX</TICKER>                              <!--Ticker symbol-->
                     <FIID>0013</FIID>                                   <!--FI internal security identifier-->
