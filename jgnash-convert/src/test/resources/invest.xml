@@ -4,6 +4,7 @@
             <STATUS>                                                    <!-- Begin status aggregate -->
                 <CODE>0</CODE>                                          <!-- OK -->
                 <SEVERITY>INFO</SEVERITY>
+                <MESSAGE>The operation succeeded.</MESSAGE>
             </STATUS>
             <DTSERVER>20050828010000</DTSERVER>
             <LANGUAGE>ENG</LANGUAGE>                                    <!-- Language used in response -->
@@ -13,6 +14,8 @@
                 <ORG>NCH</ORG>                                          <!-- Name of ID owner -->
                 <FID>1001</FID>                                         <!-- Actual ID -->
             </FI>
+            <INTU.BID>1234</INTU.BID>
+            <INTU.USERID>Nemo</INTU.USERID>
         </SONRS>                                                        <!--End of signon-->
     </SIGNONMSGSRSV1>
     <INVSTMTMSGSRSV1>
