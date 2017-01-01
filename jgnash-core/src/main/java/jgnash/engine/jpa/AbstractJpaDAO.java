@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
 
     /**
      * This ExecutorService is to be used whenever the entity manager is
-     * accessed because and EntityManager is not thread safe.
+     * accessed because the EntityManager is not thread safe, but we want to return from some methods without blocking
      */
     static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
