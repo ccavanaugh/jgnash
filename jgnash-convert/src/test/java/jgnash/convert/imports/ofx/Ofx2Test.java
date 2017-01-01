@@ -410,4 +410,41 @@ public class Ofx2Test {
         }
     }
 
+    @Test
+    public void parse401k() {
+        final String testFile = "/401k.xml";
+
+        final URL url = Object.class.getResource(testFile);
+
+        try {
+            assertTrue(FileMagic.isOfxV2(new File(url.toURI())));
+
+            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(stream);
+
+                OfxBank ofxBank = parser.getBank();
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
+                assertEquals(0, ofxBank.statusCode);
+                assertEquals("INFO", ofxBank.statusSeverity);
+                assertEquals(null, ofxBank.statusMessage);
+
+                assertEquals(3, ofxBank.getTransactions().size());
+                assertEquals(3, ofxBank.getSecurityList().size());
+
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+
+            } catch (final IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                fail();
+            }
+        } catch (final URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            fail();
+        }
+    }
+
 }

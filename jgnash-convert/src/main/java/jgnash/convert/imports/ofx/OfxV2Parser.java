@@ -151,6 +151,10 @@ public class OfxV2Parser implements OfxTags {
         }
     }
 
+    private static boolean parseBoolean(final String bool) {
+        return !bool.isEmpty() && bool.startsWith("T");
+    }
+
     /**
      * Parses an InputStream and assumes UTF-8 encoding
      *
@@ -261,6 +265,8 @@ public class OfxV2Parser implements OfxTags {
                         case INVSTMTRS:     // consume the statement download
                             break;
                         case INVPOSLIST:    // consume the securites position list; TODO: Use for reconcile
+                        case INV401KBAL:    // consume 401k balance aggregate
+                        case INV401K:       // consume 401k account info aggregate
                         case INVBAL:        // consume the investment account balance; TODO: Use for reconcile
                         case INVOOLIST:     // consume open orders
                             consumeElement(reader);
@@ -617,6 +623,7 @@ public class OfxV2Parser implements OfxTags {
                         case BUYOTHER:
                         case INCOME:
                         case REINVEST:
+                        case SELLSTOCK:
                             parseInvestmentTransaction(reader);
                             break;
                         case INVBANKTRAN:
@@ -654,6 +661,8 @@ public class OfxV2Parser implements OfxTags {
             case BUYSTOCK:
                 tran.transactionType = TransactionType.BUYSHARE;
                 break;
+            case SELLSTOCK:
+                tran.transactionType = TransactionType.SELLSHARE;
             default:
                 logger.log(Level.WARNING, "Unknown investment transaction type: {0}", parsingElement.toString());
                 break;
@@ -719,17 +728,29 @@ public class OfxV2Parser implements OfxTags {
                         case PAYEEID:
                             tran.payeeId = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
                             break;
-                        case CURRENCY:
-                            tran.currency = reader.getElementText();
+                        case CURRENCY:  // currency used for the transaction
+                            //tran.currency = reader.getElementText();
+                            consumeElement(reader);
                             break;
                         case ORIGCURRENCY:
                             tran.currency = reader.getElementText();
+                            break;
+                        case TAXEXEMPT:
+                            tran.setTaxExempt(parseBoolean(reader.getElementText()));
                             break;
                         case BUYTYPE:
                         case INVBUY:    // consume
                         case INVTRAN:
                         case SECID:
                         case UNIQUEIDTYPE:
+                            break;
+                        case LOANID:    // consume 401k loan information
+                        case LOANPRINCIPAL:
+                        case LOANINTEREST:
+                            break;
+                        case INV401KSOURCE: // consume 401k information
+                        case DTPAYROLL:
+                        case PRIORYEARCONTRIB:
                             break;
                         default:
                             logger.log(Level.WARNING, "Unknown investment transaction element: {0}",

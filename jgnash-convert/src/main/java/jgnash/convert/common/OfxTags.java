@@ -328,6 +328,51 @@ public interface OfxTags {
     String INCOMETYPE = "INCOMETYPE";
 
     /**
+     * 401k loan id
+     */
+    String LOANID = "LOANID";
+
+    /**
+     * 401k loan principal
+     */
+    String LOANPRINCIPAL = "LOANPRINCIPAL";
+
+    /**
+     * 401k loan interest
+     */
+    String LOANINTEREST = "LOANINTEREST";
+
+    /**
+     * Must be one of the following: PRETAX, AFTERTAX, MATCH, PROFITSHARING, ROLLOVER, OTHERVEST, OTHERNONVEST
+     */
+    String INV401KSOURCE = "INV401KSOURCE";
+
+    /**
+     * For 401(k)accounts, date the funds for this transaction was obtained via payroll deduction, datetime
+     */
+    String DTPAYROLL = "DTPAYROLL";
+
+    /**
+     * For 401(k) accounts, indicates that this Buy was made with a prior year contribution. Boolean
+     */
+    String PRIORYEARCONTRIB = "PRIORYEARCONTRIB";
+
+    /**
+     * For 401(k) accounts, account balance aggregate
+     */
+    String INV401KBAL = "INV401KBAL";
+
+    /**
+     * For 401(k) accounts, account information aggregate
+     */
+    String INV401K = "INV401K";
+
+    /**
+     * Tax exempt status of an investment transactions
+     */
+    String TAXEXEMPT = "TAXEXEMPT";
+
+    /**
      * Transaction amount
      */
     String TRNAMT = "TRNAMT";

@@ -179,4 +179,54 @@
             </INVSTMTRS>
         </INVSTMTTRNRS>
     </INVSTMTMSGSRSV1>
+    <SECLISTMSGSRSV1>
+        <SECLIST>                                                       <!--Beginning of securities list-->
+            <STOCKINFO>                                                 <!--Beginning of 1st security ID-->
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>123456789</UNIQUEID>                  <!--CUSIP for the stock -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>
+                    <SECNAME>Acme Development, Inc.</SECNAME>
+                    <TICKER>ACME</TICKER>                               <!--Ticker symbol-->
+                    <FIID>1024</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <YIELD>10</YIELD>                                       <!--10% yield-->
+                <ASSETCLASS>SMALLSTOCK</ASSETCLASS>                     <!--Small Capital Stock asset class-->
+            </STOCKINFO>                                                <!--End of security ID-->
+            <STOCKINFO>
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>666678578</UNIQUEID>                  <!--CUSIP for the stock -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>
+                    <SECNAME>Hackson Unlimited, Inc.</SECNAME>
+                    <TICKER>HACK</TICKER>                               <!--Ticker symbol-->
+                    <FIID>1027</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <YIELD>17</YIELD>                                       <!--17% yield-->
+                <ASSETCLASS>SMALLSTOCK</ASSETCLASS>                     <!--Small Capital Stock asset class-->
+            </STOCKINFO>
+            <OPTINFO>
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>000342222</UNIQUEID>                  <!--CUSIP for the option -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>                                            <!--End of security ID-->
+                    <SECNAME>Lucky Airlines Jan 97 Put</SECNAME>
+                    <TICKER>LUAXX</TICKER>                              <!--Ticker symbol-->
+                    <FIID>0013</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <OPTTYPE>PUT</OPTTYPE>
+                <STRIKEPRICE>35.00</STRIKEPRICE>                        <!--Strike price $35/share-->
+                <DTEXPIRE>20050121</DTEXPIRE>                           <!--Option expires Jan 21, 2005-->
+                <SHPERCTRCT>100</SHPERCTRCT>                            <!--100 shares per contract-->
+                <SECID>                                                 <!--Security ID-->
+                    <UNIQUEID>000342200</UNIQUEID>                      <!--CUSIP for the underlying stock -->
+                    <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                </SECID>
+                <ASSETCLASS>LARGESTOCK</ASSETCLASS>                     <!--Large Capital Stock asset class-->
+            </OPTINFO>                                                  <!--End of option information-->
+        </SECLIST>                                                      <!--End of securities list-->
+    </SECLISTMSGSRSV1>
 </OFX>

@@ -66,6 +66,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private BigDecimal commission;
 
+    private boolean taxExempt = false;
+
     /**
      * @return returns the destination account
      */
@@ -238,5 +240,13 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setCommission(BigDecimal commission) {
         this.commission = commission;
+    }
+
+    public boolean isTaxExempt() {
+        return taxExempt;
+    }
+
+    public void setTaxExempt(boolean taxExempt) {
+        this.taxExempt = taxExempt;
     }
 }
