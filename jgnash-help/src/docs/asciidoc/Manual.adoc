@@ -7,9 +7,9 @@
 
 [[_legal]]
 == Legal
-[big]*jGnash 2.25.x User Guide*
+[big]*jGnash 2.28.x User Guide*
 
-Copyright (C) 2001-2016 Craig Cavanaugh
+Copyright (C) 2001-2017 Craig Cavanaugh
 
 jGnash comes with *ABSOLUTELY NO WARRANTY*.
 

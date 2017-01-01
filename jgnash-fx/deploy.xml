@@ -92,7 +92,7 @@
             <fx:application refId="jgnashFx"/>
             <fx:resources refid="appRes"/>
             <fx:info title="jGnashFx" vendor="jGnash" license="GPLv3" category="Finance"
-                     copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
+                     copyright="Copyright (C) 2001-2017 Craig Cavanaugh"
                      description="jGnash Personal Finance">
                 <fx:icon href="${icon-file}"/>
             </fx:info>
@@ -137,7 +137,7 @@
             <fx:application refId="jgnashFx"/>
             <fx:resources refid="appRes"/>
             <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="public.app-category.finance"
-                     copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
+                     copyright="Copyright (C) 2001-2017 Craig Cavanaugh"
                      description="jGnash Personal Finance">
                 <fx:icon href="${icon-file}"/>
             </fx:info>
@@ -181,7 +181,7 @@
             <fx:application refId="jgnashFx"/>
             <fx:resources refid="appRes"/>
             <fx:info title="jGnash 2" vendor="jGnash" license="GPLv3" category="Finance"
-                     copyright="Copyright (C) 2001-2016 Craig Cavanaugh"
+                     copyright="Copyright (C) 2001-2017 Craig Cavanaugh"
                      description="jGnash Personal Finance">
                 <fx:icon href="${icon-file}"/>
             </fx:info>
