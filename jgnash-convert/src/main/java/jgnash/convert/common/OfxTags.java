@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,45 @@ public interface OfxTags {
      */
     String BUYSTOCK = "BUYSTOCK";
 
+    /**
+     * Purchase type, normally "BUY"
+     */
     String BUYTYPE = "BUYTYPE";
+
+    /**
+     * Buy other security type
+     */
+    String BUYOTHER = "BUYOTHER";
+
+    /**
+     * Buy mutual fund
+     */
+    String BUYMF = "BUYMF";
+
+    /**
+     * Sub-account that security or cash is being transferred to: CASH, MARGIN, SHORT, OTHER
+     */
+    String SUBACCTTO = "SUBACCTTO";
+
+    /**
+     * Sub-account that security or cash is being transferred from: CASH, MARGIN, SHORT, OTHER
+     */
+    String SUBACCTFROM = "SUBACCTFROM";
+
+    /**
+     * Investment account position list
+     */
+    String INVPOSLIST = "INVPOSLIST";
+
+    /**
+     * Investment account balance information
+     */
+    String INVBAL = "INVBAL";
+
+    /**
+     * Open investment transaction orders list
+     */
+    String INVOOLIST = "INVOOLIST";
 
     /**
      * Branch identifier. May be required for some non-US banks
@@ -270,6 +308,9 @@ public interface OfxTags {
 
     String SUBACCTSEC = "SUBACCTSEC";
 
+    /**
+     * Where did the money for the transaction come from or go to? CASH, MARGIN, SHORT, OTHER
+     */
     String SUBACCTFUND = "SUBACCTFUND";
 
     String SELLSTOCK = "SELLSTOCK";
@@ -301,6 +342,9 @@ public interface OfxTags {
      */
     String TRNUID = "TRNUID";
 
+    /**
+     * Total of the investment transaction (unit * unit price + commission)
+     */
     String TOTAL = "TOTAL";
 
     //String USERKEY = "USERKEY";
