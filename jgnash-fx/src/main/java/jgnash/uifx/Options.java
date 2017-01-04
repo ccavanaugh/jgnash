@@ -142,6 +142,11 @@ public class Options {
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
 
         buttonOrder = createStringProperty(BUTTON_ORDER, new ButtonBar().getButtonOrder());
+
+        /* User complained of a corrupted default value */
+        if (Options.reminderSnoozePeriodProperty().get() <= 0) {
+            Options.reminderSnoozePeriodProperty().setValue(DEFAULT_SNOOZE);
+        }
     }
 
     private Options() {
