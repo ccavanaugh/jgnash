@@ -58,21 +58,23 @@ class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     public List<Budget> getBudgets() {
         List<Budget> budgetList = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             Future<List<Budget>> future = executorService.submit(() -> {
-                TypedQuery<Budget> q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false",
-                        Budget.class);
+                emLock.lock();
 
-                return new ArrayList<>(q.getResultList());
+                try {
+                    TypedQuery<Budget> q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false",
+                            Budget.class);
+
+                    return new ArrayList<>(q.getResultList());
+                } finally {
+                    emLock.unlock();
+                }
             });
 
             budgetList = future.get(); // block until complete
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return budgetList;

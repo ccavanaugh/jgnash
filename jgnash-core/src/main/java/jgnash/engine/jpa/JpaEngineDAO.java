@@ -138,25 +138,27 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     public List<StoredObject> getStoredObjects() {
         List<StoredObject> list = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             final Future<List<StoredObject>> future = executorService.submit(() -> {
-                final CriteriaBuilder cb = em.getCriteriaBuilder();
-                final CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
-                final Root<StoredObject> root = cq.from(StoredObject.class);
-                cq.select(root);
+                emLock.lock();
 
-                final TypedQuery<StoredObject> q = em.createQuery(cq);
+                try {
+                    final CriteriaBuilder cb = em.getCriteriaBuilder();
+                    final CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
+                    final Root<StoredObject> root = cq.from(StoredObject.class);
+                    cq.select(root);
 
-                return new ArrayList<>(q.getResultList());
+                    final TypedQuery<StoredObject> q = em.createQuery(cq);
+
+                    return new ArrayList<>(q.getResultList());
+                } finally {
+                    emLock.unlock();
+                }
             });
 
             list = future.get();
         } catch (InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return list;
@@ -197,40 +199,44 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
      */
     @Override
     public void refresh(final StoredObject object) {
-        emLock.lock();
-
         try {
             Future<Void> future = executorService.submit(() -> {
-                em.refresh(object);
-                return null;
+                emLock.lock();
+
+                try {
+                    em.refresh(object);
+                    return null;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            future.get();
+            future.get();   // block
         } catch (ExecutionException | InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
     }
 
     @Override
     public void bulkUpdate(final List<? extends StoredObject> objectList) {
-        emLock.lock();
-
         try {
             final Future<Void> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                objectList.forEach(em::persist);
-                em.getTransaction().commit();
+                emLock.lock();
 
-                return null;
+                try {
+                    em.getTransaction().begin();
+                    objectList.forEach(em::persist);
+                    em.getTransaction().commit();
+
+                    return null;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            future.get();
+            future.get();   // block
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
     }
 

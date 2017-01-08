@@ -38,6 +38,7 @@ import javax.persistence.criteria.Root;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.TrashObject;
+import jgnash.engine.concurrent.Priority;
 import jgnash.engine.dao.TrashDAO;
 import jgnash.util.DefaultDaemonThreadFactory;
 
@@ -56,9 +57,9 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
     private static final int PERIOD = 35;   // Execute every 35 seconds
 
-    private ScheduledExecutorService entityTrashExecutor;
-
     private static final int MAX_ENTITY_LUMP = 10;
+
+    private ScheduledExecutorService entityTrashExecutor;
 
     JpaTrashDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -85,25 +86,27 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     public List<TrashObject> getTrashObjects() {
         List<TrashObject> trashObjectList = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             final Future<List<TrashObject>> future = executorService.submit(() -> {
-                final CriteriaBuilder cb = em.getCriteriaBuilder();
-                final CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
-                final Root<TrashObject> root = cq.from(TrashObject.class);
-                cq.select(root);
+                emLock.lock();
 
-                final TypedQuery<TrashObject> q = em.createQuery(cq);
+                try {
+                    final CriteriaBuilder cb = em.getCriteriaBuilder();
+                    final CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
+                    final Root<TrashObject> root = cq.from(TrashObject.class);
+                    cq.select(root);
 
-                return new ArrayList<>(q.getResultList());
+                    final TypedQuery<TrashObject> q = em.createQuery(cq);
+
+                    return new ArrayList<>(q.getResultList());
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            trashObjectList = future.get();
+            trashObjectList = future.get(); // block
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return trashObjectList;
@@ -111,120 +114,132 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
     @Override
     public void add(final TrashObject trashObject) {
-        emLock.lock();
-
         try {
             final Future<Void> future = executorService.submit(() -> {
-                em.getTransaction().begin();
+                emLock.lock();
 
-                em.persist(trashObject.getObject());
-                em.persist(trashObject);
-                em.getTransaction().commit();
+                try {
+                    em.getTransaction().begin();
 
-                return null;
+                    em.persist(trashObject.getObject());
+                    em.persist(trashObject);
+
+                    em.getTransaction().commit();
+
+                    return null;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
             future.get();   // block
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
     }
 
     @Override
     public void remove(final TrashObject trashObject) {
-        emLock.lock();
-
         try {
             final Future<Void> future = executorService.submit(() -> {
-                em.getTransaction().begin();
+                emLock.lock();
 
-                final StoredObject object = trashObject.getObject();
+                try {
+                    em.getTransaction().begin();
 
-                em.remove(object);
-                em.remove(trashObject);
+                    final StoredObject object = trashObject.getObject();
 
-                logger.info("Removed TrashObject");
+                    em.remove(object);
+                    em.remove(trashObject);
 
-                em.getTransaction().commit();
-                return null;
-            });
+                    em.getTransaction().commit();
+
+                    logger.info("Removed TrashObject");
+
+                    return null;
+                } finally {
+                    emLock.unlock();
+                }
+            }, Priority.BACKGROUND);
 
             future.get(); // block
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
     }
 
     @Override
     public void addEntityTrash(final Object entity) {
-        emLock.lock();
-
         try {
             final Future<Void> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(entity);
-                em.persist(new JpaTrashEntity(entity));
-                em.getTransaction().commit();
+                emLock.lock();
 
-                return null;
+                try {
+                    em.getTransaction().begin();
+
+                    em.persist(entity);
+                    em.persist(new JpaTrashEntity(entity));
+
+                    em.getTransaction().commit();
+
+                    return null;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
             future.get();   // block
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
     }
 
     private void cleanupEntityTrash() {
-        emLock.lock();
-
         try {
             final Future<Void> future = executorService.submit(() -> {
+                emLock.lock();
 
-                final CriteriaBuilder cb = em.getCriteriaBuilder();
-                final CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
-                final Root<JpaTrashEntity> root = cq.from(JpaTrashEntity.class);
-                cq.select(root);
+                try {
+                    final CriteriaBuilder cb = em.getCriteriaBuilder();
+                    final CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
+                    final Root<JpaTrashEntity> root = cq.from(JpaTrashEntity.class);
+                    cq.select(root);
 
-                final TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
+                    final TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
 
-                /* limit the number removed at one time to prevent starvation
+                    /* limit the number removed at one time to prevent starvation
                     if there is a large volume of entity trash to remove */
-                q.setMaxResults(MAX_ENTITY_LUMP);
+                    q.setMaxResults(MAX_ENTITY_LUMP);
 
-                for (final JpaTrashEntity trashEntity : q.getResultList()) {
-                    if (ChronoUnit.MILLIS.between(trashEntity.getDate(), LocalDateTime.now())
-                            >= MAXIMUM_ENTITY_TRASH_AGE) {
+                    for (final JpaTrashEntity trashEntity : q.getResultList()) {
+                        if (ChronoUnit.MILLIS.between(trashEntity.getDate(), LocalDateTime.now())
+                                >= MAXIMUM_ENTITY_TRASH_AGE) {
 
-                        final Class<?> clazz = Class.forName(trashEntity.getClassName());
-                        final Object entity = em.find(clazz, trashEntity.getEntityId());
+                            final Class<?> clazz = Class.forName(trashEntity.getClassName());
+                            final Object entity = em.find(clazz, trashEntity.getEntityId());
 
-                        em.getTransaction().begin();
+                            em.getTransaction().begin();
 
-                        if (entity != null) {
-                            em.remove(entity);
-                            logger.log(Level.INFO, "Removed entity trash: {0}@{1}",
-                                    new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
+                            if (entity != null) {
+                                em.remove(entity);
+                                logger.log(Level.INFO, "Removed entity trash: {0}@{1}",
+                                        new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
+                            }
+                            em.remove(trashEntity);
+
+                            em.getTransaction().commit();
                         }
-                        em.remove(trashEntity);
-
-                        em.getTransaction().commit();
                     }
-                }
-                return null;
-            });
 
-            future.get();
+                    return null;
+                } finally {
+                    emLock.unlock();
+                }
+            }, Priority.BACKGROUND);
+
+            future.get();       // block
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
     }
 }

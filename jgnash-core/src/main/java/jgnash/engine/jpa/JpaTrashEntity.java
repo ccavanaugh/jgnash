@@ -50,6 +50,12 @@ public class JpaTrashEntity {
     private String className;
 
     /**
+     * Will be true if it has been scheduled for removal.  State is not persisted should the engine be close prior
+     * to complete removal.
+     */
+    private transient boolean pending = false;
+
+    /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>
      */
@@ -86,5 +92,13 @@ public class JpaTrashEntity {
             }
         }
         return -1;
+    }
+
+    void setPending() {
+        pending = true;
+    }
+
+    boolean isPending() {
+        return pending;
     }
 }

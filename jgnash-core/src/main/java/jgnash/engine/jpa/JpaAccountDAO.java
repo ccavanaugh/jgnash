@@ -56,29 +56,32 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     public RootAccount getRootAccount() {
         RootAccount root = null;
 
-        emLock.lock();
-
         try {
             final Future<RootAccount> future = executorService.submit(() -> {
+                emLock.lock();
 
-                final TypedQuery<RootAccount> q = em.createQuery("select a from RootAccount a", RootAccount.class);
-                final List<RootAccount> list = q.getResultList();
+                try {
+                    final TypedQuery<RootAccount> q = em.createQuery("select a from RootAccount a",
+                            RootAccount.class);
+                    final List<RootAccount> list = q.getResultList();
 
-                if (list.size() == 1) {
-                    return list.get(0);
-                } else if (list.size() > 1) {
-                    logger.log(Level.SEVERE, "More than one RootAccount was found: " + list.size(), new Exception());
-                    return list.get(0);
+                    if (list.size() == 1) {
+                        return list.get(0);
+                    } else if (list.size() > 1) {
+                        logger.log(Level.SEVERE, "More than one RootAccount was found: " + list.size(),
+                                new Exception());
+                        return list.get(0);
+                    }
+
+                    return null;
+                } finally {
+                    emLock.unlock();
                 }
-
-                return null;
             });
 
-            root = future.get();
+            root = future.get();    // block and return
         } catch (final ExecutionException | InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return root;
@@ -91,21 +94,23 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     public List<Account> getAccountList() {
         List<Account> accountList = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             final Future<List<Account>> future = executorService.submit(() -> {
-                final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
-                        Account.class);
+                emLock.lock();
 
-                return new ArrayList<>(q.getResultList());
+                try {
+                    final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
+                            Account.class);
+
+                    return new ArrayList<>(q.getResultList());
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            accountList = future.get();
+            accountList = future.get(); // block and return
         } catch (final ExecutionException | InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return accountList;
@@ -118,25 +123,29 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     public boolean addAccount(final Account parent, final Account child) {
         boolean result = false;
 
-        emLock.lock();
-
         try {
             final Future<Boolean> future = executorService.submit(() -> {
+                emLock.lock();
 
-                em.getTransaction().begin();
-                em.persist(child);
-                em.merge(parent);
-                em.getTransaction().commit();
+                try {
+                    em.getTransaction().begin();
 
-                return true;
+                    em.persist(child);
+                    em.merge(parent);
+
+                    em.getTransaction().commit();
+
+                    return true;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
             result = future.get();
         } catch (final ExecutionException | InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
+
         return result;
     }
 
@@ -159,24 +168,25 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     private List<Account> getAccountList(final AccountType type) {
         List<Account> accountList = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             final Future<List<Account>> future = executorService.submit(() -> {
+                emLock.lock();
 
-                final String queryString
-                        = "SELECT a FROM Account a WHERE a.accountType = :type AND a.markedForRemoval = false";
-                final TypedQuery<Account> query = em.createQuery(queryString, Account.class);
-                query.setParameter("type", type);
+                try {
+                    final String queryString
+                            = "SELECT a FROM Account a WHERE a.accountType = :type AND a.markedForRemoval = false";
+                    final TypedQuery<Account> query = em.createQuery(queryString, Account.class);
+                    query.setParameter("type", type);
 
-                return new ArrayList<>(query.getResultList());
+                    return new ArrayList<>(query.getResultList());
+                } finally {
+                    emLock.unlock();
+                }
             });
 
             accountList = future.get();
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return accountList;
@@ -206,7 +216,10 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         emLock.lock();
 
         try {
-            return getAccountList().parallelStream().filter(a -> a.memberOf(AccountGroup.INVEST))
+            final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
+                    Account.class);
+
+            return q.getResultList().parallelStream().filter(a -> a.memberOf(AccountGroup.INVEST))
                     .collect(Collectors.toList());
         } finally {
             emLock.unlock();

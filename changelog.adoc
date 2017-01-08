@@ -27,8 +27,10 @@ WANTS
 Release 2.29.0
 --------------
 TODO: Fix notes column bug
+TODO: Fix 0 on remind later
 
-
+* 01/08/17 jGnash now uses a priority based model for the handling of internal tasks to prevent deadlocks from
+           background operations.
 * 01/07/17 Updated to the latest Hibernate dependency.
 * 01/04/17 Protect against a corrupt snooze value for reminders. (Fx)
 * 12/01/16 Corrected NPE occurring during import of transactions. (Fx)
