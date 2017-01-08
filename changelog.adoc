@@ -26,6 +26,9 @@ WANTS
 
 Release 2.29.0
 --------------
+TODO: Fix notes column bug
+
+
 * 01/04/17 Protect against a corrupt snooze value for reminders. (Fx)
 * 12/01/16 Corrected NPE occurring during import of transactions. (Fx)
 * 11/30/16 Improves behavior of background removal of securities history.
