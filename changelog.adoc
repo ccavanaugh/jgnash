@@ -21,6 +21,9 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+* Add a Ticker column to the investment register
+* Fix column sizing for high precision quantities of shares.
+
 Release 2.29.0
 --------------
 * 01/04/17 Protect against a corrupt snooze value for reminders. (Fx)
