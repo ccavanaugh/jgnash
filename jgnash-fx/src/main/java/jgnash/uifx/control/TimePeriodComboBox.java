@@ -77,7 +77,8 @@ public class TimePeriodComboBox extends ComboBox<String> {
     }
 
     private static int[] getPeriods() {
-        return new int[]{300000, 600000, 900000, 1800000, 3600000, 7200000, 28800000, 86400000, 0};
+        // only non-zero values are allowed
+        return new int[]{300000, 600000, 900000, 1800000, 3600000, 7200000, 28800000, 86400000, 1};
     }
 
     private static String[] getDescriptions() {

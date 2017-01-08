@@ -22,19 +22,19 @@ WANTS
 * Reinstate archive capability.
 
 * Add a Ticker column to the investment register
-* Fix column sizing for high precision quantities of shares.
 
 Release 2.29.0
 --------------
 TODO: Fix notes column bug
-TODO: Fix 0 on remind later
+TODO: Fix column sizing for high precision quantities of shares.
 
+* 01/08/17 Fixed an IllegalArgumentException that was occurring if the option "Next time jGnash starts" was used when
+           dismissing the Reminders dialog. (Fx)
 * 01/08/17 jGnash now uses a priority based model for the handling of internal tasks to prevent deadlocks from
            background operations.
 * 01/07/17 Updated to the latest Hibernate dependency.
-* 01/04/17 Protect against a corrupt snooze value for reminders. (Fx)
 * 12/01/16 Corrected NPE occurring during import of transactions. (Fx)
-* 11/30/16 Improves behavior of background removal of securities history.
+* 11/30/16 Improved behavior of background removal of securities history.
 
 Release 2.28.0
 --------------

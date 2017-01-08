@@ -143,7 +143,7 @@ public class Options {
 
         buttonOrder = createStringProperty(BUTTON_ORDER, new ButtonBar().getButtonOrder());
 
-        /* User complained of a corrupted default value */
+        /* Zero value caused by a prior bug */
         if (Options.reminderSnoozePeriodProperty().get() <= 0) {
             Options.reminderSnoozePeriodProperty().setValue(DEFAULT_SNOOZE);
         }
