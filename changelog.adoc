@@ -28,8 +28,8 @@ WANTS
 Release 2.29.0
 --------------
 TODO: Fix notes column bug
-TODO: Fix column sizing for high precision quantities of shares.
 
+* 01/08/17 The Investment Register was not sizing the Quantity column correctly. (Fx)
 * 01/08/17 Fixed an IllegalArgumentException that was occurring if the option "Next time jGnash starts" was used when
            dismissing the Reminders dialog. (Fx)
 * 01/08/17 jGnash now uses a priority based model for the handling of internal tasks to prevent deadlocks from
