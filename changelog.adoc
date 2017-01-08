@@ -21,6 +21,8 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+* Convert from File to Path nio so Jimfs may be used for unit tests
+
 * Add a Ticker column to the investment register
 
 Release 2.29.0
