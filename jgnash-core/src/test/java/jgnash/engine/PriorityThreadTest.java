@@ -45,7 +45,7 @@ public class PriorityThreadTest {
                 Thread.sleep(500);
                 System.out.println("Background Callable: " + value);
                 return null;
-            }, new Priority(Priority.BACKGROUND));
+            }, Priority.BACKGROUND);
         }
 
         Thread.sleep(1999);
