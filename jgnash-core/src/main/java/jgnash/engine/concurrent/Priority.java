@@ -38,7 +38,7 @@ public class Priority implements Comparable<Priority> {
 
     private final int priority;
 
-    public Priority(final int priority) {
+    Priority(final int priority) {
         sequence = atomicLongSequence.getAndIncrement();
         this.priority = priority;
     }

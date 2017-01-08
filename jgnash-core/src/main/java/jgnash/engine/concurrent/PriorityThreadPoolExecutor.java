@@ -52,11 +52,7 @@ public class PriorityThreadPoolExecutor {
         threadPoolExecutor.allowCoreThreadTimeOut(true);
     }
 
-    public <T> Future<T> submit(final Callable<T> callable) {
-        return submit(callable, new Priority(Priority.SYSTEM));
-    }
-
-    public <T> Future<T> submit(final Callable<T> callable, final Priority priority) {
+    private  <T> Future<T> submit(final Callable<T> callable, final Priority priority) {
         return threadPoolExecutor.submit(new PriorityCallable<T>() {
             @Override
             public Priority getPriority() {
@@ -68,6 +64,14 @@ public class PriorityThreadPoolExecutor {
                 return callable.call();
             }
         });
+    }
+
+    public <T> Future<T> submit(final Callable<T> callable, final int priority) {
+        return submit(callable, new Priority(priority));
+    }
+
+    public <T> Future<T> submit(final Callable<T> callable) {
+        return submit(callable, Priority.SYSTEM);
     }
 
     public void shutdown() {
