@@ -68,6 +68,10 @@
             <property name="hibernate.c3p0.timeout" value="100"/>
             <property name="hibernate.c3p0.numHelperThreads" value="5"/>
             <property name="hibernate.c3p0.max_Statements" value="50"/>
+
+            <!--<property name="hibernate.generate_statistics" value="true"/>
+            <property name="org.hibernate.stat" value="DEBUG"/>-->
+
         </properties>
     </persistence-unit>
 
