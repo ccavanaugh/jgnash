@@ -13,10 +13,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>net.sf.jopt-simple</groupId>
-			<artifactId>jopt-simple</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jgnash-core</artifactId>
 		</dependency>

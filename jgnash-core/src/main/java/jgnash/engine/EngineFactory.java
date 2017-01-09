@@ -346,7 +346,7 @@ public class EngineFactory {
     }
 
     private static DataStoreType getDataStoreByType(final File file) {
-        final FileType type = FileMagic.magic(file);
+        final FileType type = FileMagic.magic(file.toPath());
 
         if (type == FileType.jGnash2XML) {
             return DataStoreType.XML;
@@ -368,7 +368,7 @@ public class EngineFactory {
     public static float getFileVersion(final File file, final char[] password) {
         float version = 0;
 
-        final FileType type = FileMagic.magic(file);
+        final FileType type = FileMagic.magic(file.toPath());
 
         if (type == FileType.jGnash2XML) {
             version = XMLDataStore.getFileVersion(file);

@@ -19,14 +19,17 @@ package jgnash.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -35,6 +38,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import static java.nio.file.StandardOpenOption.READ;
 
 /**
  * Class to identify file types.
@@ -58,31 +63,30 @@ public class FileMagic {
 
     private static final String WINDOWS_1252 = "windows-1252";
 
-    public enum FileType {
-        BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
+    private FileMagic() {
     }
 
     /**
-     * Returns the file type.
+     * Returns the path type.
      *
-     * @param file file to identify
-     * @return identified file type
+     * @param path path to identify
+     * @return identified path type
      */
-    public static FileType magic(final File file) {
+    public static FileType magic(final Path path) {
 
-        if (isValidVersion2File(file)) {
+        if (isValidVersion2File(path)) {
             return FileType.jGnash2XML;
-        } else if (isBinaryXStreamFile(file)) {
+        } else if (isBinaryXStreamFile(path)) {
             return FileType.BinaryXStream;
-        } else if (isH2File(file)) {
+        } else if (isH2File(path)) {
             return FileType.h2;
-        } else if (isHsqlFile(file)) {
+        } else if (isHsqlFile(path)) {
             return FileType.hsql;
-        } else if (isValidVersion1File(file)) {
+        } else if (isValidVersion1File(path)) {
             return FileType.jGnash1XML;
-        } else if (isOfxV1(file)) {
+        } else if (isOfxV1(path)) {
             return FileType.OfxV1;
-        } else if (isOfxV2(file)) {
+        } else if (isOfxV2(path)) {
             return FileType.OfxV2;
         }
 
@@ -92,16 +96,39 @@ public class FileMagic {
     /**
      * Determine the correct character encoding of an OFX Version 1 file.
      *
-     * @param file File to look at
+     * @param path File to look at
      * @return encoding of the file
      */
-    public static String getOfxV1Encoding(final File file) {
+    public static String getOfxV1Encoding(final Path path) {
+
+        // Work through common standard Charsets
+        try {
+            return getOfxV1Encoding(path, StandardCharsets.UTF_8);
+        } catch (final MalformedInputException e) {
+            try {
+                return getOfxV1Encoding(path, StandardCharsets.ISO_8859_1);
+            } catch (final MalformedInputException ex) {
+                try {
+                    return getOfxV1Encoding(path, StandardCharsets.US_ASCII);
+                } catch (final MalformedInputException exx) {
+                    return WINDOWS_1252;
+                }
+            }
+        }
+    }
+
+    /**
+     * Determine the correct character encoding of an OFX Version 1 file.
+     *
+     * @param path File to look at
+     * @return encoding of the file
+     */
+    private static String getOfxV1Encoding(final Path path, final Charset charset) throws MalformedInputException {
         String encoding = null;
-        String charset = null;
+        String characterSet = null;
 
-        if (file.exists()) {
-
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+        if (Files.exists(path)) {
+            try (final BufferedReader reader = Files.newBufferedReader(path, charset)) {
                 String line = reader.readLine();
 
                 while (line != null) {
@@ -118,31 +145,33 @@ public class FileMagic {
                             String[] splits = COLON_DELIMITER_PATTERN.split(line);
 
                             if (splits.length == 2) {
-                                charset = splits[1];
+                                characterSet = splits[1];
                             }
                         }
 
-                        if (encoding != null && charset != null) {
+                        if (encoding != null && characterSet != null) {
                             break;
                         }
                     }
                     line = reader.readLine();
                 }
+            } catch (final MalformedInputException e) {
+                throw e;    // rethrow
             } catch (final IOException e) {
                 Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         }
 
-        if (encoding != null && charset != null) {
-            if (encoding.equals(StandardCharsets.UTF_8.name()) && charset.equals("CSUNICODE")) {
+        if (encoding != null && characterSet != null) {
+            if (encoding.equals(StandardCharsets.UTF_8.name()) && characterSet.equals("CSUNICODE")) {
                 return StandardCharsets.ISO_8859_1.name();
             } else if (encoding.equals(StandardCharsets.UTF_8.name())) {
                 return StandardCharsets.UTF_8.name();
-            } else if (encoding.equals(USASCII) && charset.equals("1252")) {
+            } else if (encoding.equals(USASCII) && characterSet.equals("1252")) {
                 return WINDOWS_1252;
-            } else if (encoding.equals(USASCII) && charset.contains("8859-1")) {
+            } else if (encoding.equals(USASCII) && characterSet.contains("8859-1")) {
                 return "ISO-8859-1";
-            } else if (encoding.equals(USASCII) && charset.equals("NONE")) {
+            } else if (encoding.equals(USASCII) && characterSet.equals("NONE")) {
                 return WINDOWS_1252;
             }
         }
@@ -150,12 +179,13 @@ public class FileMagic {
         return WINDOWS_1252;
     }
 
-    public static boolean isOfxV1(final File file) {
+
+    public static boolean isOfxV1(final Path path) {
 
         boolean result = false;
 
-        if (file.exists()) {
-            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+        if (Files.exists(path)) {
+            try (final BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
                 String line = reader.readLine();
 
                 while (line != null) {
@@ -176,13 +206,13 @@ public class FileMagic {
         return result;
     }
 
-    public static boolean isOfxV2(final File file) {
+    public static boolean isOfxV2(final Path path) {
 
         boolean result = false;
 
-        if (file.exists()) {
+        if (Files.exists(path)) {
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            try (final BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
 
                 String line = reader.readLine();
 
@@ -212,32 +242,31 @@ public class FileMagic {
         return result;
     }
 
-    static boolean isBinaryXStreamFile(final File file) {
-        return isFile(file, BINARY_XSTREAM_HEADER);
+    static boolean isBinaryXStreamFile(final Path path) {
+        return isFile(path, BINARY_XSTREAM_HEADER);
     }
 
-    private static boolean isH2File(final File file) {
-        return isFile(file, H2_HEADER);
+    private static boolean isH2File(final Path path) {
+        return isFile(path, H2_HEADER);
     }
 
-    private static boolean isHsqlFile(final File file) {
-        return isFile(file, HSQL_HEADER);
-        //return file.getAbsolutePath().endsWith("script");
+    private static boolean isHsqlFile(final Path path) {
+        return isFile(path, HSQL_HEADER);
     }
 
-    private static boolean isFile(final File file, final byte[] header) {
+    private static boolean isFile(final Path path, final byte[] header) {
         boolean result = false;
 
-        if (file.exists()) {
-            try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
-                if (raf.length() > 0) { // must not be a zero length file
-                    byte[] fileHeader = new byte[header.length];
+        if (Files.exists(path)) {
+            try (final SeekableByteChannel channel = Files.newByteChannel(path, EnumSet.of(READ))) {
+                if (channel.size() > 0) { // must not be a zero length file
+                    final ByteBuffer buff = ByteBuffer.allocate(header.length);
 
-                    raf.readFully(fileHeader);
-
-                    result = Arrays.equals(fileHeader, header);
+                    channel.read(buff);
+                    result = Arrays.equals(buff.array(), header);
+                    buff.clear();
                 }
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -245,24 +274,24 @@ public class FileMagic {
         return result;
     }
 
-    static boolean isValidVersion1File(final File file) {
-        return isValidVersionXFile(file, "1");
+    static boolean isValidVersion1File(final Path path) {
+        return isValidVersionXFile(path, "1");
     }
 
-    private static boolean isValidVersion2File(final File file) {
-        return isValidVersionXFile(file, "2");
+    private static boolean isValidVersion2File(final Path path) {
+        return isValidVersionXFile(path, "2");
     }
 
-    private static boolean isValidVersionXFile(final File file, final String majorVersion) {
+    private static boolean isValidVersionXFile(final Path path, final String majorVersion) {
 
-        if (!file.exists() || !file.isFile() || !file.canRead()) {
+        if (!Files.exists(path) || !Files.isReadable(path) || !Files.isRegularFile(path)) {
             return false;
         }
 
         boolean result = false;
 
-        if (isFile(file, XML_HEADER)) {
-            result = getXMLVersion(file).startsWith(majorVersion);
+        if (isFile(path, XML_HEADER)) {
+            result = getXMLVersion(path).startsWith(majorVersion);
         }
 
         return result;
@@ -271,13 +300,13 @@ public class FileMagic {
     /**
      * Determines the version of the jGnash file.
      *
-     * @param file {@code file to check}
+     * @param path {@code file to check}
      * @return file version as a String
      */
-    private static String getXMLVersion(final File file) {
+    private static String getXMLVersion(final Path path) {
         String version = "";
 
-        try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
+        try (InputStream input = new BufferedInputStream(Files.newInputStream(path))) {
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
@@ -307,12 +336,13 @@ public class FileMagic {
             Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
         } catch (XMLStreamException e) {
             Logger.getLogger(FileMagic.class.getName()).log(Level.INFO, "{0} was not a valid jGnash XML_HEADER file",
-                    file.getAbsolutePath());
+                    path.toString());
         }
 
         return version;
     }
 
-    private FileMagic() {
+    public enum FileType {
+        BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
     }
 }

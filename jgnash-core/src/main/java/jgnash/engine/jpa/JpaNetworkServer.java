@@ -100,7 +100,7 @@ public class JpaNetworkServer {
             }
         }
 
-        final FileMagic.FileType type = FileMagic.magic(new File(fileName));
+        final FileMagic.FileType type = FileMagic.magic(Paths.get(fileName));
 
         switch (type) {
             case h2:

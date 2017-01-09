@@ -19,13 +19,13 @@ package jgnash.convert.imports.ofx;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -86,7 +86,7 @@ public class OfxV2Parser implements OfxTags {
         }
     }
 
-    public static OfxBank parse(final File file) throws Exception {
+    public static OfxBank parse(final Path file) throws Exception {
 
         final OfxV2Parser parser = new OfxV2Parser();
 
@@ -187,9 +187,9 @@ public class OfxV2Parser implements OfxTags {
         logger.exiting(OfxV2Parser.class.getName(), "parse");
     }
 
-    private void parseFile(final File file) {
+    private void parseFile(final Path path) {
 
-        try (InputStream stream = new FileInputStream(file)) {
+        try (InputStream stream = Files.newInputStream(path)) {
             parse(stream);
         } catch (final IOException e) {
             logger.log(Level.SEVERE, e.toString(), e);

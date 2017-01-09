@@ -76,8 +76,8 @@ public class BinaryXStreamTest {
             fail(e.toString());
         }
 
-        assertTrue(FileMagic.isBinaryXStreamFile(tempFile));
-        assertFalse(FileMagic.isOfxV2(tempFile));
+        assertTrue(FileMagic.isBinaryXStreamFile(tempFile.toPath()));
+        assertFalse(FileMagic.isOfxV2(tempFile.toPath()));
 
         try (FileInputStream fis = new FileInputStream(tempFile)) {
             BinaryStreamDriver bsd = new BinaryStreamDriver();

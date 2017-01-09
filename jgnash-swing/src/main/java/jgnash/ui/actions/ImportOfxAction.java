@@ -92,7 +92,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
         @Override
         protected OfxBank doInBackground() throws Exception {
-            final OfxBank ofxBank = OfxV2Parser.parse(file);
+            final OfxBank ofxBank = OfxV2Parser.parse(file.toPath());
 
             /* Preset the best match for the downloaded account */
             final String accountNumber = ofxBank.accountId;

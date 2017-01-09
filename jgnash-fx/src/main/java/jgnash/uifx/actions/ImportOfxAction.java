@@ -97,7 +97,7 @@ public class ImportOfxAction {
 
         @Override
         protected OfxBank call() throws Exception {
-            final OfxBank ofxBank = OfxV2Parser.parse(file);
+            final OfxBank ofxBank = OfxV2Parser.parse(file.toPath());
 
             /* Preset the best match for the downloaded account */
             final String accountNumber = ofxBank.accountId;

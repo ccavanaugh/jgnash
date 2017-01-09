@@ -17,16 +17,17 @@
  */
 package jgnash.util;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test FileMagic.
@@ -39,15 +40,24 @@ public class FileMagicTest {
      * Test for jGnash 1.x file identification
      */
     @Test
-    public void db4ojGnash1xTest() {
+    public void jGnash1xTest() {
 
         URL url = Object.class.getResource("/test1.jgnash.xml");
 
         try {
-            assertTrue(FileMagic.isValidVersion1File(new File(url.toURI())));
+            assertTrue(FileMagic.isValidVersion1File(Paths.get(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Test
+    public void testH2Magic() throws URISyntaxException {
+        URL url = Object.class.getResource("/h2-test.h2.db");
+
+        FileMagic.FileType type = FileMagic.magic(Paths.get(url.toURI()));
+
+        assertEquals(FileMagic.FileType.h2, type);
     }
 
     /**
@@ -59,7 +69,7 @@ public class FileMagicTest {
         URL url = Object.class.getResource("/bank1.ofx");
 
         try {
-            assertTrue(FileMagic.isOfxV1(new File(url.toURI())));
+            assertTrue(FileMagic.isOfxV1(Paths.get(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -67,7 +77,7 @@ public class FileMagicTest {
         url = Object.class.getResource("/ofx_spec201_stmtrs_example.xml");
 
         try {
-            assertFalse(FileMagic.isOfxV1(new File(url.toURI())));
+            assertFalse(FileMagic.isOfxV1(Paths.get(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -82,7 +92,7 @@ public class FileMagicTest {
         URL url = Object.class.getResource("/bank1.ofx");
 
         try {
-            assertTrue(FileMagic.getOfxV1Encoding(new File(url.toURI())).equals("windows-1252"));
+            assertTrue(FileMagic.getOfxV1Encoding(Paths.get(url.toURI())).equals("windows-1252"));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -92,13 +102,13 @@ public class FileMagicTest {
      * Test for Ofx version 1 file encoding.
      */
     @Test
-    public void OfxV1EncodingTest2() {
+    public void OfxV1EncodingTest2() throws URISyntaxException {
 
         URL url = Object.class.getResource("/File_with_Accents.ofx");
 
         try {
-            assertTrue(FileMagic.getOfxV1Encoding(new File(url.toURI())).equals("ISO-8859-1"));
-        } catch (URISyntaxException ex) {
+            assertTrue(FileMagic.getOfxV1Encoding(Paths.get(url.toURI())).equals("ISO-8859-1"));
+        } catch (final URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -112,7 +122,7 @@ public class FileMagicTest {
         URL url = Object.class.getResource("/ofx_spec201_stmtrs_example.xml");
 
         try {
-            assertTrue(FileMagic.isOfxV2(new File(url.toURI())));
+            assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,7 +130,7 @@ public class FileMagicTest {
         url = Object.class.getResource("/bank1.ofx");
 
         try {
-            assertFalse(FileMagic.isOfxV2(new File(url.toURI())));
+            assertFalse(FileMagic.isOfxV2(Paths.get(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }

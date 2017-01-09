@@ -17,12 +17,12 @@
  */
 package jgnash.convert.imports.ofx;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +80,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -115,7 +115,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -151,7 +151,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -193,7 +193,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -226,7 +226,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -259,7 +259,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -314,9 +314,9 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            assertTrue(FileMagic.isOfxV1(new File(url.toURI())));
+            assertTrue(FileMagic.isOfxV1(Paths.get(url.toURI())));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -348,7 +348,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -380,7 +380,7 @@ public class Ofx2Test {
         final URL url = Object.class.getResource(testFile);
 
         try {
-            assertTrue(FileMagic.isOfxV2(new File(url.toURI())));
+            assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
 
             try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(stream);
@@ -417,7 +417,7 @@ public class Ofx2Test {
         final URL url = Object.class.getResource(testFile);
 
         try {
-            assertTrue(FileMagic.isOfxV2(new File(url.toURI())));
+            assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
 
             try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(stream);
