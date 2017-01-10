@@ -18,12 +18,7 @@
 package jgnash.engine.xstream;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.math.BigDecimal;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
-import java.nio.channels.OverlappingFileLockException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -60,6 +55,7 @@ import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.time.Period;
+import jgnash.util.FileLocker;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
@@ -83,8 +79,8 @@ abstract class AbstractXStreamContainer {
     final List<StoredObject> objects = new ArrayList<>();
     final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
     final File file;
-    private FileLock fileLock = null;
-    private FileChannel lockChannel = null;
+
+    private final FileLocker fileLocker = new FileLocker();
 
     AbstractXStreamContainer(final File file) {
         this.file = file;
@@ -210,32 +206,12 @@ abstract class AbstractXStreamContainer {
         return xstream;
     }
 
-    @SuppressWarnings(value = {"ChannelOpenedButNotSafelyClosed", "IOResourceOpenedButNotSafelyClosed", "resource"})
     boolean acquireFileLock() {
-        try {
-            lockChannel = new RandomAccessFile(file, "rw").getChannel();
-            fileLock = lockChannel.tryLock();
-            return true;
-        } catch (IOException | OverlappingFileLockException ex) {
-            Logger.getLogger(AbstractXStreamContainer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+        return fileLocker.acquireLock(file.toPath());
     }
 
     void releaseFileLock() {
-        try {
-            if (fileLock != null) {
-                fileLock.release();
-                fileLock = null;
-            }
-
-            if (lockChannel != null) {
-                lockChannel.close();
-                lockChannel = null;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(AbstractXStreamContainer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        fileLocker.release();
     }
 
     abstract void commit();

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,15 +29,58 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.Test;
 
 /**
  * File utilities test.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class FileUtilsTest {
+
+    private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
+        final char[] buffer = new char[testdata.length()];
+
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(absolutepath))) {
+            final int read = reader.read(buffer);
+
+            assertEquals(testdata.length(), read);
+        }
+
+        assertEquals(testdata, new String(buffer));
+    }
+
+    private static void writeTestData(final String testdata, final File tempfile) throws IOException {
+        try (OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(tempfile))) {
+            os.write(testdata);
+        }
+    }
+
+    @Test
+    public void testFileLock() throws IOException, InterruptedException {
+        final Path tempFile = Files.createTempFile("temp", null);
+
+        final BufferedWriter bufferedWriter = Files.newBufferedWriter(tempFile);
+
+        bufferedWriter.write("test");
+        bufferedWriter.close();
+
+        assertTrue(Files.isWritable(tempFile));
+        assertTrue(Files.isReadable(tempFile));
+
+        final FileLocker filelocker = new FileLocker();
+        filelocker.acquireLock(tempFile);
+
+        assertTrue(FileUtils.isFileLocked(tempFile.toString()));
+
+        filelocker.release();
+
+        assertFalse(FileUtils.isFileLocked(tempFile.toString()));
+
+        assertTrue(Files.deleteIfExists(tempFile));
+    }
 
     @Test
     public void fileExtensionStripTest() {
@@ -70,23 +114,5 @@ public class FileUtilsTest {
 
         // Copy the file to itself: the file should not be emptied :)
         assertFalse(FileUtils.copyFile(new File(absolutePath), new File(absolutePath)));
-    }
-
-    private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
-        final char[] buffer = new char[testdata.length()];
-
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(absolutepath))) {
-            final int read = reader.read(buffer);
-
-            assertEquals(testdata.length(), read);
-        }
-
-        assertEquals(testdata, new String(buffer));
-    }
-
-    private static void writeTestData(final String testdata, final File tempfile) throws IOException {        
-        try (OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(tempfile))) {
-            os.write(testdata); 
-        }               
     }
 }

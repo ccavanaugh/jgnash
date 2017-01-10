@@ -199,42 +199,40 @@ public final class FileUtils {
         try (FileOutputStream fos = new FileOutputStream(destination);
              ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
-            // Try to obtain the lock on the output stream
-            try (FileLock fosLock = fos.getChannel().tryLock()) {
+            final FileLocker fileLocker = new FileLocker();
 
-                if (fosLock != null) {
+            // Obtain the lock on the output stream
+            if (fileLocker.acquireLock(destination.toPath())) {
 
-                    // Try to open the input stream
-                    try (FileInputStream in = new FileInputStream(source)) {
+                // Try to open the input stream
+                try (FileInputStream in = new FileInputStream(source)) {
 
-                        // Try to lock input stream
-                        try (FileLock fisLock = in.getChannel().tryLock(0L, Long.MAX_VALUE, true)) {
+                    // Try to lock input stream
+                    try (FileLock fisLock = in.getChannel().tryLock(0L, Long.MAX_VALUE, true)) {
 
-                            if (fisLock != null) {
-                                zipOut.setLevel(Deflater.BEST_COMPRESSION);
+                        if (fisLock != null) {
+                            zipOut.setLevel(Deflater.BEST_COMPRESSION);
 
-                                // strip the path when creating the zip entry
-                                zipOut.putNextEntry(new ZipEntry(source.getName()));
+                            // strip the path when creating the zip entry
+                            zipOut.putNextEntry(new ZipEntry(source.getName()));
 
-                                // Transfer bytes from the file to the ZIP file
-                                int length;
+                            // Transfer bytes from the file to the ZIP file
+                            int length;
 
-                                byte[] ioBuffer = new byte[8192];
+                            byte[] ioBuffer = new byte[8192];
 
-                                while ((length = in.read(ioBuffer)) > 0) {
-                                    zipOut.write(ioBuffer, 0, length);
-                                }
-
-                                // finish the zip entry, but let the try-with-resources handle the close
-                                zipOut.finish();
-
-                                fosLock.release();
+                            while ((length = in.read(ioBuffer)) > 0) {
+                                zipOut.write(ioBuffer, 0, length);
                             }
+
+                            // finish the zip entry, but let the try-with-resources handle the close
+                            zipOut.finish();
                         }
                     }
                 }
+                fileLocker.release();
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
