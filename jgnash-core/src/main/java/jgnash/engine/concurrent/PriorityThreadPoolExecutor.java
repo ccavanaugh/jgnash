@@ -19,10 +19,12 @@ package jgnash.engine.concurrent;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -39,8 +41,8 @@ public class PriorityThreadPoolExecutor {
 
     private final PriorityBlockingQueue<Runnable> queue = new PriorityBlockingQueue<>();
 
-    public PriorityThreadPoolExecutor(final int poolSize) {
-        threadPoolExecutor = new ThreadPoolExecutor(1, poolSize, 1, TimeUnit.MINUTES, queue) {
+    public PriorityThreadPoolExecutor(final int poolSize, ThreadFactory threadFactory) {
+        threadPoolExecutor = new ThreadPoolExecutor(1, poolSize, 1, TimeUnit.MINUTES, queue, threadFactory) {
 
             // Wraps a Callable with a FutureTaskWrapper that respects the Priority
             @Override
@@ -50,6 +52,10 @@ public class PriorityThreadPoolExecutor {
         };
 
         threadPoolExecutor.allowCoreThreadTimeOut(true);
+    }
+
+    public PriorityThreadPoolExecutor(final int poolSize) {
+        this(poolSize, Executors.defaultThreadFactory());
     }
 
     private  <T> Future<T> submit(final Callable<T> callable, final Priority priority) {

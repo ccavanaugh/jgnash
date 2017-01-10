@@ -32,6 +32,7 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
 import jgnash.engine.dao.AbstractDAO;
 import jgnash.engine.dao.DAO;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Abstract JPA DAO.  Provides basic framework to work with the {@link EntityManager} in a thread safe manner.
@@ -48,7 +49,8 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
      * This ExecutorService is to be used whenever the entity manager is
      * accessed because the EntityManager is not thread safe, but we want to return from some methods without blocking
      */
-    static PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor(1);
+    static PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor(1,
+            new DefaultDaemonThreadFactory());
     /**
      * Entity manager reference.
      */
