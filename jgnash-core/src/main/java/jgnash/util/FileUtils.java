@@ -21,15 +21,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,15 +111,17 @@ public final class FileUtils {
         }
 
         if (!result) {
-            try (RandomAccessFile raf = new RandomAccessFile(new File(fileName), "rw");
-                 FileChannel channel = raf.getChannel()) {
+            try (final FileChannel channel = FileChannel.open(Paths.get(fileName), StandardOpenOption.READ,
+                    StandardOpenOption.WRITE)) {
 
-                try (FileLock lock = channel.tryLock()) {
+                try (final FileLock lock = channel.tryLock()) {
                     if (lock == null) {
                         result = true;
                     }
+                } catch (final OverlappingFileLockException ex) {   // indicates file is already locked
+                    result = true;
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
                 throw e;
             }
