@@ -2854,7 +2854,7 @@ public class Engine {
                             return null;
                         }), delay, TimeUnit.MILLISECONDS);
 
-                        delay += 1500;
+                        delay += 750;
                     }
                 }
             }
