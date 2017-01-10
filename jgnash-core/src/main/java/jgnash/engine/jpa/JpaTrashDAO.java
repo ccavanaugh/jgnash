@@ -40,6 +40,7 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.TrashObject;
 import jgnash.engine.concurrent.Priority;
 import jgnash.engine.dao.TrashDAO;
+import jgnash.util.CollectionUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
@@ -57,7 +58,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
     private static final int PERIOD = 35;   // Execute every 35 seconds
 
-    private static final int MAX_ENTITY_LUMP = 10;
+    private static final int MAX_ENTITY_LUMP = 5;
 
     private ScheduledExecutorService entityTrashExecutor;
 
@@ -207,28 +208,45 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
                     final TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
 
-                    /* limit the number removed at one time to prevent starvation
-                    if there is a large volume of entity trash to remove */
-                    q.setMaxResults(MAX_ENTITY_LUMP);
+                    /* Partition the results into small chunks so other higher priority work can be performed without
+                       stalling the application */
+                    final List<List<JpaTrashEntity>> listList
+                            = CollectionUtils.partition(q.getResultList(), MAX_ENTITY_LUMP);
 
-                    for (final JpaTrashEntity trashEntity : q.getResultList()) {
-                        if (ChronoUnit.MILLIS.between(trashEntity.getDate(), LocalDateTime.now())
-                                >= MAXIMUM_ENTITY_TRASH_AGE) {
+                    for (final List<JpaTrashEntity> entityList : listList) {
 
-                            final Class<?> clazz = Class.forName(trashEntity.getClassName());
-                            final Object entity = em.find(clazz, trashEntity.getEntityId());
+                        executorService.submit(() -> {
+                            emLock.lock();
 
-                            em.getTransaction().begin();
+                            try {
+                                em.getTransaction().begin();
 
-                            if (entity != null) {
-                                em.remove(entity);
-                                logger.log(Level.INFO, "Removed entity trash: {0}@{1}",
-                                        new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
+                                for (final JpaTrashEntity trashEntity : entityList) {
+                                    if (!trashEntity.isPending()
+                                            && ChronoUnit.MILLIS.between(trashEntity.getDate(), LocalDateTime.now())
+                                            >= MAXIMUM_ENTITY_TRASH_AGE) {
+
+                                        trashEntity.setPending();
+
+                                        final Class<?> clazz = Class.forName(trashEntity.getClassName());
+                                        final Object entity = em.find(clazz, trashEntity.getEntityId());
+
+                                        if (entity != null) {
+                                            em.remove(entity);
+                                            logger.log(Level.INFO, "Removed entity trash: {0}@{1}",
+                                                    new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
+                                        }
+                                        em.remove(trashEntity);
+                                    }
+                                }
+
+                                em.getTransaction().commit();
+                            } finally {
+                                emLock.unlock();
                             }
-                            em.remove(trashEntity);
 
-                            em.getTransaction().commit();
-                        }
+                            return null;
+                        }, Priority.BACKGROUND);
                     }
 
                     return null;
