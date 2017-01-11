@@ -140,7 +140,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
             private final Account account;
             private final List<ImportTransaction> transactions;
 
-            public ImportThread(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
+            ImportThread(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
                 this.bank = bank;
                 this.account = account;
                 this.transactions = transactions;
