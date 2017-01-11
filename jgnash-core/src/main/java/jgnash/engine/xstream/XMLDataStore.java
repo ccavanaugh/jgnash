@@ -145,8 +145,8 @@ public class XMLDataStore implements DataStore {
     }
 
     @Override
-    public void saveAs(final File file, final Collection<StoredObject> objects) {
-        XMLContainer.writeXML(objects, file.toPath());
+    public void saveAs(final Path path, final Collection<StoredObject> objects) {
+        XMLContainer.writeXML(objects, path);
     }
 
     /**

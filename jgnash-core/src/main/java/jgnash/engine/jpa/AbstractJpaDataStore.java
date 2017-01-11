@@ -20,6 +20,7 @@ package jgnash.engine.jpa;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -206,16 +207,16 @@ abstract class AbstractJpaDataStore implements DataStore {
     }
 
     @Override
-    public void saveAs(final File file, final Collection<StoredObject> objects) {
+    public void saveAs(final Path path, final Collection<StoredObject> objects) {
 
         // Remove the existing files so we don't mix entities and cause corruption
-        if (file.exists()) {
-            deleteDatabase(file);
+        if (Files.exists(path)) {
+            deleteDatabase(path.toFile());
         }
 
-        if (initEmptyDatabase(file.getAbsolutePath())) {
+        if (initEmptyDatabase(path.toAbsolutePath().toString())) {
 
-            final Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(),
+            final Properties properties = JpaConfiguration.getLocalProperties(getType(), path.toAbsolutePath().toString(),
                     new char[]{}, false);
 
             EntityManagerFactory factory = null;
@@ -244,7 +245,7 @@ abstract class AbstractJpaDataStore implements DataStore {
                 }
             }
 
-            waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
+            waitForLockFileRelease(path.toAbsolutePath().toString(), new char[]{});
         }
     }
 
