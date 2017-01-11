@@ -18,6 +18,9 @@
 package jgnash.engine.xstream;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -66,15 +69,16 @@ public class XMLDataStore implements DataStore {
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
-        File file = new File(fileName);
+        final Path path = Paths.get(fileName);
 
-        container = new XMLContainer(file);
+        container = new XMLContainer(path);
 
-        if (file.exists()) {
+        if (Files.exists(path)) {
             container.readXML();
         }
 
-        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(), new LocalAttachmentManager(), engineName);
+        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(),
+                new LocalAttachmentManager(), engineName);
 
         logger.info("Created local XML container and engine");
 
@@ -142,7 +146,7 @@ public class XMLDataStore implements DataStore {
 
     @Override
     public void saveAs(final File file, final Collection<StoredObject> objects) {
-        XMLContainer.writeXML(objects, file);
+        XMLContainer.writeXML(objects, file.toPath());
     }
 
     /**
@@ -157,7 +161,7 @@ public class XMLDataStore implements DataStore {
         float fileVersion = 0;
 
         if (file.exists()) {
-            XMLContainer container = new XMLContainer(file);
+            XMLContainer container = new XMLContainer(file.toPath());
 
             try {
                 container.readXML();

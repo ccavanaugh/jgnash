@@ -17,16 +17,13 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.nio.channels.FileLock;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +39,7 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
+import jgnash.util.FileLocker;
 import jgnash.util.NotNull;
 
 import com.thoughtworks.xstream.XStream;
@@ -56,8 +54,8 @@ import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
  */
 class BinaryContainer extends AbstractXStreamContainer {
 
-    BinaryContainer(final File file) {
-        super(file);
+    BinaryContainer(final Path path) {
+        super(path);
     }
 
     @Override
@@ -70,7 +68,7 @@ class BinaryContainer extends AbstractXStreamContainer {
 
         try {
             releaseFileLock();
-            writeBinary(objects, file);
+            writeBinary(objects, path);
         } finally {
             if (!acquireFileLock()) { // lock the file on open
                 Logger.getLogger(BinaryContainer.class.getName()).severe("Could not acquire the file lock");
@@ -85,16 +83,21 @@ class BinaryContainer extends AbstractXStreamContainer {
      * it will be overwritten.
      *
      * @param objects Collection of StoredObjects to write
-     * @param file    file to write
+     * @param path    file to write
      */
-    static synchronized void writeBinary(@NotNull final Collection<StoredObject> objects, @NotNull final File file) {
+    static synchronized void writeBinary(@NotNull final Collection<StoredObject> objects, @NotNull final Path path) {
         final Logger logger = Logger.getLogger(BinaryContainer.class.getName());
 
-        if (file.getParentFile().mkdirs()) {
-            logger.info("Created missing directories");
+        if (!Files.exists(path.getParent())) {
+            try {
+                Files.createDirectories(path.getParent());
+                logger.info("Created missing directories");
+            } catch (final IOException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
         }
 
-        createBackup(file);
+        createBackup(path);
 
         List<StoredObject> list = new ArrayList<>();
 
@@ -113,7 +116,7 @@ class BinaryContainer extends AbstractXStreamContainer {
 
         logger.info("Writing Binary file");
 
-        try (final OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
+        try (final OutputStream os = Files.newOutputStream(path)) {
 
             final XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(),
                     new BinaryStreamDriver()));
@@ -132,9 +135,7 @@ class BinaryContainer extends AbstractXStreamContainer {
     }
 
     void readBinary() {
-        try (final FileInputStream fis = new FileInputStream(file);
-             BufferedInputStream inputStream = new BufferedInputStream(fis)) {
-
+        try (final InputStream fis = Files.newInputStream(path)) {
             readWriteLock.writeLock().lock();
 
             final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
@@ -142,16 +143,20 @@ class BinaryContainer extends AbstractXStreamContainer {
 
             // Filters out any java.sql.Dates that sneaked in when saving from a relational database
             // and forces to a LocalDate
+            // TODO: Remove at a later date
             xstream.alias("sql-date", LocalDate.class);
 
-            try (final ObjectInputStream in = xstream.createObjectInputStream(inputStream);
-                 FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
-                if (readLock != null) {
+            final FileLocker inputFileLock = new FileLocker();
+
+            try (final ObjectInputStream in = xstream.createObjectInputStream(fis)) {
+                if (inputFileLock.acquireLock(path)) {
                     in.readObject();
+
+                    inputFileLock.release();
                 }
             }
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (final IOException | ClassNotFoundException e) {
             Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             if (!acquireFileLock()) { // lock the file on open

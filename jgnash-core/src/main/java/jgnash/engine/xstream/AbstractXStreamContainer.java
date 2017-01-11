@@ -17,8 +17,11 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,12 +81,12 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 abstract class AbstractXStreamContainer {
     final List<StoredObject> objects = new ArrayList<>();
     final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
-    final File file;
+    final Path path;
 
     private final FileLocker fileLocker = new FileLocker();
 
-    AbstractXStreamContainer(final File file) {
-        this.file = file;
+    AbstractXStreamContainer(final Path path) {
+        this.path = path;
     }
 
     /**
@@ -91,18 +94,22 @@ abstract class AbstractXStreamContainer {
      *
      * @param origFile file to check and backup
      */
-    static void createBackup(final File origFile) {
-        if (origFile.exists()) {
-            File backup = new File(origFile.getAbsolutePath() + ".backup");
-            if (backup.exists()) {
-                if (!backup.delete()) {
+    static void createBackup(final Path origFile) {
+        if (Files.exists(origFile)) {
+
+            final Path backup = Paths.get(origFile.toAbsolutePath().toString() + ".backup");
+
+            if (Files.exists(backup)) {
+                try {
+                    Files.delete(backup);
+                } catch (IOException e) {
                     Logger.getLogger(AbstractXStreamContainer.class.getName())
                             .log(Level.WARNING, "Was not able to delete the old backup file: {0}",
-                                    backup.getAbsolutePath());
+                                    backup.toString());
                 }
             }
 
-            FileUtils.copyFile(origFile.toPath(), backup.toPath());
+            FileUtils.copyFile(origFile, backup);
         }
     }
 
@@ -207,7 +214,7 @@ abstract class AbstractXStreamContainer {
     }
 
     boolean acquireFileLock() {
-        return fileLocker.acquireLock(file.toPath());
+        return fileLocker.acquireLock(path);
     }
 
     void releaseFileLock() {
@@ -280,8 +287,8 @@ abstract class AbstractXStreamContainer {
     }
 
     String getFileName() {
-        if (file != null) {
-            return file.getAbsolutePath();
+        if (path != null) {
+            return path.toAbsolutePath().toString();
         }
         return null;
     }

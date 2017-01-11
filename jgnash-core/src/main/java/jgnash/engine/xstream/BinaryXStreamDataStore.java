@@ -18,6 +18,9 @@
 package jgnash.engine.xstream;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -66,15 +69,16 @@ public class BinaryXStreamDataStore implements DataStore {
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
-        File file = new File(fileName);
+        Path path = Paths.get(fileName);
 
-        container = new BinaryContainer(file);
+        container = new BinaryContainer(path);
 
-        if (file.exists()) {
+        if (Files.exists(path)) {
             container.readBinary();
         }
 
-        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(), new LocalAttachmentManager(), engineName);
+        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(),
+                new LocalAttachmentManager(), engineName);
 
         logger.info("Created local Binary container and engine");
 
@@ -144,7 +148,7 @@ public class BinaryXStreamDataStore implements DataStore {
      */
     @Override
     public void saveAs(final File file, final Collection<StoredObject> objects) {
-        BinaryContainer.writeBinary(objects, file);
+        BinaryContainer.writeBinary(objects, file.toPath());
     }
 
     /**
@@ -159,7 +163,7 @@ public class BinaryXStreamDataStore implements DataStore {
         float fileVersion = 0;
 
         if (file.exists()) {
-            BinaryContainer container = new BinaryContainer(file);
+            BinaryContainer container = new BinaryContainer(file.toPath());
 
             try {
                 container.readBinary();

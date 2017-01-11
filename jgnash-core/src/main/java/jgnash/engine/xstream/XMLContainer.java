@@ -17,20 +17,14 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +41,7 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
+import jgnash.util.FileLocker;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
@@ -60,27 +55,8 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
  */
 class XMLContainer extends AbstractXStreamContainer {
 
-    XMLContainer(final File file) {
-        super(file);
-    }
-
-    @Override
-    void commit() {
-        writeXML();
-    }
-
-    private synchronized void writeXML() {
-        readWriteLock.readLock().lock();
-
-        try {
-            releaseFileLock();
-            writeXML(objects, file);
-        } finally {
-            if (!acquireFileLock()) { // lock the file on open
-                Logger.getLogger(XMLContainer.class.getName()).severe("Could not acquire the file lock");
-            }
-            readWriteLock.readLock().unlock();
-        }
+    XMLContainer(final Path path) {
+        super(path);
     }
 
     /**
@@ -89,12 +65,21 @@ class XMLContainer extends AbstractXStreamContainer {
      * it will be overwritten.
      *
      * @param objects Collection of StoredObjects to write
-     * @param file    file to write
+     * @param path    file to write
      */
-    static synchronized void writeXML(final Collection<StoredObject> objects, final File file) {
+    static synchronized void writeXML(final Collection<StoredObject> objects, final Path path) {
         Logger logger = Logger.getLogger(XMLContainer.class.getName());
 
-        createBackup(file);
+        if (!Files.exists(path.getParent())) {
+            try {
+                Files.createDirectories(path.getParent());
+                logger.info("Created missing directories");
+            } catch (final IOException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }
+
+        createBackup(path);
 
         List<StoredObject> list = new ArrayList<>();
 
@@ -113,7 +98,7 @@ class XMLContainer extends AbstractXStreamContainer {
 
         logger.info("Writing XML file");
 
-        try (final Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
+        try (final Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             writer.write("<?fileFormat " + Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION + "?>\n");
 
@@ -132,10 +117,27 @@ class XMLContainer extends AbstractXStreamContainer {
         logger.info("Writing XML file complete");
     }
 
-    void readXML() {
-        try (final FileInputStream fis = new FileInputStream(file);
-             Reader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8.name()))) {
+    @Override
+    void commit() {
+        writeXML();
+    }
 
+    private synchronized void writeXML() {
+        readWriteLock.readLock().lock();
+
+        try {
+            releaseFileLock();
+            writeXML(objects, path);
+        } finally {
+            if (!acquireFileLock()) { // lock the file on open
+                Logger.getLogger(XMLContainer.class.getName()).severe("Could not acquire the file lock");
+            }
+            readWriteLock.readLock().unlock();
+        }
+    }
+
+    void readXML() {
+        try (final Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             readWriteLock.writeLock().lock();
 
             final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
@@ -146,10 +148,13 @@ class XMLContainer extends AbstractXStreamContainer {
             // TODO: Remove at a later date
             xstream.alias("sql-date", LocalDate.class);
 
-            try (final ObjectInputStream in = xstream.createObjectInputStream(reader);
-                 FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
-                if (readLock != null) {
+            final FileLocker inputFileLock = new FileLocker();
+
+            try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
+                if (inputFileLock.acquireLock(path)) {
                     in.readObject();
+
+                    inputFileLock.release();
                 }
             }
 
