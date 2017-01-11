@@ -2,6 +2,7 @@ package jgnash.uifx.tasks;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -154,7 +155,7 @@ public class BootEngineTask extends Task<String> {
 
                 // make a versioned backup first
                 if (version < Engine.CURRENT_VERSION) {
-                    FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+                    FileUtils.copyFile(Paths.get(fileName), Paths.get(fileName + "." + version));
 
                     Platform.runLater(() ->
                             StaticUIMethods.displayMessage(ResourceUtils.getString("Message.Info.Upgrade",

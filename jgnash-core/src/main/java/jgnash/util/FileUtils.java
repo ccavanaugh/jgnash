@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,13 +32,13 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -172,13 +171,13 @@ public final class FileUtils {
      * @param dst Destination file
      * @return true if the copy was successful
      */
-    public static boolean copyFile(final File src, final File dst) {
+    public static boolean copyFile(final Path src, final Path dst) {
 
         boolean result = false;
 
         if (src != null && dst != null && !src.equals(dst)) {
             try {
-                Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
                 result = true;
             } catch (IOException e) {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, e);
@@ -191,8 +190,14 @@ public final class FileUtils {
 
     public static void compressFile(@NotNull final Path source, @NotNull final Path destination) {
 
-        if (destination.toFile().getParentFile().mkdirs()) {
-            Logger.getLogger(FileUtils.class.getName()).info("Created directories");
+        // Create the destination directory if needed
+        if (!Files.isDirectory(destination.getParent())) {
+            try {
+                Files.createDirectories(destination.getParent());
+                Logger.getLogger(FileUtils.class.getName()).info("Created directories");
+            } catch (IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            }
         }
 
         // Try to open the zip file for output
@@ -246,16 +251,17 @@ public final class FileUtils {
      * @return a List of matching Files. The list will be empty if no matches
      * are found or if the directory is not valid.
      */
-    public static List<File> getDirectoryListing(final File directory, final String pattern) {
-        final List<File> fileList = new ArrayList<>();
+    public static List<Path> getDirectoryListing(final Path directory, final String pattern) {
+        final List<Path> fileList = new ArrayList<>();
 
-        if (directory != null && directory.isDirectory()) {
+        if (directory != null && Files.isDirectory(directory)) {
             final Pattern p = SearchUtils.createSearchPattern(pattern, false);
 
-            final File[] files = directory.listFiles((dir, name) -> p.matcher(name).matches());
-
-            if (files != null) {
-                fileList.addAll(Arrays.asList(files));
+            try {
+                fileList.addAll(Files.list(directory).filter(path -> p.matcher(path.toString()).matches())
+                        .collect(Collectors.toList()));
+            } catch (final IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
 
             Collections.sort(fileList); // sort in natural order

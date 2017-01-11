@@ -102,7 +102,7 @@ abstract class AbstractXStreamContainer {
                 }
             }
 
-            FileUtils.copyFile(origFile, backup);
+            FileUtils.copyFile(origFile.toPath(), backup.toPath());
         }
     }
 

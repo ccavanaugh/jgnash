@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -318,43 +319,33 @@ public class OpenAction {
             if (type == DataStoreType.HSQL_DATABASE && version < 2.25) {
                 final String errorMessage = ResourceUtils.getString("Message.Error.OldHsqlFile");
 
-                new Thread() {  // pop an error dialog with the warning for immediate feedback
-                    @Override
-                    public void run() {
-                        StaticUIMethods.displayError(errorMessage);
-                    }
-                }.start();
+                // pop an error dialog with the warning for immediate feedback
+                new Thread(() -> StaticUIMethods.displayError(errorMessage)).start();
 
             } else if (version <= 0) {
                 final String errorMessage = ResourceUtils.getString("Message.Error.InvalidUserPass");
 
                 UIApplication.getLogger().warning(errorMessage);
 
-                new Thread() {  // pop an error dialog with the warning for immediate feedback
-                    @Override
-                    public void run() {
-                        StaticUIMethods.displayError(errorMessage);
-                    }
-                }.start();
+                // pop an error dialog with the warning for immediate feedback
+                new Thread(() -> StaticUIMethods.displayError(errorMessage)).start();
 
             } else {
                 result = true;
 
                 // make a versioned backup first
                 if (version < Engine.CURRENT_VERSION) {
-                    FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+                    FileUtils.copyFile(Paths.get(fileName), Paths.get(fileName + "." + version));
 
-                    new Thread() {  // pop an information dialog about the backup file
-                        @Override
-                        public void run() {
+                    // pop an information dialog about the backup file
+                    new Thread(() -> {
 
-                            final String message = ResourceUtils.getString("Message.Info.Upgrade", fileName + "."
-                                    + version);
+                        final String message = ResourceUtils.getString("Message.Info.Upgrade", fileName + "."
+                                + version);
 
-                            StaticUIMethods.displayMessage(message, ResourceUtils.getString("Title.Information"),
-                                    JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }.start();
+                        StaticUIMethods.displayMessage(message, ResourceUtils.getString("Title.Information"),
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }).start();
 
                 }
             }

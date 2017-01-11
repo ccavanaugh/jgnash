@@ -20,6 +20,7 @@ package jgnash.engine;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -166,17 +167,18 @@ public class EngineFactory {
     }
 
     public static void removeOldCompressedXML(final String fileName, final int limit) {
+        final Path path  = Paths.get(fileName);
 
-        File file = new File(fileName);
+        final String baseFile = FileUtils.stripFileExtension(path.toString());
 
-        String baseFile = FileUtils.stripFileExtension(file.getName());
-
-        List<File> fileList = FileUtils.getDirectoryListing(file.getParentFile(), baseFile + "-*.zip");
+        final List<Path> fileList = FileUtils.getDirectoryListing(path.getParent(), baseFile + "-*.zip");
 
         if (fileList.size() > limit) {
             for (int i = 0; i < fileList.size() - limit; i++) {
-                if (!fileList.get(i).delete()) {
-                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).getAbsolutePath());
+                try {
+                   Files.delete(fileList.get(i));
+                } catch (final IOException e) {
+                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).toAbsolutePath().toString());
                 }
             }
         }

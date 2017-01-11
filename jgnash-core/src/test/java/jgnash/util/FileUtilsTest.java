@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 
@@ -113,6 +114,6 @@ public class FileUtilsTest {
         checkTestData(testData, absolutePath);
 
         // Copy the file to itself: the file should not be emptied :)
-        assertFalse(FileUtils.copyFile(new File(absolutePath), new File(absolutePath)));
+        assertFalse(FileUtils.copyFile(Paths.get(absolutePath), Paths.get(absolutePath)));
     }
 }
