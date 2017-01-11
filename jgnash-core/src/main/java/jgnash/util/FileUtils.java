@@ -18,9 +18,9 @@
 package jgnash.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
@@ -189,48 +189,48 @@ public final class FileUtils {
         return result;
     }
 
-    public static void compressFile(@NotNull final File source, @NotNull final File destination) {
+    public static void compressFile(@NotNull final Path source, @NotNull final Path destination) {
 
-        if (destination.getParentFile().mkdirs()) {
+        if (destination.toFile().getParentFile().mkdirs()) {
             Logger.getLogger(FileUtils.class.getName()).info("Created directories");
         }
 
         // Try to open the zip file for output
-        try (FileOutputStream fos = new FileOutputStream(destination);
+        try (final OutputStream fos = Files.newOutputStream(destination);
              ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
-            final FileLocker fileLocker = new FileLocker();
+            final FileLocker outFileLocker = new FileLocker();
 
             // Obtain the lock on the output stream
-            if (fileLocker.acquireLock(destination.toPath())) {
+            if (outFileLocker.acquireLock(destination)) {
 
                 // Try to open the input stream
-                try (FileInputStream in = new FileInputStream(source)) {
+                try (final InputStream in = Files.newInputStream(source)) {
+                    final FileLocker inFileLocker = new FileLocker();
 
                     // Try to lock input stream
-                    try (FileLock fisLock = in.getChannel().tryLock(0L, Long.MAX_VALUE, true)) {
+                    if (inFileLocker.acquireLock(source)) {
+                        zipOut.setLevel(Deflater.BEST_COMPRESSION);
 
-                        if (fisLock != null) {
-                            zipOut.setLevel(Deflater.BEST_COMPRESSION);
+                        // strip the path when creating the zip entry
+                        zipOut.putNextEntry(new ZipEntry(source.getFileName().toString()));
 
-                            // strip the path when creating the zip entry
-                            zipOut.putNextEntry(new ZipEntry(source.getName()));
+                        // Transfer bytes from the file to the ZIP file
+                        int length;
 
-                            // Transfer bytes from the file to the ZIP file
-                            int length;
+                        byte[] ioBuffer = new byte[8192];
 
-                            byte[] ioBuffer = new byte[8192];
-
-                            while ((length = in.read(ioBuffer)) > 0) {
-                                zipOut.write(ioBuffer, 0, length);
-                            }
-
-                            // finish the zip entry, but let the try-with-resources handle the close
-                            zipOut.finish();
+                        while ((length = in.read(ioBuffer)) > 0) {
+                            zipOut.write(ioBuffer, 0, length);
                         }
+
+                        // finish the zip entry, but let the try-with-resources handle the close
+                        zipOut.finish();
+
+                        inFileLocker.release();
                     }
+                    outFileLocker.release();
                 }
-                fileLocker.release();
             }
         } catch (final IOException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);

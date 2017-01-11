@@ -158,7 +158,7 @@ public class EngineFactory {
 
         xmlDataStore.saveAs(xmlFile, objects);
 
-        FileUtils.compressFile(xmlFile, zipFile);
+        FileUtils.compressFile(xmlFile.toPath(), zipFile.toPath());
 
         if (!xmlFile.delete()) {
             logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.getAbsolutePath());
