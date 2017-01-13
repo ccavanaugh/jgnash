@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.WindowEvent;
 
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.Options;
@@ -117,6 +118,13 @@ class SplitTransactionDialog extends AbstractTransactionEntryDialog {
         debitController.comparatorProperty().bind(tableView.comparatorProperty());
 
         tabPane.getTabs().addAll(creditTab, debitTab);
+
+        // Install a listener to unbind from the Options to prevent leaks
+        if (getScene() != null) {
+            getScene().windowProperty().get().addEventHandler(WindowEvent.WINDOW_HIDING,
+                    event -> concatenateMemosCheckBox.selectedProperty()
+                            .unbindBidirectional(Options.concatenateMemosProperty()));
+        }
     }
 
     void show(final SlipType slipType, final Runnable runnable) {
