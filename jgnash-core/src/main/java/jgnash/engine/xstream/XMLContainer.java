@@ -136,6 +136,8 @@ class XMLContainer extends AbstractXStreamContainer {
     }
 
     void readXML() {
+
+        // A file lock will be held on Windows OS when reading
         try (final Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             readWriteLock.writeLock().lock();
 
@@ -147,7 +149,6 @@ class XMLContainer extends AbstractXStreamContainer {
             // TODO: Remove at a later date
             xstream.alias("sql-date", LocalDate.class);
 
-            // A file lock will be held on Windows OS when reading
             try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
                 in.readObject();
             }
