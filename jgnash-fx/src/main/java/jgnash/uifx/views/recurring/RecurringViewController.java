@@ -143,7 +143,8 @@ public class RecurringViewController implements MessageListener {
                                     setId(StyleClass.NORMAL_CELL_ID);
                                 }
                             } else {
-                                setText(null);
+                                setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                                        .format(BigDecimal.ZERO));
                             }
                         }
                     }
