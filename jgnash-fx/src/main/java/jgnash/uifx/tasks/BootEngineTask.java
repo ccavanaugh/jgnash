@@ -84,6 +84,8 @@ public class BootEngineTask extends Task<String> {
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         }
 
+        String message = resources.getString("Message.FileLoadComplete");
+
         if (remote) {
             try {
                 EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
@@ -91,7 +93,12 @@ public class BootEngineTask extends Task<String> {
                 Platform.runLater(() -> StaticUIMethods.displayException(exception));
             }
         } else {
-            if (FileUtils.isFileLocked(localFile)) {
+            if (!Files.exists(Paths.get(localFile))) {
+                updateMessage(message);
+                message = resources.getString("Message.Error.FileNotFound") + ": " + localFile;
+            } else if (FileUtils.isFileLocked(localFile)) {
+                message = resources.getString("Message.FileIsLocked") + ": " + localFile;
+                updateMessage(message);
                 Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
             } else if (checkAndBackupOldVersion(localFile, password)) {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
@@ -100,7 +107,7 @@ public class BootEngineTask extends Task<String> {
             }
         }
 
-        return resources.getString("Message.FileLoadComplete");
+        return message;
     }
 
     /**
