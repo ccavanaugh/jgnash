@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -134,7 +135,9 @@ class BinaryContainer extends AbstractXStreamContainer {
     }
 
     void readBinary() {
-        try (final InputStream fis = Files.newInputStream(path)) {
+
+        // A file lock will be held on Windows OS when reading
+        try (final InputStream fis = Files.newInputStream(path, StandardOpenOption.READ)) {
             readWriteLock.writeLock().lock();
 
             final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
@@ -145,7 +148,7 @@ class BinaryContainer extends AbstractXStreamContainer {
             // TODO: Remove at a later date
             xstream.alias("sql-date", LocalDate.class);
 
-            // A file lock will be held on Windows OS when reading
+
             try (final ObjectInputStream in = xstream.createObjectInputStream(fis)) {
                 in.readObject();
             }
