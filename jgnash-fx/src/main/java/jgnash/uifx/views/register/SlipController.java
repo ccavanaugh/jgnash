@@ -253,7 +253,9 @@ public class SlipController extends AbstractSlipController {
 
         amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
 
-        memoTextField.setText(t.getMemo());
+        // Must consider if this is a concatenated memo to set the field correctly
+        memoTextField.setText(t.isMemoConcatenated() ? t.getMemo() : t.getTransactionMemo());
+
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
         datePicker.setValue(t.getLocalDate());

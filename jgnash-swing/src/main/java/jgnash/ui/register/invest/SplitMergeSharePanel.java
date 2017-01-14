@@ -125,7 +125,7 @@ final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPanel {
         modTrans = tran;
 
         datePanel.setDate(tran.getLocalDate());
-        memoField.setText(tran.getMemo());
+        memoField.setText(tran.getTransactionMemo());
         priceField.setDecimal(_tran.getPrice());
         quantityField.setDecimal(_tran.getQuantity());
         securityCombo.setSelectedNode(_tran.getSecurityNode());

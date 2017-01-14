@@ -206,7 +206,7 @@ public class AutoCompleteFactory {
 
         private PropertyChangeListener listener;
 
-        public TransactionModel() {
+        TransactionModel() {
             init();
             setIgnoreCase(AutoCompleteFactory.ignoreCase());
             setFuzzyMatch(AutoCompleteFactory.fuzzyMatch());
@@ -289,7 +289,10 @@ public class AutoCompleteFactory {
         @Override
         void load(final Transaction tran) {
             if (tran != null) {
+
+                // Add both versions of the memo
                 addString(tran.getMemo());
+                addString(tran.getTransactionMemo());
             }
         }
     }
@@ -302,7 +305,7 @@ public class AutoCompleteFactory {
 
         private final Account account;
 
-        public PayeeAccountModel(final Account account) {
+        PayeeAccountModel(final Account account) {
             super();
             this.account = account;
         }

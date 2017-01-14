@@ -83,7 +83,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
 
         amountField.setDecimal(t.getAmount(accountProperty().get()));
 
-        memoTextField.setText(t.getMemo());
+        memoTextField.setText(t.getTransactionMemo());
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 

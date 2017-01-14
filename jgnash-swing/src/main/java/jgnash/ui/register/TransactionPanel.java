@@ -304,7 +304,9 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         // handles any exchange rate that may exist
         amountField.setDecimal(t.getAmount(getAccount()).abs());
 
-        memoField.setText(t.getMemo());
+        // Must consider if this is a concatenated memo to set the field correctly
+        memoField.setText(t.isMemoConcatenated() ? t.getMemo() : t.getTransactionMemo());
+
         payeeField.setText(t.getPayee());
         numberField.setText(t.getNumber());
         datePanel.setDate(t.getLocalDate());

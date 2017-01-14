@@ -67,7 +67,7 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
         clearForm();
 
         datePicker.setValue(transaction.getLocalDate());
-        memoTextField.setText(transaction.getMemo());
+        memoTextField.setText(transaction.getTransactionMemo());
         numberComboBox.setValue(transaction.getNumber());
         priceField.setDecimal(((InvestmentTransaction)transaction).getPrice());
         quantityField.setDecimal(((InvestmentTransaction)transaction).getQuantity());

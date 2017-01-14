@@ -166,7 +166,10 @@ public class AutoCompleteFactory {
         @Override
         void load(final Transaction tran) {
             if (tran != null) {
+
+                // Add both memo versions
                 addString(tran.getMemo());
+                addString(tran.getTransactionMemo());
             }
         }
     }
