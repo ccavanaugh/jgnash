@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
@@ -33,16 +34,17 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.util.Callback;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -52,9 +54,11 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ShortDateTableCell;
+import jgnash.uifx.skin.StyleClass;
 
 /**
  * Controller for recurring events.
@@ -100,12 +104,53 @@ public class RecurringViewController implements MessageListener {
         accountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDescription()));
         accountColumn.setCellValueFactory(param -> {
             if (param.getValue().getAccount() != null) {
-                return new SimpleStringProperty(param.getValue().getAccount().toString());
+                return new SimpleObjectProperty<>(param.getValue().getAccount().toString());
+            }
+            return null;
+        });
+        tableView.getColumns().add(accountColumn);
+
+        final TableColumn<Reminder, BigDecimal> amountColumn = new TableColumn<>(resources.getString("Column.Amount"));
+        amountColumn.setCellValueFactory(param -> {
+            if (param.getValue().getTransaction() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getTransaction().getAmount(param.getValue().getAccount()));
             }
             return null;
         });
 
-        tableView.getColumns().add(accountColumn);
+        amountColumn.setCellFactory(new Callback<TableColumn<Reminder, BigDecimal>, TableCell<Reminder, BigDecimal>>() {
+            @Override
+            public TableCell<Reminder, BigDecimal> call(TableColumn<Reminder, BigDecimal> param) {
+                return new TableCell<Reminder, BigDecimal>() {
+                    {
+                        setStyle("-fx-alignment: center-right;");
+                    }
+
+                    @Override
+                    protected void updateItem(final BigDecimal amount, final boolean empty) {
+                        super.updateItem(amount, empty);
+
+                        if (!empty && getTableRow() != null && getTableRow().getItem() != null) {
+                            final Reminder reminder = (Reminder) getTableRow().getItem();
+
+                            if (reminder.getTransaction() != null) {
+                                setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                                        .format(amount));
+
+                                if (amount != null && amount.signum() < 0) {
+                                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                                } else {
+                                    setId(StyleClass.NORMAL_CELL_ID);
+                                }
+                            } else {
+                                setText(null);
+                            }
+                        }
+                    }
+                };
+            }
+        });
+        tableView.getColumns().add(amountColumn);
 
         final TableColumn<Reminder, String> frequencyColumn = new TableColumn<>(resources.getString("Column.Freq"));
         frequencyColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getReminderType().toString()));
