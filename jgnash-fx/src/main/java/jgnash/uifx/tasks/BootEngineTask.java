@@ -122,7 +122,7 @@ public class BootEngineTask extends Task<String> {
         boolean result = false;
 
         if (Files.exists(new File(fileName).toPath())) {
-            final float version = EngineFactory.getFileVersion(new File(fileName), password);
+            final float version = EngineFactory.getFileVersion(Paths.get(fileName), password);
             final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 
             boolean oldSchema = false;

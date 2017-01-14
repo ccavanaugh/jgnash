@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -145,21 +144,25 @@ public class EngineFactory {
 
         final DataStore xmlDataStore = new XMLDataStore();
 
-        File xmlFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
+        Path xmlFile = Paths.get(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
                 + "." + xmlDataStore.getFileExt());
 
         // push the intermediary file to the temporary directory
-        xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
+        //xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
+        xmlFile = Paths.get(System.getProperty("java.io.tmpdir")  + xmlFile.getFileSystem().getSeparator() + xmlFile.getFileName().toString());
 
-        File zipFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
+        xmlDataStore.saveAs(xmlFile, objects);
+
+        Path zipFile = Paths.get(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
                 + ".zip");
 
-        xmlDataStore.saveAs(xmlFile.toPath(), objects);
+        FileUtils.compressFile(xmlFile, zipFile);
 
-        FileUtils.compressFile(xmlFile.toPath(), zipFile.toPath());
-
-        if (!xmlFile.delete()) {
-            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.getAbsolutePath());
+        try {
+            Files.delete(xmlFile);
+        } catch (final IOException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.toAbsolutePath().toString());
         }
     }
 
@@ -344,8 +347,8 @@ public class EngineFactory {
         return engine;
     }
 
-    private static DataStoreType getDataStoreByType(final File file) {
-        final FileType type = FileMagic.magic(file.toPath());
+    private static DataStoreType getDataStoreByType(final Path file) {
+        final FileType type = FileMagic.magic(file);
 
         if (type == FileType.jGnash2XML) {
             return DataStoreType.XML;
@@ -361,13 +364,13 @@ public class EngineFactory {
     }
 
     public static DataStoreType getDataStoreByType(final String fileName) {
-        return getDataStoreByType(new File(fileName));
+        return getDataStoreByType(Paths.get(fileName));
     }
 
-    public static float getFileVersion(final File file, final char[] password) {
+    public static float getFileVersion(final Path file, final char[] password) {
         float version = 0;
 
-        final FileType type = FileMagic.magic(file.toPath());
+        final FileType type = FileMagic.magic(file);
 
         if (type == FileType.jGnash2XML) {
             version = XMLDataStore.getFileVersion(file);
@@ -375,7 +378,7 @@ public class EngineFactory {
             version = BinaryXStreamDataStore.getFileVersion(file);
         } else if (type == FileType.h2 || type == FileType.hsql) {
             try {
-                version = SqlUtils.getFileVersion(file.getAbsolutePath(), password);
+                version = SqlUtils.getFileVersion(file.toAbsolutePath().toString(), password);
             } catch (final Exception e) {
                 version = 0;
             }
@@ -490,10 +493,10 @@ public class EngineFactory {
             }
         }
 
-        final File newFile = new File(FileUtils.stripFileExtension(destination)
+        final Path newFile = Paths.get(FileUtils.stripFileExtension(destination)
                 + "." + newFileType.getDataStore().getFileExt());
 
-        final File current = new File(EngineFactory.getActiveDatabase());
+        final Path current = Paths.get(EngineFactory.getActiveDatabase());
 
         // don't perform the save if the destination is going to overwrite the current database
         if (!current.equals(newFile)) {
@@ -524,11 +527,11 @@ public class EngineFactory {
                         objects = engine.getStoredObjects();
 
                         // Write everything to the new file
-                        newFileType.getDataStore().saveAs(newFile.toPath(), objects);
+                        newFileType.getDataStore().saveAs(newFile, objects);
                         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                         // Boot the engine with the new file
-                        EngineFactory.bootLocalEngine(newFile.getAbsolutePath(),
+                        EngineFactory.bootLocalEngine(newFile.toAbsolutePath().toString(),
                                 EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
                     }
 
@@ -544,10 +547,10 @@ public class EngineFactory {
 
                 if (engine != null) {
                     final Collection<StoredObject> objects = engine.getStoredObjects();
-                    newFileType.getDataStore().saveAs(newFile.toPath(), objects);
+                    newFileType.getDataStore().saveAs(newFile, objects);
                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                    EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                    EngineFactory.bootLocalEngine(newFile.toAbsolutePath().toString(), EngineFactory.DEFAULT,
                             EngineFactory.EMPTY_PASSWORD);
                 }
             }
@@ -581,10 +584,10 @@ public class EngineFactory {
             }
         }
 
-        final File newFile = new File(FileUtils.stripFileExtension(newFileName)
+        final Path newFile = Paths.get(FileUtils.stripFileExtension(newFileName)
                 + "." + newFileType.getDataStore().getFileExt());
 
-        final File current = new File(fileName);
+        final Path current = Paths.get(fileName);
 
         // don't perform the save if the destination is going to overwrite the current database
         if (!current.equals(newFile)) {
@@ -616,7 +619,7 @@ public class EngineFactory {
                         objects = engine.getStoredObjects();
 
                         // Write everything to the new file
-                        newFileType.getDataStore().saveAs(newFile.toPath(), objects);
+                        newFileType.getDataStore().saveAs(newFile, objects);
                         EngineFactory.closeEngine(ENGINE);
 
                         // reset the password
@@ -633,7 +636,7 @@ public class EngineFactory {
             } else {    // Simple
                 if (engine != null) {
                     final Collection<StoredObject> objects = engine.getStoredObjects();
-                    newFileType.getDataStore().saveAs(newFile.toPath(), objects);
+                    newFileType.getDataStore().saveAs(newFile, objects);
                     EngineFactory.closeEngine(ENGINE);
                 }
             }

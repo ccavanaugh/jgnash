@@ -17,7 +17,6 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -155,15 +154,15 @@ public class BinaryXStreamDataStore implements DataStore {
      * Opens the file in readonly mode and reads the version of the file format.
      *
      * @param file
-     * {@code File} to open
+     * {@code Path} to open
      * @return file version
      */
-    public static float getFileVersion(final File file) {
+    public static float getFileVersion(final Path file) {
 
         float fileVersion = 0;
 
-        if (file.exists()) {
-            BinaryContainer container = new BinaryContainer(file.toPath());
+        if (Files.exists(file)) {
+            final BinaryContainer container = new BinaryContainer(file);
 
             try {
                 container.readBinary();

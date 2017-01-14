@@ -17,7 +17,6 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -156,12 +155,12 @@ public class XMLDataStore implements DataStore {
      * {@code File} to open
      * @return file version
      */
-    public static float getFileVersion(final File file) {
+    public static float getFileVersion(final Path file) {
 
         float fileVersion = 0;
 
-        if (file.exists()) {
-            XMLContainer container = new XMLContainer(file.toPath());
+        if (Files.exists(file)) {
+            final XMLContainer container = new XMLContainer(file);
 
             try {
                 container.readXML();

@@ -313,7 +313,7 @@ public class OpenAction {
         boolean result = false;
 
         if (Files.exists(new File(fileName).toPath())) {
-            final float version = EngineFactory.getFileVersion(new File(fileName), password);
+            final float version = EngineFactory.getFileVersion(Paths.get(fileName), password);
             final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 
             if (type == DataStoreType.HSQL_DATABASE && version < 2.25) {
