@@ -28,6 +28,7 @@ WANTS
 Release 2.29.0
 --------------
 * 01/14/17 Added the Account and Amount columns to the Reminders table. (Fx)
+* 01/14/17 Fixed a regression that removed the Ticker/Investment column from the register. (Fx)
 
 Release 2.28.1
 --------------

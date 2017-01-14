@@ -100,6 +100,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         final TableColumn<Transaction, String> investmentColumn = new TableColumn<>(columnNames[3]);
         investmentColumn.setCellValueFactory(param -> new TransactionSymbolWrapper(param.getValue()));
         investmentColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(investmentColumn);
 
         final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[4]);
         memoColumn.setCellValueFactory(param -> new MemoWrapper(param.getValue()));
