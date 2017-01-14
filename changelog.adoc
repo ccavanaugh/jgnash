@@ -28,14 +28,15 @@ WANTS
 Release 2.28.1
 --------------
 * 01/14/17 Corrected issues with inconsistent behavior of reported memos of split transactions. (Swing, Fx)
+* 01/14/17 Updated to the latest Netty dependency.
 * 01/08/17 The Investment Register was not sizing the Quantity column correctly. (Fx)
 * 01/08/17 Fixed an IllegalArgumentException that was occurring if the option "Next time jGnash starts" was used when
            dismissing the Reminders dialog. (Fx)
 * 01/08/17 jGnash now uses a priority based model for the handling of internal tasks to prevent deadlocks from
-           background operations.  This corrects some reported random freezing and hanging of the UI. (Swing, Fx)
+           background operations.  This corrects some reported bugs with random freezing and hanging of the UI. (Swing, Fx)
 * 01/07/17 Updated to the latest Hibernate dependency.
-* 12/01/16 Corrected NPE occurring during import of transactions. (Fx)
-* 11/30/16 Improved behavior of background removal of securities history.
+* 12/01/16 Corrected an NPE that was occurring during import of a OFX/QFX files. (Fx)
+* 11/30/16 Improved the behavior of background removal of securities history.
 
 Release 2.28.0
 --------------
