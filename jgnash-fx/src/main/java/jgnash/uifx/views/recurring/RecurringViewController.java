@@ -33,6 +33,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -94,6 +95,17 @@ public class RecurringViewController implements MessageListener {
         final TableColumn<Reminder, String> descriptionColumn = new TableColumn<>(resources.getString("Column.Description"));
         descriptionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDescription()));
         tableView.getColumns().add(descriptionColumn);
+
+        final TableColumn<Reminder, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
+        accountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDescription()));
+        accountColumn.setCellValueFactory(param -> {
+            if (param.getValue().getAccount() != null) {
+                return new SimpleStringProperty(param.getValue().getAccount().toString());
+            }
+            return null;
+        });
+
+        tableView.getColumns().add(accountColumn);
 
         final TableColumn<Reminder, String> frequencyColumn = new TableColumn<>(resources.getString("Column.Freq"));
         frequencyColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getReminderType().toString()));
