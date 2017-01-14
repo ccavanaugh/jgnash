@@ -18,8 +18,8 @@
 package jgnash.ui;
 
 import java.awt.EventQueue;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -50,7 +50,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
     private static final Logger logger = Logger.getLogger(UIApplication.class.getName());
 
-    public UIApplication(final File file, final char[] password) {
+    public UIApplication(final Path file, final char[] password) {
 
         if (initFrame()) {
         

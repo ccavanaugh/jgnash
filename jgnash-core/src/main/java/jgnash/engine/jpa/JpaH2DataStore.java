@@ -17,7 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,25 +49,21 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
     }
 
     @Override
-    public void deleteDatabase(final File file) {
-        deleteDatabase(file.getAbsolutePath());
-    }
-
-    @Override
     public String getLockFileExtension() {
         return LOCK_EXT;
     }
 
-    private static void deleteDatabase(final String fileName) {
+    @Override
+    public void deleteDatabase(final String fileName) {
         final String[] extensions = new String[]{".h2.db", LOCK_EXT};
 
         final String base = FileUtils.stripFileExtension(fileName);
 
-        for (String extension : extensions) {
+        for (final String extension : extensions) {
             try {
                 logger.log(Level.INFO, "Deleting {0}{1}", new Object[]{base, extension});
                 Files.deleteIfExists(Paths.get(base + extension));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             }
         }

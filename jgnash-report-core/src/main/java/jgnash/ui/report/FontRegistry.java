@@ -17,24 +17,25 @@
  */
 package jgnash.ui.report;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.util.OS;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
-
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
 
 /**
  * Utility class map font names to font files
@@ -89,24 +90,25 @@ public class FontRegistry {
         if (!registrationStarted.get()) {
             registrationStarted.set(true);
 
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    lock.lock();
+            Thread thread = new Thread(() -> {
+                lock.lock();
 
+                try {
+                    registry = new FontRegistry();
                     try {
-                        registry = new FontRegistry();
                         registry.registerFontDirectories();
-                        registrationComplete.set(true);
-
-                        isComplete.signal();
-
-                        Logger.getLogger(FontRegistry.class.getName()).info("Font registration is complete");
-                    } finally {
-                        lock.unlock();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    registrationComplete.set(true);
+
+                    isComplete.signal();
+
+                    Logger.getLogger(FontRegistry.class.getName()).info("Font registration is complete");
+                } finally {
+                    lock.unlock();
                 }
-            };
+            });
 
             thread.setPriority(Thread.MIN_PRIORITY);
             thread.start();
@@ -145,55 +147,49 @@ public class FontRegistry {
      * @param dir the directory
      */
     @SuppressWarnings("ConstantConditions")
-    private void registerFontDirectory(final String dir) {
+    private void registerFontDirectory(final String dir) throws IOException {
 
-        File directory = new File(dir);
+        final Path directory = Paths.get(dir);
 
-        if (directory.isDirectory()) {
-            String files[] = directory.list();
-            if (files != null) {
+        if (Files.isDirectory(directory)) {
+            Files.list(directory).forEach(path -> {
+                try {
+                    if (Files.isDirectory(path)) {
+                        registerFontDirectory(path.toString());
+                    } else {
+                        String name = path.toString();
+                        String suffix = name.length() < 4 ? null : name.substring(name.length() - 3).toLowerCase(Locale.ROOT);
 
-                for (String path : files) {
-                    try {
-                        File file = new File(dir, path);
-                        if (file.isDirectory()) {
-                            registerFontDirectory(file.getAbsolutePath());
-                        } else {
-                            String name = file.getPath();
-                            String suffix = name.length() < 4 ? null : name.substring(name.length() - 3).toLowerCase(Locale.ROOT);
-
-                            if (suffix != null) {
-                                switch (suffix) {
-                                    case "afm":
-                                    case "pfm":
-                                        File pfb = new File(name.substring(0, name.length() - 3) + "pfb");
-                                        if (pfb.exists()) {
-                                            registerFont(name);
-                                        }
-                                        break;
-                                    case "ttf":
-                                    case "otf":
-                                    case "ttc":
+                        if (suffix != null) {
+                            switch (suffix) {
+                                case "afm":
+                                case "pfm":
+                                    if (Files.exists(Paths.get(name.substring(0, name.length() - 3) + "pfb"))) {
                                         registerFont(name);
-                                        break;
-                                    default:
-                                        break;  // unknown font type
-                                }
+                                    }
+                                    break;
+                                case "ttf":
+                                case "otf":
+                                case "ttc":
+                                    registerFont(name);
+                                    break;
+                                default:
+                                    break;  // unknown font type
                             }
                         }
-                    } catch (Exception e) {
-                        Logger.getLogger(FontRegistry.class.getName()).log(Level.FINEST,
-                                MessageFormat.format("Could not find path for {0}", path), e);
                     }
+                } catch (final Exception e) {
+                    Logger.getLogger(FontRegistry.class.getName()).log(Level.FINEST,
+                            MessageFormat.format("Could not find path for {0}", path), e);
                 }
-            }
+            });
         }
     }
 
     /**
      * Register fonts in known directories.
      */
-    private void registerFontDirectories() {
+    private void registerFontDirectories() throws IOException {
         if (OS.isSystemWindows()) {
             registerFontDirectory("c:/windows/fonts");
             registerFontDirectory("c:/winnt/fonts");

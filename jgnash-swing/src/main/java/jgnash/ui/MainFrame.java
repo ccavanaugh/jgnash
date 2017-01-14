@@ -29,10 +29,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -547,7 +547,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         super.dispose();
     }
 
-    static void loadFile(final File file, final char[] password) {
+    static void loadFile(final Path file, final char[] password) {
         OpenAction.openAction(file, password);
     }
 

@@ -313,7 +313,7 @@ public final class Main {
                 if (hostName != null) {
                     new UIApplication(hostName, port, password);
                 } else if (file != null && file.exists()) {
-                    new UIApplication(file, password);
+                    new UIApplication(file.toPath(), password);
                 } else {
                     new UIApplication(null, null);
                 }

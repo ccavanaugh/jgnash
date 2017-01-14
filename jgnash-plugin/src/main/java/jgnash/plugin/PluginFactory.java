@@ -195,15 +195,13 @@ public final class PluginFactory {
         
         // Add a shutdown hook to properly close the classLoader.  It needs to remain open for the duration of 
         // the application otherwise the plugin will not be able to load any needed classes.
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-        	public void run() {
-        		try {
-					classLoader.close();					
-				} catch (final IOException e) {
-					logger.log(Level.SEVERE, null, e);
-				}
-        	}
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                classLoader.close();
+            } catch (final IOException e) {
+                logger.log(Level.SEVERE, null, e);
+            }
+        }));
 
         final String pluginActivator = classLoader.getActivator();
 

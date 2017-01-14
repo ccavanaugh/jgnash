@@ -17,7 +17,9 @@
  */
 package jgnash.engine.jpa;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -85,17 +87,17 @@ public class JpaNetworkServer {
 
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
-        final File file = new File(fileName);
+        final Path file = Paths.get(fileName);
 
         // create the base directory if needed
-        if (!file.exists()) {
-            final File parent = file.getParentFile();
+        if (!Files.exists(file)) {
+            final Path parent = file.getParent();
 
-            if (parent != null && !parent.exists()) {
-                boolean result = parent.mkdirs();
-
-                if (!result) {
-                    throw new RuntimeException("Could not create directory for file: " + parent.getAbsolutePath());
+            if (parent != null && !Files.exists(parent)) {
+                try {
+                    Files.createDirectories(parent);
+                } catch (IOException e) {
+                    throw new RuntimeException("Could not create directory for file: " + parent.toString());
                 }
             }
         }

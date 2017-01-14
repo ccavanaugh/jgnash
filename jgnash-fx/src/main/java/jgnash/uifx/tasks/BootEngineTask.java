@@ -1,6 +1,5 @@
 package jgnash.uifx.tasks;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
@@ -121,7 +120,7 @@ public class BootEngineTask extends Task<String> {
 
         boolean result = false;
 
-        if (Files.exists(new File(fileName).toPath())) {
+        if (Files.exists(Paths.get(fileName))) {
             final float version = EngineFactory.getFileVersion(Paths.get(fileName), password);
             final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 
@@ -135,7 +134,7 @@ public class BootEngineTask extends Task<String> {
                 Platform.runLater(()
                         -> StaticUIMethods.displayMessage(ResourceUtils.getString("Message.Info.LongUpgrade")));
 
-                final PackDatabaseTask packDatabaseTask = new PackDatabaseTask(new File(fileName), password);
+                final PackDatabaseTask packDatabaseTask = new PackDatabaseTask(fileName, password);
 
                 new Thread(packDatabaseTask).start();
 

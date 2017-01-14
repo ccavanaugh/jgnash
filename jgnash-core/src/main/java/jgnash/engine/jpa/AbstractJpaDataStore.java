@@ -17,7 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -211,7 +210,7 @@ abstract class AbstractJpaDataStore implements DataStore {
 
         // Remove the existing files so we don't mix entities and cause corruption
         if (Files.exists(path)) {
-            deleteDatabase(path.toFile());
+            deleteDatabase(path.toAbsolutePath().toString());
         }
 
         if (initEmptyDatabase(path.toAbsolutePath().toString())) {
@@ -299,9 +298,9 @@ abstract class AbstractJpaDataStore implements DataStore {
     /**
      * Deletes a database and associated files and directories.
      *
-     * @param file one of the primary database files
+     * @param fileName one of the primary database files
      */
-    protected abstract void deleteDatabase(final File file);
+    protected abstract void deleteDatabase(final String fileName);
 
     /**
      * Return the extension used by the lock file with the preceding period.

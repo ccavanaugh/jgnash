@@ -18,9 +18,9 @@
 package jgnash.ui.actions;
 
 import java.awt.EventQueue;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -146,9 +146,9 @@ public class OpenAction {
         });
     }
 
-    public static void openAction(final File file, final char[] password) {
+    public static void openAction(final Path file, final char[] password) {
 
-        final String database = file.getAbsolutePath();
+        final String database = file.toAbsolutePath().toString();
 
         final class BootEngine extends SwingWorker<Void, Void> {
 
@@ -162,8 +162,8 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-                if (checkAndBackupOldVersion(file.getAbsolutePath(), password)) {
-                    final Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, password);
+                if (checkAndBackupOldVersion(database, password)) {
+                    final Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, password);
                     if (e != null) {
                         e.getRootAccount(); // prime the engine
                     }
@@ -312,7 +312,7 @@ public class OpenAction {
 
         boolean result = false;
 
-        if (Files.exists(new File(fileName).toPath())) {
+        if (Files.exists(Paths.get(fileName))) {
             final float version = EngineFactory.getFileVersion(Paths.get(fileName), password);
             final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 

@@ -17,7 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -66,28 +65,19 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
     }
 
     @Override
-    public void deleteDatabase(final File file) {
-        deleteDatabase(file.getAbsolutePath());
-    }
-
-    @Override
     public String getLockFileExtension() {
         return LOCK_EXT;
     }
 
-    /**
-     * Deletes a Hsqldb database and associated files.
-     *
-     * @param fileName one of the database files
-     */
-    private static void deleteDatabase(final String fileName) {
+    @Override
+    public void deleteDatabase(final String fileName) {
 
         final String base = FileUtils.stripFileExtension(fileName);
 
         for (final String extension : extensions) {
             try {
                 Files.deleteIfExists(Paths.get(base + extension));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             }
         }
