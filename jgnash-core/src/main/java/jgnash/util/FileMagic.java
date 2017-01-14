@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -306,7 +305,7 @@ public class FileMagic {
     private static String getXMLVersion(final Path path) {
         String version = "";
 
-        try (InputStream input = new BufferedInputStream(Files.newInputStream(path))) {
+        try (final InputStream input = Files.newInputStream(path)) {
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
