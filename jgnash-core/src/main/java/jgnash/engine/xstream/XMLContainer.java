@@ -41,7 +41,6 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.FileLocker;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
@@ -148,14 +147,9 @@ class XMLContainer extends AbstractXStreamContainer {
             // TODO: Remove at a later date
             xstream.alias("sql-date", LocalDate.class);
 
-            final FileLocker inputFileLock = new FileLocker();
-
+            // A file lock will be held on Windows OS when reading
             try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
-                if (inputFileLock.acquireLock(path)) {
-                    in.readObject();
-
-                    inputFileLock.release();
-                }
+                in.readObject();
             }
 
         } catch (final IOException | ClassNotFoundException e) {
