@@ -202,40 +202,26 @@ public final class FileUtils {
 
         // Try to open the zip file for output
         try (final OutputStream fos = Files.newOutputStream(destination);
-             ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+             final ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
-            final FileLocker outFileLocker = new FileLocker();
+            // Try to open the input stream
+            try (final InputStream in = Files.newInputStream(source, StandardOpenOption.READ)) {
+                zipOut.setLevel(Deflater.BEST_COMPRESSION);
 
-            // Obtain the lock on the output stream
-            if (outFileLocker.acquireLock(destination)) {
+                // strip the path when creating the zip entry
+                zipOut.putNextEntry(new ZipEntry(source.getFileName().toString()));
 
-                // Try to open the input stream
-                try (final InputStream in = Files.newInputStream(source)) {
-                    final FileLocker inFileLocker = new FileLocker();
+                // Transfer bytes from the file to the ZIP file
+                int length;
 
-                    // Try to lock input stream
-                    if (inFileLocker.acquireLock(source)) {
-                        zipOut.setLevel(Deflater.BEST_COMPRESSION);
+                byte[] ioBuffer = new byte[8192];
 
-                        // strip the path when creating the zip entry
-                        zipOut.putNextEntry(new ZipEntry(source.getFileName().toString()));
-
-                        // Transfer bytes from the file to the ZIP file
-                        int length;
-
-                        byte[] ioBuffer = new byte[8192];
-
-                        while ((length = in.read(ioBuffer)) > 0) {
-                            zipOut.write(ioBuffer, 0, length);
-                        }
-
-                        // finish the zip entry, but let the try-with-resources handle the close
-                        zipOut.finish();
-
-                        inFileLocker.release();
-                    }
-                    outFileLocker.release();
+                while ((length = in.read(ioBuffer)) > 0) {
+                    zipOut.write(ioBuffer, 0, length);
                 }
+
+                // finish the zip entry, but let the try-with-resources handle the close
+                zipOut.finish();
             }
         } catch (final IOException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
