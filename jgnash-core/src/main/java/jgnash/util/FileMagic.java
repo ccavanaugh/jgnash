@@ -233,6 +233,9 @@ public class FileMagic {
 
                     line = reader.readLine();
                 }
+            } catch (final MalformedInputException mie) {
+                result = false; // caused by binary file
+                Logger.getLogger(FileMagic.class.getName()).info("Tried to read a binary file");
             } catch (IOException e) {
                 Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
