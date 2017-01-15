@@ -25,7 +25,7 @@ WANTS
 
 * Add a Ticker column to the investment register
 
-Release 2.29.0
+Release 2.28.2
 --------------
 * 01/14/17 Corrected a bug with file locking on Windows OS.
 * 01/14/17 Added the Account and Amount columns to the Reminders table. (Fx)
