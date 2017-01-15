@@ -92,10 +92,12 @@ public class PriorityThreadPoolExecutor {
         threadPoolExecutor.shutdown();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public List<Runnable> shutdownNow() {
         return threadPoolExecutor.shutdownNow();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public boolean awaitTermination(final long timeout, final TimeUnit unit) throws InterruptedException {
         return threadPoolExecutor.awaitTermination(timeout, unit);
     }
