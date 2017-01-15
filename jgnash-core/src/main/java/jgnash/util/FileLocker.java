@@ -33,6 +33,7 @@ public class FileLocker {
         return result;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public boolean release() {
         boolean result = false;
 
