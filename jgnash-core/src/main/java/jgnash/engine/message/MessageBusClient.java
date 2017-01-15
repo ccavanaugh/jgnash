@@ -236,8 +236,10 @@ class MessageBusClient {
         channelLock.lock();
 
         try {
-            channel.close().sync();
-        } catch (InterruptedException e) {
+            if (channel != null) {  // null from a prior failed connection
+                channel.close().sync();
+            }
+        } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             channelLock.unlock();
