@@ -97,7 +97,7 @@ abstract class AbstractXStreamContainer {
     static void createBackup(final Path origFile) {
         if (Files.exists(origFile)) {
 
-            final Path backup = Paths.get(origFile.toAbsolutePath().toString() + ".backup");
+            final Path backup = Paths.get(origFile.toString() + ".backup");
 
             if (Files.exists(backup)) {
                 try {
@@ -288,7 +288,7 @@ abstract class AbstractXStreamContainer {
 
     String getFileName() {
         if (path != null) {
-            return path.toAbsolutePath().toString();
+            return path.toString();
         }
         return null;
     }

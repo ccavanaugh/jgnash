@@ -312,7 +312,7 @@ public class BudgetResultsExport {
             Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.INFO, "{0} cell styles were used", wb.getNumCellStyles());
 
             // Save
-            String filename = file.toAbsolutePath().toString();
+            String filename = file.toString();
 
             if (wb instanceof XSSFWorkbook) {
                 filename = FileUtils.stripFileExtension(filename) + ".xlsx";

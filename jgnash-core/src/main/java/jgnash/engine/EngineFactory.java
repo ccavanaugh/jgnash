@@ -162,7 +162,7 @@ public class EngineFactory {
             Files.delete(xmlFile);
         } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.toAbsolutePath().toString());
+            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.toString());
         }
     }
 
@@ -178,7 +178,7 @@ public class EngineFactory {
                 try {
                    Files.delete(fileList.get(i));
                 } catch (final IOException e) {
-                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).toAbsolutePath().toString());
+                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).toString());
                 }
             }
         }
@@ -378,7 +378,7 @@ public class EngineFactory {
             version = BinaryXStreamDataStore.getFileVersion(file);
         } else if (type == FileType.h2 || type == FileType.hsql) {
             try {
-                version = SqlUtils.getFileVersion(file.toAbsolutePath().toString(), password);
+                version = SqlUtils.getFileVersion(file.toString(), password);
             } catch (final Exception e) {
                 version = 0;
             }
@@ -515,7 +515,7 @@ public class EngineFactory {
                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                     // Boot the engine with the temporary file
-                    EngineFactory.bootLocalEngine(tempFile.toAbsolutePath().toString(), EngineFactory.DEFAULT,
+                    EngineFactory.bootLocalEngine(tempFile.toString(), EngineFactory.DEFAULT,
                             EngineFactory.EMPTY_PASSWORD);
 
                     engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -530,7 +530,7 @@ public class EngineFactory {
                         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                         // Boot the engine with the new file
-                        EngineFactory.bootLocalEngine(newFile.toAbsolutePath().toString(),
+                        EngineFactory.bootLocalEngine(newFile.toString(),
                                 EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
                     }
 
@@ -549,7 +549,7 @@ public class EngineFactory {
                     newFileType.getDataStore().saveAs(newFile, objects);
                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                    EngineFactory.bootLocalEngine(newFile.toAbsolutePath().toString(), EngineFactory.DEFAULT,
+                    EngineFactory.bootLocalEngine(newFile.toString(), EngineFactory.DEFAULT,
                             EngineFactory.EMPTY_PASSWORD);
                 }
             }
@@ -609,8 +609,7 @@ public class EngineFactory {
                     EngineFactory.closeEngine(ENGINE);
 
                     // Boot the engine with the temporary file
-                    engine = EngineFactory.bootLocalEngine(tempFile.toAbsolutePath().toString(), ENGINE,
-                            EngineFactory.EMPTY_PASSWORD);
+                    engine = EngineFactory.bootLocalEngine(tempFile.toString(), ENGINE, EngineFactory.EMPTY_PASSWORD);
 
                     if (engine != null) {
 

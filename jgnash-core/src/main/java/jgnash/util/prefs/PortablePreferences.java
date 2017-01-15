@@ -62,11 +62,11 @@ public class PortablePreferences {
             try (final InputStream is = Files.newInputStream(importFile)) {
                 Preferences.importPreferences(is);
             } catch (final InvalidPreferencesFormatException | IOException e) {
-                System.err.println("Preferences file " + importFile.toAbsolutePath().toString() + " could not be read");
+                System.err.println("Preferences file " + importFile.toString() + " could not be read");
                 Logger.getLogger(PortablePreferences.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         } else {
-            System.err.println("Preferences file " + importFile.toAbsolutePath().toString() + " was not found");
+            System.err.println("Preferences file " + importFile.toString() + " was not found");
         }
     }
 

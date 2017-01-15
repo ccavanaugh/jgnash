@@ -210,12 +210,12 @@ abstract class AbstractJpaDataStore implements DataStore {
 
         // Remove the existing files so we don't mix entities and cause corruption
         if (Files.exists(path)) {
-            deleteDatabase(path.toAbsolutePath().toString());
+            deleteDatabase(path.toString());
         }
 
-        if (initEmptyDatabase(path.toAbsolutePath().toString())) {
+        if (initEmptyDatabase(path.toString())) {
 
-            final Properties properties = JpaConfiguration.getLocalProperties(getType(), path.toAbsolutePath().toString(),
+            final Properties properties = JpaConfiguration.getLocalProperties(getType(), path.toString(),
                     new char[]{}, false);
 
             EntityManagerFactory factory = null;
@@ -244,7 +244,7 @@ abstract class AbstractJpaDataStore implements DataStore {
                 }
             }
 
-            waitForLockFileRelease(path.toAbsolutePath().toString(), new char[]{});
+            waitForLockFileRelease(path.toString(), new char[]{});
         }
     }
 
