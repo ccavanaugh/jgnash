@@ -63,6 +63,8 @@ public final class FileUtils {
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
             JpaH2DataStore.LOCK_EXT, ".lock"};
 
+    public static final String separator = System.getProperty("file.separator");
+
     private FileUtils() {
     }
 
