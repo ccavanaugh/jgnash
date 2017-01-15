@@ -21,6 +21,10 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.29.0
+--------------
+* 01/15/17 More stability improvements when under heavy background loads and using a relational database. (Swing, Fx)
+
 Release 2.28.2
 --------------
 * 01/14/17 Corrected a bug with file locking on Windows OS.
