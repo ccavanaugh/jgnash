@@ -53,6 +53,8 @@ public final class PluginFactory {
     private static boolean pluginsStarted = false;
     private static boolean pluginsLoaded = false;
 
+    public static final String separator = System.getProperty("file.separator");
+
     private PluginFactory() {
         // Utility class
     }
@@ -75,7 +77,7 @@ public final class PluginFactory {
         // starting path will be the lib directory because that is where jgnash-core lives.
 
         pluginDirectory = new File(pluginDirectory).getParentFile().getParent();
-        pluginDirectory += File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+        pluginDirectory += separator + PLUGIN_DIRECTORY_NAME + separator;
 
         logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
 
@@ -95,10 +97,10 @@ public final class PluginFactory {
         }
 
         if (OS.isSystemWindows()) {
-            pluginDirectory += File.separator + "AppData" + File.separator + "Local" + File.separator
-                    + "jgnash" + File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+            pluginDirectory += separator + "AppData" + separator + "Local" + separator
+                    + "jgnash" + separator + PLUGIN_DIRECTORY_NAME + separator;
         } else { // unix, osx
-            pluginDirectory += File.separator + ".jgnash" + File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+            pluginDirectory += separator + ".jgnash" + separator + PLUGIN_DIRECTORY_NAME + separator;
         }
 
         logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);

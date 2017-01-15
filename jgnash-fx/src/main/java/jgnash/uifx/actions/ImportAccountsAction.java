@@ -18,6 +18,8 @@
 package jgnash.uifx.actions;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -57,7 +59,7 @@ public class ImportAccountsAction {
             pref.put(LAST_DIR, file.getParentFile().getAbsolutePath());
 
             final ImportTask importTask =
-                    new ImportTask(new File(FileUtils.stripFileExtension(file.getAbsolutePath()) + ".xml"));
+                    new ImportTask(Paths.get(FileUtils.stripFileExtension(file.getAbsolutePath()) + ".xml"));
 
             new Thread(importTask).start();
 
@@ -80,9 +82,9 @@ public class ImportAccountsAction {
     }
 
     private static class ImportTask extends Task<Void> {
-        private final File file;
+        private final Path file;
 
-        ImportTask(final File file) {
+        ImportTask(final Path file) {
             this.file = file;
         }
 

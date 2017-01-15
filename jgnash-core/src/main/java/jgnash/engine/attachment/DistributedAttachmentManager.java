@@ -17,11 +17,12 @@
  */
 package jgnash.engine.attachment;
 
-import jgnash.util.OS;
-
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -35,6 +36,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.util.FileUtils;
+import jgnash.util.OS;
 
 /**
  * Attachment handler for a remote database.
@@ -99,10 +103,10 @@ public class DistributedAttachmentManager implements AttachmentManager {
         boolean result = false;
 
         // Transfer the file to the remote location
-        final Future<Void> future = fileClient.sendFile(path.toFile());
+        final Future<Void> future = fileClient.sendFile(path);
 
         // Determine the cache location the file needs to go to so it does not have to be requested
-        final Path newPath = Paths.get(tempAttachmentPath + File.separator + path.getFileName());
+        final Path newPath = Paths.get(tempAttachmentPath + FileUtils.separator + path.getFileName());
 
         if (future != null) {   // if null, path was not valid
             try {
@@ -135,7 +139,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
     public Future<Path> getAttachment(final String attachment) {
 
         return executorService.submit(() -> {
-            Path path = Paths.get(tempAttachmentPath + File.separator + Paths.get(attachment).getFileName());
+            Path path = Paths.get(tempAttachmentPath + FileUtils.separator + Paths.get(attachment).getFileName());
 
             if (Files.notExists(path)) {
                 fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location

@@ -21,8 +21,6 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
-* Convert from File to Path nio so Jimfs may be used for unit tests
-
 Release 2.28.2
 --------------
 * 01/14/17 Corrected a bug with file locking on Windows OS.

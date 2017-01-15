@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,6 +29,7 @@ import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.util.FileUtils;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -41,6 +41,8 @@ import static org.junit.Assert.fail;
  */
 public class JpaHsqlEngineTest extends EngineTest {
 
+    private static String base;
+
     @Override
     public Engine createEngine() throws Exception {
         testFile = "jpa-test." + JpaH2DataStore.FILE_EXT;
@@ -48,11 +50,7 @@ public class JpaHsqlEngineTest extends EngineTest {
         try {
             testFile = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toString();
 
-            final String base = FileUtils.stripFileExtension(testFile);
-
-            // these files will show up after close
-            new File(base + ".properties").deleteOnExit();
-            new File(base + ".lobs").deleteOnExit();
+            base = FileUtils.stripFileExtension(testFile);
         } catch (IOException ex) {
             Logger.getLogger(JpaHsqlEngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             fail();
@@ -76,5 +74,11 @@ public class JpaHsqlEngineTest extends EngineTest {
         Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile);
 
         tableNames.forEach(System.out::println);
+    }
+
+    @AfterClass
+    public static void cleanup() throws IOException {
+        Files.deleteIfExists(Paths.get(base + ".properties"));
+        Files.deleteIfExists(Paths.get(base + ".lobs"));
     }
 }

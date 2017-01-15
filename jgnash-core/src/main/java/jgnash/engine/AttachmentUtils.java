@@ -17,9 +17,9 @@
  */
 package jgnash.engine;
 
+import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,7 +76,7 @@ public class AttachmentUtils {
      */
     public static Path getAttachmentDirectory(@NotNull final Path baseFile) {
         if (baseFile.getParent() != null) {
-            return Paths.get(baseFile.getParent() + File.separator + ATTACHMENT_BASE);
+            return Paths.get(baseFile.getParent() + FileUtils.separator + ATTACHMENT_BASE);
         }
 
         return null;

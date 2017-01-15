@@ -675,7 +675,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 protected String doInBackground() throws Exception {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
-                    return BudgetResultsExport.exportBudgetResultsModel(file, resultsModel);
+                    return BudgetResultsExport.exportBudgetResultsModel(file.toPath(), resultsModel);
                 }
 
                 @Override

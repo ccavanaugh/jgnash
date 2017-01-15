@@ -143,7 +143,7 @@ public class BinaryXStreamDataStore implements DataStore {
     }
 
     /*
-     * @see jgnash.engine.DataStore#saveAs(java.io.File, java.util.Collection)
+     * @see jgnash.engine.DataStore#saveAs(java.util.Collection)
      */
     @Override
     public void saveAs(final Path path, final Collection<StoredObject> objects) {

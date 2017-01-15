@@ -32,8 +32,6 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.ResourceUtils;
 
-//import jgnash.util.Resource;
-
 /**
  * Import a tree of accounts
  *
@@ -62,7 +60,7 @@ public class ImportAccountsAction extends AbstractEnabledAction {
                 protected Void doInBackground() throws Exception {
                     UIApplication.getFrame().displayWaitMessage(ResourceUtils.getString("Message.ImportWait"));
 
-                    RootAccount root = AccountTreeXMLFactory.loadAccountTree(file);
+                    RootAccount root = AccountTreeXMLFactory.loadAccountTree(file.toPath());
 
                     if (root != null) {
                         AccountTreeXMLFactory.mergeAccountTree(EngineFactory.getEngine(EngineFactory.DEFAULT), root);

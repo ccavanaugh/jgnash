@@ -50,6 +50,7 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ImageDialog;
 import jgnash.uifx.views.main.MainView;
+import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -230,10 +231,10 @@ public class AttachmentPane extends GridPane {
                 if (!StaticUIMethods.showConfirmationDialog(resources.getString("Title.MoveFile"), message).getButtonData().isCancelButton()) {
                     moveAttachment = true;
 
-                    final Path newPath = new File(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
-                            File.separator + selectedFile.getName()).toPath();
+                    final Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
+                            FileUtils.separator + selectedFile.getName());
 
-                    if (newPath.toFile().exists()) {
+                    if (Files.exists(newPath)) {
                         message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),
                                 attachmentDirectory.toString());
 

@@ -32,7 +32,6 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Future;
@@ -131,9 +130,9 @@ class AttachmentTransferClient {
         }
     }
 
-    Future<Void> sendFile(final File file) {
+    Future<Void> sendFile(final Path file) {
         if (transferHandler != null) {
-            return transferHandler.sendFile(channel, file.getAbsolutePath());
+            return transferHandler.sendFile(channel, file.toString());
         }
 
         return null;

@@ -29,6 +29,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
+import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -91,7 +92,7 @@ public class PortablePreferences {
         if (portableFile != null && !portableFile.isEmpty()) {
             exportFile = Paths.get(portableFile);
         } else {
-            exportFile = Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator") + "pref.xml");
+            exportFile = Paths.get(System.getProperty("user.dir") + FileUtils.separator + "pref.xml");
         }
         return exportFile;
     }

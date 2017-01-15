@@ -17,22 +17,16 @@
  */
 package jgnash.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * File utilities test.
@@ -44,7 +38,7 @@ public class FileUtilsTest {
     private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
         final char[] buffer = new char[testdata.length()];
 
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(absolutepath))) {
+        try (final Reader reader = Files.newBufferedReader(Paths.get(absolutepath))) {
             final int read = reader.read(buffer);
 
             assertEquals(testdata.length(), read);
@@ -53,8 +47,8 @@ public class FileUtilsTest {
         assertEquals(testdata, new String(buffer));
     }
 
-    private static void writeTestData(final String testdata, final File tempfile) throws IOException {
-        try (OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(tempfile))) {
+    private static void writeTestData(final String testdata, final Path tempfile) throws IOException {
+        try (final Writer os = Files.newBufferedWriter(tempfile)) {
             os.write(testdata);
         }
     }
@@ -63,10 +57,10 @@ public class FileUtilsTest {
     public void testFileLock() throws IOException, InterruptedException {
         final Path tempFile = Files.createTempFile("temp", null);
 
-        final BufferedWriter bufferedWriter = Files.newBufferedWriter(tempFile);
+        final Writer writer = Files.newBufferedWriter(tempFile);
 
-        bufferedWriter.write("test");
-        bufferedWriter.close();
+        writer.write("test");
+        writer.close();
 
         assertTrue(Files.isWritable(tempFile));
         assertTrue(Files.isReadable(tempFile));
@@ -103,11 +97,10 @@ public class FileUtilsTest {
 
     @Test
     public void fileCopyToSelf() throws IOException {
-        File tempFile = Files.createTempFile("jgnash-test", ".jdb").toFile();
-        tempFile.deleteOnExit();
+        Path tempFile = Files.createTempFile("jgnash-test", ".jdb");
 
-        String absolutePath = tempFile.getAbsolutePath();
-        String testData = "42";
+        String absolutePath = tempFile.toString();
+        String testData = "42fd;lgkjsgj;gfj;slfkgj;";
 
         // Write the data to a file
         writeTestData(testData, tempFile);
@@ -115,5 +108,7 @@ public class FileUtilsTest {
 
         // Copy the file to itself: the file should not be emptied :)
         assertFalse(FileUtils.copyFile(Paths.get(absolutePath), Paths.get(absolutePath)));
+
+        Files.delete(tempFile);
     }
 }

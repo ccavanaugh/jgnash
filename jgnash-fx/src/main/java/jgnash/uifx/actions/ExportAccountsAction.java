@@ -18,6 +18,8 @@
 package jgnash.uifx.actions;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -56,7 +58,7 @@ public class ExportAccountsAction {
             pref.put(LAST_DIR, file.getParentFile().getAbsolutePath());
 
             final ExportTask exportTask =
-                    new ExportTask(new File(FileUtils.stripFileExtension(file.getAbsolutePath()) + ".xml"));
+                    new ExportTask(Paths.get(FileUtils.stripFileExtension(file.getAbsolutePath()) + ".xml"));
 
             new Thread(exportTask).start();
 
@@ -79,9 +81,9 @@ public class ExportAccountsAction {
     }
 
     private static class ExportTask extends Task<Void> {
-        private final File file;
+        private final Path file;
 
-        ExportTask(final File file) {
+        ExportTask(final Path file) {
             this.file = file;
         }
 

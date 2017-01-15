@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -56,7 +55,7 @@ public class NewFileUtility {
         }
 
         // create the directory if needed
-        Files.createDirectories(new File(new File(fileName).getParent()).toPath());
+        Files.createDirectories(Paths.get(fileName).getParent());
 
         final Engine e = EngineFactory.bootLocalEngine(fileName, EngineFactory.DEFAULT, password, dataStoreType);
 

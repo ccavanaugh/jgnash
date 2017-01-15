@@ -1,7 +1,7 @@
 package jgnash.engine;
 
-import java.io.File;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -219,7 +219,7 @@ import static org.junit.Assert.*;
      @Before
      public void setUp() {
          try {
-             database = File.createTempFile("jgnash", ".bxds").getAbsolutePath();
+             database = Files.createTempFile("jgnash", ".bxds").toString();
              EngineFactory.deleteDatabase(database);
 
              e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,

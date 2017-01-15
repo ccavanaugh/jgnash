@@ -395,9 +395,8 @@ public class EngineFactory {
     public static synchronized String getDefaultDatabase() {
         final String base = System.getProperty("user.home");
         final String userName = System.getProperty("user.name");
-        final String fileSep = System.getProperty("file.separator");
 
-        return base + fileSep + DEFAULT_DIR + fileSep + userName;
+        return base + FileUtils.separator + DEFAULT_DIR + FileUtils.separator + userName;
     }
 
     /**

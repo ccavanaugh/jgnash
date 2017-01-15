@@ -143,7 +143,7 @@ public class BudgetViewController implements MessageListener {
                     updateMessage(resources.getString("Message.PleaseWait"));
                     updateProgress(-1, Long.MAX_VALUE);
 
-                    BudgetResultsExport.exportBudgetResultsModel(file, budgetTableController.getBudgetResultsModel());
+                    BudgetResultsExport.exportBudgetResultsModel(file.toPath(), budgetTableController.getBudgetResultsModel());
                     return null;
                 }
             };

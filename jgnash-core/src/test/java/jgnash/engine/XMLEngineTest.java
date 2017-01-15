@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,10 +37,9 @@ public class XMLEngineTest extends EngineTest {
     @Override
     public Engine createEngine() throws Exception {
         try {
-            testFile = Files.createTempFile("test", "." + DataStoreType.XML.getDataStore().getFileExt()).toFile().getAbsolutePath();
+            testFile = Files.createTempFile("test", "." + DataStoreType.XML.getDataStore().getFileExt()).toString();
             tempFile = testFile;
 
-            new File(testFile + ".backup").deleteOnExit();
         } catch (IOException e1) {
             Logger.getLogger(XMLEngineTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
         }
