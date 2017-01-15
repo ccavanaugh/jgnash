@@ -44,7 +44,7 @@ public class BudgetResultsExportTest {
     public void testExportBudgetResultsModel() throws Exception {
 
         final String file = Files.createTempFile("budget-", "."
-                + DataStoreType.XML.getDataStore().getFileExt()).toFile().getAbsolutePath();
+                + DataStoreType.XML.getDataStore().getFileExt()).toString();
 
         EngineFactory.deleteDatabase(file);
 
