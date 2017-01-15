@@ -104,7 +104,7 @@ public class PriorityThreadPoolExecutor {
 
     //A future task that wraps around the priority task to be used in the queue
     static class FutureTaskWrapper<T> extends FutureTask<T> implements Comparable<FutureTaskWrapper<T>> {
-        private PriorityCallable<T> priorityCallable;
+        private final PriorityCallable<T> priorityCallable;
 
         FutureTaskWrapper(final PriorityCallable<T> priorityCallable) {
             super(priorityCallable);
