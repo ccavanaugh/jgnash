@@ -12,12 +12,22 @@
     <description>jGnash Personal Finance</description>
     <inceptionYear>2001</inceptionYear>
 
+    <scm>
+        <url>https://github.com/ccavanaugh/jgnash</url>
+        <connection>scm:git:git://github.com:ccavanaugh/jgnash.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:ccavanaugh/jgnash.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/ccavanaugh/jgnash/issues</url>
+    </issueManagement>
+
     <prerequisites>
-        <maven>3.3.3</maven>
+        <maven>3.3.9</maven>
     </prerequisites>
 
     <properties>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy/MM/dd-HH:mm</maven.build.timestamp.format>
         <buildDate>${maven.build.timestamp}</buildDate>
@@ -226,7 +236,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.6.0</version>
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
