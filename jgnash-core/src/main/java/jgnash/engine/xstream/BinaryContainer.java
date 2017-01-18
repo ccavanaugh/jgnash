@@ -17,6 +17,8 @@
  */
 package jgnash.engine.xstream;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -116,7 +118,7 @@ class BinaryContainer extends AbstractXStreamContainer {
 
         logger.info("Writing Binary file");
 
-        try (final OutputStream os = Files.newOutputStream(path)) {
+        try (final OutputStream os = new BufferedOutputStream(Files.newOutputStream(path))) {
 
             final XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(),
                     new BinaryStreamDriver()));
@@ -137,7 +139,7 @@ class BinaryContainer extends AbstractXStreamContainer {
     void readBinary() {
 
         // A file lock will be held on Windows OS when reading
-        try (final InputStream fis = Files.newInputStream(path, StandardOpenOption.READ)) {
+        try (final InputStream fis = new BufferedInputStream(Files.newInputStream(path, StandardOpenOption.READ))) {
             readWriteLock.writeLock().lock();
 
             final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),

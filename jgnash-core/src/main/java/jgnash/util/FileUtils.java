@@ -17,6 +17,8 @@
  */
 package jgnash.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -64,6 +66,8 @@ public final class FileUtils {
             JpaH2DataStore.LOCK_EXT, ".lock"};
 
     public static final String separator = System.getProperty("file.separator");
+
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     private FileUtils() {
     }
@@ -203,11 +207,11 @@ public final class FileUtils {
         }
 
         // Try to open the zip file for output
-        try (final OutputStream fos = Files.newOutputStream(destination);
+        try (final OutputStream fos = new BufferedOutputStream(Files.newOutputStream(destination));
              final ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
             // Try to open the input stream
-            try (final InputStream in = Files.newInputStream(source, StandardOpenOption.READ)) {
+            try (final InputStream in = new BufferedInputStream(Files.newInputStream(source, StandardOpenOption.READ))) {
                 zipOut.setLevel(Deflater.BEST_COMPRESSION);
 
                 // strip the path when creating the zip entry
@@ -216,7 +220,8 @@ public final class FileUtils {
                 // Transfer bytes from the file to the ZIP file
                 int length;
 
-                byte[] ioBuffer = new byte[8192];
+
+                byte[] ioBuffer = new byte[DEFAULT_BUFFER_SIZE];
 
                 while ((length = in.read(ioBuffer)) > 0) {
                     zipOut.write(ioBuffer, 0, length);
