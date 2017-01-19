@@ -64,6 +64,7 @@
                             source highlighting -->
                             <sourceHighlighter>rouge</sourceHighlighter>
                             <doctype>book</doctype>
+                            <imagesDir>../asciidoc/images</imagesDir>
                             <attributes>
                                 <pdf-stylesdir>${project.basedir}/src/docs/asciidoc/theme</pdf-stylesdir>
                                 <pdf-style>custom</pdf-style>
