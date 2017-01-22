@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,6 +50,7 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ImageDialog;
 import jgnash.uifx.views.main.MainView;
+import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -70,7 +71,7 @@ public class AttachmentPane extends GridPane {
     @FXML
     protected Button deleteAttachmentButton;
 
-    private final SimpleObjectProperty<Path> attachmentProperty = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Path> attachment = new SimpleObjectProperty<>(null);
 
     private boolean moveAttachment = false;
 
@@ -93,9 +94,9 @@ public class AttachmentPane extends GridPane {
 
     @FXML
     private void initialize() {
-        attachmentButton.disableProperty().bind(Bindings.isNotNull(attachmentProperty));
-        deleteAttachmentButton.disableProperty().bind(Bindings.isNull(attachmentProperty));
-        viewAttachmentButton.disableProperty().bind(Bindings.isNull(attachmentProperty));
+        attachmentButton.disableProperty().bind(Bindings.isNotNull(attachment));
+        deleteAttachmentButton.disableProperty().bind(Bindings.isNull(attachment));
+        viewAttachmentButton.disableProperty().bind(Bindings.isNull(attachment));
 
         attachmentButton.setOnAction(event -> attachmentAction());
         deleteAttachmentButton.setOnAction(event -> handleDeleteAction());
@@ -103,7 +104,7 @@ public class AttachmentPane extends GridPane {
     }
 
     private void handleDeleteAction() {
-        attachmentProperty.setValue(null);
+        attachment.set(null);
     }
 
     /**
@@ -122,7 +123,7 @@ public class AttachmentPane extends GridPane {
 
                 Platform.runLater(() -> {
                     try {
-                        attachmentProperty.setValue(pathFuture.get());
+                        attachment.set(pathFuture.get());
                     } catch (final InterruptedException | ExecutionException e) {
                         Logger.getLogger(AttachmentPane.class.getName()).log(Level.SEVERE, e.getMessage(), e);
                     }
@@ -140,9 +141,9 @@ public class AttachmentPane extends GridPane {
      * @return the provided {@code Transaction}
      */
     Transaction buildTransaction(final Transaction transaction) {
-        if (attachmentProperty.get() != null) {
+        if (attachment.get() != null) {
 
-            final Path path = attachmentProperty.get().getFileName();
+            final Path path = attachment.get().getFileName();
 
             if (moveAttachment) {
                 if (moveAttachment() && path != null) {
@@ -166,21 +167,21 @@ public class AttachmentPane extends GridPane {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        return engine.addAttachment(attachmentProperty.get(), false);
+        return engine.addAttachment(attachment.get(), false);
     }
 
     private void showImageAction() {
-        if (attachmentProperty.get() != null) {
-            if (Files.exists(attachmentProperty.get())) {
-                ImageDialog.showImage(attachmentProperty.get());
+        if (attachment.get() != null) {
+            if (Files.exists(attachment.get())) {
+                ImageDialog.showImage(attachment.get());
             } else {
-                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.MissingAttachment", attachmentProperty.get().toString()));
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.MissingAttachment", attachment.get().toString()));
             }
         }
     }
 
     void clear() {
-        attachmentProperty.set(null);
+        attachment.set(null);
     }
 
     private void attachmentAction() {
@@ -204,14 +205,14 @@ public class AttachmentPane extends GridPane {
             fileChooser.setInitialDirectory(new File(lastDirectory));
         }
 
-        if (attachmentProperty.get() != null) {
-            final Path path = attachmentProperty.get().getFileName();
+        if (attachment.get() != null) {
+            final Path path = attachment.get().getFileName();
             if (path != null) {
                 fileChooser.setInitialFileName(path.toString());
             }
         }
 
-        final File selectedFile = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
+        final File selectedFile = fileChooser.showOpenDialog(MainView.getPrimaryStage());
         if (selectedFile != null) {
             pref.put(LAST_DIR, selectedFile.getParent());   // save last good directory location
 
@@ -230,10 +231,10 @@ public class AttachmentPane extends GridPane {
                 if (!StaticUIMethods.showConfirmationDialog(resources.getString("Title.MoveFile"), message).getButtonData().isCancelButton()) {
                     moveAttachment = true;
 
-                    final Path newPath = new File(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
-                            File.separator + selectedFile.getName()).toPath();
+                    final Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
+                            FileUtils.separator + selectedFile.getName());
 
-                    if (newPath.toFile().exists()) {
+                    if (Files.exists(newPath)) {
                         message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),
                                 attachmentDirectory.toString());
 
@@ -247,7 +248,7 @@ public class AttachmentPane extends GridPane {
             }
 
             if (result) {
-                attachmentProperty.setValue(selectedFile.toPath());
+                attachment.set(selectedFile.toPath());
             }
         }
     }

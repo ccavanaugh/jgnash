@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,11 +78,11 @@ public class MainToolBarController implements MessageListener {
         Platform.runLater(() -> {
             switch (event.getEvent()) {
                 case FILE_LOAD_SUCCESS:
-                    disabled.setValue(false);
+                    disabled.set(false);
                     break;
                 case FILE_CLOSING:
                 case FILE_LOAD_FAILED:
-                    disabled.setValue(true);
+                    disabled.set(true);
                     break;
                 default:
                     break;

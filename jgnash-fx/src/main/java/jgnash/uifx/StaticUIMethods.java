@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ public class StaticUIMethods {
 
         pair.getStage().setResizable(false);
 
-        StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class);
+        StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class, MainView.getPrimaryStage());
 
         pair.getStage().show();
     }
@@ -66,7 +66,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.ERROR, message);
 
         alert.setTitle(ResourceUtils.getString("Title.Error"));
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -75,7 +75,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
 
         alert.setTitle(ResourceUtils.getString("Title.Information"));
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -84,7 +84,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.WARNING, message);
 
         alert.setTitle(ResourceUtils.getString("Title.Warning"));
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -100,7 +100,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.YES_NO, message);
 
         alert.setTitle(title);
-        alert.initOwner(MainView.getInstance().getPrimaryStage());
+        alert.initOwner(MainView.getPrimaryStage());
 
         final Optional<ButtonType> buttonType = alert.showAndWait();
 

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ public final class StaticAccountsMethods {
     public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainView.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getPrimaryStage());
         dialog.setTitle(ResourceUtils.getString("Title.VisibleAccountTypes"));
 
         final AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
@@ -64,7 +64,7 @@ public final class StaticAccountsMethods {
 
         dialog.setResizable(false);
 
-        StageUtils.addBoundsListener(dialog, AccountTypeFilterFormController.class);
+        StageUtils.addBoundsListener(dialog, AccountTypeFilterFormController.class, MainView.getPrimaryStage());
 
         dialog.showAndWait();
     }
@@ -72,7 +72,7 @@ public final class StaticAccountsMethods {
     static void showNewAccountPropertiesDialog(@Nullable final Account parentAccount) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainView.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getPrimaryStage());
         dialog.setTitle(ResourceUtils.getString("Title.NewAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
@@ -89,7 +89,7 @@ public final class StaticAccountsMethods {
 
         dialog.setResizable(false);
 
-        StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
+        StageUtils.addBoundsListener(dialog, AccountPropertiesController.class, MainView.getPrimaryStage());
 
         dialog.showAndWait();
 
@@ -103,7 +103,7 @@ public final class StaticAccountsMethods {
     static void showModifyAccountProperties(final Account account) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.initOwner(MainView.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getPrimaryStage());
         dialog.setTitle(ResourceUtils.getString("Title.ModifyAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
@@ -115,7 +115,7 @@ public final class StaticAccountsMethods {
 
         dialog.setResizable(false);
 
-        StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
+        StageUtils.addBoundsListener(dialog, AccountPropertiesController.class, MainView.getPrimaryStage());
 
         dialog.showAndWait();
 

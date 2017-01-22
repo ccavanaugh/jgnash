@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
 
         xAxis.setTickLabelFormatter(new NumberDateStringConverter());
 
-        xAxis.tickLabelRotationProperty().setValue(-60);
+        xAxis.tickLabelRotationProperty().set(-60);
         xAxis.setAutoRanging(false);
 
         securityNodeProperty().addListener((observable, oldValue, newValue) -> update());

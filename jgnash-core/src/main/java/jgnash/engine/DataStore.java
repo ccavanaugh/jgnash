@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -93,10 +92,10 @@ public interface DataStore {
      * <p> 
      * The currently open file will not be closed.
      * 
-     * @param file full path to the file to save the database to
+     * @param path full path to the file to save the database to
      * @param objects Collection of StoredObjects to save
      */
-    void saveAs(File file, Collection<StoredObject> objects);
+    void saveAs(Path path, Collection<StoredObject> objects);
 
     /**
      * Renames a datastore.

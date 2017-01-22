@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class ImportWizard {
         DATE_FORMAT
     }
 
-    private final ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<WizardDialogController<Settings>> wizardController = new SimpleObjectProperty<>();
 
     private final SimpleBooleanProperty dateFormatSelectionEnabled = new SimpleBooleanProperty(false);
 
@@ -64,12 +64,12 @@ public class ImportWizard {
                         resources.getString("Title.ImportTransactions"));
 
         stage = pair.getStage();
-        wizardControllerProperty().setValue(pair.getController());
+        wizardControllerProperty().set(pair.getController());
 
         final WizardDialogController<Settings> wizardController = wizardControllerProperty().get();
 
-        // force a default account before loading tasks to prevent NPE.  The ordered pages should sort out better choices
-        wizardController.setSetting(Settings.ACCOUNT, GenericImport.matchAccount(null));
+        // force a default account before loading tasks to prevent NPE.  The ordered pages will sort out better choices
+        wizardController.setSetting(Settings.ACCOUNT, GenericImport.findFirstAvailableAccount());
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ImportPageOne.fxml"), resources);
@@ -100,7 +100,7 @@ public class ImportWizard {
     }
 
     public ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty() {
-        return wizardControllerProperty;
+        return wizardController;
     }
 
     public SimpleBooleanProperty dateFormatSelectionEnabled() {

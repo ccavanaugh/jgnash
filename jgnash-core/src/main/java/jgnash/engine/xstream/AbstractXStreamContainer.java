@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,11 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.math.BigDecimal;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
-import java.nio.channels.OverlappingFileLockException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -60,6 +58,7 @@ import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.time.Period;
+import jgnash.util.FileLocker;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
@@ -82,12 +81,12 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 abstract class AbstractXStreamContainer {
     final List<StoredObject> objects = new ArrayList<>();
     final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
-    final File file;
-    private FileLock fileLock = null;
-    private FileChannel lockChannel = null;
+    final Path path;
 
-    AbstractXStreamContainer(final File file) {
-        this.file = file;
+    private final FileLocker fileLocker = new FileLocker();
+
+    AbstractXStreamContainer(final Path path) {
+        this.path = path;
     }
 
     /**
@@ -95,14 +94,18 @@ abstract class AbstractXStreamContainer {
      *
      * @param origFile file to check and backup
      */
-    static void createBackup(final File origFile) {
-        if (origFile.exists()) {
-            File backup = new File(origFile.getAbsolutePath() + ".backup");
-            if (backup.exists()) {
-                if (!backup.delete()) {
+    static void createBackup(final Path origFile) {
+        if (Files.exists(origFile)) {
+
+            final Path backup = Paths.get(origFile.toString() + ".backup");
+
+            if (Files.exists(backup)) {
+                try {
+                    Files.delete(backup);
+                } catch (IOException e) {
                     Logger.getLogger(AbstractXStreamContainer.class.getName())
                             .log(Level.WARNING, "Was not able to delete the old backup file: {0}",
-                                    backup.getAbsolutePath());
+                                    backup.toString());
                 }
             }
 
@@ -210,32 +213,12 @@ abstract class AbstractXStreamContainer {
         return xstream;
     }
 
-    @SuppressWarnings(value = {"ChannelOpenedButNotSafelyClosed", "IOResourceOpenedButNotSafelyClosed", "resource"})
     boolean acquireFileLock() {
-        try {
-            lockChannel = new RandomAccessFile(file, "rw").getChannel();
-            fileLock = lockChannel.tryLock();
-            return true;
-        } catch (IOException | OverlappingFileLockException ex) {
-            Logger.getLogger(AbstractXStreamContainer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+        return fileLocker.acquireLock(path);
     }
 
     void releaseFileLock() {
-        try {
-            if (fileLock != null) {
-                fileLock.release();
-                fileLock = null;
-            }
-
-            if (lockChannel != null) {
-                lockChannel.close();
-                lockChannel = null;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(AbstractXStreamContainer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        fileLocker.release();
     }
 
     abstract void commit();
@@ -304,8 +287,8 @@ abstract class AbstractXStreamContainer {
     }
 
     String getFileName() {
-        if (file != null) {
-            return file.getAbsolutePath();
+        if (path != null) {
+            return path.toString();
         }
         return null;
     }

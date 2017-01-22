@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -190,8 +190,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     }
 
     /**
-     * Compare using only the month, day and year of the node ignoring hours and
-     * seconds.
+     * Compare using only the {@code LocalDate}
      *
      * @param node node to compare
      */
@@ -200,10 +199,16 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         return getLocalDate().compareTo(node.getLocalDate());
     }
 
+    /**
+     * Equality is based on the {@code LocalDate} of the SecurityHistoryNode.
+     *
+     * @param obj the reference SecurityHistoryNode with which to compare.
+     * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+     */
     @Override
-    public boolean equals(final Object o) {
-        return this == o || o instanceof SecurityHistoryNode && date
-                .compareTo(((SecurityHistoryNode) o).date) == 0;
+    public boolean equals(final Object obj) {
+        return this == obj || obj instanceof SecurityHistoryNode && date
+                .compareTo(((SecurityHistoryNode) obj).date) == 0;
     }
 
    @Override

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
@@ -39,9 +40,11 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.util.Callback;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -51,9 +54,11 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ShortDateTableCell;
+import jgnash.uifx.skin.StyleClass;
 
 /**
  * Controller for recurring events.
@@ -78,7 +83,7 @@ public class RecurringViewController implements MessageListener {
 
     private final SortedList<Reminder> sortedReminderList = new SortedList<>(observableReminderList);
 
-    final private ReadOnlyObjectWrapper<Reminder> selectedReminderProperty = new ReadOnlyObjectWrapper<>();
+    final private ReadOnlyObjectWrapper<Reminder> selectedReminder = new ReadOnlyObjectWrapper<>();
 
     private Timer timer = null;
 
@@ -94,6 +99,59 @@ public class RecurringViewController implements MessageListener {
         final TableColumn<Reminder, String> descriptionColumn = new TableColumn<>(resources.getString("Column.Description"));
         descriptionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDescription()));
         tableView.getColumns().add(descriptionColumn);
+
+        final TableColumn<Reminder, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
+        accountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDescription()));
+        accountColumn.setCellValueFactory(param -> {
+            if (param.getValue().getAccount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getAccount().toString());
+            }
+            return null;
+        });
+        tableView.getColumns().add(accountColumn);
+
+        final TableColumn<Reminder, BigDecimal> amountColumn = new TableColumn<>(resources.getString("Column.Amount"));
+        amountColumn.setCellValueFactory(param -> {
+            if (param.getValue().getTransaction() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getTransaction().getAmount(param.getValue().getAccount()));
+            }
+            return null;
+        });
+
+        amountColumn.setCellFactory(new Callback<TableColumn<Reminder, BigDecimal>, TableCell<Reminder, BigDecimal>>() {
+            @Override
+            public TableCell<Reminder, BigDecimal> call(TableColumn<Reminder, BigDecimal> param) {
+                return new TableCell<Reminder, BigDecimal>() {
+                    {
+                        setStyle("-fx-alignment: center-right;");
+                    }
+
+                    @Override
+                    protected void updateItem(final BigDecimal amount, final boolean empty) {
+                        super.updateItem(amount, empty);
+
+                        if (!empty && getTableRow() != null && getTableRow().getItem() != null) {
+                            final Reminder reminder = (Reminder) getTableRow().getItem();
+
+                            if (reminder.getTransaction() != null) {
+                                setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                                        .format(amount));
+
+                                if (amount != null && amount.signum() < 0) {
+                                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                                } else {
+                                    setId(StyleClass.NORMAL_CELL_ID);
+                                }
+                            } else {
+                                setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                                        .format(BigDecimal.ZERO));
+                            }
+                        }
+                    }
+                };
+            }
+        });
+        tableView.getColumns().add(amountColumn);
 
         final TableColumn<Reminder, String> frequencyColumn = new TableColumn<>(resources.getString("Column.Freq"));
         frequencyColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getReminderType().toString()));
@@ -118,11 +176,11 @@ public class RecurringViewController implements MessageListener {
 
         tableView.setItems(sortedReminderList);
 
-        selectedReminderProperty.bind(tableView.getSelectionModel().selectedItemProperty());
+        selectedReminder.bind(tableView.getSelectionModel().selectedItemProperty());
 
         // bind enabled state of the buttons to the selected reminder property
-        deleteButton.disableProperty().bind(Bindings.isNull(selectedReminderProperty));
-        modifyButton.disableProperty().bind(Bindings.isNull(selectedReminderProperty));
+        deleteButton.disableProperty().bind(Bindings.isNull(selectedReminder));
+        modifyButton.disableProperty().bind(Bindings.isNull(selectedReminder));
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
 
@@ -207,7 +265,7 @@ public class RecurringViewController implements MessageListener {
 
     @FXML
     private void handleDeleteAction() {
-        if (selectedReminderProperty.get() != null) {
+        if (selectedReminder.get() != null) {
             if (Options.confirmOnDeleteReminderProperty().get()) {
                 if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"),
                         resources.getString("Message.ConfirmReminderDelete"))
@@ -219,7 +277,7 @@ public class RecurringViewController implements MessageListener {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            engine.removeReminder(selectedReminderProperty.get());
+            engine.removeReminder(selectedReminder.get());
         }
     }
 
@@ -245,7 +303,7 @@ public class RecurringViewController implements MessageListener {
     @FXML
     private void handleModifyAction() {
 
-        final Reminder old = selectedReminderProperty.get();
+        final Reminder old = selectedReminder.get();
 
         try {
             final Optional<Reminder> reminder = RecurringEntryDialog.showAndWait((Reminder) old.clone());

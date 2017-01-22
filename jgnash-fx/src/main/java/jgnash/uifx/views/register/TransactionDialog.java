@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ public class TransactionDialog extends Stage {
     @FXML
     private ResourceBundle resources;
 
-    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Consumer<Transaction>> transactionConsumer = new SimpleObjectProperty<>();
 
@@ -72,11 +72,11 @@ public class TransactionDialog extends Stage {
     }
 
     private ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 
     private void setTransactionConsumer(final Consumer<Transaction> consumer) {
-        transactionConsumer.setValue(consumer);
+        transactionConsumer.set(consumer);
     }
 
     @FXML
@@ -139,7 +139,7 @@ public class TransactionDialog extends Stage {
         Objects.requireNonNull(engine);
 
         if (!engine.isStored(transaction)) { // must not be a persisted transaction
-            if (transaction.getAmount(accountProperty.get()).signum() >= 0) {
+            if (transaction.getAmount(account.get()).signum() >= 0) {
                 tabPane.getSelectionModel().select(creditTab);
                 ((SlipController) creditTab.getUserData()).modifyTransaction(transaction);
             } else {
@@ -153,7 +153,7 @@ public class TransactionDialog extends Stage {
                                    final Consumer<Transaction> consumer) {
 
         final TransactionDialog transactionDialog = new TransactionDialog();
-        transactionDialog.accountProperty().setValue(account);
+        transactionDialog.accountProperty().set(account);
         transactionDialog.setTransactionConsumer(consumer);
 
         if (transaction != null) {

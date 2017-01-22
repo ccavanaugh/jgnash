@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.IconUtils;
+import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -207,8 +208,6 @@ class AttachmentPanel extends JPanel implements ActionListener {
 
                 boolean result = true;
 
-                // TODO, add option to copy the file
-
                 final Path attachmentDirectory = AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile));
 
                 if (baseFile.startsWith(EngineFactory.REMOTE_PREFIX)) { // working remotely
@@ -223,8 +222,8 @@ class AttachmentPanel extends JPanel implements ActionListener {
                     if (result) {
                         moveAttachment = true;
 
-                        Path newPath = new File(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
-                                File.separator + selectedFile.getName()).toPath();
+                        Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
+                                FileUtils.separator + selectedFile.getName());
 
                         if (newPath.toFile().exists()) {
                             message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,33 +39,6 @@ public class EncodeDecode {
     private EncodeDecode() {
     }
 
-    /*public static String encodeDimension(Dimension d) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(d.width);
-        buf.append(',');
-        buf.append(d.height);
-        return buf.toString();
-    }
-
-    public static Dimension decodeDimension(String d) {
-        if (d == null) {
-            return null;
-        }
-
-        Dimension rect = null;
-        String[] array = d.split(",");
-        if (array.length == 2) {
-            try {
-                rect = new Dimension();
-                rect.width = Integer.parseInt(array[0]);
-                rect.height = Integer.parseInt(array[1]);
-            } catch (NumberFormatException nfe) {
-                rect = null;
-            }
-        }
-        return rect;
-    }*/
-
     /**
      * Encodes a double array as a comma separated {@code String}. Values will be rounded to 2 decimal places
      *
@@ -85,15 +58,7 @@ public class EncodeDecode {
      * @return primitive {@code double} array
      */
     public static double[] decodeDoubleArray(@NotNull final String string) {
-        String[] array = COMMA_DELIMITER_PATTERN.split(string);
-
-        double[] doubles = new double[array.length];
-
-        for (int i = 0; i < doubles.length; i++) {
-            doubles[i] = Double.parseDouble(array[i]);
-        }
-
-        return doubles;
+        return Arrays.stream(COMMA_DELIMITER_PATTERN.split(string)).mapToDouble(Double::parseDouble).toArray();
     }
 
     /**

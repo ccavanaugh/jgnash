@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ package jgnash.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -57,7 +59,7 @@ public class ExportAccountsAction extends AbstractEnabledAction {
             pref.put(CURRENT_DIR, chooser.getCurrentDirectory().getAbsolutePath());
 
             // strip the file extension if added and ensure it ends with XML
-            final File file = new File(FileUtils.stripFileExtension(chooser.getSelectedFile().getAbsolutePath()) + ".xml");
+            final Path file = Paths.get(FileUtils.stripFileExtension(chooser.getSelectedFile().getAbsolutePath()) + ".xml");
 
             final class Export extends SwingWorker<Void, Void> {
 

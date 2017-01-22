@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ import jgnash.util.function.ParentAccountPredicate;
 public class IncomeExpensePieChartDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private StackPane chartPane;
@@ -87,7 +87,7 @@ public class IncomeExpensePieChartDialogController {
     public void initialize() {
 
         // Respect animation preference
-        pieChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
+        pieChart.animatedProperty().set(Options.animationsEnabledProperty().get());
 
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && newValue.getParent().getAccountType() != AccountType.ROOT) {
@@ -219,8 +219,8 @@ public class IncomeExpensePieChartDialogController {
 
             pieChart.setTitle(title);
 
-            pieChart.centerTitleProperty().setValue(accountComboBox.getValue().getName());
-            pieChart.centerSubTitleProperty().setValue(numberFormat.format(total));
+            pieChart.centerTitleProperty().set(accountComboBox.getValue().getName());
+            pieChart.centerSubTitleProperty().set(numberFormat.format(total));
 
             // abs() on all values won't work if children aren't of uniform sign,
             // then again, this chart is not right to display those trees
@@ -248,6 +248,6 @@ public class IncomeExpensePieChartDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 }

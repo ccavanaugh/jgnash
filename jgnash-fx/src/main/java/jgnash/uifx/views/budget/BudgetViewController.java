@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ public class BudgetViewController implements MessageListener {
                     preferences.put(LAST_BUDGET, newValue.getUuid());
                 }
 
-                Platform.runLater(() -> budgetTableController.budgetProperty().setValue(newValue));
+                Platform.runLater(() -> budgetTableController.budgetProperty().set(newValue));
             });
 
             loadComboBox();
@@ -132,7 +132,7 @@ public class BudgetViewController implements MessageListener {
                         "*.xls", "*.xlsx")
         );
 
-        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());
@@ -143,7 +143,7 @@ public class BudgetViewController implements MessageListener {
                     updateMessage(resources.getString("Message.PleaseWait"));
                     updateProgress(-1, Long.MAX_VALUE);
 
-                    BudgetResultsExport.exportBudgetResultsModel(file, budgetTableController.getBudgetResultsModel());
+                    BudgetResultsExport.exportBudgetResultsModel(file.toPath(), budgetTableController.getBudgetResultsModel());
                     return null;
                 }
             };

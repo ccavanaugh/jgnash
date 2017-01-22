@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,18 +37,18 @@ public class TimePeriodComboBox extends ComboBox<String> {
 
     private int[] periods = new int[0];
 
-    private final ReadOnlyIntegerWrapper periodProperty = new ReadOnlyIntegerWrapper();
+    private final ReadOnlyIntegerWrapper period = new ReadOnlyIntegerWrapper();
 
     public TimePeriodComboBox() {
         loadModel();
 
         // Update the period property automatically
         valueProperty().addListener((observable, oldValue, newValue)
-                -> periodProperty.setValue(periods[getSelectionModel().getSelectedIndex()]));
+                -> period.setValue(periods[getSelectionModel().getSelectedIndex()]));
     }
 
     public ReadOnlyIntegerProperty periodProperty() {
-        return periodProperty.getReadOnlyProperty();
+        return period.getReadOnlyProperty();
     }
 
     private void loadModel() {
@@ -77,7 +77,8 @@ public class TimePeriodComboBox extends ComboBox<String> {
     }
 
     private static int[] getPeriods() {
-        return new int[]{300000, 600000, 900000, 1800000, 3600000, 7200000, 28800000, 86400000, 0};
+        // only non-zero values are allowed
+        return new int[]{300000, 600000, 900000, 1800000, 3600000, 7200000, 28800000, 86400000, 1};
     }
 
     private static String[] getDescriptions() {

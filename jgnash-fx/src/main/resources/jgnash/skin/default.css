@@ -157,3 +157,15 @@
     -fx-font-style: normal;
     -fx-text-fill: darkred;
 }
+
+#bold-label {
+    -fx-font-style: normal;
+    -fx-font-weight: bold;
+}
+
+#bold-negative-label {
+    -fx-font-style: normal;
+    -fx-text-fill: darkred;
+    -fx-opacity: 0.6;
+    -fx-font-weight: bold;
+}

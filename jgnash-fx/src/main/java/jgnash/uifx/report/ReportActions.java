@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.Account;
@@ -51,9 +50,6 @@ public class ReportActions {
     private static final String LAST_DIR = "lastDir";
     private static final String FORCE_CURRENCY = "forceCurrency";
 
-    private static final int MIN_WIDTH = 640;
-    private static final int MIN_HEIGHT = 480;
-
     public static void displayAccountBalanceChart() {
         final FXMLUtils.Pair<AccountBalanceChartController> pair =
                 FXMLUtils.load(IncomeExpenseBarChartDialogController.class.getResource("AccountBalanceChart.fxml"),
@@ -74,16 +70,10 @@ public class ReportActions {
             controller.setAccount(account);
         }
 
-        reportPair.getStage().show();
-
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), AccountRegisterReportController.class, MainView.getPrimaryStage());
 
-        // Override the default sizes
-        Platform.runLater(() -> {
-            reportPair.getStage().setMinWidth(MIN_WIDTH);
-            reportPair.getStage().setMinHeight(MIN_HEIGHT);
-        });
+        reportPair.getStage().show();
     }
 
     public static void displayIncomeExpensePieChart() {
@@ -116,10 +106,11 @@ public class ReportActions {
                         ResourceUtils.getString("Title.PortfolioReport"));
 
         reportPair.getController().loadReportController("PortfolioReport.fxml");
-        reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), PortfolioReportController.class, MainView.getPrimaryStage());
+
+        reportPair.getStage().show();
     }
 
     public static void displayProfitLossReport() {
@@ -128,16 +119,11 @@ public class ReportActions {
                         ResourceUtils.getString("Title.ProfitLoss"));
 
         reportPair.getController().loadReportController("ProfitLossReport.fxml");
-        reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), ProfitLossReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), ProfitLossReportController.class, MainView.getPrimaryStage());
 
-        // Override the default sizes
-        Platform.runLater(() -> {
-            reportPair.getStage().setMinWidth(MIN_WIDTH);
-            reportPair.getStage().setMinHeight(MIN_HEIGHT);
-        });
+        reportPair.getStage().show();
     }
 
     public static void displayBalanceSheetReport() {
@@ -146,16 +132,11 @@ public class ReportActions {
                         ResourceUtils.getString("Title.BalanceSheet"));
 
         reportPair.getController().loadReportController("BalanceSheetReport.fxml");
-        reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), BalanceSheetReportController.class, MainView.getPrimaryStage());
 
-        // Override the default sizes
-        Platform.runLater(() -> {
-            reportPair.getStage().setMinWidth(MIN_WIDTH);
-            reportPair.getStage().setMinHeight(MIN_HEIGHT);
-        });
+        reportPair.getStage().show();
     }
 
     public static void displayNetWorthReport() {
@@ -164,16 +145,11 @@ public class ReportActions {
                         ResourceUtils.getString("Word.NetWorth"));
 
         reportPair.getController().loadReportController("NetWorthReport.fxml");
-        reportPair.getStage().show();
 
         // Preserve size and location
-        StageUtils.addBoundsListener(reportPair.getStage(), NetWorthReportController.class);
+        StageUtils.addBoundsListener(reportPair.getStage(), NetWorthReportController.class, MainView.getPrimaryStage());
 
-        // Override the default sizes
-        Platform.runLater(() -> {
-            reportPair.getStage().setMinWidth(MIN_WIDTH);
-            reportPair.getStage().setMinHeight(MIN_HEIGHT);
-        });
+        reportPair.getStage().show();
     }
 
     public static void exportProfitLossReport() {
@@ -208,7 +184,7 @@ public class ReportActions {
                     new FileChooser.ExtensionFilter("TXT", "*.txt")
             );
 
-            final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+            final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
             if (file != null) {
                 preferences.put(LAST_DIR, file.getParent());
@@ -231,7 +207,7 @@ public class ReportActions {
                 = FXMLUtils.load(BalanceByMonthOptionsDialogController.class.getResource("BalanceByMonthOptionsDialog.fxml"),
                 ResourceUtils.getString("Title.ReportOptions"));
 
-        pair.getController().forceDefaultCurrencyProperty().setValue(preferences.getBoolean(FORCE_CURRENCY, false));
+        pair.getController().forceDefaultCurrencyProperty().set(preferences.getBoolean(FORCE_CURRENCY, false));
         pair.getStage().setResizable(false);
         pair.getStage().showAndWait();
 
@@ -254,7 +230,7 @@ public class ReportActions {
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
 
-            final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+            final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
             if (file != null) {
                 preferences.put(LAST_DIR, file.getParent());

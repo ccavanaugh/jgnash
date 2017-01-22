@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -95,7 +95,7 @@ public class IncomeExpensePayeePieChartDialogController {
             .node("IncomeExpensePayeePieChart");
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private  TitledPane titledPane;
@@ -151,14 +151,14 @@ public class IncomeExpensePayeePieChartDialogController {
     public void initialize() {
 
         // Respect animation preference
-        debitPieChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
-        creditPieChart.animatedProperty().setValue(Options.animationsEnabledProperty().get());
+        debitPieChart.animatedProperty().set(Options.animationsEnabledProperty().get());
+        creditPieChart.animatedProperty().set(Options.animationsEnabledProperty().get());
 
         creditPieChart.getStylesheets().addAll(CHART_CSS);
         debitPieChart.getStylesheets().addAll(CHART_CSS);
 
-        creditPieChart.centerTitleProperty().setValue(resources.getString("Column.Credit"));
-        debitPieChart.centerTitleProperty().setValue(resources.getString("Column.Debit"));
+        creditPieChart.centerTitleProperty().set(resources.getString("Column.Credit"));
+        debitPieChart.centerTitleProperty().set(resources.getString("Column.Debit"));
 
         accountComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
 
@@ -293,8 +293,8 @@ public class IncomeExpensePayeePieChartDialogController {
                             + "\n" + numberFormat.format(data.getPieValue()) + "(" +
                             percentFormat.format(data.getPieValue() / debitTotal)) + ")")));
 
-            creditPieChart.centerSubTitleProperty().setValue(numberFormat.format(creditTotal));
-            debitPieChart.centerSubTitleProperty().setValue(numberFormat.format(debitTotal));
+            creditPieChart.centerSubTitleProperty().set(numberFormat.format(creditTotal));
+            debitPieChart.centerSubTitleProperty().set(numberFormat.format(debitTotal));
         } else {
             creditPieChart.setData(FXCollections.emptyObservableList());
             creditPieChart.setTitle("No Data");
@@ -427,6 +427,6 @@ public class IncomeExpensePayeePieChartDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 }

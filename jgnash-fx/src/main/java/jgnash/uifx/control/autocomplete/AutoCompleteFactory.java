@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ public class AutoCompleteFactory {
                     memoModel = new MemoModel();
                 }
             }
-            autoCompleteTextField.autoCompleteModelObjectProperty().setValue(memoModel);
+            autoCompleteTextField.autoCompleteModelObjectProperty().set(memoModel);
         }
     }
 
@@ -93,7 +93,7 @@ public class AutoCompleteFactory {
      */
     public static void setPayeeModel(final AutoCompleteTextField<Transaction> autoCompleteTextField, final Account account) {
         if (Options.useAutoCompleteProperty().get()) {
-            autoCompleteTextField.autoCompleteModelObjectProperty().setValue(new PayeeAccountModel(account));
+            autoCompleteTextField.autoCompleteModelObjectProperty().set(new PayeeAccountModel(account));
         }
     }
 
@@ -166,7 +166,10 @@ public class AutoCompleteFactory {
         @Override
         void load(final Transaction tran) {
             if (tran != null) {
+
+                // Add both memo versions
                 addString(tran.getMemo());
+                addString(tran.getTransactionMemo());
             }
         }
     }

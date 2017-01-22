@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ import jgnash.uifx.views.main.MainView;
 public class PackDatabaseDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button okayButton;
@@ -67,14 +67,14 @@ public class PackDatabaseDialogController {
 
     @FXML
     private void handleOkAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
 
         PackDatabaseTask.start(databaseTextField.getText(), passwordField.getText().toCharArray());
     }
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML
@@ -84,7 +84,7 @@ public class PackDatabaseDialogController {
 
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getPrimaryStage());
 
         if (file != null && file.exists()) {
             databaseTextField.setText(file.getAbsolutePath());

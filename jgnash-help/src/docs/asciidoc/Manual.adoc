@@ -1,4 +1,6 @@
-= jGnash 2.25.x User Manual
+:imagesdir: ./images
+
+= jGnash 2.28.x User Manual
 :doctype: book
 :sectnums:
 :toc: left
@@ -7,9 +9,9 @@
 
 [[_legal]]
 == Legal
-[big]*jGnash 2.25.x User Guide*
+[big]*jGnash 2.28.x User Guide*
 
-Copyright (C) 2001-2016 Craig Cavanaugh
+Copyright (C) 2001-2017 Craig Cavanaugh
 
 jGnash comes with *ABSOLUTELY NO WARRANTY*.
 
@@ -35,7 +37,7 @@ Oracle and/or its affiliates.
 [[_introduction]]
 == Introduction
 
-image::../images/jgnash-logo-small.png[]
+image::jgnash-logo-small.png[]
 
 jGnash is an open source application for personal finances.
 jGnash enables you to record detailed account and transaction information using proven double entry accounting principles. 
@@ -226,11 +228,11 @@ transaction in them.  Transactions must be manually deleted from an account befo
 A new account is created by clicking on the btn:[New]
  button in the account list view. 
 
-image:../images/new-account.png[]
+image:new-account.png[]
 
 A new dialog box will be displayed that allows you to create a new account to suit your particular needs. 
 
-image:../images/account-dialog.png[]
+image:account-dialog.png[]
 
 [float]
 ===== Account Information
@@ -399,34 +401,20 @@ The date field is freely editable and jGnash will make the best attempt at inter
 are indeterminate. Clicking on the button to the right of the field will display a calendar dialog where you can select
 a date as well.
 
-image:../images/date-entry.png[]
+image:date-entry.png[]
 
 Also, dates can be modified using the keyboard shortcuts defined below.
 
 .Date Entry Shortcut Keys
 [cols="1,1", options="header"]
-|===
-| Keys / Mouse
-| Function
-
-|kbd:[+]
-, kbd:[↑], Mouse Scroll Up
-|Increase the date by one day
-
-|kbd:[-]
-, kbd:[↓], Mouse Scroll Down
-|Decrease the date by one day
-
-|kbd:[PgUp], Mouse Thumb Wheel Up
-|Increase the date by one month
-
-|kbd:[PgDn], Mouse Thumb Wheel Down
-|Decrease the date by one month
-
-|kbd:[t]
-, kbd:[T]
-|Change to todays date
-|===
+|=============================
+| Keys / Mouse                          |Function
+|kbd:[+], kbd:[↑], Mouse Scroll Up      |Increase the date by one day
+|kbd:[-], kbd:[↓], Mouse Scroll Down    | Decrease the date by one day
+|kbd:[PgUp], Mouse Thumb Wheel Up       |Increase the date by one month
+|kbd:[PgDn], Mouse Thumb Wheel Down     |Decrease the date by one month
+|kbd:[t], kbd:[T]                       |Change to todays date
+|=============================
 
 [[_numberfields]]
 ==== Number Fields
@@ -435,7 +423,7 @@ Also, dates can be modified using the keyboard shortcuts defined below.
 Numerical entry in jGnash is as easy as typing the desired value into the field.
 Decimal separators are handled according to the configured locale. 
 
-image:../images/basic-decimal-entry.png[]
+image:basic-decimal-entry.png[]
 
 You may also enter arithmetic operators and calculate values within the entry field. 
 
@@ -443,7 +431,7 @@ The arithmetic operators that may be used are () + − ∗ /.
 
 Traditional arithmetic operator precedence is followed for all calculations. 
 
-image:../images/advanced-decimal-entry.png[]
+image:advanced-decimal-entry.png[]
 
 [[_filetypes]]
 === File Types
@@ -539,7 +527,7 @@ When reported by month, jGnash automatically handles the difference in the perio
 === Graphical Overview
 The main budget panel is shown below.
 
-image:../images/budget-overview.png[width="620"]
+image:budget-overview.png[width="620"]
 
 The width of the account column is adjustable by placing the cursor between the Account header and the period header
 columns and then clicking and dragging the mouse cursor right or left.
@@ -555,7 +543,7 @@ The btn:[Budget Manager
 The btn:[Properties]
  button will display the dialog shown below with various options for the active budget. 
 
-image:../images/budget-properties.png[]
+image:budget-properties.png[]
 
 The period used for the budget display can be changed in this dialog as well as the budget description.
 You may also select the account groups that are visible for the selected budget. 
@@ -566,7 +554,7 @@ The selected year also effects the calendar periods when editing period amounts.
 Double clicking on an account name to the left of the panel will display a dialog that allows you to change the account
 specific budget period and period amounts.
 
-image:../images/budget-goal-dialog.png[]
+image:budget-goal-dialog.png[]
 
 The Smart Fill panel may used to enter repeating patterns or fill in the amounts automatically based on the last
 12 months.
@@ -650,7 +638,7 @@ Cleared transactions, you may need to manually reconcile prior transaction histo
 jGnash makes it easier to manage reconciliation by providing some options described below.
 These can be access in the _Register_ options tabs using the menu:Tools[Options] menu.
 
-image:../images/reconcile-options.png[]
+image:reconcile-options.png[]
 
 Unless you have very specific needs, it is recommend that you choose to have the option *All transaction accounts have
 same reconciled state* or *Automatically reconcile Income and Expense Accounts* selected as the default.
@@ -697,7 +685,7 @@ entered amount.
 To manually mark a transaction as reconciled, use the context menu in the register to display options to change the
 reconciled state.
 
-image:../images/manual-reconcile-context.png[]
+image:manual-reconcile-context.png[]
 
 [sidebar]
 Use of the context menu is currently the only means of marking a transaction as reconciled other than using the
@@ -708,7 +696,7 @@ Some users may prefer to clear certain transactions manually during a given peri
  *Cleared* transactions will still be visible within the Reconciliation Wizard if used later while manually
  *Reconciled* transactions will not.
 
-image:../images/transaction-form.png[width="620"]
+image:transaction-form.png[width="620"]
 
 === Reconciliation Wizard
 Use of the Reconciliation Wizard helps to simplify the reconciliation process by comparing opening and closing balances
@@ -730,7 +718,7 @@ Take note of the _Reconciled Balance: $2,614.43_ and that it is the last transac
 Also, take note of the transaction dated _03/25/14_ and the corresponding balance of _$1,369.70._  You will see these
 same values later in the Reconcile Settings dialog.
 
-image:../images/reconcile-register.png[width="620"]
+image:reconcile-register.png[width="620"]
 
 The Reconcile Wizard is started by using the context menu in the Account List, or by clicking the btn:[Reconcile] button
 in the transaction register.
@@ -757,7 +745,7 @@ these values are entered correctly, otherwise balances will not zero out._
 Pay special attention to the account type, the selected option for _Reverse Displayed Account Balances_ and if you are
 entering a positive or negative opening and ending balance.
 
-image:../images/reconcile-settings.png[]
+image:reconcile-settings.png[]
 
 After clicking the btn:[OK] button, the settings dialog will be replaced by a dialog showing all of the transactions
 prior and inclusive of the statement date that have not been marked as Reconciled. _Transactions marked as cleared will
@@ -773,7 +761,7 @@ It is not unusual to find transactions that go unmarked for reconciliation near 
 These are transactions you have entered that were not processed through the system fast enough to show up on your statement and impact your account balance.
 Simply ignore these transactions and they will be captured at the start of the next statement and reconciliation cycle. 
 
-image:../images/reconcile-dialog.png[width="620"]
+image:reconcile-dialog.png[width="620"]
 
 Clicking on the btn:[Finish] button will close the dialog and will mark the selected transactions as Reconciled.
 Depending on the number of transactions and type of file format being used, it could take awhile for the changes to be saved.
@@ -811,7 +799,7 @@ The [label]#Proportional#
 The [label]#Monospace#
  font, also called a fixed-width font, is used to display the reported values. 
 
-image:../images/font-options.png[]
+image:font-options.png[]
 
 If a proportional spaced font is chosen for the [label]#Monospace# font, numeric report values may not line up
 correctly in the report.

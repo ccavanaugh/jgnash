@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -162,7 +162,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public boolean areAccountsHidden() {
         boolean accountsHidden = false;
 
-        for (Account account : getAccounts()) {
+        for (final Account account : getAccounts()) {
             if (!account.isVisible()) {
                 accountsHidden = true;
                 break;
@@ -180,7 +180,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public boolean areAccountsLocked() {
         boolean accountsLocked = false;
 
-        for (Account account : getAccounts()) {
+        for (final Account account : getAccounts()) {
             if (account.isLocked()) {
                 accountsLocked = true;
                 break;
@@ -200,11 +200,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         Account account = null;
 
         if (size() >= 2) {
-            Set<Account> accounts = getAccounts();
-
-            for (final Account a : accounts) {
+            for (final Account a : getAccounts()) {
                 boolean success = true;
-                for (TransactionEntry e : transactionEntries) {
+                for (final TransactionEntry e : transactionEntries) {
                     if (!e.getCreditAccount().equals(a) && !e.getDebitAccount().equals(a)) {
                         success = false;
                         break;
@@ -313,17 +311,14 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Calculates the amount of the transaction relative to the supplied account.
      *
+     * This method is synchronized to protect against concurrency issues
+     *
      * @param account reference account
      * @return Amount of this transaction relative to the supplied account
      */
-    public BigDecimal getAmount(final Account account) {
-        BigDecimal balance = BigDecimal.ZERO;
-
-        for (final TransactionEntry entry : transactionEntries) {
-            balance = balance.add(entry.getAmount(account));
-        }
-
-        return balance;
+    public synchronized BigDecimal getAmount(final Account account) {
+        return transactionEntries.stream().map(transactionEntry
+                -> transactionEntry.getAmount(account)).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     /**
@@ -411,13 +406,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     private List<TransactionEntry> getTransactionEntries(final Account account) {
-        final List<TransactionEntry> list = new ArrayList<>();
-
-        list.addAll(transactionEntries.stream()
+        return new ArrayList<>(transactionEntries.stream()
                 .filter(transactionEntry -> transactionEntry.getCreditAccount().equals(account)
                         || transactionEntry.getDebitAccount().equals(account)).collect(Collectors.toList()));
-
-        return list;
     }
 
 
@@ -429,12 +420,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * returned if none are found
      */
     List<TransactionEntry> getTransactionEntriesByTag(final TransactionTag tag) {
-        final List<TransactionEntry> list = new ArrayList<>();
-
-        list.addAll(transactionEntries.stream()
+        return new ArrayList<>(transactionEntries.stream()
                 .filter(e -> e.getTransactionTag() == tag).collect(Collectors.toList()));
-
-        return list;
     }
 
     /**
@@ -479,6 +466,13 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         return TransactionType.INVALID;
     }
 
+    /**
+     * Returns the memo for the {@code Transaction}.  If memo was set to be equal to {@value #CONCATENATE}, then a
+     * concatenated version of the {@code TransactionEntry} memos will be returned.  If the {@code Transaction} level
+     * memo is null, that the memo for the first {@code TransactionEntry} is returned
+     *
+     * @return resultant memo
+     */
     @NotNull
     synchronized public String getMemo() {
         if (memo != null) {
@@ -495,13 +489,23 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
+     * Returns the {@code Transaction} level memo
+     *
+     * @return the Transaction memo
+     */
+    @Nullable
+    public String getTransactionMemo() {
+        return memo;
+    }
+
+    /**
      * Returns the concatenated memo given an Account.
      *
      * @param account base account to generate a memo for
      * @return Concatenated string of split entry memos
      */
     @NotNull
-    public synchronized String getMemo(final Account account) {
+    public synchronized String getMemo(@NotNull final Account account) {
         return getMemo(getTransactionEntries(account));
     }
 
@@ -526,8 +530,21 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         return CONCATENATE.equals(memo);
     }
 
+    /**
+     * Set the memo for the {@code Transaction}.  If set to be equal to {@value #CONCATENATE}, then a concatenated
+     * version will be reported.  If set to null or an empty string, the memo of the first {@code TransactionEntry}
+     * will be reported.  Otherwise, the supplied String will be reported.
+     *
+     * @param memo sets the {@code Transaction} level memo
+     */
     public synchronized void setMemo(final String memo) {
-        this.memo = memo;
+
+        // force to null if empty to conserve memory.
+        if (memo != null && memo.isEmpty()) {
+            this.memo = null;
+        } else {
+            this.memo = memo;
+        }
     }
 
     @Nullable
@@ -609,7 +626,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         // deep clone
         tran.transactionEntries = new HashSet<>(); // deep clone
 
-        for (TransactionEntry entry : transactionEntries) {
+        for (final TransactionEntry entry : transactionEntries) {
             tran.addTransactionEntry((TransactionEntry) entry.clone());
         }
 

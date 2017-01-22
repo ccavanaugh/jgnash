@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package jgnash.ui.components;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -124,7 +124,7 @@ public class ChangeDatabasePasswordDialog extends JDialog implements ActionListe
 
             if (fileField.getText().isEmpty()) {
                 ValidationFactory.showValidationError(rb.getString("Message.Error.Empty"), fileField);
-            } else if (FileMagic.magic(new File(fileField.getText())) != FileMagic.FileType.h2) {
+            } else if (FileMagic.magic(Paths.get(fileField.getText())) != FileMagic.FileType.h2) {
                 ValidationFactory.showValidationError(rb.getString("Message.Error.UnsupportedFileType"), fileField);
             } else if (!Arrays.equals(newPasswordField.getPassword(), newPasswordFieldVal.getPassword())) {
                 ValidationFactory.showValidationError(rb.getString("Message.Error.PasswordMatch"), newPasswordFieldVal);
@@ -132,12 +132,8 @@ public class ChangeDatabasePasswordDialog extends JDialog implements ActionListe
                 boolean result = SqlUtils.changePassword(fileField.getText(), passwordField.getPassword(), newPasswordField.getPassword());
 
                 if (result) {   // display a success message
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            StaticUIMethods.displayMessage(rb.getString("Message.CredentialChange"), rb.getString("Title.Success"), JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }.start();
+                    new Thread(() -> StaticUIMethods.displayMessage(rb.getString("Message.CredentialChange"),
+                            rb.getString("Title.Success"), JOptionPane.INFORMATION_MESSAGE)).start();
 
                     dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 } else {

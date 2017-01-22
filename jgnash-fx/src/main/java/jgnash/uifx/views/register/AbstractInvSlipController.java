@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ import jgnash.util.NotNull;
 abstract class AbstractInvSlipController implements Slip {
 
     @InjectFXML
-    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Parent> parent = new SimpleObjectProperty<>();
 
     @FXML
     ResourceBundle resources;
@@ -56,10 +56,10 @@ abstract class AbstractInvSlipController implements Slip {
      */
     Transaction modTrans = null;
 
-    final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 
     void initialize() {
@@ -68,14 +68,14 @@ abstract class AbstractInvSlipController implements Slip {
         reconciledButton.setAllowIndeterminate(true);
 
         // Lazy init when account property is set
-        accountProperty.addListener((observable, oldValue, newValue) -> {
+        account.addListener((observable, oldValue, newValue) -> {
             if (!newValue.memberOf(AccountGroup.INVEST)) {
                 throw new RuntimeException(resources.getString("Message.Error.InvalidAccountGroup"));
             }
         });
 
         // Install an event handler when the parent has been set via injection
-        parentProperty.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
+        parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
     }
 
     @Override

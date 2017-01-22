@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ import jgnash.util.ResourceUtils;
 public class TransactionNumberDialogController {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ButtonBar buttonBar;
@@ -113,7 +113,7 @@ public class TransactionNumberDialogController {
 
         returnValue = returnedItems;
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     private Optional<List<String>> getItems() {
@@ -122,7 +122,7 @@ public class TransactionNumberDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     public static void showAndWait() {

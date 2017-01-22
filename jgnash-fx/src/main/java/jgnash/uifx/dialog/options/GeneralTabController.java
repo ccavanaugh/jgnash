@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,11 +74,11 @@ public class GeneralTabController {
 
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == linuxStyleRadioButton) {
-                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_LINUX);
+                Options.buttonOrderProperty().set(ButtonBar.BUTTON_ORDER_LINUX);
             } else if (newValue == macOSStyleRadioButton) {
-                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_MAC_OS);
+                Options.buttonOrderProperty().set(ButtonBar.BUTTON_ORDER_MAC_OS);
             } else {
-                Options.buttonOrderProperty().setValue(ButtonBar.BUTTON_ORDER_WINDOWS);
+                Options.buttonOrderProperty().set(ButtonBar.BUTTON_ORDER_WINDOWS);
             }
         });
     }

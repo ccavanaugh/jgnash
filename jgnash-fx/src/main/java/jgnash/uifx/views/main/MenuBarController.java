@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,6 +64,7 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.tasks.SaveAsTask;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.budget.BudgetManagerDialogController;
 import jgnash.uifx.views.recurring.RecurringDialogController;
 import jgnash.uifx.views.register.RegisterStage;
@@ -255,11 +256,11 @@ public class MenuBarController implements MessageListener {
         Platform.runLater(() -> {
             switch (event.getEvent()) {
                 case FILE_LOAD_SUCCESS:
-                    disabled.setValue(false);
+                    disabled.set(false);
                     break;
                 case FILE_CLOSING:
                     closeAllWindows();
-                    disabled.setValue(true);
+                    disabled.set(true);
                     break;
                 default:
                     break;
@@ -289,6 +290,8 @@ public class MenuBarController implements MessageListener {
                 FXMLUtils.load(CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml"),
                         resources.getString("Title.CreateModifyCommodities"));
 
+        StageUtils.addBoundsListener(pair.getStage(), CreateModifySecuritiesController.class);
+
         pair.getStage().show();
     }
 
@@ -297,6 +300,8 @@ public class MenuBarController implements MessageListener {
         final FXMLUtils.Pair<SecurityHistoryController> pair =
                 FXMLUtils.load(SecurityHistoryController.class.getResource("SecurityHistory.fxml"),
                         resources.getString("Title.ModifySecHistory"));
+
+        StageUtils.addBoundsListener(pair.getStage(), SecurityHistoryController.class);
 
         pair.getStage().show();
     }
@@ -352,7 +357,6 @@ public class MenuBarController implements MessageListener {
                 resources.getString("Title.FontSize"));
 
         pair.getStage().setResizable(false);
-
         pair.getStage().show();
     }
 
@@ -363,7 +367,6 @@ public class MenuBarController implements MessageListener {
                         resources.getString("Title.BaseColor"));
 
         pair.getStage().setResizable(false);
-
         pair.getStage().show();
     }
 
@@ -371,6 +374,8 @@ public class MenuBarController implements MessageListener {
     private void handleShowOptionDialog() {
         final FXMLUtils.Pair<OptionDialogController> pair = FXMLUtils.load(OptionDialogController.class.getResource("OptionDialog.fxml"),
                 resources.getString("Title.Options"));
+
+        StageUtils.addBoundsListener(pair.getStage(), OptionDialogController.class);
 
         pair.getStage().setResizable(false);
         pair.getStage().show();

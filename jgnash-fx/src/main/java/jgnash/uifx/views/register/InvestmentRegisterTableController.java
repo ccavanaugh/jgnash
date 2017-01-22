@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -29,6 +31,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
+import jgnash.engine.CommodityNode;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
@@ -41,6 +44,8 @@ import jgnash.time.DateUtils;
  */
 public class InvestmentRegisterTableController extends RegisterTableController {
 
+    private static final int DEFAULT_COMMODITY_PRECISION = 4;
+
     @FXML
     private Label cashBalanceLabel;
 
@@ -50,6 +55,8 @@ public class InvestmentRegisterTableController extends RegisterTableController {
     final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 34, 0, 0, 0, 0};
 
     private static final boolean[] DEFAULT_COLUMN_VISIBILITY = {true, false, true, true, true, true, true, true, true};
+
+    private NumberFormat quantityNumberFormat;
 
     @FXML
     @Override
@@ -73,7 +80,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
     @Override
     protected void buildTable() {
-        final String[] columnNames = RegisterFactory.getColumnNames(getAccountProperty().get().getAccountType());
+        final String[] columnNames = RegisterFactory.getColumnNames(accountProperty().get().getAccountType());
 
         final TableColumn<Transaction, LocalDate> dateColumn = new TableColumn<>(columnNames[0]);
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
@@ -93,6 +100,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         final TableColumn<Transaction, String> investmentColumn = new TableColumn<>(columnNames[3]);
         investmentColumn.setCellValueFactory(param -> new TransactionSymbolWrapper(param.getValue()));
         investmentColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        tableView.getColumns().add(investmentColumn);
 
         final TableColumn<Transaction, String> memoColumn = new TableColumn<>(columnNames[4]);
         memoColumn.setCellValueFactory(param -> new MemoWrapper(param.getValue()));
@@ -101,7 +109,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[5]);
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()
-                .getReconciled(accountProperty.getValue()).toString()));
+                .getReconciled(account.getValue()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(reconciledColumn);
 
@@ -112,22 +120,23 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
         final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[7]);
         priceColumn.setCellValueFactory(param -> new PriceProperty(param.getValue()));
-        priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(priceColumn);
 
         final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[8]);
         netColumn.setCellValueFactory(param -> new AmountProperty(param.getValue()));
-        netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(netColumn);
 
-        //tableView.getColumns().addAll(dateColumn, dateTimeColumn, typeColumn, investmentColumn, memoColumn, reconciledColumn, quantityColumn, priceColumn, netColumn);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == netColumn) {
-                return CommodityFormat.getFullNumberFormat(getAccountProperty().getValue().getCurrencyNode());
-            } else if (param == quantityColumn || param == priceColumn) {
-                return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+                return CommodityFormat.getFullNumberFormat(accountProperty().getValue().getCurrencyNode());
+            } else if (param == quantityColumn) {
+                return getQuantityColumnFormat();
+            } else if (param == priceColumn) {
+                return CommodityFormat.getShortNumberFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
                 return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {
@@ -138,13 +147,28 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         });
     }
 
+    private Format getQuantityColumnFormat() {
+        if (quantityNumberFormat == null) {
+            if (account.get() != null) {
+                final int max = account.get().getUsedSecurities().parallelStream().mapToInt(CommodityNode::getScale)
+                        .max().orElse(4);
+
+                quantityNumberFormat =  CommodityFormat.getShortNumberFormat(max);
+            }
+
+            // Just return a default for now
+            return CommodityFormat.getShortNumberFormat(DEFAULT_COMMODITY_PRECISION);
+        }
+        return quantityNumberFormat;
+    }
+
     private class TransactionTypeWrapper extends SimpleStringProperty {
         TransactionTypeWrapper(final Transaction t) {
             super();
 
             if (t instanceof InvestmentTransaction) {
                 setValue(t.getTransactionType().toString());
-            } else if (t.getAmount(accountProperty.get()).signum() > 0) {
+            } else if (t.getAmount(account.get()).signum() > 0) {
                 setValue(resources.getString("Item.CashDeposit"));
             } else {
                 setValue(resources.getString("Item.CashWithdrawal"));
@@ -204,7 +228,7 @@ public class InvestmentRegisterTableController extends RegisterTableController {
             if (t instanceof InvestmentTransaction) {
                 setValue(((InvestmentTransaction) t).getNetCashValue());
             } else {
-                setValue(t.getAmount(accountProperty.get()));
+                setValue(t.getAmount(account.get()));
             }
         }
     }

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,14 @@
 package jgnash.convert.imports;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.SecurityNode;
 
 /**
  * @author Craig Cavanaugh
@@ -65,6 +68,30 @@ public class ImportUtils {
         }
 
         return result;
+    }
+
+    static Optional<SecurityNode> matchSecurity(final ImportSecurity security) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        for (SecurityNode securityNode : engine.getSecurities()) {
+            if (securityNode.getSymbol().equals(security.ticker)) {
+                return Optional.of(securityNode);
+            }
+        }
+        return Optional.empty();
+    }
+
+    static SecurityNode createSecurityNode(final ImportSecurity security, final CurrencyNode currencyNode) {
+        final SecurityNode securityNode = new SecurityNode(currencyNode);
+
+        securityNode.setSymbol(security.ticker);
+        securityNode.setScale(currencyNode.getScale());
+
+        security.getSecurityName().ifPresent(securityNode::setDescription);
+        security.getId().ifPresent(securityNode::setISIN);
+
+        return securityNode;
     }
 
 }

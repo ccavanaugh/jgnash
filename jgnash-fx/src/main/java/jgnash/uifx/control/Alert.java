@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ public class Alert {
     static final int HEIGHT_MULTIPLIER = 3;
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Label message;
@@ -128,7 +128,7 @@ public class Alert {
 
             button.setOnAction(event -> {
                 Alert.this.buttonType = buttonType;
-                ((Stage)parentProperty.get().getWindow()).close();
+                ((Stage) parent.get().getWindow()).close();
             });
 
             buttonBar.getButtons().add(button);

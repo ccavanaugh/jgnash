@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ public class ReconcileSettingsDialogController {
     private static final int FUZZY_DATE_RANGE = 2;
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ButtonBar buttonBar;
@@ -69,7 +69,7 @@ public class ReconcileSettingsDialogController {
     @FXML
     private DatePickerEx datePicker;
 
-    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     @FXML
     private void initialize() {
@@ -83,7 +83,7 @@ public class ReconcileSettingsDialogController {
     }
 
     public ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 
     private void determineBalances() {
@@ -149,7 +149,7 @@ public class ReconcileSettingsDialogController {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML
@@ -160,9 +160,9 @@ public class ReconcileSettingsDialogController {
 
         final FXMLUtils.Pair<ReconcileDialogController> pair =
                 FXMLUtils.load(ReconcileDialogController.class.getResource("ReconcileDialog.fxml"),
-                        ResourceUtils.getString("Button.Reconcile") + " - " + accountProperty.get().getPathName());
+                        ResourceUtils.getString("Button.Reconcile") + " - " + account.get().getPathName());
 
-        pair.getController().initialize(accountProperty.get(), statementDate, openingBalance, closingBalance);
+        pair.getController().initialize(account.get(), statementDate, openingBalance, closingBalance);
 
         // Override the defaults set by FXMLUtils
         pair.getStage().initModality(Modality.NONE);

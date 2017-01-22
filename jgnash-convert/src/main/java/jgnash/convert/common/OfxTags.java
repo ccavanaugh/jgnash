@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,45 @@ public interface OfxTags {
      */
     String BUYSTOCK = "BUYSTOCK";
 
+    /**
+     * Purchase type, normally "BUY"
+     */
     String BUYTYPE = "BUYTYPE";
+
+    /**
+     * Buy other security type
+     */
+    String BUYOTHER = "BUYOTHER";
+
+    /**
+     * Buy mutual fund
+     */
+    String BUYMF = "BUYMF";
+
+    /**
+     * Sub-account that security or cash is being transferred to: CASH, MARGIN, SHORT, OTHER
+     */
+    String SUBACCTTO = "SUBACCTTO";
+
+    /**
+     * Sub-account that security or cash is being transferred from: CASH, MARGIN, SHORT, OTHER
+     */
+    String SUBACCTFROM = "SUBACCTFROM";
+
+    /**
+     * Investment account position list
+     */
+    String INVPOSLIST = "INVPOSLIST";
+
+    /**
+     * Investment account balance information
+     */
+    String INVBAL = "INVBAL";
+
+    /**
+     * Open investment transaction orders list
+     */
+    String INVOOLIST = "INVOOLIST";
 
     /**
      * Branch identifier. May be required for some non-US banks
@@ -270,6 +308,9 @@ public interface OfxTags {
 
     String SUBACCTSEC = "SUBACCTSEC";
 
+    /**
+     * Where did the money for the transaction come from or go to? CASH, MARGIN, SHORT, OTHER
+     */
     String SUBACCTFUND = "SUBACCTFUND";
 
     String SELLSTOCK = "SELLSTOCK";
@@ -287,6 +328,51 @@ public interface OfxTags {
     String INCOMETYPE = "INCOMETYPE";
 
     /**
+     * 401k loan id
+     */
+    String LOANID = "LOANID";
+
+    /**
+     * 401k loan principal
+     */
+    String LOANPRINCIPAL = "LOANPRINCIPAL";
+
+    /**
+     * 401k loan interest
+     */
+    String LOANINTEREST = "LOANINTEREST";
+
+    /**
+     * Must be one of the following: PRETAX, AFTERTAX, MATCH, PROFITSHARING, ROLLOVER, OTHERVEST, OTHERNONVEST
+     */
+    String INV401KSOURCE = "INV401KSOURCE";
+
+    /**
+     * For 401(k)accounts, date the funds for this transaction was obtained via payroll deduction, datetime
+     */
+    String DTPAYROLL = "DTPAYROLL";
+
+    /**
+     * For 401(k) accounts, indicates that this Buy was made with a prior year contribution. Boolean
+     */
+    String PRIORYEARCONTRIB = "PRIORYEARCONTRIB";
+
+    /**
+     * For 401(k) accounts, account balance aggregate
+     */
+    String INV401KBAL = "INV401KBAL";
+
+    /**
+     * For 401(k) accounts, account information aggregate
+     */
+    String INV401K = "INV401K";
+
+    /**
+     * Tax exempt status of an investment transactions
+     */
+    String TAXEXEMPT = "TAXEXEMPT";
+
+    /**
      * Transaction amount
      */
     String TRNAMT = "TRNAMT";
@@ -301,9 +387,12 @@ public interface OfxTags {
      */
     String TRNUID = "TRNUID";
 
+    /**
+     * Total of the investment transaction (unit * unit price + commission)
+     */
     String TOTAL = "TOTAL";
 
-    String USERKEY = "USERKEY";
+    //String USERKEY = "USERKEY";
 
     String UNIQUEID = "UNIQUEID";
 
@@ -323,6 +412,88 @@ public interface OfxTags {
     String CREDITCARDMSGSRSV1 = "CREDITCARDMSGSRSV1";
 
     String INVSTMTMSGSRSV1 = "INVSTMTMSGSRSV1";
+
+    String SECLISTMSGSRSV1 = "SECLISTMSGSRSV1";
+
+
+    /**
+     * Security Info
+     */
+    String STOCKINFO = "STOCKINFO";
+
+    /**
+     * Mutual fund information
+     */
+    String MFINFO = "MFINFO";
+
+    /**
+     * Security information
+     */
+    String SECINFO = "SECINFO";
+
+    /**
+     * Information about an Option
+     */
+    String OPTINFO = "OPTINFO";
+
+    /**
+     * Option type
+     */
+    String OPTTYPE = "OPTTYPE";
+
+    /**
+     * Strike price
+     */
+    String STRIKEPRICE = "STRIKEPRICE";
+
+    /**
+     * ISO-4217 3-letter currency identifier
+     */
+    String CURSYM = "CURSYM";
+
+    /**
+     * Ratio of <CURDEF> currency to <CURSYM> currency, in decimal notation, rate
+     */
+    String CURRATE = "CURRATE";
+
+    /**
+     * Security name, maximum of 120 characters
+     */
+    String SECNAME = "SECNAME";
+
+    String TICKER = "TICKER";
+
+    String SECLIST = "SECLIST";
+
+    /**
+     * Expiration date for an Option
+     */
+    String DTEXPIRE = "DTEXPIRE";
+
+    /**
+     * Number of shares per contract
+     */
+    String SHPERCTRCT = "SHPERCTRCT";
+
+    /**
+     * Asset class of the security
+     */
+    String ASSETCLASS = "ASSETCLASS";
+
+    /**
+     * Yield of the security
+     */
+    String YIELD = "YIELD";
+
+    /**
+     * Internal security identifier for the financial institution
+     */
+    String FIID = "FIID";
+
+    /**
+     * Security rating, maximum of 10 characters
+     */
+    String RATING = "RATING";
 
     /**
      * Intuit mucking up the OFX standard, Bank Id, In signon message

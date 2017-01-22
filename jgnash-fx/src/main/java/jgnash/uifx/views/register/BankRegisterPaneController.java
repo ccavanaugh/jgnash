@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
         super.initialize();
 
-        jumpButton.disableProperty().bind(selectedTransactionProperty.isNull());
+        jumpButton.disableProperty().bind(selectedTransaction.isNull());
 
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -72,7 +72,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
         final RegisterTableController controller = FXMLUtils.loadFXML(o
                 -> registerTablePane.getChildren().add(o), "BasicRegisterTable.fxml", resources);
 
-        registerTableControllerProperty.setValue(controller);
+        registerTableController.set(controller);
 
         accountProperty().addListener((observable, oldValue, newValue) -> buildTabs());
     }

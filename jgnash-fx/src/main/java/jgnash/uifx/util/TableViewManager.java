@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 package jgnash.uifx.util;
 
 import java.text.Format;
-import java.time.Duration;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +28,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -56,6 +53,8 @@ public class TableViewManager<S> {
 
     private static final String PREF_NODE_REG_VIS = "/visibility";
 
+    private static final String PREF_NODE_REG_WIDTH = "/width";
+
     private static final int COLUMN_PADDING = 10; // margins need extra padding to prevent truncated display
 
     // TODO: Extract or calculate when JavaFX font metrics API improves
@@ -76,7 +75,10 @@ public class TableViewManager<S> {
 
     private final ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
 
-    private static final Logger logger = Logger.getLogger(TableViewManager.class.getName());
+    /**
+     * Used to track initialization.  If false, old column widths should be restored.
+     */
+    private boolean isFullyInitialized = false;
 
     /**
      * Limits number of processed visibility change events ensuring the most recent is executed.
@@ -95,21 +97,15 @@ public class TableViewManager<S> {
          *
          * Excess execution requests will be silently discarded
          */
-        updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0,
+                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
         updateColumnVisibilityExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     }
 
     public void restoreLayout() {
-        // Remove listeners while state is being restored so states are not saved during state changes
-        removeColumnListeners();
+        restoreColumnVisibility();  // Restore visibility first
 
-        // Restore visibility first
-        restoreColumnVisibility();
-
-        // Install listeners and save column states
-        installColumnListeners();
-
-        packTable();    // repack the table
+        packTable();                // pack the table
     }
 
     private void installColumnListeners() {
@@ -160,6 +156,18 @@ public class TableViewManager<S> {
         return Math.ceil(maxWidth + COLUMN_PADDING);
     }
 
+    private void saveColumnWidths() {
+        if (preferenceKeyFactory.get() != null) {
+
+            final double[] columnWidths =  tableView.getColumns().filtered(TableColumnBase::isVisible)
+                    .stream().mapToDouble(TableColumnBase::getWidth).toArray();
+
+            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
+
+            preferences.put(preferenceKeyFactory.get().get(), EncodeDecode.encodeDoubleArray(columnWidths));
+        }
+    }
+
     private void saveColumnVisibility() {
         if (preferenceKeyFactory.get() != null) {
             final String uuid = preferenceKeyFactory.get().get();
@@ -177,6 +185,10 @@ public class TableViewManager<S> {
 
     private void restoreColumnVisibility() {
         if (preferenceKeyFactory.get() != null) {
+
+            // Remove listeners while state is being restored so states are not saved during state changes
+            removeColumnListeners();
+
             final String uuid = preferenceKeyFactory.get().get();
             final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_VIS);
 
@@ -188,7 +200,7 @@ public class TableViewManager<S> {
 
                 if (columnVisibility.length == tableView.getColumns().size()) {
                     for (int i = 0; i < columnVisibility.length; i++) {
-                        tableView.getColumns().get(i).visibleProperty().setValue(columnVisibility[i]);
+                        tableView.getColumns().get(i).visibleProperty().set(columnVisibility[i]);
                     }
                 }
 
@@ -200,23 +212,46 @@ public class TableViewManager<S> {
                     int i = 0;
 
                     for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
-                        column.visibleProperty().setValue(visibilityCallBack.call(i++));
+                        column.visibleProperty().set(visibilityCallBack.call(i++));
                     }
                 } else {
                     for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
-                        column.visibleProperty().setValue(true);
+                        column.visibleProperty().set(true);
                     }
                 }
             }
+
+            // restore listeners
+            installColumnListeners();
         }
     }
 
+    @NotNull
+    private double[] retrieveOldColumnWidths() {
+        double[] columnWidths = new double[0];  // zero length array instead of null to protect against NPE
+
+        if (!isFullyInitialized) {  // no need to retrieve old column widths more than once
+            if (preferenceKeyFactory.get() != null) {
+                final String uuid = preferenceKeyFactory.get().get();
+                final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
+
+                final String widths = preferences.get(uuid, null);
+
+                if (widths != null) {
+                    columnWidths = EncodeDecode.decodeDoubleArray(widths);
+                }
+            }
+        }
+
+        return columnWidths;
+    }
+
+    /**
+     * Called when the table columns need to be repacked because of content change
+     */
     public void packTable() {
 
         new Thread(() -> {
-
-            LocalTime start = LocalTime.now();
-
             // Create a list of visible columns and column weights
             final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
             final List<Double> visibleColumnWeights = new ArrayList<>();
@@ -229,12 +264,23 @@ public class TableViewManager<S> {
                 tableView.getColumns().get(i).setMinWidth(0);   // clear minWidth for pack
             }
 
-            double calculatedWidths[] = new double[visibleColumns.size()];
+            final double[] oldWidths = retrieveOldColumnWidths();
             double sumFixedColumns = 0; // sum of the fixed width columns
+
+            /* Use the old calculated widths if the count is correct and full initialization has not occurred */
+            final double[] calculatedWidths = !isFullyInitialized && oldWidths.length == visibleColumns.size()
+                    ? oldWidths : new double[visibleColumns.size()];
+
+            /* determine if the expensive calculations needs to occur */
+            final boolean doExpensiveCalculations = isFullyInitialized || oldWidths.length != visibleColumns.size();
 
             for (int i = 0; i < calculatedWidths.length; i++) {
                 if (visibleColumnWeights.get(i) == 0) {
-                    calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+
+                    /* expensive operation, don't calculate if we are reusing older values */
+                    if (doExpensiveCalculations) {
+                        calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+                    }
                     sumFixedColumns += calculatedWidths[i];
                 } else {
                     calculatedWidths[i] = Double.MAX_VALUE;
@@ -245,12 +291,10 @@ public class TableViewManager<S> {
 
             // calculate widths for adjustable columns using the remaining visible width
             for (int i = 0; i < calculatedWidths.length; i++) {
-                if (visibleColumnWeights.get(i) != 0) {
+                if (doExpensiveCalculations && visibleColumnWeights.get(i) != 0) {
                     calculatedWidths[i] = remainder * (visibleColumnWeights.get(i) / 100.0);
                 }
             }
-
-            logger.info("Pack Calculation time was " + Duration.between(start, LocalTime.now()).toMillis() + " millis");
 
             Platform.runLater(() -> {
                 removeColumnListeners();
@@ -263,18 +307,27 @@ public class TableViewManager<S> {
                     visibleColumns.get(j).setResizable(true);   // allow resizing
 
                     if (visibleColumnWeights.get(j) == 0) { // fixed width column
-                        visibleColumns.get(j).minWidthProperty().setValue(calculatedWidths[j]);
-                        visibleColumns.get(j).maxWidthProperty().setValue(calculatedWidths[j]);
+                        visibleColumns.get(j).minWidthProperty().set(calculatedWidths[j]);
+                        visibleColumns.get(j).maxWidthProperty().set(calculatedWidths[j]);
                         visibleColumns.get(j).setResizable(false);
                     } else {
-                        visibleColumns.get(j).prefWidthProperty().setValue(calculatedWidths[j]);
+                        visibleColumns.get(j).prefWidthProperty().set(calculatedWidths[j]);
                     }
                 }
 
-                // restore the old policy
-                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);   // restore the old policy
+
+                saveColumnWidths(); // save column widths for next time
 
                 installColumnListeners();
+
+                /* set the initialization flag and start a full calculated pack of the table if not initialized */
+                if (!isFullyInitialized) {
+                    isFullyInitialized = true;
+
+                    // rerun the pack process to perform a fully calculated pack
+                    Platform.runLater(this::packTable);
+                }
             });
         }).start();
     }
@@ -305,7 +358,8 @@ public class TableViewManager<S> {
 
     private final class ColumnVisibilityListener implements ChangeListener<Boolean> {
         @Override
-        public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+        public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue,
+                            final Boolean newValue) {
             updateColumnVisibilityExecutor.execute(TableViewManager.this::saveColumnVisibility);
             packTable();
         }

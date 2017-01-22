@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -96,7 +95,7 @@ public abstract class EngineTest {
         closeEngine();
 
         // check for correct file version
-        final float version = EngineFactory.getFileVersion(new File(testFile), EngineFactory.EMPTY_PASSWORD);
+        final float version = EngineFactory.getFileVersion(Paths.get(testFile), EngineFactory.EMPTY_PASSWORD);
         final Config config = new Config();
         assertEquals(Float.valueOf(config.getFileFormat()), version, .0001);
 
@@ -112,7 +111,8 @@ public abstract class EngineTest {
 
         Files.deleteIfExists(Paths.get(testFile));
 
-        final String attachmentDir = System.getProperty("java.io.tmpdir") + File.separator + "attachments";
+        final String attachmentDir = System.getProperty("java.io.tmpdir") + System.getProperty("path.separator")
+                + "attachments";
         final Path directory = Paths.get(attachmentDir);
 
         FileUtils.deletePathAndContents(directory);
@@ -923,7 +923,7 @@ public abstract class EngineTest {
             // close and reopen to force check for persistence
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-            float version = EngineFactory.getFileVersion(new File(testFile), EngineFactory.EMPTY_PASSWORD);
+            float version = EngineFactory.getFileVersion(Paths.get(testFile), EngineFactory.EMPTY_PASSWORD);
 
             System.out.println(version);
 

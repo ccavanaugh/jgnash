@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 package jgnash.uifx.actions;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -50,14 +52,14 @@ public class ImportAccountsAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(ImportAccountsAction.class);
             pref.put(LAST_DIR, file.getParentFile().getAbsolutePath());
 
             final ImportTask importTask =
-                    new ImportTask(new File(FileUtils.stripFileExtension(file.getAbsolutePath()) + ".xml"));
+                    new ImportTask(Paths.get(FileUtils.stripFileExtension(file.getAbsolutePath()) + ".xml"));
 
             new Thread(importTask).start();
 
@@ -80,9 +82,9 @@ public class ImportAccountsAction {
     }
 
     private static class ImportTask extends Task<Void> {
-        private final File file;
+        private final Path file;
 
-        ImportTask(final File file) {
+        ImportTask(final Path file) {
             this.file = file;
         }
 

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -66,15 +68,16 @@ public class BinaryXStreamDataStore implements DataStore {
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
-        File file = new File(fileName);
+        Path path = Paths.get(fileName);
 
-        container = new BinaryContainer(file);
+        container = new BinaryContainer(path);
 
-        if (file.exists()) {
+        if (Files.exists(path)) {
             container.readBinary();
         }
 
-        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(), new LocalAttachmentManager(), engineName);
+        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(),
+                new LocalAttachmentManager(), engineName);
 
         logger.info("Created local Binary container and engine");
 
@@ -140,26 +143,26 @@ public class BinaryXStreamDataStore implements DataStore {
     }
 
     /*
-     * @see jgnash.engine.DataStore#saveAs(java.io.File, java.util.Collection)
+     * @see jgnash.engine.DataStore#saveAs(java.util.Collection)
      */
     @Override
-    public void saveAs(final File file, final Collection<StoredObject> objects) {
-        BinaryContainer.writeBinary(objects, file);
+    public void saveAs(final Path path, final Collection<StoredObject> objects) {
+        BinaryContainer.writeBinary(objects, path);
     }
 
     /**
      * Opens the file in readonly mode and reads the version of the file format.
      *
      * @param file
-     * {@code File} to open
+     * {@code Path} to open
      * @return file version
      */
-    public static float getFileVersion(final File file) {
+    public static float getFileVersion(final Path file) {
 
         float fileVersion = 0;
 
-        if (file.exists()) {
-            BinaryContainer container = new BinaryContainer(file);
+        if (Files.exists(file)) {
+            final BinaryContainer container = new BinaryContainer(file);
 
             try {
                 container.readBinary();

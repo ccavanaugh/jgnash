@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,22 +77,22 @@ public class DecimalTextField extends TextFieldEx {
     private static final ScriptEngine jsEngine;
 
     // the property value may be null
-    private final ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<BigDecimal> decimal = new SimpleObjectProperty<>();
 
     /**
      * Controls the maximum number of displayed decimal places.
      */
-    private final SimpleIntegerProperty scaleProperty = new SimpleIntegerProperty();
+    private final SimpleIntegerProperty scale = new SimpleIntegerProperty();
 
     /**
      * Controls the minimum number of displayed decimal places.
      */
-    private final SimpleIntegerProperty minScaleProperty = new SimpleIntegerProperty();
+    private final SimpleIntegerProperty minScale = new SimpleIntegerProperty();
 
     /**
      * Displays an empty field if {@code decimalProperty} is zero.
      */
-    private final BooleanProperty emptyWhenZeroProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty emptyWhenZero = new SimpleBooleanProperty(true);
 
     /**
      * Reference is needed to prevent premature garbage collection.
@@ -148,41 +148,41 @@ public class DecimalTextField extends TextFieldEx {
         });
 
         // Change the max and minimum scale allowed for entry
-        scaleProperty.addListener((observable, oldValue, newValue) -> {
+        scale.addListener((observable, oldValue, newValue) -> {
             if (format instanceof DecimalFormat) {
-                format.setMaximumFractionDigits(scaleProperty.get());
+                format.setMaximumFractionDigits(scale.get());
             }
             evaluateAndSet();
         });
 
-        minScaleProperty.addListener((observable, oldValue, newValue) -> {
+        minScale.addListener((observable, oldValue, newValue) -> {
             if (format instanceof DecimalFormat) {
-                format.setMinimumFractionDigits(minScaleProperty.get());
+                format.setMinimumFractionDigits(minScale.get());
             }
             evaluateAndSet();
         });
 
-        scaleProperty.set(DEFAULT_SCALE); // trigger update to the format
-        minScaleProperty.set(DEFAULT_SCALE);
+        scale.set(DEFAULT_SCALE); // trigger update to the format
+        minScale.set(DEFAULT_SCALE);
     }
 
     public ObjectProperty<BigDecimal> decimalProperty() {
-        return decimalProperty;
+        return decimal;
     }
 
     public IntegerProperty scaleProperty() {
-        return scaleProperty;
+        return scale;
     }
 
     public IntegerProperty minScaleProperty() {
-        return minScaleProperty;
+        return minScale;
     }
 
     private void evaluateAndSet() {
         final String t = evaluateInput();
         if (!t.isEmpty()) {
             // round the value to scale
-            setDecimal(new BigDecimal(t).setScale(scaleProperty.get(), MathConstants.roundingMode));
+            setDecimal(new BigDecimal(t).setScale(scale.get(), MathConstants.roundingMode));
         } else {
             setDecimal(BigDecimal.ZERO);
         }
@@ -196,7 +196,7 @@ public class DecimalTextField extends TextFieldEx {
     public void setDecimal(@NotNull final BigDecimal decimal) {
         Objects.requireNonNull(decimal);
 
-        decimalProperty.setValue(decimal.setScale(scaleProperty.get(), MathConstants.roundingMode));
+        this.decimal.set(decimal.setScale(scale.get(), MathConstants.roundingMode));
     }
 
     public @NotNull BigDecimal getDecimal() {
@@ -331,9 +331,9 @@ public class DecimalTextField extends TextFieldEx {
                 final Object o = jsEngine.eval(text);
 
                 if (o instanceof Number) { // scale the number
-                    final BigDecimal value = new BigDecimal(o.toString()).setScale(scaleProperty.get(), MathConstants.roundingMode);
+                    final BigDecimal value = new BigDecimal(o.toString()).setScale(scale.get(), MathConstants.roundingMode);
 
-                    decimalProperty.setValue(value);
+                    decimal.set(value);
                     return value.toString();
                 }
             } catch (final ScriptException ex) {
@@ -344,6 +344,6 @@ public class DecimalTextField extends TextFieldEx {
     }
 
     public BooleanProperty emptyWhenZeroProperty() {
-        return emptyWhenZeroProperty;
+        return emptyWhenZero;
     }
 }

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ import jgnash.util.NotNull;
 abstract class AbstractTransactionEntrySlipController implements BaseSlip {
 
     @InjectFXML
-    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Parent> parent = new SimpleObjectProperty<>();
 
     @FXML
     DecimalTextField amountField;
@@ -72,11 +72,11 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
     @FXML
     private ResourceBundle resources;
 
-    final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<List<TransactionEntry>> transactionEntryList = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<Comparator<TransactionEntry>> comparatorProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Comparator<TransactionEntry>> comparator = new SimpleObjectProperty<>();
 
     TransactionEntry oldEntry;
 
@@ -97,7 +97,7 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
         AutoCompleteFactory.setMemoModel(memoField);
 
         // Install an event handler when the parent has been set via injection
-        parentProperty.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
+        parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
     }
 
     @Override
@@ -109,19 +109,19 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
     abstract TransactionEntry buildTransactionEntry();
 
     ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 
     ObjectProperty<List<TransactionEntry>> transactionEntryListProperty() {
-        return transactionEntryListProperty;
+        return transactionEntryList;
     }
 
     ObjectProperty<Comparator<TransactionEntry>> comparatorProperty() {
-        return comparatorProperty;
+        return comparator;
     }
 
     boolean hasEqualCurrencies() {
-        return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
+        return account.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
 
     public boolean validateForm() {
@@ -150,13 +150,13 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
         if (validateForm()) {
             final TransactionEntry entry = buildTransactionEntry();
 
-            final List<TransactionEntry> entries = transactionEntryListProperty.get();
+            final List<TransactionEntry> entries = transactionEntryList.get();
 
             if (oldEntry != null) {
                 entries.remove(oldEntry);
             }
 
-            final int index = Collections.binarySearch(entries, entry, comparatorProperty.get());
+            final int index = Collections.binarySearch(entries, entry, comparator.get());
 
             if (index < 0) {
                 entries.add(-index - 1, entry);

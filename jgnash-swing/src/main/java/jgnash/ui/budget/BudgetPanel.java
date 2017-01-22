@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -675,7 +675,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 protected String doInBackground() throws Exception {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
-                    return BudgetResultsExport.exportBudgetResultsModel(file, resultsModel);
+                    return BudgetResultsExport.exportBudgetResultsModel(file.toPath(), resultsModel);
                 }
 
                 @Override

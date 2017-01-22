@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,8 +32,6 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.ResourceUtils;
 
-//import jgnash.util.Resource;
-
 /**
  * Import a tree of accounts
  *
@@ -62,7 +60,7 @@ public class ImportAccountsAction extends AbstractEnabledAction {
                 protected Void doInBackground() throws Exception {
                     UIApplication.getFrame().displayWaitMessage(ResourceUtils.getString("Message.ImportWait"));
 
-                    RootAccount root = AccountTreeXMLFactory.loadAccountTree(file);
+                    RootAccount root = AccountTreeXMLFactory.loadAccountTree(file.toPath());
 
                     if (root != null) {
                         AccountTreeXMLFactory.mergeAccountTree(EngineFactory.getEngine(EngineFactory.DEFAULT), root);

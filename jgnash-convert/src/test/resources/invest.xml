@@ -1,0 +1,191 @@
+<OFX>       <!-- Example Investment Account taken from the 2.2 Public Draft 3 OFX specification -->
+    <SIGNONMSGSRSV1>
+        <SONRS>                                                         <!-- Begin signon -->
+            <STATUS>                                                    <!-- Begin status aggregate -->
+                <CODE>0</CODE>                                          <!-- OK -->
+                <SEVERITY>INFO</SEVERITY>
+                <MESSAGE>The operation succeeded.</MESSAGE>
+            </STATUS>
+            <DTSERVER>20050828010000</DTSERVER>
+            <LANGUAGE>ENG</LANGUAGE>                                    <!-- Language used in response -->
+            <DTPROFUP>20050828010000</DTPROFUP>                         <!-- Last update to profile-->
+            <DTACCTUP>20050828010000</DTACCTUP>                         <!-- Last account update -->
+            <FI>                                                        <!-- ID of receiving institution -->
+                <ORG>NCH</ORG>                                          <!-- Name of ID owner -->
+                <FID>1001</FID>                                         <!-- Actual ID -->
+            </FI>
+            <INTU.BID>1234</INTU.BID>
+            <INTU.USERID>Nemo</INTU.USERID>
+        </SONRS>                                                        <!--End of signon-->
+    </SIGNONMSGSRSV1>
+    <INVSTMTMSGSRSV1>
+        <INVSTMTTRNRS>                                                  <!--First request in file-->
+            <TRNUID>1001</TRNUID>                                       <!--Client ID for this request-->
+            <STATUS>
+                <CODE>0</CODE>                                          <!--0 = accepted, good data follows-->
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <INVSTMTRS>                                                 <!--Beginning of statement download-->
+                <DTASOF>20050827010000</DTASOF>                         <!--Statement as of Aug 27, 2005 1am-->
+                <CURDEF>USD</CURDEF>                                    <!--Default currency is US Dollar-->
+                <INVACCTFROM>                                           <!--Beginning of account information-->
+                    <BROKERID>121099999</BROKERID>                      <!--FI ID-->
+                    <ACCTID>999988</ACCTID>                             <!--Account number-->
+                </INVACCTFROM>                                          <!--End of account information-->
+                <INVTRANLIST>                                           <!--Beginning of transactions-->
+                    <DTSTART>20050824130105</DTSTART>                   <!--Send transactions posted after-->
+                                                                        <!--Aug 24, 2005 1:01:05pm-->
+                    <DTEND>20050828101000</DTEND>                       <!--End timestamp (now) -->
+                    <BUYSTOCK>                                          <!--Buy stock transaction-->
+                        <INVBUY>
+                            <INVTRAN>
+                                <FITID>23321</FITID>                    <!--FI transaction ID-->
+                                <DTTRADE>20050825</DTTRADE>             <!--Trade date Aug 25, 2005-->
+                                <DTSETTLE>20050828</DTSETTLE>           <!--Settlement date Aug 28, 2005-->
+                            </INVTRAN>
+                            <SECID>                                     <!--Security ID-->
+                                <UNIQUEID>123456789</UNIQUEID>          <!--CUSIP for ACME -->
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <UNITS>100</UNITS>                          <!--100 shares-->
+                            <UNITPRICE>50.00</UNITPRICE>                <!--$50/share-->
+                            <COMMISSION>25.00</COMMISSION>              <!--$25 commission -->
+                            <TOTAL>-5025.00</TOTAL>                     <!--Total amount $5025.00-->
+                            <SUBACCTSEC>CASH</SUBACCTSEC>               <!--Holding resides in cash account-->
+                            <SUBACCTFUND>CASH</SUBACCTFUND>             <!--Bought in cash account-->
+                        </INVBUY>
+                        <BUYTYPE>BUY</BUYTYPE>                          <!--Normal buy-->
+                    </BUYSTOCK>                                         <!--End of buy stock transaction-->
+                    <INVBANKTRAN>                                       <!--Investment acct bank transaction-->
+                        <STMTTRN>                                       <!--Beginning of a bank transaction-->
+                            <TRNTYPE>CREDIT</TRNTYPE>                   <!--Generic credit-->
+                            <DTPOSTED>20050825</DTPOSTED>               <!--Aug 25, 2005-->
+                            <DTUSER>20050825</DTUSER>                   <!--Aug 25, 2005-->
+                            <TRNAMT>1000.00</TRNAMT>                    <!--$1,000.00-->
+                            <FITID>12345</FITID>                        <!--FI transaction ID 12345-->
+                            <NAME>Customer deposit</NAME>               <!--Description of transaction-->
+                            <MEMO>Your check #1034</MEMO>               <!--Optional memo from FI-->
+                        </STMTTRN>                                      <!--End of bank transaction-->
+                        <SUBACCTFUND>CASH</SUBACCTFUND>                 <!--Credited to the cash account -->
+                    </INVBANKTRAN>
+                </INVTRANLIST>                                          <!--End of transactions-->
+                <INVPOSLIST>                                            <!--Beginning of positions list-->
+                    <POSSTOCK>                                          <!--Beginning of position -->
+                        <INVPOS>
+                            <SECID>                                     <!--Security ID-->
+                                <UNIQUEID>123456789</UNIQUEID>          <!--CUSIP for Acme Development, Inc.-->
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <HELDINACCT>CASH</HELDINACCT>               <!--Cash account-->
+                            <POSTYPE>LONG</POSTYPE>                     <!--Long position-->
+                            <UNITS>200</UNITS>                          <!--200 shares-->
+                            <UNITPRICE>49.50</UNITPRICE>                <!--Latest price-->
+                            <MKTVAL>9900.00</MKTVAL>                    <!--Current market value $9900.00-->
+                            <DTPRICEASOF>20050827010000</DTPRICEASOF>   <!--Prices as of Aug27,2005 1am-->
+                            <MEMO>Next dividend payable Sept 1</MEMO>
+                        </INVPOS>
+                    </POSSTOCK>                                         <!--End of position-->
+                    <POSOPT>                                            <!--Beginning of position-->
+                        <INVPOS>
+                            <SECID>                                     <!--Security ID-->
+                                <UNIQUEID>000342222</UNIQUEID>          <!--CUSIP for the option -->
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <HELDINACCT>CASH</HELDINACCT>               <!--Cash account-->
+                            <POSTYPE>LONG</POSTYPE>                     <!--Long position-->
+                            <UNITS>1</UNITS>                            <!--100 shares-->
+                            <UNITPRICE>5</UNITPRICE>                    <!--Latest price-->
+                            <MKTVAL>500</MKTVAL>                        <!--Current market value $500.00-->
+                            <DTPRICEASOF>20050827010000</DTPRICEASOF>   <!--Prices as of Aug27,2005 1am-->
+                            <MEMO>Option is in the money</MEMO>
+                        </INVPOS>
+                    </POSOPT>                                           <!--End of option position -->
+                </INVPOSLIST>                                           <!--End of position -->
+                <INVBAL>
+                    <AVAILCASH>200.00</AVAILCASH>                       <!--$200.00 cash balance-->
+                    <MARGINBALANCE>-50.00</MARGINBALANCE>               <!--$50.00 owed on margin balance-->
+                    <SHORTBALANCE>0</SHORTBALANCE>                      <!--$0 short balance-->
+                    <BALLIST>                                           <!--Beginning of FI-defined balances-->
+                        <BAL>                                           <!--Beginning of a balance-->
+                            <NAME>Margin Interest Rate</NAME>           <!--Name of balance entry-->
+                            <DESC>Current interest rate on margin balances</DESC> <!--Help text for this balance-->
+                            <BALTYPE>PERCENT</BALTYPE>                  <!--Format as percent-->
+                            <VALUE>7.85</VALUE>                         <!--Will be formatted 7.85%-->
+                            <DTASOF>20050827010000</DTASOF>             <!--Rate as of Aug 27, 2005 1am-->
+                        </BAL>                                          <!--End of balance entry-->
+                    </BALLIST>                                          <!--End of balances-->
+                </INVBAL>
+                <INVOOLIST>
+                    <OOBUYSTOCK>
+                        <OO>
+                            <FITID>23321</FITID>                        <!--FI transaction ID-->
+                            <SECID>                                     <!--Security ID-->
+                                <UNIQUEID>666678578</UNIQUEID>          <!--CUSIP for Hackson Unlimited-->
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <DTPLACED>20050624031505</DTPLACED>         <!--Order placed 6/24/96 3:15:05pm-->
+                            <UNITS>100</UNITS>                          <!--100 shares-->
+                            <SUBACCT>CASH</SUBACCT>                     <!--Purchase with cash-->
+                            <DURATION>GOODTILCANCEL</DURATION>          <!--GOODTILCANCEL-->
+                            <RESTRICTION>NONE</RESTRICTION>             <!--No special restrictions-->
+                            <LIMITPRICE>50.00</LIMITPRICE>              <!--Limit price $50/share-->
+                        </OO>
+                        <BUYTYPE>BUY</BUYTYPE>                          <!--Normal buy-->
+                    </OOBUYSTOCK>
+                </INVOOLIST>
+            </INVSTMTRS>
+        </INVSTMTTRNRS>                                                 <!--End of first response-->
+    </INVSTMTMSGSRSV1>
+    <SECLISTMSGSRSV1>
+        <SECLIST>                                                       <!--Beginning of securities list-->
+            <STOCKINFO>                                                 <!--Beginning of 1st security ID-->
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>123456789</UNIQUEID>                  <!--CUSIP for the stock -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>
+                    <SECNAME>Acme Development, Inc.</SECNAME>
+                    <TICKER>ACME</TICKER>                               <!--Ticker symbol-->
+                    <FIID>1024</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <YIELD>10</YIELD>                                       <!--10% yield-->
+                <ASSETCLASS>SMALLSTOCK</ASSETCLASS>                     <!--Small Capital Stock asset class-->
+            </STOCKINFO>                                                <!--End of security ID-->
+            <STOCKINFO>
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>666678578</UNIQUEID>                  <!--CUSIP for the stock -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>
+                    <SECNAME>Hackson Unlimited, Inc.</SECNAME>
+                    <TICKER>HACK</TICKER>                               <!--Ticker symbol-->
+                    <FIID>1027</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <YIELD>17</YIELD>                                       <!--17% yield-->
+                <ASSETCLASS>SMALLSTOCK</ASSETCLASS>                     <!--Small Capital Stock asset class-->
+            </STOCKINFO>
+            <OPTINFO>
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>000342222</UNIQUEID>                  <!--CUSIP for the option -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>                                            <!--End of security ID-->
+                    <SECNAME>Lucky Airlines Jan 97 Put</SECNAME>
+                    <TICKER>LUAXX</TICKER>                              <!--Ticker symbol-->
+                    <FIID>0013</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <OPTTYPE>PUT</OPTTYPE>
+                <STRIKEPRICE>35.00</STRIKEPRICE>                        <!--Strike price $35/share-->
+                <DTEXPIRE>20050121</DTEXPIRE>                           <!--Option expires Jan 21, 2005-->
+                <SHPERCTRCT>100</SHPERCTRCT>                            <!--100 shares per contract-->
+                <SECID>                                                 <!--Security ID-->
+                    <UNIQUEID>000342200</UNIQUEID>                      <!--CUSIP for the underlying stock -->
+                    <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                </SECID>
+                <ASSETCLASS>LARGESTOCK</ASSETCLASS>                     <!--Large Capital Stock asset class-->
+            </OPTINFO>                                                  <!--End of option information-->
+        </SECLIST>                                                      <!--End of securities list-->
+    </SECLISTMSGSRSV1>
+</OFX>
+
+

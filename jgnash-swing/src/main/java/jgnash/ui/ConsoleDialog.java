@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ import javax.swing.filechooser.FileSystemView;
 import jgnash.engine.Engine;
 import jgnash.ui.components.MemoryMonitor;
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -129,10 +130,9 @@ public class ConsoleDialog {
     private static void dumpHeap() {
 
         final String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
-        final String filesep = System.getProperty("file.separator");
 
         for (int i = 1; i < MAX_DUMP_FILES; i++) {  // no more than 1000 dumps
-            final File dumpFile = new File(base + filesep + "jGnashHeapDump" + i + ".bin");
+            final File dumpFile = new File(base + FileUtils.separator + "jGnashHeapDump" + i + ".bin");
 
             if (!dumpFile.exists()) {
                 final MBeanServer server = ManagementFactory.getPlatformMBeanServer();

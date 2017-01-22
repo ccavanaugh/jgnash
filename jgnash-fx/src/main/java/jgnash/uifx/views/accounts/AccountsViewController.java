@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ public class AccountsViewController implements MessageListener {
 
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(preferences);
 
-    private final SimpleObjectProperty<Account> selectedAccountProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Account> selectedAccount = new SimpleObjectProperty<>();
 
     @FXML
     private ResourceBundle resources;
@@ -109,9 +109,9 @@ public class AccountsViewController implements MessageListener {
         // Register invalidation listeners to force a reload
         typeFilter.addListener(observable -> reload());
 
-        selectedAccountProperty.addListener((observable, oldValue, newValue) -> updateButtonStates());
+        selectedAccount.addListener((observable, oldValue, newValue) -> updateButtonStates());
 
-        modifyButton.disableProperty().bind(selectedAccountProperty.isNull());
+        modifyButton.disableProperty().bind(selectedAccount.isNull());
 
         AccountBalanceDisplayManager.accountBalanceDisplayMode()
                 .addListener((observable, oldValue, newValue) -> treeTableView.refresh());
@@ -169,9 +169,9 @@ public class AccountsViewController implements MessageListener {
     private void installListeners() {
         treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                selectedAccountProperty.setValue(newValue.getValue());
+                selectedAccount.set(newValue.getValue());
             } else {
-                selectedAccountProperty.setValue(null);
+                selectedAccount.set(null);
             }
         });
 
@@ -184,7 +184,7 @@ public class AccountsViewController implements MessageListener {
         final TreeTableRow<Account> treeTableRow = new TreeTableRow<>();
         treeTableRow.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-                if (selectedAccountProperty.get() != null && !selectedAccountProperty.get().isPlaceHolder()) {
+                if (selectedAccount.get() != null && !selectedAccount.get().isPlaceHolder()) {
                     Platform.runLater(AccountsViewController.this::handleZoomAccountAction);
                 }
             }
@@ -207,7 +207,7 @@ public class AccountsViewController implements MessageListener {
         visibilityMenuItem.setOnAction(event -> new Thread(() -> {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             if (engine != null) {
-                engine.toggleAccountVisibility(selectedAccountProperty.get());
+                engine.toggleAccountVisibility(selectedAccount.get());
             }
         }).start());
 
@@ -217,7 +217,7 @@ public class AccountsViewController implements MessageListener {
         rowMenu.getItems().addAll(newItem, modifyItem, deleteItem, new SeparatorMenuItem(), visibilityMenuItem,
                 new SeparatorMenuItem(), reconcileItem);
 
-        rowMenu.setOnShowing(event -> visibilityMenuItem.setText(selectedAccountProperty.get().isVisible()
+        rowMenu.setOnShowing(event -> visibilityMenuItem.setText(selectedAccount.get().isVisible()
                 ? resources.getString("Menu.Hide.Name") : resources.getString("Menu.Show.Name")));
 
         treeTableRow.contextMenuProperty().bind(
@@ -230,7 +230,7 @@ public class AccountsViewController implements MessageListener {
 
     private void updateButtonStates() {
         Platform.runLater(() -> {
-            final Account account = selectedAccountProperty.get();
+            final Account account = selectedAccount.get();
 
             if (account != null) {
                 final int count = account.getTransactionCount();
@@ -277,24 +277,24 @@ public class AccountsViewController implements MessageListener {
 
     @FXML
     private void handleModifyAccountAction() {
-        if (selectedAccountProperty.get() != null) {
-            StaticAccountsMethods.showModifyAccountProperties(selectedAccountProperty.get());
+        if (selectedAccount.get() != null) {
+            StaticAccountsMethods.showModifyAccountProperties(selectedAccount.get());
         }
     }
 
     @FXML
     private void handleNewAccountAction() {
-        StaticAccountsMethods.showNewAccountPropertiesDialog(selectedAccountProperty.get());
+        StaticAccountsMethods.showNewAccountPropertiesDialog(selectedAccount.get());
     }
 
     @FXML
     private void handleDeleteAccountAction() {
         new Thread(() -> {   // push off the platform thread to improve performance
-            if (selectedAccountProperty.get() != null) {
+            if (selectedAccount.get() != null) {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 Objects.requireNonNull(engine);
 
-                if (!engine.removeAccount(selectedAccountProperty.get())) {
+                if (!engine.removeAccount(selectedAccount.get())) {
                     StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
                 }
             }
@@ -303,7 +303,7 @@ public class AccountsViewController implements MessageListener {
 
     @FXML
     private void handleZoomAccountAction() {
-        RegisterStage.getRegisterStage(selectedAccountProperty.get()).show();
+        RegisterStage.getRegisterStage(selectedAccount.get()).show();
     }
 
     private void updateAccountCode(final Account account, final Integer code) {
@@ -377,6 +377,6 @@ public class AccountsViewController implements MessageListener {
 
     @FXML
     private void handleReconcileAction() {
-        RegisterActions.reconcileAccountAction(selectedAccountProperty.get());
+        RegisterActions.reconcileAccountAction(selectedAccount.get());
     }
 }

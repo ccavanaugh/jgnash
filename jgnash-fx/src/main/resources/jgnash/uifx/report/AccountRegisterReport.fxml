@@ -22,11 +22,12 @@
 
     <GridPane styleClass="form">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
             <ColumnConstraints hgrow="NEVER" minWidth="105" maxWidth="105"/>
-            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
             <ColumnConstraints hgrow="NEVER" minWidth="105" maxWidth="105"/>
-            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="120" prefWidth="180" maxWidth="Infinity"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
         </columnConstraints>
         <rowConstraints>
@@ -39,6 +40,7 @@
         <DatePickerEx fx:id="endDatePicker" GridPane.columnIndex="3"/>
         <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="4"/>
         <CheckBox text="%Button.DetailSplits" fx:id="showSplitsCheckBox" GridPane.columnIndex="5"/>
+        <CheckBox text="%Button.ShowTimestamp" fx:id="showTimestampCheckBox" GridPane.columnIndex="6"/>
     </GridPane>
 
     <GridPane styleClass="form" GridPane.rowIndex="1">

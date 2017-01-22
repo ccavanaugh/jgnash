@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -56,7 +55,7 @@ public class NewFileUtility {
         }
 
         // create the directory if needed
-        Files.createDirectories(new File(new File(fileName).getParent()).toPath());
+        Files.createDirectories(Paths.get(fileName).getParent());
 
         final Engine e = EngineFactory.bootLocalEngine(fileName, EngineFactory.DEFAULT, password, dataStoreType);
 

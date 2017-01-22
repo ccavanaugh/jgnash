@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
  */
 package jgnash.engine.xstream;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -66,15 +68,16 @@ public class XMLDataStore implements DataStore {
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
-        File file = new File(fileName);
+        final Path path = Paths.get(fileName);
 
-        container = new XMLContainer(file);
+        container = new XMLContainer(path);
 
-        if (file.exists()) {
+        if (Files.exists(path)) {
             container.readXML();
         }
 
-        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(), new LocalAttachmentManager(), engineName);
+        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(),
+                new LocalAttachmentManager(), engineName);
 
         logger.info("Created local XML container and engine");
 
@@ -141,8 +144,8 @@ public class XMLDataStore implements DataStore {
     }
 
     @Override
-    public void saveAs(final File file, final Collection<StoredObject> objects) {
-        XMLContainer.writeXML(objects, file);
+    public void saveAs(final Path path, final Collection<StoredObject> objects) {
+        XMLContainer.writeXML(objects, path);
     }
 
     /**
@@ -152,12 +155,12 @@ public class XMLDataStore implements DataStore {
      * {@code File} to open
      * @return file version
      */
-    public static float getFileVersion(final File file) {
+    public static float getFileVersion(final Path file) {
 
         float fileVersion = 0;
 
-        if (file.exists()) {
-            XMLContainer container = new XMLContainer(file);
+        if (Files.exists(file)) {
+            final XMLContainer container = new XMLContainer(file);
 
             try {
                 container.readXML();

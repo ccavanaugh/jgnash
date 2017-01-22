@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@
  */
 package jgnash.engine.jpa;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -206,16 +206,16 @@ abstract class AbstractJpaDataStore implements DataStore {
     }
 
     @Override
-    public void saveAs(final File file, final Collection<StoredObject> objects) {
+    public void saveAs(final Path path, final Collection<StoredObject> objects) {
 
         // Remove the existing files so we don't mix entities and cause corruption
-        if (file.exists()) {
-            deleteDatabase(file);
+        if (Files.exists(path)) {
+            deleteDatabase(path.toString());
         }
 
-        if (initEmptyDatabase(file.getAbsolutePath())) {
+        if (initEmptyDatabase(path.toString())) {
 
-            final Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(),
+            final Properties properties = JpaConfiguration.getLocalProperties(getType(), path.toString(),
                     new char[]{}, false);
 
             EntityManagerFactory factory = null;
@@ -244,7 +244,7 @@ abstract class AbstractJpaDataStore implements DataStore {
                 }
             }
 
-            waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
+            waitForLockFileRelease(path.toString(), new char[]{});
         }
     }
 
@@ -298,9 +298,9 @@ abstract class AbstractJpaDataStore implements DataStore {
     /**
      * Deletes a database and associated files and directories.
      *
-     * @param file one of the primary database files
+     * @param fileName one of the primary database files
      */
-    protected abstract void deleteDatabase(final File file);
+    protected abstract void deleteDatabase(final String fileName);
 
     /**
      * Return the extension used by the lock file with the preceding period.

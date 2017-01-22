@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@
  */
 package jgnash.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -42,6 +43,8 @@ import static org.junit.Assert.*;
  * @author Craig Cavanaugh
  */
 public class BinaryXStreamTest {
+
+    private static Path tempFile;
 
     @Test
     public void testFile() {
@@ -54,17 +57,14 @@ public class BinaryXStreamTest {
 
         final List<Integer> integerData = stringData.stream().map(String::hashCode).collect(Collectors.toList());
 
-        File tempFile = null;
-
         try {
-            tempFile = Files.createTempFile("test", "").toFile();
-            tempFile.deleteOnExit();
+            tempFile = Files.createTempFile("test", "");
         } catch (IOException e) {
             fail(e.toString());
         }
 
 
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+        try (final OutputStream fos = Files.newOutputStream(tempFile)) {
             BinaryStreamDriver bsd = new BinaryStreamDriver();
             XStream xstream = new XStream(bsd);
 
@@ -79,7 +79,7 @@ public class BinaryXStreamTest {
         assertTrue(FileMagic.isBinaryXStreamFile(tempFile));
         assertFalse(FileMagic.isOfxV2(tempFile));
 
-        try (FileInputStream fis = new FileInputStream(tempFile)) {
+        try (InputStream fis = Files.newInputStream(tempFile)) {
             BinaryStreamDriver bsd = new BinaryStreamDriver();
             XStream xstream = new XStream(bsd);
 
@@ -96,5 +96,10 @@ public class BinaryXStreamTest {
             fail(e.toString());
         }
 
+    }
+
+    @AfterClass
+    public static void cleanup() throws IOException {
+        Files.deleteIfExists(tempFile);
     }
 }

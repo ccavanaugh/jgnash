@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -176,6 +177,16 @@ public class DateUtils {
      */
     public static Date asDate(final LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Converts a {@code LocalDate} into a {@code Date} using the default timezone.
+     *
+     * @param localDate {@code LocalDate} to convert
+     * @return an equivalent {@code Date}
+     */
+    public static Date asDate(final LocalDateTime localDate) {
+        return Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     /**

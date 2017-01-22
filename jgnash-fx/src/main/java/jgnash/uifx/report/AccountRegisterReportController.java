@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package jgnash.uifx.report;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -72,10 +73,13 @@ public class AccountRegisterReportController extends DynamicJasperReport {
     private TextField payeeFilterTextField;
 
     @FXML
-    AccountComboBox accountComboBox;
+    private AccountComboBox accountComboBox;
 
     @FXML
     private CheckBox showSplitsCheckBox;
+
+    @FXML
+    private CheckBox showTimestampCheckBox;
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -85,13 +89,19 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
     private static final String SHOW_SPLITS = "showSplits";
 
+    private static final String SHOW_TIMESTAMP = "showTimestamp";
+
     private static final String INDENT_PREFIX = "  - ";
 
     private static final String SPLIT = ResourceUtils.getString("Button.Splits");
 
-
     @FXML
     private void initialize() {
+        final Preferences preferences = getPreferences();
+
+        showSplitsCheckBox.setSelected(preferences.getBoolean(SHOW_SPLITS, false));
+        showTimestampCheckBox.setSelected(preferences.getBoolean(SHOW_TIMESTAMP, false));
+
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             refreshAccount(newValue);
             handleRefresh();
@@ -104,6 +114,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         endDatePicker.valueProperty().addListener(refreshListener);
         payeeFilterTextField.textProperty().addListener(refreshListener);
         memoFilterTextField.textProperty().addListener(refreshListener);
+        showTimestampCheckBox.selectedProperty().addListener(refreshListener);
     }
 
     public void setAccount(@Nullable final Account account) {
@@ -127,6 +138,7 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         final Preferences preferences = getPreferences();
 
         preferences.putBoolean(SHOW_SPLITS, showSplitsCheckBox.isSelected());
+        preferences.putBoolean(SHOW_TIMESTAMP, showTimestampCheckBox.isSelected());
 
         if (refreshCallBackProperty().get() != null) {
             refreshCallBackProperty().get().run();
@@ -142,10 +154,11 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
             return new InvestmentAccountReportModel(accountComboBox.getValue(), startDate, endDate,
-                    memoFilterTextField.getText());
+                    memoFilterTextField.getText(), showTimestampCheckBox.isSelected());
         } else {
             return new AccountReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(),
-                    startDate, endDate, memoFilterTextField.getText(), payeeFilterTextField.getText());
+                    startDate, endDate, memoFilterTextField.getText(), payeeFilterTextField.getText(),
+                    showTimestampCheckBox.isSelected());
         }
     }
 
@@ -189,12 +202,15 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         private String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
 
-        private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.STRING,
-                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING,
+        private final boolean showTimestamp;
+
+        private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.TIMESTAMP,
+                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
         AccountReportModel(@Nullable final Account account, final boolean showSplits, final LocalDate startDate,
-                           final LocalDate endDate, final String memoFilter, final String payeeFilter) {
+                           final LocalDate endDate, final String memoFilter, final String payeeFilter,
+                           final boolean showTimestamp) {
             this.account = account;
             this.showSplits = showSplits;
 
@@ -206,17 +222,30 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                     .and(new MemoPredicate(memoFilter))
                     .and(new PayeePredicate(payeeFilter)));
 
+            this.showTimestamp = showTimestamp;
+
             loadAccount();
+        }
+
+        @Override
+        public int[] getColumnsToHide() {
+            if (showTimestamp) {
+                return super.getColumnsToHide();
+            }
+
+            return new int[] {1};
         }
 
         @Override
         public boolean isColumnFixedWidth(final int columnIndex) {
             switch (columnIndex) {
                 case 0:
-                case 5:
+                case 1:
+                case 2:
                 case 6:
                 case 7:
                 case 8:
+                case 9:
                     return true;
                 default:
                     return false;
@@ -310,10 +339,12 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 case 0:
                     return LocalDate.class;
                 case 1:
+                    return LocalDateTime.class;
                 case 2:
                 case 3:
                 case 4:
                 case 5:
+                case 6:
                     return String.class;
                 default:
                     return BigDecimal.class;
@@ -358,12 +389,14 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                         case 0:
                             return transaction.getLocalDate();
                         case 1:
-                            return transaction.getNumber();
+                            return transaction.getTimestamp();
                         case 2:
-                            return transaction.getPayee();
+                            return transaction.getNumber();
                         case 3:
-                            return transaction.getMemo(account);
+                            return transaction.getPayee();
                         case 4:
+                            return transaction.getMemo(account);
+                        case 5:
                             if (transaction.getTransactionType() == TransactionType.SPLITENTRY
                                     && transaction.getCommonAccount() == account) {
                                 return "[ " + transaction.size() + " " + SPLIT + " ]";
@@ -375,42 +408,42 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                                 }
                                 return entry.getDebitAccount().getName();
                             }
-                        case 5:
+                        case 6:
                             return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
                                     ? transaction.getReconciled(account).toString() : null;
-                        case 6:
+                        case 7:
                             if (signum >= 0) {
                                 return amount;
                             }
                             return null;
-                        case 7:
+                        case 8:
                             if (signum < 0) {
                                 return amount.abs();
                             }
                             return null;
-                        case 8:
+                        case 9:
                             return account.getBalanceAt(transaction);
                         default:
                             return null;
                     }
                 } else {    // detailed split
                     switch (columnIndex) {
-                        case 3:
-                            return transactionEntry.getMemo();
                         case 4:
+                            return transactionEntry.getMemo();
+                        case 5:
                             if (transactionEntry.getCreditAccount() != account) {
                                 return INDENT_PREFIX + transactionEntry.getCreditAccount().getName();
                             }
                             return INDENT_PREFIX + transactionEntry.getDebitAccount().getName();
-                        case 5:
+                        case 6:
                             return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
                                     ? transaction.getReconciled(account).toString() : null;
-                        case 6:
+                        case 7:
                             if (signum >= 0) {
                                 return amount;
                             }
                             return null;
-                        case 7:
+                        case 8:
                             if (signum < 0) {
                                 return amount.abs();
                             }
@@ -433,32 +466,46 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
         private final FilteredList<Row<Transaction>> filteredList = new FilteredList<>(transactionRows);
 
-        private String[] columnNames = RegisterFactory.getColumnNames(AccountType.BANK);
+        private String[] columnNames = RegisterFactory.getColumnNames(AccountType.INVEST);
 
-        private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.STRING,
-                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
+        private static final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.SHORT_DATE, ColumnStyle.TIMESTAMP,
+                ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.SHORT_AMOUNT,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
+        private final boolean showTimestamp;
+
         InvestmentAccountReportModel(@Nullable final Account account, final LocalDate startDate,
-                                     final LocalDate endDate, final String memoFilter) {
+                                     final LocalDate endDate, final String memoFilter, final boolean showTimestamp) {
             this.account = account;
 
             filteredList.setPredicate(new TransactionAfterDatePredicate(startDate)
                     .and(new TransactionBeforeDatePredicate(endDate))
                     .and(new MemoPredicate(memoFilter)));
 
+            this.showTimestamp = showTimestamp;
+
             loadAccount();
+        }
+
+        @Override
+        public int[] getColumnsToHide() {
+            if (showTimestamp) {
+                return super.getColumnsToHide();
+            }
+
+            return new int[] {1};
         }
 
         @Override
         public boolean isColumnFixedWidth(final int columnIndex) {
             switch (columnIndex) {
                 case 0:
-                case 2:
+                case 1:
                 case 4:
                 case 5:
                 case 6:
                 case 7:
+                case 8:
                     return true;
                 default:
                     return false;
@@ -514,9 +561,11 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                 case 0:
                     return LocalDate.class;
                 case 1:
+                    return LocalDateTime.class;
                 case 2:
                 case 3:
                 case 4:
+                case 5:
                     return String.class;
                 default:
                     return BigDecimal.class;
@@ -542,6 +591,8 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                     case 0:
                         return transaction.getLocalDate();
                     case 1:
+                        return transaction.getTimestamp();
+                    case 2:
                         if (transaction instanceof InvestmentTransaction) {
                             return transaction.getTransactionType().toString();
                         } else if (transaction.getAmount(account).signum() > 0) {
@@ -549,27 +600,27 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                         } else {
                             return resources.getString("Item.CashWithdrawal");
                         }
-                    case 2:
+                    case 3:
                         if (transaction instanceof InvestmentTransaction) {
                             return ((InvestmentTransaction) transaction).getSecurityNode().getSymbol();
                         }
                         return null;
-                    case 3:
-                        return transaction.getMemo(account);
                     case 4:
+                        return transaction.getMemo(account);
+                    case 5:
                         return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
                                 ? transaction.getReconciled(account).toString() : null;
-                    case 5:
+                    case 6:
                         if (transaction instanceof InvestmentTransaction) {
                             return ((InvestmentTransaction) transaction).getQuantity();
                         }
                         return null;
-                    case 6:
+                    case 7:
                         if (transaction instanceof InvestmentTransaction) {
                             return ((InvestmentTransaction) transaction).getPrice();
                         }
                         return null;
-                    case 7:
+                    case 8:
                         if (transaction instanceof InvestmentTransaction) {
                             return ((InvestmentTransaction) transaction).getNetCashValue();
                         }

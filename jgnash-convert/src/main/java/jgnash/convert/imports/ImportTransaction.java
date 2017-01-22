@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,16 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     private ImportState state = ImportState.NEW;
 
     private String transactionID;
+
+    private String securityId;
+
+    private BigDecimal units;
+
+    private BigDecimal unitPrice;
+
+    private BigDecimal commission;
+
+    private boolean taxExempt = false;
 
     /**
      * @return returns the destination account
@@ -154,6 +164,14 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         this.payee = payee;
     }
 
+    public String getSecurityId() {
+        return securityId;
+    }
+
+    public void setSecurityId(String securityId) {
+        this.securityId = securityId;
+    }
+
     @Override
     public int compareTo(@NotNull final ImportTransaction importTransaction) {
         if (importTransaction == this) {
@@ -189,5 +207,46 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     @Override
     public int hashCode() {
         return Objects.hash(uuid);
+    }
+
+    /**
+     * Investment transaction units
+     */
+    public BigDecimal getUnits() {
+        return units;
+    }
+
+    public void setUnits(BigDecimal units) {
+        this.units = units;
+    }
+
+    /**
+     * Investment transaction unit price
+     */
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    /**
+     * Investment transaction commission
+     */
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
+
+    public boolean isTaxExempt() {
+        return taxExempt;
+    }
+
+    public void setTaxExempt(boolean taxExempt) {
+        this.taxExempt = taxExempt;
     }
 }

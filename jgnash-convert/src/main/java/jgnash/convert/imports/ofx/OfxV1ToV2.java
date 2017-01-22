@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 package jgnash.convert.imports.ofx;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,19 +36,19 @@ import jgnash.util.FileMagic;
  *
  * @author Craig Cavanaugh
  */
-public class OfxV1ToV2 {
+class OfxV1ToV2 {
 
     private static final int READ_AHEAD_LIMIT = 2048;
 
-    public static String convertToXML(final File file) {
-        String encoding = FileMagic.getOfxV1Encoding(file);
+    static String convertToXML(final Path path) {
+        String encoding = FileMagic.getOfxV1Encoding(path);
 
         Logger.getLogger(OfxV1ToV2.class.getName()).log(Level.INFO, "OFX Version 1 file encoding was {0}", encoding);
 
-        return convertSgmlToXML(readFile(file, encoding));
+        return convertSgmlToXML(readFile(path, encoding));
     }
 
-    public static String convertToXML(final InputStream stream) {
+    static String convertToXML(final InputStream stream) {
         return convertSgmlToXML(readFile(stream, System.getProperty("file.encoding")));
     }
 
@@ -164,8 +164,8 @@ public class OfxV1ToV2 {
         return concat(strings);
     }
 
-    private static String readFile(final File file, final String characterSet) {    	
-    	try (final InputStream stream = new FileInputStream(file)) {
+    private static String readFile(final Path path, final String characterSet) {
+    	try (final InputStream stream = Files.newInputStream(path)) {
     		return readFile(stream, characterSet);
     	} catch (IOException e) {
     		Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());

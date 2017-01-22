@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,30 @@
  */
 package jgnash.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -62,6 +64,10 @@ public final class FileUtils {
 
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
             JpaH2DataStore.LOCK_EXT, ".lock"};
+
+    public static final String separator = System.getProperty("file.separator");
+
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     private FileUtils() {
     }
@@ -110,15 +116,17 @@ public final class FileUtils {
         }
 
         if (!result) {
-            try (RandomAccessFile raf = new RandomAccessFile(new File(fileName), "rw");
-                 FileChannel channel = raf.getChannel()) {
+            try (final FileChannel channel = FileChannel.open(Paths.get(fileName), StandardOpenOption.READ,
+                    StandardOpenOption.WRITE)) {
 
-                try (FileLock lock = channel.tryLock()) {
+                try (final FileLock lock = channel.tryLock()) {
                     if (lock == null) {
                         result = true;
                     }
+                } catch (final OverlappingFileLockException ex) {   // indicates file is already locked
+                    result = true;
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
                 throw e;
             }
@@ -169,13 +177,13 @@ public final class FileUtils {
      * @param dst Destination file
      * @return true if the copy was successful
      */
-    public static boolean copyFile(final File src, final File dst) {
+    public static boolean copyFile(final Path src, final Path dst) {
 
         boolean result = false;
 
         if (src != null && dst != null && !src.equals(dst)) {
             try {
-                Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
                 result = true;
             } catch (IOException e) {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, e);
@@ -186,52 +194,43 @@ public final class FileUtils {
         return result;
     }
 
-    public static void compressFile(@NotNull final File source, @NotNull final File destination) {
+    public static void compressFile(@NotNull final Path source, @NotNull final Path destination) {
 
-        if (destination.getParentFile().mkdirs()) {
-            Logger.getLogger(FileUtils.class.getName()).info("Created directories");
+        // Create the destination directory if needed
+        if (!Files.isDirectory(destination.getParent())) {
+            try {
+                Files.createDirectories(destination.getParent());
+                Logger.getLogger(FileUtils.class.getName()).info("Created directories");
+            } catch (IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            }
         }
 
         // Try to open the zip file for output
-        try (FileOutputStream fos = new FileOutputStream(destination);
-             ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+        try (final OutputStream fos = new BufferedOutputStream(Files.newOutputStream(destination));
+             final ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
-            // Try to obtain the lock on the output stream
-            try (FileLock fosLock = fos.getChannel().tryLock()) {
+            // Try to open the input stream
+            try (final InputStream in = new BufferedInputStream(Files.newInputStream(source, StandardOpenOption.READ))) {
+                zipOut.setLevel(Deflater.BEST_COMPRESSION);
 
-                if (fosLock != null) {
+                // strip the path when creating the zip entry
+                zipOut.putNextEntry(new ZipEntry(source.getFileName().toString()));
 
-                    // Try to open the input stream
-                    try (FileInputStream in = new FileInputStream(source)) {
+                // Transfer bytes from the file to the ZIP file
+                int length;
 
-                        // Try to lock input stream
-                        try (FileLock fisLock = in.getChannel().tryLock(0L, Long.MAX_VALUE, true)) {
 
-                            if (fisLock != null) {
-                                zipOut.setLevel(Deflater.BEST_COMPRESSION);
+                byte[] ioBuffer = new byte[DEFAULT_BUFFER_SIZE];
 
-                                // strip the path when creating the zip entry
-                                zipOut.putNextEntry(new ZipEntry(source.getName()));
-
-                                // Transfer bytes from the file to the ZIP file
-                                int length;
-
-                                byte[] ioBuffer = new byte[8192];
-
-                                while ((length = in.read(ioBuffer)) > 0) {
-                                    zipOut.write(ioBuffer, 0, length);
-                                }
-
-                                // finish the zip entry, but let the try-with-resources handle the close
-                                zipOut.finish();
-
-                                fosLock.release();
-                            }
-                        }
-                    }
+                while ((length = in.read(ioBuffer)) > 0) {
+                    zipOut.write(ioBuffer, 0, length);
                 }
+
+                // finish the zip entry, but let the try-with-resources handle the close
+                zipOut.finish();
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
@@ -245,16 +244,17 @@ public final class FileUtils {
      * @return a List of matching Files. The list will be empty if no matches
      * are found or if the directory is not valid.
      */
-    public static List<File> getDirectoryListing(final File directory, final String pattern) {
-        final List<File> fileList = new ArrayList<>();
+    public static List<Path> getDirectoryListing(final Path directory, final String pattern) {
+        final List<Path> fileList = new ArrayList<>();
 
-        if (directory != null && directory.isDirectory()) {
+        if (directory != null && Files.isDirectory(directory)) {
             final Pattern p = SearchUtils.createSearchPattern(pattern, false);
 
-            final File[] files = directory.listFiles((dir, name) -> p.matcher(name).matches());
-
-            if (files != null) {
-                fileList.addAll(Arrays.asList(files));
+            try {
+                fileList.addAll(Files.list(directory).filter(path -> p.matcher(path.toString()).matches())
+                        .collect(Collectors.toList()));
+            } catch (final IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
 
             Collections.sort(fileList); // sort in natural order

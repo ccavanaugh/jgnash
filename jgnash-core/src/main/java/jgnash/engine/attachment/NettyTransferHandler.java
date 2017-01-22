@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package jgnash.engine.attachment;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +33,7 @@ import java.util.logging.Logger;
 
 import jgnash.engine.AttachmentUtils;
 import jgnash.util.EncryptionManager;
+import jgnash.util.FileUtils;
 import jgnash.util.Nullable;
 
 import io.netty.channel.Channel;
@@ -52,11 +52,11 @@ import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 @ChannelHandler.Sharable
 class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
-    public static final String FILE_REQUEST = "<FILE_REQUEST>";
+    static final String FILE_REQUEST = "<FILE_REQUEST>";
 
-    public static final String DELETE = "<DELETE>";
+    static final String DELETE = "<DELETE>";
 
-    public static final String EOL_DELIMITER = "\r\n";
+    static final String EOL_DELIMITER = "\r\n";
 
     private static final String FILE_STARTS = "<FILE_STARTS>";
 
@@ -68,9 +68,9 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     private static final Logger logger = Logger.getLogger(NettyTransferHandler.class.getName());
 
-    public static final int TRANSFER_BUFFER_SIZE = 1024; // too large can break netty... bug?
+    static final int TRANSFER_BUFFER_SIZE = 1024; // too large can break netty... bug?
 
-    public static final int PATH_MAX = 4096;
+    static final int PATH_MAX = 4096;
 
     private final Map<String, Attachment> fileMap = new ConcurrentHashMap<>();
 
@@ -84,7 +84,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
      * @param attachmentPath Path for attachments.
      * @param encryptionManager encryption manager instance
      */
-    public NettyTransferHandler(final Path attachmentPath, @Nullable final EncryptionManager encryptionManager) {
+    NettyTransferHandler(final Path attachmentPath, @Nullable final EncryptionManager encryptionManager) {
         Objects.requireNonNull(attachmentPath);
 
         this.attachmentPath = attachmentPath;
@@ -103,7 +103,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         }
 
         if (plainMessage.startsWith(FILE_REQUEST)) {
-            sendFile(ctx, attachmentPath + File.separator + plainMessage.substring(FILE_REQUEST.length()));
+            sendFile(ctx, attachmentPath + FileUtils.separator + plainMessage.substring(FILE_REQUEST.length()));
         } else if (plainMessage.startsWith(FILE_STARTS)) {
             openOutputStream(plainMessage.substring(FILE_STARTS.length()));
         } else if (plainMessage.startsWith(FILE_CHUNK)) {
@@ -116,7 +116,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
     }
 
     private void deleteFile(final String fileName) {
-        Path path = Paths.get(attachmentPath + File.separator + fileName);
+        Path path = Paths.get(attachmentPath + FileUtils.separator + fileName);
 
         if (Files.exists(path)) {
             try {
@@ -160,7 +160,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
      * @param fileName the file name
      * @return the future of the potentially asynchronous send is returned. A null value is returned if fileName is a path.
      */
-    public Future<Void> sendFile(final Channel channel, final String fileName) {
+    Future<Void> sendFile(final Channel channel, final String fileName) {
         Future<Void> future = null;
 
         Path path = Paths.get(fileName);
@@ -241,7 +241,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         final String fileName = msgParts[0];
         final long fileLength = Long.parseLong(msgParts[1]);
 
-        final Path filePath = Paths.get(attachmentPath + File.separator + fileName);
+        final Path filePath = Paths.get(attachmentPath + FileUtils.separator + fileName);
 
         // Lazy creation of the attachment path if needed
         if (!AttachmentUtils.createAttachmentDirectory(attachmentPath)) {

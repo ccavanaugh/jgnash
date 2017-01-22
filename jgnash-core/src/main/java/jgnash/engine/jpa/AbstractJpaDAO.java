@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@ package jgnash.engine.jpa;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -31,6 +29,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import jgnash.engine.StoredObject;
+import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
 import jgnash.engine.dao.AbstractDAO;
 import jgnash.engine.dao.DAO;
 import jgnash.util.DefaultDaemonThreadFactory;
@@ -46,22 +45,20 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
      * The {@link EntityManager} is not thread safe.  All interaction should be wrapped with this lock
      */
     static final ReentrantLock emLock = new ReentrantLock();
-
+    /**
+     * This ExecutorService is to be used whenever the entity manager is
+     * accessed because the EntityManager is not thread safe, but we want to return from some methods without blocking
+     */
+    static PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor(1,
+            new DefaultDaemonThreadFactory());
     /**
      * Entity manager reference.
      */
     final EntityManager em;
-
     /**
      * Remote connection if {@code true}.
      */
     boolean isRemote = false;
-
-    /**
-     * This ExecutorService is to be used whenever the entity manager is
-     * accessed because and EntityManager is not thread safe.
-     */
-    static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     AbstractJpaDAO(final EntityManager entityManager, final boolean isRemote) {
         Objects.requireNonNull(entityManager);
@@ -81,7 +78,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 
             // Regenerate the executor service
-            executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+            executorService = new PriorityThreadPoolExecutor(1);
 
         } catch (InterruptedException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -98,25 +95,25 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
      * @return the merged object or null if an error occurred
      */
     <T extends StoredObject> T merge(final T object) {
-        emLock.lock();
-
         try {
             final Future<T> future = executorService.submit(() -> {
+                emLock.lock();
 
-                em.getTransaction().begin();
-                T mergedObject = em.merge(object);
-                em.getTransaction().commit();
+                try {
+                    em.getTransaction().begin();
+                    T mergedObject = em.merge(object);
+                    em.getTransaction().commit();
 
-                return mergedObject;
+                    return mergedObject;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            return future.get();
-
+            return future.get();    // block and return
         } catch (final InterruptedException | ExecutionException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             return null;
-        } finally {
-            emLock.unlock();
         }
     }
 
@@ -125,51 +122,58 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
      *
      * @param objects {@link Object} to persist
      */
-    boolean persist(final Object... objects ) {
+    boolean persist(final Object... objects) {
         boolean result = false;
-
-        emLock.lock();
 
         try {
             final Future<Boolean> future = executorService.submit(() -> {
-                em.getTransaction().begin();
+                emLock.lock();
 
-                for (final Object object : objects) {
-                    em.persist(object);
+                try {
+                    em.getTransaction().begin();
+
+                    for (final Object object : objects) {
+                        em.persist(object);
+                    }
+
+                    em.getTransaction().commit();
+
+                    return true;
+                } finally {
+                    emLock.unlock();
                 }
-                em.getTransaction().commit();
-
-                return true;
             });
 
-            result = future.get();
+            result = future.get();  // block and return
 
         } catch (final InterruptedException | ExecutionException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return result;
     }
 
-
     @Override
     public <T> T getObjectByUuid(final Class<T> tClass, final String uuid) {
         T object = null;
 
-        emLock.lock();
-
         try {
-            final Future<T> future = executorService.submit(() -> em.find(tClass, uuid));
+            final Future<T> future = executorService.submit(() -> {
+                emLock.lock();
 
-            object = future.get();
+                try {
+                    return em.find(tClass, uuid);
+                } finally {
+                    emLock.unlock();
+                }
+            });
+
+            object = future.get();  // block and return
         } catch (NoResultException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.INFO, "Did not find {0} for uuid: {1}", new Object[]{tClass.getName(), uuid});
+            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.INFO, "Did not find {0} for uuid: {1}",
+                    new Object[]{tClass.getName(), uuid});
         } catch (ExecutionException | InterruptedException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return object;

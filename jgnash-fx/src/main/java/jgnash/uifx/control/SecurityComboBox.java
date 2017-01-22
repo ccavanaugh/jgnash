@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
      */
     final private ObservableList<SecurityNode> items;
 
-    final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    final private ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     public SecurityComboBox() {
 
@@ -68,7 +68,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
 
         Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
 
-        accountProperty.addListener((observable, oldValue, newValue) -> loadModel());
+        account.addListener((observable, oldValue, newValue) -> loadModel());
 
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }
@@ -82,9 +82,9 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
     private void loadModel() {
         final Collection<SecurityNode> securityNodes;
 
-        if (accountProperty.get() != null) {
+        if (account.get() != null) {
             items.clear();
-            securityNodes = accountProperty.get().getSecurities();
+            securityNodes = account.get().getSecurities();
         } else {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
@@ -110,7 +110,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
             Platform.runLater(() -> {
                 switch (event.getEvent()) {
                     case ACCOUNT_SECURITY_ADD:
-                        if (account != null && account.equals(accountProperty.get())) {
+                        if (account != null && account.equals(this.account.get())) {
                             final int index = Collections.binarySearch(items, node);
 
                             if (index < 0) {
@@ -119,7 +119,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
                         }
                         break;
                     case ACCOUNT_SECURITY_REMOVE:
-                        if (account != null && account.equals(accountProperty.get())) {
+                        if (account != null && account.equals(this.account.get())) {
                             items.removeAll(node);
                         }
                         break;
@@ -152,6 +152,6 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
     }
 
     public ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 }

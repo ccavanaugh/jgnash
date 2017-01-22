@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -103,6 +103,10 @@ public class AccountExport {
             dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yy"));
             dateStyle.setFont(defaultFont);
 
+            final CellStyle timestampStyle = wb.createCellStyle();
+            timestampStyle.setDataFormat(createHelper.createDataFormat().getFormat("YYYY-MM-DD HH:MM:SS"));
+            timestampStyle.setFont(defaultFont);
+
             final CellStyle textStyle = wb.createCellStyle();
             textStyle.setFont(defaultFont);
 
@@ -135,6 +139,12 @@ public class AccountExport {
                 c.setCellType(Cell.CELL_TYPE_STRING);
                 c.setCellValue(DateUtils.asDate(transaction.getLocalDate()));
                 c.setCellStyle(dateStyle);
+
+                // timestamp
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellValue(DateUtils.asDate(transaction.getTimestamp()));
+                c.setCellStyle(timestampStyle);
 
                 // number
                 c = r.createCell(++col);

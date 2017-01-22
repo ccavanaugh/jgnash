@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,12 +118,25 @@ public class UpdateFactory {
 
         if (result && LocalDate.now().equals(lastDate)) {   // check for an after hours update
             switch (Locale.getDefault().getCountry()) {
+                case "AU":
                 case "CA":
+                case "HK":
                 case "US":
-                    final ZonedDateTime zdt = lastUpdate.atZone(ZoneId.of("UTC").normalized());
-                    if (zdt.getHour() >= 21 && zdt.getMinute() > 25) {  // 4:25 EST for delayed online sources
+                    final ZonedDateTime zdtUS = lastUpdate.atZone(ZoneId.of("UTC").normalized());
+                    if (zdtUS.getHour() >= 21 && zdtUS.getMinute() > 25) {  // 4:25 EST for delayed online sources
                         result = false;
-                        //System.out.println("Last update was after 4:25 pm EST");
+                    }
+                    break;
+                case "GB":  // UK
+                    final ZonedDateTime zdtUK = lastUpdate.atZone(ZoneId.of("UTC").normalized());
+                    if (zdtUK.getHour() >= 21 && zdtUK.getMinute() > 55) {  // 4:55 EST for delayed online sources
+                        result = false;
+                    }
+                    break;
+                case "IN":  // India
+                    final ZonedDateTime zdtIN = lastUpdate.atZone(ZoneId.of("UTC").normalized());
+                    if (zdtIN.getHour() >= 20 && zdtIN.getMinute() > 55) {  // 3:55 EST for delayed online sources
+                        result = false;
                     }
                     break;
                 default:

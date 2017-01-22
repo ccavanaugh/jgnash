@@ -1,6 +1,6 @@
 /*
  * jGnash, account personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ import javafx.scene.input.KeyCode;
  */
 public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
 
-    private final SimpleObjectProperty<NumberFormat> numberFormatProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<NumberFormat> numberFormat = new SimpleObjectProperty<>();
 
     private DecimalTextField decimalTextField = null;
 
@@ -54,7 +54,7 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
 
     public BigDecimalTableCell(final NumberFormat numberFormat) {
         setStyle("-fx-alignment: center-right;");  // Right align
-        numberFormatProperty().setValue(numberFormat);
+        numberFormatProperty().set(numberFormat);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
                 getDecimalTextField().setDecimal(getItem());
                 setGraphic(getDecimalTextField());
             } else if (amount != null) {
-                setText(numberFormatProperty.get().format(amount));
+                setText(numberFormat.get().format(amount));
                 setGraphic(null);
             } else {
                 setText(null);
@@ -80,7 +80,7 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
     }
 
     private SimpleObjectProperty<NumberFormat> numberFormatProperty() {
-        return numberFormatProperty;
+        return numberFormat;
     }
 
     @Override
@@ -102,14 +102,14 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
     public void cancelEdit() {
         super.cancelEdit();
 
-        setText(numberFormatProperty.get().format(getItem()));
+        setText(numberFormat.get().format(getItem()));
         setGraphic(null);
     }
 
     private DecimalTextField getDecimalTextField() {
         if (decimalTextField == null) {
             decimalTextField = new DecimalTextField();
-            decimalTextField.scaleProperty().setValue(numberFormatProperty.get().getMaximumFractionDigits());
+            decimalTextField.scaleProperty().set(numberFormat.get().getMaximumFractionDigits());
 
             decimalTextField.setOnKeyPressed(event -> {
                 if (isEditing() && event.getCode() == KeyCode.ENTER) {

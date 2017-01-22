@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import java.util.prefs.Preferences;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
+import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
@@ -58,7 +59,7 @@ public class ImportOfxAction {
         final FileChooser fileChooser = configureFileChooser();
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
-        final File file = fileChooser.showOpenDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showOpenDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(ImportOfxAction.class);
@@ -75,7 +76,7 @@ public class ImportOfxAction {
         fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx" , "*.OFX", "*.QFX"),
+                new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx", "*.OFX", "*.QFX"),
                 new FileChooser.ExtensionFilter("All Files (*.*)", "*.*")
         );
 
@@ -96,7 +97,7 @@ public class ImportOfxAction {
 
         @Override
         protected OfxBank call() throws Exception {
-            final OfxBank ofxBank = OfxV2Parser.parse(file);
+            final OfxBank ofxBank = OfxV2Parser.parse(file.toPath());
 
             /* Preset the best match for the downloaded account */
             final String accountNumber = ofxBank.accountId;
@@ -162,8 +163,6 @@ public class ImportOfxAction {
 
             String accountNumber = bank.accountId;
 
-            //TODO: Should this be bankId
-
             /* set the account number if not a match */
             if (accountNumber != null && !accountNumber.equals(account.getAccountNumber())) {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -172,7 +171,12 @@ public class ImportOfxAction {
                 engine.setAccountNumber(account, accountNumber);
             }
 
-                /* Import the transactions */
+            // Import or update securities that were found
+            if (bank.getSecurityList().size() > 0) {
+                GenericImport.importSecurities(bank.getSecurityList(), account.getCurrencyNode());
+            }
+
+            // Import the transactions
             OfxImport.importTransactions(transactions, account);
 
             return null;

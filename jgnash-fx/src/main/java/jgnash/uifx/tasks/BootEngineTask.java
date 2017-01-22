@@ -1,7 +1,7 @@
 package jgnash.uifx.tasks;
 
-import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -83,6 +83,8 @@ public class BootEngineTask extends Task<String> {
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         }
 
+        String message = resources.getString("Message.FileLoadComplete");
+
         if (remote) {
             try {
                 EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
@@ -90,7 +92,12 @@ public class BootEngineTask extends Task<String> {
                 Platform.runLater(() -> StaticUIMethods.displayException(exception));
             }
         } else {
-            if (FileUtils.isFileLocked(localFile)) {
+            if (!Files.exists(Paths.get(localFile))) {
+                updateMessage(message);
+                message = resources.getString("Message.Error.FileNotFound") + ": " + localFile;
+            } else if (FileUtils.isFileLocked(localFile)) {
+                message = resources.getString("Message.FileIsLocked") + ": " + localFile;
+                updateMessage(message);
                 Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
             } else if (checkAndBackupOldVersion(localFile, password)) {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
@@ -99,7 +106,7 @@ public class BootEngineTask extends Task<String> {
             }
         }
 
-        return resources.getString("Message.FileLoadComplete");
+        return message;
     }
 
     /**
@@ -113,8 +120,8 @@ public class BootEngineTask extends Task<String> {
 
         boolean result = false;
 
-        if (Files.exists(new File(fileName).toPath())) {
-            final float version = EngineFactory.getFileVersion(new File(fileName), password);
+        if (Files.exists(Paths.get(fileName))) {
+            final float version = EngineFactory.getFileVersion(Paths.get(fileName), password);
             final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 
             boolean oldSchema = false;
@@ -127,7 +134,7 @@ public class BootEngineTask extends Task<String> {
                 Platform.runLater(()
                         -> StaticUIMethods.displayMessage(ResourceUtils.getString("Message.Info.LongUpgrade")));
 
-                final PackDatabaseTask packDatabaseTask = new PackDatabaseTask(new File(fileName), password);
+                final PackDatabaseTask packDatabaseTask = new PackDatabaseTask(fileName, password);
 
                 new Thread(packDatabaseTask).start();
 
@@ -154,7 +161,7 @@ public class BootEngineTask extends Task<String> {
 
                 // make a versioned backup first
                 if (version < Engine.CURRENT_VERSION) {
-                    FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+                    FileUtils.copyFile(Paths.get(fileName), Paths.get(fileName + "." + version));
 
                     Platform.runLater(() ->
                             StaticUIMethods.displayMessage(ResourceUtils.getString("Message.Info.Upgrade",

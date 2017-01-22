@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package jgnash.ui.report.jasper;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -30,6 +31,7 @@ import javax.swing.table.AbstractTableModel;
 import jgnash.engine.CurrencyNode;
 import jgnash.text.CommodityFormat;
 import jgnash.time.DateUtils;
+import jgnash.util.NotNull;
 
 /**
  * Report model interface
@@ -63,6 +65,11 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
             }
         }
         return column;
+    }
+
+    @NotNull
+    public int[] getColumnsToHide() {
+        return new int[0];  // return an empty array by default
     }
 
     /**
@@ -162,6 +169,23 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
                     if (date != null) {
                         final String val = dateTimeFormatter.format(date);
+                        if (val.length() > longest.length()) {
+                            longest = val;
+                        }
+                    }
+                } catch (IllegalArgumentException e) {
+                    Logger.getLogger(AbstractReportTableModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
+                }
+            }
+        } else if (getColumnStyle(columnIndex) == ColumnStyle.TIMESTAMP) {
+            final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormatter();
+
+            for (int i = 0; i < getRowCount(); i++) {
+                try {
+                    final LocalDateTime localDateTime = (LocalDateTime) getValueAt(i, columnIndex);
+
+                    if (localDateTime != null) {
+                        final String val = dateTimeFormatter.format(localDateTime);
                         if (val.length() > longest.length()) {
                             longest = val;
                         }

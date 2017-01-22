@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ public class ConsoleDialogController {
     private  static final int REFRESH_PERIOD = 500;
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ProgressBar memoryUsageProgressBar;
@@ -157,7 +157,7 @@ public class ConsoleDialogController {
         timeline.play();
 
         // Close with the main application
-        MainView.getInstance().getPrimaryStage()
+        MainView.getPrimaryStage()
                 .addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> handleCloseAction());
     }
 
@@ -170,7 +170,7 @@ public class ConsoleDialogController {
 
         timeline.stop();
 
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
         visible.set(false);
     }
 

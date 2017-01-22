@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package jgnash.engine;
 import io.netty.util.ResourceLeakDetector;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -34,8 +33,8 @@ import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.jpa.SqlUtils;
+import jgnash.util.FileUtils;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -60,10 +59,20 @@ public class FileTransferTest {
         String testFile = null;
 
         try {
-            File temp = Files.createTempFile("jpa-test-e", "." + JpaH2DataStore.FILE_EXT).toFile();
-            Assert.assertTrue(temp.delete());
-            temp.deleteOnExit();
-            testFile = temp.getAbsolutePath();
+            final Path temp = Files.createTempFile("jpa-test-e", "." + JpaH2DataStore.FILE_EXT);
+            Files.delete(temp);
+
+            testFile = temp.toString();
+
+            assertNotNull(testFile);
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    Files.delete(temp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }));
         } catch (final IOException e) {
             Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
@@ -101,7 +110,7 @@ public class FileTransferTest {
 
             Thread.sleep(4000); // wait for the transfer to finish, it may have been pushed into the background
 
-            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + File.separator + tempAttachment.getFileName());
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.separator + tempAttachment.getFileName());
             newPath.toFile().deleteOnExit();
 
             // Verify copy has occurred
@@ -147,10 +156,20 @@ public class FileTransferTest {
         String testFile = null;
 
         try {
-            File temp = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toFile();
-            Assert.assertTrue(temp.delete());
-            temp.deleteOnExit();
-            testFile = temp.getAbsolutePath();
+            Path temp = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT);
+            Files.delete(temp);
+
+            testFile = temp.toString();
+
+            assertNotNull(testFile);
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    Files.delete(temp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }));
         } catch (final IOException e) {
             Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
@@ -186,7 +205,7 @@ public class FileTransferTest {
 
             Thread.sleep(4000); // wait for transfer to finish
 
-            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + File.separator + tempAttachment.getFileName());
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.separator + tempAttachment.getFileName());
             newPath.toFile().deleteOnExit();
 
             // Verify copy has occurred

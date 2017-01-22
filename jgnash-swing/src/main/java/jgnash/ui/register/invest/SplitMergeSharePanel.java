@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPanel {
         modTrans = tran;
 
         datePanel.setDate(tran.getLocalDate());
-        memoField.setText(tran.getMemo());
+        memoField.setText(tran.getTransactionMemo());
         priceField.setDecimal(_tran.getPrice());
         quantityField.setDecimal(_tran.getQuantity());
         securityCombo.setSelectedNode(_tran.getSecurityNode());

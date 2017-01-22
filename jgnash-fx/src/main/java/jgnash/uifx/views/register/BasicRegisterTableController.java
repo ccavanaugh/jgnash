@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ public class BasicRegisterTableController extends RegisterTableController {
 
     @Override
     protected void buildTable() {
-        final String[] columnNames = RegisterFactory.getColumnNames(getAccountProperty().get().getAccountType());
+        final String[] columnNames = RegisterFactory.getColumnNames(accountProperty().get().getAccountType());
 
         final TableColumn<Transaction, LocalDate> dateColumn = new TableColumn<>(columnNames[0]);
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
@@ -106,34 +106,34 @@ public class BasicRegisterTableController extends RegisterTableController {
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[6]);
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()
-                .getReconciled(accountProperty.get()).toString()));
+                .getReconciled(account.get()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(reconciledColumn);
 
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(columnNames[7]);
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue()
-                .getAmount(getAccountProperty().getValue())));
+                .getAmount(accountProperty().getValue())));
         increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
-                .getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+                .getShortNumberFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(increaseColumn);
 
         final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[8]);
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue()
-                .getAmount(getAccountProperty().getValue())));
+                .getAmount(accountProperty().getValue())));
         decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
-                .getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+                .getShortNumberFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(decreaseColumn);
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(columnNames[9]);
         balanceColumn.setCellValueFactory(param -> {
-            final AccountType accountType = getAccountProperty().getValue().getAccountType();
+            final AccountType accountType = accountProperty().getValue().getAccountType();
 
             return new SimpleObjectProperty<>(AccountBalanceDisplayManager.
                     convertToSelectedBalanceMode(accountType, getBalanceAt(param.getValue())));
         });
 
         balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
-                .getFullNumberFormat(accountProperty.get().getCurrencyNode())));
+                .getFullNumberFormat(account.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
         tableView.getColumns().add(balanceColumn);
 
@@ -141,9 +141,9 @@ public class BasicRegisterTableController extends RegisterTableController {
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == balanceColumn) {
-                return CommodityFormat.getFullNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+                return CommodityFormat.getFullNumberFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == increaseColumn || param == decreaseColumn) {
-                return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+                return CommodityFormat.getShortNumberFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
                 return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {
@@ -157,7 +157,7 @@ public class BasicRegisterTableController extends RegisterTableController {
     private BigDecimal getBalanceAt(final Transaction transaction) {
         BigDecimal balance = BigDecimal.ZERO;
 
-        final Account account = accountProperty.get();
+        final Account account = this.account.get();
 
         if (account != null) {
             final int index = sortedList.indexOf(transaction);
@@ -183,7 +183,7 @@ public class BasicRegisterTableController extends RegisterTableController {
                     setValue("[ " + count + " " + split + " ]");
                 } else {
                     Account creditAccount = t.getTransactionEntries().get(0).getCreditAccount();
-                    if (creditAccount != accountProperty.get()) {
+                    if (creditAccount != account.get()) {
                         setValue(creditAccount.getName());
                     } else {
                         setValue(t.getTransactionEntries().get(0).getDebitAccount().getName());

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ import jgnash.util.NotNull;
 abstract class AbstractSlipController implements Slip {
 
     @InjectFXML
-    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Parent> parent = new SimpleObjectProperty<>();
 
     @FXML
     protected DecimalTextField amountField;
@@ -86,7 +86,7 @@ abstract class AbstractSlipController implements Slip {
     @FXML
     private ButtonBar buttonBar;
 
-    final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
     /**
      * Reference is needed to prevent premature garbage collection.
@@ -118,7 +118,7 @@ abstract class AbstractSlipController implements Slip {
 
         AutoCompleteFactory.setMemoModel(memoTextField);
 
-        accountProperty.addListener((observable, oldValue, newValue) -> {
+        account.addListener((observable, oldValue, newValue) -> {
             // Set the number of fixed decimal places for entry
             amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
 
@@ -141,7 +141,7 @@ abstract class AbstractSlipController implements Slip {
         }
 
         // Install an event handler when the parent has been set via injection
-        parentProperty.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
+        parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
     }
 
     @Override
@@ -187,7 +187,7 @@ abstract class AbstractSlipController implements Slip {
     }
 
     ObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 
     @FXML
@@ -204,7 +204,7 @@ abstract class AbstractSlipController implements Slip {
             if (modTrans == null) { // new transaction
                 Transaction newTrans = buildTransaction();
 
-                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, getReconciledState());
+                ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
 
                 newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
 
@@ -220,7 +220,7 @@ abstract class AbstractSlipController implements Slip {
 
                 // restore the reconciled state of the previous old transaction
                 for (final Account a : modTrans.getAccounts()) {
-                    if (!a.equals(accountProperty.get())) {
+                    if (!a.equals(account.get())) {
                         ReconcileManager.reconcileTransaction(a, newTrans, modTrans.getReconciled(a));
                     }
                 }
@@ -229,7 +229,7 @@ abstract class AbstractSlipController implements Slip {
                  * Reconcile the modified transaction for this account.
                  * This must be performed last to ensure consistent results per the ReconcileManager rules
                  */
-                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, getReconciledState());
+                ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
 
                 newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
 

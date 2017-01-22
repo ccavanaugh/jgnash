@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,11 +118,11 @@ class NotificationDialog extends Stage {
             }
         });
 
-        okButton.onActionProperty().setValue(event -> handleOkayAction());
-        cancelButton.onActionProperty().setValue(event -> handleCancelAction());
-        selectAllButton.onActionProperty().setValue(event -> handleSelectAllAction());
-        clearAllButton.onActionProperty().setValue(event -> handleClearAllAction());
-        invertButton.onActionProperty().setValue(event -> handleInvertSelectionAction());
+        okButton.onActionProperty().set(event -> handleOkayAction());
+        cancelButton.onActionProperty().set(event -> handleCancelAction());
+        selectAllButton.onActionProperty().set(event -> handleSelectAllAction());
+        clearAllButton.onActionProperty().set(event -> handleClearAllAction());
+        invertButton.onActionProperty().set(event -> handleInvertSelectionAction());
 
         snoozeComboBox.setSelectedPeriod(Options.reminderSnoozePeriodProperty().get());
 

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,43 +35,7 @@ import jgnash.engine.EngineFactory;
 public class OfxImport {
 
     public static void importTransactions(final List<ImportTransaction> transactions, final Account baseAccount) {
-
         GenericImport.importTransactions(transactions, baseAccount);
-        /*Objects.requireNonNull(transactions);
-        Objects.requireNonNull(baseAccount);
-
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
-
-        for (final ImportTransaction tran : transactions) {
-            assert tran.account != null;
-
-            if (tran.getState() == OfxTransaction.ImportState.NEW
-                    || tran.getState() == OfxTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions
-                Transaction t;
-
-                if (baseAccount.equals(tran.account)) { // single entry oTran
-                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount,
-                            tran.datePosted, tran.memo, tran.getName(), tran.checkNumber);
-                } else { // double entry
-                    if (tran.amount.signum() >= 0) {
-                        t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.getName(),
-                                tran.checkNumber);
-                    } else {
-                        t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.getName(),
-                                tran.checkNumber);
-                    }
-                }
-
-                // Set the import ID and add the oTran
-                if (t != null) {
-                    t.setFitid(tran.transactionID);
-                    engine.addTransaction(t);
-                }
-            }
-        }*/
     }
 
     public static Account matchAccount(final OfxBank bank) {

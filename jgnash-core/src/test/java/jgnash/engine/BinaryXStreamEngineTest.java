@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,11 +38,11 @@ public class BinaryXStreamEngineTest extends EngineTest {
     public Engine createEngine() throws Exception {
         try {
             testFile = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt())
-                    .toFile().getAbsolutePath();
+                    .toString();
+
             tempFile = testFile;
 
-            new File(testFile + ".backup").deleteOnExit();
-        } catch (IOException e1) {
+        } catch (final IOException e1) {
             Logger.getLogger(BinaryXStreamEngineTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
         }
 

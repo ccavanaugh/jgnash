@@ -111,6 +111,18 @@ public class ApiTest extends AbstractEngineTest {
         // Returned market price should be 10
         assertEquals(BigDecimal.TEN, Engine.getMarketPrice(new ArrayList<>(), securityNode, e.getDefaultCurrency(),
                 LocalDate.now()));
+
+
+        // Ensure the security updates correctly with a replacement value
+        final SecurityHistoryNode historyNodeReplacement = new SecurityHistoryNode(LocalDate.now(), BigDecimal.ONE, 10000,
+                BigDecimal.ONE, BigDecimal.ONE);
+
+        e.addSecurityHistory(securityNode, historyNodeReplacement);
+        assertEquals(1, securityNode.getHistoryNodes().size());
+
+        // Returned market price should be 1
+        assertEquals(BigDecimal.ONE, Engine.getMarketPrice(new ArrayList<>(), securityNode, e.getDefaultCurrency(),
+                LocalDate.now()));
     }
 
     @Test

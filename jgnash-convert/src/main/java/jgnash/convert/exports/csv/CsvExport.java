@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,10 +58,15 @@ public class CsvExport {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
 
-        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(fileName), StandardCharsets.UTF_8)))) {
+        try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                new FileOutputStream(fileName), StandardCharsets.UTF_8);
 
-            writer.writeNextRow("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
+             AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(outputStreamWriter))) {
+
+            outputStreamWriter.write('\ufeff'); // write UTF-8 byte order mark to the file for easier imports
+
+            writer.writeNextRow("Account", "Number", "Debit", "Credit", "Balance", "Date", "Timestamp",
+                    "Memo", "Payee", "Reconciled");
 
             // write the transactions
             final List<Transaction> transactions = account.getTransactions(startDate, endDate);
@@ -72,9 +77,18 @@ public class CsvExport {
                     .appendValue(DAY_OF_MONTH, 2)
                     .toFormatter();
 
-            for (final Transaction transaction : transactions) {
+            final DateTimeFormatter timestampFormatter = new DateTimeFormatterBuilder()
+                    .appendValue(YEAR, 4).appendLiteral('-').appendValue(MONTH_OF_YEAR, 2)
+                    .appendLiteral('-').appendValue(DAY_OF_MONTH, 2).appendLiteral(' ')
+                    .appendValue(HOUR_OF_DAY, 2).appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2)
+                    .appendLiteral(':').appendValue(SECOND_OF_MINUTE, 2)
+                    .toFormatter();
 
+            for (final Transaction transaction : transactions) {
                 final String date = dateTimeFormatter.format(transaction.getLocalDate());
+
+                final String timeStamp = timestampFormatter.format(transaction.getTimestamp());
+
                 final String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == -1 ? ""
                         : transaction.getAmount(account).abs().toPlainString();
 
@@ -82,13 +96,14 @@ public class CsvExport {
                         : transaction.getAmount(account).abs().toPlainString();
 
                 final String balance = account.getBalanceAt(transaction).toPlainString();
+
                 final String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED
                         ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
-                writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date,
+                writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date, timeStamp,
                         transaction.getMemo(), transaction.getPayee(), reconciled);
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Logger.getLogger(CsvExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }

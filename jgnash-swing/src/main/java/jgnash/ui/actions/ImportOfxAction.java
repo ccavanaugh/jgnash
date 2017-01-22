@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
         @Override
         protected OfxBank doInBackground() throws Exception {
-            final OfxBank ofxBank = OfxV2Parser.parse(file);
+            final OfxBank ofxBank = OfxV2Parser.parse(file.toPath());
 
             /* Preset the best match for the downloaded account */
             final String accountNumber = ofxBank.accountId;
@@ -140,7 +140,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
             private final Account account;
             private final List<ImportTransaction> transactions;
 
-            public ImportThread(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
+            ImportThread(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
                 this.bank = bank;
                 this.account = account;
                 this.transactions = transactions;

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -184,16 +184,16 @@ public final class JasperViewerDialogController {
     private StackPane stackPane;
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private ResourceBundle resources;
 
     private BusyPane busyPane;
 
-    private final SimpleObjectProperty<DynamicJasperReport> reportProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<DynamicJasperReport> report = new SimpleObjectProperty<>();
 
-    private final SimpleObjectProperty<JasperPrint> jasperPrintProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<JasperPrint> jasperPrint = new SimpleObjectProperty<>();
 
     private final SimpleObjectProperty<Pane> reportControllerPaneProperty = new SimpleObjectProperty<>();
 
@@ -214,30 +214,30 @@ public final class JasperViewerDialogController {
 
         screenResolution = Screen.getPrimary().getDpi();
 
-        saveButton.disableProperty().bind(jasperPrintProperty.isNull());
-        printButton.disableProperty().bind(jasperPrintProperty.isNull());
-        reportFormatButton.disableProperty().bind(jasperPrintProperty.isNull());
-        fontSizeSpinner.disableProperty().bind(jasperPrintProperty.isNull());
+        saveButton.disableProperty().bind(jasperPrint.isNull());
+        printButton.disableProperty().bind(jasperPrint.isNull());
+        reportFormatButton.disableProperty().bind(jasperPrint.isNull());
+        fontSizeSpinner.disableProperty().bind(jasperPrint.isNull());
 
-        firstButton.disableProperty().bind(jasperPrintProperty.isNull().or(pageCount.isEqualTo(0))
+        firstButton.disableProperty().bind(jasperPrint.isNull().or(pageCount.isEqualTo(0))
                 .or(pageIndex.isEqualTo(0)));
-        previousButton.disableProperty().bind(jasperPrintProperty.isNull().or(pageCount.isEqualTo(0))
+        previousButton.disableProperty().bind(jasperPrint.isNull().or(pageCount.isEqualTo(0))
                 .or(pageIndex.isEqualTo(0)));
 
-        nextButton.disableProperty().bind(jasperPrintProperty.isNull().or(pageCount.isEqualTo(0))
+        nextButton.disableProperty().bind(jasperPrint.isNull().or(pageCount.isEqualTo(0))
                 .or(pageIndex.isEqualTo(pageCount.subtract(1))));
-        lastButton.disableProperty().bind(jasperPrintProperty.isNull().or(pageCount.isEqualTo(0))
+        lastButton.disableProperty().bind(jasperPrint.isNull().or(pageCount.isEqualTo(0))
                 .or(pageIndex.isEqualTo(pageCount.subtract(1))));
 
-        fitPageButton.disableProperty().bind(jasperPrintProperty.isNull());
-        fitHeightButton.disableProperty().bind(jasperPrintProperty.isNull());
-        fitWidthButton.disableProperty().bind(jasperPrintProperty.isNull());
+        fitPageButton.disableProperty().bind(jasperPrint.isNull());
+        fitHeightButton.disableProperty().bind(jasperPrint.isNull());
+        fitWidthButton.disableProperty().bind(jasperPrint.isNull());
 
-        zoomComboBox.disableProperty().bind(jasperPrintProperty.isNull());
-        zoomInButton.disableProperty().bind(jasperPrintProperty.isNull()
+        zoomComboBox.disableProperty().bind(jasperPrint.isNull());
+        zoomInButton.disableProperty().bind(jasperPrint.isNull()
                 .or(zoomProperty.greaterThanOrEqualTo(DEFAULT_ZOOMS[DEFAULT_ZOOMS.length - 1] / 100)));
 
-        zoomOutButton.disableProperty().bind(jasperPrintProperty.isNull()
+        zoomOutButton.disableProperty().bind(jasperPrint.isNull()
                 .or(zoomProperty.lessThanOrEqualTo(DEFAULT_ZOOMS[0] / 100)));
 
         fitPageButton.setSelected(true);
@@ -254,24 +254,24 @@ public final class JasperViewerDialogController {
 
         fontSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 15, 7));
 
-        reportProperty.addListener((observable, oldValue, newValue) -> {
+        report.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                jasperPrintProperty.setValue(newValue.createJasperPrint(false));
+                jasperPrint.set(newValue.createJasperPrint(false));
 
                 fontSizeSpinner.valueFactoryProperty().get().setValue(newValue.getBaseFontSize());
 
-                newValue.refreshCallBackProperty().setValue(() ->
+                newValue.refreshCallBackProperty().set(() ->
                         createJasperPrint(newValue));
             } else {
-                jasperPrintProperty.setValue(null);
+                jasperPrint.set(null);
             }
         });
 
-        jasperPrintProperty.addListener((observable, oldValue, newValue) -> {
+        jasperPrint.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                pageCount.setValue(newValue.getPages().size());
+                pageCount.set(newValue.getPages().size());
             } else {
-                pageCount.setValue(0);
+                pageCount.set(0);
             }
 
             Platform.runLater(this::refresh);
@@ -284,9 +284,9 @@ public final class JasperViewerDialogController {
         });
 
         fontSizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            reportProperty.get().setBaseFontSize(newValue);
+            report.get().setBaseFontSize(newValue);
 
-            Platform.runLater(() -> createJasperPrint(reportProperty.get()));
+            Platform.runLater(() -> createJasperPrint(report.get()));
         });
 
         pagePane.setSpacing(PAGE_BORDER);
@@ -353,7 +353,7 @@ public final class JasperViewerDialogController {
                         updateMessage(resources.getString("Message.CompilingReport"));
                         updateProgress(-1, Long.MAX_VALUE);
 
-                        jasperPrintProperty.setValue(dynamicJasperReport.createJasperPrint(false));
+                        jasperPrint.set(dynamicJasperReport.createJasperPrint(false));
                         return null;
                     }
                 };
@@ -375,7 +375,7 @@ public final class JasperViewerDialogController {
             reportControllerPaneProperty.setValue(fxmlLoader.load());
 
             T controller = fxmlLoader.getController();
-            reportProperty.setValue(controller);
+            report.setValue(controller);
 
             return controller;
         } catch (IOException e) {
@@ -390,7 +390,7 @@ public final class JasperViewerDialogController {
      * @param index active page index
      */
     private void setPageIndex(final int index) {
-        final JasperPrint jasperPrint = jasperPrintProperty.get();
+        final JasperPrint jasperPrint = this.jasperPrint.get();
 
         if (jasperPrint != null && jasperPrint.getPages() != null && !jasperPrint.getPages().isEmpty()) {
             if (index >= 0 && index < pageCount.get()) {
@@ -431,7 +431,7 @@ public final class JasperViewerDialogController {
         for (int i = 0; i < pageCount.get(); i++) {
             try {
                 final BufferedImage bufferedImage =
-                        (BufferedImage) JasperPrintManager.printPageToImage(jasperPrintProperty.get(), i, (float) zoom);
+                        (BufferedImage) JasperPrintManager.printPageToImage(jasperPrint.get(), i, (float) zoom);
 
                 final ImageView imageView = new ImageView(SwingFXUtils.toFXImage(bufferedImage, null));
                 imageView.setEffect(dropShadow);
@@ -469,7 +469,7 @@ public final class JasperViewerDialogController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Document", "*.csv", "*.CSV"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RTF Document", "*.rtf", "*.RTF"));
 
-        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             preferences.put(LAST_DIR, file.getParent());
@@ -477,7 +477,7 @@ public final class JasperViewerDialogController {
             switch (FileUtils.getFileExtension(file.getAbsolutePath()).toLowerCase(Locale.ROOT)) {
                 case "pdf":
                     try {
-                        JasperExportManager.exportReportToPdfFile(jasperPrintProperty.get(), file.getAbsolutePath());
+                        JasperExportManager.exportReportToPdfFile(jasperPrint.get(), file.getAbsolutePath());
                     } catch (final JRException e) {
                         StaticUIMethods.displayException(e);
                     }
@@ -485,7 +485,7 @@ public final class JasperViewerDialogController {
                 case "odt":
                     try {
                         final JROdtExporter exporter = new JROdtExporter();
-                        exporter.setExporterInput(new SimpleExporterInput(jasperPrintProperty.get()));
+                        exporter.setExporterInput(new SimpleExporterInput(jasperPrint.get()));
                         exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(file));
                         exporter.exportReport();
                     } catch (final JRException e) {
@@ -495,7 +495,7 @@ public final class JasperViewerDialogController {
                 case "docx":
                     try {
                         final JRDocxExporter exporter = new JRDocxExporter();
-                        exporter.setExporterInput(new SimpleExporterInput(jasperPrintProperty.get()));
+                        exporter.setExporterInput(new SimpleExporterInput(jasperPrint.get()));
                         exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(file));
                         exporter.exportReport();
                     } catch (final JRException e) {
@@ -505,7 +505,7 @@ public final class JasperViewerDialogController {
                 case "xlsx":
                     try {
                         final JRXlsExporter exporter = new JRXlsExporter();
-                        exporter.setExporterInput(new SimpleExporterInput(jasperPrintProperty.get()));
+                        exporter.setExporterInput(new SimpleExporterInput(jasperPrint.get()));
                         exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(file));
                         final SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
                         configuration.setOnePagePerSheet(false);
@@ -518,7 +518,7 @@ public final class JasperViewerDialogController {
                 case "csv":
                     try {
                         final JRCsvExporter exporter = new JRCsvExporter();
-                        exporter.setExporterInput(new SimpleExporterInput(jasperPrintProperty.get()));
+                        exporter.setExporterInput(new SimpleExporterInput(jasperPrint.get()));
                         exporter.setExporterOutput(new SimpleWriterExporterOutput(file));
                         exporter.exportReport();
                     } catch (final JRException e) {
@@ -528,7 +528,7 @@ public final class JasperViewerDialogController {
                 case "rtf":
                     try {
                         final JRRtfExporter exporter = new JRRtfExporter();
-                        exporter.setExporterInput(new SimpleExporterInput(jasperPrintProperty.get()));
+                        exporter.setExporterInput(new SimpleExporterInput(jasperPrint.get()));
                         exporter.setExporterOutput(new SimpleWriterExporterOutput(file));
                         exporter.exportReport();
                     } catch (final JRException e) {
@@ -555,13 +555,13 @@ public final class JasperViewerDialogController {
             @Override
             protected Void call() throws Exception {
                 try {
-                    parentProperty.get().setCursor(Cursor.WAIT);
+                    parent.get().setCursor(Cursor.WAIT);
 
-                    JasperPrintManager.printReport(jasperPrintProperty.get(), true);
+                    JasperPrintManager.printReport(jasperPrint.get(), true);
                 } catch (final JRException e) {
                     StaticUIMethods.displayException(e);
                 } finally {
-                    parentProperty.get().setCursor(Cursor.DEFAULT);
+                    parent.get().setCursor(Cursor.DEFAULT);
                 }
 
                 return null;
@@ -573,15 +573,15 @@ public final class JasperViewerDialogController {
 
     @FXML
     private void handleFormatAction() {
-        final PageFormat oldFormat = reportProperty.get().getPageFormat();
+        final PageFormat oldFormat = report.get().getPageFormat();
         final PrinterJob job = PrinterJob.getPrinterJob();
 
         final PageFormat format = job.pageDialog(oldFormat);
 
         if (format != oldFormat) {
-            reportProperty.get().setPageFormat(format);
+            report.get().setPageFormat(format);
 
-            createJasperPrint(reportProperty.get());
+            createJasperPrint(report.get());
 
             Platform.runLater(this::refresh);
         }
@@ -604,7 +604,7 @@ public final class JasperViewerDialogController {
 
     @FXML
     private void handleLastAction() {
-        setPage(jasperPrintProperty.get().getPages().size() - 1);
+        setPage(jasperPrint.get().getPages().size() - 1);
     }
 
     private int getZoomRatio() {
@@ -668,7 +668,7 @@ public final class JasperViewerDialogController {
 
     @FXML
     private void handleFitHeightAction() {
-        final PrintPageFormat pageFormat = jasperPrintProperty.get().getPageFormat(pageIndex.get());
+        final PrintPageFormat pageFormat = jasperPrint.get().getPageFormat(pageIndex.get());
 
         final double heightRatio = (scrollPane.getViewportBounds().getHeight() - (2 * PAGE_BORDER))
                 / pageFormat.getPageHeight();
@@ -686,7 +686,7 @@ public final class JasperViewerDialogController {
         zoomComboBox.getSelectionModel().clearSelection();
 
         setActualZoomRatio((scrollPane.getViewportBounds().getWidth() - (2 * PAGE_BORDER)) /
-                jasperPrintProperty.get().getPageFormat(pageIndex.get()).getPageWidth());
+                jasperPrint.get().getPageFormat(pageIndex.get()).getPageWidth());
     }
 
     @FXML

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,12 +46,13 @@ public class FeePane extends DetailedDecimalTextField {
     @FXML
     private ResourceBundle resources;
 
-    private final SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Account> account = new SimpleObjectProperty<>(null);
 
     private FeeDialog feeDialog;
 
     public FeePane() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FeePane.fxml"), ResourceUtils.getBundle());
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FeePane.fxml"),
+                ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -66,8 +67,8 @@ public class FeePane extends DetailedDecimalTextField {
     private void initialize() {
         feeDialog = new FeeDialog();
 
-        accountProperty.addListener((observable, oldValue, newValue) ->
-                feeDialog.accountProperty().setValue(accountProperty().get()));
+        account.addListener((observable, oldValue, newValue) ->
+                feeDialog.accountProperty().set(accountProperty().get()));
     }
 
     @Override
@@ -150,7 +151,7 @@ public class FeePane extends DetailedDecimalTextField {
     }
 
     public SimpleObjectProperty<Account> accountProperty() {
-        return accountProperty;
+        return account;
     }
 }
 

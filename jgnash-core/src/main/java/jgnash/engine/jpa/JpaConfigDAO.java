@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,38 +51,40 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
     public synchronized Config getDefaultConfig() {
         Config defaultConfig = null;
 
-        emLock.lock();
-
         try {
             Future<Config> future = executorService.submit(() -> {
-                Config newConfig;
+                emLock.lock();
+
                 try {
-                    final CriteriaBuilder cb = em.getCriteriaBuilder();
-                    final CriteriaQuery<Config> cq = cb.createQuery(Config.class);
-                    final Root<Config> root = cq.from(Config.class);
-                    cq.select(root);
+                    Config newConfig;
+                    try {
+                        final CriteriaBuilder cb = em.getCriteriaBuilder();
+                        final CriteriaQuery<Config> cq = cb.createQuery(Config.class);
+                        final Root<Config> root = cq.from(Config.class);
+                        cq.select(root);
 
-                    final TypedQuery<Config> q = em.createQuery(cq);
+                        final TypedQuery<Config> q = em.createQuery(cq);
 
-                    newConfig = q.getSingleResult();
+                        newConfig = q.getSingleResult();
 
-                } catch (final Exception e) {
-                    newConfig = new Config();
+                    } catch (final Exception e) {
+                        newConfig = new Config();
 
-                    em.getTransaction().begin();
-                    em.persist(newConfig);
-                    em.getTransaction().commit();
+                        em.getTransaction().begin();
+                        em.persist(newConfig);
+                        em.getTransaction().commit();
 
-                    logger.info("Generating new default config");
+                        logger.info("Generating new default config");
+                    }
+                    return newConfig;
+                } finally {
+                    emLock.unlock();
                 }
-                return newConfig;
             });
 
             defaultConfig = future.get();
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return defaultConfig;

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package jgnash.engine;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -41,6 +42,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -94,75 +96,14 @@ public class Engine {
 
     public static final int CURRENT_MINOR_VERSION = 26;
 
-    public static final float CURRENT_VERSION = (float)CURRENT_MAJOR_VERSION + ((float)CURRENT_MINOR_VERSION / 100f);
+    public static final float CURRENT_VERSION = (float) CURRENT_MAJOR_VERSION + ((float) CURRENT_MINOR_VERSION / 100f);
 
-    // Lock names
-    private static final String ACCOUNT_LOCK = "account";
-
-    private static final String BUDGET_LOCK = "budget";
-
-    private static final String COMMODITY_LOCK = "commodity";
-
-    private static final String CONFIG_LOCK = "config";
-
-    private static final String ENGINE_LOCK = "engine";
+    // Lock name
+    private static final String BIG_LOCK = "bigLock";
 
     private static final Logger logger = Logger.getLogger(Engine.class.getName());
 
     private final static long MAXIMUM_TRASH_AGE = 2 * 60 * 1000; // 2 minutes
-
-    private final ResourceBundle rb = ResourceUtils.getBundle();
-
-    private final ReentrantReadWriteLock accountLock;
-
-    private final ReentrantReadWriteLock budgetLock;
-
-    private final ReentrantReadWriteLock commodityLock;
-
-    private final ReentrantReadWriteLock configLock;
-
-    private final ReentrantReadWriteLock engineLock;
-
-    /**
-     * Named identifier for this engine instance.
-     */
-    private final String name;
-
-    /**
-     * Unique identifier for this engine instance.
-     * Used by this distributed lock manager to keep track of who has a lock
-     */
-    private final String uuid = UUIDUtil.getUID();
-
-    static {
-        logger.setLevel(Level.ALL);
-    }
-
-    /**
-     * All engine instances will share the same message bus.
-     */
-    private MessageBus messageBus = null;
-
-    /**
-     * Cached for performance.
-     */
-    private Config config;
-
-    /**
-     * Cached for performance.
-     */
-    private RootAccount rootAccount;
-
-    private ExchangeRateDAO exchangeRateDAO;
-
-    private final EngineDAO eDAO;
-
-    private final AttachmentManager attachmentManager;
-
-    /**
-     * Cached for performance.
-     */
-    private String accountSeparator = null;
 
     /**
      * The maximum number of network errors before scheduled tasks are stopped.
@@ -174,9 +115,48 @@ public class Engine {
      */
     private static final int SCHEDULED_DELAY = 30;
 
-    private final ScheduledThreadPoolExecutor trashExecutor;
+    static {
+        logger.setLevel(Level.ALL);
+    }
 
+    private final ResourceBundle rb = ResourceUtils.getBundle();
+
+    /**
+     * Primary lock for any operation that alters or reads data
+     */
+    private final ReentrantReadWriteLock dataLock;
+
+    private final AtomicInteger backGroundCounter = new AtomicInteger();
+    /**
+     * Named identifier for this engine instance.
+     */
+    private final String name;
+    /**
+     * Unique identifier for this engine instance.
+     * Used by this distributed lock manager to keep track of who has a lock
+     */
+    private final String uuid = UUIDUtil.getUID();
+    private final EngineDAO eDAO;
+    private final AttachmentManager attachmentManager;
+    private final ScheduledThreadPoolExecutor trashExecutor;
     private final ScheduledThreadPoolExecutor backgroundExecutorService;
+    /**
+     * All engine instances will share the same message bus.
+     */
+    private MessageBus messageBus = null;
+    /**
+     * Cached for performance.
+     */
+    private Config config;
+    /**
+     * Cached for performance.
+     */
+    private RootAccount rootAccount;
+    private ExchangeRateDAO exchangeRateDAO;
+    /**
+     * Cached for performance.
+     */
+    private String accountSeparator = null;
 
     public Engine(final EngineDAO eDAO, final LockManager lockManager, final AttachmentManager attachmentManager, final String name) {
         Objects.requireNonNull(name, "The engine name may not be null");
@@ -186,12 +166,8 @@ public class Engine {
         this.eDAO = eDAO;
         this.name = name;
 
-        // Generate locks
-        accountLock = lockManager.getLock(ACCOUNT_LOCK);
-        budgetLock = lockManager.getLock(BUDGET_LOCK);
-        commodityLock = lockManager.getLock(COMMODITY_LOCK);
-        configLock = lockManager.getLock(CONFIG_LOCK);
-        engineLock = lockManager.getLock(ENGINE_LOCK);
+        // Generate lock
+        dataLock = lockManager.getLock(BIG_LOCK);
 
         messageBus = MessageBus.getInstance(name);
 
@@ -238,43 +214,6 @@ public class Engine {
     }
 
     /**
-     * Initiates a background exchange rate update with a given start delay.
-     *
-     * @param delay delay in seconds
-     * @return {@code Future} for background task
-     */
-    public Future<Void> startExchangeRateUpdate(final int delay) {
-        return backgroundExecutorService.schedule(new BackgroundCallable<>(new CurrencyUpdateFactory.UpdateExchangeRatesCallable()), delay,
-                TimeUnit.SECONDS);
-    }
-
-    /**
-     * Initiates a background securities history update with a given start delay.
-     *
-     * @param delay delay in seconds
-     */
-    public void startSecuritiesUpdate(final int delay) {
-        final List<ScheduledFuture<Boolean>> futures = new ArrayList<>();
-
-        // Load of the scheduler with the tasks and save the futures
-        // failure will occur if source is not defined
-        getSecurities().stream().filter(securityNode ->
-                securityNode.getQuoteSource() != QuoteSource.NONE).forEach(securityNode -> { // failure will occur if source is not defined
-            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
-                    new UpdateFactory.UpdateSecurityNodeCallable(securityNode)), delay, TimeUnit.SECONDS));
-
-            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
-                    new UpdateFactory.UpdateSecurityNodeEventsCallable(securityNode)), delay, TimeUnit.SECONDS));
-        });
-
-        // Cleanup thread that monitors for excess network connection failures
-        new SecuritiesUpdateThread(futures).start();
-
-        // Save the last update
-        config.setLastSecuritiesUpdateTimestamp(LocalDateTime.now());
-    }
-
-    /**
      * Returns the most current known market price for a requested date.  The {@code SecurityNode} history will be
      * searched for an exact match first.  If an exact match is not found, investment transactions will be searched
      * for the closest requested date.  {@code SecurityHistoryNode} history values will take precedent over
@@ -290,7 +229,6 @@ public class Engine {
                                             final CurrencyNode baseCurrency, final LocalDate localDate) {
 
         // Search for the exact history node record
-        //SecurityHistoryNode hNode = node.getHistoryNode(marketDate);
         Optional<SecurityHistoryNode> optional = node.getHistoryNode(localDate);
 
         // not null, must be an exact match, return the value because it has precedence
@@ -381,13 +319,69 @@ public class Engine {
         logger.severe(message);
     }
 
+    private static void shutDownAndWait(final ExecutorService executorService) {
+        executorService.shutdown();
+
+        try {
+            if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+                executorService.shutdownNow();
+
+                if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+                    logSevere("Unable to shutdown background service");
+                }
+            }
+
+        } catch (final InterruptedException e) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+
+            logger.log(Level.FINEST, e.getLocalizedMessage(), e);
+        }
+    }
+
+    /**
+     * Initiates a background exchange rate update with a given start delay.
+     *
+     * @param delay delay in seconds
+     * @return {@code Future} for background task
+     */
+    public Future<Void> startExchangeRateUpdate(final int delay) {
+        return backgroundExecutorService.schedule(new BackgroundCallable<>(new CurrencyUpdateFactory.UpdateExchangeRatesCallable()), delay,
+                TimeUnit.SECONDS);
+    }
+
+    /**
+     * Initiates a background securities history update with a given start delay.
+     *
+     * @param delay delay in seconds
+     */
+    public void startSecuritiesUpdate(final int delay) {
+        final List<ScheduledFuture<Boolean>> futures = new ArrayList<>();
+
+        // Load of the scheduler with the tasks and save the futures
+        // failure will occur if source is not defined
+        getSecurities().stream().filter(securityNode ->
+                securityNode.getQuoteSource() != QuoteSource.NONE).forEach(securityNode -> { // failure will occur if source is not defined
+            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
+                    new UpdateFactory.UpdateSecurityNodeCallable(securityNode)), delay, TimeUnit.SECONDS));
+
+            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
+                    new UpdateFactory.UpdateSecurityNodeEventsCallable(securityNode)), delay, TimeUnit.SECONDS));
+        });
+
+        // Cleanup thread that monitors for excess network connection failures
+        new SecuritiesUpdateThread(futures).start();
+
+        // Save the last update
+        config.setLastSecuritiesUpdateTimestamp(LocalDateTime.now());
+    }
+
     /**
      * Creates a RootAccount and default currency only if necessary.
      */
     private void initialize() {
 
-        commodityLock.writeLock().lock();
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
 
@@ -432,8 +426,7 @@ public class Engine {
             }
 
         } finally {
-            accountLock.writeLock().unlock();
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
 
         logInfo("Engine initialization is complete");
@@ -443,14 +436,9 @@ public class Engine {
      * Corrects minor issues with a database that may occur because of prior bugs or file format upgrades.
      */
     private void checkAndCorrect() {
-
-        commodityLock.writeLock().lock();
-        budgetLock.writeLock().lock();
-        accountLock.writeLock().lock();
-        configLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
-
             // Transaction timestamps were updated for release 2.25
             if (getConfig().getMinorFileFormatVersion() < 25) {
 
@@ -467,10 +455,7 @@ public class Engine {
                 getConfigDAO().update(localConfig);
             }
         } finally {
-            configLock.writeLock().unlock();
-            accountLock.writeLock().unlock();
-            budgetLock.writeLock().unlock();
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -481,8 +466,7 @@ public class Engine {
     }
 
     private void removeExchangeRate(final ExchangeRate rate) {
-
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             for (final ExchangeRateHistoryNode node : rate.getHistory()) {
@@ -490,7 +474,7 @@ public class Engine {
             }
             moveObjectToTrash(rate);
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -499,30 +483,12 @@ public class Engine {
 
         shutDownAndWait(backgroundExecutorService);
         shutDownAndWait(trashExecutor);
+
+        logInfo("Background services have been stopped");
     }
 
     void shutdown() {
         eDAO.shutdown();
-    }
-
-    private static void shutDownAndWait(final ExecutorService executorService) {
-        executorService.shutdown();
-
-        try {
-            if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
-                executorService.shutdownNow();
-
-                if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
-                    logSevere("Unable to shutdown background service");
-                }
-            }
-
-        } catch (final InterruptedException e) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-
-            logger.log(Level.FINEST, e.getLocalizedMessage(), e);
-        }
     }
 
     public String getName() {
@@ -568,7 +534,7 @@ public class Engine {
     private boolean moveObjectToTrash(final Object object) {
         boolean result = false;
 
-        engineLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             if (object instanceof StoredObject) {
@@ -581,7 +547,7 @@ public class Engine {
         } catch (final Exception ex) {
             logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
-            engineLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
 
         return result;
@@ -592,12 +558,12 @@ public class Engine {
      */
     private void emptyTrash() {
 
-        messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, this));
+        if (backGroundCounter.incrementAndGet() == 1) {
+            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED,
+                    Engine.this));
+        }
 
-        engineLock.writeLock().lock();
-        commodityLock.writeLock().lock();
-        accountLock.writeLock().lock();
-        budgetLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             logger.info("Checking for trash");
@@ -616,13 +582,12 @@ public class Engine {
             trash.stream().filter(o -> ChronoUnit.MILLIS.between(o.getDate(), LocalDateTime.now()) >= MAXIMUM_TRASH_AGE)
                     .forEach(o -> getTrashDAO().remove(o));
         } finally {
+            dataLock.writeLock().unlock();
 
-            budgetLock.writeLock().unlock();
-            accountLock.writeLock().unlock();
-            commodityLock.writeLock().unlock();
-            engineLock.writeLock().unlock();
-
-            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, this));
+            if (backGroundCounter.decrementAndGet() == 0) {
+                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED,
+                        Engine.this));
+            }
         }
     }
 
@@ -701,7 +666,6 @@ public class Engine {
     }
 
     public List<PendingReminder> getPendingReminders() {
-
         final ArrayList<PendingReminder> pendingList = new ArrayList<>();
         final List<Reminder> list = getReminders();
         final LocalDate now = LocalDate.now(); // today's date
@@ -763,8 +727,7 @@ public class Engine {
      * @see StoredObjectComparator
      */
     public Collection<StoredObject> getStoredObjects() {
-
-        engineLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
 
@@ -777,7 +740,7 @@ public class Engine {
 
             return objects;
         } finally {
-            engineLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -788,7 +751,6 @@ public class Engine {
      * @return true if valid
      */
     private boolean isCommodityNodeValid(final CommodityNode node) {
-
         boolean result = true;
 
         if (node.getUuid() == null) {
@@ -829,8 +791,7 @@ public class Engine {
      * @return {@code true} if the add it successful
      */
     public boolean addCurrency(final CurrencyNode node) {
-
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             boolean status = isCommodityNodeValid(node);
@@ -861,7 +822,7 @@ public class Engine {
 
             return status;
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -884,7 +845,7 @@ public class Engine {
      * @return {@code true} if the add it successful
      */
     public boolean addSecurity(final SecurityNode node) {
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             boolean status = isCommodityNodeValid(node);
@@ -913,7 +874,7 @@ public class Engine {
 
             return status;
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -926,8 +887,7 @@ public class Engine {
      * @return <tt>true</tt> if successful
      */
     public boolean addSecurityHistory(@NotNull final SecurityNode node, @NotNull final SecurityHistoryNode hNode) {
-        commodityLock.writeLock().lock();
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             // Remove old history of the same date if it exists
@@ -958,8 +918,7 @@ public class Engine {
 
             return status;
         } finally {
-            accountLock.writeLock().unlock();
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -972,8 +931,7 @@ public class Engine {
      * @return <tt>true</tt> if successful
      */
     public boolean addSecurityHistoryEvent(@NotNull final SecurityNode node, @NotNull final SecurityHistoryEvent historyEvent) {
-        commodityLock.writeLock().lock();
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
 
@@ -1002,8 +960,7 @@ public class Engine {
 
             return status;
         } finally {
-            accountLock.writeLock().unlock();
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1035,13 +992,17 @@ public class Engine {
      */
     private void clearCachedAccountBalance(final Account account) {
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             account.clearCachedBalances();
-            getAccountDAO().updateAccount(account);
+
+            // force a persistence update if working as a client / server
+            if (eDAO.isRemote()) {
+                getAccountDAO().updateAccount(account);
+            }
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
 
         if (account.getParent() != null && account.getParent().getAccountType() != AccountType.ROOT) {
@@ -1050,8 +1011,7 @@ public class Engine {
     }
 
     private CurrencyNode[] getBaseCurrencies(final String exchangeRateId) {
-
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             final List<CurrencyNode> currencies = getCurrencies();
@@ -1068,7 +1028,7 @@ public class Engine {
             }
             return null;
         } finally {
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1078,13 +1038,12 @@ public class Engine {
      * @return Set of CurrencyNodes
      */
     public Set<CurrencyNode> getActiveCurrencies() {
-
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             return getCommodityDAO().getActiveCurrencies();
         } finally {
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1096,8 +1055,7 @@ public class Engine {
      * @return null if the CurrencyNode as not been defined
      */
     public CurrencyNode getCurrency(final String symbol) {
-
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             CurrencyNode rNode = null;
@@ -1110,18 +1068,17 @@ public class Engine {
             }
             return rNode;
         } finally {
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
     public List<CurrencyNode> getCurrencies() {
-
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             return getCommodityDAO().getCurrencies();
         } finally {
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1130,13 +1087,12 @@ public class Engine {
     }
 
     public ExchangeRate getExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
-
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             return exchangeRateDAO.getExchangeRateNode(baseCurrency, exchangeCurrency);
         } finally {
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1146,13 +1102,12 @@ public class Engine {
 
     @NotNull
     public List<SecurityNode> getSecurities() {
-
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             return getCommodityDAO().getSecurities();
         } finally {
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1163,8 +1118,7 @@ public class Engine {
      * @return null if not found
      */
     public SecurityNode getSecurity(final String symbol) {
-
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             List<SecurityNode> list = getSecurities();
@@ -1179,7 +1133,7 @@ public class Engine {
             }
             return sNode;
         } finally {
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1188,9 +1142,7 @@ public class Engine {
     }
 
     private boolean isCommodityNodeUsed(final CommodityNode node) {
-
-        commodityLock.readLock().lock();
-        accountLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             List<Account> list = getAccountList();
@@ -1218,8 +1170,7 @@ public class Engine {
             }
 
         } finally {
-            accountLock.readLock().unlock();
-            commodityLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
 
         return false;
@@ -1228,7 +1179,7 @@ public class Engine {
     public boolean removeCommodity(final CurrencyNode node) {
         boolean status = true;
 
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             if (isCommodityNodeUsed(node)) {
@@ -1250,14 +1201,14 @@ public class Engine {
             return status;
 
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     public boolean removeSecurity(final SecurityNode node) {
         boolean status = true;
 
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             if (isCommodityNodeUsed(node)) {
@@ -1287,7 +1238,7 @@ public class Engine {
             return status;
 
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1299,9 +1250,7 @@ public class Engine {
      * @return {@code true} if a {@code SecurityHistoryNode} was found and removed
      */
     public boolean removeSecurityHistory(@NotNull final SecurityNode node, @NotNull final LocalDate date) {
-
-        commodityLock.writeLock().lock();
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         boolean status = false;
 
@@ -1314,6 +1263,8 @@ public class Engine {
                 if (status) {   // removal was a success, make sure we cleanup properly
                     moveObjectToTrash(optional.get());
                     status = getCommodityDAO().removeSecurityHistory(node, optional.get());
+
+                    logInfo(ResourceUtils.getString("Message.RemovingSecurityHistory", date, node.getSymbol()));
                 }
             }
 
@@ -1331,8 +1282,7 @@ public class Engine {
 
             return status;
         } finally {
-            accountLock.writeLock().unlock();
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1344,8 +1294,7 @@ public class Engine {
      * @return {@code true} if the {@code SecurityHistoryEvent} was found and removed
      */
     public boolean removeSecurityHistoryEvent(@NotNull final SecurityNode node, @NotNull final SecurityHistoryEvent historyEvent) {
-        commodityLock.writeLock().lock();
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         boolean status;
 
@@ -1371,14 +1320,13 @@ public class Engine {
 
             return status;
         } finally {
-            accountLock.writeLock().unlock();
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     private Config getConfig() {
 
-        configLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             if (config == null) {
@@ -1387,14 +1335,13 @@ public class Engine {
             return config;
 
         } finally {
-            configLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
     public CurrencyNode getDefaultCurrency() {
 
-        configLock.readLock().lock();
-        commodityLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             CurrencyNode node = getConfig().getDefaultCurrency();
@@ -1405,8 +1352,7 @@ public class Engine {
 
             return node;
         } finally {
-            commodityLock.readLock().unlock();
-            configLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1417,9 +1363,7 @@ public class Engine {
             addCurrency(defaultCurrency);
         }
 
-        accountLock.writeLock().lock();
-        configLock.writeLock().lock();
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             final Config currencyConfig = getConfig();
@@ -1442,9 +1386,7 @@ public class Engine {
             message.setObject(MessageProperty.ACCOUNT, root);
             messageBus.fireEvent(message);
         } finally {
-            commodityLock.writeLock().unlock();
-            configLock.writeLock().unlock();
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1476,7 +1418,7 @@ public class Engine {
             removeExchangeRateHistory(exchangeRate, exchangeRate.getHistory(localDate));
         }
 
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             // create the new history node
@@ -1506,13 +1448,13 @@ public class Engine {
 
             messageBus.fireEvent(message);
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     public void removeExchangeRateHistory(final ExchangeRate exchangeRate, final ExchangeRateHistoryNode history) {
 
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             final Message message;
@@ -1535,7 +1477,7 @@ public class Engine {
             message.setObject(MessageProperty.EXCHANGE_RATE, exchangeRate);
             messageBus.fireEvent(message);
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1552,7 +1494,7 @@ public class Engine {
 
         assert oldNode != templateNode;
 
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             boolean status;
@@ -1603,7 +1545,7 @@ public class Engine {
             messageBus.fireEvent(message);
             return status;
         } finally {
-            commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1627,7 +1569,7 @@ public class Engine {
 
     public String getAccountSeparator() {
 
-        configLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             if (accountSeparator == null) {
@@ -1636,13 +1578,13 @@ public class Engine {
             return accountSeparator;
 
         } finally {
-            configLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
     public void setAccountSeparator(final String separator) {
 
-        configLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             accountSeparator = separator;
@@ -1657,7 +1599,7 @@ public class Engine {
 
             messageBus.fireEvent(message);
         } finally {
-            configLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1748,7 +1690,7 @@ public class Engine {
             throw new RuntimeException("Invalid Account");
         }
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             Message message;
@@ -1775,7 +1717,7 @@ public class Engine {
             }
             return result;
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1786,7 +1728,7 @@ public class Engine {
      */
     public RootAccount getRootAccount() {
 
-        accountLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             if (rootAccount == null) {
@@ -1794,7 +1736,7 @@ public class Engine {
             }
             return rootAccount;
         } finally {
-            accountLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -1809,7 +1751,7 @@ public class Engine {
         Objects.requireNonNull(account);
         Objects.requireNonNull(newParent);
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             // cannot invert the child/parent relationship of an account
@@ -1852,7 +1794,7 @@ public class Engine {
 
             return true;
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1895,7 +1837,7 @@ public class Engine {
         boolean result;
         Message message;
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             account.setName(template.getName());
@@ -1948,7 +1890,7 @@ public class Engine {
 
             return result;
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -1975,7 +1917,7 @@ public class Engine {
      */
     public void setAccountNumber(final Account account, final String number) {
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             account.setAccountNumber(number);
@@ -1987,7 +1929,7 @@ public class Engine {
 
             logInfo(rb.getString("Message.AccountModify"));
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2010,7 +1952,7 @@ public class Engine {
             return;
         }
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             account.setAttribute(key, value);
@@ -2022,7 +1964,7 @@ public class Engine {
 
             logInfo(rb.getString("Message.AccountModify"));
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2045,7 +1987,7 @@ public class Engine {
      */
     public boolean removeAccount(final Account account) {
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             boolean result = false;
@@ -2085,7 +2027,7 @@ public class Engine {
 
             return result;
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2118,7 +2060,7 @@ public class Engine {
      */
     public boolean setAmortizeObject(final Account account, final AmortizeObject amortizeObject) {
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             if (account != null && amortizeObject != null && account.getAccountType() == AccountType.LIABILITY) {
@@ -2133,7 +2075,7 @@ public class Engine {
             }
             return false;
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2144,7 +2086,7 @@ public class Engine {
      */
     public void toggleAccountVisibility(final Account account) {
 
-        accountLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             Message message;
@@ -2161,7 +2103,7 @@ public class Engine {
                 messageBus.fireEvent(message);
             }
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2174,8 +2116,7 @@ public class Engine {
      */
     private boolean addAccountSecurity(final Account account, final SecurityNode node) {
 
-        accountLock.writeLock().lock();
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             Message message;
@@ -2199,8 +2140,7 @@ public class Engine {
             return result;
 
         } finally {
-            commodityLock.writeLock().unlock();
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2214,8 +2154,7 @@ public class Engine {
     private boolean removeAccountSecurity(final Account account, final SecurityNode node) {
         Objects.requireNonNull(node);
 
-        accountLock.writeLock().lock();
-        commodityLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             Message message;
@@ -2238,8 +2177,7 @@ public class Engine {
             return result;
 
         } finally {
-            commodityLock.writeLock().unlock();
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2256,9 +2194,7 @@ public class Engine {
         boolean result = true;
 
         if (acc.memberOf(AccountGroup.INVEST)) {
-
-            accountLock.writeLock().lock();
-            commodityLock.writeLock().lock();
+            dataLock.writeLock().lock();
 
             try {
                 final Collection<SecurityNode> oldList = acc.getSecurities();
@@ -2283,8 +2219,7 @@ public class Engine {
                     }
                 }
             } finally {
-                commodityLock.writeLock().unlock();
-                accountLock.writeLock().unlock();
+                dataLock.writeLock().unlock();
             }
         }
 
@@ -2295,7 +2230,7 @@ public class Engine {
 
         boolean result;
 
-        budgetLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             Message message;
@@ -2314,7 +2249,7 @@ public class Engine {
             return result;
 
         } finally {
-            budgetLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2322,7 +2257,7 @@ public class Engine {
 
         boolean result = false;
 
-        budgetLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             moveObjectToTrash(budget);
@@ -2336,15 +2271,14 @@ public class Engine {
         } catch (final Exception ex) {
             logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
-            budgetLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
 
         return result;
     }
 
     public void updateBudgetGoals(final Budget budget, final Account account, final BudgetGoal newGoals) {
-
-        budgetLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             BudgetGoal oldGoals = budget.getBudgetGoal(account);
@@ -2355,13 +2289,12 @@ public class Engine {
 
             updateBudgetGoals(budget, account);
         } finally {
-            budgetLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     private void updateBudgetGoals(final Budget budget, final Account account) {
-
-        budgetLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             Message message;
@@ -2381,7 +2314,7 @@ public class Engine {
 
             logger.log(Level.FINE, "Budget goal updated for {0}", account.getPathName());
         } finally {
-            budgetLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2389,7 +2322,7 @@ public class Engine {
 
         boolean result;
 
-        budgetLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             Message message;
@@ -2410,18 +2343,18 @@ public class Engine {
             return result;
 
         } finally {
-            budgetLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     public List<Budget> getBudgetList() {
 
-        budgetLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             return getBudgetDAO().getBudgets();
         } finally {
-            budgetLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -2509,8 +2442,8 @@ public class Engine {
 
     public boolean addTransaction(final Transaction transaction) {
 
-        accountLock.writeLock().lock();
-        commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
+        dataLock.writeLock().lock();
+        //commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
 
         try {
             boolean result = isTransactionValid(transaction);
@@ -2548,15 +2481,15 @@ public class Engine {
 
             return result;
         } finally {
-            commodityLock.writeLock().unlock();
-            accountLock.writeLock().unlock();
+            //commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     public boolean removeTransaction(final Transaction transaction) {
 
-        accountLock.writeLock().lock();
-        commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
+        dataLock.writeLock().lock();
+        //commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
 
         try {
             for (final Account account : transaction.getAccounts()) {
@@ -2584,8 +2517,8 @@ public class Engine {
 
             return result;
         } finally {
-            commodityLock.writeLock().unlock();
-            accountLock.writeLock().unlock();
+            //commodityLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2597,7 +2530,7 @@ public class Engine {
      * @param state       new reconciled state
      */
     public void setTransactionReconciled(final Transaction transaction, final Account account, final ReconciledState state) {
-        accountLock.writeLock().lock(); // hold a write lock to ensure nothing slips in between the remove and add
+        dataLock.writeLock().lock(); // hold a write lock to ensure nothing slips in between the remove and add
 
         try {
             final Transaction newTransaction = (Transaction) transaction.clone();
@@ -2610,22 +2543,22 @@ public class Engine {
         } catch (final CloneNotSupportedException e) {
             logger.log(Level.SEVERE, "Failed to reconcile the Transaction", e);
         } finally {
-            accountLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     public List<String> getTransactionNumberList() {
-        configLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             return getConfig().getTransactionNumberList();
         } finally {
-            configLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
     public void setTransactionNumberList(final List<String> list) {
-        configLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             final Config transactionConfig = getConfig();
@@ -2638,7 +2571,7 @@ public class Engine {
 
             messageBus.fireEvent(message);
         } finally {
-            configLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2708,7 +2641,7 @@ public class Engine {
     }
 
     public void setPreference(@NotNull final String key, @Nullable final String value) {
-        configLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             getConfig().setPreference(key, value);
@@ -2720,18 +2653,18 @@ public class Engine {
             message.setObject(MessageProperty.CONFIG, getConfig());
             messageBus.fireEvent(message);
         } finally {
-            configLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
     @Nullable
     public String getPreference(@NotNull final String key) {
-        configLock.readLock().lock();
+        dataLock.readLock().lock();
 
         try {
             return getConfig().getPreference(key);
         } finally {
-            configLock.readLock().unlock();
+            dataLock.readLock().unlock();
         }
     }
 
@@ -2756,7 +2689,7 @@ public class Engine {
     }
 
     public void setCreateBackups(final boolean createBackups) {
-        configLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             final Config backupConfig = getConfig();
@@ -2770,7 +2703,7 @@ public class Engine {
             message.setObject(MessageProperty.CONFIG, backupConfig);
             messageBus.fireEvent(message);
         } finally {
-            configLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2779,7 +2712,7 @@ public class Engine {
     }
 
     public void setRetainedBackupLimit(final int retainedBackupLimit) {
-        configLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             final Config backupConfig = getConfig();
@@ -2793,7 +2726,7 @@ public class Engine {
             message.setObject(MessageProperty.CONFIG, backupConfig);
             messageBus.fireEvent(message);
         } finally {
-            configLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
     }
 
@@ -2802,7 +2735,7 @@ public class Engine {
     }
 
     public void setRemoveOldBackups(final boolean removeOldBackups) {
-        configLock.writeLock().lock();
+        dataLock.writeLock().lock();
 
         try {
             final Config backupConfig = getConfig();
@@ -2816,8 +2749,40 @@ public class Engine {
             message.setObject(MessageProperty.CONFIG, backupConfig);
             messageBus.fireEvent(message);
         } finally {
-            configLock.writeLock().unlock();
+            dataLock.writeLock().unlock();
         }
+    }
+
+    /**
+     * Handles Background removal of {@code SecurityNode} history.  This can an expensive operation that block normal
+     * operations, so the removal is partitioned into small events to prevent stalling.
+     *
+     * @param securityNode SecurityNode being processed
+     * @param daysOfWeek   Collection of {code DayOfWeek} to remove
+     */
+    public void removeSecurityHistoryByDayOfWeek(final SecurityNode securityNode, final Collection<DayOfWeek> daysOfWeek) {
+
+        final Thread thread = new Thread(() -> {
+            long delay = 0;
+
+            for (final SecurityHistoryNode historyNode : new ArrayList<>(securityNode.getHistoryNodes())) {
+                for (final DayOfWeek dayOfWeek : daysOfWeek) {
+                    if (historyNode.getLocalDate().getDayOfWeek() == dayOfWeek) {
+
+                        backgroundExecutorService.schedule(new BackgroundCallable<>((Callable<Void>) () -> {
+                            removeSecurityHistory(securityNode, historyNode.getLocalDate());
+                            return null;
+                        }), delay, TimeUnit.MILLISECONDS);
+
+                        delay += 750;
+                    }
+                }
+            }
+        });
+
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
     }
 
     /**
@@ -2877,12 +2842,18 @@ public class Engine {
 
         @Override
         public E call() throws Exception {
-            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, Engine.this));
+            if (backGroundCounter.incrementAndGet() == 1) {
+                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED,
+                        Engine.this));
+            }
 
             try {
                 return callable.call();
             } finally {
-                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, Engine.this));
+                if (backGroundCounter.decrementAndGet() == 0) {
+                    messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED,
+                            Engine.this));
+                }
             }
         }
     }

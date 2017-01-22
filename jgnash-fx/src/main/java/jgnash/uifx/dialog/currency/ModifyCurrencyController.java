@@ -1,6 +1,6 @@
 /*
  * jGnash, account personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ import jgnash.util.ResourceUtils;
 public class ModifyCurrencyController implements MessageListener {
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button applyButton;
@@ -92,7 +92,7 @@ public class ModifyCurrencyController implements MessageListener {
         selectedCurrency.addListener((observable, oldValue, newValue) -> Platform.runLater(this::loadForm));
 
         // unregister when the window closes
-        parentProperty.addListener((observable, oldValue, newValue)
+        parent.addListener((observable, oldValue, newValue)
                 -> newValue.windowProperty().addListener((observable1, oldValue1, newValue1) -> {
             newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
                     event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
@@ -165,7 +165,7 @@ public class ModifyCurrencyController implements MessageListener {
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @Override

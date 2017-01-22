@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,9 +80,13 @@ public class AboutDialogController {
 
     private Tab addHTMLTab(final String name, final String resource) {
         final WebView webView = new WebView();
-        webView.getEngine().load(HTMLResource.getURL(resource).toExternalForm());
+
         webView.setFontScale(FONT_SCALE);
         webView.setMaxHeight(MAX_HEIGHT);
+
+        // be paranoid, protect against external scripts
+        webView.getEngine().setJavaScriptEnabled(false);
+        webView.getEngine().load(HTMLResource.getURL(resource).toExternalForm());
 
         return new Tab(name, webView);
     }

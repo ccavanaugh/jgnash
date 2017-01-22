@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package jgnash.engine.attachment;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +29,7 @@ import java.util.logging.Logger;
 
 import jgnash.engine.AttachmentUtils;
 import jgnash.engine.EngineFactory;
+import jgnash.util.FileUtils;
 
 /**
  * Attachment handler for a local database.
@@ -59,7 +59,7 @@ public class LocalAttachmentManager implements AttachmentManager {
 
         if (AttachmentUtils.createAttachmentDirectory(baseFile)) {  // create if needed
 
-            Path newPath = new File(AttachmentUtils.getAttachmentPath() + File.separator + path.getFileName()).toPath();
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.separator + path.getFileName());
 
             try {
                 if (copy) {
@@ -82,7 +82,7 @@ public class LocalAttachmentManager implements AttachmentManager {
     public boolean removeAttachment(final String attachment) {
         boolean result = false;
 
-        Path path = Paths.get(AttachmentUtils.getAttachmentPath() + File.separator + attachment);
+        Path path = Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.separator + attachment);
 
         try {
             Files.delete(path);
@@ -97,6 +97,6 @@ public class LocalAttachmentManager implements AttachmentManager {
     @Override
     public Future<Path> getAttachment(final String attachment) {
         return executorService.submit(() ->
-                Paths.get(AttachmentUtils.getAttachmentPath() + File.separator + attachment));
+                Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.separator + attachment));
     }
 }

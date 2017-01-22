@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
         // Load the register table
-        registerTableControllerProperty.setValue(FXMLUtils.loadFXML(node ->
+        registerTableController.set(FXMLUtils.loadFXML(node ->
                 registerTablePane.getChildren().add(node), "InvestmentRegisterTable.fxml", resources));
 
         investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);

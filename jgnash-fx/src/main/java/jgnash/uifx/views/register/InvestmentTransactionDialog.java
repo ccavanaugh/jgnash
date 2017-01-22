@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -93,7 +94,7 @@ class InvestmentTransactionDialog extends Stage {
     }
 
     private void setTransactionConsumer(final Consumer<Transaction> consumer) {
-        transactionConsumer.setValue(consumer);
+        transactionConsumer.set(consumer);
     }
 
     @FXML
@@ -127,7 +128,7 @@ class InvestmentTransactionDialog extends Stage {
                             final Consumer<Transaction> consumer) {
 
         final InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
-        transactionDialog.accountProperty().setValue(account);
+        transactionDialog.accountProperty().set(account);
         transactionDialog.setTransactionConsumer(consumer);
 
         transactionDialog.setTransaction(transaction);
@@ -144,7 +145,8 @@ class InvestmentTransactionDialog extends Stage {
             // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
             Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth() + 1));
 
-            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, InvestmentTransactionDialog.class));
+            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, InvestmentTransactionDialog.class,
+                    MainView.getPrimaryStage()));
         });
     }
 }

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,19 @@
  */
 package jgnash.engine.budget;
 
-import jgnash.engine.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.DataStoreType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.time.Period;
 
 import org.junit.Test;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertTrue;
 
@@ -39,7 +44,7 @@ public class BudgetResultsExportTest {
     public void testExportBudgetResultsModel() throws Exception {
 
         final String file = Files.createTempFile("budget-", "."
-                + DataStoreType.XML.getDataStore().getFileExt()).toFile().getAbsolutePath();
+                + DataStoreType.XML.getDataStore().getFileExt()).toString();
 
         EngineFactory.deleteDatabase(file);
 
@@ -66,13 +71,13 @@ public class BudgetResultsExportTest {
 
         BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node, false);
 
-        File exportFile = Files.createTempFile("testworkbook", ".xls").toFile();
+        final Path exportFile = Files.createTempFile("testworkbook", ".xls");
 
         BudgetResultsExport.exportBudgetResultsModel(exportFile, model);
 
-        assertTrue(exportFile.exists());
+        assertTrue(Files.exists(exportFile));
 
-        assertTrue(exportFile.delete());
+        Files.delete(exportFile);
 
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 

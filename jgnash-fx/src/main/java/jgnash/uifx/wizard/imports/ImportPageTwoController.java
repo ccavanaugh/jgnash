@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         tableView.setEditable(true);
 
         tableView.getItems().addListener((ListChangeListener<ImportTransaction>) c ->
-                valid.setValue(tableView.getItems().size() > 0));
+                valid.set(tableView.getItems().size() > 0));
 
         buildTableView();
 

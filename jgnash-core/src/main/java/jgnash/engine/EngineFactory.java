@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@
  */
 package jgnash.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -102,17 +102,14 @@ public class EngineFactory {
 
     public static boolean doesDatabaseExist(final String database, final DataStoreType type) {
         if (FileUtils.fileHasExtension(database)) {
-            File file = new File(database);
-            return file.canRead();
+            return Files.isReadable(Paths.get(database));
         }
 
-        File file = new File(database + "." + type.getDataStore().getFileExt());
-        return file.canRead();
+        return Files.isReadable(Paths.get(database + "." + type.getDataStore().getFileExt()));
     }
 
     public static boolean doesDatabaseExist(final String database) {
-        File file = new File(database);
-        return file.canRead();
+        return Files.isReadable(Paths.get(database));
     }
 
     public static boolean deleteDatabase(final String database) {
@@ -147,36 +144,41 @@ public class EngineFactory {
 
         final DataStore xmlDataStore = new XMLDataStore();
 
-        File xmlFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
+        Path xmlFile = Paths.get(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
                 + "." + xmlDataStore.getFileExt());
 
         // push the intermediary file to the temporary directory
-        xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
-
-        File zipFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
-                + ".zip");
+        //xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
+        xmlFile = Paths.get(System.getProperty("java.io.tmpdir")  + xmlFile.getFileSystem().getSeparator() + xmlFile.getFileName().toString());
 
         xmlDataStore.saveAs(xmlFile, objects);
 
+        Path zipFile = Paths.get(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
+                + ".zip");
+
         FileUtils.compressFile(xmlFile, zipFile);
 
-        if (!xmlFile.delete()) {
-            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.getAbsolutePath());
+        try {
+            Files.delete(xmlFile);
+        } catch (final IOException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.toString());
         }
     }
 
     public static void removeOldCompressedXML(final String fileName, final int limit) {
+        final Path path  = Paths.get(fileName);
 
-        File file = new File(fileName);
+        final String baseFile = FileUtils.stripFileExtension(path.toString());
 
-        String baseFile = FileUtils.stripFileExtension(file.getName());
-
-        List<File> fileList = FileUtils.getDirectoryListing(file.getParentFile(), baseFile + "-*.zip");
+        final List<Path> fileList = FileUtils.getDirectoryListing(path.getParent(), baseFile + "-*.zip");
 
         if (fileList.size() > limit) {
             for (int i = 0; i < fileList.size() - limit; i++) {
-                if (!fileList.get(i).delete()) {
-                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).getAbsolutePath());
+                try {
+                   Files.delete(fileList.get(i));
+                } catch (final IOException e) {
+                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).toString());
                 }
             }
         }
@@ -345,7 +347,7 @@ public class EngineFactory {
         return engine;
     }
 
-    private static DataStoreType getDataStoreByType(final File file) {
+    private static DataStoreType getDataStoreByType(final Path file) {
         final FileType type = FileMagic.magic(file);
 
         if (type == FileType.jGnash2XML) {
@@ -362,10 +364,10 @@ public class EngineFactory {
     }
 
     public static DataStoreType getDataStoreByType(final String fileName) {
-        return getDataStoreByType(new File(fileName));
+        return getDataStoreByType(Paths.get(fileName));
     }
 
-    public static float getFileVersion(final File file, final char[] password) {
+    public static float getFileVersion(final Path file, final char[] password) {
         float version = 0;
 
         final FileType type = FileMagic.magic(file);
@@ -376,7 +378,7 @@ public class EngineFactory {
             version = BinaryXStreamDataStore.getFileVersion(file);
         } else if (type == FileType.h2 || type == FileType.hsql) {
             try {
-                version = SqlUtils.getFileVersion(file.getAbsolutePath(), password);
+                version = SqlUtils.getFileVersion(file.toString(), password);
             } catch (final Exception e) {
                 version = 0;
             }
@@ -393,9 +395,8 @@ public class EngineFactory {
     public static synchronized String getDefaultDatabase() {
         final String base = System.getProperty("user.home");
         final String userName = System.getProperty("user.name");
-        final String fileSep = System.getProperty("file.separator");
 
-        return base + fileSep + DEFAULT_DIR + fileSep + userName;
+        return base + FileUtils.separator + DEFAULT_DIR + FileUtils.separator + userName;
     }
 
     /**
@@ -491,17 +492,17 @@ public class EngineFactory {
             }
         }
 
-        final File newFile = new File(FileUtils.stripFileExtension(destination)
+        final Path newFile = Paths.get(FileUtils.stripFileExtension(destination)
                 + "." + newFileType.getDataStore().getFileExt());
 
-        final File current = new File(EngineFactory.getActiveDatabase());
+        final Path current = Paths.get(EngineFactory.getActiveDatabase());
 
         // don't perform the save if the destination is going to overwrite the current database
         if (!current.equals(newFile)) {
             final DataStoreType currentType = dataStoreMap.get(EngineFactory.DEFAULT).getType();
 
             if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
-                final File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
+                final Path tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT);
 
                 Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -514,7 +515,7 @@ public class EngineFactory {
                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                     // Boot the engine with the temporary file
-                    EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                    EngineFactory.bootLocalEngine(tempFile.toString(), EngineFactory.DEFAULT,
                             EngineFactory.EMPTY_PASSWORD);
 
                     engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -529,11 +530,13 @@ public class EngineFactory {
                         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                         // Boot the engine with the new file
-                        EngineFactory.bootLocalEngine(newFile.getAbsolutePath(),
+                        EngineFactory.bootLocalEngine(newFile.toString(),
                                 EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
                     }
 
-                    if (!tempFile.delete()) {
+                    try {
+                        Files.delete(tempFile);
+                    } catch (final IOException ioe) {
                         Logger.getLogger(EngineFactory.class.getName())
                                 .info(ResourceUtils.getString("Message.Error.RemoveTempFile"));
                     }
@@ -546,7 +549,7 @@ public class EngineFactory {
                     newFileType.getDataStore().saveAs(newFile, objects);
                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                    EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT,
+                    EngineFactory.bootLocalEngine(newFile.toString(), EngineFactory.DEFAULT,
                             EngineFactory.EMPTY_PASSWORD);
                 }
             }
@@ -580,10 +583,10 @@ public class EngineFactory {
             }
         }
 
-        final File newFile = new File(FileUtils.stripFileExtension(newFileName)
+        final Path newFile = Paths.get(FileUtils.stripFileExtension(newFileName)
                 + "." + newFileType.getDataStore().getFileExt());
 
-        final File current = new File(fileName);
+        final Path current = Paths.get(fileName);
 
         // don't perform the save if the destination is going to overwrite the current database
         if (!current.equals(newFile)) {
@@ -595,7 +598,7 @@ public class EngineFactory {
             Engine engine = EngineFactory.bootLocalEngine(fileName, ENGINE, password);
 
             if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
-                final File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
+                final Path tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT);
 
                 if (engine != null) {
                     // Get collection of object to persist
@@ -606,8 +609,7 @@ public class EngineFactory {
                     EngineFactory.closeEngine(ENGINE);
 
                     // Boot the engine with the temporary file
-                    engine = EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), ENGINE,
-                            EngineFactory.EMPTY_PASSWORD);
+                    engine = EngineFactory.bootLocalEngine(tempFile.toString(), ENGINE, EngineFactory.EMPTY_PASSWORD);
 
                     if (engine != null) {
 
@@ -622,7 +624,9 @@ public class EngineFactory {
                         SqlUtils.changePassword(newFileName, EngineFactory.EMPTY_PASSWORD, password);
                     }
 
-                    if (!tempFile.delete()) {
+                    try {
+                        Files.delete(tempFile);
+                    } catch (final IOException ioe) {
                         Logger.getLogger(EngineFactory.class.getName())
                                 .info(ResourceUtils.getString("Message.Error.RemoveTempFile"));
                     }

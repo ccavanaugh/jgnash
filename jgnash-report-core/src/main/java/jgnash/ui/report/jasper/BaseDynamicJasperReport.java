@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,6 +47,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -229,6 +232,7 @@ public abstract class BaseDynamicJasperReport {
     private Style getStyle(final ColumnStyle style, final boolean formatForCSV) {
         switch (style) {
             case SHORT_DATE:
+            case TIMESTAMP:
             case STRING:
                 Style stringStyle = new Style();
                 stringStyle.setFont(ReportFactory.getDefaultMonoFont(getBaseFontSize()));
@@ -310,7 +314,9 @@ public abstract class BaseDynamicJasperReport {
                 drb.setIgnorePagination(true);
             }
 
-            AbstractColumn[] columns = new AbstractColumn[model.getColumnCount()];
+            final List<AbstractColumn> columns = new ArrayList<>();
+
+            final int[] columnsToHide = model.getColumnsToHide();
 
             assignPageFormat(drb);
 
@@ -320,6 +326,11 @@ public abstract class BaseDynamicJasperReport {
             logger.info("Creating column model for report");
             // create columns and add to the list
             for (int i = 0; i < model.getColumnCount(); i++) {
+
+                if (Arrays.binarySearch(columnsToHide, i) >= 0) {   // don't add any hidden columns
+                    continue;
+                }
+
                 if (model.getColumnStyle(i) != ColumnStyle.GROUP && model.getColumnStyle(i) != ColumnStyle.GROUP_NO_HEADER) {
                     Style columnTypeStyle = getStyle(model.getColumnStyle(i), formatForCSV);
                     Style columnHeaderStyle = getStyle(model.getColumnHeaderStyle(i), formatForCSV);
@@ -354,6 +365,8 @@ public abstract class BaseDynamicJasperReport {
                         builder.setPattern(pattern);
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_DATE) {
                         builder.setTextFormatter(DateUtils.getShortDateFormatter().toFormat());
+                    } else if (model.getColumnStyle(i) == ColumnStyle.TIMESTAMP) {
+                        builder.setTextFormatter(DateUtils.getShortDateTimeFormatter().toFormat());
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_AMOUNT) {
                         String pattern = CommodityFormat.getShortNumberPattern(model.getCurrency());
                         builder.setPattern(pattern);
@@ -363,14 +376,14 @@ public abstract class BaseDynamicJasperReport {
                         builder.setFixedWidth(true);
                     }
 
-                    columns[i] = builder.build();
+                    columns.add(builder.build());
                 } else if (model.getColumnStyle(i) == ColumnStyle.GROUP || model.getColumnStyle(i) == ColumnStyle.GROUP_NO_HEADER) {
                     ColumnBuilder builder = ColumnBuilder.getNew();
                     builder.setColumnProperty(COLUMN_PROPERTY + i, model.getColumnClass(i).getName());
                     builder.setTitle(model.getColumnName(i));
                     builder.setStyle(getTypeHeaderStyle());
 
-                    columns[i] = builder.build();
+                    columns.add(builder.build());
                 }
             }
 
@@ -398,11 +411,11 @@ public abstract class BaseDynamicJasperReport {
                 gb.setDefaultHeaderVariableStyle(getTypeHeaderStyle());
                 gb.setDefaultFooterVariableStyle(getTypeFooterStyle());
 
-                for (int i = 0; i < model.getColumnCount(); i++) {
+                for (int i = 0; i < columns.size(); i++) {
                     if (model.getColumnStyle(i) == ColumnStyle.GROUP || model.getColumnStyle(i) == ColumnStyle.GROUP_NO_HEADER) {
-                        gb.setCriteriaColumn((PropertyColumn) columns[i]);
+                        gb.setCriteriaColumn((PropertyColumn) columns.get(i));
                     } else if (model.getColumnStyle(i) == ColumnStyle.AMOUNT_SUM || model.getColumnStyle(i) == ColumnStyle.BALANCE_WITH_SUM || model.getColumnStyle(i) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL || model.getColumnStyle(i) == ColumnStyle.CROSSTAB_TOTAL) {
-                        gb.addFooterVariable(columns[i], DJCalculation.SUM);
+                        gb.addFooterVariable(columns.get(i), DJCalculation.SUM);
                     }
                 }
 
@@ -422,8 +435,8 @@ public abstract class BaseDynamicJasperReport {
 
                 boolean global = false;
 
-                for (int i = 0; i < model.getColumnCount(); i++) {
-                    AbstractColumn c = columns[i];
+                for (int i = 0; i < columns.size(); i++) {
+                    final AbstractColumn c = columns.get(i);
 
                     drb.addColumn(c);
 
@@ -440,8 +453,8 @@ public abstract class BaseDynamicJasperReport {
                     drb.setGrandTotalLegend(getGrandTotalLegend());
                 }
             } else { // no groups exist, just add the columns
-                for (int i = 0; i < model.getColumnCount(); i++) {
-                    drb.addColumn(columns[i]);
+                for (final AbstractColumn column : columns) {
+                    drb.addColumn(column);
                 }
 
             }

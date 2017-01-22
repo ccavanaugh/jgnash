@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ public class NewFileFourController extends AbstractWizardPaneController<NewFileW
 
     @FXML
     private void initialize() {
-        textArea.textProperty().setValue(TextResource.getString("NewFileFour.txt"));
+        textArea.textProperty().set(TextResource.getString("NewFileFour.txt"));
         accountSetsList.getItems().addAll(AccountTreeXMLFactory.getLocalizedAccountSet());
 
         accountSetsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)

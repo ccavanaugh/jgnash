@@ -5,7 +5,6 @@ WANTS
 * OFX export
 * VAT/GST UI
 * Command Line interface/Class for loading accounts and transactions
-* Improve Security creation/modification UI
 * Mass selection of destination accounts for imported transactions.
 * Info icon in a sell investment panel that calculate the estimated gains/loss for selling a transaction
 * FIFO, and Lot performance calculations for securities. (http://groups.google.com/group/jgnash-user/browse_thread/thread/fe124ecf806857f3?hl=en)
@@ -17,30 +16,82 @@ WANTS
 * Direct Transaction entry option in the Ledger to avoid Transaction form.
 * Formal Trial Balance report
 * Budgeting
-** an option for Total Year OR YTD Total – this is actually quite useful, since the user can be under / over budget in any given period, but on-budget YTD.
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.28.3
+--------------
+* 01/20/17 Updated to the latest Hibernate and HSQLDB dependencies.
+* 01/18/17 Corrected a performance regression loading and saving bxds and zip files introduced in 2.28.0.
+* 01/17/17 Updates and  corrections to translations.  Parts of text for some languages were corrupt due to an editor bug.
+* 01/15/17 More stability improvements when under heavy background loads and using a relational database.
+
+Release 2.28.2
+--------------
+* 01/14/17 Corrected a bug with file locking on Windows OS.
+* 01/14/17 Added the Account and Amount columns to the Reminders table. (Fx)
+* 01/14/17 Corrected errors with the Polish translation. (Sławomir Szarkowicz)
+* 01/14/17 Fixed a regression that removed the Ticker/Investment column from the Investment account register. (Fx)
+
+Release 2.28.1
+--------------
+* 01/14/17 Corrected issues with inconsistent behavior of the reported memos of split transactions. (Swing, Fx)
+* 01/14/17 Updated to the latest Netty dependency.
+* 01/08/17 The Investment Register was not sizing the Quantity column correctly. (Fx)
+* 01/08/17 Fixed an IllegalArgumentException that was occurring if the option "Next time jGnash starts" was used when
+           dismissing the Reminders dialog. (Fx)
+* 01/08/17 jGnash now uses a priority based model for the handling of internal tasks to prevent deadlocks from
+           background operations.  This corrects some reported bugs with random freezing and hanging of the UI. (Swing, Fx)
+* 01/07/17 Updated to the latest Hibernate dependency.
+* 12/01/16 Corrected an NPE that was occurring during import of a OFX/QFX files. (Fx)
+* 11/30/16 Improved the behavior of background removal of securities history.
+
+Release 2.28.0
+--------------
+* 11/27/16 Added the transaction timestamp to the CSV export. (Swing, Fx)
+* 11/27/16 The xls and xlsx Account exports were broken by the addition of timestamps in Release 2.27.0. (Swing, Fx)
+* 11/27/16 Updated to the latest Hibernate, DynamicJasper, JasperReports and OpenCSV dependencies.
+* 11/26/16 The Account Register report was broken by the addition of timestamps in Release 2.27.0. (Fx)
+* 11/26/16 An exception was occurring if Budgeting was being used and the window was too small to display data. (Fx)
+* 11/26/16 Corrected sizing issues in the Budget interface if the screen was very wide and the budget was configured to
+           use a small number of periods. (Fx)
+* 11/26/16 Column widths are preserved so automatic column width resizing is less notable. (Fx)
+* 11/26/16 Fixed a NPE triggered by a file load while a file is already being loaded. (Fx)
+* 11/24/16 Columns were not resize correctly when adding or removing transactions. (Fx)
+* 11/24/16 Delay the upgrade notification a bit more for a cleaner startup for some users. (Fx)
+* 11/23/16 Added capability to cull down unneeded securities history as a background operation. This can reduce file
+           size and improve overall performance. (Fx)
+* 11/23/16 Improved performance when using a relational database and updating securities history. (Swing, Fx)
+* 11/20/16 jGnash would stall and appear to be hung if a large group of transactions or security history was being
+           removed when using a relational database. (Swing, Fx)
+* 11/14/16 Corrected a rare ConcurrentModificationException on systems under heavy loads. (Swing, Fx)
+* 11/08/16 Account ComboBox selection can be made using the first letter of the account. (Fx) _[Pranay Kumar]_
+* 11/08/16 Up and Down arrows can be used for selection within the Transaction number box
+* 11/05/16 Improved visual feedback for placeholder accounts and sums in the Budget interface. (Fx) (Feature Request 116)
+
 Release 2.27.0
 --------------
+* 11/05/16 Improved window positioning behavior on multi-monitor systems. (Fx)
+* 11/05/16 The Budget Goals dialog had the wrong title and layout behavior was poor. (Fx)
+* 11/03/16 Budgets results may now be display as running totals instead of per period values. (Fx)
 * 10/26/16 Improved the density and layout stability of the budget view. (Fx)
 * 10/24/16 Added selection buttons to the Reminders notification dialog to reduce required effort. (Fx)
 * 10/24/16 The Periodic Account Balance chart was improved with more selectable periods and better button names. (Fx)
 * 10/24/16 The Income and Expense bar chart was freezing due to an infinite loop. (Fx) _[Pranay Kumar]_
 * 10/24/16 Improved stability of test and build for slow or virtualized systems.
 * 10/23/16 The focus and accent colors for the Fx UI can now be changed. (Fx)
-* 10/22/16 Corrected some font scaling issues withing the UI. (Fx)
+* 10/22/16 Corrected some font scaling issues within the UI. (Fx)
 * 10/22/16 Improved column layout behavior when changing the default font scale. (Fx)
 * 10/18/16 Transaction timestamps are now strictly controlled.  Alternation of a transaction including reconciliation
            will alter the timestamp.
 * 10/18/16 A transaction entry timestamp column has been added to the register.  It is hidden by default. (Fx)
 * 10/17/16 Prevent an IllegalArgumentException from occurring if a default or prior directory is missing when attempting
            to select a file. (Fx)
-* 10/16/16 Added an option to control how Bayesian model matches transaction. (Fx)
+* 10/16/16 Added an option to control how Bayesian model matches transactions to accounts when importing. (Fx)
 * 10/16/16 Make the last selected transaction account sticky for the OFX/QIF/MT940 Import wizard. (Fx)
-* 10/14/16 The OFX/QIF/MT940 Import wizard was not displaying a consistent precision for transaction amounts. (Fx)
+* 10/14/16 The OFX/QIF/MT940 Import wizard was not displaying consistent precision for transaction amounts. (Fx)
 
 Release 2.26.1
 --------------

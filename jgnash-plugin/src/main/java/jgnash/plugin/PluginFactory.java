@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,8 @@ public final class PluginFactory {
     private static boolean pluginsStarted = false;
     private static boolean pluginsLoaded = false;
 
+    public static final String separator = System.getProperty("file.separator");
+
     private PluginFactory() {
         // Utility class
     }
@@ -75,7 +77,7 @@ public final class PluginFactory {
         // starting path will be the lib directory because that is where jgnash-core lives.
 
         pluginDirectory = new File(pluginDirectory).getParentFile().getParent();
-        pluginDirectory += File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+        pluginDirectory += separator + PLUGIN_DIRECTORY_NAME + separator;
 
         logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
 
@@ -95,10 +97,10 @@ public final class PluginFactory {
         }
 
         if (OS.isSystemWindows()) {
-            pluginDirectory += File.separator + "AppData" + File.separator + "Local" + File.separator
-                    + "jgnash" + File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+            pluginDirectory += separator + "AppData" + separator + "Local" + separator
+                    + "jgnash" + separator + PLUGIN_DIRECTORY_NAME + separator;
         } else { // unix, osx
-            pluginDirectory += File.separator + ".jgnash" + File.separator + PLUGIN_DIRECTORY_NAME + File.separator;
+            pluginDirectory += separator + ".jgnash" + separator + PLUGIN_DIRECTORY_NAME + separator;
         }
 
         logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
@@ -195,15 +197,13 @@ public final class PluginFactory {
         
         // Add a shutdown hook to properly close the classLoader.  It needs to remain open for the duration of 
         // the application otherwise the plugin will not be able to load any needed classes.
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-        	public void run() {
-        		try {
-					classLoader.close();					
-				} catch (final IOException e) {
-					logger.log(Level.SEVERE, null, e);
-				}
-        	}
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                classLoader.close();
+            } catch (final IOException e) {
+                logger.log(Level.SEVERE, null, e);
+            }
+        }));
 
         final String pluginActivator = classLoader.getActivator();
 

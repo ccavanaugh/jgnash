@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
 
         if ((slipType == SlipType.DECREASE && signum >= 0) || (slipType == SlipType.INCREASE && signum < 0)) {
             entry.setCreditAccount(accountExchangePane.getSelectedAccount());
-            entry.setDebitAccount(accountProperty.get());
+            entry.setDebitAccount(account.get());
 
             if (hasEqualCurrencies()) {
                 entry.setAmount(amountField.getDecimal().abs());
@@ -50,7 +50,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
                 entry.setCreditAmount(accountExchangePane.exchangeAmountProperty().get().abs());
             }
         } else {
-            entry.setCreditAccount(accountProperty.get());
+            entry.setCreditAccount(account.get());
             entry.setDebitAccount(accountExchangePane.getSelectedAccount());
 
             if (hasEqualCurrencies()) {
@@ -61,7 +61,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
             }
         }
 
-        entry.setReconciled(accountProperty.get(), getReconciledState());
+        entry.setReconciled(account.get(), getReconciledState());
 
         return entry;
     }
@@ -83,6 +83,6 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
             accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
         }
 
-        setReconciledState(entry.getReconciled(accountProperty.get()));
+        setReconciledState(entry.getReconciled(account.get()));
     }
 }

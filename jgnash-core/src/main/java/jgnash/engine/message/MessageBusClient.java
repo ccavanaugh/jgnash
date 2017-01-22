@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -236,8 +236,10 @@ class MessageBusClient {
         channelLock.lock();
 
         try {
-            channel.close().sync();
-        } catch (InterruptedException e) {
+            if (channel != null) {  // null from a prior failed connection
+                channel.close().sync();
+            }
+        } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             channelLock.unlock();

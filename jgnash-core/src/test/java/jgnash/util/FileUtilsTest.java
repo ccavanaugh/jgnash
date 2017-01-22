@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,65 @@
  */
 package jgnash.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
  * File utilities test.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class FileUtilsTest {
+
+    private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
+        final char[] buffer = new char[testdata.length()];
+
+        try (final Reader reader = Files.newBufferedReader(Paths.get(absolutepath))) {
+            final int read = reader.read(buffer);
+
+            assertEquals(testdata.length(), read);
+        }
+
+        assertEquals(testdata, new String(buffer));
+    }
+
+    private static void writeTestData(final String testdata, final Path tempfile) throws IOException {
+        try (final Writer os = Files.newBufferedWriter(tempfile)) {
+            os.write(testdata);
+        }
+    }
+
+    @Test
+    public void testFileLock() throws IOException, InterruptedException {
+        final Path tempFile = Files.createTempFile("temp", null);
+
+        final Writer writer = Files.newBufferedWriter(tempFile);
+
+        writer.write("test");
+        writer.close();
+
+        assertTrue(Files.isWritable(tempFile));
+        assertTrue(Files.isReadable(tempFile));
+
+        final FileLocker filelocker = new FileLocker();
+        filelocker.acquireLock(tempFile);
+
+        assertTrue(FileUtils.isFileLocked(tempFile.toString()));
+
+        filelocker.release();
+
+        assertFalse(FileUtils.isFileLocked(tempFile.toString()));
+
+        assertTrue(Files.deleteIfExists(tempFile));
+    }
 
     @Test
     public void fileExtensionStripTest() {
@@ -58,35 +97,18 @@ public class FileUtilsTest {
 
     @Test
     public void fileCopyToSelf() throws IOException {
-        File tempFile = Files.createTempFile("jgnash-test", ".jdb").toFile();
-        tempFile.deleteOnExit();
+        Path tempFile = Files.createTempFile("jgnash-test", ".jdb");
 
-        String absolutePath = tempFile.getAbsolutePath();
-        String testData = "42";
+        String absolutePath = tempFile.toString();
+        String testData = "42fd;lgkjsgj;gfj;slfkgj;";
 
         // Write the data to a file
         writeTestData(testData, tempFile);
         checkTestData(testData, absolutePath);
 
         // Copy the file to itself: the file should not be emptied :)
-        assertFalse(FileUtils.copyFile(new File(absolutePath), new File(absolutePath)));
-    }
+        assertFalse(FileUtils.copyFile(Paths.get(absolutePath), Paths.get(absolutePath)));
 
-    private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
-        final char[] buffer = new char[testdata.length()];
-
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(absolutepath))) {
-            final int read = reader.read(buffer);
-
-            assertEquals(testdata.length(), read);
-        }
-
-        assertEquals(testdata, new String(buffer));
-    }
-
-    private static void writeTestData(final String testdata, final File tempfile) throws IOException {        
-        try (OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(tempfile))) {
-            os.write(testdata); 
-        }               
+        Files.delete(tempFile);
     }
 }

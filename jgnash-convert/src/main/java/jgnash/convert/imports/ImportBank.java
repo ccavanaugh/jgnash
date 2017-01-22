@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,14 @@ import java.util.List;
  * @author Arnout Engelen
  */
 public class ImportBank<E extends ImportTransaction> {
+
     private List<E> transactions = new ArrayList<>();
+
+    final protected List<ImportSecurity> securityList = new ArrayList<>();
+
+    public void addSecurity(final ImportSecurity importSecurity) {
+        securityList.add(importSecurity);
+    }
 
     public void setTransactions(List<E> transactions) {
         this.transactions = transactions;
@@ -39,5 +46,9 @@ public class ImportBank<E extends ImportTransaction> {
 
     public void addTransaction(E transaction) {
         transactions.add(transaction);
+    }
+
+    public List<ImportSecurity> getSecurityList() {
+        return securityList;
     }
 }

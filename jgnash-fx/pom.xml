@@ -5,7 +5,7 @@
     <parent>
         <artifactId>jgnash2</artifactId>
         <groupId>jgnash</groupId>
-        <version>2.26.1</version>
+        <version>2.28.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -63,7 +63,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
@@ -81,6 +81,7 @@
                 </executions>
             </plugin>
 
+            <!-- Warning, newer versions of the jar plugin break the build combination of Swing and Fx -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -105,7 +106,7 @@
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.11</version>
+                <version>1.7.15</version>
                 <executions>
                     <execution>
                         <id>l4j-gui</id>
@@ -135,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.5.5</version>
+                <version>3.0.0</version>
                 <configuration>
                     <descriptors>
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
@@ -165,7 +166,7 @@
                                     <pluginExecutionFilter>
                                         <groupId>org.apache.maven.plugins</groupId>
                                         <artifactId>maven-dependency-plugin</artifactId>
-                                        <versionRange>[2.10,)</versionRange>
+                                        <versionRange>[3.0,)</versionRange>
                                         <goals>
                                             <goal>copy-dependencies</goal>
                                         </goals>

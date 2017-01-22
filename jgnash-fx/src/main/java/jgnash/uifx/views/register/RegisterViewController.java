@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -165,7 +165,7 @@ public class RegisterViewController {
 
         // Push the account to the controller at the end of the application thread
         Platform.runLater(() -> registerPaneController.accountProperty()
-                .setValue(accountTreeController.getSelectedAccountProperty().get()));
+                .set(accountTreeController.getSelectedAccountProperty().get()));
     }
 
     private void restoreLastSelectedAccount() {
@@ -202,7 +202,7 @@ public class RegisterViewController {
 
     @FXML
     private void handleAccountExport() {
-        RegisterTableController registerTableController = registerPaneController.registerTableControllerProperty.get();
+        RegisterTableController registerTableController = registerPaneController.registerTableController.get();
 
         final Account account = registerPaneController.accountProperty().get();
 

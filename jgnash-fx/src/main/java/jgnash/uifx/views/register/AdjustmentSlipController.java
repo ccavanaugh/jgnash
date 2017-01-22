@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
     @NotNull
     @Override
     public Transaction buildTransaction() {
-        return TransactionFactory.generateSingleEntryTransaction(accountProperty.get(), amountField.getDecimal(),
+        return TransactionFactory.generateSingleEntryTransaction(account.get(), amountField.getDecimal(),
                 datePicker.getValue(), memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
     }
 
@@ -83,7 +83,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
 
         amountField.setDecimal(t.getAmount(accountProperty().get()));
 
-        memoTextField.setText(t.getMemo());
+        memoTextField.setText(t.getTransactionMemo());
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
@@ -100,7 +100,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
 
     @FXML
     private void convertAction() {
-        final Optional<Account> accountOptional = StaticAccountsMethods.selectAccount(null, accountProperty.get());
+        final Optional<Account> accountOptional = StaticAccountsMethods.selectAccount(null, account.get());
         if (accountOptional.isPresent()) {
             final Account opp = accountOptional.get();
 
@@ -114,10 +114,10 @@ public class AdjustmentSlipController extends AbstractSlipController {
             entry.setMemo(memoTextField.getText());
 
             if (amountField.getDecimal().signum() >= 0) {
-                entry.setCreditAccount(accountProperty.get());
+                entry.setCreditAccount(account.get());
                 entry.setDebitAccount(opp);
             } else {
-                entry.setDebitAccount(accountProperty.get());
+                entry.setDebitAccount(account.get());
                 entry.setCreditAccount(opp);
             }
 
@@ -126,9 +126,9 @@ public class AdjustmentSlipController extends AbstractSlipController {
 
             t.addTransactionEntry(entry);
 
-            ReconcileManager.reconcileTransaction(accountProperty.get(), t, getReconciledState());
+            ReconcileManager.reconcileTransaction(account.get(), t, getReconciledState());
 
-            TransactionDialog.showAndWait(accountProperty.get(), t, transaction -> {
+            TransactionDialog.showAndWait(account.get(), t, transaction -> {
                 if (transaction != null) {
 
                     final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ public class ImageDialog {
 
         dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainView.getInstance().getPrimaryStage());
+        dialog.initOwner(MainView.getPrimaryStage());
         dialog.setTitle(resources.getString("Title.ViewImage"));
 
         // Set a sane default size
@@ -105,7 +105,7 @@ public class ImageDialog {
         dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
 
         // Remember dialog size and location
-        StageUtils.addBoundsListener(dialog, ImageDialog.class);
+        StageUtils.addBoundsListener(dialog, ImageDialog.class, MainView.getPrimaryStage());
     }
 
     private void setImage(final Path path) {
@@ -114,7 +114,7 @@ public class ImageDialog {
                 final Image image = new Image(path.toUri().toURL().toString(), true);
                 imageView.setPreserveRatio(true);
                 imageView.setImage(image);
-                statusBar.textProperty().setValue(path.toString());
+                statusBar.textProperty().set(path.toString());
             } catch (final MalformedURLException e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             }

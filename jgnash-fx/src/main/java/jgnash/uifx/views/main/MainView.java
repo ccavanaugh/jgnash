@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -259,15 +259,13 @@ public class MainView implements MessageListener {
     private void checkForLatestRelease() {
         new Thread(() -> {
             try {
-                Thread.sleep(BootEngineTask.FORCED_DELAY * 2);
+                Thread.sleep(BootEngineTask.FORCED_DELAY * 3);
                 if (Options.checkForUpdatesProperty().get()) {
-                    backgroundExecutor.execute(() -> {
-                        if (!Version.isReleaseCurrent()) {
-                            Platform.runLater(() ->
-                                    StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion")));
-                        }
-                        logger.info("Version check performed");
-                    });
+                    if (!Version.isReleaseCurrent()) {
+                        Platform.runLater(() ->
+                                StaticUIMethods.displayMessage(ResourceUtils.getString("Message.NewVersion")));
+                    }
+                    logger.info("Version check performed");
                 }
             } catch (InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -276,7 +274,6 @@ public class MainView implements MessageListener {
     }
 
     private void addViews() {
-
         backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"), resources),
                 resources.getString("Tab.Accounts"))));
@@ -309,9 +306,12 @@ public class MainView implements MessageListener {
     }
 
     private void removeViews() {
-        tabViewPane.getTabs().clear();
-        tabViewPane.getSelectionModel().selectedIndexProperty().removeListener(tabListener);
-        tabListener = null;
+        // Push to the background executor so that a load before current load is finished won't trigger a NPE
+        backgroundExecutor.execute(() -> Platform.runLater(() -> {
+            tabViewPane.getTabs().clear();
+            tabViewPane.getSelectionModel().selectedIndexProperty().removeListener(tabListener);
+            tabListener = null;
+        }));
     }
 
     private void installHandlers() {
@@ -332,8 +332,8 @@ public class MainView implements MessageListener {
      *
      * @return the primary stage
      */
-    public Stage getPrimaryStage() {
-        return primaryStage;
+    public static Stage getPrimaryStage() {
+        return getInstance().primaryStage;
     }
 
     /**
@@ -472,8 +472,8 @@ public class MainView implements MessageListener {
 
         private void updateStatus(final String status, final Node glyph) {
             Platform.runLater(() -> {
-                statusBar.textProperty().setValue(status);
-                statusBar.graphicProperty().setValue(glyph);
+                statusBar.textProperty().set(status);
+                statusBar.graphicProperty().set(glyph);
             });
         }
     }

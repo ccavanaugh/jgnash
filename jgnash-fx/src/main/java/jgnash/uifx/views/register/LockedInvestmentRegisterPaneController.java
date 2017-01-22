@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ public class LockedInvestmentRegisterPaneController extends RegisterPaneControll
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentRegisterTable.fxml"), resources);
             registerTablePane.getChildren().add(fxmlLoader.load());
-            registerTableControllerProperty.setValue(fxmlLoader.getController());
+            registerTableController.set(fxmlLoader.getController());
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

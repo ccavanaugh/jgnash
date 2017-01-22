@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public class SaveAsTask extends Task<Void> {
         fileChooser.setInitialDirectory(current.getParentFile());
         fileChooser.setTitle(resources.getString("Title.SaveAs"));
 
-        final File newFile = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File newFile = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (newFile != null) {
             final SaveAsTask saveAsTask = new SaveAsTask(newFile);

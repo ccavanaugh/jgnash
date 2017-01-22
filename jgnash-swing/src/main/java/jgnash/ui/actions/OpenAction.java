@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@
 package jgnash.ui.actions;
 
 import java.awt.EventQueue;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -145,9 +146,9 @@ public class OpenAction {
         });
     }
 
-    public static void openAction(final File file, final char[] password) {
+    public static void openAction(final Path file, final char[] password) {
 
-        final String database = file.getAbsolutePath();
+        final String database = file.toAbsolutePath().toString();
 
         final class BootEngine extends SwingWorker<Void, Void> {
 
@@ -161,8 +162,8 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-                if (checkAndBackupOldVersion(file.getAbsolutePath(), password)) {
-                    final Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, password);
+                if (checkAndBackupOldVersion(database, password)) {
+                    final Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, password);
                     if (e != null) {
                         e.getRootAccount(); // prime the engine
                     }
@@ -311,50 +312,40 @@ public class OpenAction {
 
         boolean result = false;
 
-        if (Files.exists(new File(fileName).toPath())) {
-            final float version = EngineFactory.getFileVersion(new File(fileName), password);
+        if (Files.exists(Paths.get(fileName))) {
+            final float version = EngineFactory.getFileVersion(Paths.get(fileName), password);
             final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
 
             if (type == DataStoreType.HSQL_DATABASE && version < 2.25) {
                 final String errorMessage = ResourceUtils.getString("Message.Error.OldHsqlFile");
 
-                new Thread() {  // pop an error dialog with the warning for immediate feedback
-                    @Override
-                    public void run() {
-                        StaticUIMethods.displayError(errorMessage);
-                    }
-                }.start();
+                // pop an error dialog with the warning for immediate feedback
+                new Thread(() -> StaticUIMethods.displayError(errorMessage)).start();
 
             } else if (version <= 0) {
                 final String errorMessage = ResourceUtils.getString("Message.Error.InvalidUserPass");
 
                 UIApplication.getLogger().warning(errorMessage);
 
-                new Thread() {  // pop an error dialog with the warning for immediate feedback
-                    @Override
-                    public void run() {
-                        StaticUIMethods.displayError(errorMessage);
-                    }
-                }.start();
+                // pop an error dialog with the warning for immediate feedback
+                new Thread(() -> StaticUIMethods.displayError(errorMessage)).start();
 
             } else {
                 result = true;
 
                 // make a versioned backup first
                 if (version < Engine.CURRENT_VERSION) {
-                    FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+                    FileUtils.copyFile(Paths.get(fileName), Paths.get(fileName + "." + version));
 
-                    new Thread() {  // pop an information dialog about the backup file
-                        @Override
-                        public void run() {
+                    // pop an information dialog about the backup file
+                    new Thread(() -> {
 
-                            final String message = ResourceUtils.getString("Message.Info.Upgrade", fileName + "."
-                                    + version);
+                        final String message = ResourceUtils.getString("Message.Info.Upgrade", fileName + "."
+                                + version);
 
-                            StaticUIMethods.displayMessage(message, ResourceUtils.getString("Title.Information"),
-                                    JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }.start();
+                        StaticUIMethods.displayMessage(message, ResourceUtils.getString("Title.Information"),
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }).start();
 
                 }
             }

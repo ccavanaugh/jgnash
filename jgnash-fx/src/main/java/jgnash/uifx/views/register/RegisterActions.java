@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -141,7 +141,7 @@ public class RegisterActions {
                 FXMLUtils.load(ReconcileSettingsDialogController.class.getResource("ReconcileSettingsDialog.fxml"),
                         ResourceUtils.getString("Title.ReconcileSettings"));
 
-        pair.getController().accountProperty().setValue(account);
+        pair.getController().accountProperty().set(account);
 
         pair.getStage().setResizable(false);
         pair.getStage().showAndWait();
@@ -163,7 +163,7 @@ public class RegisterActions {
                         "*.xls", "*.xlsx")
         );
 
-        final File file = fileChooser.showSaveDialog(MainView.getInstance().getPrimaryStage());
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());

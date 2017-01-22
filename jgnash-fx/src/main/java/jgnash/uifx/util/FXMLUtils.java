@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ public class FXMLUtils {
             Logger.getLogger(stage.getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        stage.initOwner(MainView.getInstance().getPrimaryStage());
+        stage.initOwner(MainView.getPrimaryStage());
         stage.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
         stage.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         stage.initStyle(StageStyle.DECORATED);
@@ -160,11 +160,11 @@ public class FXMLUtils {
     @SuppressWarnings("unchecked")
     private static void injectParent(final Object object, final Object value) {
         for (final Field field : getDeclaredFields(object.getClass())) {
-            if (field.isAnnotationPresent(InjectFXML.class) && field.getName().equals("parentProperty")) {
+            if (field.isAnnotationPresent(InjectFXML.class) && field.getName().equals("parent")) {
                 field.setAccessible(true);
                 try {
                     final ObjectProperty<Object> property = (ObjectProperty<Object>) field.get(object);
-                    property.setValue(value);
+                    property.set(value);
                 } catch (IllegalAccessException e) {
                     Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, e.getMessage(), e);
                 }
@@ -189,7 +189,7 @@ public class FXMLUtils {
         stage.initModality(Modality.APPLICATION_MODAL);
 
         if (MainView.getInstance() != null) {    // null check is only necessary to pass unit tests
-            stage.initOwner(MainView.getInstance().getPrimaryStage());
+            stage.initOwner(MainView.getPrimaryStage());
         }
 
         try {
@@ -249,7 +249,7 @@ public class FXMLUtils {
 
         final Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainView.getInstance().getPrimaryStage());
+        stage.initOwner(MainView.getPrimaryStage());
 
         try {
             final Scene scene = new Scene(fxmlLoader.load());
@@ -268,6 +268,8 @@ public class FXMLUtils {
             injectParent(controller, scene);
 
             stage.setOnShown(event -> Platform.runLater(() -> {
+                stage.sizeToScene();    // force the stage to resize to the scene before setting the minimums
+
                 stage.setMinHeight(stage.getHeight());
                 stage.setMinWidth(stage.getWidth());
             }));

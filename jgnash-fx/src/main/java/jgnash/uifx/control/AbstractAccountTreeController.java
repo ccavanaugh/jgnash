@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ import jgnash.util.Nullable;
  */
 public abstract class AbstractAccountTreeController implements MessageListener {
 
-    private final ReadOnlyObjectWrapper<Account> selectedAccountProperty = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<Account> selectedAccount = new ReadOnlyObjectWrapper<>();
 
     protected abstract TreeView<Account> getTreeView();
 
@@ -90,7 +90,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         if (isAccountSelectable(newValue.getValue())) {
-                            selectedAccountProperty.setValue(newValue.getValue());
+                            selectedAccount.set(newValue.getValue());
                         }
                     }
                 });
@@ -99,7 +99,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
     }
 
     public ReadOnlyObjectProperty<Account> getSelectedAccountProperty() {
-        return selectedAccountProperty.getReadOnlyProperty();
+        return selectedAccount.getReadOnlyProperty();
     }
 
     public void setSelectedAccount(final Account account) {

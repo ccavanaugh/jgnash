@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,19 @@
  */
 package jgnash.util.prefs;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
+import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -51,25 +54,25 @@ public class PortablePreferences {
     }
 
     private static void importPreferences(final String file) {
-        final File importFile = getPreferenceFile(file);
+        final Path importFile = getPreferenceFile(file);
 
-        if (importFile.canRead()) {
+        if (Files.isReadable(Paths.get(file))) {
             Logger.getLogger(PortablePreferences.class.getName()).info("Importing preferences");
 
-            try (FileInputStream is = new FileInputStream(importFile)) {
+            try (final InputStream is = Files.newInputStream(importFile)) {
                 Preferences.importPreferences(is);
-            } catch (InvalidPreferencesFormatException | IOException e) {
-                System.err.println("Preferences file " + importFile.getAbsolutePath() + " could not be read");
+            } catch (final InvalidPreferencesFormatException | IOException e) {
+                System.err.println("Preferences file " + importFile.toString() + " could not be read");
                 Logger.getLogger(PortablePreferences.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         } else {
-            System.err.println("Preferences file " + importFile.getAbsolutePath() + " was not found");
+            System.err.println("Preferences file " + importFile.toString() + " was not found");
         }
     }
 
     public static void deleteUserPreferences() {
         try {
-            Preferences prefs = Preferences.userRoot();
+            final Preferences prefs = Preferences.userRoot();
             if (prefs.nodeExists("/jgnash")) {
                 Preferences jgnash = prefs.node("/jgnash");
                 jgnash.removeNode();
@@ -77,19 +80,19 @@ public class PortablePreferences {
             } else {
                 System.err.println(ResourceUtils.getString("Message.PrefFail"));
             }
-        } catch (BackingStoreException bse) {
+        } catch (final BackingStoreException bse) {
             Logger.getLogger(PortablePreferences.class.getName()).log(Level.SEVERE, bse.toString(), bse);
             System.err.println(ResourceUtils.getString("Message.UninstallBad"));
         }
     }
 
-    private static File getPreferenceFile(final String portableFile) {
-        final File exportFile;
+    private static Path getPreferenceFile(final String portableFile) {
+        final Path exportFile;
 
         if (portableFile != null && !portableFile.isEmpty()) {
-            exportFile = new File(portableFile);
+            exportFile = Paths.get(portableFile);
         } else {
-            exportFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "pref.xml");
+            exportFile = Paths.get(System.getProperty("user.dir") + FileUtils.separator + "pref.xml");
         }
         return exportFile;
     }
@@ -105,11 +108,11 @@ public class PortablePreferences {
         public void run() {
             Logger.getLogger(ExportPreferencesThread.class.getName()).info("Exporting preferences");
 
-            final File exportFile = getPreferenceFile(file);
+            final Path exportFile = getPreferenceFile(file);
 
             final Preferences preferences = Preferences.userRoot();
 
-            try (final FileOutputStream os = new FileOutputStream(exportFile)) {
+            try (final OutputStream os = Files.newOutputStream(exportFile)) {
                 try {
                     if (preferences.nodeExists("/jgnash")) {
                         final Preferences p = preferences.node("/jgnash");

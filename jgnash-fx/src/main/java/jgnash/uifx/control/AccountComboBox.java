@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,10 @@ import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
 import jgnash.engine.Account;
@@ -54,6 +56,41 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     final private ObservableList<Account> items;
 
+    private class KeyHandler implements EventHandler<KeyEvent> {
+
+        @Override
+        public void handle(final KeyEvent event) {
+            int current = getSelectionModel().getSelectedIndex();
+
+            if (current < 0 || current > filteredList.size()) {
+                current = 0;
+            }
+       
+            int loop = current;
+
+            do {
+                loop++; //move to next item
+                if (loop > filteredList.size() - 1) {
+                    loop = 0;
+                }
+                
+                final Account item = filteredList.get(loop);
+                if (item.toString().toUpperCase().startsWith(event.getCharacter().toUpperCase())) {
+                    getSelectionModel().select(item);
+                    break;
+                }
+            } while ( loop != current );
+
+            forceScrollSelectionBugWorkAround();
+        }
+    }
+
+    // TODO: JDK Bug JDK-8129123 https://bugs.openjdk.java.net/browse/JDK-8129123
+    private void forceScrollSelectionBugWorkAround() {
+        final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
+        listView.scrollTo(getSelectionModel().getSelectedIndex());
+    }
+
     public AccountComboBox() {
 
         items = getItems();
@@ -67,11 +104,9 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
 
-        // TODO: JDK Bug JDK-8129123 https://bugs.openjdk.java.net/browse/JDK-8129123
-        setOnMouseClicked(event -> {
-            final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
-            listView.scrollTo(getSelectionModel().getSelectedIndex());
-        });
+        setOnMouseClicked(event -> forceScrollSelectionBugWorkAround());
+
+        setOnKeyTyped(new KeyHandler());
 
         // display the full account path instead of the name
         setConverter(new StringConverter<Account>() {

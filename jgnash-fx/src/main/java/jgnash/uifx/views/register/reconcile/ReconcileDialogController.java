@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ public class ReconcileDialogController implements MessageListener {
     private static final String DECREASE_KEY = "decrease";
 
     @InjectFXML
-    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button finishButton;
@@ -152,7 +152,7 @@ public class ReconcileDialogController implements MessageListener {
 
     @FXML
     private void initialize() {
-        parentProperty.addListener((observable, oldValue, newScene) -> {
+        parent.addListener((observable, oldValue, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().get().addEventHandler(WindowEvent.WINDOW_SHOWN,
                         event -> Platform.runLater(() -> {
@@ -257,7 +257,7 @@ public class ReconcileDialogController implements MessageListener {
     @FXML
     private void handleCloseAction() {
         MessageBus.getInstance().unregisterListener(this, MessageChannel.TRANSACTION);
-        ((Stage) parentProperty.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @FXML
@@ -362,7 +362,7 @@ public class ReconcileDialogController implements MessageListener {
             Platform.runLater(() -> differenceLabel
                     .setText(numberFormat.format(difference)));
 
-            reconciled.setValue(difference.compareTo(BigDecimal.ZERO) == 0);
+            reconciled.set(difference.compareTo(BigDecimal.ZERO) == 0);
         }).start();
     }
 

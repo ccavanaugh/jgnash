@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 
 import jgnash.time.DateUtils;
@@ -66,12 +65,10 @@ public class SecurityNode extends CommodityNode {
     private String isin;
 
     @JoinTable
-    @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<SecurityHistoryNode> historyNodes = new HashSet<>();
 
     @JoinTable
-    @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private final Set<SecurityHistoryEvent> securityHistoryEvents = new HashSet<>();
 
@@ -175,31 +172,19 @@ public class SecurityNode extends CommodityNode {
     }
 
     boolean removeHistoryNode(final LocalDate date) {
-
-        boolean result = false;
-
-        SecurityHistoryNode nodeToRemove = null;
-
         lock.writeLock().lock();
 
         try {
-            for (final SecurityHistoryNode node : historyNodes) {
-                if (node.getLocalDate().compareTo(date) == 0) {
-                    nodeToRemove = node;
-                    break;
-                }
+            final boolean result = historyNodes.removeIf(node -> node.getLocalDate().compareTo(date) == 0);
+
+            if (result) {
+                sortedHistoryNodeCache.removeIf(node -> node.getLocalDate().compareTo(date) == 0);
             }
 
-            // Remove outside the iterator
-            if (nodeToRemove != null) {
-                sortedHistoryNodeCache.remove(nodeToRemove);
-                result = historyNodes.remove(nodeToRemove);
-            }
+            return result;
         } finally {
             lock.writeLock().unlock();
         }
-
-        return result;
     }
 
     boolean addSecurityHistoryEvent(final SecurityHistoryEvent securityHistoryEvent) {
@@ -267,7 +252,7 @@ public class SecurityNode extends CommodityNode {
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
 
-        lock.writeLock().lock();
+        lock.readLock().lock();
 
         try {
             final List<SecurityHistoryEvent> splits = getSplitEvents();
@@ -296,12 +281,12 @@ public class SecurityNode extends CommodityNode {
 
             return Collections.unmodifiableList(sortedHistoryNodeCache);
         } finally {
-            lock.writeLock().unlock();
+            lock.readLock().unlock();
         }
     }
 
     /**
-     * Convience function to return the upper and lower date bounds.  If
+     * Convience function to return the upper and lower date bounds.
      *
      * @return an array of LocalDate with {@code [0]} being the lower bound and {@code [1]} being the upper bound
      */
@@ -327,42 +312,48 @@ public class SecurityNode extends CommodityNode {
      * @return a List of Lists of SecurityHistoryNodes
      */
     public List<List<SecurityHistoryNode>> getHistoryNodeGroupsBySplits() {
+        lock.readLock().lock();
 
-        final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
-        final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
+        try {
 
-        if (splitEvents.size() == 0) {
-            groups.add(getHistoryNodes());
-        } else {    // count should be split events + 1 when complete
+            final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
+            final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
 
-            // Create a defensive copy that has the adjustment multiplier set
-            final List<SecurityHistoryNode> securityHistoryNodes = getHistoryNodes();
-            final ListIterator<SecurityHistoryEvent> historyEventIterator = splitEvents.listIterator();
+            if (splitEvents.size() == 0) {
+                groups.add(getHistoryNodes());
+            } else {    // count should be split events + 1 when complete
 
-            LocalDate eventDate = historyEventIterator.next().getDate();
+                // Create a defensive copy that has the adjustment multiplier set
+                final List<SecurityHistoryNode> securityHistoryNodes = getHistoryNodes();
+                final ListIterator<SecurityHistoryEvent> historyEventIterator = splitEvents.listIterator();
 
-            List<SecurityHistoryNode> group = new ArrayList<>();
+                LocalDate eventDate = historyEventIterator.next().getDate();
 
-            for (int i = 0; i < securityHistoryNodes.size(); i++) {
-                if (eventDate == null || securityHistoryNodes.get(i).getLocalDate().isBefore(eventDate)) {
-                    group.add(securityHistoryNodes.get(i));
-                } else {
-                    groups.add(group);                              // save the current group
-                    group = new ArrayList<>();                      // start a new group
-                    group.add(securityHistoryNodes.get(i - 1));      // create continuity with the previous group
-                    group.add(securityHistoryNodes.get(i));          // add the current node
+                List<SecurityHistoryNode> group = new ArrayList<>();
 
-                    if (historyEventIterator.hasNext()) {
-                        eventDate = historyEventIterator.next().getDate();
+                for (int i = 0; i < securityHistoryNodes.size(); i++) {
+                    if (eventDate == null || securityHistoryNodes.get(i).getLocalDate().isBefore(eventDate)) {
+                        group.add(securityHistoryNodes.get(i));
                     } else {
-                        eventDate = null;
+                        groups.add(group);                              // save the current group
+                        group = new ArrayList<>();                      // start a new group
+                        group.add(securityHistoryNodes.get(i - 1));      // create continuity with the previous group
+                        group.add(securityHistoryNodes.get(i));          // add the current node
+
+                        if (historyEventIterator.hasNext()) {
+                            eventDate = historyEventIterator.next().getDate();
+                        } else {
+                            eventDate = null;
+                        }
                     }
                 }
+                groups.add(group);  // add last group
             }
-            groups.add(group);  // add last group
-        }
 
-        return groups;
+            return groups;
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -491,7 +482,8 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    /**.
+    /**
+     * .
      * Required by XStream for proper initialization
      *
      * @return Properly initialized SecurityNode

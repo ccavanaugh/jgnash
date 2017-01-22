@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,22 @@
  */
 package jgnash.convert.imports.ofx;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.util.FileMagic;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * JUnit 4 test class
@@ -44,10 +41,11 @@ import org.junit.Test;
  */
 public class Ofx2Test {
 
-    private OfxV2Parser parser;
+    private static OfxV2Parser parser;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
+        OfxV2Parser.enableDetailedLogFile();  // enable debugging
         parser = new OfxV2Parser();
     }
 
@@ -82,7 +80,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -117,7 +115,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -153,7 +151,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -195,7 +193,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -228,7 +226,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -261,7 +259,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -316,9 +314,9 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            assertTrue(FileMagic.isOfxV1(new File(url.toURI())));
+            assertTrue(FileMagic.isOfxV1(Paths.get(url.toURI())));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -350,7 +348,7 @@ public class Ofx2Test {
         String encoding;
 
         try {
-            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
@@ -373,6 +371,80 @@ public class Ofx2Test {
             fail();
         }
 
+    }
+
+    @Test
+    public void parseInvest() {
+        final String testFile = "/invest.xml";
+
+        final URL url = Object.class.getResource(testFile);
+
+        try {
+            assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
+
+            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(stream);
+
+                OfxBank ofxBank = parser.getBank();
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
+                assertEquals(0, ofxBank.statusCode);
+                assertEquals("INFO", ofxBank.statusSeverity);
+                assertEquals(null, ofxBank.statusMessage);
+
+                assertEquals(2, ofxBank.getTransactions().size());
+                assertEquals(3, ofxBank.getSecurityList().size());
+
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+
+            } catch (final IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                fail();
+            }
+        } catch (final URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            fail();
+        }
+    }
+
+    @Test
+    public void parse401k() {
+        final String testFile = "/401k.xml";
+
+        final URL url = Object.class.getResource(testFile);
+
+        try {
+            assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
+
+            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(stream);
+
+                OfxBank ofxBank = parser.getBank();
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
+                assertEquals(0, ofxBank.statusCode);
+                assertEquals("INFO", ofxBank.statusSeverity);
+                assertEquals(null, ofxBank.statusMessage);
+
+                assertEquals(3, ofxBank.getTransactions().size());
+                assertEquals(3, ofxBank.getSecurityList().size());
+
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+
+            } catch (final IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                fail();
+            }
+        } catch (final URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            fail();
+        }
     }
 
 }

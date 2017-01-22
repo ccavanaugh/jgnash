@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,21 +52,24 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     public List<Transaction> getTransactions() {
         List<Transaction> transactionList = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             final Future<List<Transaction>> future = executorService.submit(() -> {
-                final TypedQuery<Transaction> q = em
-                        .createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false", Transaction.class);
+                emLock.lock();
 
-                return new ArrayList<>(q.getResultList());
+                try {
+                    final TypedQuery<Transaction> q = em
+                            .createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false",
+                                    Transaction.class);
+
+                    return new ArrayList<>(q.getResultList());
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            transactionList = future.get();
+            transactionList = future.get(); // block and return
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return transactionList;
@@ -79,24 +82,27 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     public synchronized boolean addTransaction(final Transaction transaction) {
         boolean result = false;
 
-        emLock.lock();
-
         try {
             final Future<Boolean> future = executorService.submit(() -> {
-                em.getTransaction().begin();
-                em.persist(transaction);
+                emLock.lock();
 
-                transaction.getAccounts().forEach(em::persist);
-                em.getTransaction().commit();
+                try {
+                    em.getTransaction().begin();
 
-                return true;
+                    em.persist(transaction);
+                    transaction.getAccounts().forEach(em::persist);
+
+                    em.getTransaction().commit();
+
+                    return true;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            result = future.get();
+            result = future.get();  // block and return
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return result;
@@ -114,26 +120,28 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     public synchronized boolean removeTransaction(final Transaction transaction) {
         boolean result = false;
 
-        emLock.lock();
-
         try {
             final Future<Boolean> future = executorService.submit(() -> {
-                em.getTransaction().begin();
+                emLock.lock();
 
-                // look at accounts this transaction impacted and update the accounts
-                transaction.getAccounts().forEach(em::persist);
+                try {
+                    em.getTransaction().begin();
 
-                em.persist(transaction);    // saved, removed with the trash
-                em.getTransaction().commit();
+                    // look at accounts this transaction impacted and update the accounts
+                    transaction.getAccounts().forEach(em::persist);
 
-                return true;
+                    em.persist(transaction);    // saved, removed with the trash
+                    em.getTransaction().commit();
+
+                    return true;
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            result = future.get();
+            result = future.get();  // block and return
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return result;
@@ -143,22 +151,24 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     public List<Transaction> getTransactionsWithAttachments() {
         List<Transaction> transactionList = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             final Future<List<Transaction>> future = executorService.submit(() -> {
-                final TypedQuery<Transaction> q = em
-                        .createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false AND t.attachment is not null",
-                                Transaction.class);
+                emLock.lock();
 
-                return new ArrayList<>(q.getResultList());
+                try {
+                    final TypedQuery<Transaction> q = em
+                            .createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false AND t.attachment is not null",
+                                    Transaction.class);
+
+                    return new ArrayList<>(q.getResultList());
+                } finally {
+                    emLock.unlock();
+                }
             });
 
-            transactionList = future.get();
+            transactionList = future.get(); // block and return
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return transactionList;

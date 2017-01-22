@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,18 +18,17 @@
 package jgnash.engine;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -66,6 +65,9 @@ public class AccountTreeXMLFactory {
     private static final Charset ENCODING = StandardCharsets.UTF_8;
 
     private static final String RESOURCE_ROOT_PATH = "/jgnash/resource/account";
+
+    private AccountTreeXMLFactory() {
+    }
 
     private static XStream getStream() {
 
@@ -128,12 +130,12 @@ public class AccountTreeXMLFactory {
         return xstream;
     }
 
-    public static void exportAccountTree(final Engine engine, final File file) {
+    public static void exportAccountTree(final Engine engine, final Path file) {
         RootAccount account = engine.getRootAccount();
 
         XStream xstream = getStream();
 
-        try (final OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), ENCODING);
+        try (final Writer writer = Files.newBufferedWriter(file, ENCODING);
              final ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
             out.writeObject(account);
         } catch (IOException e) {
@@ -171,10 +173,10 @@ public class AccountTreeXMLFactory {
      * @param file file name to use
      * @return RootAccount if file name is valid
      */
-    public static RootAccount loadAccountTree(final File file) {
+    public static RootAccount loadAccountTree(final Path file) {
         RootAccount account = null;
 
-        try (Reader reader = new InputStreamReader(new FileInputStream(file), ENCODING)) {
+        try (final Reader reader = Files.newBufferedReader(file, ENCODING)) {
             account = loadAccountTree(reader);
         } catch (IOException ex) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
@@ -221,6 +223,44 @@ public class AccountTreeXMLFactory {
     public static void mergeAccountTree(final Engine engine, final RootAccount root) {
         AccountImport accountImport = new AccountImport();
         accountImport.mergeAccountTree(engine, root);
+    }
+
+    public static Collection<RootAccount> getLocalizedAccountSet() {
+        final List<RootAccount> files = new ArrayList<>();
+
+        for (final String string : getAccountSetList()) {
+
+            try (final InputStream stream = Object.class.getResourceAsStream(string)) {
+                final RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
+                files.add(account);
+            } catch (final IOException e) {
+                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+        return files;
+    }
+
+    private static List<String> getAccountSetList() {
+        final String path = ClassPathUtils.getLocalizedPath(RESOURCE_ROOT_PATH);
+
+        final List<String> set = new ArrayList<>();
+
+        if (path != null) {
+            try (final InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
+                 final BufferedReader r = new BufferedReader(new InputStreamReader(stream, ENCODING))) {
+
+                String line = r.readLine();
+
+                while (line != null) {
+                    set.add(path + "/" + line);
+                    line = r.readLine();
+                }
+            } catch (final IOException ex) {
+                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return set;
     }
 
     static private class AccountImport {
@@ -370,46 +410,5 @@ public class AccountTreeXMLFactory {
                 importChildren(engine, child);
             }
         }
-    }
-
-    public static Collection<RootAccount> getLocalizedAccountSet() {
-        final List<RootAccount> files = new ArrayList<>();
-
-        for (final String string : getAccountSetList()) {
-
-            try (final InputStream stream = Object.class.getResourceAsStream(string)) {
-                final RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
-                files.add(account);
-            } catch (final IOException e) {
-                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, e);
-            }
-        }
-
-        return files;
-    }
-
-    private static List<String> getAccountSetList() {
-        final String path = ClassPathUtils.getLocalizedPath(RESOURCE_ROOT_PATH);
-
-        final List<String> set = new ArrayList<>();
-
-        if (path != null) {
-            try (final InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
-                 final BufferedReader r = new BufferedReader(new InputStreamReader(stream, ENCODING))) {
-
-                String line = r.readLine();
-
-                while (line != null) {
-                    set.add(path + "/" + line);
-                    line = r.readLine();
-                }
-            } catch (final IOException ex) {
-                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return set;
-    }
-
-    private AccountTreeXMLFactory() {
     }
 }

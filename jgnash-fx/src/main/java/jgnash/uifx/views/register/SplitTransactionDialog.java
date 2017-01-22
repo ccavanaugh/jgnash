@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.WindowEvent;
 
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.Options;
@@ -100,8 +101,8 @@ class SplitTransactionDialog extends AbstractTransactionEntryDialog {
         creditTab.setUserData(creditController);
 
         creditController.setSlipType(SlipType.INCREASE);
-        creditController.accountProperty().setValue(accountProperty().getValue());
-        creditController.transactionEntryListProperty().setValue(getTransactionEntries());
+        creditController.accountProperty().set(accountProperty().getValue());
+        creditController.transactionEntryListProperty().set(getTransactionEntries());
         creditController.comparatorProperty().bind(tableView.comparatorProperty());
 
         debitTab = new Tab(tabNames[1]);
@@ -112,11 +113,18 @@ class SplitTransactionDialog extends AbstractTransactionEntryDialog {
         debitTab.setUserData(debitController);
 
         debitController.setSlipType(SlipType.DECREASE);
-        debitController.accountProperty().setValue(accountProperty().getValue());
-        debitController.transactionEntryListProperty().setValue(getTransactionEntries());
+        debitController.accountProperty().set(accountProperty().getValue());
+        debitController.transactionEntryListProperty().set(getTransactionEntries());
         debitController.comparatorProperty().bind(tableView.comparatorProperty());
 
         tabPane.getTabs().addAll(creditTab, debitTab);
+
+        // Install a listener to unbind from the Options to prevent leaks
+        if (getScene() != null) {
+            getScene().windowProperty().get().addEventHandler(WindowEvent.WINDOW_HIDING,
+                    event -> concatenateMemosCheckBox.selectedProperty()
+                            .unbindBidirectional(Options.concatenateMemosProperty()));
+        }
     }
 
     void show(final SlipType slipType, final Runnable runnable) {

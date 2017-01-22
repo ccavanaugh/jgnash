@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -206,7 +206,7 @@ public class AutoCompleteFactory {
 
         private PropertyChangeListener listener;
 
-        public TransactionModel() {
+        TransactionModel() {
             init();
             setIgnoreCase(AutoCompleteFactory.ignoreCase());
             setFuzzyMatch(AutoCompleteFactory.fuzzyMatch());
@@ -289,7 +289,10 @@ public class AutoCompleteFactory {
         @Override
         void load(final Transaction tran) {
             if (tran != null) {
+
+                // Add both versions of the memo
                 addString(tran.getMemo());
+                addString(tran.getTransactionMemo());
             }
         }
     }
@@ -302,7 +305,7 @@ public class AutoCompleteFactory {
 
         private final Account account;
 
-        public PayeeAccountModel(final Account account) {
+        PayeeAccountModel(final Account account) {
             super();
             this.account = account;
         }

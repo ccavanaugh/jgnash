@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -304,7 +304,9 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         // handles any exchange rate that may exist
         amountField.setDecimal(t.getAmount(getAccount()).abs());
 
-        memoField.setText(t.getMemo());
+        // Must consider if this is a concatenated memo to set the field correctly
+        memoField.setText(t.isMemoConcatenated() ? t.getMemo() : t.getTransactionMemo());
+
         payeeField.setText(t.getPayee());
         numberField.setText(t.getNumber());
         datePanel.setDate(t.getLocalDate());

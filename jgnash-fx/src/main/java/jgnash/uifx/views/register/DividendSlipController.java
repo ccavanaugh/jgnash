@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,12 +79,12 @@ public class DividendSlipController extends AbstractInvSlipController {
         super.initialize();
 
         // Lazy init when account property is set
-        accountProperty.addListener((observable, oldValue, newValue) -> {
-            dividendField.scaleProperty().setValue(newValue.getCurrencyNode().getScale());
-            dividendField.minScaleProperty().setValue(newValue.getCurrencyNode().getScale());
+        account.addListener((observable, oldValue, newValue) -> {
+            dividendField.scaleProperty().set(newValue.getCurrencyNode().getScale());
+            dividendField.minScaleProperty().set(newValue.getCurrencyNode().getScale());
 
-            accountExchangePane.baseCurrencyProperty().setValue(accountProperty().get().getCurrencyNode());
-            incomeExchangePane.baseCurrencyProperty().setValue(accountProperty().get().getCurrencyNode());
+            accountExchangePane.baseCurrencyProperty().set(accountProperty().get().getCurrencyNode());
+            incomeExchangePane.baseCurrencyProperty().set(accountProperty().get().getCurrencyNode());
 
             accountExchangePane.amountProperty().bindBidirectional(dividendField.decimalProperty());
             incomeExchangePane.amountProperty().bindBidirectional(dividendField.decimalProperty());
@@ -92,7 +92,7 @@ public class DividendSlipController extends AbstractInvSlipController {
             clearForm();
         });
 
-        securityComboBox.accountProperty().bind(accountProperty);
+        securityComboBox.accountProperty().bind(account);
     }
 
     @Override

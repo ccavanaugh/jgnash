@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ public class CommodityFormat {
 
     private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> fullInstanceMap = new HashMap<>();
 
-    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
+    private static final Map<Integer, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
 
     private static final String[] ESCAPE_CHARS = new String[]{",", ".", "0", "#", "-", ";", "%"};
 
@@ -105,7 +105,16 @@ public class CommodityFormat {
      * @return thread safe {@code NumberFormat}
      */
     public static NumberFormat getShortNumberFormat(@NotNull final CommodityNode node) {
-        final ThreadLocal<DecimalFormat> o = simpleInstanceMap.get(node);
+        return getShortNumberFormat(node.getScale());
+    }
+
+    /**
+     *
+     * @param scale scale of the simple number
+     * @return thread safe {@code NumberFormat}
+     */
+    public static NumberFormat getShortNumberFormat(final int scale) {
+        final ThreadLocal<DecimalFormat> o = simpleInstanceMap.get(scale);
 
         if (o != null) {
             return o.get();
@@ -116,7 +125,7 @@ public class CommodityFormat {
             final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
             dfs.setCurrencySymbol("");
             df.setDecimalFormatSymbols(dfs);
-            df.setMaximumFractionDigits(node.getScale());
+            df.setMaximumFractionDigits(scale);
 
             // required for some locale
             df.setMinimumFractionDigits(df.getMaximumFractionDigits());
@@ -134,7 +143,7 @@ public class CommodityFormat {
             return df;
         });
 
-        simpleInstanceMap.put(node, threadLocal);
+        simpleInstanceMap.put(scale, threadLocal);
 
         return threadLocal.get();
     }

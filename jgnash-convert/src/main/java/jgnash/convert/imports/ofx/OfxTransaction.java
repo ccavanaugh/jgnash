@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 package jgnash.convert.imports.ofx;
 
 import jgnash.convert.imports.ImportTransaction;
+import jgnash.engine.TransactionType;
 
 /**
  * OFX Transaction object
@@ -26,13 +27,25 @@ import jgnash.convert.imports.ImportTransaction;
  */
 public class OfxTransaction extends ImportTransaction {
 
-    String transactionType;
+    String transactionTypeDescription;
+
+    TransactionType transactionType = TransactionType.DOUBLEENTRY;  // double entry by default
 
     String sic; // automatic category assignment
 
     String refNum;
 
     String payeeId;
+
+    /**
+     * Sub-account type for a security / investment transaction.  Typically CASH
+     */
+    String subAccountSec;
+
+    /**
+     * The sub-account, typically CASH
+     */
+    String subAccount;
 
     public String currency;
 
@@ -60,7 +73,8 @@ public class OfxTransaction extends ImportTransaction {
      */
     @Override
     public String toString() {
-        return transactionType + ", " +
+        return transactionTypeDescription + ", " +
+                transactionType + ", " +
                 getDatePosted() + ", " +
                 getAmount() + ", " +
                 getTransactionID() + ", " +

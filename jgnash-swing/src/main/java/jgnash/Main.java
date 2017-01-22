@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -313,7 +313,7 @@ public final class Main {
                 if (hostName != null) {
                     new UIApplication(hostName, port, password);
                 } else if (file != null && file.exists()) {
-                    new UIApplication(file, password);
+                    new UIApplication(file.toPath(), password);
                 } else {
                     new UIApplication(null, null);
                 }

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,11 @@
  */
 package jgnash.engine.budget;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,13 +69,13 @@ public class BudgetResultsExport {
      * @param model Results model to export
      * @return Error message
      */
-    public static String exportBudgetResultsModel(final File file, final BudgetResultsModel model) {
+    public static String exportBudgetResultsModel(final Path file, final BudgetResultsModel model) {
         
         String message = null;
 
         final ResourceBundle rb = ResourceUtils.getBundle();
         
-        final String extension = FileUtils.getFileExtension(file.getAbsolutePath());
+        final String extension = FileUtils.getFileExtension(file.toString());
         
         try (final Workbook wb = extension.equals("xlsx") ? new XSSFWorkbook() : new HSSFWorkbook()) {        	
         	final CreationHelper createHelper = wb.getCreationHelper();
@@ -310,7 +312,7 @@ public class BudgetResultsExport {
             Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.INFO, "{0} cell styles were used", wb.getNumCellStyles());
 
             // Save
-            String filename = file.getAbsolutePath();
+            String filename = file.toString();
 
             if (wb instanceof XSSFWorkbook) {
                 filename = FileUtils.stripFileExtension(filename) + ".xlsx";
@@ -318,7 +320,7 @@ public class BudgetResultsExport {
                 filename = FileUtils.stripFileExtension(filename) + ".xls";
             }
             
-            try (final FileOutputStream out = new FileOutputStream(filename)) {
+            try (final OutputStream out = Files.newOutputStream(Paths.get(filename))) {
                 wb.write(out);              
             } catch (final Exception e) {
                 Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);

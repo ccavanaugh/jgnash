@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2016 Craig Cavanaugh
+ * Copyright (C) 2001-2017 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,26 +56,27 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
         List<Reminder> reminderList = Collections.emptyList();
 
-        emLock.lock();
-
         try {
             final Future<List<Reminder>> future = executorService.submit(() -> {
+                emLock.lock();
 
-                final CriteriaBuilder cb = em.getCriteriaBuilder();
-                final CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
-                final Root<Reminder> root = cq.from(Reminder.class);
-                cq.select(root);
+                try {
+                    final CriteriaBuilder cb = em.getCriteriaBuilder();
+                    final CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
+                    final Root<Reminder> root = cq.from(Reminder.class);
+                    cq.select(root);
 
-                final TypedQuery<Reminder> q = em.createQuery(cq);
+                    final TypedQuery<Reminder> q = em.createQuery(cq);
 
-                return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+                    return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+                } finally {
+                    emLock.unlock();
+                }
             });
 
             reminderList = future.get();
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
         }
 
         return reminderList;
