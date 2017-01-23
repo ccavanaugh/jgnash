@@ -204,6 +204,65 @@ If you do have the desire to encrypt your jGnash data, the best choice is to use
 operating system or install a freely available third party encryption tool.
 ****
 
+[[_filetypes]]
+==== File Types
+
+jGnash supports different file types for storing data.
+File types can be easily changed by using the menu:File[Save As]
+ command and naming the new file with the appropriate file extension. 
+
+The current file will be saved in the new format and automatically opened. 
+
+Regardless of file type used, jGnash automatically saves the data if changed every 30 seconds to minimize the chance of accidental data loss. 
+
+.Client/Server
+[NOTE]
+====
+If you are using jGnash in the Client/Server mode, all changes are committed immediately. 
+====
+
+==== H2 and HyperSql Relational Database
+
+An H2 or HyperSql relational database is required when using the client / server functionality of jGnash.
+jGnash embeds the database server so that no additional configuration or installation of software is required to use a relational database. 
+
+The relational database may be used for a single user.
+If startup and shutdown performance is important to you, then the binary file format described below is a better choice. 
+
+The advantage of the relational database outside the requirement for client / server capability is the ability to use several available tools to browse and query your jGnash data.
+Also, a relational database will be more fault tolerant of system crashes or power outages vs.
+use of an XML or Binary file. 
+
+The disadvantage of the relational database is a bit slower operation and more memory consumption. 
+
+If using the H2 Database and operating over a network using Client/Server mode, you have the option of enabling encryption for network communication.
+This will not encrypt your database file.
+See the Command line options for specifics. 
+
+.Database Administrator
+[NOTE]
+====
+The default administrator for a jGnash relational databases is JGNASH and is not configurable at this time. 
+====
+
+==== XML File
+
+XML file format is human readable and easily read by other applications at the expense of a considerably larger file size.
+Memory usage is less when using the XML file format, but certain operations may take longer.
+The advantage of the XML file is easier parsing and manipulation of the file using another program external to jGnash.
+If you have a large amount of data, jGnash will use less system memory when using the XML file format.
+
+.Backups
+[NOTE]
+====
+The XML format is also used for saving automatic backups of jGnash files if enabled. 
+====
+
+==== Binary File
+
+The binary file format is the most compact file format and will open and close the quickest.
+This is the recommended file format if you do not need client / server functionality and you are using a laptop or a workstaion with a UPS.
+
 [[_accounts]]
 === Accounts
 Accounts are what you use to organize how you save and spend your money, and where it comes from.
@@ -386,7 +445,134 @@ The root account is the top level account that holds all other accounts.
 You cannot remove or modify the root account.
 Normally, it is not visible unless you are changing the account structure. 
 
-[[_editing]]
+<<<
+[[_transactions]]
+=== Entering Transactions
+jGnash follows well know double entry accounting practices while reducing the complexity of transaction entry.
+
+If you are familiar with other personal finance applications, you may notice that jGnash uses income
+and expense accounts instead of income and expense categories. Functionally, there is no difference,
+other than jGnash allows you see a detailed transaction register of the income and expense accounts as
+easily as you would look at your bank accounts.
+
+When creating your file, if you selected the available default accounts, you will have income and expense
+accounts to work with.  These accounts can be changed to suit your needs at any time.
+
+The benefit of double entry accounting in jGnash is the ability to use reports and charts to see where your money is
+going and coming from.  Single entry transactions hide those details and make tracking difficult and tedious.
+
+****
+For simplicty, the terms used here to discuss changes in account balances will be *Increase* and *Decrease*.
+
+Business accounting practices use the Credit and Debit terms which can appear to be backwards depending on account type
+and cause confusion for those who are not familiar.
+****
+
+==== Common Transaction Properties
+
+The properties below are common to all basic transaction types.  _Investment transactions will require additional
+information not covered in this section._
+
+===== Payee
+The Payee is almost always the name of a person or business.  The Payee field may be empty, but
+it is good practice to always use a payee for a transaction entry.  jGnash will automatically learn
+and autocomplete a transaction using the Payee field.  This helps aid speed of transaction entry and
+helps to establish consistency making searching and filter much easier.
+
+===== Number
+A transaction may be assigned a number or abbreviated description.  If working with a Checking account, the
+number is almost always the same as the check number you wrote.  Use of a check number also makes reconciliation against
+a bank statement easier.
+
+===== Date
+Every transaction has a date.  The date is usually the date the transaction occurred.  Some people will choose to edit
+the transaction to match the posting date.
+
+Please review the <<dateFields>> shortcuts that may be used to save a significant amount of time when selecting and editing dates.
+
+[NOTE]
+jGnash also maintains an internal timestamp for the actual date and time the transaction was created or last modified
+for auditing and tracking purposes.
+
+===== Memo
+The Memo is a brief description of the transaction so you can remember what it was.  jGnash will automatically
+learn the Memos you commonly use.  This helps aid speed of transaction entry and helps to establish
+consistency making searching and filter much easier.
+
+Split transactions have an option to Concatenate
+or automatically merge the Memos of the split entries.
+
+===== Amount
+This is the transaction amount.  If entering a multi-currency transaction, this field will be expanded to handle
+the correct exchange of currencies.
+
+The <<numberFields>> section details how to enter amounts using mathematical operations in the
+same manner as a calculator.
+
+===== Reconciliation State
+The Cleared CheckBox at the bottom of the register form is a tri-state box that allows you to toggle through
+all three of the reconciliation states described below.
+
+.A jGnash transaction has three reconciliation states
+Not Reconciled:: The transaction has not been reconciled against a bank or online statement
+Cleared:: The intended use is for manual reconcilation of a specific transaction prior to a full reconcilation for the
+ period.
+Reconciled:: The transaction has been reconciled manually or through use of the Reconcilation tool
+
+===== Transaction Attachments
+jGnash allows the attachment of an image file to the transaction using the chain link button at the bottom of the
+transaction form.  The attachment will be moved to a managed directory call `attachments` located in the same directory
+as your jGnash file.  The eye button allows you to view the attachment and the broken chain loop button allows for removal
+of the attachment.
+
+==== Double Entry Transactions
+
+A double entry transaction follows standard accounting practices.  A double entry transaction will always
+increase the balance of one account and decrease the balance of another account.  The amount of the change will
+always equal and opposite in value.
+
+****
+Double entry transactions using accounts with different currencies will not be equal and opposite numerically due to
+exchange rates between currencies.  jGnash automatically handles the difficult part of the currency exchange within the
+transaction.
+****
+
+A double entry transaction normally begins within the register of some type of Cash or Bank account.
+In the example below, a Withdrawal is being made from a Cash account.  The balance of the account will be decreased
+by `25.67` and the balance of the Expense Account `Automobile:Fuel` will be increased by `25.67`.
+
+The account to withdraw funds from (Decrease) or deposit to (Increase) is selected in the Account ComboBox.
+
+image::basicDoubleEntry.png[width="640"]
+
+==== Split Entry Transaction
+
+A Split Entry Transaction is a Double Entry Transaction, but the amount is split across multiple accounts.
+
+A Split Entry Transaction is started by clicking the btn:[Splits] Button.  A dialog will be shown that allows an entry
+for multiple accounts to be made.
+
+image:splitTransactionEntry.png[width="640"]
+
+Notice the btn:[Concatenate Memos] Checkbox.  If the Checkbox is selected, the Transaction memo will be a generated list
+of the unique memos of the split entries.  This saves entry time for the Transaction and reduces the file size.
+
+Editing of the Transaction amount will be disabled as it is the sum of the Entries.  The Memo field will be disabled
+as well if the btn:[Concatenate Memos] in the Split Transaction dialog was selected.
+
+==== Single Entry / Adjustment Transaction
+
+A Single Entry Transaction is primarily used to fudge an Account balance when you simply don't have the information to
+correctly balance the account.
+
+In the example below, you can see a negative amount of `-1.23` was used to decrease the balance of the account.
+
+image:adjustmentTransaction.png[width="640"]
+
+The half black and half white circular button at the bottom of the form is a utility to help convert the
+Single Entry transaction into a Double Entry Transaction after you find the needed information.
+
+[[editing]]
 === Editing Environment
 The jGnash editing environment is not much different then in other application with the exception that it provides a
 few shortcuts to speed up entry of transactions.
@@ -394,7 +580,7 @@ few shortcuts to speed up entry of transactions.
 jGnash knows and understands just about any known locale and country setting.
 Depending on your settings, the decimal symbol will change accordingly as well as the displayed format of dates. 
 
-[[_datefields]]
+[[dateFields]]
 ==== Date Fields
 
 The date field is freely editable and jGnash will make the best attempt at interpreting an invalid entry, but the results
@@ -413,13 +599,11 @@ Also, dates can be modified using the keyboard shortcuts defined below.
 |kbd:[-], kbd:[↓], Mouse Scroll Down    | Decrease the date by one day
 |kbd:[PgUp], Mouse Thumb Wheel Up       |Increase the date by one month
 |kbd:[PgDn], Mouse Thumb Wheel Down     |Decrease the date by one month
-|kbd:[t], kbd:[T]                       |Change to todays date
+|kbd:[t], kbd:[T]                       |Change to today's date
 |=============================
 
-[[_numberfields]]
+[[numberFields]]
 ==== Number Fields
-
-
 Numerical entry in jGnash is as easy as typing the desired value into the field.
 Decimal separators are handled according to the configured locale. 
 
@@ -433,70 +617,8 @@ Traditional arithmetic operator precedence is followed for all calculations.
 
 image:advanced-decimal-entry.png[]
 
-[[_filetypes]]
-=== File Types
-
-
-jGnash supports different file types for storing data.
-File types can be easily changed by using the menu:File[Save As]
- command and naming the new file with the appropriate file extension. 
-
-The current file will be saved in the new format and automatically opened. 
-
-Regardless of file type used, jGnash automatically saves the data if changed every 30 seconds to minimize the chance of accidental data loss. 
-
-.Client/Server
-[NOTE]
-====
-If you are using jGnash in the Client/Server mode, all changes are committed immediately. 
-====
-
-==== H2 and HyperSql Relational Database
-
-
-An H2 or HyperSql relational database is required when using the client / server functionality of jGnash.
-jGnash already embeds the database server so that no additional configuration or installation of software is required to use a relational database. 
-
-The relational database may be used for a single user.
-If startup and shutdown performance is important to you, then the binary file format described below is a better choice. 
-
-The advantage of the relational database outside the requirement for client / server capability is the ability to use several available tools to browse and query your jGnash data.
-Also, a relational database will be more fault tolerant of system crashes or power outages vs.
-use of an XML or Binary file. 
-
-The disadvantage of the relational database is a bit slower operation and more memory consumption. 
-
-If using the H2 Database and operating over a network using Client/Server mode, you have the option of enabling encryption for network communication.
-This will not encrypt your database file.
-See the Command line options for specifics. 
-
-.Database Administrator
-[NOTE]
-====
-The default administrator for a jGnash relational databases is JGNASH and is not configurable at this time. 
-====
-
-==== XML File
-
-XML file format is human readable and easily read by other applications at the expense of a considerably larger file size.
-Memory usage is less when using the XML file format, but certain operations may take longer.
-The advantage of the XML file is easier parsing and manipulation of the file using another program external to jGnash.
-If you have a large amount of data, jGnash will use less system memory when using the XML file format. 
-
-.Backups
-[NOTE]
-====
-The XML format is also used for saving automatic backups of jGnash files if enabled. 
-====
-
-==== Binary File
-
-The binary file format is the most compact file format and will open and close the quickest.
-This is the recommended file format if you do not need client / server functionality. 
-
 [[_budgets]]
 == Budgets
-
 jGnash has a budgeting feature that makes it easy for you to define spending and income goals by account and bump those goals up against your actual transactions.
 A compact graphical overview of each budgeting period is provided to highlight how well you are following your budget based on selectable periods. 
 
@@ -577,7 +699,6 @@ The btn:[Export Spreadsheet]
 The exported spreadsheet does contain formulas which makes it easier to manipulate the file externally. 
 
 === Budgeting Tips
-
 
 When planing a budget, you need to consider how you spend and receive your money versus how you want to report your budget. 
 
