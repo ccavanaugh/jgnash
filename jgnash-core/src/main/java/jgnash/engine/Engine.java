@@ -138,8 +138,12 @@ public class Engine {
     private final String uuid = UUIDUtil.getUID();
     private final EngineDAO eDAO;
     private final AttachmentManager attachmentManager;
-    private final ScheduledThreadPoolExecutor trashExecutor;
+
+    /**
+     * Background executor service for trash management and currency / security updates
+     */
     private final ScheduledThreadPoolExecutor backgroundExecutorService;
+
     /**
      * All engine instances will share the same message bus.
      */
@@ -175,18 +179,16 @@ public class Engine {
 
         checkAndCorrect();
 
-        trashExecutor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory());
-
-        // run trash cleanup every 5 minutes 1 minute after startup
-        trashExecutor.scheduleWithFixedDelay(() -> {
-            if (!Thread.currentThread().isInterrupted()) {
-                emptyTrash();
-            }
-        }, 1, 5, TimeUnit.MINUTES);
-
         backgroundExecutorService = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory());
         backgroundExecutorService.setRemoveOnCancelPolicy(true);
         backgroundExecutorService.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+
+        // run trash cleanup every 5 minutes 45 seconds after startup
+        backgroundExecutorService.scheduleWithFixedDelay(() -> {
+            if (!Thread.currentThread().isInterrupted()) {
+                emptyTrash();
+            }
+        }, 45, 5, TimeUnit.SECONDS);
 
         // Engine needs to be registered before the update factories can find it.  Push the check to the background executor
         backgroundExecutorService.schedule(() -> {
@@ -482,7 +484,6 @@ public class Engine {
         logInfo("Controlled engine shutdown initiated");
 
         shutDownAndWait(backgroundExecutorService);
-        shutDownAndWait(trashExecutor);
 
         logInfo("Background services have been stopped");
     }
