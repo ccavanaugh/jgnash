@@ -146,23 +146,84 @@ little time and contribute your experience to the group and help others.
 
 [[_gettingstarted]]
 == Getting Started
+The basic elements of jGnash are Accounts, Currencies, Securites, and Transactions.  Every account is assigned one
+currency and every transaction is associated with at least one account.  Investment Accounts and Investment Transactions
+will be associated with a Security.
 
-Every account is assigned a currency and every transaction is associated with at least one account. 
+jGnash supports various Account types that can be arranged into a flexible hierarchical structure.  The Accounts
+may be arranged by financial institution, by type, or some other structure.  It's good practice to organize your
+Income and Expense Accounts into a logic arrangement that allows you to drill down into a layer of more detail.
+
+The balance of an Account will roll up into it's parent Account within the Accounts view as well as in some reports.
+
+Below is a typical Expense Account arrangement that allows you to differentiate between different type of automotive
+and food related expenses, but roll them up into more macro level expenses.
+
+====
+* Expense Accounts
+** Automobile
+*** Fuel
+*** Insurance
+*** Service
+** Food
+*** Dining Out
+*** Groceries
+====
 
 Transactions are used to record daily expenditures as well as income from the sale of personal items, investments, or
 paychecks.
-
-Most of the effort involved in getting started with jGnash is creating a personalized income and expense account
-structure that best suits your needs.
 
 If you are familiar with other personal finance applications, you may notice that jGnash uses income and expense
 _accounts_ instead of income and expense __categories__.
 Functionally, there is no difference, other than jGnash allows you see a detailed transaction register of the income
 and expense accounts as easily as you would look at your bank accounts.
 
+[[editing]]
+=== Editing Environment
+The jGnash editing environment is not much different then in other application with the exception that it provides a
+few shortcuts to speed up entry of transactions.
+
+jGnash knows and understands just about any known locale and country setting.
+Depending on your settings, the decimal symbol will change accordingly as well as the displayed format of dates.
+
+[[dateFields]]
+==== Date Fields
+
+The date field is freely editable and jGnash will make the best attempt at interpreting an invalid entry, but the results
+are indeterminate. Clicking on the button to the right of the field will display a calendar dialog where you can select
+a date as well.
+
+image:date-entry.png[]
+
+Also, dates can be modified using the keyboard shortcuts defined below.
+
+.Date Entry Shortcut Keys
+[cols="1,1", options="header"]
+|=============================
+| Keys / Mouse                          |Function
+|kbd:[+], kbd:[↑], Mouse Scroll Up      |Increase the date by one day
+|kbd:[-], kbd:[↓], Mouse Scroll Down    | Decrease the date by one day
+|kbd:[PgUp], Mouse Thumb Wheel Up       |Increase the date by one month
+|kbd:[PgDn], Mouse Thumb Wheel Down     |Decrease the date by one month
+|kbd:[t], kbd:[T]                       |Change to today's date
+|=============================
+
+[[numberFields]]
+==== Number Fields
+Numerical entry in jGnash is as easy as typing the desired value into the field.
+Decimal separators are handled according to the configured locale.
+
+image:basic-decimal-entry.png[] image:advanced-decimal-entry.png[]
+
+You may also enter arithmetic operators and calculate values within the entry field.
+
+The arithmetic operators that may be used are () + − ∗ /.
+
+Traditional arithmetic operator precedence is followed for all calculations.
+
+
 [[_newfile]]
 === Creating a New File
-
 
 When you start jGnash for the first time, you will be presented with a very simple screen.
 At the bottom of the screen, program notifications and memory consumption information are displayed. 
@@ -581,50 +642,9 @@ image:adjustmentTransaction.png[width="630"]
 The half black and half white circular button at the bottom of the form is a utility to help convert the
 Single Entry transaction into a Double Entry Transaction after you find the needed information.
 
-[[editing]]
-=== Editing Environment
-The jGnash editing environment is not much different then in other application with the exception that it provides a
-few shortcuts to speed up entry of transactions.
-
-jGnash knows and understands just about any known locale and country setting.
-Depending on your settings, the decimal symbol will change accordingly as well as the displayed format of dates. 
-
-[[dateFields]]
-==== Date Fields
-
-The date field is freely editable and jGnash will make the best attempt at interpreting an invalid entry, but the results
-are indeterminate. Clicking on the button to the right of the field will display a calendar dialog where you can select
-a date as well.
-
-image:date-entry.png[]
-
-Also, dates can be modified using the keyboard shortcuts defined below.
-
-.Date Entry Shortcut Keys
-[cols="1,1", options="header"]
-|=============================
-| Keys / Mouse                          |Function
-|kbd:[+], kbd:[↑], Mouse Scroll Up      |Increase the date by one day
-|kbd:[-], kbd:[↓], Mouse Scroll Down    | Decrease the date by one day
-|kbd:[PgUp], Mouse Thumb Wheel Up       |Increase the date by one month
-|kbd:[PgDn], Mouse Thumb Wheel Down     |Decrease the date by one month
-|kbd:[t], kbd:[T]                       |Change to today's date
-|=============================
-
-[[numberFields]]
-==== Number Fields
-Numerical entry in jGnash is as easy as typing the desired value into the field.
-Decimal separators are handled according to the configured locale. 
-
-image:basic-decimal-entry.png[]
-
-You may also enter arithmetic operators and calculate values within the entry field. 
-
-The arithmetic operators that may be used are () + − ∗ /.
-
-Traditional arithmetic operator precedence is followed for all calculations. 
-
-image:advanced-decimal-entry.png[]
+==== Transfer Transaction
+The Transfer tab provides a slightly faster way to move money between accounts without requiring as much information.
+If go back to edit the Transaction, the edits will be performed within the Deposit or Withdrawal forms.
 
 [[_budgets]]
 == Budgets
@@ -642,7 +662,6 @@ Tracking how well you follow your budget can be an eye opening experience and ca
 * The reporting period for budgets may be daily, weekly, bi-weekly, monthly, or quarterly and can be changed as needed. 
 * The per account budget goals may also be entered in daily, weekly, bi-weekly, monthly, or quarterly periods and are independent of the budget reporting period. 
 * The budget may be exported to a spreadsheet.
-
 
 .Budget Periods
 [TIP]
