@@ -545,6 +545,7 @@ The account to withdraw funds from (Decrease) or deposit to (Increase) is select
 
 image::basicDoubleEntry.png[width="640"]
 
+<<<
 ==== Split Entry Transaction
 
 A Split Entry Transaction is a Double Entry Transaction, but the amount is split across multiple accounts.
@@ -560,6 +561,14 @@ of the unique memos of the split entries.  This saves entry time for the Transac
 Editing of the Transaction amount will be disabled as it is the sum of the Entries.  The Memo field will be disabled
 as well if the btn:[Concatenate Memos] in the Split Transaction dialog was selected.
 
+If a memo is not entered for a Split Transaction and the btn:[Concatenate Memos] button is not selected, the
+Transactions register will display the memo of the first Split Entry.
+
+A Split Transaction may consist of multiple Deposits and Withdrawals as shown below.  This is a typical example
+of a paycheck where insurance and taxes are deducted from the gross salary.
+
+image:mixedSplitTransaction.png[width="540"]
+
 ==== Single Entry / Adjustment Transaction
 
 A Single Entry Transaction is primarily used to fudge an Account balance when you simply don't have the information to
@@ -567,7 +576,7 @@ correctly balance the account.
 
 In the example below, you can see a negative amount of `-1.23` was used to decrease the balance of the account.
 
-image:adjustmentTransaction.png[width="640"]
+image:adjustmentTransaction.png[width="630"]
 
 The half black and half white circular button at the bottom of the form is a utility to help convert the
 Single Entry transaction into a Double Entry Transaction after you find the needed information.
