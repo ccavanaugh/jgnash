@@ -41,6 +41,22 @@ class OfxV1ToV2 {
 
     private static final int READ_AHEAD_LIMIT = 2048;
 
+    /*
+    public static void main(final String[] args) {
+        if (args.length == 2) {
+            Path input = Paths.get(args[0]);
+            Path output = Paths.get(args[1]);
+
+            if (Files.exists(input)) {
+                try {
+                    Files.write(output, convertToXML(input).getBytes());
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }*/
+
     static String convertToXML(final Path path) {
         String encoding = FileMagic.getOfxV1Encoding(path);
 
