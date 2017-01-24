@@ -17,6 +17,7 @@
  */
 package jgnash.convert.imports.ofx;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -165,9 +166,9 @@ class OfxV1ToV2 {
     }
 
     private static String readFile(final Path path, final String characterSet) {
-    	try (final InputStream stream = Files.newInputStream(path)) {
+    	try (final InputStream stream = new BufferedInputStream(Files.newInputStream(path))) {
     		return readFile(stream, characterSet);
-    	} catch (IOException e) {
+    	} catch (final IOException e) {
     		Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
             logger.log(Level.SEVERE, e.toString(), e);
             return "";

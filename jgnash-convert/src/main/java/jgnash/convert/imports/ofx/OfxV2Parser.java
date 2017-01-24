@@ -189,7 +189,7 @@ public class OfxV2Parser implements OfxTags {
 
     private void parseFile(final Path path) {
 
-        try (InputStream stream = Files.newInputStream(path)) {
+        try (final InputStream stream = new BufferedInputStream(Files.newInputStream(path))) {
             parse(stream);
         } catch (final IOException e) {
             logger.log(Level.SEVERE, e.toString(), e);
