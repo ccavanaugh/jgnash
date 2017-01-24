@@ -663,6 +663,13 @@ public class OfxV2Parser implements OfxTags {
                 break;
             case SELLSTOCK:
                 tran.transactionType = TransactionType.SELLSHARE;
+                break;
+            case INCOME:
+                tran.transactionType = TransactionType.DIVIDEND;
+                break;
+            case REINVEST:
+                tran.transactionType = TransactionType.REINVESTDIV;
+                break;
             default:
                 logger.log(Level.WARNING, "Unknown investment transaction type: {0}", parsingElement.toString());
                 break;
