@@ -215,12 +215,14 @@ public class FileMagic {
 
                 String line = reader.readLine();
 
+                /* Assume that the OFX file is one continuous string of information when searching for OFXHEADER */
                 while (line != null) {
                     line = line.trim();
 
                     // consume any processing instructions and check for ofx 2.0 hints
                     if (!line.isEmpty() && line.startsWith("<?")) {
-                        if (line.startsWith("<?OFX") && line.contains("OFXHEADER=\"200\"")) {
+                        if (line.contains("OFXHEADER=\"200\"")) {
+                            System.out.println("here2");
                             result = true;
                             break;
                         }

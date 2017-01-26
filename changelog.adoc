@@ -21,6 +21,10 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.28.4
+--------------
+* 01/26/17 Fixed an OFX import bug.  File header was in an unanticipated format that prevented correct identification.
+
 Release 2.28.3
 --------------
 * 01/23/17 Manual was expanded with specifics of transaction entry
