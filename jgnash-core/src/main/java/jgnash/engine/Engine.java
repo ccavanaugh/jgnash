@@ -188,7 +188,7 @@ public class Engine {
             if (!Thread.currentThread().isInterrupted()) {
                 emptyTrash();
             }
-        }, 45, 5, TimeUnit.SECONDS);
+        }, 45, 5 * 60, TimeUnit.SECONDS);
 
         // Engine needs to be registered before the update factories can find it.  Push the check to the background executor
         backgroundExecutorService.schedule(() -> {
