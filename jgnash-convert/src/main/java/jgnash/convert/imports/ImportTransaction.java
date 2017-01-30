@@ -87,7 +87,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
      *
      * @return transaction id
      */
-    public String getTransactionID() {
+    protected String getTransactionID() {
         return transactionID;
     }
 
@@ -256,7 +256,11 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         return securityType;
     }
 
-    public void setSecurityType(String securityType) {
+    public void setSecurityType(final String securityType) {
         this.securityType = securityType;
+    }
+
+    public boolean isInvestmentTransaction() {
+        return getSecurityId() != null;
     }
 }

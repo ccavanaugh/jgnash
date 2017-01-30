@@ -51,4 +51,18 @@ public class ImportBank<E extends ImportTransaction> {
     public List<ImportSecurity> getSecurityList() {
         return securityList;
     }
+
+    public boolean isInvestmentAccount() {
+
+        boolean result = false;
+
+        for (final E transaction : getTransactions()) {
+            if (transaction.isInvestmentTransaction()) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
 }

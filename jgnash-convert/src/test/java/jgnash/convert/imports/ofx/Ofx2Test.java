@@ -65,6 +65,8 @@ public class Ofx2Test {
             assertEquals(0, bank.statusCode);
             assertEquals("INFO", bank.statusSeverity);
 
+            assertFalse(parser.getBank().isInvestmentAccount());
+
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());            
         } catch (IOException e) {
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
@@ -95,6 +97,8 @@ public class Ofx2Test {
                 assertEquals(0, bank.statusCode);
                 assertEquals("INFO", bank.statusSeverity);
                 assertEquals("Success", bank.statusMessage);
+
+                assertFalse(parser.getBank().isInvestmentAccount());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -127,6 +131,8 @@ public class Ofx2Test {
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
                 assertEquals(null, parser.getBank().statusMessage);
+
+                assertFalse(parser.getBank().isInvestmentAccount());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -174,6 +180,8 @@ public class Ofx2Test {
                 assertEquals(new BigDecimal("300.01"), transactions.get(2).getAmount());
                 assertEquals(new BigDecimal("160.50"), transactions.get(3).getAmount());
 
+                assertFalse(parser.getBank().isInvestmentAccount());
+
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
@@ -205,6 +213,8 @@ public class Ofx2Test {
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
                 assertEquals(null, parser.getBank().statusMessage);
+
+                assertFalse(parser.getBank().isInvestmentAccount());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -239,6 +249,8 @@ public class Ofx2Test {
                 assertEquals("INFO", parser.getBank().statusSeverity);
                 assertEquals("OK", parser.getBank().statusMessage);
 
+                assertFalse(parser.getBank().isInvestmentAccount());
+
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
@@ -272,6 +284,8 @@ public class Ofx2Test {
                 assertEquals("INFO", parser.getBank().statusSeverity);
                 assertEquals(null, parser.getBank().statusMessage);
 
+                assertFalse(parser.getBank().isInvestmentAccount());
+
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
@@ -298,6 +312,8 @@ public class Ofx2Test {
             assertEquals(0, parser.getBank().statusCode);
             assertEquals("INFO", parser.getBank().statusSeverity);
             assertEquals(null, parser.getBank().statusMessage);
+
+            assertFalse(parser.getBank().isInvestmentAccount());
 
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
         } catch (IOException e) {
@@ -328,6 +344,8 @@ public class Ofx2Test {
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
                 assertEquals(null, parser.getBank().statusMessage);
+
+                assertFalse(parser.getBank().isInvestmentAccount());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -398,6 +416,8 @@ public class Ofx2Test {
                 assertEquals(2, ofxBank.getTransactions().size());
                 assertEquals(3, ofxBank.getSecurityList().size());
 
+                assertTrue(ofxBank.isInvestmentAccount());
+
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
 
             } catch (final IOException e) {
@@ -434,6 +454,9 @@ public class Ofx2Test {
 
                 assertEquals(3, ofxBank.getTransactions().size());
                 assertEquals(3, ofxBank.getSecurityList().size());
+
+
+                assertTrue(ofxBank.isInvestmentAccount());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
 
