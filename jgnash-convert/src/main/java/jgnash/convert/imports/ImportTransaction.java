@@ -68,6 +68,9 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private BigDecimal commission;
 
+    // Type of income for investment transaction
+    private String incomeType;
+
     private boolean taxExempt = false;
 
     /**
@@ -262,5 +265,13 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public boolean isInvestmentTransaction() {
         return getSecurityId() != null;
+    }
+
+    public String getIncomeType() {
+        return incomeType;
+    }
+
+    public void setIncomeType(String incomeType) {
+        this.incomeType = incomeType;
     }
 }

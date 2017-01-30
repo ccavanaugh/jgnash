@@ -709,6 +709,9 @@ public class OfxV2Parser implements OfxTags {
                         case COMMISSION:
                             tran.setCommission(parseAmount(reader.getElementText()));
                             break;
+                        case INCOMETYPE:
+                            tran.setIncomeType(reader.getElementText());
+                            break;
                         case SUBACCTSEC:
                             tran.subAccountSec = reader.getElementText();
                             break;
