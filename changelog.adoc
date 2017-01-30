@@ -24,6 +24,7 @@ WANTS
 Release 2.29.0
 --------------
 * 01/30/17 Fixed a NPE that was occurring when importing transactions. (Fx)
+* 01/30/17 Corrected an OFX import regression that reduced effectiveness of detecting a duplicate import.
 * 01/29/17 Entity trash was being checked to frequently
 
 Release 2.28.4
