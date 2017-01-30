@@ -697,6 +697,9 @@ public class OfxV2Parser implements OfxTags {
                         case UNIQUEID:  // the security for the transaction
                             tran.setSecurityId(reader.getElementText());
                             break;
+                        case UNIQUEIDTYPE:  // the type of security for the transaction
+                            tran.setSecurityType(reader.getElementText());
+                            break;
                         case UNITS:
                             tran.setUnits(parseAmount(reader.getElementText()));
                             break;
@@ -749,7 +752,6 @@ public class OfxV2Parser implements OfxTags {
                         case INVBUY:    // consume
                         case INVTRAN:
                         case SECID:
-                        case UNIQUEIDTYPE:
                             break;
                         case LOANID:    // consume 401k loan information
                         case LOANPRINCIPAL:

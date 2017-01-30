@@ -60,6 +60,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private String securityId;
 
+    private String securityType;
+
     private BigDecimal units;
 
     private BigDecimal unitPrice;
@@ -248,5 +250,13 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setTaxExempt(boolean taxExempt) {
         this.taxExempt = taxExempt;
+    }
+
+    public String getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(String securityType) {
+        this.securityType = securityType;
     }
 }
