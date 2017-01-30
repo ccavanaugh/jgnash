@@ -63,6 +63,7 @@ import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.util.TableViewManager;
+import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
@@ -343,10 +344,10 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         }
 
         @Override
-        public void updateItem(final Account item, final boolean empty) {
+        public void updateItem(@Nullable final Account item, final boolean empty) {
             super.updateItem(item, empty);
 
-            if (empty) {
+            if (empty || item == null) {
                 setText(null);
                 setGraphic(null);
             } else {
