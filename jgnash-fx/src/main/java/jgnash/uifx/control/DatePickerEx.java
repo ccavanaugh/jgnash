@@ -99,7 +99,9 @@ public class DatePickerEx extends DatePicker {
         });
 
         getEditor().addEventFilter(KeyEvent.KEY_TYPED, event -> {
-            if (allowedDateCharacters.indexOf(event.getCharacter().charAt(0)) < 0) {
+
+            // An empty event character is possible... must protect against it
+            if (!event.getCharacter().isEmpty() && allowedDateCharacters.indexOf(event.getCharacter().charAt(0)) < 0) {
                 event.consume();
             }
         });
