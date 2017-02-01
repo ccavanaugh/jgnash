@@ -176,6 +176,9 @@ public class GenericImport {
             if (!ImportUtils.matchSecurity(importSecurity).isPresent()) {   // Import only if a match is not found
                 final SecurityNode securityNode = ImportUtils.createSecurityNode(importSecurity, currencyNode);
 
+                // link the security node
+                importSecurity.setSecurityNode(securityNode);
+
                 engine.addSecurity(securityNode);
 
                 // if the ImportSecurity has pricing information, import it as well
@@ -184,6 +187,10 @@ public class GenericImport {
                     engine.addSecurityHistory(securityNode, securityHistoryNode);
                 }));
             } else {    // check to see if the cuspid needs to be updated
+
+                // link the security node
+                ImportUtils.matchSecurity(importSecurity).ifPresent(importSecurity::setSecurityNode);
+
                 ImportUtils.matchSecurity(importSecurity)
                         .ifPresent(securityNode -> importSecurity.getId().ifPresent(securityId -> {
                             if (securityNode.getISIN() == null || securityNode.getISIN().isEmpty()) {
