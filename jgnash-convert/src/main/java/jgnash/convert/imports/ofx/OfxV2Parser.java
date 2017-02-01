@@ -516,7 +516,7 @@ public class OfxV2Parser implements OfxTags {
                             importSecurity.setSecurityName(reader.getElementText().trim());
                             break;
                         case TICKER:
-                            importSecurity.ticker = reader.getElementText().trim();
+                            importSecurity.setTicker(reader.getElementText().trim());
                             break;
                         case UNITPRICE:
                             importSecurity.setUnitPrice(parseAmount(reader.getElementText()));

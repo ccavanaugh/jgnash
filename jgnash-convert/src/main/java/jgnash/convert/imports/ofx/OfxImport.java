@@ -17,15 +17,25 @@
  */
 package jgnash.convert.imports.ofx;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import jgnash.convert.imports.GenericImport;
+import jgnash.convert.imports.ImportSecurity;
+import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.SecurityNode;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionFactory;
 
 /**
  * OfxImport utility methods
@@ -34,8 +44,133 @@ import jgnash.engine.EngineFactory;
  */
 public class OfxImport {
 
-    public static void importTransactions(final List<ImportTransaction> transactions, final Account baseAccount) {
-        GenericImport.importTransactions(transactions, baseAccount);
+    /**
+     * Private constructor, utility class
+     */
+    private OfxImport() {
+    }
+
+    public static void importTransactions(final OfxBank ofxBank, final Account baseAccount) {
+        Objects.requireNonNull(ofxBank.getTransactions());
+        Objects.requireNonNull(baseAccount);
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        for (final ImportTransaction tran : ofxBank.getTransactions()) {
+            Objects.requireNonNull(tran.getAccount());
+
+            if (tran.getState() == ImportState.NEW
+                    || tran.getState() == ImportState.NOT_EQUAL) { // do not import matched transactions
+
+                Transaction transaction = null;
+
+                if (tran.isInvestmentTransaction()) {
+                    if (baseAccount.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+
+                        transaction = importInvestmentTransaction(ofxBank, (OfxTransaction) tran, baseAccount);
+
+                        if (transaction != null) {
+
+                            // check and add the security node to the account if not present
+                            if (!baseAccount.containsSecurity(((InvestmentTransaction) transaction).getSecurityNode())) {
+                                engine.addAccountSecurity(((InvestmentTransaction) transaction).getInvestmentAccount(),
+                                        ((InvestmentTransaction) transaction).getSecurityNode());
+                            }
+                        }
+
+                    } else { // Signal an error
+                        System.out.println("Base account was not an investment account type");
+                    }
+                } else {
+                    if (baseAccount.equals(tran.getAccount())) { // single entry oTran
+                        transaction = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.getAmount(),
+                                tran.getDatePosted(), tran.getMemo(), tran.getPayee(), tran.getCheckNumber());
+                    } else { // double entry
+                        if (tran.getAmount().signum() >= 0) {
+                            transaction = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.getAccount(),
+                                    tran.getAmount().abs(), tran.getDatePosted(), tran.getMemo(), tran.getPayee(),
+                                    tran.getCheckNumber());
+                        } else {
+                            transaction = TransactionFactory.generateDoubleEntryTransaction(tran.getAccount(), baseAccount,
+                                    tran.getAmount().abs(), tran.getDatePosted(), tran.getMemo(), tran.getPayee(),
+                                    tran.getCheckNumber());
+                        }
+                    }
+                }
+
+                // add the new transaction
+                if (transaction != null) {
+                    transaction.setFitid(tran.getTransactionID());
+                    engine.addTransaction(transaction);
+                }
+            }
+        }
+    }
+
+    private static InvestmentTransaction importInvestmentTransaction(final OfxBank ofxBank, final OfxTransaction ofxTransaction,
+                                                                     final Account baseAccount) {
+
+        // OFX reinvested dividends can be merged into one or created as a zero commission purchase
+
+        // TODO match up security
+        // Specify an income account!
+        // Specify and fees account for expenses
+
+        final SecurityNode securityNode = matchSecurity(ofxBank, ofxTransaction.getSecurityId());
+        final String memo = ofxTransaction.getMemo();
+        final LocalDate datePosted = ofxTransaction.getDatePosted();
+
+        final BigDecimal dividend = ofxTransaction.getAmount();
+        final BigDecimal units = ofxTransaction.getUnits();
+        final BigDecimal unitPrice = ofxTransaction.getUnitPrice();
+        final BigDecimal commission = ofxTransaction.getCommission();
+
+        List<TransactionEntry> fees = Collections.emptyList();
+
+        if (!commission.equals(BigDecimal.ZERO)) {
+            // TODO Generate transaction entry for the fees against the expense account
+        }
+
+        InvestmentTransaction transaction = null;
+
+        if (securityNode != null) {
+
+            switch (ofxTransaction.transactionType) {
+                case DIVIDEND:
+
+                    // TODO: This is a single entry dividend
+                    transaction = TransactionFactory.generateDividendXTransaction(baseAccount, baseAccount, baseAccount,
+                            securityNode, dividend, dividend, dividend, datePosted, memo);
+                    break;
+                case REINVESTDIV:   // cash with zero commission
+
+                    // TODO: This is a single entry buy
+                    transaction = TransactionFactory.generateBuyXTransaction(baseAccount, baseAccount, securityNode,
+                            unitPrice, units, BigDecimal.ONE, datePosted, memo, fees);
+
+                    break;
+                default:
+            }
+        }
+
+        return transaction;
+    }
+
+    private static SecurityNode matchSecurity(final OfxBank ofxBank, final String securityId) {
+
+        SecurityNode securityNode = null;
+
+        for (final ImportSecurity importSecurity : ofxBank.getSecurityList()) {
+            if (importSecurity.getId().isPresent()) {
+                if (importSecurity.getId().get().equals(securityId)) {
+                    securityNode = importSecurity.getSecurityNode();
+                    break;
+                }
+            }
+        }
+
+        return securityNode;
     }
 
     public static Account matchAccount(final OfxBank bank) {
@@ -67,11 +202,5 @@ public class OfxImport {
         }
 
         return account;
-    }
-
-    /**
-     * Private constructor, utility class
-     */
-    private OfxImport() {
     }
 }

@@ -18,7 +18,6 @@
 package jgnash.uifx.actions;
 
 import java.io.File;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -27,7 +26,6 @@ import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
 import jgnash.convert.imports.GenericImport;
-import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
 import jgnash.convert.imports.ofx.OfxV2Parser;
@@ -129,13 +127,9 @@ public class ImportOfxAction {
             if (wizardDialogController.validProperty().get()) {
                 final Account account = (Account) wizardDialogController.getSetting(ImportWizard.Settings.ACCOUNT);
 
-                @SuppressWarnings("unchecked")
-                final List<ImportTransaction> transactions =
-                        (List<ImportTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
-
                 // import threads in the background
                 final ImportTransactionsTask importTransactionsTask =
-                        new ImportTransactionsTask(ofxBank, account, transactions);
+                        new ImportTransactionsTask(ofxBank, account);
 
                 new Thread(importTransactionsTask).start();
 
@@ -148,12 +142,10 @@ public class ImportOfxAction {
 
         private final OfxBank bank;
         private final Account account;
-        private final List<ImportTransaction> transactions;
 
-        ImportTransactionsTask(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
+        ImportTransactionsTask(final OfxBank bank, final Account account) {
             this.bank = bank;
             this.account = account;
-            this.transactions = transactions;
         }
 
         @Override
@@ -177,7 +169,7 @@ public class ImportOfxAction {
             }
 
             // Import the transactions
-            OfxImport.importTransactions(transactions, account);
+            OfxImport.importTransactions(bank, account);
 
             return null;
         }

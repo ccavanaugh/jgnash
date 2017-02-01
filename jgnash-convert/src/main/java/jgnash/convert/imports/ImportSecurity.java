@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import jgnash.engine.SecurityNode;
+
 /**
  * Security Import Object
  *
@@ -28,7 +30,7 @@ import java.util.Optional;
  */
 public class ImportSecurity {
 
-    public String ticker;
+    private String ticker;
     private String securityName;
     private BigDecimal unitPrice;
     private LocalDate localDate;
@@ -37,11 +39,13 @@ public class ImportSecurity {
     public String currency;
     private BigDecimal currencyRate;
 
+    private SecurityNode securityNode;
+
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
 
-        b.append("ticker: ").append(ticker).append('\n');
+        b.append("ticker: ").append(getTicker()).append('\n');
         b.append("securityName: ").append(securityName).append('\n');
         b.append("unitPrice: ").append(unitPrice).append('\n');
         b.append("localDate: ").append(localDate).append('\n');
@@ -109,4 +113,22 @@ public class ImportSecurity {
         return Optional.ofNullable(currency);
     }
 
+    /**
+     * Reference to the security node linked to this imported security node
+     */
+    public SecurityNode getSecurityNode() {
+        return securityNode;
+    }
+
+    public void setSecurityNode(SecurityNode securityNode) {
+        this.securityNode = securityNode;
+    }
+
+    public String getTicker() {
+        return ticker;
+    }
+
+    public void setTicker(final String ticker) {
+        this.ticker = ticker;
+    }
 }

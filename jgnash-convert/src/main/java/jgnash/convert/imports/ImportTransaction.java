@@ -62,11 +62,11 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private String securityType;
 
-    private BigDecimal units;
+    private BigDecimal units = BigDecimal.ZERO;
 
-    private BigDecimal unitPrice;
+    private BigDecimal unitPrice = BigDecimal.ZERO;
 
-    private BigDecimal commission;
+    private BigDecimal commission = BigDecimal.ZERO;
 
     // Type of income for investment transaction
     private String incomeType;
@@ -90,7 +90,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
      *
      * @return transaction id
      */
-    protected String getTransactionID() {
+    public String getTransactionID() {
         return transactionID;
     }
 
@@ -221,7 +221,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         return units;
     }
 
-    public void setUnits(BigDecimal units) {
+    public void setUnits(final BigDecimal units) {
         this.units = units;
     }
 
@@ -232,7 +232,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         return unitPrice;
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
+    public void setUnitPrice(final BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
@@ -243,7 +243,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         return commission;
     }
 
-    public void setCommission(BigDecimal commission) {
+    public void setCommission(final BigDecimal commission) {
         this.commission = commission;
     }
 

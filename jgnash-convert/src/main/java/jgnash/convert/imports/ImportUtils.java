@@ -74,8 +74,8 @@ public class ImportUtils {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        for (SecurityNode securityNode : engine.getSecurities()) {
-            if (securityNode.getSymbol().equals(security.ticker)) {
+        for (final SecurityNode securityNode : engine.getSecurities()) {
+            if (securityNode.getSymbol().equals(security.getTicker())) {
                 return Optional.of(securityNode);
             }
         }
@@ -85,7 +85,7 @@ public class ImportUtils {
     static SecurityNode createSecurityNode(final ImportSecurity security, final CurrencyNode currencyNode) {
         final SecurityNode securityNode = new SecurityNode(currencyNode);
 
-        securityNode.setSymbol(security.ticker);
+        securityNode.setSymbol(security.getTicker());
         securityNode.setScale(currencyNode.getScale());
 
         security.getSecurityName().ifPresent(securityNode::setDescription);

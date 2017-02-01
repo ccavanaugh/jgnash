@@ -19,7 +19,6 @@ package jgnash.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -31,7 +30,6 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
 import jgnash.convert.imports.ofx.OfxV2Parser;
@@ -122,12 +120,8 @@ public class ImportOfxAction extends AbstractEnabledAction {
                 if (d.isWizardValid()) {
                     final Account account = (Account) d.getSetting(ImportDialog.Settings.ACCOUNT);
 
-                    @SuppressWarnings("unchecked")
-                    final List<ImportTransaction> transactions =
-                            (List<ImportTransaction>) d.getSetting(ImportDialog.Settings.TRANSACTIONS);
-
                     // import threads in the background
-                    new ImportThread(ofxBank, account, transactions).start();
+                    new ImportThread(ofxBank, account).start();
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
@@ -138,12 +132,10 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
             private final OfxBank bank;
             private final Account account;
-            private final List<ImportTransaction> transactions;
 
-            ImportThread(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
+            ImportThread(final OfxBank bank, final Account account) {
                 this.bank = bank;
                 this.account = account;
-                this.transactions = transactions;
             }
 
             @Override
@@ -159,7 +151,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
                 }
 
                 /* Import the transactions */
-                OfxImport.importTransactions(transactions, account);
+                OfxImport.importTransactions(bank, account);
             }
         }
     }
