@@ -706,7 +706,10 @@ public class OfxV2Parser implements OfxTags {
                         case UNITPRICE:
                             tran.setUnitPrice(parseAmount(reader.getElementText()));
                             break;
-                        case COMMISSION:
+                        case FEES:  // investment fees
+                            tran.setFees(parseAmount(reader.getElementText()));
+                            break;
+                        case COMMISSION:    // investment commission
                             tran.setCommission(parseAmount(reader.getElementText()));
                             break;
                         case INCOMETYPE:

@@ -36,6 +36,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
+import jgnash.engine.TransactionTag;
 
 /**
  * OfxImport utility methods
@@ -109,13 +110,13 @@ public class OfxImport {
     }
 
     private static InvestmentTransaction importInvestmentTransaction(final OfxBank ofxBank, final OfxTransaction ofxTransaction,
-                                                                     final Account baseAccount) {
+                                                                     final Account investmentAccount) {
 
         // OFX reinvested dividends can be merged into one or created as a zero commission purchase
 
         // TODO match up security
         // Specify an income account!
-        // Specify and fees account for expenses
+        // Specify a fees account
 
         final SecurityNode securityNode = matchSecurity(ofxBank, ofxTransaction.getSecurityId());
         final String memo = ofxTransaction.getMemo();
@@ -124,12 +125,30 @@ public class OfxImport {
         final BigDecimal dividend = ofxTransaction.getAmount();
         final BigDecimal units = ofxTransaction.getUnits();
         final BigDecimal unitPrice = ofxTransaction.getUnitPrice();
-        final BigDecimal commission = ofxTransaction.getCommission();
+
+        Account cashAccount = investmentAccount;
+
+        // force use of cash balance
+        if ("CASH".equals(ofxTransaction.subAccountSec)) {
+            cashAccount = investmentAccount;
+        }
 
         List<TransactionEntry> fees = Collections.emptyList();
 
-        if (!commission.equals(BigDecimal.ZERO)) {
-            // TODO Generate transaction entry for the fees against the expense account
+        if (!ofxTransaction.getCommission().equals(BigDecimal.ZERO)) {
+            // TODO: This is a single entry fee
+
+            final TransactionEntry transactionEntry = new TransactionEntry(investmentAccount, ofxTransaction.getCommission().negate());
+            transactionEntry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
+            fees.add(transactionEntry);
+        }
+
+        if (!ofxTransaction.getFees().equals(BigDecimal.ZERO)) {
+            // TODO: This is a single entry fee
+
+            final TransactionEntry transactionEntry = new TransactionEntry(investmentAccount, ofxTransaction.getFees().negate());
+            transactionEntry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
+            fees.add(transactionEntry);
         }
 
         InvestmentTransaction transaction = null;
@@ -140,13 +159,13 @@ public class OfxImport {
                 case DIVIDEND:
 
                     // TODO: This is a single entry dividend
-                    transaction = TransactionFactory.generateDividendXTransaction(baseAccount, baseAccount, baseAccount,
+                    transaction = TransactionFactory.generateDividendXTransaction(investmentAccount, investmentAccount, cashAccount,
                             securityNode, dividend, dividend, dividend, datePosted, memo);
                     break;
                 case REINVESTDIV:   // cash with zero commission
 
                     // TODO: This is a single entry buy
-                    transaction = TransactionFactory.generateBuyXTransaction(baseAccount, baseAccount, securityNode,
+                    transaction = TransactionFactory.generateBuyXTransaction(cashAccount, investmentAccount, securityNode,
                             unitPrice, units, BigDecimal.ONE, datePosted, memo, fees);
 
                     break;

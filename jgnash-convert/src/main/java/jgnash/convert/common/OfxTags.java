@@ -210,6 +210,11 @@ public interface OfxTags {
 
     String DTSETTLE = "DTSETTLE";
 
+    /**
+     * Fees applied to trade, amount
+     */
+    String FEES = "FEES";
+
     String FI = "FI";
 
     String FID = "FID";
@@ -258,6 +263,11 @@ public interface OfxTags {
     String PAYEE = "PAYEE";
 
     String PAYEEID = "PAYEEID";
+
+    /**
+     * Indicates an amount withheld due to a penalty. Amount
+     */
+    String PENALTY = "PENALTY";
 
     String REFNUM = "REFNUM";
 

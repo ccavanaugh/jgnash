@@ -68,6 +68,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private BigDecimal commission = BigDecimal.ZERO;
 
+    private BigDecimal fees = BigDecimal.ZERO;
+
     // Type of income for investment transaction
     private String incomeType;
 
@@ -273,5 +275,13 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setIncomeType(String incomeType) {
         this.incomeType = incomeType;
+    }
+
+    public BigDecimal getFees() {
+        return fees;
+    }
+
+    public void setFees(BigDecimal fees) {
+        this.fees = fees;
     }
 }
