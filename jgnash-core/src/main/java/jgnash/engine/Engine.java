@@ -2115,7 +2115,7 @@ public class Engine {
      * @param node    SecurityNode to add
      * @return true if add was successful
      */
-    private boolean addAccountSecurity(final Account account, final SecurityNode node) {
+    public boolean addAccountSecurity(final Account account, final SecurityNode node) {
 
         dataLock.writeLock().lock();
 
@@ -2428,6 +2428,15 @@ public class Engine {
             return false;
         }
 
+        if (transaction instanceof InvestmentTransaction) {
+            final InvestmentTransaction investmentTransaction = (InvestmentTransaction)transaction;
+
+            if (!investmentTransaction.getInvestmentAccount().containsSecurity(investmentTransaction.getSecurityNode())) {
+                logger.log(Level.WARNING, "Investment Account is missing the security");
+                return false;
+            }
+        }
+
         return transaction.getTransactionType() != TransactionType.INVALID;
     }
 
@@ -2444,7 +2453,6 @@ public class Engine {
     public boolean addTransaction(final Transaction transaction) {
 
         dataLock.writeLock().lock();
-        //commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
 
         try {
             boolean result = isTransactionValid(transaction);
@@ -2482,7 +2490,6 @@ public class Engine {
 
             return result;
         } finally {
-            //commodityLock.writeLock().unlock();
             dataLock.writeLock().unlock();
         }
     }
@@ -2490,7 +2497,6 @@ public class Engine {
     public boolean removeTransaction(final Transaction transaction) {
 
         dataLock.writeLock().lock();
-        //commodityLock.writeLock().lock();   // protect against jdbc concurrency issues, not needed for xstream
 
         try {
             for (final Account account : transaction.getAccounts()) {
@@ -2518,7 +2524,6 @@ public class Engine {
 
             return result;
         } finally {
-            //commodityLock.writeLock().unlock();
             dataLock.writeLock().unlock();
         }
     }
