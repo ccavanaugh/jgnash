@@ -31,7 +31,7 @@ import jgnash.util.Nullable;
  * @author Craig Cavanaugh
  * @author Nicolas Bouillon
  */
-public class OfxBank extends ImportBank<OfxTransaction> {
+public class OfxBank extends ImportBank<ImportTransaction> {
 
     public String currency;
 

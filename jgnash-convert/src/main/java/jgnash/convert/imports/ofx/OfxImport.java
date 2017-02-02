@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import jgnash.convert.common.OfxTags;
 import jgnash.convert.imports.ImportSecurity;
 import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
@@ -69,7 +70,7 @@ public class OfxImport {
                 if (tran.isInvestmentTransaction()) {
                     if (baseAccount.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
 
-                        transaction = importInvestmentTransaction(ofxBank, (OfxTransaction) tran, baseAccount);
+                        transaction = importInvestmentTransaction(ofxBank, tran, baseAccount);
 
                         if (transaction != null) {
 
@@ -109,7 +110,7 @@ public class OfxImport {
         }
     }
 
-    private static InvestmentTransaction importInvestmentTransaction(final OfxBank ofxBank, final OfxTransaction ofxTransaction,
+    private static InvestmentTransaction importInvestmentTransaction(final OfxBank ofxBank, final ImportTransaction ofxTransaction,
                                                                      final Account investmentAccount) {
 
         // OFX reinvested dividends can be merged into one or created as a zero commission purchase
@@ -129,7 +130,7 @@ public class OfxImport {
         Account cashAccount = investmentAccount;
 
         // force use of cash balance
-        if ("CASH".equals(ofxTransaction.subAccountSec)) {
+        if (OfxTags.CASH.equals(ofxTransaction.getSubAccount())) {
             cashAccount = investmentAccount;
         }
 
@@ -155,7 +156,9 @@ public class OfxImport {
 
         if (securityNode != null) {
 
-            switch (ofxTransaction.transactionType) {
+            // TODO: Create option to use a jGnash version of reinvest dividend transaction for an OFX dividend and reinvest
+
+            switch (ofxTransaction.getTransactionType()) {
                 case DIVIDEND:
 
                     // TODO: This is a single entry dividend
@@ -167,6 +170,21 @@ public class OfxImport {
                     // TODO: This is a single entry buy
                     transaction = TransactionFactory.generateBuyXTransaction(cashAccount, investmentAccount, securityNode,
                             unitPrice, units, BigDecimal.ONE, datePosted, memo, fees);
+
+                    break;
+                case BUYSHARE:
+                    // TODO: This is a single entry buy
+                    transaction = TransactionFactory.generateBuyXTransaction(cashAccount, investmentAccount, securityNode,
+                            unitPrice, units, BigDecimal.ONE, datePosted, memo, fees);
+
+                    break;
+                case SELLSHARE:
+                    // TODO: This is a single entry buy
+
+                    List<TransactionEntry> gains = Collections.emptyList();
+
+                    transaction = TransactionFactory.generateSellXTransaction(cashAccount, investmentAccount, securityNode,
+                            unitPrice, units, BigDecimal.ONE, datePosted, memo, fees, gains);
 
                     break;
                 default:

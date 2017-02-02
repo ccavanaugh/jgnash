@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.convert.imports.ofx.OfxTransaction;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.CurrencyNode;
@@ -43,6 +42,9 @@ import jgnash.util.NotNull;
  * @author Arnout Engelen
  */
 public class GenericImport {
+
+    private GenericImport() {
+    }
 
     public static void importTransactions(@NotNull final List<? extends ImportTransaction> transactions,
                                           @NotNull final Account baseAccount) {
@@ -109,47 +111,43 @@ public class GenericImport {
                 // amounts must be comparably the same, do not use an equality check
                 if (tran.getAmount(baseAccount).compareTo(importTransaction.getAmount()) == 0) {
 
-                    { // check for date match
-                        LocalDate startDate;
-                        LocalDate endDate;
+                    // check for date match
+                    final LocalDate startDate;
+                    final LocalDate endDate;
 
-                        // we have a user initiated date, use a smaller window
-                        if ((importTransaction.getDateUser() != null)) {
-                            startDate = importTransaction.getDateUser().minusDays(1);
-                            endDate = importTransaction.getDateUser().plusDays(1);
-                        } else { // use the posted date with a larger window
-                            startDate = importTransaction.getDatePosted().minusDays(3);
-                            endDate = importTransaction.getDatePosted().plusDays(3);
-                        }
+                    // we have a user initiated date, use a smaller window
+                    if ((importTransaction.getDateUser() != null)) {
+                        startDate = importTransaction.getDateUser().minusDays(1);
+                        endDate = importTransaction.getDateUser().plusDays(1);
+                    } else { // use the posted date with a larger window
+                        startDate = importTransaction.getDatePosted().minusDays(3);
+                        endDate = importTransaction.getDatePosted().plusDays(3);
+                    }
 
-                        if (DateUtils.after(tran.getLocalDate(), startDate) && DateUtils.before(tran.getLocalDate(), endDate)) {
+                    if (DateUtils.after(tran.getLocalDate(), startDate) && DateUtils.before(tran.getLocalDate(), endDate)) {
+                        importTransaction.setState(ImportState.EQUAL);
+                        break;
+                    }
+
+
+                    // check for matching check number
+                    final String checkNumber = importTransaction.getCheckNumber();
+                    if (checkNumber != null && !checkNumber.isEmpty()) {
+                        if (tran.getNumber().equals(checkNumber)) {
                             importTransaction.setState(ImportState.EQUAL);
                             break;
                         }
                     }
 
-                    { // check for matching check number
-                        String checkNumber = importTransaction.getCheckNumber();
-                        if (checkNumber != null && !checkNumber.isEmpty()) {
-                            if (tran.getNumber().equals(checkNumber)) {
-                                importTransaction.setState(ImportState.EQUAL);
-                                break;
-                            }
-                        }
-
-                    }
-
-                    { // check for matching fitid number
-                        if (importTransaction instanceof OfxTransaction) {
-                            final String id = importTransaction.getTransactionID();
-                            if (id != null && !id.isEmpty()) {
-                                if (tran.getFitid() != null && tran.getFitid().equals(id)) {
-                                    importTransaction.setState(ImportState.EQUAL);
-                                    break;
-                                }
-                            }
+                    // check for matching fitid number
+                    final String id = importTransaction.getTransactionID();
+                    if (id != null && !id.isEmpty()) {
+                        if (tran.getFitid() != null && tran.getFitid().equals(id)) {
+                            importTransaction.setState(ImportState.EQUAL);
+                            break;
                         }
                     }
+
                 }
             }
         }
@@ -210,8 +208,5 @@ public class GenericImport {
             }
 
         }
-    }
-
-    private GenericImport() {
     }
 }

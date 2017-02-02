@@ -45,6 +45,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import jgnash.convert.common.OfxTags;
 import jgnash.convert.imports.ImportSecurity;
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.TransactionType;
 import jgnash.util.FileMagic;
 import jgnash.util.ResourceUtils;
@@ -652,23 +653,28 @@ public class OfxV2Parser implements OfxTags {
 
         final QName parsingElement = reader.getName();
 
-        final OfxTransaction tran = new OfxTransaction();
+        final ImportTransaction tran = new ImportTransaction();
+
+        // set the descriptive transaction type text as well
+        tran.setTransactionTypeDescription(parsingElement.toString());
 
         // extract the investment transaction type from the element name
         switch (parsingElement.toString()) {
             case BUYMF:
             case BUYOTHER:
             case BUYSTOCK:
-                tran.transactionType = TransactionType.BUYSHARE;
+                tran.setTransactionType(TransactionType.BUYSHARE);
                 break;
+            case SELLMF:
+            case SELLOTHER:
             case SELLSTOCK:
-                tran.transactionType = TransactionType.SELLSHARE;
+                tran.setTransactionType(TransactionType.SELLSHARE);
                 break;
             case INCOME:
-                tran.transactionType = TransactionType.DIVIDEND;
+                tran.setTransactionType(TransactionType.DIVIDEND);
                 break;
             case REINVEST:
-                tran.transactionType = TransactionType.REINVESTDIV;
+                tran.setTransactionType(TransactionType.REINVESTDIV);
                 break;
             default:
                 logger.log(Level.WARNING, "Unknown investment transaction type: {0}", parsingElement.toString());
@@ -716,12 +722,10 @@ public class OfxV2Parser implements OfxTags {
                             tran.setIncomeType(reader.getElementText());
                             break;
                         case SUBACCTSEC:
-                            tran.subAccountSec = reader.getElementText();
-                            break;
                         case SUBACCTFROM:
                         case SUBACCTTO:
                         case SUBACCTFUND:
-                            tran.subAccount = reader.getElementText();
+                            tran.setSubAccount(reader.getElementText());
                             break;
                         case CHECKNUM:
                             tran.setCheckNumber(reader.getElementText());
@@ -736,20 +740,20 @@ public class OfxV2Parser implements OfxTags {
                         case CATEGORY:  // Chase bank mucking up the OFX standard
                             break;
                         case SIC:
-                            tran.sic = reader.getElementText();
+                            tran.setSIC(reader.getElementText());
                             break;
                         case REFNUM:
-                            tran.refNum = reader.getElementText();
+                            tran.setRefNum(reader.getElementText());
                             break;
                         case PAYEEID:
-                            tran.payeeId = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
+                            tran.setPayeeId(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
                             break;
                         case CURRENCY:  // currency used for the transaction
                             //tran.currency = reader.getElementText();
                             consumeElement(reader);
                             break;
                         case ORIGCURRENCY:
-                            tran.currency = reader.getElementText();
+                            tran.setCurrency(reader.getElementText());
                             break;
                         case TAXEXEMPT:
                             tran.setTaxExempt(parseBoolean(reader.getElementText()));
@@ -799,7 +803,7 @@ public class OfxV2Parser implements OfxTags {
 
         final QName parsingElement = reader.getName();
 
-        final OfxTransaction tran = new OfxTransaction();
+        final ImportTransaction tran = new ImportTransaction();
 
         parse:
         while (reader.hasNext()) {
@@ -809,7 +813,7 @@ public class OfxV2Parser implements OfxTags {
                 case XMLStreamConstants.START_ELEMENT:
                     switch (reader.getLocalName()) {
                         case TRNTYPE:
-                            tran.transactionTypeDescription = reader.getElementText();
+                            tran.setTransactionTypeDescription(reader.getElementText());
                             break;
                         case DTPOSTED:
                             tran.setDatePosted(parseDate(reader.getElementText()));
@@ -836,22 +840,22 @@ public class OfxV2Parser implements OfxTags {
                         case CATEGORY:  // Chase bank mucking up the OFX standard
                             break;
                         case SIC:
-                            tran.sic = reader.getElementText();
+                            tran.setSIC(reader.getElementText());
                             break;
                         case REFNUM:
-                            tran.refNum = reader.getElementText();
+                            tran.setRefNum(reader.getElementText());
                             break;
                         case PAYEEID:
-                            tran.payeeId = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
+                            tran.setPayeeId(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
                             break;
                         case CURRENCY:
-                            tran.currency = reader.getElementText();
+                            tran.setCurrency(reader.getElementText());
                             break;
                         case ORIGCURRENCY:
-                            tran.currency = reader.getElementText();
+                            tran.setCurrency(reader.getElementText());
                             break;
                         case SUBACCTFUND: // transfer into / out off an investment account
-                            tran.subAccount = reader.getElementText();
+                            tran.setSubAccount(reader.getElementText());
                             break;
                         case STMTTRN:   // consume, occurs with an investment account transfer
                             break;

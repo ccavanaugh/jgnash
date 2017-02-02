@@ -23,11 +23,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 import jgnash.engine.Account;
+import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
- * Common interface for imported transactions from OFX and mt940
+ * Common interface for importing transactions from OFX, QIF, and mt940
  *
  * @author Craig Cavanaugh
  * @author Arnout Engelen
@@ -54,6 +55,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     @NotNull
     private String payee = ""; // previously: 'name'
 
+    private String payeeId;
+
     private ImportState state = ImportState.NEW;
 
     private String transactionID;
@@ -74,6 +77,20 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     private String incomeType;
 
     private boolean taxExempt = false;
+
+    // OFX
+    private TransactionType transactionType = TransactionType.SINGLENTRY;  // single entry by default
+
+    // OFX
+    private String transactionTypeDescription;
+
+    // OFX
+    private String SIC;
+
+    // OFX
+    private String refNum;
+    private String subAccount;
+    private String currency;
 
     /**
      * @return returns the destination account
@@ -283,5 +300,127 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setFees(BigDecimal fees) {
         this.fees = fees;
+    }
+
+    /**
+     * The parser may establish a transaction type when imported.
+     *
+     * @return {@code TransactionType}
+     */
+    @NotNull
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(@NotNull final TransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    /**
+     * OFX defines descriptive transaction types
+     */
+    public String getTransactionTypeDescription() {
+        return transactionTypeDescription;
+    }
+
+    public void setTransactionTypeDescription(final String transactionTypeDescription) {
+        this.transactionTypeDescription = transactionTypeDescription;
+    }
+
+    /**
+     * Standard Industry Code
+     * <p>
+     * Could be use used for automatic expense and income assignment.  Typically a 4 digit numeric, but OFX allows 6
+     */
+    public String getSIC() {
+        return SIC;
+    }
+
+    public void setSIC(String SIC) {
+        this.SIC = SIC;
+    }
+
+    /**
+     * Reference number that uniquely identifies the transaction. May be used in
+     * addition to or instead of a {@link #getCheckNumber()}
+     */
+    public String getRefNum() {
+        return refNum;
+    }
+
+    public void setRefNum(String refNum) {
+        this.refNum = refNum;
+    }
+
+    /**
+     * Some OFX based systems will assign an ID to a Payee.
+     * <p>
+     * The ID would correspond to a Payee List identified by <PAYEELSTID> (not implemented)
+     */
+    public String getPayeeId() {
+        return payeeId;
+    }
+
+    public void setPayeeId(String payeeId) {
+        this.payeeId = payeeId;
+    }
+
+    /**
+     * The sub-account for cash transfer, typically CASH, but could be MARGIN, SHORT, or OTHER
+     * <p>
+     * <SUBACCTFROM>, <SUBACCTFUND>, <SUBACCTSEC>, <SUBACCTTO>
+     */
+    public String getSubAccount() {
+        return subAccount;
+    }
+
+    public void setSubAccount(String subAccount) {
+        this.subAccount = subAccount;
+    }
+
+    /*
+         *
+         * <STMTTRN>
+         *   <TRNTYPE>DIRECTDEBIT
+         *   <DTPOSTED>20060612120000[0:GMT]
+         *   <TRNAMT>-11.45
+         *   <FITID>1014005003
+         *   <SIC>000000
+         *   <NAME>ACH - Debit
+         *   <MEMO>WAL-MART 7 ECA PURCHASE 1021 FORTIN
+         * </STMTTRN>
+         *
+         * <STMTTRN>
+         *   <TRNTYPE>OTHER
+         *   <DTPOSTED>20060721120000[0:GMT]
+         *   <TRNAMT>-5.27
+         *   <FITID>1023720039
+         *   <SIC>000000
+         *   <NAME>ATM/DEBIT WITHDRAWAL
+         *   <MEMO>POS PURCHASE LOWE'S
+         * </STMTTRN>
+         */
+    @Override
+    public String toString() {
+        return getTransactionTypeDescription() + ", " +
+                getTransactionType() + ", " +
+                getDatePosted() + ", " +
+                getAmount() + ", " +
+                getTransactionID() + ", " +
+                getSIC() + ", " +
+                getPayee() + ", " +
+                getMemo() + ", " +
+                getCheckNumber() + ", " +
+                getRefNum() + ", " +
+                getPayeeId() + ", " +
+                getCurrency();
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

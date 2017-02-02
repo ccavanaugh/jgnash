@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.util.FileMagic;
 
 import org.junit.BeforeClass;
@@ -173,7 +174,7 @@ public class Ofx2Test {
                 assertEquals(new BigDecimal("524.10"), parser.getBank().ledgerBalance);
                 assertEquals(new BigDecimal("519.10"), parser.getBank().availBalance);
 
-                List<OfxTransaction> transactions = parser.getBank().getTransactions();
+                List<ImportTransaction> transactions = parser.getBank().getTransactions();
 
                 assertEquals(new BigDecimal("-130.00"), transactions.get(0).getAmount());
                 assertEquals(new BigDecimal("-120.00"), transactions.get(1).getAmount());

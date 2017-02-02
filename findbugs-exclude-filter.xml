@@ -80,7 +80,7 @@
 
     <!-- Super class uses a UUID for hash and equality -->
     <Match>
-        <Class name="jgnash.convert.imports.ofx.OfxTransaction"/>
+        <Class name="jgnash.convert.imports.ofx.ImportTransaction"/>
         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     </Match>
 

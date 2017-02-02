@@ -51,6 +51,11 @@ public interface OfxTags {
     String BANKACCTFROM = "BANKACCTFROM";
 
     /**
+     * CASH Tag
+     */
+    String CASH = "CASH";
+
+    /**
      * Credit Card info
      */
     String CCACCTFROM = "CCACCTFROM";
@@ -323,6 +328,19 @@ public interface OfxTags {
      */
     String SUBACCTFUND = "SUBACCTFUND";
 
+    /**
+     * Sell a mutual fund
+     */
+    String SELLMF = "SELLMF";
+
+    /**
+     * Sell other type of security
+     */
+    String SELLOTHER = "SELLOTHER";
+
+    /**
+     * Sell a stock
+     */
     String SELLSTOCK = "SELLSTOCK";
 
     String SELLTYPE = "SELLTYPE";
