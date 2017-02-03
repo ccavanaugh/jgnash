@@ -23,6 +23,7 @@ WANTS
 
 Release 2.29.0
 --------------
+* 02/03/17 Updated to the latest Netty and JOpt Simple Dependencies.
 * 02/01/17 Fixed a StringIndexOutOfBoundsException that was occurring when escaping out of a text field on MacOS. (Fx)
 * 01/30/17 Fixed a NPE that was occurring when importing transactions. (Fx)
 * 01/30/17 Corrected an OFX import regression that reduced effectiveness of detecting a duplicate import.
