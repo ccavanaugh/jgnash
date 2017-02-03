@@ -127,7 +127,7 @@ public class IncomeExpensePieChartDialogController {
         startDatePicker.valueProperty().addListener(listener);
         endDatePicker.valueProperty().addListener(listener);
 
-        pieChart.setLegendSide(Side.RIGHT);
+        pieChart.setLegendSide(Side.BOTTOM);
 
         // zoom out
         pieChart.setOnMouseClicked(event -> {
