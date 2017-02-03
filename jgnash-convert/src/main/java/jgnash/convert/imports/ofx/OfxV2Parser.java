@@ -698,7 +698,7 @@ public class OfxV2Parser implements OfxTags {
                             tran.setAmount(parseAmount(reader.getElementText()));
                             break;
                         case FITID:
-                            tran.setTransactionID(reader.getElementText());
+                            tran.setFITID(reader.getElementText());
                             break;
                         case UNIQUEID:  // the security for the transaction
                             tran.setSecurityId(reader.getElementText());
@@ -825,7 +825,7 @@ public class OfxV2Parser implements OfxTags {
                             tran.setAmount(parseAmount(reader.getElementText()));
                             break;
                         case FITID:
-                            tran.setTransactionID(reader.getElementText());
+                            tran.setFITID(reader.getElementText());
                             break;
                         case CHECKNUM:
                             tran.setCheckNumber(reader.getElementText());

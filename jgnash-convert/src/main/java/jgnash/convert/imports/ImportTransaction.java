@@ -53,16 +53,20 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     private String memo = ""; // memo
 
     @NotNull
-    private String payee = ""; // previously: 'name'
+    private String payee = "";
 
+    // OFX
     private String payeeId;
 
     private ImportState state = ImportState.NEW;
 
-    private String transactionID;
+    // OFX, Financial Institution transaction ID
+    private String FITID;
 
+    // OFX
     private String securityId;
 
+    // OFX
     private String securityType;
 
     private BigDecimal units = BigDecimal.ZERO;
@@ -73,7 +77,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private BigDecimal fees = BigDecimal.ZERO;
 
-    // Type of income for investment transaction
+    // OFX, Type of income for investment transaction
     private String incomeType;
 
     private boolean taxExempt = false;
@@ -89,7 +93,10 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     // OFX
     private String refNum;
+
+    // OFX
     private String subAccount;
+
     private String currency;
 
     /**
@@ -109,12 +116,12 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
      *
      * @return transaction id
      */
-    public String getTransactionID() {
-        return transactionID;
+    public String getFITID() {
+        return FITID;
     }
 
-    public void setTransactionID(String transactionID) {
-        this.transactionID = transactionID;
+    public void setFITID(String FITID) {
+        this.FITID = FITID;
     }
 
     /**
@@ -378,35 +385,21 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         this.subAccount = subAccount;
     }
 
-    /*
-         *
-         * <STMTTRN>
-         *   <TRNTYPE>DIRECTDEBIT
-         *   <DTPOSTED>20060612120000[0:GMT]
-         *   <TRNAMT>-11.45
-         *   <FITID>1014005003
-         *   <SIC>000000
-         *   <NAME>ACH - Debit
-         *   <MEMO>WAL-MART 7 ECA PURCHASE 1021 FORTIN
-         * </STMTTRN>
-         *
-         * <STMTTRN>
-         *   <TRNTYPE>OTHER
-         *   <DTPOSTED>20060721120000[0:GMT]
-         *   <TRNAMT>-5.27
-         *   <FITID>1023720039
-         *   <SIC>000000
-         *   <NAME>ATM/DEBIT WITHDRAWAL
-         *   <MEMO>POS PURCHASE LOWE'S
-         * </STMTTRN>
-         */
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     @Override
     public String toString() {
         return getTransactionTypeDescription() + ", " +
                 getTransactionType() + ", " +
                 getDatePosted() + ", " +
                 getAmount() + ", " +
-                getTransactionID() + ", " +
+                getFITID() + ", " +
                 getSIC() + ", " +
                 getPayee() + ", " +
                 getMemo() + ", " +
@@ -414,13 +407,5 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
                 getRefNum() + ", " +
                 getPayeeId() + ", " +
                 getCurrency();
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 }

@@ -87,7 +87,7 @@ public class GenericImport {
 
                 // add the new transaction
                 if (transaction != null) {
-                    transaction.setFitid(tran.getTransactionID());
+                    transaction.setFitid(tran.getFITID());
                     engine.addTransaction(transaction);
                 }
             }
@@ -140,7 +140,7 @@ public class GenericImport {
                     }
 
                     // check for matching fitid number
-                    final String id = importTransaction.getTransactionID();
+                    final String id = importTransaction.getFITID();
                     if (id != null && !id.isEmpty()) {
                         if (tran.getFitid() != null && tran.getFitid().equals(id)) {
                             importTransaction.setState(ImportState.EQUAL);

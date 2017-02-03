@@ -103,7 +103,7 @@ public class OfxImport {
 
                 // add the new transaction
                 if (transaction != null) {
-                    transaction.setFitid(tran.getTransactionID());
+                    transaction.setFitid(tran.getFITID());
                     engine.addTransaction(transaction);
                 }
             }
