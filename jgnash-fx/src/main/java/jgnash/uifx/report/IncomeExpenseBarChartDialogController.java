@@ -50,6 +50,8 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.time.DateUtils;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * Income and Expense Bar Chart.
@@ -147,6 +149,8 @@ public class IncomeExpenseBarChartDialogController {
         final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
                 periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
 
+        int descriptorsIndex = 0;
+
         // Income Series
         final XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
         incomeSeries.setName(AccountType.INCOME.toString());
@@ -171,17 +175,40 @@ public class IncomeExpenseBarChartDialogController {
             profitSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income.add(expense)));
         }
 
+        descriptorsIndex = 0;
         for (XYChart.Data<String, Number> data : incomeSeries.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
+            setupPieChartLaunch(data, AccountType.INCOME,
+                    descriptors.get(descriptorsIndex).getStartDate(), descriptors.get(descriptorsIndex).getEndDate());
+            descriptorsIndex++;
         }
 
+        descriptorsIndex = 0;
         for (XYChart.Data<String, Number> data : expenseSeries.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
+            setupPieChartLaunch(data, AccountType.EXPENSE,
+                    descriptors.get(descriptorsIndex).getStartDate(), descriptors.get(descriptorsIndex).getEndDate());
+            descriptorsIndex++;
         }
 
         for (XYChart.Data<String, Number> data : profitSeries.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
         }
+    }
+
+    private void setupPieChartLaunch(final XYChart.Data<String, Number> data, final AccountType accountType, 
+            final LocalDate startDate, final LocalDate endDate){
+        //PK: Launch the PieChartNormally on click
+        data.getNode().setOnMouseClicked(event -> {
+            final FXMLUtils.Pair<IncomeExpensePieChartDialogController> pair = 
+                    FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePieChartDialog.fxml"),
+                        ResourceUtils.getString("Title.IncomeExpenseChart"));
+
+            pair.getStage().show();
+
+            //PK: Now customize the data we are interested in
+            pair.getController().setParameters(accountType, startDate, endDate);
+        });
     }
 
     private BigDecimal getSum(final List<Account> accounts, final LocalDate statDate, final LocalDate endDate) {

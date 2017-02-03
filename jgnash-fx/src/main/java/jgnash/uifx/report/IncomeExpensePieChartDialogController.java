@@ -18,6 +18,7 @@
 package jgnash.uifx.report;
 
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -228,6 +229,23 @@ public class IncomeExpensePieChartDialogController {
         } else {
             pieChart.setData(FXCollections.emptyObservableList());
             pieChart.setTitle("No Data");
+        }
+    }
+
+    public void setParameters( final AccountType accountType, final LocalDate startDate, final LocalDate endDate ) {
+        //PK: dates can be directly set
+        startDatePicker.setValue(startDate);
+        endDatePicker.setValue(endDate);
+
+        //PK: We assume that the root of all income or expense accounts is one account under the root. Select that
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        for ( final Account comboAccount : accountComboBox.getItems() ) {
+            if ( (accountType == comboAccount.getAccountType()) && (comboAccount.getParent() == engine.getRootAccount()) ) {
+                accountComboBox.setValue(comboAccount);
+                break;
+            }
         }
     }
 
