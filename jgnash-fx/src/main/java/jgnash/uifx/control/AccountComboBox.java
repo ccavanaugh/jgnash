@@ -47,49 +47,14 @@ import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
  * ComboBox of available accounts.  A Predicate for allowed accounts may be specified.
  *
  * @author Craig Cavanaugh
- *
- * <a href="https://bugs.openjdk.java.net/browse/JDK-8129123">Bug JDK-8129123</a>
+ *         <p>
+ *         <a href="https://bugs.openjdk.java.net/browse/JDK-8129123">Bug JDK-8129123</a>
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
 
     final private FilteredList<Account> filteredList;
 
     final private ObservableList<Account> items;
-
-    private class KeyHandler implements EventHandler<KeyEvent> {
-
-        @Override
-        public void handle(final KeyEvent event) {
-            int current = getSelectionModel().getSelectedIndex();
-
-            if (current < 0 || current > filteredList.size()) {
-                current = 0;
-            }
-       
-            int loop = current;
-
-            do {
-                loop++; //move to next item
-                if (loop > filteredList.size() - 1) {
-                    loop = 0;
-                }
-                
-                final Account item = filteredList.get(loop);
-                if (item.toString().toUpperCase().startsWith(event.getCharacter().toUpperCase())) {
-                    getSelectionModel().select(item);
-                    break;
-                }
-            } while ( loop != current );
-
-            forceScrollSelectionBugWorkAround();
-        }
-    }
-
-    // TODO: JDK Bug JDK-8129123 https://bugs.openjdk.java.net/browse/JDK-8129123
-    private void forceScrollSelectionBugWorkAround() {
-        final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
-        listView.scrollTo(getSelectionModel().getSelectedIndex());
-    }
 
     public AccountComboBox() {
 
@@ -127,11 +92,9 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         });
     }
 
-    public ObservableList<Account> getUnfilteredItems() {return items; }
-
     /**
      * Returns the default Predicate used to determine which Accounts are displayed.
-     *
+     * <p>
      * The default is only visible accounts that are not locked or placeholders are shown.
      *
      * @return default Account Predicate
@@ -147,6 +110,16 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
      */
     public static Predicate<Account> getShowAllPredicate() {
         return account -> true;
+    }
+
+    // TODO: JDK Bug JDK-8129123 https://bugs.openjdk.java.net/browse/JDK-8129123
+    private void forceScrollSelectionBugWorkAround() {
+        final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
+        listView.scrollTo(getSelectionModel().getSelectedIndex());
+    }
+
+    public ObservableList<Account> getUnfilteredItems() {
+        return items;
     }
 
     public void setPredicate(final Predicate<Account> predicate) {
@@ -166,6 +139,18 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
             } else {    // push to the end of the application thread only if needed
                 Platform.runLater(() -> setValue(filteredList.get(0)));
             }
+        }
+    }
+
+    /**
+     * A decorator around {@link ComboBox#setValue(Object)} that ensures only Accounts available within this ComboBox
+     * are set.
+     *
+     * @param value Account to set
+     */
+    public final void setAccountValue(final Account value) {
+        if (value == null || filteredList.contains(value)) {
+            setValue(value);
         }
     }
 
@@ -209,5 +194,34 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                     break;
             }
         });
+    }
+
+    private class KeyHandler implements EventHandler<KeyEvent> {
+
+        @Override
+        public void handle(final KeyEvent event) {
+            int current = getSelectionModel().getSelectedIndex();
+
+            if (current < 0 || current > filteredList.size()) {
+                current = 0;
+            }
+
+            int loop = current;
+
+            do {
+                loop++; //move to next item
+                if (loop > filteredList.size() - 1) {
+                    loop = 0;
+                }
+
+                final Account item = filteredList.get(loop);
+                if (item.toString().toUpperCase().startsWith(event.getCharacter().toUpperCase())) {
+                    getSelectionModel().select(item);
+                    break;
+                }
+            } while (loop != current);
+
+            forceScrollSelectionBugWorkAround();
+        }
     }
 }
