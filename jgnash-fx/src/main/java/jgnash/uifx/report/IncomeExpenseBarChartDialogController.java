@@ -45,6 +45,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
+import jgnash.resource.cursor.CustomCursor;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
@@ -209,6 +210,8 @@ public class IncomeExpenseBarChartDialogController {
             //PK: Now customize the data we are interested in
             pair.getController().setParameters(accountType, startDate, endDate);
         });
+
+        data.getNode().setOnMouseEntered(event -> data.getNode().setCursor(CustomCursor.getZoomInCursor()) );
     }
 
     private BigDecimal getSum(final List<Account> accounts, final LocalDate statDate, final LocalDate endDate) {
