@@ -32,6 +32,8 @@ import jgnash.convert.imports.DateFormat;
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.ResourceUtils;
@@ -82,8 +84,8 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
 
         // hide the controls if date format selection is not permitted
         dateFormatChoiceBox.disableProperty().bind(dateFormatSelectionEnabled.not());
-        dateFormatLabel.visibleProperty().bind(dateFormatSelectionEnabled);
-        dateFormatChoiceBox.visibleProperty().bind(dateFormatSelectionEnabled);
+        dateFormatChoiceBox.managedProperty().bind(dateFormatSelectionEnabled);
+        dateFormatLabel.managedProperty().bind(dateFormatSelectionEnabled);
     }
 
     @Override
@@ -105,13 +107,23 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
 
     @Override
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
+        final ImportBank<?> bank = (ImportBank<?>) map.get(ImportWizard.Settings.BANK);
+
+        // Filter the available account types to prevent import errors
+        if (bank != null && bank.isInvestmentAccount()) {
+            accountComboBox.setPredicate(AccountComboBox.getDefaultPredicate()
+                    .and(account -> account.getAccountType().getAccountGroup() == AccountGroup.INVEST));
+        } else {
+            accountComboBox.setPredicate(AccountComboBox.getDefaultPredicate()
+                    .and(account -> account.getAccountType() != AccountType.INCOME
+                            && account.getAccountType() != AccountType.EXPENSE));
+        }
+
         if (map.get(ImportWizard.Settings.ACCOUNT) != null) {
-            accountComboBox.setValue((Account) map.get(ImportWizard.Settings.ACCOUNT));
+            accountComboBox.setAccountValue((Account) map.get(ImportWizard.Settings.ACCOUNT));
         }
 
         if (!dateFormatChoiceBox.isDisabled()) {
-            final ImportBank<?> bank = (ImportBank<?>) map.get(ImportWizard.Settings.BANK);
-
             if (bank != null && bank instanceof QifAccount) {
                 dateFormatChoiceBox.setValue(((QifAccount) bank).getDateFormat());
             }
