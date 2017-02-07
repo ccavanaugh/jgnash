@@ -48,7 +48,6 @@ public class QifTransaction extends ImportTransaction {
     String security;
     String price;
     String quantity;
-    String type;
     String amountTrans;
 
     public final ArrayList<QifSplitTransaction> splits = new ArrayList<>();

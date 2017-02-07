@@ -19,6 +19,7 @@ package jgnash.convert.imports.ofx;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -115,10 +116,6 @@ public class OfxImport {
 
         // OFX reinvested dividends can be merged into one or created as a zero commission purchase
 
-        // TODO match up security
-        // Specify an income account!
-        // Specify a fees account
-
         final SecurityNode securityNode = matchSecurity(ofxBank, ofxTransaction.getSecurityId());
         final String memo = ofxTransaction.getMemo();
         final LocalDate datePosted = ofxTransaction.getDatePosted();
@@ -127,30 +124,32 @@ public class OfxImport {
         final BigDecimal units = ofxTransaction.getUnits();
         final BigDecimal unitPrice = ofxTransaction.getUnitPrice();
 
-        Account cashAccount = investmentAccount;
+        final Account gainsAccount = ofxTransaction.getGainsAccount();
+        final Account fessAccount = ofxTransaction.getFeesAccount();
+
+        Account cashAccount = ofxTransaction.getAccount();
 
         // force use of cash balance
         if (OfxTags.CASH.equals(ofxTransaction.getSubAccount())) {
             cashAccount = investmentAccount;
         }
 
-        List<TransactionEntry> fees = Collections.emptyList();
+        final List<TransactionEntry> fees = new ArrayList<>();
+        final List<TransactionEntry> gains = Collections.emptyList();
 
         if (!ofxTransaction.getCommission().equals(BigDecimal.ZERO)) {
-            // TODO: This is a single entry fee
-
-            final TransactionEntry transactionEntry = new TransactionEntry(investmentAccount, ofxTransaction.getCommission().negate());
+            final TransactionEntry transactionEntry = new TransactionEntry(fessAccount, ofxTransaction.getCommission().negate());
             transactionEntry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
             fees.add(transactionEntry);
         }
 
         if (!ofxTransaction.getFees().equals(BigDecimal.ZERO)) {
-            // TODO: This is a single entry fee
-
-            final TransactionEntry transactionEntry = new TransactionEntry(investmentAccount, ofxTransaction.getFees().negate());
+            final TransactionEntry transactionEntry = new TransactionEntry(fessAccount, ofxTransaction.getFees().negate());
             transactionEntry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
             fees.add(transactionEntry);
         }
+
+        // TODO: Add a gains column.  OFX does not identify investment gains
 
         InvestmentTransaction transaction = null;
 
@@ -160,32 +159,20 @@ public class OfxImport {
 
             switch (ofxTransaction.getTransactionType()) {
                 case DIVIDEND:
-
-                    // TODO: This is a single entry dividend
-                    transaction = TransactionFactory.generateDividendXTransaction(investmentAccount, investmentAccount, cashAccount,
+                    transaction = TransactionFactory.generateDividendXTransaction(gainsAccount, investmentAccount, cashAccount,
                             securityNode, dividend, dividend, dividend, datePosted, memo);
                     break;
                 case REINVESTDIV:   // cash with zero commission
-
-                    // TODO: This is a single entry buy
-                    transaction = TransactionFactory.generateBuyXTransaction(cashAccount, investmentAccount, securityNode,
-                            unitPrice, units, BigDecimal.ONE, datePosted, memo, fees);
-
+                    transaction = TransactionFactory.generateReinvestDividendXTransaction(investmentAccount, securityNode,
+                            unitPrice, units, datePosted, memo, fees, gains);
                     break;
                 case BUYSHARE:
-                    // TODO: This is a single entry buy
                     transaction = TransactionFactory.generateBuyXTransaction(cashAccount, investmentAccount, securityNode,
                             unitPrice, units, BigDecimal.ONE, datePosted, memo, fees);
-
                     break;
                 case SELLSHARE:
-                    // TODO: This is a single entry buy
-
-                    List<TransactionEntry> gains = Collections.emptyList();
-
                     transaction = TransactionFactory.generateSellXTransaction(cashAccount, investmentAccount, securityNode,
                             unitPrice, units, BigDecimal.ONE, datePosted, memo, fees, gains);
-
                     break;
                 default:
             }

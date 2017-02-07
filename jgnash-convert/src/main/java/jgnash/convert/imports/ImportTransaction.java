@@ -40,6 +40,16 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private Account account;
 
+    /**
+     * Account for dividends and gains/losses from an investment transaction
+     */
+    private Account gainsAccount;
+
+    /**
+     * Account for investment expenses
+     */
+    private Account feesAccount;
+
     private BigDecimal amount = BigDecimal.ZERO;
 
     private String checkNumber = ""; // check number (?)
@@ -106,7 +116,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         return account;
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(final Account account) {
         this.account = account;
     }
 
@@ -393,6 +403,28 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         this.currency = currency;
     }
 
+    /**
+     * Account for gains or losses from an investment transaction
+     */
+    public Account getGainsAccount() {
+        return gainsAccount;
+    }
+
+    public void setGainsAccount(final Account gainsAccount) {
+        this.gainsAccount = gainsAccount;
+    }
+
+    /**
+     * Account for investment expenses
+     */
+    public Account getFeesAccount() {
+        return feesAccount;
+    }
+
+    public void setFeesAccount(Account feesAccount) {
+        this.feesAccount = feesAccount;
+    }
+
     @Override
     public String toString() {
         return getTransactionTypeDescription() + ", " +
@@ -402,6 +434,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
                 getFITID() + ", " +
                 getSIC() + ", " +
                 getPayee() + ", " +
+
                 getMemo() + ", " +
                 getCheckNumber() + ", " +
                 getRefNum() + ", " +

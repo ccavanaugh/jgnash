@@ -40,6 +40,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -52,10 +53,12 @@ import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
+import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
 import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
@@ -74,6 +77,14 @@ import jgnash.util.TextResource;
  */
 public class ImportPageTwoController extends AbstractWizardPaneController<ImportWizard.Settings> {
 
+    private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
+
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0, 0, 0};
+
+    private final SimpleBooleanProperty valid = new SimpleBooleanProperty(false);
+
+    private final NumberFormat numberFormat = NumberFormat.getNumberInstance();
+
     @FXML
     private TextFlow textFlow;
 
@@ -86,17 +97,19 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     @FXML
     private ResourceBundle resources;
 
-    private final SimpleBooleanProperty valid = new SimpleBooleanProperty(false);
-
     private TableViewManager<ImportTransaction> tableViewManager;
 
-    private final NumberFormat numberFormat = NumberFormat.getNumberInstance();
+    private TableColumn<ImportTransaction, Account> incomeAccountColumn;
 
-    private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
+    private TableColumn<ImportTransaction, Account> expenseAccountColumn;
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0};
+    private Account baseAccount = null;
 
     private Account lastAccount;
+
+    private Account lastGainsAccount;
+
+    private Account lastFeesAccount;
 
     @FXML
     private void initialize() {
@@ -132,7 +145,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
             cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                 if (event.getClickCount() > 1) {
-                    final ImportTransaction t = tableView.getItems().get(((TableCell<?,?>)event.getSource())
+                    final ImportTransaction t = tableView.getItems().get(((TableCell<?, ?>) event.getSource())
                             .getTableRow().getIndex());
 
                     if (t.getState() == ImportState.EQUAL) {
@@ -193,6 +206,40 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         });
         tableView.getColumns().add(accountColumn);
 
+
+        incomeAccountColumn = new TableColumn<>(resources.getString("Column.Income"));
+        incomeAccountColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null && param.getValue().getAccount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getGainsAccount());
+            }
+            return null;
+        });
+        incomeAccountColumn.setCellFactory(param -> new IncomeAccountComboBoxTableCell<>());
+        incomeAccountColumn.setEditable(true);
+        incomeAccountColumn.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setGainsAccount(event.getNewValue());
+            lastGainsAccount = event.getNewValue();
+            Platform.runLater(tableViewManager::packTable);
+        });
+        tableView.getColumns().add(incomeAccountColumn);
+
+        expenseAccountColumn = new TableColumn<>(resources.getString("Column.Expense"));
+        expenseAccountColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null && param.getValue().getAccount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getFeesAccount());
+            }
+            return null;
+        });
+        expenseAccountColumn.setCellFactory(param -> new ExpenseAccountComboBoxTableCell<>());
+        expenseAccountColumn.setEditable(true);
+        expenseAccountColumn.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setFeesAccount(event.getNewValue());
+            lastFeesAccount = event.getNewValue();
+            Platform.runLater(tableViewManager::packTable);
+        });
+        tableView.getColumns().add(expenseAccountColumn);
+
+
         final TableColumn<ImportTransaction, BigDecimal> amountColumn =
                 new TableColumn<>(resources.getString("Column.Amount"));
 
@@ -215,9 +262,9 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         if (bank != null) {
             final List<ImportTransaction> list = bank.getTransactions();
 
-            final Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
+            baseAccount = (Account) map.get(ImportWizard.Settings.ACCOUNT);
 
-            final CurrencyNode currencyNode = account.getCurrencyNode();
+            final CurrencyNode currencyNode = baseAccount.getCurrencyNode();
 
             // rescale for consistency
             numberFormat.setMinimumFractionDigits(currencyNode.getScale());
@@ -225,12 +272,37 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
             // set to sane account assuming it's going to be a single entry
             for (final ImportTransaction t : list) {
-                t.setAccount(account);
+                t.setAccount(baseAccount);
+
+                if (t.isInvestmentTransaction()) {
+
+                    switch (t.getTransactionType()) {
+                        case BUYSHARE:
+                            t.setFeesAccount(baseAccount);
+                            break;
+                        case SELLSHARE:
+                            t.setFeesAccount(baseAccount);
+                            t.setGainsAccount(baseAccount);
+                            break;
+                        case DIVIDEND:
+                            t.setGainsAccount(baseAccount);
+                            break;
+                        case REINVESTDIV:
+                            t.setFeesAccount(baseAccount);
+                            t.setGainsAccount(baseAccount);
+                            break;
+                        default:
+                    }
+                }
+
                 t.setState(ImportState.NEW);  // force reset
             }
 
+            incomeAccountColumn.setVisible(bank.isInvestmentAccount());
+            expenseAccountColumn.setVisible(bank.isInvestmentAccount());
+
             // match up any pre-existing transactions
-            GenericImport.matchTransactions(list, account);
+            GenericImport.matchTransactions(list, baseAccount);
 
             // classify the transactions
             if (Options.globalBayesProperty().get()) {
@@ -240,9 +312,9 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                 final List<Transaction> transactions = engine.getTransactions();
                 transactions.sort(null);
 
-                BayesImportClassifier.classifyTransactions(list, transactions, account);
+                BayesImportClassifier.classifyTransactions(list, transactions, baseAccount);
             } else {
-                BayesImportClassifier.classifyTransactions(list, account.getSortedTransactionList(), account);
+                BayesImportClassifier.classifyTransactions(list, baseAccount.getSortedTransactionList(), baseAccount);
             }
 
             tableView.getItems().setAll(list);
@@ -320,6 +392,15 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         @Override
         public void startEdit() {
+            final TableRow row = getTableRow();
+
+            if (row != null) {
+                final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
+
+                editableProperty().setValue(!(importTransaction.isInvestmentTransaction()
+                        && importTransaction.getTransactionType() == TransactionType.REINVESTDIV));
+            }
+
             if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
                 return;
             }
@@ -339,7 +420,10 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         public void cancelEdit() {
             super.cancelEdit();
 
-            setText(getItem().getName());
+            if (getItem() != null) {
+                setText(getItem().getName());
+            }
+
             setGraphic(null);
         }
 
@@ -348,6 +432,165 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             super.updateItem(item, empty);
 
             if (empty || item == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                if (isEditing()) {
+                    comboBox.getSelectionModel().select(getItem());
+                    setText(null);
+                    setGraphic(comboBox);
+                } else {
+                    setText(getItem().getName());
+                    setGraphic(null);
+                }
+            }
+        }
+    }
+
+    class IncomeAccountComboBoxTableCell<S extends ImportTransaction> extends TableCell<S, Account> {
+
+        private final AccountComboBox comboBox;
+
+        IncomeAccountComboBoxTableCell() {
+            this.getStyleClass().add("combo-box-table-cell");
+
+            comboBox = new AccountComboBox();
+
+            comboBox.setPredicate(AccountComboBox.getDefaultPredicate()
+                    .and(account -> account.getAccountType() == AccountType.INCOME || account == baseAccount));
+
+            comboBox.setMaxWidth(Double.MAX_VALUE);
+            comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+                if (isEditing()) {
+                    commitEdit(newValue);
+                }
+            });
+        }
+
+        @Override
+        public void startEdit() {
+            final TableRow row = getTableRow();
+
+            if (row != null) {
+                final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
+
+                editableProperty().setValue(importTransaction.getTransactionType() == TransactionType.SELLSHARE
+                        || importTransaction.getTransactionType() == TransactionType.DIVIDEND
+                        || importTransaction.getTransactionType() == TransactionType.REINVESTDIV);
+            }
+
+            if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
+                return;
+            }
+
+            if (lastGainsAccount != null) {
+                comboBox.getSelectionModel().select(lastGainsAccount);
+            } else {
+                comboBox.getSelectionModel().select(getItem());
+            }
+
+            super.startEdit();
+            setText(null);
+            setGraphic(comboBox);
+        }
+
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+
+            if (getItem() != null) {
+                setText(getItem().getName());
+            }
+
+            setGraphic(null);
+        }
+
+        @Override
+        public void updateItem(@Nullable final Account item, final boolean empty) {
+            super.updateItem(item, empty);
+
+            TableRow row = getTableRow();
+
+            if (empty || item == null || row == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                if (isEditing()) {
+                    comboBox.getSelectionModel().select(getItem());
+                    setText(null);
+                    setGraphic(comboBox);
+                } else {
+                    setText(getItem().getName());
+                    setGraphic(null);
+                }
+            }
+        }
+    }
+
+    class ExpenseAccountComboBoxTableCell<S extends ImportTransaction> extends TableCell<S, Account> {
+
+        private final AccountComboBox comboBox;
+
+        ExpenseAccountComboBoxTableCell() {
+            this.getStyleClass().add("combo-box-table-cell");
+
+            comboBox = new AccountComboBox();
+            comboBox.setPredicate(AccountComboBox.getDefaultPredicate()
+                    .and(account -> account.getAccountType() == AccountType.EXPENSE || account == baseAccount));
+
+            comboBox.setMaxWidth(Double.MAX_VALUE);
+            comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+                if (isEditing()) {
+                    commitEdit(newValue);
+                }
+            });
+        }
+
+        @Override
+        public void startEdit() {
+            final TableRow row = getTableRow();
+
+            if (row != null) {
+                final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
+
+                editableProperty().setValue(importTransaction.getTransactionType() == TransactionType.SELLSHARE
+                        || importTransaction.getTransactionType() == TransactionType.BUYSHARE
+                        || importTransaction.getTransactionType() == TransactionType.REINVESTDIV);
+            }
+
+            if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
+                return;
+            }
+
+            if (lastFeesAccount != null) {
+                comboBox.getSelectionModel().select(lastFeesAccount);
+            } else {
+                comboBox.getSelectionModel().select(getItem());
+            }
+
+            super.startEdit();
+            setText(null);
+            setGraphic(comboBox);
+        }
+
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+
+            if (getItem() != null) {
+                setText(getItem().getName());
+            }
+
+            setGraphic(null);
+        }
+
+        @Override
+        public void updateItem(@Nullable final Account item, final boolean empty) {
+            super.updateItem(item, empty);
+
+            TableRow row = getTableRow();
+
+            if (empty || item == null || row == null) {
                 setText(null);
                 setGraphic(null);
             } else {

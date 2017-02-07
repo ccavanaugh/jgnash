@@ -346,12 +346,13 @@ public final class QifParser {
             while (line != null) {
                 if (startsWith(line, "!Type:")) {
                     if (startsWith(line, "!Type:Invst")) {
-                        tran.type = line.substring(1);
+                        tran.setTransactionTypeDescription(line.substring(1));
+                        tran.setTransactionTypeDescription(line.substring(1));
                     } else if (startsWith(line, "!Type:Memor")) {
                         in.reset();
                         return true;
                     } else {
-                        tran.type = line.substring(1);
+                        tran.setTransactionTypeDescription(line.substring(1));
                     }
                 } else if (line.startsWith("D")) {
                     /* Preserve the original unparsed date so that it may be
@@ -420,7 +421,7 @@ public final class QifParser {
             line = in.readLine();
             while (line != null) {
                 if (startsWith(line, "!Type:Invst")) { // TODO Bogus check?
-                    tran.type = line.substring(1);
+                    tran.setTransactionTypeDescription(line.substring(1));
                 } else if (startsWith(line, "!Type:Memor")) {
                     in.reset();
                     result = true;
