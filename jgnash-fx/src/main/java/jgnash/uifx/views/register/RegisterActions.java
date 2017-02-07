@@ -81,21 +81,26 @@ public class RegisterActions {
             }
         }
 
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        if (engine != null) {
-            for (final Transaction transaction : transactions) {
-                if (engine.removeTransaction(transaction)) {
-                    if (transaction.getAttachment() != null) {
-                        if (confirmAttachmentDeletion().getButtonData().isCancelButton()) {
-                            if (!engine.removeAttachment(transaction.getAttachment())) {
-                                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.DeleteAttachment",
-                                        transaction.getAttachment()));
+        // Move to a thread so the UI does not block
+        Thread thread = new Thread(() -> {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            if (engine != null) {
+                for (final Transaction transaction : transactions) {
+                    if (engine.removeTransaction(transaction)) {
+                        if (transaction.getAttachment() != null) {
+                            if (confirmAttachmentDeletion().getButtonData().isCancelButton()) {
+                                if (!engine.removeAttachment(transaction.getAttachment())) {
+                                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.DeleteAttachment",
+                                            transaction.getAttachment()));
+                                }
                             }
                         }
                     }
                 }
             }
-        }
+        });
+
+        thread.start();
     }
 
     static void duplicateTransaction(final Account account, final List<Transaction> transactions) {

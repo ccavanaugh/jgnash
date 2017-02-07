@@ -23,6 +23,7 @@ WANTS
 
 Release 2.29.0
 --------------
+* 02/07/17 Improved UI behavior when performing a large batch delete of transactions. (Fx)
 * 02/06/17 An OFX import now prevents initial assignment to the wrong account type. (Fx)
 * 02/03/17 Updated to the latest Netty and JOpt Simple Dependencies.
 * 02/01/17 Fixed a StringIndexOutOfBoundsException that was occurring when escaping out of a text field on MacOS. (Fx)
