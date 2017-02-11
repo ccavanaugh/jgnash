@@ -23,6 +23,8 @@ WANTS
 
 Release 2.29.0
 --------------
+* 02/11/17 Clicking on an Income or Expense bar within the Income Expense Bar Chart will show the details for the
+           period within a pie chart. (Fx) _[Pranay Kumar]_
 * 02/07/17 Improved UI behavior when performing a large batch delete of transactions. (Fx)
 * 02/06/17 An OFX import now prevents initial assignment to the wrong account type. (Fx)
 * 02/03/17 Updated to the latest Netty and JOpt Simple Dependencies.

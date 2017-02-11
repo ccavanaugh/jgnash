@@ -150,8 +150,6 @@ public class IncomeExpenseBarChartDialogController {
         final List<ReportPeriodUtils.Descriptor> descriptors = ReportPeriodUtils.getDescriptors(
                 periodComboBox.getValue(), startDatePicker.getValue(), endDatePicker.getValue());
 
-        int descriptorsIndex = 0;
-
         // Income Series
         final XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
         incomeSeries.setName(AccountType.INCOME.toString());
@@ -176,23 +174,25 @@ public class IncomeExpenseBarChartDialogController {
             profitSeries.getData().add(new XYChart.Data<>(descriptor.getLabel(), income.add(expense)));
         }
 
-        descriptorsIndex = 0;
-        for (XYChart.Data<String, Number> data : incomeSeries.getData()) {
+        int descriptorsIndex = 0;
+        for (final XYChart.Data<String, Number> data : incomeSeries.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
             setupPieChartLaunch(data, AccountType.INCOME,
                     descriptors.get(descriptorsIndex).getStartDate(), descriptors.get(descriptorsIndex).getEndDate());
+
             descriptorsIndex++;
         }
 
         descriptorsIndex = 0;
-        for (XYChart.Data<String, Number> data : expenseSeries.getData()) {
+        for (final XYChart.Data<String, Number> data : expenseSeries.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
             setupPieChartLaunch(data, AccountType.EXPENSE,
                     descriptors.get(descriptorsIndex).getStartDate(), descriptors.get(descriptorsIndex).getEndDate());
+
             descriptorsIndex++;
         }
 
-        for (XYChart.Data<String, Number> data : profitSeries.getData()) {
+        for (final XYChart.Data<String, Number> data : profitSeries.getData()) {
             Tooltip.install(data.getNode(), new Tooltip(numberFormat.format(data.getYValue())));
         }
     }

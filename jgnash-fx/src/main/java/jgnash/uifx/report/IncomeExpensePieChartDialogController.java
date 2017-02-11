@@ -232,7 +232,7 @@ public class IncomeExpensePieChartDialogController {
         }
     }
 
-    public void setParameters( final AccountType accountType, final LocalDate startDate, final LocalDate endDate ) {
+    void setParameters(final AccountType accountType, final LocalDate startDate, final LocalDate endDate) {
         //PK: dates can be directly set
         startDatePicker.setValue(startDate);
         endDatePicker.setValue(endDate);
