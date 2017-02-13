@@ -18,7 +18,6 @@
 package jgnash.ui.actions;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
