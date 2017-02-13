@@ -31,9 +31,9 @@ public final class OS {
     private static final String JAVA_VERSION = "java.version";
 
     /**
-     * The minimum working release to use for JavaFx due to needed API changes.
+     * The minimum working release to use for JavaFx due to needed API changes and critical bugs
      */
-    public static final int JVM_RELEASE_60 = 60;
+    public static final int JVM_RELEASE_71 = 71;
 
     static {
         final String os = System.getProperty("os.name");
