@@ -57,10 +57,12 @@ public class FileUtilsTest {
     public void testFileLock() throws IOException, InterruptedException {
         final Path tempFile = Files.createTempFile("temp", null);
 
-        final Writer writer = Files.newBufferedWriter(tempFile);
-
-        writer.write("test");
-        writer.close();
+        try (final Writer writer = Files.newBufferedWriter(tempFile)) {
+        	writer.write("test");
+        	writer.close();
+        } catch (Exception e) {
+        	fail();
+        }
 
         assertTrue(Files.isWritable(tempFile));
         assertTrue(Files.isReadable(tempFile));
