@@ -392,7 +392,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         @Override
         public void startEdit() {
-            final TableRow row = getTableRow();
+            final TableRow<?> row = getTableRow();
 
             if (row != null) {
                 final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
@@ -469,7 +469,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         @Override
         public void startEdit() {
-            final TableRow row = getTableRow();
+            final TableRow<?> row = getTableRow();
 
             if (row != null) {
                 final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
@@ -509,7 +509,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         public void updateItem(@Nullable final Account item, final boolean empty) {
             super.updateItem(item, empty);
 
-            TableRow row = getTableRow();
+            TableRow<?> row = getTableRow();
 
             if (empty || item == null || row == null) {
                 setText(null);
@@ -548,7 +548,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         @Override
         public void startEdit() {
-            final TableRow row = getTableRow();
+            final TableRow<?> row = getTableRow();
 
             if (row != null) {
                 final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
@@ -588,7 +588,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         public void updateItem(@Nullable final Account item, final boolean empty) {
             super.updateItem(item, empty);
 
-            TableRow row = getTableRow();
+            TableRow<?> row = getTableRow();
 
             if (empty || item == null || row == null) {
                 setText(null);

@@ -84,7 +84,7 @@ public class PriorityThreadPoolExecutor {
 
         /* Remove any non-critical system tasks from the executor first */
         for (final Runnable runnable : queue.toArray(new Runnable[0])) {
-            if (((FutureTaskWrapper)runnable).getPriorityCallable().getPriority().getPriority() != Priority.SYSTEM) {
+            if (((FutureTaskWrapper<?>)runnable).getPriorityCallable().getPriority().getPriority() != Priority.SYSTEM) {
                 threadPoolExecutor.remove(runnable);
             }
         }
