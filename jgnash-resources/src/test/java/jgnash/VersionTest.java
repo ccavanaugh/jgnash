@@ -1,5 +1,6 @@
 package jgnash;
 
+import jgnash.util.OS;
 import jgnash.util.Version;
 import org.junit.Test;
 
@@ -21,5 +22,14 @@ public class VersionTest {
         assertFalse(Version.isReleaseCurrent("2.20"));
         assertFalse(Version.isReleaseCurrent("2.20.0"));
         assertTrue(Version.isReleaseCurrent("10.40.40"));
+    }
+
+    @Test
+    public void testJavaRelease() {
+
+        System.out.println("Java Release: " + OS.getJavaRelease());
+
+        assertTrue(OS.getJavaRelease() > 0);
+
     }
 }
