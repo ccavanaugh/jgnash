@@ -71,6 +71,8 @@ public class TableViewManager<S> {
 
     private final ObjectProperty<Callback<Integer, Double>> columnWeightFactory = new SimpleObjectProperty<>();
 
+    private final ObjectProperty<Callback<Integer, Double>> minimumColumnWidthFactory = new SimpleObjectProperty<>();
+
     private final ObjectProperty<Supplier<String>> preferenceKeyFactory = new SimpleObjectProperty<>();
 
     private final ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
@@ -89,8 +91,9 @@ public class TableViewManager<S> {
         this.tableView = tableView;
         this.preferencesUserRoot = preferencesUserRoot;
 
-        // Set a default format factory
+        // Set a default factories
         setColumnFormatFactory(param -> null);
+        setMinimumColumnWidthFactory(param -> 0.0);
 
          /* At least 2 updates need to be allowed.  The update in process and any potential updates requested
          * that occur when an update is already in process.  Limited to 1 thread
@@ -147,7 +150,9 @@ public class TableViewManager<S> {
             maxWidth = max.isPresent() ? max.getAsDouble() : 0;
         }
 
-        maxWidth = Math.max(maxWidth, column.getMinWidth());
+        //noinspection SuspiciousMethodCalls
+        maxWidth = Math.max(maxWidth, Math.max(column.getMinWidth(), minimumColumnWidthFactory
+                .get().call(tableView.getColumns().indexOf(column))));
 
         // header text width
         maxWidth = Math.max(maxWidth,
@@ -346,6 +351,15 @@ public class TableViewManager<S> {
 
     public void setColumnWeightFactory(final Callback<Integer, Double> weightFactory) {
         this.columnWeightFactory.set(weightFactory);
+    }
+
+    /**
+     * Enforces a minimum width width for a column
+     *
+     * @param widthFactory {@code Callback} returning a non-zero width of a given column
+     */
+    public void setMinimumColumnWidthFactory(final Callback<Integer, Double> widthFactory) {
+        this.minimumColumnWidthFactory.setValue(widthFactory);
     }
 
     public void setDefaultColumnVisibilityFactory(final Callback<Integer, Boolean> visibilityFactoryCallback) {
