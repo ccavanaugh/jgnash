@@ -81,6 +81,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0, 0, 0};
 
+    private static final double[] MIN_COLUMN_WIDTHS = {0, 0, 0, 0, 0, 90, 90, 90, 0};
+
     private final SimpleBooleanProperty valid = new SimpleBooleanProperty(false);
 
     private final NumberFormat numberFormat = NumberFormat.getNumberInstance();
@@ -128,13 +130,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE);
         tableViewManager.setColumnWeightFactory(column -> PREF_COLUMN_WEIGHTS[column]);
+        tableViewManager.setMinimumColumnWidthFactory(column -> MIN_COLUMN_WIDTHS[column]);
 
         updateDescriptor();
     }
 
     private void buildTableView() {
-
-        tableView.getColumns().clear();
 
         final TableColumn<ImportTransaction, ImportState> stateColumn = new TableColumn<>();
         stateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getState()));
@@ -234,7 +235,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         expenseAccountColumn.setEditable(true);
         expenseAccountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setFeesAccount(event.getNewValue());
-            lastFeesAccount = event.getNewValue();
+            //lastFeesAccount = event.getNewValue();
             Platform.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(expenseAccountColumn);
@@ -376,6 +377,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     class AccountComboBoxTableCell<S> extends TableCell<S, Account> {
 
         private final AccountComboBox comboBox;
+        private boolean firstPassEdit = false;
 
         AccountComboBoxTableCell() {
             this.getStyleClass().add("combo-box-table-cell");
@@ -383,9 +385,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             comboBox = new AccountComboBox();
 
             comboBox.setMaxWidth(Double.MAX_VALUE);
-            comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+
+            comboBox.setOnHidden(event -> {
                 if (isEditing()) {
-                    commitEdit(newValue);
+                    firstPassEdit = true;
+                    lastAccount = comboBox.getValue();
+                    commitEdit(comboBox.getValue());
                 }
             });
         }
@@ -405,7 +410,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                 return;
             }
 
-            if (lastAccount != null) {
+            if (!firstPassEdit && lastAccount != null) {
                 comboBox.getSelectionModel().select(lastAccount);
             } else {
                 comboBox.getSelectionModel().select(getItem());
@@ -450,6 +455,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     class IncomeAccountComboBoxTableCell<S extends ImportTransaction> extends TableCell<S, Account> {
 
         private final AccountComboBox comboBox;
+        private boolean firstPassEdit = false;
 
         IncomeAccountComboBoxTableCell() {
             this.getStyleClass().add("combo-box-table-cell");
@@ -460,9 +466,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                     .and(account -> account.getAccountType() == AccountType.INCOME || account == baseAccount));
 
             comboBox.setMaxWidth(Double.MAX_VALUE);
-            comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+
+            comboBox.setOnHidden(event -> {
                 if (isEditing()) {
-                    commitEdit(newValue);
+                    firstPassEdit = true;
+                    lastGainsAccount = comboBox.getValue();
+                    commitEdit(comboBox.getValue());
                 }
             });
         }
@@ -483,7 +492,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                 return;
             }
 
-            if (lastGainsAccount != null) {
+            if (!firstPassEdit && lastGainsAccount != null) {
                 comboBox.getSelectionModel().select(lastGainsAccount);
             } else {
                 comboBox.getSelectionModel().select(getItem());
@@ -530,6 +539,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     class ExpenseAccountComboBoxTableCell<S extends ImportTransaction> extends TableCell<S, Account> {
 
         private final AccountComboBox comboBox;
+        private boolean firstPassEdit = false;
 
         ExpenseAccountComboBoxTableCell() {
             this.getStyleClass().add("combo-box-table-cell");
@@ -539,9 +549,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                     .and(account -> account.getAccountType() == AccountType.EXPENSE || account == baseAccount));
 
             comboBox.setMaxWidth(Double.MAX_VALUE);
-            comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+
+            comboBox.setOnHidden(event -> {
                 if (isEditing()) {
-                    commitEdit(newValue);
+                    firstPassEdit = true;
+                    lastFeesAccount = comboBox.getValue();
+                    commitEdit(comboBox.getValue());
                 }
             });
         }
@@ -562,7 +575,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                 return;
             }
 
-            if (lastFeesAccount != null) {
+            if (!firstPassEdit && lastFeesAccount != null) {
                 comboBox.getSelectionModel().select(lastFeesAccount);
             } else {
                 comboBox.getSelectionModel().select(getItem());
