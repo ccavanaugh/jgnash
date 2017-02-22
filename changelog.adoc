@@ -23,6 +23,8 @@ WANTS
 
 Release 2.29.0
 --------------
+* 02/22/17 Backup files were not being preserved correctly in some instances depending on the pattern of the file names
+           in the same directory and if they contained a '-' character. (Swing, Fx)
 * 02/13/17 jGnashFx Users are required to use Java 8 Update 71 or newer due to critical Java bugs. (Fx)
 * 02/11/17 Clicking on an Income or Expense bar within the Income Expense Bar Chart will show the details for the
            period within a pie chart. (Fx) _[Pranay Kumar]_

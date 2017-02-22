@@ -240,15 +240,15 @@ public final class FileUtils {
      * style wildcard search pattern.
      *
      * @param directory base directory for the search
-     * @param pattern   DOS search pattern
+     * @param regexPattern   regex search pattern
      * @return a List of matching Files. The list will be empty if no matches
      * are found or if the directory is not valid.
      */
-    public static List<Path> getDirectoryListing(final Path directory, final String pattern) {
+    public static List<Path> getDirectoryListing(final Path directory, final String regexPattern) {
         final List<Path> fileList = new ArrayList<>();
 
         if (directory != null && Files.isDirectory(directory)) {
-            final Pattern p = SearchUtils.createSearchPattern(pattern, false);
+            final Pattern p = Pattern.compile(regexPattern);
 
             try {
                 fileList.addAll(Files.list(directory).filter(path -> p.matcher(path.toString()).matches())

@@ -60,6 +60,10 @@ public class EngineFactory {
 
     public static final String LOCALHOST = "localhost";
 
+    public static final String DEFAULT = "default";
+
+    public static final String REMOTE_PREFIX = "@";
+
     private static final String LAST_DATABASE = "LastDatabase";
 
     private static final String LAST_HOST = "LastHost";
@@ -80,13 +84,9 @@ public class EngineFactory {
 
     private static final Logger logger = Logger.getLogger(EngineFactory.class.getName());
 
-    public static final String DEFAULT = "default";
-
     private static final Map<String, Engine> engineMap = new HashMap<>();
 
     private static final Map<String, DataStore> dataStoreMap = new HashMap<>();
-
-    public static final String REMOTE_PREFIX = "@";
 
     private EngineFactory() {
     }
@@ -94,6 +94,7 @@ public class EngineFactory {
     /**
      * Registers a {@code Handler} with the class logger.
      * This also ensures the static logger is initialized.
+     *
      * @param handler {@code Handler} to register
      */
     public static void addLogHandler(final Handler handler) {
@@ -148,8 +149,8 @@ public class EngineFactory {
                 + "." + xmlDataStore.getFileExt());
 
         // push the intermediary file to the temporary directory
-        //xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
-        xmlFile = Paths.get(System.getProperty("java.io.tmpdir")  + xmlFile.getFileSystem().getSeparator() + xmlFile.getFileName().toString());
+        xmlFile = Paths.get(System.getProperty("java.io.tmpdir") + xmlFile.getFileSystem().getSeparator()
+                + xmlFile.getFileName().toString());
 
         xmlDataStore.saveAs(xmlFile, objects);
 
@@ -167,17 +168,18 @@ public class EngineFactory {
     }
 
     public static void removeOldCompressedXML(final String fileName, final int limit) {
-        final Path path  = Paths.get(fileName);
+        final Path path = Paths.get(fileName);
 
         final String baseFile = FileUtils.stripFileExtension(path.toString());
 
-        final List<Path> fileList = FileUtils.getDirectoryListing(path.getParent(), baseFile + "-*.zip");
+        // old files use the base file name plus a '-' and a 8 digit date plus a '-' and a 4 digit time stamp
+        final List<Path> fileList = FileUtils.getDirectoryListing(path.getParent(), baseFile + "-\\d{8}-\\d{4}.zip");
 
         if (fileList.size() > limit) {
             for (int i = 0; i < fileList.size() - limit; i++) {
                 try {
-                   Files.delete(fileList.get(i));
-                } catch (final IOException e) {
+                    Files.delete(fileList.get(i));
+                } catch (final Exception e) {
                     logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).toString());
                 }
             }
@@ -227,7 +229,7 @@ public class EngineFactory {
      *
      * @param fileName   filename to load
      * @param engineName engine identifier
-     * @param password connection password
+     * @param password   connection password
      * @return new {@code Engine} instance if successful, null otherwise
      * @see Engine
      */
