@@ -78,14 +78,19 @@ public class TableViewManager<S> {
     private final ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
 
     /**
-     * Used to track initialization.  If false, old column widths should be restored.
-     */
-    private boolean isFullyInitialized = false;
-
-    /**
      * Limits number of processed visibility change events ensuring the most recent is executed.
      */
     private final ThreadPoolExecutor updateColumnVisibilityExecutor;
+
+    /**
+     * Limits number of packTable calls while ensuring the most recent is executed.
+     */
+    private final ThreadPoolExecutor packTableExecutor;
+
+    /**
+     * Used to track initialization.  If false, old column widths should be restored.
+     */
+    private boolean isFullyInitialized = false;
 
     public TableViewManager(@NotNull final TableView<S> tableView, @NotNull final String preferencesUserRoot) {
         this.tableView = tableView;
@@ -103,6 +108,10 @@ public class TableViewManager<S> {
         updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0,
                 TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
         updateColumnVisibilityExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+
+        packTableExecutor = new ThreadPoolExecutor(0, 1, 0,
+                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        packTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     }
 
     public void restoreLayout() {
@@ -164,7 +173,7 @@ public class TableViewManager<S> {
     private void saveColumnWidths() {
         if (preferenceKeyFactory.get() != null) {
 
-            final double[] columnWidths =  tableView.getColumns().filtered(TableColumnBase::isVisible)
+            final double[] columnWidths = tableView.getColumns().filtered(TableColumnBase::isVisible)
                     .stream().mapToDouble(TableColumnBase::getWidth).toArray();
 
             final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
@@ -256,7 +265,7 @@ public class TableViewManager<S> {
      */
     public void packTable() {
 
-        new Thread(() -> {
+        packTableExecutor.execute(() -> {
             // Create a list of visible columns and column weights
             final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
             final List<Double> visibleColumnWeights = new ArrayList<>();
@@ -331,10 +340,10 @@ public class TableViewManager<S> {
                     isFullyInitialized = true;
 
                     // rerun the pack process to perform a fully calculated pack
-                    Platform.runLater(this::packTable);
+                    Platform.runLater(TableViewManager.this::packTable);
                 }
             });
-        }).start();
+        });
     }
 
     /**
