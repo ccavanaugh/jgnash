@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -256,7 +257,7 @@ public class TableViewManager<S> {
      */
     public void packTable() {
 
-        new Thread(() -> {
+        Thread task = new Thread(() -> {
             // Create a list of visible columns and column weights
             final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
             final List<Double> visibleColumnWeights = new ArrayList<>();
@@ -334,7 +335,8 @@ public class TableViewManager<S> {
                     Platform.runLater(this::packTable);
                 }
             });
-        }).start();
+        });
+        ForkJoinPool.commonPool().execute(task);
     }
 
     /**
