@@ -1,6 +1,8 @@
 package jgnash.uifx.util;
 
 import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
@@ -41,8 +43,60 @@ public class JavaFXUtils {
 
     public static final KeyCombination ESCAPE_KEY = new KeyCodeCombination(KeyCode.ESCAPE);
 
+    private static final Queue<Runnable> platformRunnables = new ConcurrentLinkedQueue<>();
+
+    private static final int BATCH_SIZE = 3;    // omne trium perfectum
+
+    private static final int FLOOD_DELAY_MILLIS = 50;
+
     private JavaFXUtils() {
         // utility class
+    }
+
+    /**
+     * Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future.
+     *
+     * This implementation batches Runnables together in the order received to minimize stress on the JavaFX Application
+     * Thread.  A small delay between batches is enforced if being flooded
+     *
+     * @see Platform#runLater(Runnable)
+     * @param runnable the Runnable whose run method will be executed on the
+     * JavaFX Application Thread
+     */
+    public static void runLater(final Runnable runnable) {
+        platformRunnables.add(runnable);
+        _runLater(false);
+    }
+
+    private static synchronized void _runLater(final boolean useFloodProtection) {
+
+        // don't flood the JavaFX Application with too many Runnables at once.  Allow other processes to run
+        if (useFloodProtection) {
+            try {
+                Thread.sleep(FLOOD_DELAY_MILLIS);
+            } catch (final InterruptedException e) {
+                Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }
+
+        Platform.runLater(() -> {
+            for (int i = 0; i < BATCH_SIZE - 1; i++) {
+                if (!platformRunnables.isEmpty()) {
+                    final Runnable runnable = platformRunnables.poll(); // poll instead of remove to prevent a NPE
+                    if (runnable != null) {
+                        runnable.run();
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            // if there are still more runnables to process, force the calling thread to wait to allow time for the
+            // Platform thread to do other work than what the queue contains
+            if (!platformRunnables.isEmpty()) {
+                _runLater(true);
+            }
+        });
     }
 
     /**
