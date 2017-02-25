@@ -263,7 +263,7 @@ public class TableViewManager<S> {
     /**
      * Called when the table columns need to be repacked because of content change
      */
-    public void packTable() {
+    public synchronized void packTable() {
 
         packTableExecutor.execute(() -> {
 
