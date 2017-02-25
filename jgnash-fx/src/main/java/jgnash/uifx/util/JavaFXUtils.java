@@ -1,10 +1,13 @@
 package jgnash.uifx.util;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,9 +48,11 @@ public class JavaFXUtils {
 
     private static final Queue<Runnable> platformRunnables = new ConcurrentLinkedQueue<>();
 
-    private static final int BATCH_SIZE = 3;    // omne trium perfectum
-
     private static final int FLOOD_DELAY_MILLIS = 50;
+
+    private static final int MAX_BATCH_TIME_MILLIS = 500;
+
+    private static final Semaphore batchSemaphore = new Semaphore(1);
 
     private JavaFXUtils() {
         // utility class
@@ -57,21 +62,27 @@ public class JavaFXUtils {
      * Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future.
      *
      * This implementation batches Runnables together in the order received to minimize stress on the JavaFX Application
-     * Thread.  A small delay between batches is enforced if being flooded
+     * Thread.  A small delay between batches is enforced if being flooded by too many events.  Do not use this for
+     * time sensitive operation such a UI feedback where delays are not desirable
      *
      * @see Platform#runLater(Runnable)
      * @param runnable the Runnable whose run method will be executed on the
      * JavaFX Application Thread
      */
-    public static void runLater(final Runnable runnable) {
+    public static void runLater(@NotNull final Runnable runnable) {
         platformRunnables.add(runnable);
-        _runLater(false);
+
+        // do not call _runLater unless the semaphore has been released.  _runLater will respawn if needed
+        if (batchSemaphore.tryAcquire()) {
+            _runLater();
+        }
     }
 
-    private static synchronized void _runLater(final boolean useFloodProtection) {
+    private static synchronized void _runLater() {
 
-        // don't flood the JavaFX Application with too many Runnables at once.  Allow other processes to run
-        if (useFloodProtection) {
+        // don't flood the JavaFX Application with too many Runnables at once.  Allow other processes to run by
+        // enforcing a small delay in the calling thread
+        if (!platformRunnables.isEmpty()) {
             try {
                 Thread.sleep(FLOOD_DELAY_MILLIS);
             } catch (final InterruptedException e) {
@@ -80,21 +91,29 @@ public class JavaFXUtils {
         }
 
         Platform.runLater(() -> {
-            for (int i = 0; i < BATCH_SIZE - 1; i++) {
+            final LocalDateTime start = LocalDateTime.now();
+
+            //int count = 0;
+
+            while (ChronoUnit.MILLIS.between(start, LocalDateTime.now()) < MAX_BATCH_TIME_MILLIS) {
                 if (!platformRunnables.isEmpty()) {
                     final Runnable runnable = platformRunnables.poll(); // poll instead of remove to prevent a NPE
                     if (runnable != null) {
                         runnable.run();
+                        //count++;
                     }
                 } else {
                     break;
                 }
             }
 
-            // if there are still more runnables to process, force the calling thread to wait to allow time for the
-            // Platform thread to do other work than what the queue contains
+            //System.out.println("batch " + count + ": "+ ChronoUnit.MILLIS.between(start, LocalDateTime.now()));
+
+            // if there are still more runnables to process, respawn to empty the queue
             if (!platformRunnables.isEmpty()) {
-                _runLater(true);
+                _runLater();
+            } else {
+                batchSemaphore.release();   // release the semaphore now the queue is empty
             }
         });
     }
