@@ -23,6 +23,8 @@ WANTS
 
 Release 2.29.0
 --------------
+* 02/25/17 Improved UI performance when performing large batch updates of transactions. (Fx, GitHub Issue #23)
+* 02/24/17 Updated to the latest Hibernate dependency.
 * 02/22/17 Backup files were not being preserved correctly in some instances depending on the pattern of the file names
            in the same directory and if they contained a '-' character. (Swing, Fx)
 * 02/13/17 jGnashFx Users are required to use Java 8 Update 71 or newer due to critical Java bugs. (Fx)
@@ -33,8 +35,8 @@ Release 2.29.0
 * 02/03/17 Updated to the latest Netty and JOpt Simple Dependencies.
 * 02/01/17 Fixed a StringIndexOutOfBoundsException that was occurring when escaping out of a text field on MacOS. (Fx)
 * 01/30/17 Fixed a NPE that was occurring when importing transactions. (Fx)
-* 01/30/17 Corrected an OFX import regression that reduced effectiveness of detecting a duplicate import.
-* 01/29/17 Entity trash was being checked too frequently. (GitHub Issue #21)
+* 01/30/17 Corrected an OFX import regression that reduced effectiveness of detecting a duplicate import. (Swing, Fx)
+* 01/29/17 Entity trash was being checked too frequently. (Swing, Fx, GitHub Issue #21)
 
 Release 2.28.4
 --------------
