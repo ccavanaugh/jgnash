@@ -20,7 +20,6 @@ package jgnash.uifx.views.register;
 import java.util.Objects;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
@@ -35,6 +34,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -177,7 +177,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
             final int index = tabPreferences.getInt(id, transactionForms.getSelectionModel().getSelectedIndex());
 
-            Platform.runLater(() -> transactionForms.getSelectionModel().select(index));
+            JavaFXUtils.runLater(() -> transactionForms.getSelectionModel().select(index));
         }
     }
 

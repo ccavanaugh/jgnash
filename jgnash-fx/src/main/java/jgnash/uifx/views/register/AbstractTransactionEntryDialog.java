@@ -17,7 +17,9 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.application.Platform;
+import java.math.BigDecimal;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,16 +34,15 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.util.ResourceBundle;
 
 /**
  * Abstract dialog for split transactions.
@@ -122,7 +123,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
             }
 
             // Force a table view refresh, running totals will need to be recalculated
-            Platform.runLater(() -> tableView.refresh());
+            JavaFXUtils.runLater(() -> tableView.refresh());
         });
 
         closeButton.setOnAction(event -> closeAction());

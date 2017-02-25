@@ -23,7 +23,6 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Objects;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -36,13 +35,14 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
+import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -168,7 +168,7 @@ public class ReconcileSettingsDialogController {
         pair.getStage().initModality(Modality.NONE);
         pair.getStage().initOwner(null);
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             pair.getStage().show();
             pair.getStage().setMinWidth(pair.getStage().getWidth());
             pair.getStage().setMinHeight(pair.getStage().getHeight());

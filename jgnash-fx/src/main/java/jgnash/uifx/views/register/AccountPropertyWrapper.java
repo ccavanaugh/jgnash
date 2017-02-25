@@ -22,7 +22,6 @@ import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -37,6 +36,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.util.DefaultDaemonThreadFactory;
 
@@ -98,9 +98,9 @@ class AccountPropertyWrapper implements MessageListener {
 
     private void updateProperties() {
         if (account.get() != null) {
-            Platform.runLater(() -> accountName.set(account.get().getName()));
+            JavaFXUtils.runLater(() -> accountName.set(account.get().getName()));
         } else {
-            Platform.runLater(() -> accountName.set(""));
+            JavaFXUtils.runLater(() -> accountName.set(""));
         }
 
         executorService.submit(new Task<Void>() {
@@ -113,9 +113,9 @@ class AccountPropertyWrapper implements MessageListener {
                                 AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                                         account.getBalance());
 
-                        Platform.runLater(() -> accountBalance.set(numberFormat.format(balance)));
+                        JavaFXUtils.runLater(() -> accountBalance.set(numberFormat.format(balance)));
                     } else {
-                        Platform.runLater(() -> accountBalance.set(numberFormat.format(BigDecimal.ZERO)));
+                        JavaFXUtils.runLater(() -> accountBalance.set(numberFormat.format(BigDecimal.ZERO)));
                     }
                 }
                 return null;
@@ -132,9 +132,9 @@ class AccountPropertyWrapper implements MessageListener {
                                 AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                                         account.getReconciledBalance());
 
-                        Platform.runLater(() -> reconciledAmount.set(numberFormat.format(balance)));
+                        JavaFXUtils.runLater(() -> reconciledAmount.set(numberFormat.format(balance)));
                     } else {
-                        Platform.runLater(() -> reconciledAmount.set(numberFormat.format(BigDecimal.ZERO)));
+                        JavaFXUtils.runLater(() -> reconciledAmount.set(numberFormat.format(BigDecimal.ZERO)));
                     }
                 }
                 return null;
@@ -152,9 +152,9 @@ class AccountPropertyWrapper implements MessageListener {
                                     AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                                             account.getCashBalance());
 
-                            Platform.runLater(() -> cashBalance.set(numberFormat.format(balance)));
+                            JavaFXUtils.runLater(() -> cashBalance.set(numberFormat.format(balance)));
                         } else {
-                            Platform.runLater(() -> cashBalance.set(numberFormat.format(BigDecimal.ZERO)));
+                            JavaFXUtils.runLater(() -> cashBalance.set(numberFormat.format(BigDecimal.ZERO)));
                         }
                     }
                     return null;
@@ -166,9 +166,9 @@ class AccountPropertyWrapper implements MessageListener {
                 protected Void call() throws Exception {
                     synchronized (numberFormatLock) {
                         if (account.get() != null) {
-                            Platform.runLater(() -> marketValue.set(numberFormat.format(account.get().getMarketValue())));
+                            JavaFXUtils.runLater(() -> marketValue.set(numberFormat.format(account.get().getMarketValue())));
                         } else {
-                            Platform.runLater(() -> marketValue.set(numberFormat.format(BigDecimal.ZERO)));
+                            JavaFXUtils.runLater(() -> marketValue.set(numberFormat.format(BigDecimal.ZERO)));
                         }
                     }
                     return null;

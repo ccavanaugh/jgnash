@@ -27,7 +27,6 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -66,6 +65,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterFactory;
@@ -155,7 +155,7 @@ public class ReconcileDialogController implements MessageListener {
         parent.addListener((observable, oldValue, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().get().addEventHandler(WindowEvent.WINDOW_SHOWN,
-                        event -> Platform.runLater(() -> {
+                        event -> JavaFXUtils.runLater(() -> {
                             increaseTableViewManager.restoreLayout();
                             decreaseTableViewManager.restoreLayout();
                         }));
@@ -181,7 +181,7 @@ public class ReconcileDialogController implements MessageListener {
                         newValue.setReconciledState(ReconciledState.RECONCILED);
                     }
                     tableView.refresh();
-                    Platform.runLater(() -> tableView.getSelectionModel().clearSelection());
+                    JavaFXUtils.runLater(() -> tableView.getSelectionModel().clearSelection());
                     updateCalculatedValues();
                 }
             }
@@ -342,15 +342,14 @@ public class ReconcileDialogController implements MessageListener {
             final BigDecimal increaseAmount = getReconciledTotal(increaseList);
             final BigDecimal decreaseAmount = getReconciledTotal(decreaseList);
 
-            Platform.runLater(() -> increaseTotalLabel
-                    .setText(numberFormat.format(increaseAmount)));
-
-            Platform.runLater(() -> decreaseTotalLabel
-                    .setText(numberFormat.format(decreaseAmount)));
+            JavaFXUtils.runLater(() -> {
+                increaseTotalLabel.setText(numberFormat.format(increaseAmount));
+                decreaseTotalLabel.setText(numberFormat.format(decreaseAmount));
+            });
 
             final BigDecimal reconciledBalance = increaseAmount.add(decreaseAmount).add(openingBalance);
 
-            Platform.runLater(() -> reconciledBalanceLabel
+            JavaFXUtils.runLater(() -> reconciledBalanceLabel
                     .setText(numberFormat.format(reconciledBalance)));
 
             // need to round of the values for difference to work (investment accounts)
@@ -359,8 +358,7 @@ public class ReconcileDialogController implements MessageListener {
             final BigDecimal difference = endingBalance.subtract(reconciledBalance).abs()
                     .setScale(scale, MathConstants.roundingMode);
 
-            Platform.runLater(() -> differenceLabel
-                    .setText(numberFormat.format(difference)));
+            JavaFXUtils.runLater(() -> differenceLabel.setText(numberFormat.format(difference)));
 
             reconciled.set(difference.compareTo(BigDecimal.ZERO) == 0);
         }).start();

@@ -1,6 +1,5 @@
 package jgnash.uifx.views.register;
 
-import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -16,6 +15,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Transaction;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
@@ -78,7 +78,7 @@ public class RegisterStage extends Stage {
         setHeight(minHeight * SCALE_FACTOR);
 
         // Push the account to the controller at the end of the application thread
-        Platform.runLater(() -> controller.accountProperty().set(account));
+        JavaFXUtils.runLater(() -> controller.accountProperty().set(account));
 
         updateTitle(account);
 
@@ -104,7 +104,7 @@ public class RegisterStage extends Stage {
 
     public void show(final Transaction transaction) {
         show();
-        Platform.runLater(() -> controller.selectTransaction(transaction));
+        JavaFXUtils.runLater(() -> controller.selectTransaction(transaction));
     }
 
     public ReadOnlyObjectProperty<Account> accountProperty() {

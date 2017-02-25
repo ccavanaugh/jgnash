@@ -19,7 +19,6 @@ package jgnash.uifx.views.register;
 
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -30,6 +29,7 @@ import javafx.scene.layout.StackPane;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
@@ -116,8 +116,7 @@ abstract class RegisterPaneController {
 
             /* Push to the end of the application thread to allow other UI controls to update before
             * updating many transaction form controls */
-
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 if (newValue != null) {
                     modifyTransaction(newValue);
                 } else {

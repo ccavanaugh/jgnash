@@ -26,7 +26,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
@@ -44,6 +43,7 @@ import jgnash.uifx.report.ReportActions;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.DefaultDaemonThreadFactory;
 
@@ -164,7 +164,7 @@ public class RegisterViewController {
                 resources);
 
         // Push the account to the controller at the end of the application thread
-        Platform.runLater(() -> registerPaneController.accountProperty()
+        JavaFXUtils.runLater(() -> registerPaneController.accountProperty()
                 .set(accountTreeController.getSelectedAccountProperty().get()));
     }
 

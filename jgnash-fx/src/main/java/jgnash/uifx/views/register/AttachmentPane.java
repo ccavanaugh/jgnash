@@ -34,7 +34,6 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -49,6 +48,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ImageDialog;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
@@ -121,7 +121,7 @@ public class AttachmentPane extends GridPane {
 
                 final Future<Path> pathFuture = engine.getAttachment(transaction.getAttachment());
 
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     try {
                         attachment.set(pathFuture.get());
                     } catch (final InterruptedException | ExecutionException e) {

@@ -72,6 +72,7 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
@@ -309,7 +310,7 @@ abstract class RegisterTableController {
         tableView.getSelectionModel().select(transaction);
 
         // The table needs to be focused for the row selection to highlight
-        Platform.runLater(tableView::requestFocus);
+        JavaFXUtils.runLater(tableView::requestFocus);
     }
 
     abstract protected void buildTable();
@@ -446,17 +447,17 @@ abstract class RegisterTableController {
                             // clear the selection of the transaction is currently selected
                             if (tableView.getSelectionModel().getSelectedItems()
                                     .contains(event.getObject(MessageProperty.TRANSACTION))) {
-                                Platform.runLater(RegisterTableController.this::clearTableSelection);
+                                JavaFXUtils.runLater(RegisterTableController.this::clearTableSelection);
                             }
 
-                            Platform.runLater(() -> {
+                            JavaFXUtils.runLater(() -> {
                                 observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION));
                                 tableView.refresh();  // this will force the running balance to recalculate
                                 tableViewManager.packTable();
                             });
                             break;
                         case TRANSACTION_ADD:
-                            Platform.runLater(() -> {
+                            JavaFXUtils.runLater(() -> {
                                 final Transaction transaction = event.getObject(MessageProperty.TRANSACTION);
 
                                 final int index = Collections.binarySearch(observableTransactions, transaction,
@@ -470,7 +471,7 @@ abstract class RegisterTableController {
                                 scrollToTransaction(event.getObject(MessageProperty.TRANSACTION));
 
                                 // this will force the running balance to recalculate
-                                Platform.runLater(() -> {
+                                JavaFXUtils.runLater(() -> {
                                     tableView.refresh();
                                     tableViewManager.packTable();
                                 });
@@ -486,7 +487,7 @@ abstract class RegisterTableController {
     @FXML
     protected void handleResetFilters() {
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
             reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
 

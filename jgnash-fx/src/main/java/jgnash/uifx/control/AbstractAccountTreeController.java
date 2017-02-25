@@ -37,6 +37,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TreeSearch;
 import jgnash.util.Nullable;
 
@@ -111,7 +112,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
     }
 
     public void reload() {
-        Platform.runLater(this::loadAccountTree);
+        JavaFXUtils.runLater(this::loadAccountTree);
     }
 
     private void loadAccountTree() {
@@ -153,7 +154,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
                 reload();
                 break;
             case FILE_CLOSING:
-                Platform.runLater(() -> getTreeView().setRoot(null));   // dump account references immediately
+                JavaFXUtils.runLater(() -> getTreeView().setRoot(null));   // dump account references immediately
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
                 break;
             default:

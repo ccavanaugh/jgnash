@@ -39,6 +39,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
@@ -177,7 +178,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     @Override
     public void messagePosted(final Message event) {
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             switch (event.getEvent()) {
                 case FILE_CLOSING:
                     MessageBus.getInstance().unregisterListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);

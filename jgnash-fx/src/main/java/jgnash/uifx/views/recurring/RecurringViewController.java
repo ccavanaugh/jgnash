@@ -59,6 +59,7 @@ import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Controller for recurring events.
@@ -184,7 +185,7 @@ public class RecurringViewController implements MessageListener {
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
 
-        Platform.runLater(this::loadTable);
+        JavaFXUtils.runLater(this::loadTable);
 
         startTimer();
 
