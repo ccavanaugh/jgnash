@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -310,7 +311,7 @@ public class TableViewManager<S> {
                 }
             }
 
-            JavaFXUtils.runLater(() -> {
+            Platform.runLater(() -> {
                 removeColumnListeners();
 
                 // unconstrained is required for resize columns correctly
@@ -340,7 +341,7 @@ public class TableViewManager<S> {
                     isFullyInitialized = true;
 
                     // rerun the pack process to perform a fully calculated pack
-                    JavaFXUtils.runLater(TableViewManager.this::packTable);
+                    Platform.runLater(TableViewManager.this::packTable);
                 }
             });
         });
