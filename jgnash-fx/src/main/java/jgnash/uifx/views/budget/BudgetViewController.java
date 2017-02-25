@@ -42,6 +42,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 
 /**
@@ -176,12 +177,12 @@ public class BudgetViewController implements MessageListener {
         switch (message.getEvent()) {
             case FILE_CLOSING:
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.BUDGET, MessageChannel.SYSTEM);
-                Platform.runLater(() -> availableBudgetsComboBox.getItems().clear());
+                JavaFXUtils.runLater(() -> availableBudgetsComboBox.getItems().clear());
                 break;
             case BUDGET_REMOVE:
             case BUDGET_ADD:
             case BUDGET_UPDATE:
-                Platform.runLater(BudgetViewController.this::loadComboBox);
+                JavaFXUtils.runLater(BudgetViewController.this::loadComboBox);
                 break;
             default:
                 break;

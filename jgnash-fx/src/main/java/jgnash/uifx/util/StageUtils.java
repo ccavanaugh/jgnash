@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Rectangle2D;
@@ -141,7 +140,7 @@ public class StageUtils {
             executor.schedule(() -> {
                 if (executor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
                     // window size and location requests must be pushed to the EDT to prevent a race condition
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         if (parent != null) {
                             p.put(DEFAULT_KEY, encodeRectangle(window.getX() - parent.getX(),
                                     window.getY() - parent.getY(), window.getWidth(), window.getHeight()));

@@ -27,8 +27,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
-
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -41,6 +39,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AutoCompleteTextField;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.MultiHashMap;
 import jgnash.util.ResourceUtils;
@@ -191,7 +190,7 @@ public class AutoCompleteFactory {
         void load() {
 
             // Push the load to the end of the application thread for a lazy init
-            Platform.runLater(() -> pool.execute(() -> {
+            JavaFXUtils.runLater(() -> pool.execute(() -> {
                 if (account != null) {
                     account.getSortedTransactionList().forEach(this::load);
                 }

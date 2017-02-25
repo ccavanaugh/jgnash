@@ -64,6 +64,7 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.tasks.SaveAsTask;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.budget.BudgetManagerDialogController;
 import jgnash.uifx.views.recurring.RecurringDialogController;
@@ -77,8 +78,10 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  */
 public class MenuBarController implements MessageListener {
 
+    private final BooleanProperty disabled = new SimpleBooleanProperty(true);
+
     @FXML
-    private  MenuItem packDatabaseMenuItem;
+    private MenuItem packDatabaseMenuItem;
 
     @FXML
     private MenuItem recurringTransactionsMenuItem;
@@ -139,8 +142,6 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private MenuItem exitMenuItem;
-
-    private final BooleanProperty disabled = new SimpleBooleanProperty(true);
 
     @FXML
     private ResourceBundle resources;
@@ -253,19 +254,19 @@ public class MenuBarController implements MessageListener {
 
     @Override
     public void messagePosted(final Message event) {
-        Platform.runLater(() -> {
-            switch (event.getEvent()) {
-                case FILE_LOAD_SUCCESS:
-                    disabled.set(false);
-                    break;
-                case FILE_CLOSING:
+        switch (event.getEvent()) {
+            case FILE_LOAD_SUCCESS:
+                JavaFXUtils.runLater(() -> disabled.set(false));
+                break;
+            case FILE_CLOSING:
+                JavaFXUtils.runLater(() -> {
                     closeAllWindows();
                     disabled.set(true);
-                    break;
-                default:
-                    break;
-            }
-        });
+                });
+                break;
+            default:
+                break;
+        }
     }
 
     @FXML
@@ -502,7 +503,7 @@ public class MenuBarController implements MessageListener {
 
         if (controller.getResult()) {
             // Message buss is on port + 1
-            Platform.runLater(() -> MessageBus.getInstance().shutDownRemoteServer(controller.getHost(),
+            JavaFXUtils.runLater(() -> MessageBus.getInstance().shutDownRemoteServer(controller.getHost(),
                     controller.getPort() + 1, controller.getPassword()));
         }
     }

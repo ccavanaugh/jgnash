@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.main;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -31,6 +30,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Primary ToolBar Controller.
@@ -38,6 +38,8 @@ import jgnash.uifx.tasks.CloseFileTask;
  * @author Craig Cavanaugh
  */
 public class MainToolBarController implements MessageListener {
+
+    final private BooleanProperty disabled = new SimpleBooleanProperty(true);
 
     @FXML
     private Button closeButton;
@@ -47,8 +49,6 @@ public class MainToolBarController implements MessageListener {
 
     @FXML
     private Button updateSecurities;
-
-    final private BooleanProperty disabled = new SimpleBooleanProperty(true);
 
     @FXML
     private void initialize() {
@@ -74,20 +74,17 @@ public class MainToolBarController implements MessageListener {
 
     @Override
     public void messagePosted(final Message event) {
-
-        Platform.runLater(() -> {
-            switch (event.getEvent()) {
-                case FILE_LOAD_SUCCESS:
-                    disabled.set(false);
-                    break;
-                case FILE_CLOSING:
-                case FILE_LOAD_FAILED:
-                    disabled.set(true);
-                    break;
-                default:
-                    break;
-            }
-        });
+        switch (event.getEvent()) {
+            case FILE_LOAD_SUCCESS:
+                JavaFXUtils.runLater(() -> disabled.set(false));
+                break;
+            case FILE_CLOSING:
+            case FILE_LOAD_FAILED:
+                JavaFXUtils.runLater(() -> disabled.set(true));
+                break;
+            default:
+                break;
+        }
     }
 
     @FXML

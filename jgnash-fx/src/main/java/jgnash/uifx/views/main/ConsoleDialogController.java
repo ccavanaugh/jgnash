@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -51,6 +50,7 @@ import javafx.util.Duration;
 import jgnash.engine.Engine;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -107,7 +107,7 @@ public class ConsoleDialogController {
                 @Override
                 public void write(int b) {
                     oldOutStream.write(b);
-                    Platform.runLater(() -> consoleArea.appendText(String.valueOf((char) b)));
+                    JavaFXUtils.runLater(() -> consoleArea.appendText(String.valueOf((char) b)));
                 }
             }, false, Charset.defaultCharset().name());
         } catch (final UnsupportedEncodingException ex) {
@@ -119,7 +119,7 @@ public class ConsoleDialogController {
                 @Override
                 public void write(int b) {
                     oldErrStream.write(b);
-                    Platform.runLater(() -> consoleArea.appendText(String.valueOf((char) b)));
+                    JavaFXUtils.runLater(() -> consoleArea.appendText(String.valueOf((char) b)));
                 }
             }, false, Charset.defaultCharset().name());
         } catch (final UnsupportedEncodingException ex) {
@@ -144,7 +144,7 @@ public class ConsoleDialogController {
                 total = runtime.totalMemory() / BYTES_PER_MB;
                 used = total - runtime.freeMemory() / BYTES_PER_MB;
                 if (used < oldUsed - diff || used > oldUsed + diff) {
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         memoryUsageProgressBar.setProgress((double)used / (double)total);
                         memoryUsageText.setText(used + "/" + total + " MB");
                     });
@@ -206,7 +206,7 @@ public class ConsoleDialogController {
     private class LogHandler extends Handler {
         @Override
         public void publish(LogRecord record) {
-            Platform.runLater(() -> consoleArea.appendText(record.getMessage() + System.lineSeparator()));
+            JavaFXUtils.runLater(() -> consoleArea.appendText(record.getMessage() + System.lineSeparator()));
         }
 
         @Override

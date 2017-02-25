@@ -29,7 +29,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -152,6 +151,8 @@ abstract class RegisterTableController {
 
     // Used for formatting of the selection summary tooltip
     private NumberFormat numberFormat = NumberFormat.getNumberInstance();
+
+    // TODO: Rate limit table resizing and refresh of transaction adds and removes
 
     @FXML
     void initialize() {

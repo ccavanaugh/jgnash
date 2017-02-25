@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -210,7 +209,7 @@ public class RecurringViewController implements MessageListener {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(RecurringViewController.this::showReminderDialog);
+                    JavaFXUtils.runLater(RecurringViewController.this::showReminderDialog);
                 }
             }, START_UP_DELAY, Options.reminderSnoozePeriodProperty().get());
         }

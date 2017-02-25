@@ -50,6 +50,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.IntegerTreeTableCell;
 import jgnash.uifx.util.AccountTypeFilter;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterActions;
 import jgnash.uifx.views.register.RegisterStage;
@@ -101,7 +102,7 @@ public class AccountsViewController implements MessageListener {
 
         initializeTreeTableView();
 
-        Platform.runLater(this::loadAccountTree);
+        JavaFXUtils.runLater(this::loadAccountTree);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT,
                 MessageChannel.TRANSACTION);
@@ -229,7 +230,7 @@ public class AccountsViewController implements MessageListener {
     }
 
     private void updateButtonStates() {
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             final Account account = selectedAccount.get();
 
             if (account != null) {
@@ -348,7 +349,7 @@ public class AccountsViewController implements MessageListener {
     }
 
     private synchronized void reload() {
-        Platform.runLater(this::loadAccountTree);
+        JavaFXUtils.runLater(this::loadAccountTree);
     }
 
     @Override
@@ -363,10 +364,10 @@ public class AccountsViewController implements MessageListener {
                 break;
             case TRANSACTION_ADD:
             case TRANSACTION_REMOVE:
-                Platform.runLater(() -> treeTableView.refresh());
+                JavaFXUtils.runLater(() -> treeTableView.refresh());
                 break;
             case FILE_CLOSING:
-                Platform.runLater(() -> treeTableView.setRoot(null));
+                JavaFXUtils.runLater(() -> treeTableView.setRoot(null));
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT,
                         MessageChannel.TRANSACTION);
                 break;

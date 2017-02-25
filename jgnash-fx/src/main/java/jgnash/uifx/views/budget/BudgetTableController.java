@@ -263,7 +263,7 @@ public class BudgetTableController implements MessageListener {
         accountGroupPeriodSummaryTable.minWidthProperty().bind(minSummaryColumnWidth.multiply(3.0).add(BORDER_MARGIN));
 
         accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue)
-                -> Platform.runLater(this::updateExpandedAccountList));
+                -> JavaFXUtils.runLater(this::updateExpandedAccountList));
 
         final ChangeListener<Object> budgetChangeListener = (observable, oldValue, newValue) -> handleBudgetChange();
 
@@ -318,7 +318,7 @@ public class BudgetTableController implements MessageListener {
     private void rateLimitUpdate(final Runnable runnable) {
         rateLimitExecutor.schedule(() -> {
             if (rateLimitExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
-                Platform.runLater(runnable);    // update is assumed to be on the platform thread
+                JavaFXUtils.runLater(runnable);    // update is assumed to be on the platform thread
             }
         }, UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
