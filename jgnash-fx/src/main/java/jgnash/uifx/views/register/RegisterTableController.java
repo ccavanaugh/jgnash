@@ -27,6 +27,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import javafx.beans.binding.Bindings;
@@ -90,30 +93,6 @@ abstract class RegisterTableController {
 
     private final static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
-    @FXML
-    protected TableView<Transaction> tableView;
-
-    @FXML
-    protected Label balanceLabel;
-
-    @FXML
-    protected Label accountNameLabel;
-
-    @FXML
-    protected ResourceBundle resources;
-
-    @FXML
-    protected ComboBox<ReconciledStateEnum> reconciledStateFilterComboBox;
-
-    @FXML
-    protected ComboBox<AgeEnum> transactionAgeFilterComboBox;
-
-    @FXML
-    protected TextField memoFilterTextField;
-
-    @FXML
-    protected TextField payeeFilterTextField;
-
     /**
      * Active account for the pane.
      */
@@ -139,8 +118,6 @@ abstract class RegisterTableController {
 
     final private MessageBusHandler messageBusHandler = new MessageBusHandler();
 
-    TableViewManager<Transaction> tableViewManager;
-
     final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
     // Used for selection summary tooltip
@@ -149,10 +126,34 @@ abstract class RegisterTableController {
     // Used for selection summary tooltip
     final private Tooltip selectionSummaryTooltip = new Tooltip();
 
+    @FXML
+    protected TableView<Transaction> tableView;
+
+    @FXML
+    protected Label balanceLabel;
+
+    @FXML
+    protected Label accountNameLabel;
+
+    @FXML
+    protected ResourceBundle resources;
+
+    @FXML
+    protected ComboBox<ReconciledStateEnum> reconciledStateFilterComboBox;
+
+    @FXML
+    protected ComboBox<AgeEnum> transactionAgeFilterComboBox;
+
+    @FXML
+    protected TextField memoFilterTextField;
+
+    @FXML
+    protected TextField payeeFilterTextField;
+
+    TableViewManager<Transaction> tableViewManager;
+
     // Used for formatting of the selection summary tooltip
     private NumberFormat numberFormat = NumberFormat.getNumberInstance();
-
-    // TODO: Rate limit table resizing and refresh of transaction adds and removes
 
     @FXML
     void initialize() {
@@ -380,6 +381,82 @@ abstract class RegisterTableController {
         }
     }
 
+    @FXML
+    protected void handleResetFilters() {
+
+        JavaFXUtils.runLater(() -> {
+            transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
+            reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
+
+            if (memoFilterTextField != null) {
+                memoFilterTextField.setText("");
+            }
+
+            if (payeeFilterTextField != null) {
+                payeeFilterTextField.setText("");
+            }
+        });
+    }
+
+    private enum ReconciledStateEnum {
+        ALL(ResourceUtils.getString("Button.AnyStatus"), null),
+        CLEARED(ResourceUtils.getString("Button.Cleared"), ReconciledState.CLEARED),
+        NOT_RECONCILED(ResourceUtils.getString("Button.NotReconciled"), ReconciledState.NOT_RECONCILED),
+        RECONCILED(ResourceUtils.getString("Button.Reconciled"), ReconciledState.RECONCILED);
+
+        private final String description;
+
+        private final ReconciledState reconciledState;
+
+        ReconciledStateEnum(final String description, final ReconciledState reconciledState) {
+            this.description = description;
+            this.reconciledState = reconciledState;
+        }
+
+        public ReconciledState getReconciledState() {
+            return reconciledState;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
+    }
+
+    private enum AgeEnum {
+        ALL(ResourceUtils.getString("Button.AllDates"), ChronoUnit.FOREVER, 0),
+        Year(ResourceUtils.getString("Button.Last12Months"), ChronoUnit.MONTHS, 12),
+        _120(ResourceUtils.getString("Button.Last120Days"), ChronoUnit.DAYS, 120),
+        _90(ResourceUtils.getString("Button.Last90Days"), ChronoUnit.DAYS, 90),
+        _60(ResourceUtils.getString("Button.Last60Days"), ChronoUnit.DAYS, 60),
+        _30(ResourceUtils.getString("Button.Last30Days"), ChronoUnit.DAYS, 30);
+
+        private final String description;
+
+        private final int age;
+
+        private final ChronoUnit chronoUnit;
+
+        AgeEnum(final String description, final ChronoUnit chronoUnit, final int age) {
+            this.description = description;
+            this.chronoUnit = chronoUnit;
+            this.age = age;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public ChronoUnit getChronoUnit() {
+            return chronoUnit;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
+    }
+
     private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
 
         @Override
@@ -436,7 +513,18 @@ abstract class RegisterTableController {
 
     private class MessageBusHandler implements MessageListener {
 
-        @SuppressWarnings("SuspiciousMethodCalls")
+        /**
+         * Limits number of refresh and packTable calls while ensuring the most recent is executed.
+         */
+        private final ThreadPoolExecutor updateTableExecutor;
+
+        MessageBusHandler() {
+            updateTableExecutor = new ThreadPoolExecutor(0, 1, 0,
+                    TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+
+            updateTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+        }
+
         @Override
         public void messagePosted(final Message event) {
             final Account account = RegisterTableController.this.account.getValue();
@@ -445,117 +533,46 @@ abstract class RegisterTableController {
                 if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {
                     switch (event.getEvent()) {
                         case TRANSACTION_REMOVE:
-                            // clear the selection of the transaction is currently selected
-                            if (tableView.getSelectionModel().getSelectedItems()
-                                    .contains(event.getObject(MessageProperty.TRANSACTION))) {
+                            final Transaction removedTransaction = event.getObject(MessageProperty.TRANSACTION);
+
+                            // clear the selection if the transaction is currently selected
+                            if (tableView.getSelectionModel().getSelectedItems().contains(removedTransaction)) {
                                 JavaFXUtils.runLater(RegisterTableController.this::clearTableSelection);
                             }
 
-                            JavaFXUtils.runLater(() -> {
-                                observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION));
-                                tableView.refresh();  // this will force the running balance to recalculate
+                            observableTransactions.remove(removedTransaction);
+
+                            // this will force the running balance to recalculate
+                            updateTableExecutor.execute(() -> {
+                                tableView.refresh();
                                 tableViewManager.packTable();
                             });
+
                             break;
                         case TRANSACTION_ADD:
-                            JavaFXUtils.runLater(() -> {
-                                final Transaction transaction = event.getObject(MessageProperty.TRANSACTION);
+                            final Transaction addedTransaction = event.getObject(MessageProperty.TRANSACTION);
 
-                                final int index = Collections.binarySearch(observableTransactions, transaction,
-                                        tableView.getComparator());
+                            final int index = Collections.binarySearch(observableTransactions, addedTransaction,
+                                    tableView.getComparator());
 
-                                if (index < 0) {
-                                    observableTransactions.add(-index - 1, transaction);
-                                }
+                            if (index < 0) {
+                                observableTransactions.add(-index - 1, addedTransaction);
+                            }
 
-                                // scroll to the new transaction
-                                scrollToTransaction(event.getObject(MessageProperty.TRANSACTION));
+                            // scroll to the new transaction
+                            JavaFXUtils.runLater(() -> scrollToTransaction(addedTransaction));
 
-                                // this will force the running balance to recalculate
-                                JavaFXUtils.runLater(() -> {
-                                    tableView.refresh();
-                                    tableViewManager.packTable();
-                                });
+                            // this will force the running balance to recalculate
+                            updateTableExecutor.execute(() -> {
+                                tableView.refresh();
+                                tableViewManager.packTable();
                             });
+
                             break;
                         default:
                     }
                 }
             }
-        }
-    }
-
-    @FXML
-    protected void handleResetFilters() {
-
-        JavaFXUtils.runLater(() -> {
-            transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
-            reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
-
-            if (memoFilterTextField != null) {
-                memoFilterTextField.setText("");
-            }
-
-            if (payeeFilterTextField != null) {
-                payeeFilterTextField.setText("");
-            }
-        });
-    }
-
-    private enum ReconciledStateEnum {
-        ALL(ResourceUtils.getString("Button.AnyStatus"), null),
-        CLEARED(ResourceUtils.getString("Button.Cleared"), ReconciledState.CLEARED),
-        NOT_RECONCILED(ResourceUtils.getString("Button.NotReconciled"), ReconciledState.NOT_RECONCILED),
-        RECONCILED(ResourceUtils.getString("Button.Reconciled"), ReconciledState.RECONCILED);
-
-        private final String description;
-
-        private final ReconciledState reconciledState;
-
-        ReconciledStateEnum(final String description, final ReconciledState reconciledState) {
-            this.description = description;
-            this.reconciledState = reconciledState;
-        }
-
-        public ReconciledState getReconciledState() {
-            return reconciledState;
-        }
-
-        @Override
-        public String toString() {
-            return description;
-        }
-    }
-
-    private enum AgeEnum {
-        ALL(ResourceUtils.getString("Button.AllDates"), ChronoUnit.FOREVER, 0),
-        Year(ResourceUtils.getString("Button.Last12Months"), ChronoUnit.MONTHS, 12),
-        _120(ResourceUtils.getString("Button.Last120Days"), ChronoUnit.DAYS, 120),
-        _90(ResourceUtils.getString("Button.Last90Days"), ChronoUnit.DAYS, 90),
-        _60(ResourceUtils.getString("Button.Last60Days"), ChronoUnit.DAYS, 60),
-        _30(ResourceUtils.getString("Button.Last30Days"), ChronoUnit.DAYS, 30);
-
-        private final String description;
-        private final int age;
-        private final ChronoUnit chronoUnit;
-
-        AgeEnum(final String description, final ChronoUnit chronoUnit, final int age) {
-            this.description = description;
-            this.chronoUnit = chronoUnit;
-            this.age = age;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public ChronoUnit getChronoUnit() {
-            return chronoUnit;
-        }
-
-        @Override
-        public String toString() {
-            return description;
         }
     }
 }
