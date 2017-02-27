@@ -20,7 +20,6 @@ package jgnash.uifx.control;
 import java.util.Objects;
 import java.util.TreeSet;
 
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -107,7 +106,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
         final TreeItem<Account> treeItem = TreeSearch.findTreeItem(getTreeView().getRoot(), account);
 
         if (treeItem != null) {
-            Platform.runLater(() -> getTreeView().getSelectionModel().select(treeItem));
+            JavaFXUtils.runLater(() -> getTreeView().getSelectionModel().select(treeItem));
         }
     }
 
