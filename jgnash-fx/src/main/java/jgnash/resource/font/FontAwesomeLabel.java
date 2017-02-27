@@ -20,6 +20,7 @@ package jgnash.resource.font;
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+
 import java.util.Locale;
 
 import javafx.beans.binding.Bindings;
@@ -27,7 +28,6 @@ import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -91,7 +91,6 @@ public class FontAwesomeLabel extends Label {
      *
      * @param value This can either be the Glyph Name or a unicode character representing the glyph.
      */
-    @FXML
     public void setGlyphName(final Object value) {
         glyphName.set(value);
 
@@ -104,17 +103,14 @@ public class FontAwesomeLabel extends Label {
         }
     }
 
-    @FXML
     public Object getGlyphName() {
         return glyphName.get();
     }
 
-    @FXML
     public void setSize(final Double value) {
         size.set(value);
     }
 
-    @FXML
     public Double getSize() {
         return size.getValue();
     }
