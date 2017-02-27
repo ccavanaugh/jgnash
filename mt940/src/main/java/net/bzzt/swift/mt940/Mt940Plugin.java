@@ -71,7 +71,7 @@ public class Mt940Plugin implements SwingPlugin, FxPlugin {
         }
     }
 
-    private void installFxMenu() {
+    private static void installFxMenu() {
         final MenuBar menuBar = MainView.getInstance().getMenuBar();
 
         menuBar.getMenus().stream().filter(menu -> "fileMenu".equals(menu.getId())).forEach(menu -> menu.getItems()

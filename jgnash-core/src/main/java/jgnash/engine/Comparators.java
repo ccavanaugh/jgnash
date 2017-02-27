@@ -158,7 +158,7 @@ public class Comparators {
             this.subComparator = subComparator;
         }
 
-        private Deque<Account> accountPath(Account acc) {
+        private static Deque<Account> accountPath(Account acc) {
             final Deque<Account> path = new LinkedList<>();
 
             while (acc != null) {

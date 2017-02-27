@@ -39,7 +39,7 @@ public class ApiTest extends AbstractEngineTest {
                 DataStoreType.BINARY_XSTREAM);
     }
 
-    private void closeEngine() {
+    private static void closeEngine() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 

@@ -1160,7 +1160,7 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    private void consumeElement(final XMLStreamReader reader) throws XMLStreamException {
+    private static void consumeElement(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "consumeElement");
 
         final QName parsingElement = reader.getName();

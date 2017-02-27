@@ -59,7 +59,7 @@ public abstract class EngineTest {
 
     protected abstract Engine createEngine() throws Exception;
 
-    private void closeEngine() {
+    private static void closeEngine() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 
