@@ -42,8 +42,7 @@ public class TransactionAgePredicate implements Predicate<Transaction> {
     public boolean test(final Transaction transaction) {
         if (chronoUnit == ChronoUnit.FOREVER) {
             return true;
-        } else {
-            return chronoUnit.between(transaction.getLocalDate(), LocalDate.now()) <= age;
         }
+		return chronoUnit.between(transaction.getLocalDate(), LocalDate.now()) <= age;
     }
 }

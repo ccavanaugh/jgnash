@@ -52,9 +52,8 @@ public class LocalDateConverter extends AbstractSingleValueConverter {
         if (!str.isEmpty()) {
             if (str.length() == 10) {   // newer file
                 return LocalDate.from(dateTimeFormatter.parse(str));
-            } else {    // older file, delegate to the default XStream converter
-                return DateUtils.asLocalDate((Date)dateConverter.fromString(str));
             }
+			return DateUtils.asLocalDate((Date)dateConverter.fromString(str));
         }
         return null;
     }

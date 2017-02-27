@@ -44,8 +44,7 @@ public class ReconciledPredicate implements Predicate<Transaction> {
     public boolean test(final Transaction transaction) {
         if (reconciledState == null) {
             return true;
-        } else {
-            return reconciledState == transaction.getReconciled(account);
         }
+		return reconciledState == transaction.getReconciled(account);
     }
 }

@@ -79,9 +79,8 @@ public class ResourceUtils {
         try {
             if (arguments.length == 0) {
                 return getBundle().getString(key);
-            } else {
-                return MessageFormat.format(getBundle().getString(key), arguments);
             }
+			return MessageFormat.format(getBundle().getString(key), arguments);
         } catch (final MissingResourceException mre) {
             Logger.getLogger(ResourceUtils.class.getName()).log(Level.WARNING, "Missing resource for: " + key, mre);
             return key;
