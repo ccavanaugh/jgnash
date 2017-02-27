@@ -190,7 +190,8 @@ public final class PluginFactory {
         return paths;
     }
 
-    private static Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException,
+    @SuppressWarnings("resource")
+	private static Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException,
             IllegalAccessException, IOException {
        
         final JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + jarFileName));
