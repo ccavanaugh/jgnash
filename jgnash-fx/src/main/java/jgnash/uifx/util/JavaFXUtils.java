@@ -48,7 +48,7 @@ public class JavaFXUtils {
 
     private static final Queue<Runnable> platformRunnables = new ConcurrentLinkedQueue<>();
 
-    private static final int FLOOD_DELAY_MILLIS = 50;
+    private static final int FLOOD_DELAY_MILLIS = 25;
 
     private static final int MAX_BATCH_TIME_MILLIS = 500;
 
