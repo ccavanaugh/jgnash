@@ -29,6 +29,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.concurrent.Task;
@@ -274,19 +275,19 @@ public class MainView implements MessageListener {
     }
 
     private void addViews() {
-        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"), resources),
                 resources.getString("Tab.Accounts"))));
 
-        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(RegisterViewController.class.getResource("RegisterView.fxml"), resources),
                 resources.getString("Tab.Register"))));
 
-        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"), resources),
                 resources.getString("Tab.Reminders"))));
 
-        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"), resources),
                 resources.getString("Tab.Budgeting"))));
 
