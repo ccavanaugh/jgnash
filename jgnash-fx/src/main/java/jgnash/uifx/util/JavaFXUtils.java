@@ -48,8 +48,6 @@ public class JavaFXUtils {
 
     private static final Queue<Runnable> platformRunnables = new ConcurrentLinkedQueue<>();
 
-    private static final int FLOOD_DELAY_MILLIS = 25;
-
     private static final int MAX_BATCH_TIME_MILLIS = 500;
 
     private static final Semaphore batchSemaphore = new Semaphore(1);
@@ -80,14 +78,9 @@ public class JavaFXUtils {
 
     private static synchronized void _runLater() {
 
-        // don't flood the JavaFX Application with too many Runnables at once.  Allow other processes to run by
-        // enforcing a small delay in the calling thread
+        // don't flood the JavaFX Application with too many Runnables at once.  Allow other processes to run by yielding
         if (!platformRunnables.isEmpty()) {
-            try {
-                Thread.sleep(FLOOD_DELAY_MILLIS);
-            } catch (final InterruptedException e) {
-                Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
+            Thread.yield();
         }
 
         Platform.runLater(() -> {
