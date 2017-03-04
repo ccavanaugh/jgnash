@@ -64,12 +64,12 @@ public class DefaultLocaleAction {
                     dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
                     dialog.setHeaderText(resources.getString("Title.SelDefLocale"));
 
-                    final Optional<LocaleObject> result = dialog.showAndWait();
+                    final Optional<LocaleObject> optional = dialog.showAndWait();
 
-                    if (result.isPresent()) {
-                        ResourceUtils.setLocale(result.get().getLocale());
-                        StaticUIMethods.displayMessage(result.get() + "\n" + resources.getString("Message.RestartLocale"));
-                    }
+                    optional.ifPresent(localeObject -> {
+                        ResourceUtils.setLocale(localeObject.getLocale());
+                        StaticUIMethods.displayMessage(localeObject + "\n" + resources.getString("Message.RestartLocale"));
+                    });
                 });
             }
         };

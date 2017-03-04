@@ -64,15 +64,15 @@ public class DefaultDateFormatAction {
                     dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
                     dialog.setHeaderText(resources.getString("Title.SelDefDateFormat"));
 
-                    final Optional<String> result = dialog.showAndWait();
+                    final Optional<String> optional = dialog.showAndWait();
 
-                    if (result.isPresent()) {
+                    optional.ifPresent(datePattern -> {
                         try {
-                            DateUtils.setDateFormatPattern(result.get());
+                            DateUtils.setDateFormatPattern(datePattern);
                         } catch (IllegalArgumentException e) {
                             StaticUIMethods.displayError(resources.getString("Message.Error.InvalidDateFormat"));
                         }
-                    }
+                    });
                 });
             }
         };
