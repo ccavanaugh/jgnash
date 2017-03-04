@@ -292,7 +292,7 @@ public class MainView implements MessageListener {
                 resources.getString("Tab.Budgeting"))));
 
         backgroundExecutor.execute(() ->
-                JavaFXUtils.runLater(() -> {
+                Platform.runLater(() -> {
                     tabViewPane.getSelectionModel().select(preferences.getInt(LAST_TAB, 0));
 
                     tabListener = (observable, oldValue, newValue) -> {
