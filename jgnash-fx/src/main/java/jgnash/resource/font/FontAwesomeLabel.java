@@ -91,6 +91,7 @@ public class FontAwesomeLabel extends Label {
      *
      * @param value This can either be the Glyph Name or a unicode character representing the glyph.
      */
+    @SuppressWarnings("WeakerAccess")
     public void setGlyphName(final Object value) {
         glyphName.set(value);
 
