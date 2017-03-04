@@ -132,13 +132,13 @@ public class TransactionNumberDialogController {
 
         pair.getStage().showAndWait();
 
-        final Optional<List<String>> items = pair.getController().getItems();
+        final Optional<List<String>> optional = pair.getController().getItems();
 
-        if (items.isPresent()) {
+        optional.ifPresent(strings -> {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            engine.setTransactionNumberList(items.get());
-        }
+            engine.setTransactionNumberList(strings);
+        });
     }
 }
