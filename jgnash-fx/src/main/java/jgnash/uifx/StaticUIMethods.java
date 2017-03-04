@@ -104,7 +104,7 @@ public class StaticUIMethods {
 
         final Optional<ButtonType> buttonType = alert.showAndWait();
 
-        return buttonType.isPresent() ? buttonType.get() : ButtonType.NO;
+        return buttonType.orElse(ButtonType.NO);
     }
 
     public static void displayException(final Throwable exception) {
