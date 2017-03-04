@@ -17,15 +17,23 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import jgnash.engine.*;
+
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.ReconcileManager;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionFactory;
+import jgnash.engine.TransactionType;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.NotNull;
-
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Transaction Entry Controller for Credits and Debits.
@@ -101,9 +109,8 @@ public class AdjustmentSlipController extends AbstractSlipController {
     @FXML
     private void convertAction() {
         final Optional<Account> accountOptional = StaticAccountsMethods.selectAccount(null, account.get());
-        if (accountOptional.isPresent()) {
-            final Account opp = accountOptional.get();
 
+        accountOptional.ifPresent(opp -> {
             final Transaction t = new Transaction();
 
             t.setDate(datePicker.getValue());
@@ -140,6 +147,6 @@ public class AdjustmentSlipController extends AbstractSlipController {
                     clearForm();
                 }
             });
-        }
+        });
     }
 }
