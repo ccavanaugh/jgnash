@@ -165,9 +165,9 @@ public class ReportActions {
         pair.getStage().setResizable(false);
         pair.getStage().showAndWait();
 
-        final Optional<LocalDate[]> dates = pair.getController().getDates();
+        final Optional<LocalDate[]> optional = pair.getController().getDates();
 
-        if (dates.isPresent()) {
+        optional.ifPresent(localDates -> {
 
             final Preferences preferences = Preferences.userNodeForPackage(ReportActions.class);
 
@@ -189,12 +189,12 @@ public class ReportActions {
             if (file != null) {
                 preferences.put(LAST_DIR, file.getParent());
 
-                final ProfitLossTextReport report = new ProfitLossTextReport(file.getAbsolutePath(), dates.get()[0],
-                        dates.get()[1], baseCommodity, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
+                final ProfitLossTextReport report = new ProfitLossTextReport(file.getAbsolutePath(), localDates[0],
+                        localDates[1], baseCommodity, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
 
                 report.run();
             }
-        }
+        });
     }
 
     public static void exportBalanceByMonthCSVReport() {
