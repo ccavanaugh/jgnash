@@ -211,11 +211,12 @@ public class ReportActions {
         pair.getStage().setResizable(false);
         pair.getStage().showAndWait();
 
-        final Optional<LocalDate[]> dates = pair.getController().getDates();
         final boolean vertical = pair.getController().isVertical();
         final boolean forceCurrency = pair.getController().forceDefaultCurrencyProperty().get();
 
-        if (dates.isPresent()) {
+        final Optional<LocalDate[]> optional = pair.getController().getDates();
+
+        optional.ifPresent(localDates -> {
             final String lastDir = preferences.get(LAST_DIR, null);
             preferences.putBoolean(FORCE_CURRENCY, forceCurrency);
 
@@ -238,17 +239,17 @@ public class ReportActions {
                 final BalanceByMonthCSVReport report;
 
                 if (forceCurrency) {
-                    report = new BalanceByMonthCSVReport(file.getAbsolutePath(), dates.get()[0], dates.get()[1],
+                    report = new BalanceByMonthCSVReport(file.getAbsolutePath(), localDates[0], localDates[1],
                             engine.getDefaultCurrency(), vertical,
                             AccountBalanceDisplayManager::convertToSelectedBalanceMode);
 
                 } else {
-                    report = new BalanceByMonthCSVReport(file.getAbsolutePath(), dates.get()[0],
-                            dates.get()[1], null, vertical, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
+                    report = new BalanceByMonthCSVReport(file.getAbsolutePath(), localDates[0],
+                            localDates[1], null, vertical, AccountBalanceDisplayManager::convertToSelectedBalanceMode);
                 }
 
                 report.run();
             }
-        }
+        });
     }
 }
