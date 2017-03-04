@@ -288,16 +288,16 @@ public class RecurringViewController implements MessageListener {
 
     @FXML
     private void handleNewAction() {
-        final Optional<Reminder> reminder = RecurringEntryDialog.showAndWait(null);
+        final Optional<Reminder> optional = RecurringEntryDialog.showAndWait(null);
 
-        if (reminder.isPresent()) {
+        optional.ifPresent(reminder -> {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            if (!engine.addReminder(reminder.get())) {
+            if (!engine.addReminder(reminder)) {
                 StaticUIMethods.displayError(resources.getString("Message.Error.ReminderAdd"));
             }
-        }
+        });
     }
 
     @FXML
@@ -306,21 +306,21 @@ public class RecurringViewController implements MessageListener {
         final Reminder old = selectedReminder.get();
 
         try {
-            final Optional<Reminder> reminder = RecurringEntryDialog.showAndWait((Reminder) old.clone());
+            final Optional<Reminder> optional = RecurringEntryDialog.showAndWait((Reminder) old.clone());
 
-            if (reminder.isPresent()) {
+            optional.ifPresent(reminder -> {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 Objects.requireNonNull(engine);
 
                 if (engine.removeReminder(old)) { // remove the old
-                    if (!engine.addReminder(reminder.get())) { // add the new
+                    if (!engine.addReminder(reminder)) { // add the new
                         StaticUIMethods.displayError(resources.getString("Message.Error.ReminderUpdate"));
                     }
                 } else {
                     StaticUIMethods.displayError(resources.getString("Message.Error.ReminderUpdate"));
                 }
 
-            }
+            });
         } catch (final CloneNotSupportedException e) {
             Logger.getLogger(RecurringViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
