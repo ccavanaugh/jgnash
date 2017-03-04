@@ -1078,14 +1078,14 @@ public class BudgetTableController implements MessageListener {
 
         pair.getStage().showAndWait();
 
-        final Optional<BudgetGoal> result = pair.getController().getResult();
+        final Optional<BudgetGoal> optional = pair.getController().getResult();
 
-        if (result.isPresent()) {
+        optional.ifPresent(budgetGoal -> {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            engine.updateBudgetGoals(budget.get(), account, result.get());
-        }
+            engine.updateBudgetGoals(budget.get(), account, budgetGoal);
+        });
     }
 
     @Override
