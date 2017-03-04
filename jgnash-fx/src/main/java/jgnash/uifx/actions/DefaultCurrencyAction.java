@@ -76,15 +76,15 @@ public class DefaultCurrencyAction {
                     dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
                     dialog.setHeaderText(resources.getString("Title.SelDefCurr"));
 
-                    final Optional<CurrencyNode> result = dialog.showAndWait();
+                    final Optional<CurrencyNode> optional = dialog.showAndWait();
 
-                    if (result.isPresent()) {
-                        engine.setDefaultCurrency(result.get());
+                    optional.ifPresent(currencyNode -> {
+                        engine.setDefaultCurrency(currencyNode);
 
                         Platform.runLater(() -> StaticUIMethods.displayMessage(resources.getString("Message.CurrChange")
                                 + " " + engine.getDefaultCurrency().getSymbol()));
 
-                    }
+                    });
                 });
             }
         };
