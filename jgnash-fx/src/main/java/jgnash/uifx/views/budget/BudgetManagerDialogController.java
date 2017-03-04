@@ -168,17 +168,17 @@ public class BudgetManagerDialogController implements MessageListener{
             textInputDialog.setTitle(resources.getString("Title.RenameBudget"));
             textInputDialog.setContentText(resources.getString("Label.RenameBudget"));
 
-            final Optional<String> result = textInputDialog.showAndWait();
+            final Optional<String> optional = textInputDialog.showAndWait();
 
-            if (result.isPresent()) {
-                if (!result.get().isEmpty()) {
+            optional.ifPresent(s -> {
+                if (!s.isEmpty()) {
                     final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                     Objects.requireNonNull(engine);
 
-                    budget.setName(result.get());
+                    budget.setName(s);
                     engine.updateBudget(budget);
                 }
-            }
+            });
         }
     }
 
