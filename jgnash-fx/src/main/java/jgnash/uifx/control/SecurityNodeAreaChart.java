@@ -73,33 +73,33 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
                 final SecurityNode securityNode = securityNodeProperty().get();
                 final List<List<SecurityHistoryNode>> groups = securityNode.getHistoryNodeGroupsBySplits();
 
-                final Optional<LocalDate[]> bounds = securityNode.getLocalDateBounds();
+                final Optional<LocalDate[]> optional = securityNode.getLocalDateBounds();
 
-                if (bounds.isPresent()) {
+                optional.ifPresent(localDates -> {
                     Platform.runLater(() -> getData().clear());
 
                     for (int i = 0; i < groups.size(); i++) {
-                        final AreaChart.Series<Number, Number> series = new AreaChart.Series<>();
+                        final Series<Number, Number> series = new Series<>();
                         series.setName(securityNode.getSymbol() + i);
 
                         for (final SecurityHistoryNode node : groups.get(i)) {
-                            series.getData().add(new AreaChart.Data<>(node.getLocalDate().toEpochDay(), node.getAdjustedPrice()));
+                            series.getData().add(new Data<>(node.getLocalDate().toEpochDay(), node.getAdjustedPrice()));
                         }
 
                         Platform.runLater(() -> getData().add(series));
                     }
 
-                    xAxis.setLowerBound(bounds.get()[0].toEpochDay());
-                    xAxis.setUpperBound(bounds.get()[1].toEpochDay());
+                    xAxis.setLowerBound(localDates[0].toEpochDay());
+                    xAxis.setUpperBound(localDates[1].toEpochDay());
 
-                    final long range = bounds.get()[1].toEpochDay() - bounds.get()[0].toEpochDay();
+                    final long range = localDates[1].toEpochDay() - localDates[0].toEpochDay();
 
                     if (range > TICK_MARKS) {
-                        xAxis.setTickUnit((bounds.get()[1].toEpochDay() - bounds.get()[0].toEpochDay()) / TICK_MARKS);
+                        xAxis.setTickUnit((localDates[1].toEpochDay() - localDates[0].toEpochDay()) / TICK_MARKS);
                     } else {
                         xAxis.setTickUnit(range - 1);
                     }
-                }
+                });
             }).start();
         }
     }
