@@ -45,7 +45,7 @@
     <AccountExchangePane fx:id="incomeExchangePane" GridPane.fillWidth="true" GridPane.columnIndex="1"
                          GridPane.rowIndex="2"/>
     <Label text="%Label.ReturnOfCapital" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-    <DecimalTextField fx:id="returnOfCapitalField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+    <DecimalTextField fx:id="decimalTextField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
     <!-- Row 3 -->
     <Label text="%Label.Account" GridPane.rowIndex="3"/>

@@ -18,27 +18,10 @@
 package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.logging.Logger;
 
-import javafx.fxml.FXML;
-
-import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.Transaction;
-import jgnash.engine.TransactionEntry;
-import jgnash.engine.TransactionEntryRocX;
 import jgnash.engine.TransactionFactory;
-import jgnash.engine.TransactionTag;
 import jgnash.engine.TransactionType;
-import jgnash.uifx.Options;
-import jgnash.uifx.control.AutoCompleteTextField;
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.control.SecurityComboBox;
-import jgnash.uifx.control.TransactionNumberComboBox;
-import jgnash.uifx.util.ValidationFactory;
-import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
@@ -46,66 +29,14 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
-
-    @FXML
-    DatePickerEx datePicker;
-
-    @FXML
-    AutoCompleteTextField<Transaction> memoTextField;
-
-    @FXML
-    TransactionNumberComboBox numberComboBox;
-
-    @FXML
-    SecurityComboBox securityComboBox;
-
-    @FXML
-    DecimalTextField returnOfCapitalField;
-
-    @FXML
-    private AccountExchangePane accountExchangePane;
-
-    @FXML
-    private AccountExchangePane incomeExchangePane;
-
-    @FXML
-    protected AttachmentPane attachmentPane;
-
-    private static final Logger logger = MainView.getLogger();
-
-    @FXML
-    public void initialize() {
-        super.initialize();
-
-        // Lazy init when account property is set
-        account.addListener((observable, oldValue, newValue) -> {
-            returnOfCapitalField.scaleProperty().set(newValue.getCurrencyNode().getScale());
-            returnOfCapitalField.minScaleProperty().set(newValue.getCurrencyNode().getScale());
-
-            accountExchangePane.baseCurrencyProperty().set(accountProperty().get().getCurrencyNode());
-            incomeExchangePane.baseCurrencyProperty().set(accountProperty().get().getCurrencyNode());
-
-            accountExchangePane.amountProperty().bindBidirectional(returnOfCapitalField.decimalProperty());
-            incomeExchangePane.amountProperty().bindBidirectional(returnOfCapitalField.decimalProperty());
-
-            clearForm();
-        });
-
-        securityComboBox.accountProperty().bind(account);
-    }
-
-    @Override
-    protected void focusFirstComponent() {
-        securityComboBox.requestFocus();
-    }
+public class ReturnOfCapitalSlipController extends AbstractInvIncomeSlipController {
 
     @NotNull
     @Override
     public Transaction buildTransaction() {
-        BigDecimal incomeExchangedAmount = returnOfCapitalField.getDecimal().negate();
+        BigDecimal incomeExchangedAmount = decimalTextField.getDecimal().negate();
 
-        BigDecimal accountExchangedAmount = returnOfCapitalField.getDecimal();
+        BigDecimal accountExchangedAmount = decimalTextField.getDecimal();
 
         if (!incomeExchangePane.getSelectedAccount().getCurrencyNode().equals(accountProperty().get().getCurrencyNode())) {
             incomeExchangedAmount = incomeExchangePane.exchangeAmountProperty().get().negate();
@@ -117,7 +48,7 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
 
         final Transaction transaction = TransactionFactory.generateRocXTransaction(incomeExchangePane.getSelectedAccount(),
                 accountProperty().get(), accountExchangePane.getSelectedAccount(), securityComboBox.getValue(),
-                returnOfCapitalField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePicker.getValue(),
+                decimalTextField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePicker.getValue(),
                 memoTextField.getText());
 
         transaction.setNumber(numberComboBox.getValue());
@@ -126,75 +57,7 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
     }
 
     @Override
-    public void modifyTransaction(@NotNull Transaction transaction) {
-        if (transaction.getTransactionType() != TransactionType.RETURNOFCAPITAL) {
-            throw new IllegalArgumentException(resources.getString("Message.Error.InvalidTransactionType"));
-        }
-
-        clearForm();
-
-        datePicker.setValue(transaction.getLocalDate());
-        numberComboBox.setValue(transaction.getNumber());
-
-        final List<TransactionEntry> entries = transaction.getTransactionEntries();
-
-        for (TransactionEntry e : entries) {
-            if (e instanceof TransactionEntryRocX) {
-                AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
-
-                memoTextField.setText(e.getMemo());
-                securityComboBox.setSecurityNode(entry.getSecurityNode());
-
-                incomeExchangePane.setSelectedAccount(entry.getDebitAccount());
-                incomeExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
-
-                returnOfCapitalField.setDecimal(entry.getAmount(accountProperty().get()));
-            } else if (e.getTransactionTag() == TransactionTag.INVESTMENT_CASH_TRANSFER) {
-                accountExchangePane.setSelectedAccount(e.getCreditAccount());
-                accountExchangePane.setExchangedAmount(e.getCreditAmount());
-            } else {
-                logger.warning("Invalid transaction");
-            }
-        }
-
-        modTrans = transaction;
-        modTrans = attachmentPane.modifyTransaction(modTrans);
-
-        setReconciledState(transaction.getReconciled(accountProperty().get()));
-    }
-
-    @Override
-    public void clearForm() {
-        super.clearForm();
-
-        if (!Options.rememberLastDateProperty().get()) {
-            datePicker.setValue(LocalDate.now());
-        }
-
-        numberComboBox.setValue("");
-        memoTextField.clear();
-        returnOfCapitalField.setDecimal(BigDecimal.ZERO);
-
-        accountExchangePane.setSelectedAccount(accountProperty().get());
-        incomeExchangePane.setSelectedAccount(accountProperty().get());
-    }
-
-    @Override
-    public boolean validateForm() {
-        if (securityComboBox.getValue() == null) {
-            logger.warning(resources.getString("Message.Error.SecuritySelection"));
-            ValidationFactory.showValidationError(securityComboBox,
-                    resources.getString("Message.Error.SecuritySelection"));
-            return false;
-        }
-
-        if (returnOfCapitalField.getLength() == 0) {
-            logger.warning(resources.getString("Message.Error.DividendValue"));
-            ValidationFactory.showValidationError(returnOfCapitalField,
-                    resources.getString("Message.Error.DividendValue"));
-            return false;
-        }
-
-        return true;
+    TransactionType getTransactionType() {
+        return TransactionType.RETURNOFCAPITAL;
     }
 }

@@ -79,9 +79,9 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0, 0, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0, 0, 0, 0};
 
-    private static final double[] MIN_COLUMN_WIDTHS = {0, 0, 0, 0, 0, 90, 90, 90, 0};
+    private static final double[] MIN_COLUMN_WIDTHS = {0, 0, 0, 0, 0, 90, 90, 90, 0, 0};
 
     private final SimpleBooleanProperty valid = new SimpleBooleanProperty(false);
 
@@ -104,6 +104,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     private TableColumn<ImportTransaction, Account> incomeAccountColumn;
 
     private TableColumn<ImportTransaction, Account> expenseAccountColumn;
+
+    private TableColumn<ImportTransaction, String> typeColumn;
 
     private Account baseAccount = null;
 
@@ -235,7 +237,6 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         expenseAccountColumn.setEditable(true);
         expenseAccountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setFeesAccount(event.getNewValue());
-            //lastFeesAccount = event.getNewValue();
             Platform.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(expenseAccountColumn);
@@ -247,6 +248,22 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getAmount()));
         amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(numberFormat));
         tableView.getColumns().add(amountColumn);
+
+
+        typeColumn = new TableColumn<>(resources.getString("Column.Type"));
+        typeColumn.setCellValueFactory(param -> {
+
+            TransactionType transactionType = TransactionType.SINGLENTRY;
+
+            if (param.getValue().isInvestmentTransaction()) {
+                transactionType = param.getValue().getTransactionType();
+            } else if (!param.getValue().getAccount().equals(baseAccount)) {
+                transactionType = TransactionType.DOUBLEENTRY;
+            }
+
+            return new SimpleStringProperty(transactionType.toString());
+        });
+        tableView.getColumns().add(typeColumn);
     }
 
     @Override
@@ -273,10 +290,13 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
             // set to sane account assuming it's going to be a single entry
             for (final ImportTransaction t : list) {
-                t.setAccount(baseAccount);
+
+                if (!t.isInvestmentTransaction()
+                        || (t.isInvestmentTransaction() && t.getTransactionType() != TransactionType.REINVESTDIV)) {
+                    t.setAccount(baseAccount);
+                }
 
                 if (t.isInvestmentTransaction()) {
-
                     switch (t.getTransactionType()) {
                         case BUYSHARE:
                             t.setFeesAccount(baseAccount);
@@ -301,6 +321,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
             incomeAccountColumn.setVisible(bank.isInvestmentAccount());
             expenseAccountColumn.setVisible(bank.isInvestmentAccount());
+            typeColumn.setVisible(bank.isInvestmentAccount());
 
             // match up any pre-existing transactions
             GenericImport.matchTransactions(list, baseAccount);
@@ -402,8 +423,9 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             if (row != null) {
                 final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
 
-                editableProperty().setValue(!(importTransaction.isInvestmentTransaction()
-                        && importTransaction.getTransactionType() == TransactionType.REINVESTDIV));
+                editableProperty().setValue(!(!importTransaction.isInvestmentTransaction()
+                        || (importTransaction.isInvestmentTransaction()
+                        && importTransaction.getTransactionType() == TransactionType.REINVESTDIV)));
             }
 
             if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
