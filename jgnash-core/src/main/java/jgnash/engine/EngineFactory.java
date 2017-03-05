@@ -41,11 +41,8 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
-import jgnash.util.FileMagic;
+import jgnash.util.*;
 import jgnash.util.FileMagic.FileType;
-import jgnash.util.FileUtils;
-import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
 
 /**
  * Factory class for obtaining an engine instance.
@@ -170,7 +167,12 @@ public class EngineFactory {
     public static void removeOldCompressedXML(final String fileName, final int limit) {
         final Path path = Paths.get(fileName);
 
-        final String baseFile = FileUtils.stripFileExtension(path.toString());
+        String baseFile = FileUtils.stripFileExtension(path.toString());
+
+        // '\' on Windows platform must be replaced with '\\' to prevent an exception
+        if (OS.isSystemWindows()) {
+            baseFile = baseFile.replace("\\","\\\\");
+        }
 
         // old files use the base file name plus a '-' and a 8 digit date plus a '-' and a 4 digit time stamp
         final List<Path> fileList = FileUtils.getDirectoryListing(path.getParent(), baseFile + "-\\d{8}-\\d{4}.zip");
