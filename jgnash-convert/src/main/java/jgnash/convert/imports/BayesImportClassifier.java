@@ -23,6 +23,7 @@ import java.util.Set;
 import jgnash.bayes.BayesClassifier;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
 
 /**
  * Bayes classifier import utility methods
@@ -51,7 +52,12 @@ public class BayesImportClassifier {
                 builder.append(transaction.getMemo());
             }
 
-            transaction.setAccount(classifier.classify(builder.toString()));
+            // reinvested dividends do not have a cash account
+            if (!transaction.isInvestmentTransaction()
+                    || (transaction.isInvestmentTransaction()
+                        && transaction.getTransactionType() != TransactionType.REINVESTDIV)) {
+                transaction.setAccount(classifier.classify(builder.toString()));
+            }
         }
     }
 
