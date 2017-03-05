@@ -236,8 +236,7 @@ public final class FileUtils {
     }
 
     /**
-     * Returns a sorted list of files in a specified directory that match a DOS
-     * style wildcard search pattern.
+     * Returns a sorted list of files in a specified directory that match a regex search pattern.
      *
      * @param directory base directory for the search
      * @param regexPattern   regex search pattern
