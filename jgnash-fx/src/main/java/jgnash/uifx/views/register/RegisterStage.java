@@ -1,5 +1,6 @@
 package jgnash.uifx.views.register;
 
+import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -78,7 +79,7 @@ public class RegisterStage extends Stage {
         setHeight(minHeight * SCALE_FACTOR);
 
         // Push the account to the controller at the end of the application thread
-        JavaFXUtils.runLater(() -> controller.accountProperty().set(account));
+        Platform.runLater(() -> controller.accountProperty().set(account));
 
         updateTitle(account);
 
