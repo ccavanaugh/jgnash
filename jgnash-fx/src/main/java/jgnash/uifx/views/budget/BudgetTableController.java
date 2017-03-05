@@ -917,11 +917,9 @@ public class BudgetTableController implements MessageListener {
         accountGroupPeriodSummaryTable.getColumns().add(headerColumn);
     }
 
-    private double calculateMinColumnWidth(final BudgetPeriodDescriptor descriptor, final Account account) {
+    private double calculateMinColumnWidth(final BudgetPeriodResults budgetPeriodResults) {
         double max = 0;
         double min = 0;
-
-        BudgetPeriodResults budgetPeriodResults = budgetResultsModel.getResults(descriptor, account);
 
         max = Math.max(max, budgetPeriodResults.getBudgeted().doubleValue());
         max = Math.max(max, budgetPeriodResults.getChange().doubleValue());
@@ -938,25 +936,12 @@ public class BudgetTableController implements MessageListener {
                         BORDER_MARGIN, null));
     }
 
+    private double calculateMinColumnWidth(final BudgetPeriodDescriptor descriptor, final Account account) {
+        return calculateMinColumnWidth(budgetResultsModel.getResults(descriptor, account));
+    }
+
     private double calculateMinColumnWidth(final Account account) {
-        double max = 0;
-        double min = 0;
-
-        BudgetPeriodResults budgetPeriodResults = budgetResultsModel.getResults(account);
-        max = Math.max(max, budgetPeriodResults.getBudgeted().doubleValue());
-        max = Math.max(max, budgetPeriodResults.getChange().doubleValue());
-        max = Math.max(max, budgetPeriodResults.getRemaining().doubleValue());
-
-        min = Math.min(min, budgetPeriodResults.getBudgeted().doubleValue());
-        min = Math.min(min, budgetPeriodResults.getChange().doubleValue());
-        min = Math.min(min, budgetPeriodResults.getRemaining().doubleValue());
-
-
-        return Math.max(JavaFXUtils.getDisplayedTextWidth(
-                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
-                        BORDER_MARGIN, null), JavaFXUtils.getDisplayedTextWidth(
-                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
-                        BORDER_MARGIN, null));
+        return calculateMinColumnWidth(budgetResultsModel.getResults(account));
     }
 
     private double calculateMinColumnWidth(final BudgetPeriodDescriptor descriptor) {
