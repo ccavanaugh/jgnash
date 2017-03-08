@@ -2,7 +2,10 @@ image:https://jgnash.github.io/img/jgnash-logo.png[jGnash Logo]
 
 = jGnash README
 
-https://sourceforge.net/projects/jgnash/[jGnash] is a free (no strings attached!) personal finance manager with many of the same features as commercially-available software. It was created in order to make tracking your personal finances easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on any operating system that has a working Java 7 Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
+https://sourceforge.net/projects/jgnash/[jGnash] is a free (no strings attached!) personal finance manager with many
+of the same features as commercially-available software. It was created in order to make tracking your personal finances
+easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on
+any operating system that has a working Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
 
 jGnash 2.x requires that the Java Platform version 8 or newer be installed.
 jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Platform.
