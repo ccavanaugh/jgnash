@@ -72,11 +72,11 @@ public class PortablePreferences {
 
     public static void deleteUserPreferences() {
         try {
-            final Preferences prefs = Preferences.userRoot();
-            if (prefs.nodeExists("/jgnash")) {
-                Preferences jgnash = prefs.node("/jgnash");
+            final Preferences p = Preferences.userRoot();
+            if (p.nodeExists("/jgnash")) {
+                Preferences jgnash = p.node("/jgnash");
                 jgnash.removeNode();
-                prefs.flush();
+                p.flush();
             } else {
                 System.err.println(ResourceUtils.getString("Message.PrefFail"));
             }
