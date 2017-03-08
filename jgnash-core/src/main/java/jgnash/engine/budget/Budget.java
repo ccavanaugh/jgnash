@@ -307,7 +307,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Overridden to return the name of the budget for convience.
+     * Overridden to return the name of the budget for convenience.
      *
      * @return name of the budget
      */
