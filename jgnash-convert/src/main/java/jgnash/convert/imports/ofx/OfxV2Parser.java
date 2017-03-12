@@ -65,6 +65,8 @@ public class OfxV2Parser implements OfxTags {
 
     private static final String ENCODING = StandardCharsets.UTF_8.name();
 
+    private OfxBank bank;
+
     /**
      * Default language is assumed to be English unless the import file defines it
      */
@@ -74,7 +76,10 @@ public class OfxV2Parser implements OfxTags {
 
     private String statusSeverity;
 
-    private OfxBank bank;
+    /**
+     * Status message from sign-on process
+     */
+    private String statusMessage;
 
     static void enableDetailedLogFile() {
         try {
@@ -1086,6 +1091,7 @@ public class OfxV2Parser implements OfxTags {
                             statusSeverity = reader.getElementText();
                             break;
                         case MESSAGE:   // consume it, not used
+                            statusMessage = reader.getElementText();
                             break;
                         default:
                             logger.log(Level.WARNING, "Unknown STATUS element {0}", reader.getLocalName());
@@ -1207,5 +1213,9 @@ public class OfxV2Parser implements OfxTags {
 
     public String getLanguage() {
         return language;
+    }
+
+    String getStatusMessage() {
+        return statusMessage;
     }
 }
