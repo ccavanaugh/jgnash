@@ -471,4 +471,44 @@ public class Ofx2Test {
         }
     }
 
+    @Test
+    public void parseInvest2() {
+        final String testFile = "/invest2.xml";
+
+        final URL url = Object.class.getResource(testFile);
+
+        try {
+            assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
+
+            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(stream);
+
+                OfxBank ofxBank = parser.getBank();
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+                assertEquals("The operation succeeded.", parser.getStatusMessage());
+
+                assertEquals(0, ofxBank.statusCode);
+                assertEquals("INFO", ofxBank.statusSeverity);
+                assertEquals(null, ofxBank.statusMessage);
+
+                assertEquals(60, ofxBank.getTransactions().size());
+                assertEquals(6, ofxBank.getSecurityList().size());
+
+                assertTrue(ofxBank.isInvestmentAccount());
+
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+
+            } catch (final IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                fail();
+            }
+        } catch (final URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            fail();
+        }
+    }
+
 }
