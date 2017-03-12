@@ -21,6 +21,10 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.xx.x
+--------------
+* 03/11/17 Updated to the latest Netty dependency.
+
 Release 2.29.0
 --------------
 * 02/25/17 Improved UI performance when performing large batch updates of transactions. (Fx, GitHub Issue #23)
@@ -32,7 +36,7 @@ Release 2.29.0
            period within a pie chart. (Fx) _[Pranay Kumar]_
 * 02/07/17 Improved UI behavior when performing a large batch delete of transactions. (Fx)
 * 02/06/17 An OFX import now prevents initial assignment to the wrong account type. (Fx)
-* 02/03/17 Updated to the latest Netty and JOpt Simple Dependencies.
+* 02/03/17 Updated to the latest Netty and JOpt Simple dependencies.
 * 02/01/17 Fixed a StringIndexOutOfBoundsException that was occurring when escaping out of a text field on MacOS. (Fx)
 * 01/30/17 Fixed a NPE that was occurring when importing transactions. (Fx)
 * 01/30/17 Corrected an OFX import regression that reduced effectiveness of detecting a duplicate import. (Swing, Fx)
