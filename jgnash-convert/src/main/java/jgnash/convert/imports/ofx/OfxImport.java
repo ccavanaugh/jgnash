@@ -39,7 +39,6 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionTag;
-import jgnash.engine.TransactionType;
 
 /**
  * OfxImport utility methods
@@ -61,20 +60,11 @@ public class OfxImport {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-
-        /*if (true) {
-                if (ofxTransaction.getTransactionType() == TransactionType.REINVESTDIV) {
-                    ofxTransaction.setTransactionType(TransactionType.DIVIDEND);
-                }
-            }*/
-
-
-
         for (final ImportTransaction tran : ofxBank.getTransactions()) {
             Objects.requireNonNull(tran.getAccount());
 
-            if (tran.getState() == ImportState.NEW
-                    || tran.getState() == ImportState.NOT_EQUAL) { // do not import matched transactions
+            // do not import matched transactions
+            if (tran.getState() == ImportState.NEW || tran.getState() == ImportState.NOT_EQUAL) {
 
                 Transaction transaction = null;
 
@@ -164,14 +154,6 @@ public class OfxImport {
         InvestmentTransaction transaction = null;
 
         if (securityNode != null) {
-
-            // TODO: Create option to use a jGnash version of reinvest dividend transaction for an OFX dividend and reinvest
-
-            /*if (true) {
-                if (ofxTransaction.getTransactionType() == TransactionType.REINVESTDIV) {
-                    ofxTransaction.setTransactionType(TransactionType.DIVIDEND);
-                }
-            }*/
 
             switch (ofxTransaction.getTransactionType()) {
                 case DIVIDEND:
