@@ -40,6 +40,11 @@ public class ImportBank<E extends ImportTransaction> {
         this.transactions = transactions;
     }
 
+    /**
+     * Returns a mutable list of transactions.
+     *
+     * @return mutable List
+     */
     public List<E> getTransactions() {
         return transactions;
     }
