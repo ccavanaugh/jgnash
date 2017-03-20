@@ -30,12 +30,15 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -110,7 +113,47 @@ public class OfxV2Parser implements OfxTags {
             throw new Exception("Bank import failed");
         }
 
-        return parser.getBank();
+        return postProcess(parser.getBank());
+    }
+
+    /**
+     * Post processes the OFX transactions for import.  Income transactions with a reinvestment transaction will be
+     * stripped out. jGnash has a reinvested dividend transaction that reduces overall transaction count.
+     *
+     * @param ofxBank OfxBank to process
+     * @return OfxBank with post processed transactions
+     */
+    private static OfxBank postProcess(final OfxBank ofxBank) {
+        // Clone the original list
+        final List<ImportTransaction> importTransactions = ofxBank.getTransactions();
+
+        // Create a list of Reinvested dividends
+        final List<ImportTransaction> reinvestedDividends = importTransactions.stream()
+                .filter(importTransaction -> importTransaction.getTransactionType() == TransactionType.REINVESTDIV)
+                .collect(Collectors.toList());
+
+        // Search through the list and remove matching income transactions
+        for (final ImportTransaction reinvestDividend : reinvestedDividends) {
+
+            final Iterator<ImportTransaction> iterator = importTransactions.iterator();
+
+            while (iterator.hasNext()) {
+                final ImportTransaction otherTran = iterator.next();
+
+                // if this was OFX income and the securites match and the amount match, remove the transaction
+                if (reinvestDividend != otherTran && OfxTags.INCOME.equals(otherTran.getTransactionTypeDescription())) {
+                    if (otherTran.getAmount().equals(reinvestDividend.getAmount().abs())) {
+                        if (otherTran.getSecurityId().equals(reinvestDividend.getSecurityId())) {
+                            iterator.remove();  // remove it
+                            // reverse sign
+                            reinvestDividend.setAmount(reinvestDividend.getAmount().abs());
+                        }
+                    }
+                }
+            }
+        }
+
+        return ofxBank;
     }
 
     /**
@@ -675,7 +718,7 @@ public class OfxV2Parser implements OfxTags {
             case SELLSTOCK:
                 tran.setTransactionType(TransactionType.SELLSHARE);
                 break;
-            case INCOME:
+            case INCOME:    // dividend
                 tran.setTransactionType(TransactionType.DIVIDEND);
                 break;
             case REINVEST:

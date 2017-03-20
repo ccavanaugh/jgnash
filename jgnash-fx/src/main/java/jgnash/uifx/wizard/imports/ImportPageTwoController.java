@@ -42,6 +42,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -87,6 +88,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     private final NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
+    private static final Account NOP_EXPENSE_ACCOUNT = new Account();
+
     @FXML
     private TextFlow textFlow;
 
@@ -114,6 +117,10 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     private Account lastGainsAccount;
 
     private Account lastFeesAccount;
+
+    static {
+        NOP_EXPENSE_ACCOUNT.setName("…");   // universal N/A for tabular data
+    }
 
     @FXML
     private void initialize() {
@@ -212,7 +219,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         incomeAccountColumn = new TableColumn<>(resources.getString("Column.Income"));
         incomeAccountColumn.setCellValueFactory(param -> {
-            if (param.getValue() != null && param.getValue().getAccount() != null) {
+            if (param.getValue() != null && param.getValue().getGainsAccount() != null) {
                 return new SimpleObjectProperty<>(param.getValue().getGainsAccount());
             }
             return null;
@@ -228,8 +235,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         expenseAccountColumn = new TableColumn<>(resources.getString("Column.Expense"));
         expenseAccountColumn.setCellValueFactory(param -> {
-            if (param.getValue() != null && param.getValue().getAccount() != null) {
-                return new SimpleObjectProperty<>(param.getValue().getFeesAccount());
+            if (param.getValue() != null && param.getValue().getFeesAccount() != null) {
+                if (param.getValue().getFees().compareTo(BigDecimal.ZERO) != 0) {
+                    return new SimpleObjectProperty<>(param.getValue().getFeesAccount());
+                } else {
+                    return new SimpleObjectProperty<>(NOP_EXPENSE_ACCOUNT);  // no-opp account
+                }
             }
             return null;
         });
@@ -247,6 +258,21 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getAmount()));
         amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(numberFormat));
+
+        amountColumn.setCellFactory(param -> {
+            final TableCell<ImportTransaction, BigDecimal> cell = new BigDecimalTableCell<>(numberFormat);
+
+            // add tool tip
+            cell.indexProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.intValue() >= 0) {
+                    cell.setTooltip(new Tooltip(tableView.itemsProperty().get().get(newValue.intValue()).getToolTip()));
+                }
+            });
+
+            return cell;
+        });
+
+
         tableView.getColumns().add(amountColumn);
 
 
@@ -567,8 +593,10 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             this.getStyleClass().add("combo-box-table-cell");
 
             comboBox = new AccountComboBox();
+            comboBox.getUnfilteredItems().addAll(NOP_EXPENSE_ACCOUNT);
             comboBox.setPredicate(AccountComboBox.getDefaultPredicate()
-                    .and(account -> account.getAccountType() == AccountType.EXPENSE || account == baseAccount));
+                    .and(account -> account.getAccountType() == AccountType.EXPENSE || account == baseAccount
+                            || account == NOP_EXPENSE_ACCOUNT));
 
             comboBox.setMaxWidth(Double.MAX_VALUE);
 
@@ -588,9 +616,11 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             if (row != null) {
                 final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
 
-                editableProperty().setValue(importTransaction.getTransactionType() == TransactionType.SELLSHARE
+                editableProperty().setValue(importTransaction.getFees().compareTo(BigDecimal.ZERO) != 0
+                        && (importTransaction.getTransactionType() == TransactionType.SELLSHARE
                         || importTransaction.getTransactionType() == TransactionType.BUYSHARE
-                        || importTransaction.getTransactionType() == TransactionType.REINVESTDIV);
+                        || importTransaction.getTransactionType() == TransactionType.REINVESTDIV));
+
             }
 
             if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {

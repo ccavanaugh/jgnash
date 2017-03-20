@@ -311,11 +311,11 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         this.incomeType = incomeType;
     }
 
-    public BigDecimal getFees() {
+    @NotNull public BigDecimal getFees() {
         return fees;
     }
 
-    public void setFees(BigDecimal fees) {
+    public void setFees(@NotNull final BigDecimal fees) {
         this.fees = fees;
     }
 
@@ -423,6 +423,14 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setFeesAccount(Account feesAccount) {
         this.feesAccount = feesAccount;
+    }
+
+    @NotNull
+    public String getToolTip() {
+        if (isInvestmentTransaction()) {
+            return units.toString() + " @ " + unitPrice.toString();
+        }
+        return "";
     }
 
     @Override
