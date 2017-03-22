@@ -540,7 +540,9 @@ abstract class RegisterTableController {
                                 JavaFXUtils.runLater(RegisterTableController.this::clearTableSelection);
                             }
 
-                            observableTransactions.remove(removedTransaction);
+                            /* push removal to the end of the application thread to ensure the table selection is
+                               cleared first to prevent an IndexOfOutBoundsException */
+                            JavaFXUtils.runLater(() -> observableTransactions.remove(removedTransaction));
 
                             // this will force the running balance to recalculate
                             updateTableExecutor.execute(() -> {
