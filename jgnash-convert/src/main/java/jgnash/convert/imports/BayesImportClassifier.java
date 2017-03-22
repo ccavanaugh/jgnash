@@ -53,9 +53,7 @@ public class BayesImportClassifier {
             }
 
             // reinvested dividends do not have a cash account
-            if (!transaction.isInvestmentTransaction()
-                    || (transaction.isInvestmentTransaction()
-                        && transaction.getTransactionType() != TransactionType.REINVESTDIV)) {
+            if (transaction.getTransactionType() != TransactionType.REINVESTDIV) {
                 transaction.setAccount(classifier.classify(builder.toString()));
             }
         }
