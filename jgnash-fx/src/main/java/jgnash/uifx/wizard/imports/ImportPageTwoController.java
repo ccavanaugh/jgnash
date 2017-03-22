@@ -317,8 +317,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             // set to sane account assuming it's going to be a single entry
             for (final ImportTransaction t : list) {
 
-                if (!t.isInvestmentTransaction()
-                        || (t.isInvestmentTransaction() && t.getTransactionType() != TransactionType.REINVESTDIV)) {
+                if (t.getTransactionType() != TransactionType.REINVESTDIV) {
                     t.setAccount(baseAccount);
                 }
 
