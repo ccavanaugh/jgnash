@@ -61,16 +61,13 @@ public class OfxImport {
         Objects.requireNonNull(engine);
 
         for (final ImportTransaction tran : ofxBank.getTransactions()) {
-            Objects.requireNonNull(tran.getAccount());
 
             // do not import matched transactions
             if (tran.getState() == ImportState.NEW || tran.getState() == ImportState.NOT_EQUAL) {
-
                 Transaction transaction = null;
 
                 if (tran.isInvestmentTransaction()) {
                     if (baseAccount.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-
                         transaction = importInvestmentTransaction(ofxBank, tran, baseAccount);
 
                         if (transaction != null) {
