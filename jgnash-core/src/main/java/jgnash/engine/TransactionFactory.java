@@ -684,6 +684,23 @@ public class TransactionFactory {
 
     }
 
+    public static TransactionEntry createTransactionEntry(final Account debitAccount, final Account creditAccount,
+                                                           final BigDecimal amount, final String memo,
+                                                           final TransactionTag transactionTag) {
+        TransactionEntry entry = new TransactionEntry();
+
+        entry.setMemo(memo);
+
+        entry.setDebitAccount(debitAccount);
+        entry.setCreditAccount(creditAccount);
+
+        entry.setDebitAmount(amount.abs().negate());
+        entry.setCreditAmount(amount.abs());
+
+        entry.setTransactionTag(transactionTag);
+        return entry;
+    }
+
     private TransactionFactory() {
     }
 }

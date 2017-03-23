@@ -13,8 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static jgnash.engine.InvestmentTransactionTest.createTransactionEntry;
-import static jgnash.engine.TransactionFactory.generateBuyXTransaction;
+import static jgnash.engine.TransactionFactory.*;
 import static org.junit.Assert.*;
 
 /**
