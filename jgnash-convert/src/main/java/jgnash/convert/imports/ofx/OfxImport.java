@@ -20,7 +20,6 @@ package jgnash.convert.imports.ofx;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -111,17 +110,14 @@ public class OfxImport {
     private static InvestmentTransaction importInvestmentTransaction(final OfxBank ofxBank, final ImportTransaction ofxTransaction,
                                                                      final Account investmentAccount) {
 
-        // OFX reinvested dividends can be merged into one or created as a zero commission purchase
-
         final SecurityNode securityNode = matchSecurity(ofxBank, ofxTransaction.getSecurityId());
         final String memo = ofxTransaction.getMemo();
         final LocalDate datePosted = ofxTransaction.getDatePosted();
 
-        final BigDecimal dividend = ofxTransaction.getAmount();
         final BigDecimal units = ofxTransaction.getUnits();
         final BigDecimal unitPrice = ofxTransaction.getUnitPrice();
 
-        final Account gainsAccount = ofxTransaction.getGainsAccount();
+        final Account incomeAccount = ofxTransaction.getGainsAccount();
         final Account fessAccount = ofxTransaction.getFeesAccount();
 
         Account cashAccount = ofxTransaction.getAccount();
@@ -132,7 +128,7 @@ public class OfxImport {
         }
 
         final List<TransactionEntry> fees = new ArrayList<>();
-        final List<TransactionEntry> gains = Collections.emptyList();
+        final List<TransactionEntry> gains = new ArrayList<>();
 
         if (!ofxTransaction.getCommission().equals(BigDecimal.ZERO)) {
             final TransactionEntry transactionEntry = new TransactionEntry(fessAccount, ofxTransaction.getCommission().negate());
@@ -146,18 +142,24 @@ public class OfxImport {
             fees.add(transactionEntry);
         }
 
-        // TODO: Add a gains column.  OFX does not identify investment gains
-
         InvestmentTransaction transaction = null;
 
         if (securityNode != null) {
-
             switch (ofxTransaction.getTransactionType()) {
                 case DIVIDEND:
-                    transaction = TransactionFactory.generateDividendXTransaction(gainsAccount, investmentAccount, cashAccount,
+                    final BigDecimal dividend = ofxTransaction.getAmount();
+
+                    transaction = TransactionFactory.generateDividendXTransaction(incomeAccount, investmentAccount, cashAccount,
                             securityNode, dividend, dividend, dividend, datePosted, memo);
                     break;
-                case REINVESTDIV:   // cash with zero commission
+                case REINVESTDIV:
+                    // Create a gains entry of an account other than the investment account has been selected
+                    if (incomeAccount != investmentAccount) {
+                        final TransactionEntry gainsEntry = TransactionFactory.createTransactionEntry(incomeAccount,
+                                investmentAccount, ofxTransaction.getAmount().negate(), memo, TransactionTag.GAIN_LOSS);
+                        gains.add(gainsEntry);
+                    }
+
                     transaction = TransactionFactory.generateReinvestDividendXTransaction(investmentAccount, securityNode,
                             unitPrice, units, datePosted, memo, fees, gains);
                     break;
@@ -193,16 +195,13 @@ public class OfxImport {
     }
 
     public static Account matchAccount(final OfxBank bank) {
-
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
+        final String number = bank.accountId;
+        final CurrencyNode node = engine.getCurrency(bank.currency);
+
         Account account = null;
-
-        String number = bank.accountId;
-        String symbol = bank.currency;
-
-        CurrencyNode node = engine.getCurrency(symbol);
 
         if (node != null) {
             for (Account a : engine.getAccountList()) {
