@@ -20,6 +20,8 @@ package jgnash.uifx.actions;
 import java.io.File;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javafx.concurrent.Task;
@@ -169,7 +171,11 @@ public class ImportOfxAction {
             }
 
             // Import the transactions
-            OfxImport.importTransactions(bank, account);
+            try {
+                OfxImport.importTransactions(bank, account);
+            } catch (final Exception e) {
+                Logger.getLogger(ImportOfxAction.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
 
             return null;
         }
