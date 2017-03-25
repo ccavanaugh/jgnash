@@ -57,11 +57,11 @@ public class TransactionFactory {
         Objects.requireNonNull(date);
         Objects.requireNonNull(memo);
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryAddX entry = new TransactionEntryAddX(investmentAccount, node, price, quantity);
+        final TransactionEntryAddX entry = new TransactionEntryAddX(investmentAccount, node, price, quantity);
         entry.setMemo(memo);
 
         transaction.setPayee(buildPayee("Word.Add", node, price, quantity));
@@ -107,11 +107,11 @@ public class TransactionFactory {
             }
         }
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryBuyX entry = new TransactionEntryBuyX(account, investmentAccount, node, price, quantity,
+        final TransactionEntryBuyX entry = new TransactionEntryBuyX(account, investmentAccount, node, price, quantity,
                 exchangeRate);
         entry.setMemo(memo);
 
@@ -260,14 +260,14 @@ public class TransactionFactory {
             throw new RuntimeException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
         }
 
-        Transaction transaction = new Transaction();
+        final Transaction transaction = new Transaction();
 
         transaction.setDate(date);
         transaction.setNumber(number);
         transaction.setPayee(payee);
         transaction.setMemo(memo);
 
-        TransactionEntry entry = new TransactionEntry(creditAccount, debitAccount, creditAmount, debitAmount);
+        final TransactionEntry entry = new TransactionEntry(creditAccount, debitAccount, creditAmount, debitAmount);
         entry.setMemo(memo);
 
         transaction.addTransactionEntry(entry);
@@ -297,14 +297,14 @@ public class TransactionFactory {
             throw new RuntimeException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
         }
 
-        Transaction transaction = new Transaction();
+        final Transaction transaction = new Transaction();
 
         transaction.setDate(date);
         transaction.setNumber(number);
         transaction.setPayee(payee);
         transaction.setMemo(memo);
 
-        TransactionEntry entry = new TransactionEntry(creditAccount, debitAccount, amount);
+        final TransactionEntry entry = new TransactionEntry(creditAccount, debitAccount, amount);
         entry.setMemo(memo);
 
         transaction.addTransactionEntry(entry);
@@ -334,11 +334,11 @@ public class TransactionFactory {
         Objects.requireNonNull(date);
         Objects.requireNonNull(memo);
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryMergeX entry = new TransactionEntryMergeX(investmentAccount, node, price, quantity);
+        final TransactionEntryMergeX entry = new TransactionEntryMergeX(investmentAccount, node, price, quantity);
         entry.setMemo(memo);
 
         transaction.setPayee(buildPayee("Word.Merge", node, price, quantity));
@@ -377,30 +377,28 @@ public class TransactionFactory {
         Objects.requireNonNull(fees);
         Objects.requireNonNull(gains);
 
-        for (TransactionEntry fee : fees) {
+        for (final TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
                 throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
-        for (TransactionEntry gain : gains) {
+        for (final TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
                 throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryReinvestDivX entry = new TransactionEntryReinvestDivX(investmentAccount, node, price, quantity);
+        final TransactionEntryReinvestDivX entry = new TransactionEntryReinvestDivX(investmentAccount, node, price,
+                quantity);
 
         entry.setMemo(memo);
 
-        final NumberFormat format = CommodityFormat.getFullNumberFormat(node);
-
-        transaction.setPayee(ResourceUtils.getString("Word.ReInvDiv") + " : " + node.getSymbol() + ' '
-                + quantity.toString() + " @ " + format.format(quantity));
+        transaction.setPayee(buildPayee("Word.ReInvDiv", node, price, quantity));
 
         transaction.addTransactionEntry(entry);
 
@@ -414,7 +412,7 @@ public class TransactionFactory {
             }
 
             // create a single entry transaction that offsets any resulting fees
-            TransactionEntry feesOffsetEntry = new TransactionEntry(investmentAccount, totalFees.negate());
+            final TransactionEntry feesOffsetEntry = new TransactionEntry(investmentAccount, totalFees.negate());
             feesOffsetEntry.setMemo(memo);
             feesOffsetEntry.setTransactionTag(TransactionTag.FEES_OFFSET);
 
@@ -451,11 +449,11 @@ public class TransactionFactory {
         Objects.requireNonNull(date);
         Objects.requireNonNull(memo);
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryRemoveX entry = new TransactionEntryRemoveX(investmentAccount, node, price, quantity);
+        final TransactionEntryRemoveX entry = new TransactionEntryRemoveX(investmentAccount, node, price, quantity);
         entry.setMemo(memo);
 
         transaction.setPayee(buildPayee("Word.Remove", node, price, quantity));
@@ -551,14 +549,14 @@ public class TransactionFactory {
         Objects.requireNonNull(amount);
         Objects.requireNonNull(date);
 
-        Transaction transaction = new Transaction();
+        final Transaction transaction = new Transaction();
 
         transaction.setDate(date);
         transaction.setNumber(number);
         transaction.setPayee(payee);
         transaction.setMemo(memo);
 
-        TransactionEntry entry = new TransactionEntry(account, amount);
+        final TransactionEntry entry = new TransactionEntry(account, amount);
         entry.setMemo(memo);
 
         assert entry.isSingleEntry(); // check
@@ -591,11 +589,11 @@ public class TransactionFactory {
         Objects.requireNonNull(date);
         Objects.requireNonNull(memo);
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntrySplitX entry = new TransactionEntrySplitX(investmentAccount, node, price, quantity);
+        final TransactionEntrySplitX entry = new TransactionEntrySplitX(investmentAccount, node, price, quantity);
         entry.setMemo(memo);
 
         transaction.setPayee(buildPayee("Word.Split", node, price, quantity));
@@ -619,7 +617,7 @@ public class TransactionFactory {
                                             final BigDecimal dividend, final BigDecimal cashExchangedAmount) {
 
         if (!cashAccount.equals(investmentAccount)) {
-            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
+            final TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
                     dividend.negate());
 
             tran.setMemo(memo);
@@ -638,7 +636,7 @@ public class TransactionFactory {
             BigDecimal nonCashBalanceFees = BigDecimal.ZERO;
 
             // loop through and add investment fees to the transaction
-            for (TransactionEntry fee : fees) {
+            for (final TransactionEntry fee : fees) {
                 transaction.addTransactionEntry(fee);
 
                 nonCashBalanceFees = nonCashBalanceFees.add(fee.getAmount(investmentAccount).abs());
@@ -651,7 +649,7 @@ public class TransactionFactory {
                 BigDecimal exchangedAmount = nonCashBalanceFees.abs().multiply(exchangeRate).setScale(scale,
                         MathConstants.roundingMode);
 
-                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees,
+                final TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees,
                         exchangedAmount.negate());
                 tran.setMemo(memo);
                 tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
@@ -687,7 +685,7 @@ public class TransactionFactory {
     public static TransactionEntry createTransactionEntry(final Account debitAccount, final Account creditAccount,
                                                            final BigDecimal amount, final String memo,
                                                            final TransactionTag transactionTag) {
-        TransactionEntry entry = new TransactionEntry();
+        final TransactionEntry entry = new TransactionEntry();
 
         entry.setMemo(memo);
 
