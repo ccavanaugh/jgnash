@@ -31,6 +31,7 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -70,9 +71,12 @@ public class SqlUtils {
 
         try {
             if (!FileUtils.isFileLocked(fileName)) {
-                DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-                Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
-                String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+                final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
+
+                Objects.requireNonNull(dataStoreType);
+
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+                final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
 
