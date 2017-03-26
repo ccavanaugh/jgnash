@@ -44,7 +44,7 @@ public class JpaH2EngineTest extends EngineTest {
         try {
             //File temp = Files.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT).toFile();
             //temp.deleteOnExit();
-            testFile = Files.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT).toString();
+            testFile = Files.createTempFile("jpa-test", JpaH2DataStore.FILE_EXT).toString();
 
         } catch (final IOException ex) {
             Logger.getLogger(JpaH2EngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);

@@ -259,7 +259,7 @@ abstract class AbstractJpaDataStore implements DataStore {
     }
 
     private boolean exists(final String fileName) {
-        return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + "." + getFileExt()));
+        return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + getFileExt()));
     }
 
     /**

@@ -91,7 +91,7 @@ public class DatabasePathAction {
         final List<String> types = new ArrayList<>();
 
         for (final DataStoreType dataStoreType : DataStoreType.values()) {
-            types.add("*." + dataStoreType.getDataStore().getFileExt());
+            types.add("*" + dataStoreType.getDataStore().getFileExt());
         }
 
         fileChooser.getExtensionFilters().addAll(
@@ -100,7 +100,7 @@ public class DatabasePathAction {
 
         for (final DataStoreType dataStoreType : DataStoreType.values()) {
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter(dataStoreType.toString(), "*." + dataStoreType.getDataStore().getFileExt())
+                    new FileChooser.ExtensionFilter(dataStoreType.toString(), "*" + dataStoreType.getDataStore().getFileExt())
             );
         }
 

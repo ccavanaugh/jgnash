@@ -155,7 +155,8 @@ public class ControlsTest extends Application {
 
     private Engine createEngine() throws IOException {
         try {
-            testFile = Files.createTempFile("test", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
+            testFile = Files.createTempFile("test",
+                    DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;
         } catch (IOException e1) {
             Logger.getLogger(ControlsTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);

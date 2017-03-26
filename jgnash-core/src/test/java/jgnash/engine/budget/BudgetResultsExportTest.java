@@ -43,8 +43,8 @@ public class BudgetResultsExportTest {
     @Test
     public void testExportBudgetResultsModel() throws Exception {
 
-        final String file = Files.createTempFile("budget-", "."
-                + DataStoreType.XML.getDataStore().getFileExt()).toString();
+        final String file = Files.createTempFile("budget-",
+                DataStoreType.XML.getDataStore().getFileExt()).toString();
 
         EngineFactory.deleteDatabase(file);
 

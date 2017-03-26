@@ -49,9 +49,9 @@ public final class FileChooserFactory {
         final StringBuilder description = new StringBuilder(ResourceUtils.getString("Label.jGnashFiles") + " (");
 
         for (int i = 0; i < types.length; i++) {
-            ext[i] = "*." + types[i].getDataStore().getFileExt();
+            ext[i] = "*" + types[i].getDataStore().getFileExt();
 
-            description.append("*.");
+            description.append("*");
             description.append(types[i].getDataStore().getFileExt());
 
             if (i < types.length - 1) {

@@ -105,7 +105,7 @@ public class NewFileWizard {
             final List<RootAccount> accountList = (List<RootAccount>) wizardController.getSetting(Settings.ACCOUNT_SET);
 
             // Ensure file extension matches data store type
-            final String fileName = FileUtils.stripFileExtension(database) + "." + type.getDataStore().getFileExt();
+            final String fileName = FileUtils.stripFileExtension(database) + type.getDataStore().getFileExt();
 
             try {
                 NewFileUtility.buildNewFile(fileName, type, password.toCharArray(), defaultCurrency, nodes, accountList);

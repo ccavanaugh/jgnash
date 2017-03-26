@@ -34,11 +34,11 @@ import jgnash.util.NotNull;
  */
 public class JpaHsqlDataStore extends AbstractJpaDataStore {
 
-    public static final String FILE_EXT = "script";
+    public static final String FILE_EXT = ".script";
 
     public static final String LOCK_EXT = ".lck";
 
-    private static final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup",
+    private static final String[] extensions = new String[]{".log", ".properties", FILE_EXT, ".data", ".backup",
             ".tmp", ".lobs", LOCK_EXT};
 
     @NotNull

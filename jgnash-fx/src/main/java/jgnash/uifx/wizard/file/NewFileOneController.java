@@ -91,7 +91,7 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
         if (FileUtils.fileHasExtension(fileName)) {
             fileNameField.setText(fileName);
         } else {
-            fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
+            fileNameField.setText(fileName + storageTypeComboBox.getValue().getDataStore().getFileExt());
         }
 
         updateDescriptor();
@@ -126,7 +126,7 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
 
             Platform.runLater(() -> {
                 String fileName = FileUtils.stripFileExtension(fileNameField.getText());
-                fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
+                fileNameField.setText(fileName + storageTypeComboBox.getValue().getDataStore().getFileExt());
             });
         }
     }

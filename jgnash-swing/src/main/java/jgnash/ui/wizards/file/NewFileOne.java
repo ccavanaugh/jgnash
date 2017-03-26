@@ -63,7 +63,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
     private DataStoreTypeCombo typeCombo;
 
-    public NewFileOne() {
+    NewFileOne() {
 
         layoutMainPanel();
     }
@@ -143,7 +143,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
         if (FileUtils.fileHasExtension(fileName)) {
             dbNameField.setText(fileName);
         } else {
-            dbNameField.setText(fileName + "." + typeCombo.getSelectedDataStoreType().getDataStore().getFileExt());
+            dbNameField.setText(fileName + typeCombo.getSelectedDataStoreType().getDataStore().getFileExt());
         }
 
         checkForOverwrite();
@@ -170,7 +170,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
             EventQueue.invokeLater(() -> {
                 String fileName = FileUtils.stripFileExtension(dbNameField.getText());
-                dbNameField.setText(fileName + "." + typeCombo.getSelectedDataStoreType().getDataStore().getFileExt());
+                dbNameField.setText(fileName + typeCombo.getSelectedDataStoreType().getDataStore().getFileExt());
             });
         }
     }

@@ -37,7 +37,7 @@ public class XMLEngineTest extends EngineTest {
     @Override
     public Engine createEngine() throws Exception {
         try {
-            testFile = Files.createTempFile("test", "." + DataStoreType.XML.getDataStore().getFileExt()).toString();
+            testFile = Files.createTempFile("test", DataStoreType.XML.getDataStore().getFileExt()).toString();
             tempFile = testFile;
 
         } catch (IOException e1) {

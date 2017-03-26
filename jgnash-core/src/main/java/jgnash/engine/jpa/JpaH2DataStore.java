@@ -33,7 +33,7 @@ import jgnash.util.NotNull;
  */
 public class JpaH2DataStore extends AbstractJpaDataStore {
 
-    public static final String FILE_EXT = "h2.db";
+    public static final String FILE_EXT = ".h2.db";
 
     public static final String LOCK_EXT = ".lock.db";
 
@@ -55,7 +55,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
 
     @Override
     public void deleteDatabase(final String fileName) {
-        final String[] extensions = new String[]{".h2.db", LOCK_EXT};
+        final String[] extensions = new String[]{FILE_EXT, LOCK_EXT};
 
         final String base = FileUtils.stripFileExtension(fileName);
 

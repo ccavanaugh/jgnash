@@ -59,7 +59,7 @@ public class FileTransferTest {
         String testFile = null;
 
         try {
-            final Path temp = Files.createTempFile("jpa-test-e", "." + JpaH2DataStore.FILE_EXT);
+            final Path temp = Files.createTempFile("jpa-test-e", JpaH2DataStore.FILE_EXT);
             Files.delete(temp);
 
             testFile = temp.toString();
@@ -156,7 +156,7 @@ public class FileTransferTest {
         String testFile = null;
 
         try {
-            Path temp = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT);
+            Path temp = Files.createTempFile("jpa-test", JpaHsqlDataStore.FILE_EXT);
             Files.delete(temp);
 
             testFile = temp.toString();

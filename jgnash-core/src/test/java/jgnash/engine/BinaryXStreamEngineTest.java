@@ -37,7 +37,7 @@ public class BinaryXStreamEngineTest extends EngineTest {
     @Override
     public Engine createEngine() throws Exception {
         try {
-            testFile = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt())
+            testFile = Files.createTempFile("jgnash-", DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt())
                     .toString();
 
             tempFile = testFile;

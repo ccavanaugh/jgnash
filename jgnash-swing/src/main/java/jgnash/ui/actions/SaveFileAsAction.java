@@ -58,7 +58,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
 
         final DataStoreType[] types = DataStoreType.values();
 
-        String[] ext = new String[types.length];
+        final String[] ext = new String[types.length];
 
         for (int i = 0; i < types.length; i++) {
             ext[i] = types[i].getDataStore().getFileExt();
@@ -67,7 +67,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
         StringBuilder description = new StringBuilder(rb.getString("Label.jGnashFiles") + " (");
 
         for (int i = 0; i < types.length; i++) {
-            description.append("*.");
+            description.append("*");
             description.append(types[i].getDataStore().getFileExt());
 
             if (i < types.length - 1) {
@@ -77,7 +77,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
 
         description.append(')');
 
-        chooser.addChoosableFileFilter(new FileNameExtensionFilter(description.toString(), ext));
+        chooser.addChoosableFileFilter(new DataStoreFilter(description.toString(), ext));
 
         if (chooser.showSaveDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {
             pref.put(CURRENT_DIR, chooser.getCurrentDirectory().getAbsolutePath());

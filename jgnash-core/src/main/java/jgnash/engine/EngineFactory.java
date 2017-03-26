@@ -103,7 +103,7 @@ public class EngineFactory {
             return Files.isReadable(Paths.get(database));
         }
 
-        return Files.isReadable(Paths.get(database + "." + type.getDataStore().getFileExt()));
+        return Files.isReadable(Paths.get(database + type.getDataStore().getFileExt()));
     }
 
     public static boolean doesDatabaseExist(final String database) {
@@ -143,7 +143,7 @@ public class EngineFactory {
         final DataStore xmlDataStore = new XMLDataStore();
 
         Path xmlFile = Paths.get(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
-                + "." + xmlDataStore.getFileExt());
+                + xmlDataStore.getFileExt());
 
         // push the intermediary file to the temporary directory
         xmlFile = Paths.get(System.getProperty("java.io.tmpdir") + xmlFile.getFileSystem().getSeparator()
@@ -484,7 +484,7 @@ public class EngineFactory {
      */
     public static void saveAs(final String destination) throws IOException {
 
-        final String fileExtension = FileUtils.getFileExtension(destination);
+        final String fileExtension = "." + FileUtils.getFileExtension(destination);
         DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
 
         if (!fileExtension.isEmpty()) {
@@ -497,7 +497,7 @@ public class EngineFactory {
         }
 
         final Path newFile = Paths.get(FileUtils.stripFileExtension(destination)
-                + "." + newFileType.getDataStore().getFileExt());
+                + newFileType.getDataStore().getFileExt());
 
         final Path current = Paths.get(EngineFactory.getActiveDatabase());
 
@@ -506,7 +506,7 @@ public class EngineFactory {
             final DataStoreType currentType = dataStoreMap.get(EngineFactory.DEFAULT).getType();
 
             if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
-                final Path tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT);
+                final Path tempFile = Files.createTempFile("jgnash", BinaryXStreamDataStore.FILE_EXT);
 
                 Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -574,7 +574,8 @@ public class EngineFactory {
 
         final String ENGINE = UUIDUtil.getUID();    // create a temporary engine ID for utility use only
 
-        final String fileExtension = FileUtils.getFileExtension(newFileName);
+        final String fileExtension = "." + FileUtils.getFileExtension(newFileName);
+
         DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
 
         // Determine the data store type given the file extension
@@ -588,7 +589,7 @@ public class EngineFactory {
         }
 
         final Path newFile = Paths.get(FileUtils.stripFileExtension(newFileName)
-                + "." + newFileType.getDataStore().getFileExt());
+                + newFileType.getDataStore().getFileExt());
 
         final Path current = Paths.get(fileName);
 
@@ -602,7 +603,7 @@ public class EngineFactory {
             Engine engine = EngineFactory.bootLocalEngine(fileName, ENGINE, password);
 
             if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
-                final Path tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT);
+                final Path tempFile = Files.createTempFile("jgnash", BinaryXStreamDataStore.FILE_EXT);
 
                 if (engine != null) {
                     // Get collection of object to persist

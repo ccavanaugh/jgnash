@@ -47,7 +47,7 @@ public class JpaHsqlEngineTest extends EngineTest {
         testFile = "jpa-test." + JpaHsqlDataStore.FILE_EXT;
 
         try {
-            testFile = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toString();
+            testFile = Files.createTempFile("jpa-test", JpaHsqlDataStore.FILE_EXT).toString();
 
             base = FileUtils.stripFileExtension(testFile);
         } catch (IOException ex) {

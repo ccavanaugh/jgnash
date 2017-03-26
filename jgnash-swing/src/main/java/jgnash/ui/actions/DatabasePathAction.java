@@ -18,7 +18,6 @@
 package jgnash.ui.actions;
 
 import java.awt.Component;
-import java.io.File;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -65,7 +64,7 @@ public class DatabasePathAction {
         final StringBuilder description = new StringBuilder(rb.getString("Label.jGnashFiles") + " (");
 
         for (int i = 0; i < dataStoreTypes.length; i++) {
-            description.append("*.");
+            description.append("*");
             description.append(dataStoreTypes[i].getDataStore().getFileExt());
 
             if (i < dataStoreTypes.length - 1) {
@@ -79,7 +78,7 @@ public class DatabasePathAction {
 
         JFileChooser chooser = new JFileChooser(pref.get(LAST_DIR, null));
 
-        FileFilter filter = new DataStoreFilter(description.toString(), ext);
+        final FileFilter filter = new DataStoreFilter(description.toString(), ext);
         chooser.addChoosableFileFilter(filter);
         chooser.setFileFilter(filter);
         chooser.setMultiSelectionEnabled(false);
@@ -101,47 +100,5 @@ public class DatabasePathAction {
             }
         }
         return "";
-    }
-
-    private static class DataStoreFilter extends FileFilter {
-
-        private final String description;
-
-        private final String[] fileExtensions;
-
-        public DataStoreFilter(final String description, final String... extensions) {
-            this.description = description;
-            this.fileExtensions = extensions;
-        }
-
-        @Override
-        public boolean accept(final File f) {
-            if (f != null) {
-
-                if (f.isDirectory()) {
-                    return true;
-                }
-
-                String fileName = f.getName();
-
-                final int i = fileName.indexOf('.');
-
-                if (i > 0 && i < fileName.length() - 1) {
-                    final String extension = fileName.substring(i + 1);
-
-                    for (String fileExtension : fileExtensions) {
-                        if (extension.equalsIgnoreCase(fileExtension)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public String getDescription() {
-            return description;
-        }
     }
 }

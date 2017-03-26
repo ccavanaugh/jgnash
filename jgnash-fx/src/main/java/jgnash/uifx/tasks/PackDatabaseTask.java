@@ -84,11 +84,9 @@ public class PackDatabaseTask extends Task<Void> {
 
             final DataStore dataStore = EngineFactory.getDataStoreByType(file).getDataStore();
 
-            final String newFile = FileUtils.stripFileExtension(file) + "-pack" + "."
-                    + dataStore.getFileExt();
+            final String newFile = FileUtils.stripFileExtension(file) + "-pack" + dataStore.getFileExt();
 
-            final String oldFile = FileUtils.stripFileExtension(file) + "-old" + "."
-                    + dataStore.getFileExt();
+            final String oldFile = FileUtils.stripFileExtension(file) + "-old" + dataStore.getFileExt();
 
             EngineFactory.saveAs(file, newFile, password);
 
