@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.util.FileUtils;
@@ -45,7 +44,7 @@ public class JpaHsqlEngineTest extends EngineTest {
 
     @Override
     public Engine createEngine() throws Exception {
-        testFile = "jpa-test." + JpaH2DataStore.FILE_EXT;
+        testFile = "jpa-test." + JpaHsqlDataStore.FILE_EXT;
 
         try {
             testFile = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toString();
