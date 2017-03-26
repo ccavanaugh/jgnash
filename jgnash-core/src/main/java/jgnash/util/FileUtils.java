@@ -156,7 +156,7 @@ public final class FileUtils {
         return !stripFileExtension(fileName).equals(fileName);
     }
 
-    public static String getFileExtension(final String fileName) {  // TODO, validate usages
+    public static String getFileExtension(final String fileName) {
 
         String result = "";
 
