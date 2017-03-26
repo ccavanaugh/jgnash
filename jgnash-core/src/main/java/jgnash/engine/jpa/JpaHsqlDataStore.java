@@ -39,7 +39,7 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
     public static final String LOCK_EXT = ".lck";
 
     private static final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup",
-            ".tmp", ".lobs", ".lck"};
+            ".tmp", ".lobs", LOCK_EXT};
 
     @NotNull
     @Override
