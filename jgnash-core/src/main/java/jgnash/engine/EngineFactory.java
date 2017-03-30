@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -264,6 +266,8 @@ public class EngineFactory {
                                                       final char[] password, final DataStoreType type)
             throws IOException {
 
+        Instant start = Instant.now();
+
         MessageBus.getInstance(engineName).setLocal();
 
         final DataStore dataStore = type.getDataStore();
@@ -292,6 +296,8 @@ public class EngineFactory {
                 pref.put(LAST_DATABASE, fileName);
                 pref.putBoolean(LAST_REMOTE, false);
             }
+
+            System.out.println("Boot time was " + ChronoUnit.MILLIS.between(start, Instant.now()) + " milliseconds");
         }
         return engine;
     }
@@ -360,6 +366,8 @@ public class EngineFactory {
             return DataStoreType.BINARY_XSTREAM;
         } else if (type == FileType.h2) {
             return DataStoreType.H2_DATABASE;
+        } else if (type == FileType.h2mv) {
+            return DataStoreType.H2MV_DATABASE;
         } else if (type == FileType.hsql) {
             return DataStoreType.HSQL_DATABASE;
         }
@@ -380,7 +388,7 @@ public class EngineFactory {
             version = XMLDataStore.getFileVersion(file);
         } else if (type == FileType.BinaryXStream) {
             version = BinaryXStreamDataStore.getFileVersion(file);
-        } else if (type == FileType.h2 || type == FileType.hsql) {
+        } else if (type == FileType.h2 || type == FileType.h2mv || type == FileType.hsql) {
             try {
                 version = SqlUtils.getFileVersion(file.toString(), password);
             } catch (final Exception e) {

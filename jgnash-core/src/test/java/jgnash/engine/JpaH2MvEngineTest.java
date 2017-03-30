@@ -17,16 +17,16 @@
  */
 package jgnash.engine;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaH2MvDataStore;
 import jgnash.engine.jpa.SqlUtils;
-
-import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -36,17 +36,18 @@ import static org.junit.Assert.fail;
  *
  * @author Craig Cavanaugh
  */
-public class JpaH2EngineTest extends EngineTest {
+public class JpaH2MvEngineTest extends EngineTest {
+
 
     @Override
     public Engine createEngine() throws Exception {
-        testFile = "jpa-test" + JpaH2DataStore.FILE_EXT;
+        testFile = "jpa-testmv" + JpaH2MvDataStore.FILE_EXT;
 
         try {
-            testFile = Files.createTempFile("jpa-test", JpaH2DataStore.FILE_EXT).toString();
+            testFile = Files.createTempFile("jpa-testmv", JpaH2MvDataStore.FILE_EXT).toString();
 
         } catch (final IOException ex) {
-            Logger.getLogger(JpaH2EngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            Logger.getLogger(JpaH2MvEngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             fail();
         }
 
@@ -54,7 +55,7 @@ public class JpaH2EngineTest extends EngineTest {
 
         try {
             return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
-                    DataStoreType.H2_DATABASE);
+                    DataStoreType.H2MV_DATABASE);
         } catch (final Exception e) {
             fail(e.getMessage());
             return null;
@@ -62,7 +63,7 @@ public class JpaH2EngineTest extends EngineTest {
     }
 
     @Test
-    public void dumpTableAndColumnNames() {
+    public void dumpTableAndColumnNames() throws InterruptedException {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         final Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile);

@@ -52,6 +52,7 @@ class JpaConfiguration {
 
         switch (database) {
             case H2_DATABASE:
+            case H2MV_DATABASE:
                 properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.h2.Driver");
                 properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.H2Dialect");
                 break;
@@ -75,7 +76,8 @@ class JpaConfiguration {
 
         switch (dataStoreType) {
             case H2_DATABASE:
-                urlBuilder.append("jdbc:h2:file:");
+            case H2MV_DATABASE:
+                urlBuilder.append("jdbc:h2:nio:");
 
                 urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
@@ -89,6 +91,8 @@ class JpaConfiguration {
                 // for correct handling of old files without forcing an upgrade
                 if (FileUtils.getFileExtension(fileName).contains("h2.db")) {
                     urlBuilder.append(";MV_STORE=FALSE;MVCC=FALSE");
+                } else {
+                    urlBuilder.append(";COMPRESS=TRUE;FILE_LOCK=FILE");   // do not use FS locking for
                 }
 
                 if (readOnly) {
@@ -145,6 +149,7 @@ class JpaConfiguration {
 
         switch (dataStoreType) {
             case H2_DATABASE:
+            case H2MV_DATABASE:
                 urlBuilder.append("jdbc:h2");
 
                 /*boolean useSSL = Boolean.parseBoolean(properties.getProperty(EncryptionManager.ENCRYPTION_FLAG));

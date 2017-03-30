@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaH2MvDataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
@@ -40,9 +41,13 @@ public enum DataStoreType {
             false,
             BinaryXStreamDataStore.class),
     H2_DATABASE (
-            ResourceUtils.getString("DataStoreType.H2"),
+            ResourceUtils.getString("DataStoreType.H2") + " (1.3)",
             true,
             JpaH2DataStore.class),
+    H2MV_DATABASE (
+            ResourceUtils.getString("DataStoreType.H2") + " (1.4)",
+            true,
+            JpaH2MvDataStore.class),
     HSQL_DATABASE (
             ResourceUtils.getString("DataStoreType.HSQL"),
             true,
@@ -68,9 +73,10 @@ public enum DataStoreType {
 
     public DataStore getDataStore() {
         try {
-            Constructor<?> storeConst = dataStore.getDeclaredConstructor();
+            final Constructor<?> storeConst = dataStore.getDeclaredConstructor();
             return (DataStore) storeConst.newInstance();
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
 
             throw new RuntimeException(ex);

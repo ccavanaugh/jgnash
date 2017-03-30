@@ -23,6 +23,8 @@ WANTS
 
 Release 2.xx.x
 --------------
+* 03/30/17 Added support the the H2 MVStore database file format.
+* 03/30/17 Updated to the latest H2 database dependency
 * 03/26/17 Updated to the latest Hibernate dependency.
 * 03/25/17 The payee for Reinvested Dividends was not being generated correctly.
 * 03/24/17 OFX import of investment transactions is supported for Buys, Sells, Dividends, and Reinvested Dividends.

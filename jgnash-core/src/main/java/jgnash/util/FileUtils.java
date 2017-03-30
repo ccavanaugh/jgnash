@@ -46,6 +46,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaH2MvDataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 
 /**
@@ -63,7 +64,7 @@ public final class FileUtils {
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
 
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
-            JpaH2DataStore.LOCK_EXT, ".lock"};
+            JpaH2DataStore.LOCK_EXT, JpaH2MvDataStore.LOCK_EXT, ".lock"};
 
     public static final String separator = System.getProperty("file.separator");
 

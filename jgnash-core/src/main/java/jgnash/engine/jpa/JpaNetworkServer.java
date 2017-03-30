@@ -106,6 +106,7 @@ public class JpaNetworkServer {
 
         switch (type) {
             case h2:
+            case h2mv:
                 runH2Server(fileName, port, password);
                 break;
             case hsql:

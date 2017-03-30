@@ -52,7 +52,10 @@ public class FileMagic {
     private static final byte[] BINARY_XSTREAM_HEADER = new byte[]{10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
             115, 116, 114, 101, 97, 109, 11, -127, 10};
 
-    private static final byte[] H2_HEADER = new byte[]{0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F, 0x42, 0x20, 0x2D, 0x2D};
+    private static final byte[] H2_HEADER = new byte[]{0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F,
+            0x42, 0x20, 0x2D, 0x2D};
+
+    private static final byte[] H2MV_HEADER = new byte[]{72, 58, 50};
 
     private static final byte[] HSQL_HEADER = "SET DATABASE UNIQUE NAME HSQLDB".getBytes(StandardCharsets.UTF_8);
 
@@ -79,6 +82,8 @@ public class FileMagic {
             return FileType.BinaryXStream;
         } else if (isH2File(path)) {
             return FileType.h2;
+        } else if (isH2MvFile(path)) {
+            return FileType.h2mv;
         } else if (isHsqlFile(path)) {
             return FileType.hsql;
         } else if (isValidVersion1File(path)) {
@@ -222,7 +227,6 @@ public class FileMagic {
                     // consume any processing instructions and check for ofx 2.0 hints
                     if (!line.isEmpty() && line.startsWith("<?")) {
                         if (line.contains("OFXHEADER=\"200\"")) {
-                            System.out.println("here2");
                             result = true;
                             break;
                         }
@@ -252,6 +256,10 @@ public class FileMagic {
 
     private static boolean isH2File(final Path path) {
         return isFile(path, H2_HEADER);
+    }
+
+    private static boolean isH2MvFile(final Path path) {
+        return isFile(path, H2MV_HEADER);
     }
 
     private static boolean isHsqlFile(final Path path) {
@@ -347,6 +355,6 @@ public class FileMagic {
     }
 
     public enum FileType {
-        BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
+        BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, h2mv, hsql, unknown
     }
 }

@@ -17,13 +17,7 @@
  */
 package jgnash.engine.jpa;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.Level;
-
 import jgnash.engine.DataStoreType;
-import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -31,11 +25,9 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class JpaH2DataStore extends AbstractJpaDataStore {
+public class JpaH2MvDataStore extends JpaH2DataStore {
 
-    public static final String FILE_EXT = ".h2.db";
-
-    public static final String LOCK_EXT = ".lock.db";
+    public static final String FILE_EXT = ".mv.db";
 
     @NotNull
     @Override
@@ -45,27 +37,6 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
 
     @Override
     public DataStoreType getType() {
-        return DataStoreType.H2_DATABASE;
-    }
-
-    @Override
-    public String getLockFileExtension() {
-        return LOCK_EXT;
-    }
-
-    @Override
-    public void deleteDatabase(final String fileName) {
-        final String[] extensions = new String[]{getFileExt(), getLockFileExtension()};
-
-        final String base = FileUtils.stripFileExtension(fileName);
-
-        for (final String extension : extensions) {
-            try {
-                logger.log(Level.INFO, "Deleting {0}{1}", new Object[]{base, extension});
-                Files.deleteIfExists(Paths.get(base + extension));
-            } catch (final IOException e) {
-                logger.log(Level.SEVERE, e.getMessage(), e);
-            }
-        }
+        return DataStoreType.H2MV_DATABASE;
     }
 }
