@@ -62,12 +62,26 @@ public class ApiTest extends AbstractEngineTest {
         e.setPreference("myKey", "myValue");
         e.setPreference("myNumber", BigDecimal.TEN.toString());
 
+        e.putBoolean("myBoolean", true);
+        assertTrue(e.getBoolean("myBoolean", false));
+
+        e.setRetainedBackupLimit(5);
+        assertEquals(5, e.getRetainedBackupLimit());
+
+        e.setRemoveOldBackups(false);
+        assertFalse(e.removeOldBackups());
+
+        e.setRemoveOldBackups(true);
+        assertTrue(e.removeOldBackups());
+
         // close and reopen to force check for persistence
         closeEngine();
 
         e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
         assertEquals("myValue", e.getPreference("myKey"));
+        assertTrue(e.getBoolean("myBoolean", false));
+        assertEquals(5, e.getRetainedBackupLimit());
 
         final String number = e.getPreference("myNumber");
         assertNotNull(number);

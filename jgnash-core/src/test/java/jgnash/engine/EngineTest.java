@@ -594,36 +594,6 @@ public abstract class EngineTest {
         assertTrue(!e.getInvestmentAccountList().isEmpty());
     }
 
-    @Ignore
-    @Test
-    public void testRefreshAccount() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testRefreshCommodity() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testRefreshExchangeRate() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testRefreshReminder() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testRefreshTransaction() {
-        fail("Not yet implemented");
-    }
-
     @Test
     public void testAccounts() throws IOException {
 
@@ -730,24 +700,6 @@ public abstract class EngineTest {
         assertNotNull(root);
     }
 
-    @Ignore
-    @Test
-    public void testMoveAccount() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testModifyAccount() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testSetAccountNumber() {
-        fail("Not yet implemented");
-    }
-
     @Test
     public void testRemoveAccount() throws IOException {
         final String ACCOUNT_NAME = "testIsStored";
@@ -779,30 +731,6 @@ public abstract class EngineTest {
         assertNull(e.getAccountByName(ACCOUNT_NAME));
     }
 
-    @Ignore
-    @Test
-    public void testSetAmortizeObject() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testToggleAccountVisibility() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testUpdateAccountSecurities() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testIsTransactionValid() {
-        fail("Not yet implemented");
-    }
-
     @Test
     public void testIsStored() {
 
@@ -819,30 +747,6 @@ public abstract class EngineTest {
         e.addAccount(e.getRootAccount(), a);
 
         assertTrue(e.isStored(a));
-    }
-
-    @Ignore
-    @Test
-    public void testRemoveTransaction() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testSetTransactionReconciled() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testGetTransactionNumberList() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testSetTransactionNumberList() {
-        fail("Not yet implemented");
     }
 
     @Test
