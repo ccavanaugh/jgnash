@@ -23,6 +23,7 @@ WANTS
 
 Release 2.xx.x
 --------------
+* 04/06/17 Fixed an issue with importing OFX 1.x files with ugly white space formatting.
 * 03/30/17 Added support the the H2 MVStore database file format.
 * 03/30/17 Updated to the latest H2 database dependency
 * 03/26/17 Updated to the latest Hibernate dependency.

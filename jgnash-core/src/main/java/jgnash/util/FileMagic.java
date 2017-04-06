@@ -193,6 +193,9 @@ public class FileMagic {
                 String line = reader.readLine();
 
                 while (line != null) {
+
+                    line = line.trim(); // time white space.  Some OFX files may contain ugly white space
+
                     if (!line.isEmpty()) { // allow empty lines at the beginning of the file
 
                         if (line.contains("OFXHEADER:")) {

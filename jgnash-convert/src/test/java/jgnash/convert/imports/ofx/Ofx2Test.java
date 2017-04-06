@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
@@ -506,6 +508,51 @@ public class Ofx2Test {
                 fail();
             }
         } catch (final URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            fail();
+        }
+    }
+
+    @Test
+    public void parseUglyFile() throws Exception {
+        final String testFile = "/uglyFormat.ofx";
+
+        final Path path = Paths.get(Object.class.getResource(testFile).toURI());
+
+        assertTrue(Files.exists(path));
+
+        assertTrue(FileMagic.isOfxV1(path));
+
+        try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            String result = OfxV1ToV2.convertToXML(stream);
+            System.out.println(result);
+        } catch (final IOException e) {
+            Logger.getLogger(OfxConvertTest.class.getName()).log(Level.SEVERE, null, e);
+            fail();
+        }
+
+        final URL url = Object.class.getResource(testFile);
+        String encoding;
+
+        try {
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
+
+            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
+                assertFalse(parser.getBank().isInvestmentAccount());
+
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                fail();
+            }
+        } catch (URISyntaxException e) {
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
             fail();
         }
