@@ -41,6 +41,8 @@ public class DatePickerEx extends DatePicker {
 
     private final DateTimeFormatter dateFormatter;
 
+    private static char dateFormatSeparator = '/';
+
     /**
      * Reference is needed to prevent premature garbage collection.
      */
@@ -60,6 +62,9 @@ public class DatePickerEx extends DatePicker {
             if (!Character.isDigit(aChar)) {
                 if (buf.indexOf(Character.toString(aChar)) == -1) {
                     buf.append(aChar);
+
+                    //System.out.println(aChar);
+                    dateFormatSeparator = aChar;
                 }
             }
         }
@@ -120,6 +125,25 @@ public class DatePickerEx extends DatePicker {
             final LocalDate date = _getValue(); // force an update to the current value
 
             switch (event.getCode()) {
+                case PERIOD:    // substitute common separators with the current locale's separator
+                case SLASH:     // while preventing entry of consecutive separators
+                case COMMA:
+                case BACK_SLASH:
+                    Platform.runLater(() -> {
+                        final StringBuilder text = new StringBuilder(getEditor().getText());
+
+                        if (text.length() > caretPosition) {
+                            if (text.charAt(caretPosition) != dateFormatSeparator && (caretPosition > 0
+                                    && text.charAt(caretPosition - 1) != dateFormatSeparator)) {
+                                text.insert(caretPosition, dateFormatSeparator);
+                            }
+                        } else {
+                            text.append(dateFormatSeparator);
+                        }
+                        getEditor().setText(text.toString());
+                        getEditor().positionCaret(caretPosition + 1);
+                    });
+                    break;
                 case ADD:
                 case UP:
                 case KP_UP:

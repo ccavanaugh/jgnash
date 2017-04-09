@@ -20,12 +20,10 @@ WANTS
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
 * Reinstate archive capability.
-* Date entry improvements
-** Flexibility to allow single digit month entry
-** Allow substitution or control of the separator
 
-Release 2.xx.0
+Release 2.31.0
 --------------
+* 04/09/17 Entry of date separators is now more flexible and allows use of ',' '.' '/' and '\' characters for all locales. (Fx)
 * 04/09/17 Relaxed date entry requirements.  Single digit months may be now be typed in. (Swing, Fx)
 * 04/09/17 The Account Register report was not reporting split entries correctly and consistent with the UI. (Fx)
 
