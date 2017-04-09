@@ -397,9 +397,10 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                         case 4:
                             return transaction.getMemo(account);
                         case 5:
-                            if (transaction.getTransactionType() == TransactionType.SPLITENTRY
-                                    && transaction.getCommonAccount() == account) {
-                                return "[ " + transaction.size() + " " + SPLIT + " ]";
+                            final int count = transaction.size();
+
+                            if (count > 1) {
+                                return "[ " + count + " " + SPLIT + " ]";
                             } else {
                                 final TransactionEntry entry = transaction.getTransactionEntries().get(0);
 

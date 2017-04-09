@@ -21,6 +21,10 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.xx.0
+--------------
+* 04/09/17 The Account Register report was not reporting split entries correctly and consistent with the UI. (Fx)
+
 Release 2.30.0
 --------------
 * 04/09/17 Fixed a bug that was causing Buy and Sell transactions not using the cash balance of the investment account
