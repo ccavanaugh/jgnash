@@ -26,6 +26,7 @@ WANTS
 
 Release 2.xx.0
 --------------
+* 04/09/17 Relaxed date entry requirements.  Single digit months may be now be typed in. (Swing, Fx)
 * 04/09/17 The Account Register report was not reporting split entries correctly and consistent with the UI. (Fx)
 
 Release 2.30.0

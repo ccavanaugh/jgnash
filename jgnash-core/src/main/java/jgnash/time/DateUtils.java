@@ -162,8 +162,14 @@ public class DateUtils {
     private static String getShortDateManualEntryPattern() {
         String pattern = getShortDatePattern();
 
+        // Relax date entry
         if (pattern.contains("dd")) {
             pattern = pattern.replace("dd", "d");
+        }
+
+        // Relax month entry
+        if (pattern.contains("MM")) {
+            pattern = pattern.replace("MM", "M");
         }
 
         return pattern;
