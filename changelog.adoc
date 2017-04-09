@@ -26,7 +26,7 @@ Release 2.30.0
 * 04/09/17 Fixed a bug that was causing Buy and Sell transactions not using the cash balance of the investment account
            to generate an incorrect cash account amount. (Fx)
 * 04/06/17 Fixed an issue with importing OFX 1.x files with ugly white space formatting. (Swing, Fx)
-* 03/30/17 Added support the the H2 MVStore database file format.
+* 03/30/17 Added support for the H2 MVStore database file format.
 * 03/30/17 Updated to the latest H2 database dependency
 * 03/26/17 Updated to the latest Hibernate dependency.
 * 03/25/17 The payee for Reinvested Dividends was not being generated correctly. (Swing, Fx)
