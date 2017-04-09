@@ -29,6 +29,7 @@ Release 2.xx.x
 * 03/26/17 Updated to the latest Hibernate dependency.
 * 03/25/17 The payee for Reinvested Dividends was not being generated correctly.
 * 03/24/17 OFX import of investment transactions is supported for Buys, Sells, Dividends, and Reinvested Dividends.
+* 03/22/17 Corrected a random IllegalStateException occurring during transaction edits.
 * 03/11/17 Updated to the latest Netty dependency.
 
 Release 2.29.0
