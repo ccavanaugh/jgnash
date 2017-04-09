@@ -118,7 +118,8 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
     @NotNull
     @Override
     public Transaction buildTransaction() {
-        final BigDecimal exchangeRate = accountExchangePane.exchangeAmountProperty().getValue();
+        final BigDecimal exchangeRate = accountExchangePane.getExchangeRate();
+
         final List<TransactionEntry> fees = feePane.getTransactions();
 
         final Transaction transaction =  TransactionFactory.generateBuyXTransaction(accountExchangePane.getSelectedAccount(),

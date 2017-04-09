@@ -21,15 +21,17 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
-Release 2.xx.x
+Release 2.30.0
 --------------
-* 04/06/17 Fixed an issue with importing OFX 1.x files with ugly white space formatting.
+* 04/09/17 Fixed a bug that was causing Buy and Sell transactions not using the cash balance of the investment account
+           to generate an incorrect cash account amount. (Fx)
+* 04/06/17 Fixed an issue with importing OFX 1.x files with ugly white space formatting. (Swing, Fx)
 * 03/30/17 Added support the the H2 MVStore database file format.
 * 03/30/17 Updated to the latest H2 database dependency
 * 03/26/17 Updated to the latest Hibernate dependency.
-* 03/25/17 The payee for Reinvested Dividends was not being generated correctly.
+* 03/25/17 The payee for Reinvested Dividends was not being generated correctly. (Swing, Fx)
 * 03/24/17 OFX import of investment transactions is supported for Buys, Sells, Dividends, and Reinvested Dividends.
-* 03/22/17 Corrected a random IllegalStateException occurring during transaction edits.
+* 03/22/17 Corrected a random IllegalStateException occurring during transaction edits. (Fx)
 * 03/11/17 Updated to the latest Netty dependency.
 
 Release 2.29.0

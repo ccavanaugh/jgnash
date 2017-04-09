@@ -124,7 +124,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
     @NotNull
     @Override
     public Transaction buildTransaction() {
-        final BigDecimal exchangeRate = accountExchangePane.exchangeAmountProperty().getValue();
+        final BigDecimal exchangeRate = accountExchangePane.getExchangeRate();
         final List<TransactionEntry> gains = gainLossPane.getTransactions();
         final List<TransactionEntry> fees = feePane.getTransactions();
 

@@ -17,9 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,7 +28,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.MathConstants;
@@ -40,8 +36,10 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.ResourceUtils;
-
 import org.controlsfx.control.PopOver;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * Controller for handling the exchange of currencies.
@@ -291,6 +289,10 @@ public class AccountExchangePane extends GridPane {
 
     ObjectProperty<BigDecimal> exchangeAmountProperty() {
         return exchangeAmount;
+    }
+
+    BigDecimal getExchangeRate() {
+        return exchangeRateField.getDecimal();
     }
 
     ObjectProperty<BigDecimal> amountProperty() {
