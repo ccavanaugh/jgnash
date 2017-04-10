@@ -18,11 +18,11 @@
 package jgnash.report;
 
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
@@ -162,8 +162,7 @@ public class BalanceByMonthCSVReport {
             return;
         }
 
-        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),
-                StandardCharsets.UTF_8))) {
+        try (final BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName), StandardCharsets.UTF_8)) {
 
             // write out the account names with full path
             final int length = accountList.size();
@@ -198,8 +197,7 @@ public class BalanceByMonthCSVReport {
             return;
         }
 
-        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),
-                StandardCharsets.UTF_8))) {
+        try (final BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName), StandardCharsets.UTF_8)) {
 
             // write out the month header, the first column is empty
             for (final LocalDate date : dates) {
