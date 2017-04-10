@@ -264,8 +264,10 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
             // add tool tip
             cell.indexProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue.intValue() >= 0) {
-                    cell.setTooltip(new Tooltip(tableView.itemsProperty().get().get(newValue.intValue()).getToolTip()));
+                final int index = newValue.intValue();
+
+                if (index >= 0 && index < tableView.itemsProperty().get().size()) {
+                    cell.setTooltip(new Tooltip(tableView.itemsProperty().get().get(index).getToolTip()));
                 }
             });
 
