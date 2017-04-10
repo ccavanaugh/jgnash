@@ -18,11 +18,11 @@
 package jgnash.report;
 
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -162,8 +162,7 @@ public class ProfitLossTextReport {
     }
 
     private void writeFile() {
-        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),
-                StandardCharsets.UTF_8))) {
+        try (final BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName), StandardCharsets.UTF_8)) {
             for (final String text : reportText) {  //write the array list pl to the file
                 writer.write(text);
                 writer.newLine();
