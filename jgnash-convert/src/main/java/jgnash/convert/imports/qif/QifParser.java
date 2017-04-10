@@ -18,11 +18,11 @@
 package jgnash.convert.imports.qif;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -102,7 +102,7 @@ public final class QifParser {
 
         boolean accountFound = true;
 
-        try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8))) {
+        try (final QifReader in = new QifReader(Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8))) {
 
             String line = in.readLine();
 
@@ -158,7 +158,7 @@ public final class QifParser {
 
     private boolean parsePartialFile(final String fileName) {
 
-        try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8))) {
+        try (QifReader in = new QifReader(Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8))) {
             String peek = in.peekLine();
             if (startsWith(peek, "!Type:")) {
                 final QifAccount acc = new QifAccount(); // "unknown" holding account
