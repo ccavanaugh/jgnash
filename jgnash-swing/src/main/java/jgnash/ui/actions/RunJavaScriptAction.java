@@ -19,11 +19,11 @@ package jgnash.ui.actions;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -56,10 +56,10 @@ public class RunJavaScriptAction extends AbstractEnabledAction {
         if (chooser.showOpenDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {
             pref.put(JAVASCRIPT_DIR, chooser.getCurrentDirectory().getAbsolutePath());
 
-            final String file = chooser.getSelectedFile().getAbsolutePath();
+            final Path path = chooser.getSelectedFile().toPath();
 
             EventQueue.invokeLater(() -> {
-                try (final Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+                try (final Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
                     new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
                 } catch (IOException | ScriptException ex) {
                     Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, ex.toString(), ex);
