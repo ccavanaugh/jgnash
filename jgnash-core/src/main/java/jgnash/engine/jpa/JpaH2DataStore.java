@@ -49,7 +49,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
     }
 
     @Override
-    public String getLockFileExtension() {
+    protected String getLockFileExtension() {
         return LOCK_EXT;
     }
 
