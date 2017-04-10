@@ -20,16 +20,12 @@ package jgnash.engine.checks;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +42,7 @@ public class CheckLayoutSerializationFactory {
         XStream xstream = getStream();
         CheckLayout layout = null;
 
-        try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+        try (final Reader reader = Files.newBufferedReader(Paths.get(file), StandardCharsets.UTF_8)) {
             layout = (CheckLayout) xstream.fromXML(reader);
         } catch (IOException e) {
             Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
@@ -59,7 +55,7 @@ public class CheckLayoutSerializationFactory {
 
         XStream xstream = getStream();
 
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
+        try (final Writer writer = Files.newBufferedWriter(Paths.get(file), StandardCharsets.UTF_8)) {
             xstream.toXML(layout, writer);
             result = true;
         } catch (IOException e) {
