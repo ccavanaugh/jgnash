@@ -18,10 +18,9 @@
 package net.bzzt.swift.mt940;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -107,8 +106,7 @@ class ImportMt940FxAction {
         protected ImportBank<ImportTransaction> call() throws Exception {
             Mt940Parser parser = new Mt940Parser();
 
-            try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(new FileInputStream(file),
-                    StandardCharsets.ISO_8859_1))) {
+            try (final LineNumberReader reader = new LineNumberReader(Files.newBufferedReader(file.toPath(), StandardCharsets.ISO_8859_1))) {
                 Mt940File parsedFile = parser.parse(reader);
                 return Mt940Exporter.convert(parsedFile);
             }
