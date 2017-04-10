@@ -193,6 +193,10 @@ The date field is freely editable and jGnash will make the best attempt at inter
 are indeterminate. Clicking on the button to the right of the field will display a calendar dialog where you can select
 a date as well.
 
+The field is flexible enough to allow use of multiple keys as the field separators regardless of the current locale.
+This is done to make entry easier on compact keyboards. The usable field  separator characters are defined in the table
+below.
+
 image:date-entry.png[]
 
 Also, dates can be modified using the keyboard shortcuts defined below.
@@ -206,6 +210,7 @@ Also, dates can be modified using the keyboard shortcuts defined below.
 |kbd:[PgUp], Mouse Thumb Wheel Up       |Increase the date by one month
 |kbd:[PgDn], Mouse Thumb Wheel Down     |Decrease the date by one month
 |kbd:[t], kbd:[T]                       |Change to today's date
+|kbd:[,], kbd:[.], kbd:[/], kbd:[\]     |Valid field separator for all locales
 |=============================
 
 [[numberFields]]
@@ -269,8 +274,7 @@ operating system or install a freely available third party encryption tool.
 ==== File Types
 
 jGnash supports different file types for storing data.
-File types can be easily changed by using the menu:File[Save As]
- command and naming the new file with the appropriate file extension. 
+File types can be easily changed by using the menu:File[Save As] command and naming the new file with the appropriate file extension.
 
 The current file will be saved in the new format and automatically opened. 
 
@@ -686,9 +690,7 @@ At the top of the panel, a toolbar exists that allows you to change how much inf
 budgets, and export the active budget to a spreadsheet.
 
 The budget drop down list lets you quickly select between different budgets you have created.
-The btn:[Budget Manager
-        ]
- button displays a dialog that let you create, duplicate, and delete budgets. 
+The btn:[Budget Manager] button displays a dialog that let you create, duplicate, and delete budgets.
 
 The btn:[Properties]
  button will display the dialog shown below with various options for the active budget. 
@@ -991,6 +993,7 @@ An open file may be saved as a new file of the same type, or a new file with a n
 To save the file as a different type, you must change the file extension to a supported type.
 Correct file extensions are shown below. 
 
+[[_fileFormats]]
 .File Formats
 [cols="1,1"]
 |===
@@ -1001,8 +1004,11 @@ Correct file extensions are shown below.
 |Binary File
 |.bxds
 
-|H2 Relational Database
+|H2 Relational Database (B-Tree)
 |.h2.db
+
+|H2 Relational Database (MVStore)
+|.mv.db
 
 |HyperSql (hslqb) Relational Database
 |.script (.lobs, .log, .properties are used as support
