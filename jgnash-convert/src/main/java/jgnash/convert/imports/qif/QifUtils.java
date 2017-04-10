@@ -18,12 +18,11 @@
 package jgnash.convert.imports.qif;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -47,7 +46,7 @@ public class QifUtils {
     private QifUtils() {
     }
 
-    public static BigDecimal parseMoney(final String money) {
+    static BigDecimal parseMoney(final String money) {
         String sMoney = money;
 
         if (sMoney != null) {
@@ -103,11 +102,11 @@ public class QifUtils {
         return BigDecimal.ZERO;
     }
 
-    public static boolean isFullFile(File file) {
+    public static boolean isFullFile(final File file) {
 
         boolean result = false;
 
-        try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+        try (final QifReader in = new QifReader(Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8))) {
             String line = in.readLine();
 
             while (line != null) {
@@ -183,7 +182,7 @@ public class QifUtils {
      * @param category string to strip
      * @return the stripped string
      */
-    public static String stripCategoryTags(final String category) {
+    static String stripCategoryTags(final String category) {
         // Auto:Gas/matrix:Vacation > Auto:Gas
 
         if (category != null && category.contains("/")) {
