@@ -36,7 +36,7 @@ public class PriorityThreadTest {
 
         final AtomicLong atomicLongSequence = new AtomicLong(0);
 
-        final PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor(1);
+        final PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor();
 
         for (int i = 0; i < 25; i++) {
             executorService.submit(() -> {

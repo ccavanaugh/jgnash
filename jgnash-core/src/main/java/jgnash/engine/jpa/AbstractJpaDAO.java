@@ -45,16 +45,18 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
      * The {@link EntityManager} is not thread safe.  All interaction should be wrapped with this lock
      */
     static final ReentrantLock emLock = new ReentrantLock();
+
     /**
      * This ExecutorService is to be used whenever the entity manager is
      * accessed because the EntityManager is not thread safe, but we want to return from some methods without blocking
      */
-    static PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor(1,
-            new DefaultDaemonThreadFactory());
+    static PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor(new DefaultDaemonThreadFactory());
+
     /**
      * Entity manager reference.
      */
     final EntityManager em;
+
     /**
      * Remote connection if {@code true}.
      */
@@ -78,7 +80,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 
             // Regenerate the executor service
-            executorService = new PriorityThreadPoolExecutor(1);
+            executorService = new PriorityThreadPoolExecutor();
 
         } catch (InterruptedException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);

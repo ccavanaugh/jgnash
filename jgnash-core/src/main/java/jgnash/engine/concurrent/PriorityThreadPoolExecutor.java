@@ -41,8 +41,8 @@ public class PriorityThreadPoolExecutor {
 
     private final PriorityBlockingQueue<Runnable> queue = new PriorityBlockingQueue<>();
 
-    public PriorityThreadPoolExecutor(final int poolSize, ThreadFactory threadFactory) {
-        threadPoolExecutor = new ThreadPoolExecutor(1, poolSize, 1, TimeUnit.MINUTES, queue, threadFactory) {
+    public PriorityThreadPoolExecutor(ThreadFactory threadFactory) {
+        threadPoolExecutor = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, queue, threadFactory) {
 
             // Wraps a Callable with a FutureTaskWrapper that respects the Priority
             @Override
@@ -54,8 +54,8 @@ public class PriorityThreadPoolExecutor {
         threadPoolExecutor.allowCoreThreadTimeOut(true);
     }
 
-    public PriorityThreadPoolExecutor(final int poolSize) {
-        this(poolSize, Executors.defaultThreadFactory());
+    public PriorityThreadPoolExecutor() {
+        this(Executors.defaultThreadFactory());
     }
 
     private  <T> Future<T> submit(final Callable<T> callable, final Priority priority) {
