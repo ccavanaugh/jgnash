@@ -18,11 +18,10 @@
 package jgnash.uifx.actions;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,7 +62,7 @@ public class ExecuteJavaScriptAction {
             pref.put(LAST_DIR, file.getParentFile().getAbsolutePath());
 
             Platform.runLater(() -> {
-                try (final Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+                try (final Reader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
                     new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
                 } catch (IOException | ScriptException ex) {
                     Logger.getLogger(ExecuteJavaScriptAction.class.getName()).log(Level.SEVERE, ex.toString(), ex);
