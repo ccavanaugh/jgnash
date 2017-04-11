@@ -17,15 +17,14 @@
  */
 package jgnash.convert.exports.ofx;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -84,8 +83,8 @@ public class OfxExport implements OfxTags {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".ofx";
 
-        try (IndentedPrintWriter writer = new IndentedPrintWriter(new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(fileName), Charset.forName("windows-1252"))))) {
+        try (final IndentedPrintWriter writer = new IndentedPrintWriter(Files.newBufferedWriter(Paths.get(fileName),
+                Charset.forName("windows-1252")))) {
 
             indentedWriter = writer;
 
