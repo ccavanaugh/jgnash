@@ -131,7 +131,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
     public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
         for (Attachment object : fileMap.values()) {
             try {
-                object.fileOutputStream.close();
+                object.outputStream.close();
             } catch (IOException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
@@ -172,14 +172,14 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
                 return null;
             }
 
-            try (InputStream fileInputStream = Files.newInputStream(path)) {
+            try (final InputStream inputStream = Files.newInputStream(path)) {
                 channel.writeAndFlush(encrypt(FILE_STARTS + path.getFileName() + ":" + Files.size(path)) + EOL_DELIMITER);
 
                 byte[] bytes = new byte[TRANSFER_BUFFER_SIZE];  // leave room for base 64 expansion
 
                 int bytesRead;
 
-                while ((bytesRead = fileInputStream.read(bytes)) != -1) {
+                while ((bytesRead = inputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
                         channel.write(encrypt(FILE_CHUNK + path.getFileName() + ':' +
                                 printBase64Binary(Arrays.copyOfRange(bytes, 0, bytesRead))) + EOL_DELIMITER);
@@ -210,7 +210,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         Attachment attachment = fileMap.get(msg);
 
         try {
-            attachment.fileOutputStream.close();
+            attachment.outputStream.close();
             fileMap.remove(msg);
         } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -228,7 +228,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
         if (attachment != null) {
             try {
-                attachment.fileOutputStream.write(parseBase64Binary(msgParts[1]));
+                attachment.outputStream.write(parseBase64Binary(msgParts[1]));
             } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
@@ -259,13 +259,13 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
     private static class Attachment {
         final Path path;
 
-        final OutputStream fileOutputStream;
+        final OutputStream outputStream;
 
         final long fileSize;
 
         private Attachment(final Path path, long fileSize) throws IOException {
             this.path = path;
-            fileOutputStream = Files.newOutputStream(path);
+            outputStream = Files.newOutputStream(path);
 
             this.fileSize = fileSize;
         }
