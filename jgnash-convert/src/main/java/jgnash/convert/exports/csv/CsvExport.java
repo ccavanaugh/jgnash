@@ -19,11 +19,12 @@ package jgnash.convert.exports.csv;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -58,10 +59,10 @@ public class CsvExport {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
 
-        try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                new FileOutputStream(fileName), StandardCharsets.UTF_8);
+        try (final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(Files.newOutputStream(Paths.get(fileName)),
+                StandardCharsets.UTF_8);
 
-             AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(outputStreamWriter))) {
+             final AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(outputStreamWriter))) {
 
             outputStreamWriter.write('\ufeff'); // write UTF-8 byte order mark to the file for easier imports
 

@@ -18,9 +18,11 @@
 package jgnash.convert.exports.ssf;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -221,13 +223,13 @@ public class AccountExport {
                 filename = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".xls";
             }
 
-            try (final FileOutputStream out = new FileOutputStream(filename)) {
+            try (final OutputStream out = Files.newOutputStream(Paths.get(filename))) {
                 wb.write(out);
             } catch (final Exception e) {
                 Logger.getLogger(AccountExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
 
-        }  catch (IOException e) {
+        }  catch (final IOException e) {
             Logger.getLogger(AccountExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
