@@ -35,29 +35,9 @@ import net.bzzt.swift.mt940.Mt940Record;
  *
  * @author Arnout Engelen
  * @author Miroslav Holubec
+ * @author Craig Cavanaugh
  */
 public class Mt940Parser {
-
-    /*
-     * Invoke the Mt940-parser stand alone: for testing.
-     *
-     * @param args
-     * @throws IOException
-     * @throws ParseException
-     */
-    /*public static void main(String[] args) throws IOException, ParseException {
-         String fileName = "/home/arnouten/dev/swiftmt940/voorbeeld.STA";
-
-         LineNumberReader reader = new LineNumberReader(new InputStreamReader(new FileInputStream(fileName)));
-         Mt940File file = new Mt940Parser().parse(reader);
-         for (Mt940Record record : file.getRecords())
-         {
-             for (Mt940Entry entry : record.getEntries())
-             {
-                 System.out.println(entry.toString());
-             }
-         }
-     }*/
 
     /**
      * Parse the Mt940-file. Mt940 records are delimited by '-'.
@@ -104,22 +84,24 @@ public class Mt940Parser {
      */
     private static List<String> mergeLines(final List<String> recordLines) {
         List<String> retVal = new ArrayList<>();
-        String currentString = null;
+
+        StringBuilder currentString = new StringBuilder();
+
         boolean inMessage = false;
         for (String string : recordLines) {
             // Are we in the message proper, after the
             // header?
             if (inMessage) {
                 if (string.startsWith(":")) {
-                    retVal.add(currentString);
-                    currentString = "";
+                    retVal.add(currentString.toString());
+                    currentString = new StringBuilder();
                 }
-                currentString += string;
+                currentString.append(string);
             } else {
                 if (string.startsWith(":")) {
                     // then we're past the header
                     inMessage = true;
-                    currentString = string;
+                    currentString = new StringBuilder(string);
                 } else {
                     // add a line of the header
                     retVal.add(string);
