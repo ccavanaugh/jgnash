@@ -99,7 +99,7 @@ public class FontAwesomeLabel extends Label {
             if (value instanceof Character) {
                 setText(String.valueOf((char)value));
             } else {    //  GlyphIcons is assumed
-                setText((String.valueOf(getGlyphChar(value.toString()))));
+                setText(getUnicode(value.toString()));
             }
         }
     }
@@ -116,7 +116,7 @@ public class FontAwesomeLabel extends Label {
         return size.getValue();
     }
 
-    private Character getGlyphChar(final String string) {
-        return FontAwesomeIcon.valueOf(string).getChar();
+    private String getUnicode(final String string) {
+        return FontAwesomeIcon.valueOf(string).unicode();
     }
 }

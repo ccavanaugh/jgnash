@@ -23,6 +23,7 @@ WANTS
 
 Release 2.31.0
 --------------
+* 04/12/17 Updated to the latest FontAwesomeFx dependencies.
 * 04/10/17 Corrected an IndexOutOfBoundsException occurring during Transaction import of a quantity not large enough
            to fill the table. (Fx)
 * 04/09/17 Entry of date separators is now more flexible and allows use of ',' '.' '/' and '\' characters for all locales. (Fx)
