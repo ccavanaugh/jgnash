@@ -23,10 +23,10 @@ WANTS
 
 Release 2.31.0
 --------------
-* 04/15/17 Updated to the latest Hibernate dependency.
+* 04/15/17 Updated to the latest Hibernate and HSQLDB dependencies.
 * 04/12/17 Updated to the latest FontAwesomeFx dependencies.
-* 04/10/17 Corrected an IndexOutOfBoundsException occurring during Transaction import of a quantity not large enough
-           to fill the table. (Fx)
+* 04/10/17 Corrected an IndexOutOfBoundsException occurring during Transaction import (OFX, QIF) of a quantity not large
+           enough to fill the table. (Fx)
 * 04/09/17 Entry of date separators is now more flexible and allows use of ',' '.' '/' and '\' characters for all locales. (Fx)
 * 04/09/17 Relaxed date entry requirements.  Single digit months may be now be typed in. (Swing, Fx)
 * 04/09/17 The Account Register report was not reporting split entries correctly and consistent with the UI. (Fx)
