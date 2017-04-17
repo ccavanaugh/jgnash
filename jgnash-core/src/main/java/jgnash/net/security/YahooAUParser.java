@@ -27,6 +27,6 @@ public class YahooAUParser extends YahooParser {
 
     @Override
     public String getBaseURL() {
-        return "http://au.finance.yahoo.com/d/quotes.csv?s=";
+        return "https://au.finance.yahoo.com/d/quotes.csv?s=";
     }
 }
