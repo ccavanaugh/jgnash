@@ -60,12 +60,6 @@
 
     <repositories>
         <repository>
-            <id>jgnash-local</id>
-            <name>Local repository in project tree</name>
-            <url>file:${basedir}/../repository</url>
-        </repository>
-
-        <repository>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
