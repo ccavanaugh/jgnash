@@ -44,6 +44,7 @@ import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
 /**
  * Retrieves historical stock dividend and split information from Yahoo.
  * <p>
+ *
  * @author Craig Cavanaugh
  */
 public class YahooEventParser {
@@ -117,7 +118,7 @@ public class YahooEventParser {
 
         //http://ichart.finance.yahoo.com/x?s=IBM&a=00&b=2&c=1962&d=04&e=25&f=2011&g=v&y=0&z=30000
 
-        final StringBuilder url = new StringBuilder("http://ichart.finance.yahoo.com/x?s=").append(s);
+        final StringBuilder url = new StringBuilder("https://ichart.finance.yahoo.com/x?s=").append(s);
         url.append("&a=").append(a).append("&b=").append(b).append("&c=").append(c);
         url.append("&d=").append(d).append("&e=").append(e);
         url.append("&f=").append(f);
@@ -127,6 +128,23 @@ public class YahooEventParser {
 
         try {
             connection = ConnectionFactory.openConnection(url.toString());
+
+            /*final Map<String, List<String>> headerFields = connection.getHeaderFields();
+
+            for (final Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
+
+            final Certificate[] certificates = ((HttpsURLConnection) connection).getServerCertificates();
+
+            System.out.println("\n");
+            for (final Certificate certificate : certificates) {
+                System.out.println("Certificate Type : " + certificate.getType());
+                System.out.println("Certificate Hash Code : " + certificate.hashCode());
+                System.out.println("Certificate Public Key Algorithm : " + certificate.getPublicKey().getAlgorithm());
+                System.out.println("Certificate Public Key Format : " + certificate.getPublicKey().getFormat());
+                System.out.println("\n");
+            }*/
 
             if (connection != null) {
                 try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
