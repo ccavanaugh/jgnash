@@ -55,10 +55,11 @@ public class StaticUIMethods {
                 = FXMLUtils.load(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
                 ResourceUtils.getString("Title.Open"));
 
-        pair.getStage().setResizable(false);
+        pair.getStage().setResizable(true);
 
         StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class, MainView.getPrimaryStage());
 
+        pair.getStage().setMaxHeight(pair.getStage().getHeight());
         pair.getStage().show();
     }
 

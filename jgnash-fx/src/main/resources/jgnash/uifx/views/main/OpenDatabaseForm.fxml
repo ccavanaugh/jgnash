@@ -17,7 +17,7 @@
           fx:controller="jgnash.uifx.views.main.OpenDatabaseController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="-Infinity"/>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
     </columnConstraints>
     <rowConstraints>
