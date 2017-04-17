@@ -60,6 +60,11 @@ public class TableViewManager<S> {
     // TODO: Extract or calculate when JavaFX font metrics API improves
     private static final double BOLD_MULTIPLIER = 1.08;  // multiplier for bold width
 
+    /**
+     * Ensure visible columns do not disappear
+     */
+    private static final int MIN_WIDTH = 30;
+
     @NotNull
     private final TableView<S> tableView;
 
@@ -325,7 +330,8 @@ public class TableViewManager<S> {
                         visibleColumns.get(j).minWidthProperty().set(calculatedWidths[j]);
                         visibleColumns.get(j).maxWidthProperty().set(calculatedWidths[j]);
                         visibleColumns.get(j).setResizable(false);
-                    } else {
+                    } else {    // set the preferred size and ensure the column does not disappear
+                        visibleColumns.get(j).minWidthProperty().set(MIN_WIDTH);
                         visibleColumns.get(j).prefWidthProperty().set(calculatedWidths[j]);
                     }
                 }
