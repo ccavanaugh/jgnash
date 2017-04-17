@@ -338,7 +338,10 @@ public class TableViewManager<S> {
 
                 tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);   // restore the old policy
 
-                saveColumnWidths(); // save column widths for next time
+                /* save the column widths for next time after fully initialized */
+                if (isFullyInitialized) {
+                    saveColumnWidths();
+                }
 
                 installColumnListeners();
 
