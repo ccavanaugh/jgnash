@@ -324,7 +324,7 @@ abstract class RegisterTableController {
             observableTransactions.addAll(account.get().getSortedTransactionList());
 
             tableView.setItems(sortedList);
-            tableViewManager.restoreLayout();   // required to table view manager is to work
+            tableViewManager.restoreLayout();   // required for table view manager to work
 
             tableView.scrollTo(observableTransactions.size());  // scroll to the end of the table
         }
