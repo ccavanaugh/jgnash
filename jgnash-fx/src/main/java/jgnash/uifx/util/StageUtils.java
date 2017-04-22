@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Rectangle2D;
@@ -99,11 +100,24 @@ public class StageUtils {
 
                 if (resizable) { // don't resize if originally false
                     if (stage.getMinWidth() != stage.getMaxWidth()) {   // width may be locked
-                        stage.setWidth(rectangle.getWidth());
+                        final double width = rectangle.getWidth();
+
+                        if (stage.isShowing()) {
+                            Platform.runLater(() -> stage.setWidth(width));
+                        } else {
+                            stage.setWidth(width);
+                        }
+
                     }
 
                     if (stage.getMinHeight() != stage.getMaxHeight()) { // height may be locked
-                        stage.setHeight(rectangle.getHeight());
+                        final double height = rectangle.getHeight();
+
+                        if (stage.isShowing()) {
+                            Platform.runLater(() -> stage.setHeight(height));
+                        } else {
+                            stage.setHeight(height);
+                        }
                     }
                 }
                 stage.setResizable(resizable); // restore the resize property
