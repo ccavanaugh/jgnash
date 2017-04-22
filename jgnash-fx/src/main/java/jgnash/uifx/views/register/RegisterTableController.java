@@ -32,6 +32,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -324,9 +325,11 @@ abstract class RegisterTableController {
             observableTransactions.addAll(account.get().getSortedTransactionList());
 
             tableView.setItems(sortedList);
-            tableViewManager.restoreLayout();   // required for table view manager to work
 
-            tableView.scrollTo(observableTransactions.size());  // scroll to the end of the table
+            Platform.runLater(() -> {   // table view many not be ready, push to end of the Platform thread
+                tableViewManager.restoreLayout();   // required for table view manager to work
+                tableView.scrollTo(observableTransactions.size());  // scroll to the end of the table
+            });
         }
     }
 
