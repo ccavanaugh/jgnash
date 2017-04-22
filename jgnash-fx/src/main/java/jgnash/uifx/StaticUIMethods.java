@@ -56,11 +56,11 @@ public class StaticUIMethods {
                 ResourceUtils.getString("Title.Open"));
 
         pair.getStage().setResizable(true);
-
-        StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class, MainView.getPrimaryStage());
+        pair.getStage().show();
 
         pair.getStage().setMaxHeight(pair.getStage().getHeight());
-        pair.getStage().show();
+
+        StageUtils.addBoundsListener(pair.getStage(), OpenDatabaseController.class, MainView.getPrimaryStage());
     }
 
     public static void displayError(final String message) {
