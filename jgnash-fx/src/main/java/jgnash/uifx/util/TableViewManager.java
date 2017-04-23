@@ -283,6 +283,14 @@ public class TableViewManager<S> {
      */
     public synchronized void packTable() {
 
+        if (tableView.widthProperty().get() == 0) {
+            new Exception("packTable was called too soon!").printStackTrace();
+
+            // rerun the pack process to recover
+            Platform.runLater(TableViewManager.this::packTable);
+            return;
+        }
+
         packTableExecutor.execute(() -> {
 
             // Create a list of visible columns and column weights
