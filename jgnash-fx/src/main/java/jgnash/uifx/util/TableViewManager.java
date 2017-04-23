@@ -59,6 +59,7 @@ public class TableViewManager<S> {
 
     // TODO: Extract or calculate when JavaFX font metrics API improves
     private static final double BOLD_MULTIPLIER = 1.08;  // multiplier for bold width
+    private static final double COLUMN_BORDER_WIDTH = 2.0;
 
     /**
      * Ensure visible columns do not disappear
@@ -82,6 +83,8 @@ public class TableViewManager<S> {
 
     private final ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
 
+    private final ColumnWidthListener columnWidthListener = new ColumnWidthListener();
+
     /**
      * Limits number of processed visibility change events ensuring the most recent is executed.
      */
@@ -91,6 +94,11 @@ public class TableViewManager<S> {
      * Limits number of packTable calls while ensuring the most recent is executed.
      */
     private final ThreadPoolExecutor packTableExecutor;
+
+    /**
+     * Limits number of saveColumnWidths calls while ensuring the most recent is executed.
+     */
+    private final ThreadPoolExecutor saveColumnWidthExecutor;
 
     /**
      * Used to track initialization.  If false, old column widths should be restored.
@@ -117,6 +125,10 @@ public class TableViewManager<S> {
         packTableExecutor = new ThreadPoolExecutor(0, 1, 0,
                 TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
         packTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+
+        saveColumnWidthExecutor = new ThreadPoolExecutor(0, 1, 0,
+                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        saveColumnWidthExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     }
 
     public void restoreLayout() {
@@ -128,12 +140,14 @@ public class TableViewManager<S> {
     private void installColumnListeners() {
         for (final TableColumnBase<S, ?> tableColumn : tableView.getColumns()) {
             tableColumn.visibleProperty().addListener(visibilityListener);
+            tableColumn.widthProperty().addListener(columnWidthListener);
         }
     }
 
     private void removeColumnListeners() {
         for (final TableColumnBase<S, ?> tableColumn : tableView.getColumns()) {
             tableColumn.visibleProperty().removeListener(visibilityListener);
+            tableColumn.widthProperty().removeListener(columnWidthListener);
         }
     }
 
@@ -306,7 +320,9 @@ public class TableViewManager<S> {
                 }
             }
 
-            double remainder = tableView.widthProperty().get() - sumFixedColumns;   // leftover visible table width
+            // leftover visible width of the table.  Column borders need to be considered
+            double remainder = tableView.widthProperty().get()
+                    - ((visibleColumns.size() - 1) * COLUMN_BORDER_WIDTH) - sumFixedColumns;
 
             // calculate widths for adjustable columns using the remaining visible width
             for (int i = 0; i < calculatedWidths.length; i++) {
@@ -394,6 +410,14 @@ public class TableViewManager<S> {
                             final Boolean newValue) {
             updateColumnVisibilityExecutor.execute(TableViewManager.this::saveColumnVisibility);
             packTable();
+        }
+    }
+
+    private final class ColumnWidthListener implements ChangeListener<Number> {
+        @Override
+        public void changed(final ObservableValue<? extends Number> observable, final Number oldValue,
+                            final Number newValue) {
+            saveColumnWidthExecutor.execute(TableViewManager.this::saveColumnWidths);
         }
     }
 }
