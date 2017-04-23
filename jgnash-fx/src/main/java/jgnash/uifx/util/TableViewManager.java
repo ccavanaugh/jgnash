@@ -333,9 +333,11 @@ public class TableViewManager<S> {
                     - ((visibleColumns.size() - 1) * COLUMN_BORDER_WIDTH) - sumFixedColumns;
 
             // calculate widths for adjustable columns using the remaining visible width
-            for (int i = 0; i < calculatedWidths.length; i++) {
-                if (doExpensiveCalculations && visibleColumnWeights.get(i) != 0) {
-                    calculatedWidths[i] = remainder * (visibleColumnWeights.get(i) / 100.0);
+            if (doExpensiveCalculations) {
+                for (int i = 0; i < calculatedWidths.length; i++) {
+                    if (visibleColumnWeights.get(i) != 0) {
+                        calculatedWidths[i] = remainder * (visibleColumnWeights.get(i) / 100.0);
+                    }
                 }
             }
 
