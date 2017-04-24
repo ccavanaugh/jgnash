@@ -23,6 +23,7 @@ WANTS
 
 Release 2.31.0
 --------------
+* 04/24/17 Updated to the latest H2 database dependency.
 * 04/17/17 Yahoo Security Download now requires use of HTTPS for downloads. (Swing, Fx)
 * 04/17/17 Improved sizing of the open dialog for the Fx interface (Fx, GitHub Issue #25) _[Pranay Kumar]_
 * 04/17/17 Cleaned up build system.  JGoodies dependencies now come from Maven Central
