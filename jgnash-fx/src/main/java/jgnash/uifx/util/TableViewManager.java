@@ -323,8 +323,6 @@ public class TableViewManager<S> {
                         calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
                     }
                     sumFixedColumns += calculatedWidths[i];
-                } else {
-                    calculatedWidths[i] = Double.MAX_VALUE;
                 }
             }
 
@@ -333,11 +331,9 @@ public class TableViewManager<S> {
                     - ((visibleColumns.size() - 1) * COLUMN_BORDER_WIDTH) - sumFixedColumns;
 
             // calculate widths for adjustable columns using the remaining visible width
-            if (doExpensiveCalculations) {
-                for (int i = 0; i < calculatedWidths.length; i++) {
-                    if (visibleColumnWeights.get(i) != 0) {
-                        calculatedWidths[i] = remainder * (visibleColumnWeights.get(i) / 100.0);
-                    }
+            for (int i = 0; i < calculatedWidths.length; i++) {
+                if (visibleColumnWeights.get(i) != 0) {
+                    calculatedWidths[i] = Math.floor(remainder * (visibleColumnWeights.get(i) / 100.0));
                 }
             }
 
