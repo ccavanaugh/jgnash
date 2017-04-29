@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -76,7 +74,7 @@ public class TextInputDialog {
 
         Platform.runLater(() -> textField.setText(defaultValue));
 
-        setGraphic(new FontAwesomeLabel(FontAwesomeIcon.QUESTION_CIRCLE,
+        setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.QUESTION_CIRCLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER));
     }
 

@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.views.accounts;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -179,10 +177,10 @@ public class SelectAccountSecuritiesDialog {
         vBox.setFillWidth(true);
         vBox.getStyleClass().add("form");
 
-        moveToTarget = new Button("", new FontAwesomeLabel(FontAwesomeIcon.CHEVRON_RIGHT));
+        moveToTarget = new Button("", new FontAwesomeLabel(FontAwesomeLabel.FAIcon.CHEVRON_RIGHT));
         moveToTarget.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
-        moveToSource = new Button("", new FontAwesomeLabel(FontAwesomeIcon.CHEVRON_LEFT));
+        moveToSource = new Button("", new FontAwesomeLabel(FontAwesomeLabel.FAIcon.CHEVRON_LEFT));
         moveToSource.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
         moveToTarget.setMaxWidth(Double.MAX_VALUE);

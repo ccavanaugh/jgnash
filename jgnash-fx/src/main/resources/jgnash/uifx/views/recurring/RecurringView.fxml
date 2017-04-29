@@ -22,7 +22,7 @@
             </Button>
             <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                    <FontAwesomeLabel glyphName="TRASH_O"/>
                 </graphic>
             </Button>
             <Separator orientation="VERTICAL"/>

@@ -41,7 +41,7 @@
             </Button>
             <Button text="%Button.Export" onAction="#handleAccountExport">
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILE_EXCEL_ALT"/>
+                    <FontAwesomeLabel glyphName="FILE_EXCEL_O"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ExportTransactions"/>

@@ -23,7 +23,7 @@
             </Button>
             <Button fx:id="exportButton" text="%Button.ExportSpreadsheet" onAction="#handleExportAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILE_EXCEL_ALT"/>
+                    <FontAwesomeLabel glyphName="FILE_EXCEL_O"/>
                 </graphic>
             </Button>
         </ToolBar>

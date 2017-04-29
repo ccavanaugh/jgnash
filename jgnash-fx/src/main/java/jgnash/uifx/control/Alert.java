@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -78,22 +76,22 @@ public class Alert {
 
         switch (alertType) {
             case ERROR:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_TRIANGLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKRED));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case WARNING:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE,
+                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_CIRCLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case INFORMATION:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.INFO_CIRCLE,
+                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO_CIRCLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case YES_NO:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.QUESTION_CIRCLE,
+                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.QUESTION_CIRCLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER));
                 ButtonType buttonTypeYes = new ButtonType(resources.getString("Button.Yes"), ButtonBar.ButtonData.YES);
                 ButtonType buttonTypeNo = new ButtonType(resources.getString("Button.No"), ButtonBar.ButtonData.NO);

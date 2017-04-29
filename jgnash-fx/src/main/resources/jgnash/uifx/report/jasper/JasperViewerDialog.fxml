@@ -35,7 +35,7 @@
                         <Button fx:id="saveButton" onAction="#handleSaveAction" text="Save"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="FLOPPY_ALT"/>
+                                <FontAwesomeLabel glyphName="SAVE"/>
                             </graphic>
                         </Button>
 

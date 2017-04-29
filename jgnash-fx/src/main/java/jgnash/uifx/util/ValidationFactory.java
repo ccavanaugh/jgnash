@@ -17,7 +17,9 @@
  */
 package jgnash.uifx.util;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import org.controlsfx.control.decoration.Decoration;
+import org.controlsfx.control.decoration.Decorator;
+import org.controlsfx.control.decoration.GraphicDecoration;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,10 +32,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import jgnash.resource.font.FontAwesomeLabel;
-
-import org.controlsfx.control.decoration.Decoration;
-import org.controlsfx.control.decoration.Decorator;
-import org.controlsfx.control.decoration.GraphicDecoration;
 
 /**
  * Validation factory methods.
@@ -49,14 +47,14 @@ public class ValidationFactory {
     }
 
     private static Decoration createErrorDecoration() {
-        final FontAwesomeLabel glyphIcon = new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+        final FontAwesomeLabel glyphIcon = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_TRIANGLE,
                 ALERT_SIZE, Color.DARKRED);
 
         return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 0);
     }
 
     private static Decoration createWarningDecoration() {
-        final FontAwesomeLabel glyphIcon = new FontAwesomeLabel(FontAwesomeIcon.INFO_CIRCLE,
+        final FontAwesomeLabel glyphIcon = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO_CIRCLE,
                 ALERT_SIZE, Color.DARKGOLDENROD);
 
         return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 0);

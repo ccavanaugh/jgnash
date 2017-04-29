@@ -89,7 +89,7 @@
                     <Button fx:id="deletePriceButton" onAction="#handleDeletePriceAction" text="%Button.Delete"
                             ButtonBar.buttonData="LEFT">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                            <FontAwesomeLabel glyphName="TRASH_O"/>
                         </graphic>
                     </Button>
                     <Button onAction="#handleClearPriceAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
@@ -110,7 +110,7 @@
                     <Button text="%Button.DeleteWeekends" onAction="#handleRemoveWeekendsAction" ButtonBar.buttonData="LEFT"
                             ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                            <FontAwesomeLabel glyphName="TRASH_O"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="%ToolTip.DeleteWeekendSecurityHistory"/>
@@ -119,7 +119,7 @@
                     <Button text="%Button.KeepMondays" onAction="#handleKeepMondaysOnlyAction" ButtonBar.buttonData="LEFT"
                             ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                            <FontAwesomeLabel glyphName="TRASH_O"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="%ToolTip.DeleteAllExceptMondaySecurityHistory"/>
@@ -128,7 +128,7 @@
                     <Button text="%Button.KeepFridays" onAction="#handleKeepFridaysOnlyAction" ButtonBar.buttonData="LEFT"
                             ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                            <FontAwesomeLabel glyphName="TRASH_O"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="%ToolTip.DeleteAllExceptFridaySecurityHistory"/>
@@ -173,7 +173,7 @@
                     <Button fx:id="deleteEventButton" onAction="#handleDeleteEventAction" text="%Button.Delete"
                             ButtonBar.buttonData="LEFT">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                            <FontAwesomeLabel glyphName="TRASH_O"/>
                         </graphic>
                     </Button>
                     <Button onAction="#handleClearEventAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>

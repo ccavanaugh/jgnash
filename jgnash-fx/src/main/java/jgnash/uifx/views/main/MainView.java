@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.views.main;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-
 import java.io.File;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
@@ -447,9 +445,9 @@ public class MainView implements MessageListener {
         final Node SEVERE;
 
         StatusBarLogHandler() {
-            INFO = new FontAwesomeLabel(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
-            WARNING = new FontAwesomeLabel(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
-            SEVERE = new FontAwesomeLabel(FontAwesomeIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
+            INFO = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO, GRAPHIC_SIZE);
+            WARNING = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.FLAG, GRAPHIC_SIZE);
+            SEVERE = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
         }
 
         @Override

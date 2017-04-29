@@ -17,10 +17,6 @@
  */
 package jgnash.resource.font;
 
-import de.jensd.fx.glyphs.GlyphIcons;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-
 import java.util.Locale;
 
 import javafx.beans.binding.Bindings;
@@ -34,6 +30,7 @@ import javafx.scene.text.Font;
 
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainView;
+import jgnash.util.NotNull;
 
 /**
  * Simple implementation of a FontAwesome based icon.  This scales well with font size changes and is good for use
@@ -43,31 +40,32 @@ import jgnash.uifx.views.main.MainView;
  */
 public class FontAwesomeLabel extends Label {
 
+    private static final String TTF_PATH = "/jgnash/fonts/fontawesome-webfont.ttf";
+
     private static final double DEFAULT_SIZE = 16.0;
 
-    private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
-
-    private final SimpleDoubleProperty size = new SimpleDoubleProperty(DEFAULT_SIZE);
-
     static {
-        Font.loadFont(FontAwesomeLabel.class.getResource(FontAwesomeIconView.TTF_PATH).toExternalForm(),
+        Font.loadFont(FontAwesomeLabel.class.getResource(TTF_PATH).toExternalForm(),
                 ThemeManager.fontScaleProperty().get() * DEFAULT_SIZE);
     }
 
+    private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
+    private final SimpleDoubleProperty size = new SimpleDoubleProperty(DEFAULT_SIZE);
+
     @SuppressWarnings("unused")
     public FontAwesomeLabel() {
-        this(FontAwesomeIcon.BUG);
+        this(FAIcon.BUG);
     }
 
-    public FontAwesomeLabel(final GlyphIcons glyphValue) {
+    public FontAwesomeLabel(final FAIcon glyphValue) {
         this(glyphValue, ThemeManager.fontScaleProperty().get() * DEFAULT_SIZE, null);
     }
 
-    public FontAwesomeLabel(final GlyphIcons glyphValue, final Double sizeValue) {
+    public FontAwesomeLabel(final FAIcon glyphValue, final Double sizeValue) {
         this(glyphValue, sizeValue, null);
     }
 
-    public FontAwesomeLabel(final GlyphIcons glyphValue, final Double sizeValue, Paint paint) {
+    public FontAwesomeLabel(final FAIcon glyphValue, final Double sizeValue, Paint paint) {
 
         final StringExpression iconStyleProperty = Bindings.format(Locale.US,
                 "-fx-font-family: FontAwesome; -fx-font-size: %1$.6f;",
@@ -86,6 +84,10 @@ public class FontAwesomeLabel extends Label {
         getStylesheets().addAll(MainView.DEFAULT_CSS);
     }
 
+    public Object getGlyphName() {
+        return glyphName.get();
+    }
+
     /**
      * Set the glyphName to display.
      *
@@ -93,30 +95,105 @@ public class FontAwesomeLabel extends Label {
      */
     @SuppressWarnings("WeakerAccess")
     public void setGlyphName(final Object value) {
-        glyphName.set(value);
+        try {
+            glyphName.set(value);
 
-        if (value != null) {
-            if (value instanceof Character) {
-                setText(String.valueOf((char)value));
-            } else {    //  GlyphIcons is assumed
-                setText(getUnicode(value.toString()));
+            if (value != null) {
+                if (value instanceof Character) {
+                    setText(String.valueOf((char) value));
+                } else {    //  FAIcon is assumed
+                    setText(getUnicode(value.toString()));
+                }
             }
+        } catch (final IllegalArgumentException e) {
+            System.err.println(e.toString());
+            setText(FAIcon.BUG.getUnicode());
         }
-    }
-
-    public Object getGlyphName() {
-        return glyphName.get();
-    }
-
-    public void setSize(final Double value) {
-        size.set(value);
     }
 
     public Double getSize() {
         return size.getValue();
     }
 
+    public void setSize(final Double value) {
+        size.set(value);
+    }
+
     private String getUnicode(final String string) {
-        return FontAwesomeIcon.valueOf(string).unicode();
+        return FAIcon.valueOf(string).getUnicode();
+    }
+
+    public enum FAIcon {
+        ADJUST("\uf042"),
+        ARROWS("\uf047"),
+        ARROWS_H("\uf07e"),
+        ARROWS_V("\uf07d"),
+        BOOKMARK("\uf02e"),
+        BUG("\uf188"),
+        CALENDAR("\uf073"),
+        CHEVRON_LEFT("\uf053"),
+        CHEVRON_RIGHT("\uf054"),
+        CLIPBOARD("\uf0ea"),
+        CLOSE("\uf00d"),
+        CLOUD_DOWNLOAD("\uf0ed"),
+        CODE("\uf121"),
+        COMPRESS("\uf066"),
+        COPY("\uf0c5"),
+        EDIT("\uf044"),
+        ELLIPSIS_H("\uf141"),
+        EXCLAMATION("\uf12a"),
+        EXCLAMATION_CIRCLE("\uf06a"),
+        EXCLAMATION_TRIANGLE("\uf071"),
+        EXCHANGE("\uf0ec"),
+        EXPAND("\uf065"),
+        EXTERNAL_LINK("\uf08e"),
+        EXTERNAL_LINK_SQUARE("\uf14c"),
+        EYE("\uf06e"),
+        FAST_BACKWARD("\uf049"),
+        FAST_FORWARD("\uf050"),
+        FILE("\uf15b"),
+        FILE_CODE_O("\uf1c9"),
+        FILE_EXCEL_O("\uf1c3"),
+        FILE_IMAGE_O("\uf1c5"),
+        FILTER("\uf0b0"),
+        FLAG("\uf024"),
+        INFO("\uf129"),
+        INFO_CIRCLE("\uf05a"),
+        KEY("\uf084"),
+        LANGUAGE("\uf1ab"),
+        LEVEL_DOWN("\uf149"),
+        LEVEL_UP("\uf148"),
+        LINK("\uf0c1"),
+        LIST("\uf03a"),
+        FOLDER_OPEN("\uf07c"),
+        MINUS_CIRCLE("\uf056"),
+        MONEY("\uf0d6"),
+        PLUS("\uf067"),
+        PLUS_CIRCLE("\uf055"),
+        POWER_OFF("\uf011"),
+        PRINT("\uf02f"),
+        QUESTION_CIRCLE("\uf059"),
+        REFRESH("\uf021"),
+        SAVE("\uf0c7"),
+        SEARCH_MINUS("\uf010"),
+        SEARCH_PLUS("\uf00e"),
+        SIGN_OUT("\uf08b"),
+        STEP_BACKWARD("\uf048"),
+        STEP_FORWARD("\uf051"),
+        TERMINAL("\uf120"),
+        TEXT_HEIGHT("\uf034"),
+        TRASH_O("\uf014"),
+        UNLINK("\uf127"),
+        WRENCH("\uf0ad");
+
+        private final String unicode;
+
+        FAIcon(@NotNull final String unicode) {
+            this.unicode = unicode;
+        }
+
+        public String getUnicode() {
+            return unicode;
+        }
     }
 }

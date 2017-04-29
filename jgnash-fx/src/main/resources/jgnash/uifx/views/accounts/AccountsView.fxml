@@ -22,7 +22,7 @@
             </Button>
             <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAccountAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                    <FontAwesomeLabel glyphName="TRASH_O"/>
                 </graphic>
             </Button>
             <Button fx:id="reconcileButton" text="%Button.Reconcile" onAction="#handleReconcileAction">

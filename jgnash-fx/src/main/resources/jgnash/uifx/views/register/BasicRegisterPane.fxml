@@ -40,7 +40,7 @@
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction"
                                 text="%Button.Delete" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeLabel glyphName="TRASH_ALT"/>
+                                <FontAwesomeLabel glyphName="TRASH_O"/>
                             </graphic>
                         </Button>
                     </buttons>

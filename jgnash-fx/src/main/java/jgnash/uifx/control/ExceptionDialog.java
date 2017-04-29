@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -82,7 +80,7 @@ public class ExceptionDialog {
 
     @FXML
     private void initialize() {
-        message.setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+        message.setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_TRIANGLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER, Color.DARKRED));
 
         closeButton.setOnAction(event -> ((Stage) parent.get().getWindow()).close());

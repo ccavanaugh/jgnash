@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -82,7 +80,7 @@ public class ImageDialog {
         final ToolBar toolBar = new ToolBar();
 
         final Button printButton = new Button(resources.getString("Button.Print"),
-                new FontAwesomeLabel(FontAwesomeIcon.PRINT));
+                new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PRINT));
 
         printButton.setOnAction(event -> JavaFXUtils.printImageView(imageView));
 

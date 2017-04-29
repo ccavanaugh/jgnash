@@ -21,7 +21,7 @@
       <ToolBar>
           <Button text="%Button.SaveImage" onAction="#handleSaveAction">
               <graphic>
-                  <FontAwesomeLabel glyphName="FILE_IMAGE_ALT"/>
+                  <FontAwesomeLabel glyphName="FILE_IMAGE_O"/>
               </graphic>
           </Button>
           <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">

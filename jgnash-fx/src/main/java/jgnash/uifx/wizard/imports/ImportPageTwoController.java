@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.wizard.imports;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -406,16 +404,16 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                 switch (item) {
                     case IGNORE:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.MINUS_CIRCLE)));
+                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.MINUS_CIRCLE)));
                         break;
                     case NEW:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
+                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PLUS_CIRCLE)));
                         break;
                     case EQUAL:
                         setGraphic(new StackPane(new Label("=")));
                         break;
                     case NOT_EQUAL:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
+                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PLUS_CIRCLE)));
                         break;
                 }
             }
