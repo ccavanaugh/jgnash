@@ -264,7 +264,10 @@ abstract class RegisterTableController {
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
         buildTable();
-        loadTable();
+
+        /* push to the end of the application thread to ensure table build is complete before data is loaded
+          this prevents inconsistent and random behavior for column sizing */
+        Platform.runLater(this::loadTable);
     }
 
     abstract Callback<Integer, Double> getColumnWeightFactory();
