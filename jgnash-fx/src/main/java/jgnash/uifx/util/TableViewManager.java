@@ -18,6 +18,7 @@
 package jgnash.uifx.util;
 
 import java.text.Format;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,10 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -105,6 +109,8 @@ public class TableViewManager<S> {
      */
     private boolean isFullyInitialized = false;
 
+    private AtomicLong counter = new AtomicLong();
+
     public TableViewManager(@NotNull final TableView<S> tableView, @NotNull final String preferencesUserRoot) {
         this.tableView = tableView;
         this.preferencesUserRoot = preferencesUserRoot;
@@ -134,7 +140,7 @@ public class TableViewManager<S> {
     public void restoreLayout() {
         restoreColumnVisibility();  // Restore visibility first
 
-        packTable();                // pack the table
+        Platform.runLater(this::packTable);  // pack the table
     }
 
     private void installColumnListeners() {
@@ -190,15 +196,19 @@ public class TableViewManager<S> {
     }
 
     private void saveColumnWidths() {
-        if (preferenceKeyFactory.get() != null) {
+        Platform.runLater(() -> {
+            if (preferenceKeyFactory.get() != null) {
 
-            final double[] columnWidths = tableView.getColumns().filtered(TableColumnBase::isVisible)
-                    .stream().mapToDouble(TableColumnBase::getWidth).toArray();
+                final double[] columnWidths = tableView.getColumns().filtered(TableColumnBase::isVisible)
+                        .stream().mapToDouble(TableColumnBase::getWidth).toArray();
 
-            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
+                final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
 
-            preferences.put(preferenceKeyFactory.get().get(), EncodeDecode.encodeDoubleArray(columnWidths));
-        }
+                preferences.put(preferenceKeyFactory.get().get(), EncodeDecode.encodeDoubleArray(columnWidths));
+
+                //System.out.println("saveColumnWidths: " + Arrays.toString(columnWidths));
+            }
+        });
     }
 
     private void saveColumnVisibility() {
@@ -264,7 +274,8 @@ public class TableViewManager<S> {
         double[] columnWidths = new double[0];  // zero length array instead of null to protect against NPE
 
         // no need to retrieve old column widths more than once
-        if (!isFullyInitialized && preferenceKeyFactory.get() != null) {
+        if (preferenceKeyFactory.get() != null) {
+
             final String uuid = preferenceKeyFactory.get().get();
             final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
 
@@ -283,6 +294,10 @@ public class TableViewManager<S> {
      */
     public synchronized void packTable() {
 
+        //System.out.println("packTable");
+
+        //System.out.println(counter.get());
+
         if (tableView.widthProperty().get() == 0) {
             new Exception("packTable was called too soon!").printStackTrace();
 
@@ -290,6 +305,8 @@ public class TableViewManager<S> {
             Platform.runLater(TableViewManager.this::packTable);
             return;
         }
+
+        counter.incrementAndGet();
 
         packTableExecutor.execute(() -> {
 
@@ -308,34 +325,74 @@ public class TableViewManager<S> {
             final double[] oldWidths = retrieveOldColumnWidths();
             double sumFixedColumns = 0; // sum of the fixed width columns
 
+            if (oldWidths.length == visibleColumns.size()) {
+                double sumOldResizableColumns = 0;
+
+                // calculate the sum of visible resizable columns
+                for (int i = 0; i < visibleColumns.size(); i++) {
+                    if (visibleColumnWeights.get(i) > 0) {
+                        sumOldResizableColumns += oldWidths[i];
+                    }
+                }
+
+                for (int i = 0; i < visibleColumns.size(); i++) {
+                    if (visibleColumnWeights.get(i) > 0) {
+                        double oldPercentage = oldWidths[i] / sumOldResizableColumns * 100.0;
+                        visibleColumnWeights.set(i, oldPercentage);
+                    }
+                }
+
+                //System.out.println("visColumnWeights: " + Arrays.toString(visibleColumnWeights.toArray()));
+            }
+
+            //System.out.println("oldWidths:        " + Arrays.toString(oldWidths));
+
             /* Use the old calculated widths if the count is correct and full initialization has not occurred */
-            final double[] calculatedWidths = !isFullyInitialized && oldWidths.length == visibleColumns.size()
+            final double[] calculatedWidths = oldWidths.length == visibleColumns.size()
                     ? oldWidths : new double[visibleColumns.size()];
+
+            //System.out.println("calculatedWidths: " + Arrays.toString(calculatedWidths));
 
             /* determine if the expensive calculations needs to occur */
             final boolean doExpensiveCalculations = isFullyInitialized || oldWidths.length != visibleColumns.size();
+            //System.out.println("doExpensiveCalc:  " + doExpensiveCalculations);
 
-            for (int i = 0; i < calculatedWidths.length; i++) {
-                if (visibleColumnWeights.get(i) == 0) {
 
-                    /* expensive operation, don't calculate if we are reusing older values */
-                    if (doExpensiveCalculations) {
-                        calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+            /*double sumOldWidths = DoubleStream.of(oldWidths).sum();
+            double visualWidth = tableView.widthProperty().get() - ((visibleColumns.size() - 1) * COLUMN_BORDER_WIDTH);
+            System.out.println(sumOldWidths + ", " + visualWidth);*/
+
+            // if the sum of the old widths is close to the visual width, then don't repack
+            //final boolean repack = !nearlyEquals(sumOldWidths, visualWidth, visualWidth * 0.010) || counter.get() > 2;
+
+            if (counter.get() > 2) {
+                System.out.println("recalculating all widths");
+
+                for (int i = 0; i < calculatedWidths.length; i++) {
+                    if (visibleColumnWeights.get(i) == 0) {
+
+                        /* expensive operation, don't calculate if we are reusing older values */
+                        if (doExpensiveCalculations) {
+                            calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+                        }
+                        sumFixedColumns += calculatedWidths[i];
                     }
-                    sumFixedColumns += calculatedWidths[i];
+                }
+
+                // leftover visible width of the table.  Column borders need to be considered
+                double remainder = tableView.widthProperty().get()
+                        - ((visibleColumns.size() - 1) * COLUMN_BORDER_WIDTH) - sumFixedColumns;
+
+                // calculate widths for adjustable columns using the remaining visible width
+                for (int i = 0; i < calculatedWidths.length; i++) {
+                    if (visibleColumnWeights.get(i) != 0) {
+                        calculatedWidths[i] = Math.floor(remainder * (visibleColumnWeights.get(i) / 100.0));
+                    }
                 }
             }
 
-            // leftover visible width of the table.  Column borders need to be considered
-            double remainder = tableView.widthProperty().get()
-                    - ((visibleColumns.size() - 1) * COLUMN_BORDER_WIDTH) - sumFixedColumns;
-
-            // calculate widths for adjustable columns using the remaining visible width
-            for (int i = 0; i < calculatedWidths.length; i++) {
-                if (visibleColumnWeights.get(i) != 0) {
-                    calculatedWidths[i] = Math.floor(remainder * (visibleColumnWeights.get(i) / 100.0));
-                }
-            }
+            //System.out.println("calculatedWidths: " + Arrays.toString(calculatedWidths));
+            //System.out.println("visColumnWeights: " + Arrays.toString(visibleColumnWeights.toArray()));
 
             Platform.runLater(() -> {
                 removeColumnListeners();
@@ -371,7 +428,7 @@ public class TableViewManager<S> {
                     isFullyInitialized = true;
 
                     // rerun the pack process to perform a fully calculated pack
-                    Platform.runLater(TableViewManager.this::packTable);
+                    //Platform.runLater(TableViewManager.this::packTable);
                 }
             });
         });
@@ -420,10 +477,20 @@ public class TableViewManager<S> {
     }
 
     private final class ColumnWidthListener implements ChangeListener<Number> {
+
+        private static final int RATE_LIMIT_MILLIS = 175;
+
         @Override
         public void changed(final ObservableValue<? extends Number> observable, final Number oldValue,
                             final Number newValue) {
-            saveColumnWidthExecutor.execute(TableViewManager.this::saveColumnWidths);
+            saveColumnWidthExecutor.execute(() -> {
+                try {
+                    Thread.sleep(RATE_LIMIT_MILLIS);  // rate limit the number of saves during drags
+                    saveColumnWidths();
+                } catch (final InterruptedException e) {
+                    Logger.getLogger(TableViewManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            });
         }
     }
 }
