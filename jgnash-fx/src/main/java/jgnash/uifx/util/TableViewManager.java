@@ -18,7 +18,6 @@
 package jgnash.uifx.util;
 
 import java.text.Format;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -140,7 +138,7 @@ public class TableViewManager<S> {
     public void restoreLayout() {
         restoreColumnVisibility();  // Restore visibility first
 
-        Platform.runLater(this::packTable);  // pack the table
+        JavaFXUtils.runLater(this::packTable);  // pack the table
     }
 
     private void installColumnListeners() {
@@ -196,7 +194,7 @@ public class TableViewManager<S> {
     }
 
     private void saveColumnWidths() {
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             if (preferenceKeyFactory.get() != null) {
 
                 final double[] columnWidths = tableView.getColumns().filtered(TableColumnBase::isVisible)
@@ -302,13 +300,13 @@ public class TableViewManager<S> {
             new Exception("packTable was called too soon!").printStackTrace();
 
             // rerun the pack process to recover
-            Platform.runLater(TableViewManager.this::packTable);
+            JavaFXUtils.runLater(TableViewManager.this::packTable);
             return;
         }
 
-        counter.incrementAndGet();
-
         packTableExecutor.execute(() -> {
+
+            counter.incrementAndGet();
 
             // Create a list of visible columns and column weights
             final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
@@ -394,7 +392,7 @@ public class TableViewManager<S> {
             //System.out.println("calculatedWidths: " + Arrays.toString(calculatedWidths));
             //System.out.println("visColumnWeights: " + Arrays.toString(visibleColumnWeights.toArray()));
 
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 removeColumnListeners();
 
                 // unconstrained is required for resize columns correctly
@@ -423,12 +421,9 @@ public class TableViewManager<S> {
 
                 installColumnListeners();
 
-                /* set the initialization flag and start a full calculated pack of the table if not initialized */
+                /* set the initialization flag */
                 if (!isFullyInitialized) {
                     isFullyInitialized = true;
-
-                    // rerun the pack process to perform a fully calculated pack
-                    //Platform.runLater(TableViewManager.this::packTable);
                 }
             });
         });
