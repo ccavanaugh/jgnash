@@ -158,6 +158,11 @@ abstract class RegisterTableController {
 
     @FXML
     void initialize() {
+
+        // table view displays the sorted list of data.  The comparator property must be bound
+        tableView.setItems(sortedList);
+        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+
         // Bind the account property
         getAccountPropertyWrapper().accountProperty().bind(account);
 
@@ -236,7 +241,6 @@ abstract class RegisterTableController {
     }
 
     private void handleFilterChange() {
-
         Predicate<Transaction> predicate = new ReconciledPredicate(account.get(),
                 reconciledStateFilterComboBox.valueProperty().get().getReconciledState())
                 .and(new TransactionAgePredicate(transactionAgeFilterComboBox.valueProperty().get().getChronoUnit(),
@@ -257,11 +261,9 @@ abstract class RegisterTableController {
 
     private void loadAccount() {
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
+        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());
         tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         tableViewManager.setDefaultColumnVisibilityFactory(getColumnVisibilityFactory());
-        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());
-
-        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
         buildTable();
 
@@ -326,8 +328,6 @@ abstract class RegisterTableController {
 
         if (account.get() != null) {
             observableTransactions.addAll(account.get().getSortedTransactionList());
-
-            tableView.setItems(sortedList);
 
             Platform.runLater(() -> {   // table view many not be ready, push to end of the Platform thread
                 tableViewManager.restoreLayout();   // required for table view manager to work
