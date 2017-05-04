@@ -122,16 +122,16 @@ public class TableViewManager<S> {
          *
          * Excess execution requests will be silently discarded
          */
-        updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0,
-                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        updateColumnVisibilityExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE,
+                TimeUnit.DAYS, new ArrayBlockingQueue<>(1));
         updateColumnVisibilityExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
 
-        packTableExecutor = new ThreadPoolExecutor(0, 1, 0,
-                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        packTableExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE,
+                TimeUnit.DAYS, new ArrayBlockingQueue<>(1));
         packTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
 
-        saveColumnWidthExecutor = new ThreadPoolExecutor(0, 1, 0,
-                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        saveColumnWidthExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE,
+                TimeUnit.DAYS, new ArrayBlockingQueue<>(1));
         saveColumnWidthExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     }
 
@@ -304,7 +304,7 @@ public class TableViewManager<S> {
             return;
         }
 
-        packTableExecutor.execute(() -> {
+        packTableExecutor.execute(() -> {   // rate limits with a high rate of transactional changes
 
             counter.incrementAndGet();
 
@@ -361,9 +361,9 @@ public class TableViewManager<S> {
             System.out.println(sumOldWidths + ", " + visualWidth);*/
 
             // if the sum of the old widths is close to the visual width, then don't repack
-            //final boolean repack = !nearlyEquals(sumOldWidths, visualWidth, visualWidth * 0.010) || counter.get() > 2;
+            //final boolean repack = !nearlyEquals(sumOldWidths, visualWidth, visualWidth * 0.010) || counter.get() > 1;
 
-            if (counter.get() > 2) {
+            if (counter.get() > 1) {
                 System.out.println("recalculating all widths");
 
                 for (int i = 0; i < calculatedWidths.length; i++) {
