@@ -42,7 +42,8 @@ public class PriorityThreadPoolExecutor {
     private final PriorityBlockingQueue<Runnable> queue = new PriorityBlockingQueue<>();
 
     public PriorityThreadPoolExecutor(ThreadFactory threadFactory) {
-        threadPoolExecutor = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, queue, threadFactory) {
+        threadPoolExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.DAYS,
+                queue, threadFactory) {
 
             // Wraps a Callable with a FutureTaskWrapper that respects the Priority
             @Override
