@@ -52,7 +52,7 @@ public class PriorityThreadPoolExecutor {
             }
         };
 
-        threadPoolExecutor.allowCoreThreadTimeOut(true);
+        threadPoolExecutor.allowCoreThreadTimeOut(false);
     }
 
     public PriorityThreadPoolExecutor() {
