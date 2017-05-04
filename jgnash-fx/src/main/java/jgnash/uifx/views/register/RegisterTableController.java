@@ -525,8 +525,8 @@ abstract class RegisterTableController {
         private final ThreadPoolExecutor updateTableExecutor;
 
         MessageBusHandler() {
-            updateTableExecutor = new ThreadPoolExecutor(0, 1, 0,
-                    TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+            updateTableExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE,
+                    TimeUnit.DAYS, new ArrayBlockingQueue<>(1));
 
             updateTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
         }
