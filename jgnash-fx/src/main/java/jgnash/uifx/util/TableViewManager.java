@@ -136,7 +136,8 @@ public class TableViewManager<S> {
     }
 
     public void restoreLayout() {
-        restoreColumnVisibility();  // Restore visibility first
+        //restoreColumnVisibility();  // Restore visibility first
+        JavaFXUtils.runLater(this::restoreColumnVisibility);
 
         JavaFXUtils.runLater(this::packTable);  // pack the table
     }
