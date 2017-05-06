@@ -36,6 +36,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.Stage;
 
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.TimePeriodComboBox;
@@ -48,7 +52,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-class NotificationDialog extends Stage {
+class NotificationDialog extends Stage implements MessageListener {
 
     @FXML
     private Button cancelButton;
@@ -86,7 +90,7 @@ class NotificationDialog extends Stage {
     }
 
     Collection<PendingReminder> getApprovedReminders() {
-       return observableReminderList.stream().filter(PendingReminder::isApproved).collect(Collectors.toList());
+        return observableReminderList.stream().filter(PendingReminder::isApproved).collect(Collectors.toList());
     }
 
     @FXML
@@ -128,6 +132,8 @@ class NotificationDialog extends Stage {
 
         // Bind options to the snooze period property
         Options.reminderSnoozePeriodProperty().bind(snoozeComboBox.periodProperty());
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
 
     private void handleSelectAllAction() {
@@ -158,6 +164,22 @@ class NotificationDialog extends Stage {
 
     private void handleOkayAction() {
         close();
+    }
+
+    @Override
+    public void close() {
+        MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
+        super.close();
+    }
+
+    @Override
+    public void messagePosted(final Message message) {
+        switch (message.getEvent()) {
+            case FILE_CLOSING:  // close the dialog automatically
+                close();
+                break;
+            default:
+        }
     }
 
     private static class DateTableCell extends TableCell<PendingReminder, LocalDate> {
