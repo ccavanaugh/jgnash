@@ -23,6 +23,7 @@ WANTS
 
 Release 2.31.0
 --------------
+* 05/06/17 Updated to the latest Netty dependency.
 * 05/06/17 The reminder dialog now closes itself automatically if it was shown in the background while a file close was
            started concurrently. (Fx)
 * 04/28/17 Dependency on FontAwesomeFx is no longer needed to reduce application size. (Fx)
