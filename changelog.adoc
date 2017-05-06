@@ -23,6 +23,8 @@ WANTS
 
 Release 2.31.0
 --------------
+* 05/06/17 The reminder dialog now closes itself automatically if it was shown in the background while a file close was
+           started concurrently. (Fx)
 * 04/28/17 Dependency on FontAwesomeFx is no longer needed to reduce application size. (Fx)
 * 04/24/17 Updated to the latest H2 database dependency.
 * 04/17/17 Yahoo Security Download now requires use of HTTPS for downloads. (Swing, Fx)
