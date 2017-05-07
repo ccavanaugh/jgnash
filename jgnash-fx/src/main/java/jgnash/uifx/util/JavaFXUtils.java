@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
@@ -75,14 +76,14 @@ public class JavaFXUtils {
 
     /**
      * Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future.
-     *
+     * <p>
      * This implementation batches Runnables together in the order received to minimize stress on the JavaFX Application
      * Thread.  A small delay between batches is enforced if being flooded by too many events.  Do not use this for
      * time sensitive operation such a UI feedback where delays are not desirable
      *
+     * @param runnable the Runnable whose run method will be executed on the JavaFX Application Thread
+     *
      * @see Platform#runLater(Runnable)
-     * @param runnable the Runnable whose run method will be executed on the
-     * JavaFX Application Thread
      */
     public static void runLater(@NotNull final Runnable runnable) {
         platformRunnables.add(runnable);
@@ -126,6 +127,40 @@ public class JavaFXUtils {
                 batchSemaphore.release();   // release the semaphore now the queue is empty
             }
         });
+    }
+
+    /**
+     * Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future and
+     * wait for completion.
+     *
+     * @param runnable the Runnable whose run method will be executed on the JavaFX Application Thread
+     */
+    public static void runAndWait(@NotNull final Runnable runnable) {
+
+        if (Platform.isFxApplicationThread()) { // run synchronously if already on the Application Thread
+            try {
+                runnable.run();
+            } catch (final Exception e) {
+                Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        } else {
+            final CountDownLatch doneLatch = new CountDownLatch(1);
+            runLater(() -> {
+                try {
+                    runnable.run();
+                } catch (final Exception e) {
+                    Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                } finally {
+                    doneLatch.countDown();
+                }
+            });
+
+            try {
+                doneLatch.await();  // TODO, allow use of a timeout value to prevent stalls?
+            } catch (final InterruptedException e) {
+                Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }
     }
 
     /**
@@ -189,7 +224,7 @@ public class JavaFXUtils {
      * Calculates the displayed width of a text string.
      *
      * @param displayString displayed text
-     * @param style text style, may be null
+     * @param style         text style, may be null
      * @return width of the displayed string
      */
     public static double getDisplayedTextWidth(@NotNull final String displayString, @Nullable final String style) {
