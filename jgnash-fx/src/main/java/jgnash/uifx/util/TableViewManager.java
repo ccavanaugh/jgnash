@@ -309,7 +309,6 @@ public class TableViewManager<S> {
             }
 
             final double[] oldWidths = retrieveOldColumnWidths();
-            double sumFixedColumns = 0; // sum of the fixed width columns
 
             if (oldWidths.length == visibleColumns.size()) {
                 double sumOldResizableColumns = 0;
@@ -333,11 +332,12 @@ public class TableViewManager<S> {
             final double[] calculatedWidths = oldWidths.length == visibleColumns.size()
                     ? oldWidths : new double[visibleColumns.size()];
 
-            /* determine if the expensive calculations needs to occur */
-            final boolean doExpensiveCalculations = isFullyInitialized || oldWidths.length != visibleColumns.size();
-
             if (isFullyInitialized) {
+                double sumFixedColumns = 0; // sum of the fixed width columns
                 // System.out.println("recalculating all widths");
+
+                 /* determine if the expensive calculations needs to occur */
+                final boolean doExpensiveCalculations = oldWidths.length != visibleColumns.size();
 
                 for (int i = 0; i < calculatedWidths.length; i++) {
                     if (visibleColumnWeights.get(i) == 0) {
