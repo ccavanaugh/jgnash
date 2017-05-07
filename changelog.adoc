@@ -23,6 +23,7 @@ WANTS
 
 Release 2.31.0
 --------------
+* 05/07/17 Table Column sizes are now correctly remembered, restored, and scaled. (Fx)
 * 05/06/17 Updated to the latest Netty dependency.
 * 05/06/17 The reminder dialog now closes itself automatically if it was shown in the background while a file close was
            started concurrently. (Fx)
