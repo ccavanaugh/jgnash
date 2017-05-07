@@ -37,6 +37,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
@@ -136,8 +137,7 @@ public class TableViewManager<S> {
     }
 
     public void restoreLayout() {
-        //restoreColumnVisibility();  // Restore visibility first
-        JavaFXUtils.runLater(this::restoreColumnVisibility);
+        JavaFXUtils.runAndWait(this::restoreColumnVisibility); // Restore visibility first
 
         JavaFXUtils.runLater(this::packTable);  // pack the table
     }
@@ -197,15 +197,12 @@ public class TableViewManager<S> {
     private void saveColumnWidths() {
         JavaFXUtils.runLater(() -> {
             if (preferenceKeyFactory.get() != null) {
-
-                final double[] columnWidths = tableView.getColumns().filtered(TableColumnBase::isVisible)
-                        .stream().mapToDouble(TableColumnBase::getWidth).toArray();
+                final double[] columnWidths = tableView.getColumns().filtered(TableColumnBase::isVisible).stream()
+                        .mapToDouble(value -> Math.floor(value.getWidth())).toArray();
 
                 final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
 
                 preferences.put(preferenceKeyFactory.get().get(), EncodeDecode.encodeDoubleArray(columnWidths));
-
-                //System.out.println("saveColumnWidths: " + Arrays.toString(columnWidths));
             }
         });
     }
@@ -292,11 +289,6 @@ public class TableViewManager<S> {
      * Called when the table columns need to be repacked because of content change
      */
     public synchronized void packTable() {
-
-        //System.out.println("packTable");
-
-        //System.out.println(counter.get());
-
         if (tableView.widthProperty().get() == 0) {
             new Exception("packTable was called too soon!").printStackTrace();
 
@@ -310,7 +302,7 @@ public class TableViewManager<S> {
             counter.incrementAndGet();
 
             // Create a list of visible columns and column weights
-            final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
+            final List<TableColumn<S, ?>> visibleColumns = new ArrayList<>();
             final List<Double> visibleColumnWeights = new ArrayList<>();
 
             for (int i = 0; i < tableView.getColumns().size(); i++) {
@@ -340,32 +332,17 @@ public class TableViewManager<S> {
                         visibleColumnWeights.set(i, oldPercentage);
                     }
                 }
-
-                //System.out.println("visColumnWeights: " + Arrays.toString(visibleColumnWeights.toArray()));
             }
-
-            //System.out.println("oldWidths:        " + Arrays.toString(oldWidths));
 
             /* Use the old calculated widths if the count is correct and full initialization has not occurred */
             final double[] calculatedWidths = oldWidths.length == visibleColumns.size()
                     ? oldWidths : new double[visibleColumns.size()];
 
-            //System.out.println("calculatedWidths: " + Arrays.toString(calculatedWidths));
-
             /* determine if the expensive calculations needs to occur */
             final boolean doExpensiveCalculations = isFullyInitialized || oldWidths.length != visibleColumns.size();
-            //System.out.println("doExpensiveCalc:  " + doExpensiveCalculations);
-
-
-            /*double sumOldWidths = DoubleStream.of(oldWidths).sum();
-            double visualWidth = tableView.widthProperty().get() - ((visibleColumns.size() - 1) * COLUMN_BORDER_WIDTH);
-            System.out.println(sumOldWidths + ", " + visualWidth);*/
-
-            // if the sum of the old widths is close to the visual width, then don't repack
-            //final boolean repack = !nearlyEquals(sumOldWidths, visualWidth, visualWidth * 0.010) || counter.get() > 1;
 
             if (counter.get() > 1) {
-                System.out.println("recalculating all widths");
+                // System.out.println("recalculating all widths");
 
                 for (int i = 0; i < calculatedWidths.length; i++) {
                     if (visibleColumnWeights.get(i) == 0) {
@@ -385,15 +362,12 @@ public class TableViewManager<S> {
                 // calculate widths for adjustable columns using the remaining visible width
                 for (int i = 0; i < calculatedWidths.length; i++) {
                     if (visibleColumnWeights.get(i) != 0) {
-                        calculatedWidths[i] = Math.floor(remainder * (visibleColumnWeights.get(i) / 100.0));
+                        calculatedWidths[i] = Math.floor(remainder * (visibleColumnWeights.get(i) / 100.0) - 0.5);
                     }
                 }
             }
 
-            //System.out.println("calculatedWidths: " + Arrays.toString(calculatedWidths));
-            //System.out.println("visColumnWeights: " + Arrays.toString(visibleColumnWeights.toArray()));
-
-            JavaFXUtils.runLater(() -> {
+            JavaFXUtils.runAndWait(() -> {
                 removeColumnListeners();
 
                 // unconstrained is required for resize columns correctly
@@ -414,6 +388,17 @@ public class TableViewManager<S> {
                 }
 
                 tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);   // restore the old policy
+
+                // Go back and correct the width of adjustable columns at the end of application thread
+                JavaFXUtils.runLater(() -> {
+                    // Go back and correct the width of adjustable columns
+                    for (int j = 0; j < calculatedWidths.length; j++) {
+                        if (visibleColumnWeights.get(j) != 0) { // fixed width column
+                            tableView.resizeColumn(visibleColumns.get(j), calculatedWidths[j]
+                                    - visibleColumns.get(j).getWidth());
+                        }
+                    }
+                });
 
                 /* save the column widths for next time after fully initialized */
                 if (isFullyInitialized) {
