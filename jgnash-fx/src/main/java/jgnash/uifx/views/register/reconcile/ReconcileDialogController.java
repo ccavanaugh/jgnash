@@ -45,7 +45,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
@@ -138,10 +137,6 @@ public class ReconcileDialogController implements MessageListener {
 
     private final FilteredList<RecTransaction> decreaseList = new FilteredList<>(transactions);
 
-    private TableViewManager<RecTransaction> increaseTableViewManager;
-
-    private TableViewManager<RecTransaction> decreaseTableViewManager;
-
     private NumberFormat numberFormat;
 
     private final SimpleBooleanProperty reconciled = new SimpleBooleanProperty(false);
@@ -152,16 +147,6 @@ public class ReconcileDialogController implements MessageListener {
 
     @FXML
     private void initialize() {
-        parent.addListener((observable, oldValue, newScene) -> {
-            if (newScene != null) {
-                newScene.windowProperty().get().addEventHandler(WindowEvent.WINDOW_SHOWN,
-                        event -> JavaFXUtils.runLater(() -> {
-                            increaseTableViewManager.restoreLayout();
-                            decreaseTableViewManager.restoreLayout();
-                        }));
-            }
-        });
-
         // Selection listener that toggles the reconciled state
         class ToggleStateChangeListener implements ChangeListener<RecTransaction> {
 
@@ -233,11 +218,13 @@ public class ReconcileDialogController implements MessageListener {
     }
 
     private void loadTables() {
-        increaseTableViewManager = new TableViewManager<>(increaseTableView, PREF_NODE);
+        final TableViewManager<RecTransaction> increaseTableViewManager
+                = new TableViewManager<>(increaseTableView, PREF_NODE);
         increaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         increaseTableViewManager.setPreferenceKeyFactory(() -> INCREASE_KEY);
 
-        decreaseTableViewManager = new TableViewManager<>(decreaseTableView, PREF_NODE);
+        final TableViewManager<RecTransaction> decreaseTableViewManager
+                = new TableViewManager<>(decreaseTableView, PREF_NODE);
         decreaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         decreaseTableViewManager.setPreferenceKeyFactory(() -> DECREASE_KEY);
 
@@ -418,6 +405,21 @@ public class ReconcileDialogController implements MessageListener {
             }
             return null;
         });
+
+        final ChangeListener<Number> widthListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                if (newValue != null && newValue.doubleValue() > 0) {
+                    JavaFXUtils.runLater(tableViewManager::restoreLayout);
+                    JavaFXUtils.runLater(tableViewManager::packTable);
+
+                    tableView.widthProperty().removeListener(this);
+                }
+            }
+        };
+
+        tableView.widthProperty().addListener(widthListener);
     }
 
     private boolean reconcilable(final Transaction t) {
