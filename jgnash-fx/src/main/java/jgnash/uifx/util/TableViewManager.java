@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,8 +106,6 @@ public class TableViewManager<S> {
      * Used to track initialization.  If false, old column widths should be restored.
      */
     private boolean isFullyInitialized = false;
-
-    private AtomicLong counter = new AtomicLong();
 
     public TableViewManager(@NotNull final TableView<S> tableView, @NotNull final String preferencesUserRoot) {
         this.tableView = tableView;
@@ -299,8 +296,6 @@ public class TableViewManager<S> {
 
         packTableExecutor.execute(() -> {   // rate limits with a high rate of transactional changes
 
-            counter.incrementAndGet();
-
             // Create a list of visible columns and column weights
             final List<TableColumn<S, ?>> visibleColumns = new ArrayList<>();
             final List<Double> visibleColumnWeights = new ArrayList<>();
@@ -341,7 +336,7 @@ public class TableViewManager<S> {
             /* determine if the expensive calculations needs to occur */
             final boolean doExpensiveCalculations = isFullyInitialized || oldWidths.length != visibleColumns.size();
 
-            if (counter.get() > 1) {
+            if (isFullyInitialized) {
                 // System.out.println("recalculating all widths");
 
                 for (int i = 0; i < calculatedWidths.length; i++) {
