@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,6 +108,8 @@ public class TableViewManager<S> {
      */
     private boolean isFullyInitialized = false;
 
+    private AtomicLong packCounter = new AtomicLong();
+
     public TableViewManager(@NotNull final TableView<S> tableView, @NotNull final String preferencesUserRoot) {
         this.tableView = tableView;
         this.preferencesUserRoot = preferencesUserRoot;
@@ -134,9 +137,10 @@ public class TableViewManager<S> {
     }
 
     public void restoreLayout() {
-        JavaFXUtils.runAndWait(this::restoreColumnVisibility); // Restore visibility first
-
-        JavaFXUtils.runLater(this::packTable);  // pack the table
+        if (!isFullyInitialized) {
+            JavaFXUtils.runAndWait(this::restoreColumnVisibility); // Restore visibility first
+            JavaFXUtils.runLater(this::packTable);  // pack the table
+        }
     }
 
     private void installColumnListeners() {
@@ -290,6 +294,8 @@ public class TableViewManager<S> {
             return; // exit right away if the table view is not visible
         }
 
+        packCounter.incrementAndGet();
+
         packTableExecutor.execute(() -> {   // rate limits with a high rate of transactional changes
 
             // Create a list of visible columns and column weights
@@ -328,12 +334,22 @@ public class TableViewManager<S> {
             final double[] calculatedWidths = oldWidths.length == visibleColumns.size()
                     ? oldWidths : new double[visibleColumns.size()];
 
-            if (isFullyInitialized) {
-                double sumFixedColumns = 0; // sum of the fixed width columns
-                // System.out.println("recalculating all widths");
+            /* If any columns are zero width, a full calculation is required */
+            boolean forceCalculations = false;
 
-                 /* determine if the expensive calculations needs to occur */
-                final boolean doExpensiveCalculations = oldWidths.length != visibleColumns.size();
+            for (final double width : calculatedWidths) {
+                if (width <= 0.0) {
+                    forceCalculations = true;
+                    break;
+                }
+            }
+
+            if (isFullyInitialized || forceCalculations || packCounter.get() > 1) {
+                double sumFixedColumns = 0; // sum of the fixed width columns
+
+                /* determine if the expensive calculations needs to occur */
+                final boolean doExpensiveCalculations = oldWidths.length != visibleColumns.size()
+                        || packCounter.get() > 1 || forceCalculations;
 
                 for (int i = 0; i < calculatedWidths.length; i++) {
                     if (visibleColumnWeights.get(i) == 0) {
@@ -358,7 +374,7 @@ public class TableViewManager<S> {
                 }
             }
 
-            JavaFXUtils.runAndWait(() -> {
+            JavaFXUtils.runLater(() -> {
                 removeColumnListeners();
 
                 // unconstrained is required for resize columns correctly
