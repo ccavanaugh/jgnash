@@ -63,6 +63,7 @@ import jgnash.time.DateUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
+import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
@@ -398,6 +399,9 @@ public class ReconcileDialogController implements MessageListener {
                 CommodityFormat.getShortNumberFormat(account.getCurrencyNode())));
 
         tableView.getColumns().add(amountColumn);
+
+        // hide the horizontal scrollbar
+        tableView.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS);
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == amountColumn && account != null) {
