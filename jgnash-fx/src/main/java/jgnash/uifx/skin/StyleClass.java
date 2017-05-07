@@ -23,6 +23,11 @@ package jgnash.uifx.skin;
  * @author Craig Cavanaugh
  */
 public class StyleClass {
+
+    private StyleClass() {
+        // utility class
+    }
+
     public static final String LIST_TITLE_STYLE = "list-title";
 
     public static final String LIST_BUTTON_STYLE = "list-button";
@@ -43,4 +48,10 @@ public class StyleClass {
 
     public static final String ITALIC_NEGATIVE_CELL_ID = "italic-negative-label";
 
+
+    public static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
+
+    public static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
+
+    public static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
 }

@@ -80,10 +80,6 @@ public class BudgetTableController implements MessageListener {
 
     private static final String RUNNING_TOTALS = "runningTotals";
 
-    private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
-    private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
-    private static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
-
     private static final int ROW_HEIGHT_MULTIPLIER = 2;
 
     //TODO: Magic number that needs to be fixed or controlled with css
@@ -223,20 +219,20 @@ public class BudgetTableController implements MessageListener {
                 LocalDate.now().getYear() - YEAR_MARGIN, LocalDate.now().getYear() + YEAR_MARGIN,
                 LocalDate.now().getYear(), 1));
 
-        accountTreeView.getStylesheets().addAll(HIDE_VERTICAL_CSS);
+        accountTreeView.getStylesheets().addAll(StyleClass.HIDE_VERTICAL_CSS);
         accountTreeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
         accountTreeView.setShowRoot(false);
         accountTreeView.setEditable(true);
         accountTreeView.fixedCellSizeProperty().bind(rowHeight);
 
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
+        accountSummaryTable.getStylesheets().addAll(StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_HORIZONTAL_CSS);
         accountSummaryTable.setItems(expandedAccountList);
         accountSummaryTable.fixedCellSizeProperty().bind(rowHeight);
         accountSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(accountSummaryTable));
 
         accountTypeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountTypeTable.getStylesheets().add(HIDE_HEADER_CSS);
+        accountTypeTable.getStylesheets().add(StyleClass.HIDE_HEADER_CSS);
         accountTypeTable.setItems(accountGroupList);
         accountTypeTable.fixedCellSizeProperty().bind(rowHeight);
         accountTypeTable.prefHeightProperty()
@@ -244,7 +240,7 @@ public class BudgetTableController implements MessageListener {
         accountTypeTable.setSelectionModel(new NullTableViewSelectionModel<>(accountTypeTable));
 
         accountGroupPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountGroupPeriodSummaryTable.getStylesheets().addAll(HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS, HIDE_VERTICAL_CSS);
+        accountGroupPeriodSummaryTable.getStylesheets().addAll(StyleClass.HIDE_HEADER_CSS, StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS);
         accountGroupPeriodSummaryTable.setItems(accountGroupList);
         accountGroupPeriodSummaryTable.fixedCellSizeProperty().bind(rowHeight);
         accountGroupPeriodSummaryTable.prefHeightProperty()
@@ -750,7 +746,7 @@ public class BudgetTableController implements MessageListener {
         gridPane.getChildren().add(periodTable);
 
         periodTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        periodTable.getStylesheets().addAll(HIDE_HORIZONTAL_CSS, HIDE_VERTICAL_CSS);
+        periodTable.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS);
         periodTable.fixedCellSizeProperty().bind(rowHeight);
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
@@ -844,7 +840,7 @@ public class BudgetTableController implements MessageListener {
         gridPane.getChildren().add(periodSummaryTable);
 
         periodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        periodSummaryTable.getStylesheets().addAll(HIDE_HORIZONTAL_CSS, HIDE_VERTICAL_CSS, HIDE_HEADER_CSS);
+        periodSummaryTable.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_HEADER_CSS);
         periodSummaryTable.fixedCellSizeProperty().bind(rowHeight);
         periodSummaryTable.prefHeightProperty()
                 .bind(rowHeight.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
