@@ -287,11 +287,7 @@ public class TableViewManager<S> {
      */
     public synchronized void packTable() {
         if (tableView.widthProperty().get() == 0) {
-            new Exception("packTable was called too soon!").printStackTrace();
-
-            // rerun the pack process to recover
-            JavaFXUtils.runLater(TableViewManager.this::packTable);
-            return;
+            return; // exit right away if the table view is not visible
         }
 
         packTableExecutor.execute(() -> {   // rate limits with a high rate of transactional changes
