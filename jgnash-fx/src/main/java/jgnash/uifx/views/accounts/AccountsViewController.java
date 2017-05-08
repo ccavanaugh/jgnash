@@ -49,6 +49,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.IntegerTreeTableCell;
+import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
@@ -128,6 +129,9 @@ public class AccountsViewController implements MessageListener {
 
         // force resize policy for better default appearance
         treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+
+        // hide the horizontal scrollbar and prevent ghosting
+        treeTableView.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS);
 
         final TreeTableColumn<Account, String> nameColumn = new TreeTableColumn<>(resources.getString("Column.Account"));
         nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));

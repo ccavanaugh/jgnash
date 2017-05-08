@@ -96,6 +96,9 @@ public class RecurringViewController implements MessageListener {
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
+        // hide the horizontal scrollbar and prevent ghosting
+        tableView.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS);
+
         final TableColumn<Reminder, String> descriptionColumn = new TableColumn<>(resources.getString("Column.Description"));
         descriptionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDescription()));
         tableView.getColumns().add(descriptionColumn);

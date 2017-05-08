@@ -74,6 +74,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
+import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
@@ -171,6 +172,9 @@ abstract class RegisterTableController {
 
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // hide the horizontal scrollbar and prevent ghosting
+        tableView.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS);
 
         // Load the table on change and set the row factory if the account in not locked
         accountProperty().addListener((observable, oldValue, newValue) -> {
