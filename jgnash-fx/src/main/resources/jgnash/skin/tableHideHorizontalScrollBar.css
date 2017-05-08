@@ -1,8 +1,8 @@
 /*noinspection ALL*/
-.table-view *.scroll-bar:horizontal *.increment-button,
-.table-view *.scroll-bar:horizontal *.decrement-button,
-.table-view *.scroll-bar:horizontal *.increment-arrow,
-.table-view *.scroll-bar:horizontal *.decrement-arrow {
+*.scroll-bar:horizontal *.increment-button,
+*.scroll-bar:horizontal *.decrement-button,
+*.scroll-bar:horizontal *.increment-arrow,
+*.scroll-bar:horizontal *.decrement-arrow {
     visibility: hidden;
     -fx-background-color: null;
     -fx-background-radius: 0;
