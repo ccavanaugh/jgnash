@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -189,7 +190,13 @@ public class FileMagic {
         boolean result = false;
 
         if (Files.exists(path)) {
-            try (final BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+
+            final String encoding = getOfxV1Encoding(path);
+            final Charset charset = Charset.forName(encoding);
+
+            Objects.requireNonNull(charset);
+
+            try (final BufferedReader reader = Files.newBufferedReader(path, charset)) {
                 String line = reader.readLine();
 
                 while (line != null) {
