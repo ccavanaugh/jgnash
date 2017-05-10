@@ -17,9 +17,12 @@
  */
 package jgnash.uifx.dialog.options;
 
+import java.util.prefs.Preferences;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -30,6 +33,7 @@ import javafx.stage.Stage;
 import jgnash.plugin.FxPlugin;
 import jgnash.plugin.PluginFactory;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Controller for application options.
@@ -40,6 +44,8 @@ public class OptionDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
+
+    private final String INDEX = "index";
 
     @FXML
     private TabPane tabPane;
@@ -55,6 +61,20 @@ public class OptionDialogController {
                         tabPane.getTabs().add(new Tab(plugin.getName(), tab));
                     }
                 }));
+
+
+        JavaFXUtils.runLater(() -> {
+            final Preferences preferences = Preferences.userNodeForPackage(OptionDialogController.class);
+
+            tabPane.getSelectionModel().select(preferences.getInt(INDEX, 0));
+
+            tabPane.getSelectionModel()
+                    .selectedIndexProperty().addListener(new WeakChangeListener<>((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    preferences.putInt(INDEX, newValue.intValue());
+                }
+            }));
+        });
     }
 
     @FXML
