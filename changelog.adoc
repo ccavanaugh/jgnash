@@ -23,6 +23,7 @@ WANTS
 
 Release 2.31.0
 --------------
+* 05/10/17 Added a General configuration option to allow full manual control of table column widths. (Fx)
 * 05/08/17 Corrected handling of OFX files written with a windows-1252 character set. (Swing, Fx)
 * 05/08/17 Prevent ghosting horizontal scrollbars when resizing the main window. (Fx)
 * 05/07/17 Table Column sizes (register & reconcile) are now correctly remembered, restored, and scaled. (Fx)

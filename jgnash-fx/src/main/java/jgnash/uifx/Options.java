@@ -37,6 +37,8 @@ public class Options {
 
     private static final Preferences p = Preferences.userNodeForPackage(Options.class);
 
+    private static final String AUTO_PACK_TABLE = "autoPackTables";
+
     private static final String CONFIRM_DELETE_REMINDER = "confirmDeleteReminder";
 
     private static final String CONFIRM_DELETE_TRANSACTION = "confirmDeleteTransaction";
@@ -82,6 +84,8 @@ public class Options {
     private static final SimpleBooleanProperty confirmDeleteReminder;
 
     private static final SimpleBooleanProperty rememberDate;
+
+    private static final SimpleBooleanProperty autoPackTablesEnabled;
 
     private static final SimpleBooleanProperty autoCompleteEnabled;
 
@@ -131,6 +135,7 @@ public class Options {
         autoCompleteEnabled = createBooleanProperty(AUTO_COMPLETE, true);
         autoCompleteCaseSensitiveEnabled = createBooleanProperty(CASE_SENSITIVE, false);
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
+        autoPackTablesEnabled = createBooleanProperty(AUTO_PACK_TABLE, true);
         openLastEnabled = createBooleanProperty(OPEN_LAST, false);
         selectOnFocusEnabled = createBooleanProperty(SELECT_ON_FOCUS, false);
         concatenateMemos = createBooleanProperty(CONCATENATE_MEMOS, false);
@@ -234,6 +239,15 @@ public class Options {
      */
     public static BooleanProperty autoCompleteIsCaseSensitiveProperty() {
         return autoCompleteCaseSensitiveEnabled;
+    }
+
+    /**
+     * Provides access to the case sensitivity of auto completion.
+     *
+     * @return {@code BooleanProperty} controlling case sensitivity
+     */
+    public static BooleanProperty autoPackTablesProperty() {
+        return autoPackTablesEnabled;
     }
 
     /** Provides access to the property controlling if fuzzy match is used for auto completion.

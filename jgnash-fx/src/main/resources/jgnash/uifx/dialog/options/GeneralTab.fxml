@@ -48,8 +48,10 @@
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints vgrow="NEVER"/>
+                    <RowConstraints vgrow="NEVER"/>
                 </rowConstraints>
-                <CheckBox text="%Button.AnimationsEnabled" fx:id="animationsEnabledCheckBox" />
+                <CheckBox text="%Button.AnimationsEnabled" fx:id="animationsEnabledCheckBox" GridPane.rowIndex="0"/>
+                <CheckBox text="%Button.AutoResizeColumns" fx:id="autoPackRegisterTableCheckBox" GridPane.rowIndex="1"/>
             </GridPane>
         </TitledPane>
 

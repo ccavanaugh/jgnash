@@ -33,7 +33,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -69,6 +71,11 @@ public class TableViewManager<S> {
      */
     private static final int MIN_WIDTH = 30;
 
+    /**
+     * JavaFX default value for maximum column width
+     */
+    private static final int MAX_WIDTH = 4000;
+
     @NotNull
     private final TableView<S> tableView;
 
@@ -89,6 +96,11 @@ public class TableViewManager<S> {
     private final ColumnWidthListener columnWidthListener = new ColumnWidthListener();
 
     /**
+     * If true, manual packing for the table should be allowed
+     */
+    private final BooleanProperty manualPacking = new SimpleBooleanProperty(false);
+
+    /**
      * Limits number of processed visibility change events ensuring the most recent is executed.
      */
     private final ThreadPoolExecutor updateColumnVisibilityExecutor;
@@ -104,10 +116,8 @@ public class TableViewManager<S> {
     private final ThreadPoolExecutor saveColumnWidthExecutor;
 
     /**
-     * Used to track initialization.  If false, old column widths should be restored.
+     * Used to track initialization and pack state
      */
-    private boolean isFullyInitialized = false;
-
     private AtomicLong packCounter = new AtomicLong();
 
     public TableViewManager(@NotNull final TableView<S> tableView, @NotNull final String preferencesUserRoot) {
@@ -134,10 +144,17 @@ public class TableViewManager<S> {
         saveColumnWidthExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE,
                 TimeUnit.DAYS, new ArrayBlockingQueue<>(1));
         saveColumnWidthExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+
+        // repack and reset column properties if the user changes settings
+        manualPacking.addListener((observable, oldValue, newValue) -> {
+            if (packCounter.get() > 0) {
+                packTable();
+            }
+        });
     }
 
     public void restoreLayout() {
-        if (!isFullyInitialized) {
+        if (packCounter.get() == 0) {
             JavaFXUtils.runAndWait(this::restoreColumnVisibility); // Restore visibility first
             JavaFXUtils.runLater(this::packTable);  // pack the table
         }
@@ -155,6 +172,10 @@ public class TableViewManager<S> {
             tableColumn.visibleProperty().removeListener(visibilityListener);
             tableColumn.widthProperty().removeListener(columnWidthListener);
         }
+    }
+
+    public BooleanProperty manualColumnPackingProperty() {
+        return manualPacking;
     }
 
     /**
@@ -344,7 +365,7 @@ public class TableViewManager<S> {
                 }
             }
 
-            if (isFullyInitialized || forceCalculations || packCounter.get() > 1) {
+            if (forceCalculations || packCounter.get() > 0) {
                 double sumFixedColumns = 0; // sum of the fixed width columns
 
                 /* determine if the expensive calculations needs to occur */
@@ -384,13 +405,18 @@ public class TableViewManager<S> {
                 for (int j = 0; j < calculatedWidths.length; j++) {
                     visibleColumns.get(j).setResizable(true);   // allow resizing
 
-                    if (visibleColumnWeights.get(j) == 0) { // fixed width column
-                        visibleColumns.get(j).minWidthProperty().set(calculatedWidths[j]);
-                        visibleColumns.get(j).maxWidthProperty().set(calculatedWidths[j]);
-                        visibleColumns.get(j).setResizable(false);
-                    } else {    // set the preferred size and ensure the column does not disappear
+                    if (!manualPacking.get()) {
+                        if (visibleColumnWeights.get(j) == 0) { // fixed width column
+                            visibleColumns.get(j).minWidthProperty().set(calculatedWidths[j]);
+                            visibleColumns.get(j).maxWidthProperty().set(calculatedWidths[j]);
+                            visibleColumns.get(j).setResizable(false);
+                        } else {    // set the preferred size and ensure the column does not disappear
+                            visibleColumns.get(j).minWidthProperty().set(MIN_WIDTH);
+                            visibleColumns.get(j).prefWidthProperty().set(calculatedWidths[j]);
+                        }
+                    } else {
                         visibleColumns.get(j).minWidthProperty().set(MIN_WIDTH);
-                        visibleColumns.get(j).prefWidthProperty().set(calculatedWidths[j]);
+                        visibleColumns.get(j).maxWidthProperty().set(MAX_WIDTH);
                     }
                 }
 
@@ -400,7 +426,9 @@ public class TableViewManager<S> {
                 JavaFXUtils.runLater(() -> {
                     // Go back and correct the width of adjustable columns
                     for (int j = 0; j < calculatedWidths.length; j++) {
-                        if (visibleColumnWeights.get(j) != 0) { // fixed width column
+
+                        // resize if not a fixed width column or manual packing is enabled
+                        if (visibleColumnWeights.get(j) != 0 || manualPacking.get()) {
                             tableView.resizeColumn(visibleColumns.get(j), calculatedWidths[j]
                                     - visibleColumns.get(j).getWidth());
                         }
@@ -408,16 +436,11 @@ public class TableViewManager<S> {
                 });
 
                 /* save the column widths for next time after fully initialized */
-                if (isFullyInitialized) {
+                if (packCounter.get() > 0) {
                     saveColumnWidths();
                 }
 
                 installColumnListeners();
-
-                /* set the initialization flag */
-                if (!isFullyInitialized) {
-                    isFullyInitialized = true;
-                }
             });
         });
     }

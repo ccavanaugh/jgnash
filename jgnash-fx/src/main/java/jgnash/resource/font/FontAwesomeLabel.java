@@ -180,6 +180,7 @@ public class FontAwesomeLabel extends Label {
         SIGN_OUT("\uf08b"),
         STEP_BACKWARD("\uf048"),
         STEP_FORWARD("\uf051"),
+        TABLE("\uf0ce"),
         TERMINAL("\uf120"),
         TEXT_HEIGHT("\uf034"),
         TRASH_O("\uf014"),

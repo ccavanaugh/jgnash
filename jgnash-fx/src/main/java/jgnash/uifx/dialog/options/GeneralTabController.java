@@ -51,6 +51,9 @@ public class GeneralTabController {
     private CheckBox selectOnFocusCheckBox;
 
     @FXML
+    private CheckBox autoPackRegisterTableCheckBox;
+
+    @FXML
     private ToggleGroup toggleGroup;
 
     @FXML
@@ -58,6 +61,8 @@ public class GeneralTabController {
         selectOnFocusCheckBox.selectedProperty().bindBidirectional(Options.selectOnFocusProperty());
         animationsEnabledCheckBox.selectedProperty().bindBidirectional(Options.animationsEnabledProperty());
         filterRegexEnabledCheckBox.selectedProperty().bindBidirectional(Options.regexForFiltersProperty());
+
+        autoPackRegisterTableCheckBox.selectedProperty().bindBidirectional(Options.autoPackTablesProperty());
 
         switch (Options.buttonOrderProperty().get()) {
             case ButtonBar.BUTTON_ORDER_LINUX:

@@ -55,6 +55,14 @@
                     <Tooltip text="%ToolTip.PrintRegRep"/>
                 </tooltip>
             </Button>
+            <Button text="%Button.Resize" fx:id="packColumnsButton" onAction="#handleTableColumnPack">
+                <graphic>
+                    <FontAwesomeLabel glyphName="TABLE"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ToolTip.ResizeColumns"/>
+                </tooltip>
+            </Button>
         </ToolBar>
     </top>
     <center>

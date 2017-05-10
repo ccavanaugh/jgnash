@@ -39,6 +39,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.AbstractAccountTreeController;
 import jgnash.uifx.report.ReportActions;
 import jgnash.uifx.skin.StyleClass;
@@ -71,6 +72,9 @@ public class RegisterViewController {
 
     @FXML
     private Button zoomButton;
+
+    @FXML
+    private Button packColumnsButton;
 
     @FXML
     private TreeView<Account> treeView;
@@ -133,6 +137,10 @@ public class RegisterViewController {
 
         // Restore divider location
         splitPane.setDividerPosition(0, preferences.getDouble(DIVIDER_POSITION, DEFAULT_DIVIDER_POSITION));
+
+        // Enable / disable the pack columns button
+        packColumnsButton.visibleProperty().bind(Options.autoPackTablesProperty().not());
+        packColumnsButton.disableProperty().bind(Options.autoPackTablesProperty());
 
         restoreLastSelectedAccount();
     }
@@ -223,8 +231,13 @@ public class RegisterViewController {
     }
 
     @FXML
-    private  void handleAccountReport() {
+    private void handleAccountReport() {
         ReportActions.displayAccountRegisterReport(registerPaneController.accountProperty().get());
+    }
+
+    @FXML
+    private void handleTableColumnPack() {
+        registerPaneController.registerTableController.get().manuallyPackTable();
     }
 
     private static final class DisabledTreeCell extends TreeCell<Account> {

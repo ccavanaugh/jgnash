@@ -268,6 +268,7 @@ abstract class RegisterTableController {
         tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());
         tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         tableViewManager.setDefaultColumnVisibilityFactory(getColumnVisibilityFactory());
+        tableViewManager.manualColumnPackingProperty().bind(Options.autoPackTablesProperty().not());
 
         buildTable();
 
@@ -338,6 +339,10 @@ abstract class RegisterTableController {
                 tableView.scrollTo(observableTransactions.size());  // scroll to the end of the table
             });
         }
+    }
+
+    void manuallyPackTable() {
+        tableViewManager.packTable();
     }
 
     List<Transaction> getSelectedTransactions() {
