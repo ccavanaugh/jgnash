@@ -165,6 +165,7 @@ public class FontAwesomeLabel extends Label {
         LEVEL_UP("\uf148"),
         LINK("\uf0c1"),
         LIST("\uf03a"),
+        LONG_ARROW_RIGHT("\uf178"),
         FOLDER_OPEN("\uf07c"),
         MINUS_CIRCLE("\uf056"),
         MONEY("\uf0d6"),
@@ -183,6 +184,7 @@ public class FontAwesomeLabel extends Label {
         TABLE("\uf0ce"),
         TERMINAL("\uf120"),
         TEXT_HEIGHT("\uf034"),
+        TIMES("\uf00d"),
         TRASH_O("\uf014"),
         UNLINK("\uf127"),
         WRENCH("\uf0ad");
