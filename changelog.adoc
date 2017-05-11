@@ -23,6 +23,10 @@ WANTS
 
 Release 2.31.0
 --------------
+* 05/11/17 Fixed missing icons for the currency exchange rate dialog. (Fx)
+
+Release 2.31.0
+--------------
 * 05/10/17 Added a General configuration option to allow full manual control of table column widths. (Fx)
 * 05/10/17 The Options dialog now remembers the last tab that was used. (Fx)
 * 05/08/17 Corrected handling of OFX files written with a windows-1252 character set. (Swing, Fx)
