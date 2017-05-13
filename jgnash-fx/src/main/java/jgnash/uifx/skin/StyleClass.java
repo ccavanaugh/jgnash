@@ -54,4 +54,6 @@ public class StyleClass {
     public static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
 
     public static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
+
+    public static final String POP_OVER_BUTTON_CSS = "jgnash/skin/popOverButton.css";
 }

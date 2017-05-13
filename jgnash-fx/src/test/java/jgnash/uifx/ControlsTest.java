@@ -44,10 +44,11 @@ import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
+import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.control.DetailedDecimalTextField;
+import jgnash.uifx.control.PopOverButton;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TextFieldEx;
 import jgnash.uifx.control.TimePeriodComboBox;
@@ -128,12 +129,13 @@ public class ControlsTest extends Application {
 
         SecurityComboBox securityComboBox = new SecurityComboBox();
 
-        DetailedDecimalTextField feesField = new DetailedDecimalTextField();
-
         TextFieldEx textFieldEx = new TextFieldEx();
 
+        PopOverButton popOverButton = new PopOverButton(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCHANGE));
+        popOverButton.setContentNode(new DecimalTextField());
+
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, feesField, new TimePeriodComboBox(), textFieldEx);
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, new TimePeriodComboBox(), textFieldEx, popOverButton);
 
         primaryStage.setScene(new Scene(vBox, 300, 420));
 

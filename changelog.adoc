@@ -23,6 +23,7 @@ WANTS
 
 Release 2.31.0
 --------------
+* 05/13/17 Reworked exchange rate popup because display quality was inconsistent when first shown. (Fx)
 * 05/11/17 Fixed missing icons for the currency exchange rate dialog. (Fx)
 
 Release 2.31.0

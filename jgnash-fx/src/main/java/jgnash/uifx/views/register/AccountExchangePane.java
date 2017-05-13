@@ -17,7 +17,9 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.application.Platform;
+import java.io.IOException;
+import java.math.BigDecimal;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,21 +27,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.MathConstants;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.views.main.MainView;
+import jgnash.uifx.control.PopOverButton;
 import jgnash.util.ResourceUtils;
-import org.controlsfx.control.PopOver;
-
-import java.io.IOException;
-import java.math.BigDecimal;
 
 /**
  * Controller for handling the exchange of currencies.
@@ -58,13 +56,10 @@ public class AccountExchangePane extends GridPane {
     private DecimalTextField exchangeRateField;
 
     @FXML
-    private Button expandButton;
+    private PopOverButton expandButton;
 
     @FXML
     private Label label;
-
-    @FXML
-    private PopOver popOver;
 
     @FXML
     private Label exchangeLabel;
@@ -117,10 +112,6 @@ public class AccountExchangePane extends GridPane {
 
     @FXML
     private void initialize() {
-        popOver.detachableProperty().set(false);
-
-        // popover needs a bit of extra help for styling
-        popOver.getRoot().getStylesheets().addAll(MainView.DEFAULT_CSS);
 
         accountCombo.disableProperty().bind(disableProperty());
         expandButton.disableProperty().bind(disableProperty());
@@ -160,7 +151,10 @@ public class AccountExchangePane extends GridPane {
 
         selectedAccountProperty().bindBidirectional(accountCombo.valueProperty());
 
-        expandButton.setOnAction(event -> handleExpandButton());
+        // update the exchange label text
+        expandButton.focusedProperty().addListener((observable, oldValue, newValue)
+                -> exchangeLabel.setText(CommodityFormat.getConversion(baseCurrency.get(),
+                accountCombo.getValue().getCurrencyNode())));
 
         exchangeAmount.bindBidirectional(exchangeAmountField.decimalProperty());
 
@@ -231,8 +225,6 @@ public class AccountExchangePane extends GridPane {
                         MathConstants.roundingMode));
             }
         }
-
-        Platform.runLater(popOver::hide);
     }
 
     private void exchangeAmountFieldAction() {
@@ -261,17 +253,6 @@ public class AccountExchangePane extends GridPane {
                     getChildren().addAll(label, exchangeAmountField, expandButton);
                 }
             }
-        }
-    }
-
-    private void handleExpandButton() {
-        if (popOver.isShowing()) {
-            popOver.hide();
-        } else {
-            // update the label before the popover is shown
-            exchangeLabel.setText(CommodityFormat.getConversion(baseCurrency.get(),
-                    accountCombo.getValue().getCurrencyNode()));
-            popOver.show(expandButton);
         }
     }
 
