@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,7 +34,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
- * Simple implementation of a FontAwesome based icon.  This scales well with font size changes and is good for use
+ * Simple implementation of a FontAwesome based icon.  This scales well with font sizeProperty changes and is good for use
  * in table cells
  *
  * @author Craig Cavanaugh
@@ -50,7 +51,8 @@ public class FontAwesomeLabel extends Label {
     }
 
     private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
-    private final SimpleDoubleProperty size = new SimpleDoubleProperty(DEFAULT_SIZE);
+
+    private final DoubleProperty sizeProperty = new SimpleDoubleProperty(DEFAULT_SIZE);
 
     @SuppressWarnings("unused")
     public FontAwesomeLabel() {
@@ -67,12 +69,14 @@ public class FontAwesomeLabel extends Label {
 
     public FontAwesomeLabel(final FAIcon glyphValue, final Double sizeValue, Paint paint) {
 
+        sizeProperty.set(sizeValue);
+
         final StringExpression iconStyleProperty = Bindings.format(Locale.US,
                 "-fx-font-family: FontAwesome; -fx-font-size: %1$.6f;",
-                ThemeManager.fontScaleProperty().multiply(sizeValue));
+                ThemeManager.fontScaleProperty().multiply(sizeProperty));
 
         setGlyphName(glyphValue);
-        size.set(sizeValue);
+
         styleProperty().bind(iconStyleProperty);
 
         if (paint != null) {
@@ -82,6 +86,19 @@ public class FontAwesomeLabel extends Label {
         }
 
         getStylesheets().addAll(MainView.DEFAULT_CSS);
+    }
+
+    /**
+     * Unbinds and changes the color of the icon
+     *
+     * @param value new color
+     */
+    public void setColor(final Paint value) {
+        if (textFillProperty().isBound()) { //unbind if needed
+            textFillProperty().unbind();
+        }
+
+        setTextFill(value);
     }
 
     public Object getGlyphName() {
@@ -112,11 +129,11 @@ public class FontAwesomeLabel extends Label {
     }
 
     public Double getSize() {
-        return size.getValue();
+        return sizeProperty.getValue();
     }
 
     public void setSize(final Double value) {
-        size.set(value);
+        sizeProperty.set(value);
     }
 
     private String getUnicode(final String string) {
