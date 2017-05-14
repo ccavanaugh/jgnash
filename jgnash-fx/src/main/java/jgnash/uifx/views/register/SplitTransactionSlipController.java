@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.views.register;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+
 import jgnash.engine.TransactionEntry;
 
 /**
@@ -26,10 +29,20 @@ import jgnash.engine.TransactionEntry;
  */
 public class SplitTransactionSlipController extends AbstractTransactionEntrySlipController {
 
+    @FXML
+    private Button enterButton;
+
     private SlipType slipType;
 
     void setSlipType(final SlipType slipType) {
         this.slipType = slipType;
+    }
+
+    @FXML
+    protected void initialize() {
+        super.initialize();
+
+        enterButton.disableProperty().bind(amountField.textProperty().isEmpty());
     }
 
     @Override

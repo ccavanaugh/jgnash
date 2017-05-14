@@ -45,7 +45,7 @@
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
         <ButtonBar GridPane.columnIndex="1">
             <buttons>
-                <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
+                <Button text="%Button.Enter" fx:id="enterButton" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
                 <Button text="%Button.Clear" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
             </buttons>
         </ButtonBar>

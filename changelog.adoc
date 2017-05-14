@@ -23,6 +23,7 @@ WANTS
 
 Release 2.31.0
 --------------
+* 05/14/17 The Enter button should be disabled if the form is not valid for split entries. (Fx)
 * 05/13/17 Reworked exchange rate popup because display quality was inconsistent when first shown. (Fx)
 * 05/11/17 Fixed missing icons for the currency exchange rate dialog. (Fx)
 

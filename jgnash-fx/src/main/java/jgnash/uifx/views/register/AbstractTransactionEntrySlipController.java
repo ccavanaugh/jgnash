@@ -38,7 +38,6 @@ import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
 /**
@@ -81,7 +80,7 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
     TransactionEntry oldEntry;
 
     @FXML
-    private void initialize() {
+    protected void initialize() {
         if (buttonBar != null) {
             buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
         }
@@ -125,12 +124,7 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
     }
 
     public boolean validateForm() {
-        if (amountField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
-            ValidationFactory.showValidationError(amountField, resources.getString("Message.Error.Value"));
-            return false;
-        }
-
-        return true;
+        return amountField.getDecimal().compareTo(BigDecimal.ZERO) != 0;
     }
 
     public void clearForm() {
