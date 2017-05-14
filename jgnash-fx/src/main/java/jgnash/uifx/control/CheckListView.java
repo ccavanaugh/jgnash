@@ -74,7 +74,7 @@ public class CheckListView<T> extends ListView<T> {
         }
     }
 
-    public void toogleAll() {
+    public void toggleAll() {
         for (final T item : getItems()) {
             getItemBooleanProperty(item).set(!getItemBooleanProperty(item).get());
         }

@@ -142,7 +142,7 @@ public class HistoricalImportController {
 
     @FXML
     private void handleInvertSelectionAction() {
-        checkListView.toogleAll();
+        checkListView.toggleAll();
     }
 
     @FXML
