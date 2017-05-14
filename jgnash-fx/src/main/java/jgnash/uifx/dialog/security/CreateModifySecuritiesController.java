@@ -47,7 +47,6 @@ import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.control.QuoteSourceComboBox;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -59,6 +58,9 @@ public class CreateModifySecuritiesController implements MessageListener {
 
     @InjectFXML
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
+
+    @FXML
+    private Button applyButton;
 
     @FXML
     private Button deleteButton;
@@ -99,20 +101,12 @@ public class CreateModifySecuritiesController implements MessageListener {
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 
-       new Thread(this::loadList).start();
-    }
+        // disable button if the symbol or scale are not specified.
+        applyButton.disableProperty()
+                .bind(symbolTextField.textProperty().isEmpty()
+                        .or(scaleTextField.textProperty().isEmpty()));
 
-    private boolean validateForm() {
-        if (symbolTextField.getText() == null || scaleTextField.getText().isEmpty()) {
-            scaleTextField.setInteger((int) reportedCurrencyComboBox.getValue().getScale()); // force to something valid
-        }
-
-        if (symbolTextField.getText() == null || symbolTextField.getText().isEmpty()) {
-            ValidationFactory.showValidationError(symbolTextField, resources.getString("Message.Error.MissingSymbol"));
-            return false;
-        }
-
-        return true;
+        new Thread(this::loadList).start();
     }
 
     private SecurityNode buildSecurityNode() {
@@ -188,29 +182,33 @@ public class CreateModifySecuritiesController implements MessageListener {
 
     @FXML
     private void handleApplyAction() {
-        if (validateForm()) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
 
-            final SecurityNode newNode = buildSecurityNode();
-
-            if (selectedSecurityNode.get() != null) {
-                if (!engine.updateCommodity(selectedSecurityNode.get(), newNode)) {
-                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityUpdate",
-                            newNode.getSymbol()));
-                }
-            } else {
-                if (!engine.addSecurity(newNode)) {
-                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityAdd", newNode.getSymbol()));
-                }
-            }
-            clearForm();
+        // always ensure a positive scale is entered
+        if (scaleTextField.getInteger() <= 0) {
+            scaleTextField.setInteger((int)reportedCurrencyComboBox.getValue().getScale());
         }
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final SecurityNode newNode = buildSecurityNode();
+
+        if (selectedSecurityNode.get() != null) {
+            if (!engine.updateCommodity(selectedSecurityNode.get(), newNode)) {
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityUpdate",
+                        newNode.getSymbol()));
+            }
+        } else {
+            if (!engine.addSecurity(newNode)) {
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityAdd", newNode.getSymbol()));
+            }
+        }
+        clearForm();
     }
 
     @FXML
     private void handleCloseAction() {
-        ((Stage)parent.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @Override
