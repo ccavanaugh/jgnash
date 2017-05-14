@@ -42,7 +42,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
     protected void initialize() {
         super.initialize();
 
-        enterButton.disableProperty().bind(amountField.textProperty().isEmpty());
+        enterButton.disableProperty().bind(validFormProperty().not());
     }
 
     @Override

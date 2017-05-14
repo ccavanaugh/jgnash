@@ -20,6 +20,7 @@ package jgnash.uifx.views.register;
 import java.util.Objects;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
@@ -39,6 +40,9 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  */
 public class InvestmentRegisterPaneController extends RegisterPaneController {
+
+    @FXML
+    private Button enterButton;
 
     @FXML
     private ButtonBar buttonBar;
@@ -64,6 +68,12 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
         investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);
         investmentSlipManager.accountProperty().bind(accountProperty());
+
+        actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                enterButton.disableProperty().bind(newValue.getController().validFormProperty().not());
+            }
+        });
     }
 
     @FXML

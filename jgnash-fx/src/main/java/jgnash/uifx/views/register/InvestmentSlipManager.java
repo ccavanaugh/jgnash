@@ -38,7 +38,7 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * Abstract container for investment transaction forms.
+ * Manager for investment transaction forms.
  */
 class InvestmentSlipManager {
     private final ComboBox<SlipControllerContainer> actionComboBox;

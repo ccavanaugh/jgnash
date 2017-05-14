@@ -18,6 +18,7 @@
 package jgnash.uifx.views.register;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
@@ -41,11 +42,11 @@ interface BaseSlip {
     void handleEnterAction();
 
     /**
-     * Validates the form.
+     * Observable value indicating true if the form entry is valid.  Entry acceptance should be bound to this property.
      *
-     * @return return {@code true} if the form entry is valid, {@code false} otherwise
+     * @return boolean property
      */
-    boolean validateForm();
+    BooleanProperty validFormProperty();
 
     @NotNull
     CheckBox getReconcileButton();
@@ -86,7 +87,7 @@ interface BaseSlip {
             if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
                 clearForm();
             } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
-                if (validateForm()) {
+                if (validFormProperty().get()) {
                     Platform.runLater(BaseSlip.this::handleEnterAction);
                 } else {
                     Platform.runLater(() -> {

@@ -26,7 +26,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
@@ -49,7 +52,6 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
 /**
@@ -102,6 +104,8 @@ abstract class AbstractSlipController implements Slip {
     @FXML
     ResourceBundle resources;
 
+    final BooleanProperty validFormProperty = new SimpleBooleanProperty();
+
     @FXML
     public void initialize() {
 
@@ -142,6 +146,13 @@ abstract class AbstractSlipController implements Slip {
 
         // Install an event handler when the parent has been set via injection
         parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
+
+        validFormProperty.bind(Bindings.notEqual(0, amountField.lengthProperty()));
+    }
+
+    @Override
+    public BooleanProperty validFormProperty() {
+        return validFormProperty;
     }
 
     @Override
@@ -200,53 +211,51 @@ abstract class AbstractSlipController implements Slip {
     @FXML
     @Override
     public void handleEnterAction() {
-        if (validateForm()) {
-            if (modTrans == null) { // new transaction
-                Transaction newTrans = buildTransaction();
+        if (modTrans == null) { // new transaction
+            Transaction newTrans = buildTransaction();
 
-                ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
+            ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
 
-                newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
+            newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
 
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                if (engine != null) {
-                    if (!engine.addTransaction(newTrans)) {
-                        StaticUIMethods.displayError(resources.getString("Message.Error.TranAddFail"));
-                    }
+            if (engine != null) {
+                if (!engine.addTransaction(newTrans)) {
+                    StaticUIMethods.displayError(resources.getString("Message.Error.TranAddFail"));
                 }
-            } else {
-                Transaction newTrans = buildTransaction();
+            }
+        } else {
+            Transaction newTrans = buildTransaction();
 
-                // restore the reconciled state of the previous old transaction
-                for (final Account a : modTrans.getAccounts()) {
-                    if (!a.equals(account.get())) {
-                        ReconcileManager.reconcileTransaction(a, newTrans, modTrans.getReconciled(a));
-                    }
+            // restore the reconciled state of the previous old transaction
+            for (final Account a : modTrans.getAccounts()) {
+                if (!a.equals(account.get())) {
+                    ReconcileManager.reconcileTransaction(a, newTrans, modTrans.getReconciled(a));
                 }
+            }
 
                 /*
                  * Reconcile the modified transaction for this account.
                  * This must be performed last to ensure consistent results per the ReconcileManager rules
                  */
-                ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
+            ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
 
-                newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
+            newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
 
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                if (engine != null && engine.removeTransaction(modTrans)) {
-                    engine.addTransaction(newTrans);
-                }
+            if (engine != null && engine.removeTransaction(modTrans)) {
+                engine.addTransaction(newTrans);
             }
-
-            clearForm();
-            focusFirstComponent();
         }
+
+        clearForm();
+        focusFirstComponent();
     }
 
     /**
-     *  Focuses the first component the user will interact with.
+     * Focuses the first component the user will interact with.
      */
     void focusFirstComponent() {
         if (payeeTextField != null) {
@@ -318,21 +327,5 @@ abstract class AbstractSlipController implements Slip {
         t.setAttachment(null);
 
         return t;
-    }
-
-    @Override
-    public boolean validateForm() {
-        if (payeeTextField != null) {   // transfer slips do not use the payee field
-            if (payeeTextField.getText() == null || payeeTextField.getText().isEmpty()) {
-                ValidationFactory.showValidationWarning(payeeTextField, resources.getString("Message.Warn.EmptyPayee"));
-            }
-        }
-
-        if (amountField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
-            ValidationFactory.showValidationError(amountField, resources.getString("Message.Error.Value"));
-            return false;
-        }
-
-        return true;
     }
 }

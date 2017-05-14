@@ -91,6 +91,12 @@ class InvestmentTransactionDialog extends Stage {
 
         investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);
         investmentSlipManager.accountProperty().bind(accountProperty());
+
+        actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                enterButton.disableProperty().bind(newValue.getController().validFormProperty().not());
+            }
+        });
     }
 
     private void setTransactionConsumer(final Consumer<Transaction> consumer) {
@@ -101,11 +107,8 @@ class InvestmentTransactionDialog extends Stage {
     private void handleEnterAction() {
         final Slip controller = actionComboBox.getSelectionModel().getSelectedItem().getController();
 
-        if (controller.validateForm()) {
-            transactionConsumer.get().accept(controller.buildTransaction());
-
-            transactionSlips.getScene().getWindow().hide();
-        }
+        transactionConsumer.get().accept(controller.buildTransaction());
+        transactionSlips.getScene().getWindow().hide();
     }
 
     @FXML

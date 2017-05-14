@@ -42,7 +42,6 @@ import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
 /**
@@ -52,31 +51,27 @@ import jgnash.util.NotNull;
  */
 public class SlipController extends AbstractSlipController {
 
-    @FXML
-    protected Button cancelButton;
-
-    @FXML
-    protected Button enterButton;
-
-    @FXML
-    private Button splitsButton;
-
-    @FXML
-    private AccountExchangePane accountExchangePane;
-
     private final SimpleListProperty<TransactionEntry> transactionEntries =
             new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    private SlipType slipType;
-
     private final SimpleObjectProperty<TransactionEntry> modEntry = new SimpleObjectProperty<>();
-
     private final BooleanProperty concatenated = new SimpleBooleanProperty();
+    @FXML
+    protected Button cancelButton;
+    @FXML
+    protected Button enterButton;
+    @FXML
+    private Button splitsButton;
+    @FXML
+    private AccountExchangePane accountExchangePane;
+    private SlipType slipType;
 
     @FXML
     @Override
     public void initialize() {
         super.initialize();
+
+        validFormProperty.bind(amountField.textProperty().isNotEmpty()
+                .and(Bindings.isNotNull(accountExchangePane.selectedAccountProperty())));
 
         // Bind necessary properties to the exchange panel
         accountExchangePane.baseAccountProperty().bind(accountProperty());
@@ -85,8 +80,7 @@ public class SlipController extends AbstractSlipController {
 
         // Bind the enter button, effectively negates the need for validation
         if (enterButton != null) {  // enter button may not have been initialized if used for an investment slip
-            enterButton.disableProperty().bind(Bindings.or(amountField.textProperty().isEmpty(),
-                    accountExchangePane.selectedAccountProperty().isNull()));
+            enterButton.disableProperty().bind(validFormProperty.not());
         }
 
         amountField.editableProperty().bind(transactionEntries.emptyProperty());
@@ -131,18 +125,6 @@ public class SlipController extends AbstractSlipController {
                 logger.warning("Was not able to modify the transaction");
             }
         }
-    }
-
-    @Override
-    public boolean validateForm() {
-        boolean result = super.validateForm();
-
-        if (accountExchangePane.getSelectedAccount() == null) {
-            ValidationFactory.showValidationError(accountExchangePane, resources.getString("Message.Error.Value"));
-            result = false;
-        }
-
-        return result;
     }
 
     @NotNull
@@ -369,40 +351,37 @@ public class SlipController extends AbstractSlipController {
 
     @Override
     public void handleEnterAction() {
-        if (validateForm()) {
-            if (modEntry.get() != null && modTrans != null) {
-                try {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
+        if (modEntry.get() != null && modTrans != null) {
+            try {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
-                    // clone the transaction
-                    final Transaction t = (Transaction) modTrans.clone();
+                // clone the transaction
+                final Transaction t = (Transaction) modTrans.clone();
 
-                    // remove the modifying entry from the clone
-                    t.removeTransactionEntry(modEntry.get());
+                // remove the modifying entry from the clone
+                t.removeTransactionEntry(modEntry.get());
 
-                    // generate new TransactionEntry
-                    final TransactionEntry e = buildTransactionEntry();
+                // generate new TransactionEntry
+                final TransactionEntry e = buildTransactionEntry();
 
-                    // add it to the clone
-                    t.addTransactionEntry(e);
+                // add it to the clone
+                t.addTransactionEntry(e);
 
-                    ReconcileManager.reconcileTransaction(account.get(), t, getReconciledState());
+                ReconcileManager.reconcileTransaction(account.get(), t, getReconciledState());
 
-                    if (engine.removeTransaction(modTrans)) {
-                        engine.addTransaction(t);
-                    }
-
-                    clearForm();
-                    focusFirstComponent();
-                } catch (CloneNotSupportedException e) {
-                    Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                if (engine.removeTransaction(modTrans)) {
+                    engine.addTransaction(t);
                 }
-            } else {
-                super.handleEnterAction();
-            }
-        }
 
+                clearForm();
+                focusFirstComponent();
+            } catch (CloneNotSupportedException e) {
+                Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        } else {
+            super.handleEnterAction();
+        }
     }
 
     @FXML

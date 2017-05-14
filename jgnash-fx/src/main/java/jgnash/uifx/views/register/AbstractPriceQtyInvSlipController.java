@@ -19,8 +19,8 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.logging.Logger;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 
 import jgnash.engine.MathConstants;
@@ -31,8 +31,6 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
-import jgnash.uifx.util.ValidationFactory;
-import jgnash.uifx.views.main.MainView;
 
 /**
  * Base Investment Slip controller.
@@ -62,8 +60,6 @@ abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipControll
     @FXML
     DecimalTextField totalField;
 
-    private static final Logger logger = MainView.getLogger();
-
     @FXML
     public void initialize() {
         super.initialize();
@@ -83,6 +79,11 @@ abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipControll
         });
 
         securityComboBox.accountProperty().bind(account);
+
+        validFormProperty.bind(Bindings
+                .isNotNull(securityComboBox.valueProperty())
+                .and(totalField.textProperty().isNotEmpty())
+        );
     }
 
     @Override
@@ -103,30 +104,5 @@ abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipControll
         priceField.setDecimal(BigDecimal.ZERO);
         quantityField.setDecimal(BigDecimal.ZERO);
         totalField.setDecimal(BigDecimal.ZERO);
-    }
-
-    @Override
-    public boolean validateForm() {
-        boolean result = true;
-
-        if (securityComboBox.getValue() == null) {
-            logger.warning(resources.getString("Message.Error.SecuritySelection"));
-            ValidationFactory.showValidationError(securityComboBox, resources.getString("Message.Error.SecuritySelection"));
-            result = false;
-        }
-
-        if (priceField.getLength() == 0) {
-            logger.warning(resources.getString("Message.Error.SecurityPrice"));
-            ValidationFactory.showValidationError(priceField, resources.getString("Message.Error.SecurityPrice"));
-            result = false;
-        }
-
-        if (quantityField.getLength() == 0) {
-            logger.warning(resources.getString("Message.Error.SecurityQuantity"));
-            ValidationFactory.showValidationError(quantityField, resources.getString("Message.Error.SecurityQuantity"));
-            result = false;
-        }
-
-        return result;
     }
 }

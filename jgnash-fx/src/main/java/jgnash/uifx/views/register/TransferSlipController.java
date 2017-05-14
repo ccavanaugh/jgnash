@@ -44,6 +44,9 @@ public class TransferSlipController extends AbstractSlipController {
     public void initialize() {
         super.initialize();
 
+        validFormProperty.bind(amountField.textProperty().isNotEmpty()
+                .and(Bindings.isNotNull(accountExchangePane.selectedAccountProperty())));
+
         // Bind necessary properties to the exchange panel
         accountExchangePane.baseAccountProperty().bind(accountProperty());
         accountExchangePane.amountProperty().bindBidirectional(amountField.decimalProperty());
@@ -51,8 +54,7 @@ public class TransferSlipController extends AbstractSlipController {
 
         numberComboBox.setValue(resources.getString("Item.Trans"));
 
-        enterButton.disableProperty().bind(Bindings.or(amountField.textProperty().isEmpty(),
-                accountExchangePane.selectedAccountProperty().isNull()));
+        enterButton.disableProperty().bind(validFormProperty.not());
     }
 
     @NotNull

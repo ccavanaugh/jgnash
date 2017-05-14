@@ -23,7 +23,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -77,6 +79,8 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
 
     private final ObjectProperty<Comparator<TransactionEntry>> comparator = new SimpleObjectProperty<>();
 
+    final BooleanProperty validFormProperty = new SimpleBooleanProperty();
+
     TransactionEntry oldEntry;
 
     @FXML
@@ -97,6 +101,13 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
 
         // Install an event handler when the parent has been set via injection
         parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
+
+        validFormProperty.bind(amountField.textProperty().isNotEmpty());
+    }
+
+    @Override
+    public BooleanProperty validFormProperty() {
+        return validFormProperty;
     }
 
     @Override
@@ -123,10 +134,6 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
         return account.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
 
-    public boolean validateForm() {
-        return amountField.getDecimal().compareTo(BigDecimal.ZERO) != 0;
-    }
-
     public void clearForm() {
         oldEntry = null;
 
@@ -141,24 +148,23 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
 
     @FXML
     public void handleEnterAction() {
-        if (validateForm()) {
-            final TransactionEntry entry = buildTransactionEntry();
 
-            final List<TransactionEntry> entries = transactionEntryList.get();
+        final TransactionEntry entry = buildTransactionEntry();
 
-            if (oldEntry != null) {
-                entries.remove(oldEntry);
-            }
+        final List<TransactionEntry> entries = transactionEntryList.get();
 
-            final int index = Collections.binarySearch(entries, entry, comparator.get());
-
-            if (index < 0) {
-                entries.add(-index - 1, entry);
-            }
-
-            clearForm();
-            memoField.requestFocus();
+        if (oldEntry != null) {
+            entries.remove(oldEntry);
         }
+
+        final int index = Collections.binarySearch(entries, entry, comparator.get());
+
+        if (index < 0) {
+            entries.add(-index - 1, entry);
+        }
+
+        clearForm();
+        memoField.requestFocus();
     }
 
     @FXML

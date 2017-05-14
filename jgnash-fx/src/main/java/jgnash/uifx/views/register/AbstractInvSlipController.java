@@ -20,7 +20,9 @@ package jgnash.uifx.views.register;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -62,6 +64,8 @@ abstract class AbstractInvSlipController implements Slip {
         return account;
     }
 
+    final BooleanProperty validFormProperty = new SimpleBooleanProperty();
+
     void initialize() {
 
         // Needed to support tri-state capability
@@ -79,6 +83,11 @@ abstract class AbstractInvSlipController implements Slip {
     }
 
     @Override
+    public BooleanProperty validFormProperty() {
+        return validFormProperty;
+    }
+
+    @Override
     @NotNull
     public CheckBox getReconcileButton() {
         return reconciledButton;
@@ -86,35 +95,33 @@ abstract class AbstractInvSlipController implements Slip {
 
     @Override
     public void handleEnterAction() {
-        if (validateForm()) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            Objects.requireNonNull(engine);
+        Objects.requireNonNull(engine);
 
-            if (modTrans == null) {
-                final Transaction newTrans = buildTransaction();
+        if (modTrans == null) {
+            final Transaction newTrans = buildTransaction();
 
-                // Need to set the reconciled state
-                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, getReconciledState());
+            // Need to set the reconciled state
+            ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, getReconciledState());
 
-                engine.addTransaction(newTrans);
-            } else {
-                final Transaction newTrans = buildTransaction();
+            engine.addTransaction(newTrans);
+        } else {
+            final Transaction newTrans = buildTransaction();
 
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
                  */
-                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, getReconciledState());
+            ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, getReconciledState());
 
-                if (engine.isTransactionValid(newTrans)) {
-                    if (engine.removeTransaction(modTrans)) {
-                        engine.addTransaction(newTrans);
-                    }
+            if (engine.isTransactionValid(newTrans)) {
+                if (engine.removeTransaction(modTrans)) {
+                    engine.addTransaction(newTrans);
                 }
             }
-            clearForm();
-            focusFirstComponent();
         }
+        clearForm();
+        focusFirstComponent();
     }
 
     @Override

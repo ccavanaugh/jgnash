@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 
 import jgnash.engine.AbstractInvestmentTransactionEntry;
@@ -35,7 +36,6 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
-import jgnash.uifx.util.ValidationFactory;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
@@ -91,6 +91,11 @@ public abstract class AbstractInvIncomeSlipController extends AbstractInvSlipCon
         });
 
         securityComboBox.accountProperty().bind(account);
+
+        validFormProperty.bind(Bindings
+                .isNotNull(securityComboBox.valueProperty())
+                .and(decimalTextField.textProperty().isNotEmpty())
+        );
     }
 
     @Override
@@ -153,24 +158,5 @@ public abstract class AbstractInvIncomeSlipController extends AbstractInvSlipCon
 
         accountExchangePane.setSelectedAccount(accountProperty().get());
         incomeExchangePane.setSelectedAccount(accountProperty().get());
-    }
-
-    @Override
-    public boolean validateForm() {
-        if (securityComboBox.getValue() == null) {
-            logger.warning(resources.getString("Message.Error.SecuritySelection"));
-            ValidationFactory.showValidationError(securityComboBox,
-                    resources.getString("Message.Error.SecuritySelection"));
-            return false;
-        }
-
-        if (decimalTextField.getLength() == 0) {
-            logger.warning(resources.getString("Message.Error.DividendValue"));
-            ValidationFactory.showValidationError(decimalTextField,
-                    resources.getString("Message.Error.DividendValue"));
-            return false;
-        }
-
-        return true;
     }
 }

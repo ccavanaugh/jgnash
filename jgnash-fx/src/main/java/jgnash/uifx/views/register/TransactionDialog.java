@@ -127,11 +127,8 @@ public class TransactionDialog extends Stage {
     }
 
     private void handleEnterAction(final SlipController controller) {
-        if (controller.validateForm()) {
-            transactionConsumer.get().accept(controller.buildTransaction());
-
-            tabPane.getScene().getWindow().hide();
-        }
+        transactionConsumer.get().accept(controller.buildTransaction());
+        tabPane.getScene().getWindow().hide();
     }
 
     private void setTransaction(final Transaction transaction) {

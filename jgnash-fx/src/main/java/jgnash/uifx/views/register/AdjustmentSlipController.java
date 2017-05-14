@@ -53,7 +53,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
     public void initialize() {
         super.initialize();
 
-        enterButton.disableProperty().bind(amountField.textProperty().isEmpty());
+        enterButton.disableProperty().bind(validFormProperty.not());
     }
 
     @NotNull
