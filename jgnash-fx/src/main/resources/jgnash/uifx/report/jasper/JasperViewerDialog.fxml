@@ -7,18 +7,19 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import jgnash.resource.font.FontAwesomeLabel?>
-<?import org.controlsfx.control.SegmentedButton?>
 
 <StackPane fx:id="stackPane" fx:controller="jgnash.uifx.report.jasper.JasperViewerDialogController"
            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <fx:define>
         <DropShadow fx:id="dropShadow" color="grey" offsetX="2" offsetY="2" blurType="ONE_PASS_BOX"/>
+        <ToggleGroup fx:id="toggleGroup"/>
     </fx:define>
     <BorderPane>
         <top>
@@ -89,25 +90,23 @@
                             </graphic>
                         </Button>
                         <Separator/>
-                        <SegmentedButton>
-                            <buttons>
-                                <ToggleButton fx:id="fitPageButton" onAction="#handleActualSizeAction">
-                                    <graphic>
-                                        <FontAwesomeLabel glyphName="ARROWS"/>
-                                    </graphic>
-                                </ToggleButton>
-                                <ToggleButton fx:id="fitHeightButton" onAction="#handleFitHeightAction">
-                                    <graphic>
-                                        <FontAwesomeLabel glyphName="ARROWS_V"/>
-                                    </graphic>
-                                </ToggleButton>
-                                <ToggleButton fx:id="fitWidthButton" onAction="#handleFitPageWidthAction">
-                                    <graphic>
-                                        <FontAwesomeLabel glyphName="ARROWS_H"/>
-                                    </graphic>
-                                </ToggleButton>
-                            </buttons>
-                        </SegmentedButton>
+
+                        <ToggleButton fx:id="fitPageButton" onAction="#handleActualSizeAction" toggleGroup="$toggleGroup">
+                            <graphic>
+                                <FontAwesomeLabel glyphName="ARROWS"/>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="fitHeightButton" onAction="#handleFitHeightAction" toggleGroup="$toggleGroup">
+                            <graphic>
+                                <FontAwesomeLabel glyphName="ARROWS_V"/>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="fitWidthButton" onAction="#handleFitPageWidthAction" toggleGroup="$toggleGroup">
+                            <graphic>
+                                <FontAwesomeLabel glyphName="ARROWS_H"/>
+                            </graphic>
+                        </ToggleButton>
+
                     </ToolBar>
                 </top>
                 <center>
