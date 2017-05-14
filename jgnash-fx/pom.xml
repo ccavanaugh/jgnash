@@ -32,16 +32,6 @@
             <artifactId>jgnash-plugin</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.controlsfx</groupId>
-                    <artifactId>openjfx-dialogs</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
         </dependency>

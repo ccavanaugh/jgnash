@@ -54,7 +54,6 @@
         <plexus-utils.version>3.0.10</plexus-utils.version>
         <opencsv.version>3.8</opencsv.version>
         <netty.version>4.1.10.Final</netty.version>
-        <controlsfx.version>8.40.12</controlsfx.version>
         <jopt-simple.version>5.0.3</jopt-simple.version>
     </properties>
 
@@ -172,11 +171,6 @@
                 <groupId>net.sf.jopt-simple</groupId>
                 <artifactId>jopt-simple</artifactId>
                 <version>${jopt-simple.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.controlsfx</groupId>
-                <artifactId>controlsfx</artifactId>
-                <version>${controlsfx.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.opencsv</groupId>
