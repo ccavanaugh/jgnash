@@ -10,6 +10,7 @@
 <?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.DataStoreTypeComboBox?>
 
+<?import javafx.scene.control.Tooltip?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxHeight="Infinity"
           maxWidth="Infinity"
           fx:controller="jgnash.uifx.wizard.file.NewFileOneController" styleClass="form">
@@ -17,18 +18,19 @@
         <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
         <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
     </rowConstraints>
-    <TextArea fx:id="textArea" editable="false" wrapText="true" GridPane.columnSpan="3" GridPane.fillHeight="true"
+    <TextArea fx:id="textArea" editable="false" wrapText="true" GridPane.columnSpan="4" GridPane.fillHeight="true"
               GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
 
     <Label text="%Label.StorageType" GridPane.rowIndex="1"/>
     <DataStoreTypeComboBox fx:id="storageTypeComboBox" onAction="#handleDataStoreTypeAction" prefWidth="150.0"
-                           GridPane.columnIndex="1" GridPane.columnSpan="2"
+                           GridPane.columnIndex="1" GridPane.columnSpan="3"
                            maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.rowIndex="1"/>
 
     <Label text="%Label.DatabaseName" GridPane.rowIndex="2"/>
@@ -38,4 +40,10 @@
             <FontAwesomeLabel glyphName="ELLIPSIS_H"/>
         </graphic>
     </Button>
+    <FontAwesomeLabel fx:id="warningLabel" glyphName="EXCLAMATION_TRIANGLE" size="24"
+                      GridPane.columnIndex="3" GridPane.rowIndex="2">
+        <tooltip>
+            <Tooltip text="%Message.OverwriteDB"/>
+        </tooltip>
+    </FontAwesomeLabel>
 </GridPane>

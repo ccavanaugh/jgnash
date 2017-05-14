@@ -26,13 +26,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.paint.Color;
 
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
+import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
-import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
@@ -43,6 +45,9 @@ import jgnash.util.TextResource;
  * @author Craig Cavanaugh
  */
 public class NewFileOneController extends AbstractWizardPaneController<NewFileWizard.Settings> {
+
+    @FXML
+    private FontAwesomeLabel warningLabel;
 
     @FXML
     private TextArea textArea;
@@ -64,9 +69,15 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
         textArea.setText(TextResource.getString("NewFileOne.txt"));
         storageTypeComboBox.setValue(DataStoreType.H2_DATABASE);
 
-        // push this to the end of the EDT, otherwise the dialog does not display correctly
-        Platform.runLater(() -> fileNameField.textProperty().addListener((observable, oldValue, newValue)
-                -> checkForOverwrite()));
+        storageTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> checkForOverWrite());
+
+        fileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                checkForOverWrite();
+            }
+        });
+
+        warningLabel.setColor(Color.GOLDENROD);
 
         updateDescriptor();
     }
@@ -95,8 +106,6 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
         }
 
         updateDescriptor();
-
-        Platform.runLater(this::checkForOverwrite);
     }
 
     @Override
@@ -129,15 +138,13 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
                 fileNameField.setText(fileName + storageTypeComboBox.getValue().getDataStore().getFileExt());
             });
         }
+
     }
 
-    private void checkForOverwrite() {
-        ValidationFactory.removeStickyValidation(fileNameField);
+    private void checkForOverWrite() {
+        warningLabel.visibleProperty().set(EngineFactory.doesDatabaseExist(fileNameField.getText(),
+                storageTypeComboBox.getValue()));
 
-        if (EngineFactory.doesDatabaseExist(fileNameField.getText(), storageTypeComboBox.getValue())) {
-            ValidationFactory.showValidationWarning(fileNameField, resources.getString("Message.OverwriteDB"), true);
-        } else {
-            fileNameField.setTooltip(null);
-        }
+        warningLabel.managedProperty().bind(warningLabel.visibleProperty());
     }
 }
