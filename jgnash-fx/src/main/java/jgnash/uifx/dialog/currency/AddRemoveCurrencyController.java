@@ -23,7 +23,9 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -41,7 +43,6 @@ import jgnash.engine.EngineFactory;
 import jgnash.uifx.control.LockedCommodityListCell;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.LockedCommodityNode;
-import jgnash.uifx.util.ValidationFactory;
 
 /**
  * Add / remove currency controller.
@@ -68,6 +69,8 @@ public class AddRemoveCurrencyController {
     @FXML
     private ResourceBundle resources;
 
+    private BooleanProperty validProperty = new SimpleBooleanProperty(true);
+
     @FXML
     @SuppressWarnings("unchecked")
     void initialize() {
@@ -76,10 +79,16 @@ public class AddRemoveCurrencyController {
 
         selectedList.setCellFactory(param -> new LockedCommodityListCell<>());
 
-        addButton.disableProperty().bind(newCurrencyTextField.textProperty().isEmpty());
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        newCurrencyTextField.textProperty().addListener((observable, oldValue, newValue)
+                -> validProperty.set(engine.getCurrency(newCurrencyTextField.getText()) == null));
+
+        addButton.disableProperty().bind(newCurrencyTextField.textProperty().isEmpty().or(validProperty.not()));
 
         loadModel();
-
     }
 
     private void loadModel() {
@@ -154,18 +163,13 @@ public class AddRemoveCurrencyController {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        if (engine.getCurrency(newCurrencyTextField.getText()) != null) {
-            ValidationFactory.showValidationError(newCurrencyTextField, resources.getString("Message.Error.Duplicate"));
-        } else {
-            final CurrencyNode node = DefaultCurrencies.buildCustomNode(newCurrencyTextField.getText());
+        final CurrencyNode node = DefaultCurrencies.buildCustomNode(newCurrencyTextField.getText());
 
-            // the add could fail if the commodity symbol is a duplicate
-            if (engine.addCurrency(node)) {
-
-                selectedList.getItems().add(new LockedCommodityNode<>(node, false));
-                FXCollections.sort(selectedList.getItems());
-                newCurrencyTextField.clear();
-            }
+        // the add could fail if the commodity symbol is a duplicate
+        if (engine.addCurrency(node)) {
+            selectedList.getItems().add(new LockedCommodityNode<>(node, false));
+            FXCollections.sort(selectedList.getItems());
+            newCurrencyTextField.clear();
         }
     }
 
