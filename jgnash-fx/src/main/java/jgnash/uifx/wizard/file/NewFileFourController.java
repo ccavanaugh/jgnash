@@ -30,11 +30,10 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.Comparators;
 import jgnash.engine.RootAccount;
+import jgnash.uifx.control.CheckListView;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
-
-import org.controlsfx.control.CheckListView;
 
 /**
  * New file wizard pane, handles selection of account sets.
@@ -90,7 +89,7 @@ public class NewFileFourController extends AbstractWizardPaneController<NewFileW
     @Override
     @SuppressWarnings("unchecked")
     public void putSettings(final Map<NewFileWizard.Settings, Object> map) {
-        map.put(NewFileWizard.Settings.ACCOUNT_SET,  new ArrayList<Account>(accountSetsList.getCheckModel().getCheckedItems()));
+        map.put(NewFileWizard.Settings.ACCOUNT_SET,  new ArrayList<Account>(accountSetsList.getCheckedItems()));
     }
 
     @Override

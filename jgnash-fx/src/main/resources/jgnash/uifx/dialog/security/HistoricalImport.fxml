@@ -4,12 +4,12 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import jgnash.uifx.control.CheckListView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.DatePickerEx?>
-<?import org.controlsfx.control.CheckListView?>
 
 <GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
           fx:controller="jgnash.uifx.dialog.security.HistoricalImportController" styleClass="form, dialog">

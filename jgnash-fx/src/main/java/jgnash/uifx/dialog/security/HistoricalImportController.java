@@ -50,12 +50,11 @@ import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.security.UpdateFactory;
+import jgnash.time.DateUtils;
+import jgnash.uifx.control.CheckListView;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.time.DateUtils;
 import jgnash.util.ResourceUtils;
-
-import org.controlsfx.control.CheckListView;
 
 /**
  * Historical import controller.
@@ -133,23 +132,17 @@ public class HistoricalImportController {
 
     @FXML
     private void handleSelectAllAction() {
-        checkListView.getCheckModel().checkAll();
+        checkListView.checkAll();
     }
 
     @FXML
     private void handleClearAllAction() {
-        checkListView.getCheckModel().clearChecks();
+        checkListView.clearChecks();
     }
 
     @FXML
     private void handleInvertSelectionAction() {
-        for (int i = 0; i < checkListView.getCheckModel().getItemCount(); i++) {
-            if (checkListView.getCheckModel().isChecked(i)) {
-                checkListView.getCheckModel().clearCheck(i);
-            } else {
-                checkListView.getCheckModel().check(i);
-            }
-        }
+        checkListView.toogleAll();
     }
 
     @FXML
@@ -171,7 +164,7 @@ public class HistoricalImportController {
 
                 // create a defensive copy
                 final List<SecurityNode> securityNodes =
-                        new ArrayList<>(checkListView.getCheckModel().getCheckedItems());
+                        new ArrayList<>(checkListView.getCheckedItems());
 
                 // need to determine the total count
                 long historyCount = 0;
@@ -234,7 +227,7 @@ public class HistoricalImportController {
         messageLabel.textProperty().unbind();
         updateTask = null;
 
-        checkListView.getCheckModel().clearChecks();
+        checkListView.clearChecks();
 
         disableUI.set(false);
     }
