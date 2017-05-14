@@ -74,7 +74,7 @@
                     ButtonBar.buttonData="LEFT"/>
             <Button mnemonicParsing="false" onAction="#handleCancelAction" text="Cancel" ButtonBar.buttonData="LEFT"/>
             <Button ButtonBar.buttonData="SMALL_GAP" visible="false"/>
-            <Button mnemonicParsing="false" onAction="#handleApplyAction" text="Apply" ButtonBar.buttonData="RIGHT"/>
+            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#handleApplyAction" text="Apply" ButtonBar.buttonData="RIGHT"/>
         </buttons>
     </ButtonBar>
     <ButtonBar GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
