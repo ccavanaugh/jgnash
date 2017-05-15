@@ -79,7 +79,7 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
 
     private final ObjectProperty<Comparator<TransactionEntry>> comparator = new SimpleObjectProperty<>();
 
-    final BooleanProperty validFormProperty = new SimpleBooleanProperty();
+    private final BooleanProperty validFormProperty = new SimpleBooleanProperty();
 
     TransactionEntry oldEntry;
 
