@@ -34,6 +34,7 @@ import jgnash.uifx.skin.StyleClass;
  */
 public class PopOverButton extends MenuButton {
 
+    @SuppressWarnings("unused")
     public PopOverButton() {
         this(null);
     }
@@ -43,42 +44,25 @@ public class PopOverButton extends MenuButton {
         getStylesheets().addAll(StyleClass.POP_OVER_BUTTON_CSS);
     }
 
-    private final ObjectProperty<Node> contentNode = new SimpleObjectProperty<Node>(this, "contentNode") {
-        @Override
-        public void setValue(final Node node) {
-            if (node == null) {
-                throw new IllegalArgumentException("content may not be null");
-            }
-        }
-    };
-
-    /**
-     * Returns the content shown by the pop over.
-     *
-     * @return the content node property
-     */
-    public final ObjectProperty<Node> contentNodeProperty() {
-        return contentNode;
-    }
+    private final ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(this, "contentNode");
 
     /**
      * Returns the value of the content property
      *
      * @return the content node
-     * @see #contentNodeProperty()
      */
+    @SuppressWarnings("unused")
     public final Node getContentNode() {
-        return contentNodeProperty().get();
+        return contentNode.get();
     }
 
     /**
      * Sets the value of the content property.
      *
      * @param content the new content node value
-     * @see #contentNodeProperty()
      */
     public final void setContentNode(final Node content) {
-        contentNodeProperty().set(content);
+        contentNode.set(content);
 
         final VBox vBox = new VBox(5);
         vBox.setAlignment(Pos.CENTER);
