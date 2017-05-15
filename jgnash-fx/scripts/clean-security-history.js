@@ -18,7 +18,7 @@ Console.show();
 // this is how to get the default Engine instance
 var engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-if (engine != null) {
+if (engine !== null) {
 
     // List<SecurityNode>
     var securities = engine.getSecurities();
@@ -33,7 +33,7 @@ if (engine != null) {
             var historyNode = securityHistory.get(j);
             var dayOfWeek = historyNode.getLocalDate().getDayOfWeek();
 
-            if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+            if (dayOfWeek === DayOfWeek.SATURDAY || dayOfWeek === DayOfWeek.SUNDAY) {
                 debug("removing one");
                 engine.removeSecurityHistory(security, historyNode.getLocalDate());
             }
