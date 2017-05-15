@@ -69,7 +69,7 @@ public class AddRemoveCurrencyController {
     @FXML
     private ResourceBundle resources;
 
-    private BooleanProperty validProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty validProperty = new SimpleBooleanProperty(true);
 
     @FXML
     @SuppressWarnings("unchecked")

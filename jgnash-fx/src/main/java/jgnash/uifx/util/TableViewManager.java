@@ -118,7 +118,7 @@ public class TableViewManager<S> {
     /**
      * Used to track initialization and pack state
      */
-    private AtomicLong packCounter = new AtomicLong();
+    private final AtomicLong packCounter = new AtomicLong();
 
     public TableViewManager(@NotNull final TableView<S> tableView, @NotNull final String preferencesUserRoot) {
         this.tableView = tableView;

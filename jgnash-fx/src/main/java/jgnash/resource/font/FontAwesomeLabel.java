@@ -101,6 +101,7 @@ public class FontAwesomeLabel extends Label {
         setTextFill(value);
     }
 
+    @SuppressWarnings("unused")
     public Object getGlyphName() {
         return glyphName.get();
     }
@@ -132,6 +133,7 @@ public class FontAwesomeLabel extends Label {
         return sizeProperty.getValue();
     }
 
+    @SuppressWarnings("unused")
     public void setSize(final Double value) {
         sizeProperty.set(value);
     }
@@ -140,6 +142,7 @@ public class FontAwesomeLabel extends Label {
         return FAIcon.valueOf(string).getUnicode();
     }
 
+    @SuppressWarnings("unused")
     public enum FAIcon {
         ADJUST("\uf042"),
         ARROWS("\uf047"),
