@@ -23,7 +23,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
