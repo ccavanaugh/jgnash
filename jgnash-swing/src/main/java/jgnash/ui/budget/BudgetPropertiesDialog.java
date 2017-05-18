@@ -75,7 +75,7 @@ final class BudgetPropertiesDialog extends JDialog implements ActionListener {
 
     private final Budget budget;
 
-    public BudgetPropertiesDialog(final Budget budget) {
+    BudgetPropertiesDialog(final Budget budget) {
         super(UIApplication.getFrame(), true);
         setTitle(rb.getString("Title.BudgetProperties"));
         setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
@@ -190,16 +190,12 @@ final class BudgetPropertiesDialog extends JDialog implements ActionListener {
             }
 
             if (modified) {
-                Thread thread = new Thread() {
+                Thread thread = new Thread(() -> {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
 
-                    @Override
-                    public void run() {
-                        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                        Objects.requireNonNull(engine);
-
-                        engine.updateBudget(budget);
-                    }
-                };
+                    engine.updateBudget(budget);
+                });
 
                 thread.start();
             }

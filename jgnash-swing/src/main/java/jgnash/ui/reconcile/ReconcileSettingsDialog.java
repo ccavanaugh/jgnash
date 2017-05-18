@@ -192,22 +192,20 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
         returnValue = e.getSource() == okButton;
 
         if (returnValue) {
-            new Thread() {  // save the value in a background thread as this could take a little bit
-                @Override
-                public void run() {
-                    ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_ATTEMPT_DATE,
-                            LocalDate.now());
+            // save the value in a background thread as this could take a little bit
+            new Thread(() -> {
+                ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_ATTEMPT_DATE,
+                        LocalDate.now());
 
-                    ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_STATEMENT_DATE,
-                            getStatementDate());
+                ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_STATEMENT_DATE,
+                        getStatementDate());
 
-                    ReconcileManager.setAccountBigDecimalAttribute(account, Account.RECONCILE_LAST_OPENING_BALANCE,
-                            getOpeningBalance());
+                ReconcileManager.setAccountBigDecimalAttribute(account, Account.RECONCILE_LAST_OPENING_BALANCE,
+                        getOpeningBalance());
 
-                    ReconcileManager.setAccountBigDecimalAttribute(account, Account.RECONCILE_LAST_CLOSING_BALANCE,
-                            getClosingBalance());
-                }
-            }.start();
+                ReconcileManager.setAccountBigDecimalAttribute(account, Account.RECONCILE_LAST_CLOSING_BALANCE,
+                        getClosingBalance());
+            }).start();
         }
 
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));

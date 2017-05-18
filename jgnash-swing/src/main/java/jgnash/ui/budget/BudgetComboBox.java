@@ -43,26 +43,22 @@ import jgnash.util.ResourceUtils;
  * @author Craig Cavanaugh
  *
  */
-public final class BudgetComboBox extends JComboBox<Budget> {
+final class BudgetComboBox extends JComboBox<Budget> {
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    public BudgetComboBox() {
+    BudgetComboBox() {
         super();
 
         setModel(new BudgetModel());
         setRenderer(new Renderer(getRenderer()));
 
         // lazily create a prototype value so UI will size correctly
-        Thread thread = new Thread() {
+        Thread thread = new Thread(() -> {
+            Budget prototype = new Budget();
+            prototype.setName(ResourceUtils.getString("Word.NewBudget") + " " + 1);
 
-            @Override
-            public void run() {
-                Budget prototype = new Budget();
-                prototype.setName(ResourceUtils.getString("Word.NewBudget") + " " + 1);
-
-                setPrototypeDisplayValue(prototype);
-            }
-        };
+            setPrototypeDisplayValue(prototype);
+        });
 
         thread.start();
 
@@ -76,7 +72,7 @@ public final class BudgetComboBox extends JComboBox<Budget> {
      *
      * @return the Budget
      */
-    public Budget getSelectedBudget() {
+    Budget getSelectedBudget() {
         return (Budget) getSelectedItem();
     }
 
@@ -85,13 +81,13 @@ public final class BudgetComboBox extends JComboBox<Budget> {
      *
      * @param budget Budget to select
      */
-    public void setSelectedBudget(final Budget budget) {
+    void setSelectedBudget(final Budget budget) {
         super.setSelectedItem(budget);
     }
 
     protected static final class BudgetModel extends SortedComboBoxModel<Budget> implements MessageListener {
 
-        public BudgetModel() {
+        BudgetModel() {
             super();
 
             final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -166,7 +162,7 @@ public final class BudgetComboBox extends JComboBox<Budget> {
 
         private final ListCellRenderer<? super Budget> delegate;
 
-        public Renderer(final ListCellRenderer<? super Budget> delegate) {
+        Renderer(final ListCellRenderer<? super Budget> delegate) {
             this.delegate = delegate;
         }
 
