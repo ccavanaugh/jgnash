@@ -78,15 +78,17 @@ public class InvestmentTransaction extends Transaction {
     @Override
     public void addTransactionEntry(@NotNull final TransactionEntry entry) {
         if (entry instanceof AbstractInvestmentTransactionEntry) {
-            final TransactionType type = getTransactionType();
-            final SecurityNode node = getSecurityNode();
 
-            if (type != TransactionType.INVALID) { // assert that the types are a match if established
-                assert ((AbstractInvestmentTransactionEntry) entry).getTransactionType() == type;
+            // assert that the types are a match if established
+            if (getTransactionType() != TransactionType.INVALID
+                    && ((AbstractInvestmentTransactionEntry) entry).getTransactionType() != getTransactionType()) {
+                throw new IllegalArgumentException("TransactionEntry type did not match the transaction type");
             }
 
-            if (node != null) {
-                assert ((AbstractInvestmentTransactionEntry) entry).getSecurityNode().equals(node);
+            // assert that the securities are a match if established
+            if (getSecurityNode() != null
+                    && !((AbstractInvestmentTransactionEntry) entry).getSecurityNode().equals(getSecurityNode())) {
+                throw new IllegalArgumentException("TransactionEntry security did not match the transaction security");
             }
         }
         super.addTransactionEntry(entry);
