@@ -60,7 +60,7 @@ public class RunJavaScriptAction extends AbstractEnabledAction {
 
             EventQueue.invokeLater(() -> {
                 try (final Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-                    new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
+                    new ScriptEngineManager().getEngineByName("nashorn").eval(reader);
                 } catch (IOException | ScriptException ex) {
                     Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, ex.toString(), ex);
                 }

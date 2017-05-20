@@ -63,7 +63,7 @@ public class ExecuteJavaScriptAction {
 
             Platform.runLater(() -> {
                 try (final Reader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
-                    new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
+                    new ScriptEngineManager().getEngineByName("nashorn").eval(reader);
                 } catch (IOException | ScriptException ex) {
                     Logger.getLogger(ExecuteJavaScriptAction.class.getName()).log(Level.SEVERE, ex.toString(), ex);
                 }

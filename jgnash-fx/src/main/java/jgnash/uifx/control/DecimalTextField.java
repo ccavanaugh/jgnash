@@ -102,7 +102,7 @@ public class DecimalTextField extends TextFieldEx {
 
     static {
         FLOAT = getAllowedChars();
-        jsEngine = new ScriptEngineManager().getEngineByName("JavaScript");
+        jsEngine = new ScriptEngineManager().getEngineByName("nashorn");
     }
 
     public DecimalTextField() {
