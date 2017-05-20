@@ -27,6 +27,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
@@ -42,8 +43,6 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-
 /**
  * ComboBox of available accounts.  A Predicate for allowed accounts may be specified.
  *
@@ -56,6 +55,8 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     final private FilteredList<Account> filteredList;
 
     final private ObservableList<Account> items;
+
+    private ListView<Account> listView;
 
     public AccountComboBox() {
 
@@ -74,8 +75,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         setOnKeyTyped(new KeyHandler());
 
-        // display the full account path instead of the name
-        setConverter(new StringConverter<Account>() {
+        final StringConverter<Account> accountStringConverter = new StringConverter<Account>() {
             @Override
             public String toString(final Account account) {
                 return account == null ? null : account.getPathName();
@@ -90,7 +90,25 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                 }
                 return null;
             }
+        };
+
+        // cell factory for capturing the ListView needed for addressing JDK Bug JDK-8129123
+        setCellFactory(param -> {
+            final ComboBoxListCell<Account> comboBoxListCell = new ComboBoxListCell<>();
+
+            comboBoxListCell.listViewProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    listView = newValue;
+                }
+            });
+
+            comboBoxListCell.setConverter(accountStringConverter);
+
+            return comboBoxListCell;
         });
+
+        // display the full account path instead of the name
+        setConverter(accountStringConverter);
     }
 
     /**
@@ -115,8 +133,9 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     // TODO: JDK Bug JDK-8129123 https://bugs.openjdk.java.net/browse/JDK-8129123
     private void forceScrollSelectionBugWorkAround() {
-        final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
-        listView.scrollTo(getSelectionModel().getSelectedIndex());
+        if (listView != null) {
+            listView.scrollTo(getSelectionModel().getSelectedIndex());
+        }
     }
 
     public ObservableList<Account> getUnfilteredItems() {
