@@ -1,9 +1,4 @@
-// Load compatibility script
-load("nashorn:mozilla_compat.js");
-
 // clears security history nodes that fall on weekends
-importPackage(Packages.jgnash.engine);
-importPackage(Packages.java.util);
 
 var LocalDate = Packages.java.time.LocalDate;
 var DayOfWeek = Packages.java.time.DayOfWeek;
