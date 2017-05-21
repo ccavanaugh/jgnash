@@ -4,10 +4,14 @@ load("nashorn:mozilla_compat.js");
 // clears security history nodes that fall on weekends
 importPackage(Packages.jgnash.engine);
 importPackage(Packages.java.util);
-importPackage(Packages.java.time);
+
+var LocalDate = Packages.java.time.LocalDate;
+var DayOfWeek = Packages.java.time.DayOfWeek;
+
+var EngineFactory = Packages.jgnash.engine.EngineFactory;
 
 function debug(message) {   // helper function to print messages to the console
-    java.lang.System.out.println(message);
+    Java.type("java.lang.System").out["println(String)"](message);
 }
 
 var Console = Java.type("jgnash.uifx.views.main.ConsoleDialogController");
