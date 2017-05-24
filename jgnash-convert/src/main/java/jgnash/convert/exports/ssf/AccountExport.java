@@ -237,20 +237,20 @@ public class AccountExport {
     private static String getAccountColumnValue(final Transaction transaction, final Account account) {
         if (transaction instanceof InvestmentTransaction) {
             return ((InvestmentTransaction) transaction).getInvestmentAccount().getName();
-        } else {
-            int count = transaction.size();
-            if (count > 1) {
-                return "[ " + count + " " + ResourceUtils.getString("Button.Splits") + " ]";
-
-            } else {
-                Account creditAccount = transaction.getTransactionEntries().get(0).getCreditAccount();
-                if (creditAccount != account) {
-                   return creditAccount.getName();
-                } else {
-                    return transaction.getTransactionEntries().get(0).getDebitAccount().getName();
-                }
-            }
         }
-
+        
+		int count = transaction.size();
+		
+		if (count > 1) {
+		    return "[ " + count + " " + ResourceUtils.getString("Button.Splits") + " ]";
+		}
+		
+		final Account creditAccount = transaction.getTransactionEntries().get(0).getCreditAccount();
+		
+		if (creditAccount != account) {
+		   return creditAccount.getName();
+		}
+		
+		return transaction.getTransactionEntries().get(0).getDebitAccount().getName();
     }
 }
