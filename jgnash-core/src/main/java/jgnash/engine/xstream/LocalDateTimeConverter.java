@@ -40,7 +40,7 @@ public class LocalDateTimeConverter extends AbstractSingleValueConverter {
     @SuppressWarnings("rawtypes")
 	@Override
     public boolean canConvert(final Class type) {
-        return type.equals(LocalDateTime.class);
+        return LocalDateTime.class == type;
     }
 
     @Override
