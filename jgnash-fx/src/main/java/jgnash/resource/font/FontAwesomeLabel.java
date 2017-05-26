@@ -157,6 +157,8 @@ public class FontAwesomeLabel extends Label {
         CLOSE("\uf00d"),
         CLOUD_DOWNLOAD("\uf0ed"),
         CODE("\uf121"),
+        COG("\uf013"),
+        COGS("\uf085"),
         COMPRESS("\uf066"),
         COPY("\uf0c5"),
         EDIT("\uf044"),
