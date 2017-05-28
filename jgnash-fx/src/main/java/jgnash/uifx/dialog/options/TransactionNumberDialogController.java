@@ -18,14 +18,19 @@
 package jgnash.uifx.dialog.options;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -49,6 +54,12 @@ public class TransactionNumberDialogController {
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
+    private Button upButton;
+
+    @FXML
+    private Button downButton;
+
+    @FXML
     private ButtonBar buttonBar;
 
     @FXML
@@ -56,8 +67,17 @@ public class TransactionNumberDialogController {
 
     private List<String> returnValue = null;
 
+    final private IntegerProperty scriptCountProperty = new SimpleIntegerProperty();
+
+    final private IntegerProperty selectedIndexProperty = new SimpleIntegerProperty();
+
     @FXML
     private void initialize() {
+
+        // simplify binding
+        scriptCountProperty.bind(Bindings.size(listView.getItems()));
+        selectedIndexProperty.bind(listView.selectionModelProperty().get().selectedIndexProperty());
+
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -73,6 +93,13 @@ public class TransactionNumberDialogController {
             listView.getItems().set(event.getIndex(), event.getNewValue());
             processListItems();
         });
+
+        upButton.disableProperty().bind(scriptCountProperty.lessThan(1)
+                .or(selectedIndexProperty.lessThan(1)));
+
+        downButton.disableProperty().bind(scriptCountProperty.lessThan(1)
+                .or(selectedIndexProperty.isEqualTo(scriptCountProperty.subtract(1)))
+                .or(selectedIndexProperty.lessThan(0)));
     }
 
     /**
@@ -91,18 +118,13 @@ public class TransactionNumberDialogController {
 
     @FXML
     private void handleUpAction() {
-        if (listView.getSelectionModel().getSelectedIndex() >= 1) {
-            final int index = listView.getSelectionModel().getSelectedIndex();
-            listView.getItems().add(index - 1, listView.getItems().remove(index));
-        }
+        Collections.swap(listView.getItems(), selectedIndexProperty.get(), selectedIndexProperty.get() - 1);
+
     }
 
     @FXML
     private void handleDownAction() {
-        if (listView.getSelectionModel().getSelectedIndex() < listView.getItems().size() - 1) {
-            final int index = listView.getSelectionModel().getSelectedIndex();
-            listView.getItems().add(index + 1, listView.getItems().remove(index));
-        }
+        Collections.swap(listView.getItems(), selectedIndexProperty.get(), selectedIndexProperty.get() + 1);
     }
 
     @FXML
