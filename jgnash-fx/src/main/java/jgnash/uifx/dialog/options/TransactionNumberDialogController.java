@@ -67,7 +67,7 @@ public class TransactionNumberDialogController {
 
     private List<String> returnValue = null;
 
-    final private IntegerProperty scriptCountProperty = new SimpleIntegerProperty();
+    final private IntegerProperty countProperty = new SimpleIntegerProperty();
 
     final private IntegerProperty selectedIndexProperty = new SimpleIntegerProperty();
 
@@ -75,7 +75,7 @@ public class TransactionNumberDialogController {
     private void initialize() {
 
         // simplify binding
-        scriptCountProperty.bind(Bindings.size(listView.getItems()));
+        countProperty.bind(Bindings.size(listView.getItems()));
         selectedIndexProperty.bind(listView.selectionModelProperty().get().selectedIndexProperty());
 
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
@@ -94,11 +94,11 @@ public class TransactionNumberDialogController {
             processListItems();
         });
 
-        upButton.disableProperty().bind(scriptCountProperty.lessThan(1)
+        upButton.disableProperty().bind(countProperty.lessThan(1)
                 .or(selectedIndexProperty.lessThan(1)));
 
-        downButton.disableProperty().bind(scriptCountProperty.lessThan(1)
-                .or(selectedIndexProperty.isEqualTo(scriptCountProperty.subtract(1)))
+        downButton.disableProperty().bind(countProperty.lessThan(1)
+                .or(selectedIndexProperty.isEqualTo(countProperty.subtract(1)))
                 .or(selectedIndexProperty.lessThan(0)));
     }
 
