@@ -23,6 +23,7 @@ WANTS
 
 Release 2.32.0
 --------------
+* 05/28/17 Minor improvements to the button behavior when editing the transaction number list. (Fx)
 * 05/22/17 Updated to the latest Netty dependency.
 * 05/14/17 Minor internal changes to remove the dependency on ControlsFX. (Fx)
 * 05/14/17 The Enter button should be disabled if the form is not valid for investment transactions and split entries. (Fx)
