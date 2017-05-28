@@ -23,12 +23,12 @@
     <ListView fx:id="listView" minHeight="90" prefHeight="180"/>
 
     <VBox GridPane.columnIndex="1" styleClass="form">
-        <Button onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
+        <Button onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" minWidth="50">
             <graphic>
                 <FontAwesomeLabel glyphName="LEVEL_UP"/>
             </graphic>
         </Button>
-        <Button onAction="#handleDownAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
+        <Button onAction="#handleDownAction" contentDisplay="GRAPHIC_ONLY" minWidth="50">
             <graphic>
                 <FontAwesomeLabel glyphName="LEVEL_DOWN"/>
             </graphic>
