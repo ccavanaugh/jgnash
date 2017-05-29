@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
+          fx:controller="jgnash.uifx.dialog.ImportScriptsDialogController" styleClass="dialog, form">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <TableView fx:id="tableView"/>
+
+    <VBox GridPane.columnIndex="1" styleClass="form">
+        <Button fx:id="upButton" onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" minWidth="50">
+            <graphic>
+                <FontAwesomeLabel glyphName="LEVEL_UP"/>
+            </graphic>
+        </Button>
+        <Button fx:id="downButton" onAction="#handleDownAction" contentDisplay="GRAPHIC_ONLY" minWidth="50">
+            <graphic>
+                <FontAwesomeLabel glyphName="LEVEL_DOWN"/>
+            </graphic>
+        </Button>
+    </VBox>
+
+    <ButtonBar GridPane.rowIndex="1" GridPane.columnSpan="2">
+        <buttons>
+            <Button text="%Button.Close" onAction="#handleCloseAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
+        </buttons>
+    </ButtonBar>
+
+</GridPane>

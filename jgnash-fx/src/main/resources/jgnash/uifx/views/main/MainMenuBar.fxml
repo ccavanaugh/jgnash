@@ -146,13 +146,19 @@
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog">
             <graphic>
-                <FontAwesomeLabel glyphName="WRENCH"/>
+                <FontAwesomeLabel glyphName="COGS"/>
             </graphic>
         </MenuItem>
         <MenuItem text="%Menu.EditTranNumList.Name" fx:id="transNumberListMenuItem"
                   onAction="#handleShowTranNumberListDialog">
             <graphic>
                 <FontAwesomeLabel glyphName="LIST"/>
+            </graphic>
+        </MenuItem>
+        <MenuItem text="%Menu.ConfigImportFilters.Name" fx:id="configureTranImportFiltersMenuItem"
+                  onAction="#handleShowTranImportFilterDialog">
+            <graphic>
+                <FontAwesomeLabel glyphName="COG"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>

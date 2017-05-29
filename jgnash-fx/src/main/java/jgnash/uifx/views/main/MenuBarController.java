@@ -48,6 +48,7 @@ import jgnash.uifx.actions.ImportAccountsAction;
 import jgnash.uifx.actions.ImportOfxAction;
 import jgnash.uifx.actions.ImportQifAction;
 import jgnash.uifx.dialog.ChangeDatabasePasswordDialogController;
+import jgnash.uifx.dialog.ImportScriptsDialogController;
 import jgnash.uifx.dialog.PackDatabaseDialogController;
 import jgnash.uifx.dialog.RemoteConnectionDialogController;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
@@ -79,6 +80,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
 public class MenuBarController implements MessageListener {
 
     private final BooleanProperty disabled = new SimpleBooleanProperty(true);
+
+    @FXML
+    private MenuItem configureTranImportFiltersMenuItem;
 
     @FXML
     private MenuItem packDatabaseMenuItem;
@@ -149,10 +153,11 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void initialize() {
         budgetManagerMenuItem.disableProperty().bind(disabled);
-        changePasswordMenuItem.disableProperty().bind(Bindings.not(disabled));
+        changePasswordMenuItem.disableProperty().bind(disabled.not());
         securitiesMenu.disableProperty().bind(disabled);
         currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
+        configureTranImportFiltersMenuItem.disableProperty().bind(disabled);
         optionsMenuItem.disableProperty().bind(disabled);
         reportMenu.disableProperty().bind(disabled);
         transNumberListMenuItem.disableProperty().bind(disabled);
@@ -162,8 +167,8 @@ public class MenuBarController implements MessageListener {
         exportAccountsMenuItem.disableProperty().bind(disabled);
         recurringTransactionsMenuItem.disableProperty().bind(disabled);
         saveAsMenuItem.disableProperty().bind(disabled);
-        shutdownServerMenuItem.disableProperty().bind(Bindings.not(disabled));
-        packDatabaseMenuItem.disableProperty().bind(Bindings.not(disabled));
+        shutdownServerMenuItem.disableProperty().bind(disabled.not());
+        packDatabaseMenuItem.disableProperty().bind(disabled.not());
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageList().emptyProperty()));
 
@@ -520,5 +525,16 @@ public class MenuBarController implements MessageListener {
                         resources.getString("Title.Reminders"));
 
         pair.getStage().show();
+    }
+
+    @FXML
+    private void handleShowTranImportFilterDialog() {
+        final FXMLUtils.Pair<ImportScriptsDialogController> pair =
+                FXMLUtils.load(ImportScriptsDialogController.class.getResource("ImportScriptsDialog.fxml"),
+                        resources.getString("Title.ConfigTransImportFilters"));
+
+        pair.getStage().show();
+
+        StageUtils.addBoundsListener(pair.getStage(), ImportScriptsDialogController.class, MainView.getPrimaryStage());
     }
 }
