@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 
 /**
  * Utility class to reduce logging code
- *
+ * <p>
  * A fair amount of byte code is generated to log a throwable.
- *
- *  This class provides a static method which produces much less byte code when used.
+ * <p>
+ * This class provides a static method which produces much less byte code when used.
  *
  * @author Craig Cavanaugh
  */
@@ -37,10 +37,21 @@ public class LogUtil {
 
     /**
      * Logs a throwable at Level.SEVERE.
-     * @param clazz calling class
+     *
+     * @param clazz     calling class
      * @param throwable Throwable to log
      */
     public static void logSevere(final Class clazz, final Throwable throwable) {
         Logger.getLogger(clazz.getName()).log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
+    }
+
+    /**
+     * Logs a throwable at Level.SEVERE.
+     *
+     * @param clazz   calling class
+     * @param message error message
+     */
+    public static void logSevere(final Class clazz, final String message) {
+        Logger.getLogger(clazz.getName()).log(Level.SEVERE, message);
     }
 }
