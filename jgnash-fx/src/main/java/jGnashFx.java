@@ -48,6 +48,7 @@ import jgnash.util.ResourceUtils;
 import jgnash.util.prefs.PortablePreferences;
 
 import static java.util.Arrays.asList;
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Main entry for the application.
@@ -208,10 +209,10 @@ public class jGnashFx extends Application {
                 System.err.println(ResourceUtils.getString("Message.FileIsLocked"));
             }
         } catch (final FileNotFoundException e) {
-            Logger.getLogger(jGnashFx.class.getName()).log(Level.SEVERE, e.toString(), e);
+            logSevere(jGnashFx.class, e);
             System.err.println("File " + serverFile.getAbsolutePath() + " was not found");
         } catch (final Exception e) {
-            Logger.getLogger(jGnashFx.class.getName()).log(Level.SEVERE, e.toString(), e);
+            logSevere(jGnashFx.class, e);
         }
     }
 
