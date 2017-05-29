@@ -41,7 +41,7 @@ public class LogUtil {
      * @param clazz     calling class
      * @param throwable Throwable to log
      */
-    public static void logSevere(final Class clazz, final Throwable throwable) {
+    public static void logSevere(final Class<?> clazz, final Throwable throwable) {
         Logger.getLogger(clazz.getName()).log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
     }
 
@@ -51,7 +51,7 @@ public class LogUtil {
      * @param clazz   calling class
      * @param message error message
      */
-    public static void logSevere(final Class clazz, final String message) {
+    public static void logSevere(final Class<?> clazz, final String message) {
         Logger.getLogger(clazz.getName()).log(Level.SEVERE, message);
     }
 }
