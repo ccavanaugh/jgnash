@@ -26,8 +26,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -52,6 +50,8 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Utility methods for {@code Scene}.
@@ -141,7 +141,7 @@ public class JavaFXUtils {
             try {
                 runnable.run();
             } catch (final Exception e) {
-                Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                logSevere(JavaFXUtils.class, e);
             }
         } else {
             final CountDownLatch doneLatch = new CountDownLatch(1);
@@ -149,7 +149,7 @@ public class JavaFXUtils {
                 try {
                     runnable.run();
                 } catch (final Exception e) {
-                    Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    logSevere(JavaFXUtils.class, e);
                 } finally {
                     doneLatch.countDown();
                 }
@@ -158,7 +158,7 @@ public class JavaFXUtils {
             try {
                 doneLatch.await();  // TODO, allow use of a timeout value to prevent stalls?
             } catch (final InterruptedException e) {
-                Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                logSevere(JavaFXUtils.class, e);
             }
         }
     }
@@ -246,7 +246,7 @@ public class JavaFXUtils {
                 try {
                     width = futureTask.get();
                 } catch (final InterruptedException | ExecutionException e) {
-                    Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    logSevere(JavaFXUtils.class, e);
                 }
             }
         }
