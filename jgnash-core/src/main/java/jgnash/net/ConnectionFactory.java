@@ -21,11 +21,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.util.Nullable;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Factory methods for setting network connection timeout and creating a URLConnection with timeout set correctly.
@@ -75,7 +75,7 @@ public class ConnectionFactory {
         try {
             return openConnection(new URL(url));
         } catch (final MalformedURLException ex) {
-            Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
+            logSevere(ConnectionFactory.class, ex);
         }
         return null;
     }
@@ -87,7 +87,7 @@ public class ConnectionFactory {
         try {
             connection = url.openConnection();
         } catch (final IOException ex) {
-            Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
+            logSevere(ConnectionFactory.class, ex);
         }
 
         /* Set the connection timeout */
