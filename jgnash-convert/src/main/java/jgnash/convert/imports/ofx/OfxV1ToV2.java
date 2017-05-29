@@ -29,8 +29,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import jgnash.util.FileMagic;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Utility class to convert OFX version 1 (SGML) to OFX version 2 (XML)
@@ -149,10 +150,8 @@ class OfxV1ToV2 {
      */
     private static String readFile(final InputStream stream, final String characterSet) {
 
-        Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
-
         if (stream == null) {
-            logger.severe("InputStream was null");
+            logSevere(OfxV1ToV2.class, "InputStream was null");
             return null;
         }
 
@@ -175,7 +174,7 @@ class OfxV1ToV2 {
                 line = reader.readLine();
             }
         } catch (final IOException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
+            logSevere(OfxV1ToV2.class, e);
         }
 
         return concat(strings);
@@ -185,8 +184,7 @@ class OfxV1ToV2 {
     	try (final InputStream stream = new BufferedInputStream(Files.newInputStream(path))) {
     		return readFile(stream, characterSet);
     	} catch (final IOException e) {
-    		Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
-            logger.log(Level.SEVERE, e.toString(), e);
+            logSevere(OfxV1ToV2.class, e);
             return "";
 		}     	    	     
     }
