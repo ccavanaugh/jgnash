@@ -32,12 +32,14 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.Stage;
 
 import jgnash.convert.imports.ImportFilter;
+import jgnash.uifx.Options;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
@@ -60,6 +62,9 @@ public class ImportScriptsDialogController {
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
+    private ButtonBar buttonBar;
+
+    @FXML
     private Button upButton;
 
     @FXML
@@ -80,6 +85,8 @@ public class ImportScriptsDialogController {
 
     @FXML
     private void initialize() {
+
+        buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
 
         // simplify binding process
         scriptCountProperty.bind(Bindings.size(tableView.getItems()));
@@ -135,6 +142,11 @@ public class ImportScriptsDialogController {
 
     @FXML
     private void handleCloseAction() {
+        ((Stage) parent.get().getWindow()).close();
+    }
+
+    @FXML
+    private  void handleOkayCloseAction() {
         ((Stage) parent.get().getWindow()).close();
     }
 

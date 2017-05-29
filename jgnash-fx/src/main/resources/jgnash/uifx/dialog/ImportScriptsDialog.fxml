@@ -36,9 +36,10 @@
         </Button>
     </VBox>
 
-    <ButtonBar GridPane.rowIndex="1" GridPane.columnSpan="2">
+    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="1" GridPane.columnSpan="2">
         <buttons>
-            <Button text="%Button.Close" onAction="#handleCloseAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
+            <Button text="%Button.Ok" onAction="#handleOkayCloseAction" ButtonBar.buttonData="OK_DONE"/>
+            <Button text="%Button.Cancel" onAction="#handleCloseAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 
