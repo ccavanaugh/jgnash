@@ -43,8 +43,6 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 
-import static jgnash.util.LogUtil.logSevere;
-
 /**
  * Controller for managing import scripts
  *
@@ -110,7 +108,7 @@ public class ImportScriptsDialogController {
                 .or(selectedIndexProperty.lessThan(1)));
 
         downButton.disableProperty().bind(scriptCountProperty.lessThan(2)
-                .or(selectedIndexProperty.greaterThan(scriptCountProperty.subtract(1)))
+                .or(selectedIndexProperty.isEqualTo(scriptCountProperty.subtract(1)))
                 .or(selectedIndexProperty.lessThan(0)));
 
 
@@ -124,21 +122,14 @@ public class ImportScriptsDialogController {
     }
 
     private void loadScripts() {
-        for (String filter : ImportFilter.KNOWN_SCRIPTS) {
-            try {
+        for (final ImportFilter importFilter : ImportFilter.getImportFilters()) {
+            final Script script = new Script();
 
-                final Script script = new Script();
+            script.descriptionProperty.setValue(importFilter.getDescription());
+            script.pathProperty.setValue(importFilter.getScript());
+            //script.enabledProperty.setValue(true);
 
-                ImportFilter importFilter = new ImportFilter(filter);
-
-                script.descriptionProperty.setValue(importFilter.getDescription());
-                script.pathProperty.setValue(filter);
-                //script.enabledProperty.setValue(true);
-
-                tableView.getItems().add(script);
-            } catch (final Exception e) {
-                logSevere(ImportScriptsDialogController.class, e);
-            }
+            tableView.getItems().add(script);
         }
     }
 
