@@ -34,6 +34,8 @@ import jgnash.engine.dao.AbstractDAO;
 import jgnash.engine.dao.DAO;
 import jgnash.util.DefaultDaemonThreadFactory;
 
+import static jgnash.util.LogUtil.logSevere;
+
 /**
  * Abstract JPA DAO.  Provides basic framework to work with the {@link EntityManager} in a thread safe manner.
  *
@@ -82,8 +84,8 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
             // Regenerate the executor service
             executorService = new PriorityThreadPoolExecutor();
 
-        } catch (InterruptedException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } catch (final InterruptedException e) {
+            logSevere(AbstractJpaDAO.class, e);
         } finally {
             emLock.unlock();
         }
@@ -114,7 +116,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
 
             return future.get();    // block and return
         } catch (final InterruptedException | ExecutionException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logSevere(AbstractJpaDAO.class, e);
             return null;
         }
     }
@@ -149,7 +151,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
             result = future.get();  // block and return
 
         } catch (final InterruptedException | ExecutionException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logSevere(AbstractJpaDAO.class, e);
         }
 
         return result;
@@ -171,11 +173,11 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
             });
 
             object = future.get();  // block and return
-        } catch (NoResultException e) {
+        } catch (final NoResultException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.INFO, "Did not find {0} for uuid: {1}",
                     new Object[]{tClass.getName(), uuid});
         } catch (ExecutionException | InterruptedException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logSevere(AbstractJpaDAO.class, e);
         }
 
         return object;
