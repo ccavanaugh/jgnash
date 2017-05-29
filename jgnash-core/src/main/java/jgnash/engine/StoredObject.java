@@ -17,11 +17,17 @@
  */
 package jgnash.engine;
 
-import javax.persistence.*;
-
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Version;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Abstract class for anything stored in the database that requires a unique id.
@@ -109,7 +115,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
             o.setUuid(UUIDUtil.getUID());   // force a unique id
             o.markedForRemoval = false;
         } catch (final CloneNotSupportedException e) {
-            Logger.getLogger(StoredObject.class.getName()).log(Level.SEVERE, e.toString(), e);
+            logSevere(StoredObject.class, e);
         }
 
         return o;
