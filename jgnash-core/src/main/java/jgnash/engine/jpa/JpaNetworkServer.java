@@ -174,7 +174,7 @@ public class JpaNetworkServer {
                             wait(); // wait forever for notify() from stopServer()
                         }
                     } catch (final InterruptedException ex) {
-                        Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                     }
 
                     messageBusServer.removeLocalListener(listener);

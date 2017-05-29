@@ -24,12 +24,12 @@ import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jgnash.engine.AttachmentUtils;
 import jgnash.engine.EngineFactory;
 import jgnash.util.FileUtils;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Attachment handler for a local database.
@@ -70,7 +70,7 @@ public class LocalAttachmentManager implements AttachmentManager {
                 }
                 result = true;
             } catch (final IOException e) {
-                Logger.getLogger(LocalAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                logSevere(LocalAttachmentManager.class, e);
                 throw new IOException(e);
             }
         }
@@ -87,8 +87,8 @@ public class LocalAttachmentManager implements AttachmentManager {
         try {
             Files.delete(path);
             result = true;
-        } catch (IOException e) {
-            Logger.getLogger(LocalAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } catch (final IOException e) {
+            logSevere(LocalAttachmentManager.class, e);
         }
 
         return result;

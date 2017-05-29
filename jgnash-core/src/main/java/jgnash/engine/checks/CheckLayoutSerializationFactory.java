@@ -26,10 +26,10 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jgnash.util.OS;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Factory methods for serializing CheckLayout objects.
@@ -45,7 +45,7 @@ public class CheckLayoutSerializationFactory {
         try (final Reader reader = Files.newBufferedReader(Paths.get(file), StandardCharsets.UTF_8)) {
             layout = (CheckLayout) xstream.fromXML(reader);
         } catch (IOException e) {
-            Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(CheckLayoutSerializationFactory.class, e);
         }
         return layout;
     }
@@ -59,7 +59,7 @@ public class CheckLayoutSerializationFactory {
             xstream.toXML(layout, writer);
             result = true;
         } catch (IOException e) {
-            Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(CheckLayoutSerializationFactory.class, e);
         }
 
         return result;
@@ -78,7 +78,7 @@ public class CheckLayoutSerializationFactory {
                 xstream.omitField(media, "value");
                 xstream.omitField(media, "winID");
             } catch (ClassNotFoundException e) {
-                Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(CheckLayoutSerializationFactory.class, e);
             }
         }
 

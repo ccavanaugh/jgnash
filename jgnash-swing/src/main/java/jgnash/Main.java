@@ -48,6 +48,7 @@ import jgnash.util.Version;
 import jgnash.util.prefs.PortablePreferences;
 
 import static java.util.Arrays.asList;
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * This is the main entry point for the jGnash application.
@@ -283,10 +284,10 @@ public final class Main {
                         System.err.println(ResourceUtils.getString("Message.FileIsLocked"));
                     }
                 } catch (FileNotFoundException e) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
+                    logSevere(Main.class, e);
                     System.err.println("File " + serverFile.getAbsolutePath() + " was not found");
                 } catch (Exception e) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
+                    logSevere(Main.class, e);
                 }
             } else { // start the UI
                 if (portable || portableFile != null) { // must hook in the preferences implementation first
@@ -322,7 +323,7 @@ public final class Main {
             try {
                 parser.printHelpOn(System.err);
             } catch (final IOException ioe) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, ioe.toString(), ioe);
+                logSevere(Main.class, ioe);
             }
 
         }

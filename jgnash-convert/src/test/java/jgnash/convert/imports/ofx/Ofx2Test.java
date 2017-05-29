@@ -17,6 +17,9 @@
  */
 package jgnash.convert.imports.ofx;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -26,15 +29,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.util.FileMagic;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import static jgnash.util.LogUtil.logSevere;
 import static org.junit.Assert.*;
 
 /**
@@ -69,10 +68,8 @@ public class Ofx2Test {
             assertEquals("INFO", bank.statusSeverity);
 
             assertFalse(parser.getBank().isInvestmentAccount());
-
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());            
         } catch (IOException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -102,14 +99,12 @@ public class Ofx2Test {
                 assertEquals("Success", bank.statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -136,14 +131,12 @@ public class Ofx2Test {
                 assertEquals(null, parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -184,14 +177,12 @@ public class Ofx2Test {
                 assertEquals(new BigDecimal("160.50"), transactions.get(3).getAmount());
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -218,14 +209,12 @@ public class Ofx2Test {
                 assertEquals(null, parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -253,14 +242,12 @@ public class Ofx2Test {
                 assertEquals("OK", parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
            fail();
         }
     }
@@ -288,14 +275,12 @@ public class Ofx2Test {
                 assertEquals(null, parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -317,10 +302,8 @@ public class Ofx2Test {
             assertEquals(null, parser.getBank().statusMessage);
 
             assertFalse(parser.getBank().isInvestmentAccount());
-
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
         } catch (IOException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -349,14 +332,12 @@ public class Ofx2Test {
                 assertEquals(null, parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -381,14 +362,12 @@ public class Ofx2Test {
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
                 assertEquals("OK", parser.getBank().statusMessage);
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
 
@@ -420,15 +399,12 @@ public class Ofx2Test {
                 assertEquals(3, ofxBank.getSecurityList().size());
 
                 assertTrue(ofxBank.isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-
             } catch (final IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (final URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -460,15 +436,12 @@ public class Ofx2Test {
 
 
                 assertTrue(ofxBank.isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-
             } catch (final IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (final URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -500,15 +473,12 @@ public class Ofx2Test {
                 assertEquals(6, ofxBank.getSecurityList().size());
 
                 assertTrue(ofxBank.isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-
             } catch (final IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (final URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }
@@ -527,7 +497,7 @@ public class Ofx2Test {
             String result = OfxV1ToV2.convertToXML(stream);
             System.out.println(result);
         } catch (final IOException e) {
-            Logger.getLogger(OfxConvertTest.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
 
@@ -546,14 +516,12 @@ public class Ofx2Test {
                 assertEquals(0, parser.getStatusCode());
 
                 assertFalse(parser.getBank().isInvestmentAccount());
-
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                logSevere(Ofx2Test.class, e);
                 fail();
             }
         } catch (URISyntaxException e) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            logSevere(Ofx2Test.class, e);
             fail();
         }
     }

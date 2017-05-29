@@ -19,13 +19,13 @@ package jgnash.engine.jpa;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * A Trash entity for generic cleanup of typed entities that need to be cleanup up
@@ -87,7 +87,7 @@ public class JpaTrashEntity {
                 try {
                     return field.getLong(object);
                 } catch (final IllegalAccessException e) {
-                    Logger.getLogger(JpaTrashEntity.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    logSevere(JpaTrashEntity.class, e);
                 }
             }
         }

@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -40,6 +38,8 @@ import jgnash.engine.dao.EngineDAO;
 import jgnash.engine.dao.RecurringDAO;
 import jgnash.engine.dao.TransactionDAO;
 import jgnash.engine.dao.TrashDAO;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * Engine DAO.
@@ -61,8 +61,6 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     private TransactionDAO transactionDAO;
 
     private TrashDAO trashDAO;
-
-    private static final Logger logger = Logger.getLogger(JpaEngineDAO.class.getName());
 
     JpaEngineDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -157,8 +155,8 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
             });
 
             list = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } catch (final InterruptedException | ExecutionException e) {
+            logSevere(JpaEngineDAO.class, e);
         }
 
         return list;
@@ -184,7 +182,7 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
             list = future.get();
         } catch (InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logSevere(JpaEngineDAO.class, e);
         } finally {
             emLock.unlock();
         }
@@ -213,7 +211,7 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
             future.get();   // block
         } catch (ExecutionException | InterruptedException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logSevere(JpaEngineDAO.class, e);
         }
     }
 
@@ -236,7 +234,7 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
             future.get();   // block
         } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logSevere(JpaEngineDAO.class, e);
         }
     }
 

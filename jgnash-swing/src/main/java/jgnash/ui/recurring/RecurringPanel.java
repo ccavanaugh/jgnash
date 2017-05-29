@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
@@ -65,6 +64,8 @@ import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.util.ResourceUtils;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * A Panel that displays a list of reminders. This panel will listen for recurring events fired by the engine as well.
@@ -127,7 +128,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
                         model.setEnabledSymbol('X');
                     }
                 } catch (InterruptedException | ExecutionException e) {
-                    Logger.getLogger(RecurringPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    logSevere(RecurringPanel.class, e);
                 }
             }
         };
@@ -309,7 +310,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
                     }
                 }
             } catch (CloneNotSupportedException e) {
-                Logger.getLogger(RecurringPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                logSevere(RecurringPanel.class, e);
             }
         }
     }
@@ -379,7 +380,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
                         showingDialog = false;
                     }
                 } catch (final InterruptedException | ExecutionException | RuntimeException e) {
-                    Logger.getLogger(RecurringPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    logSevere(RecurringPanel.class, e);
                 }
             }
         };

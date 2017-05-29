@@ -36,7 +36,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +47,8 @@ import java.util.zip.ZipOutputStream;
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaH2MvDataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
+
+import static jgnash.util.LogUtil.logSevere;
 
 /**
  * File utilities.
@@ -128,7 +129,7 @@ public final class FileUtils {
                     result = true;
                 }
             } catch (final IOException e) {
-                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
+                logSevere(FileUtils.class, e);
                 throw e;
             }
         }
@@ -186,8 +187,8 @@ public final class FileUtils {
             try {
                 Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
                 result = true;
-            } catch (IOException e) {
-                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, e);
+            } catch (final IOException e) {
+                logSevere(FileUtils.class, e);
             }
 
         }
@@ -202,8 +203,8 @@ public final class FileUtils {
             try {
                 Files.createDirectories(destination.getParent());
                 Logger.getLogger(FileUtils.class.getName()).info("Created directories");
-            } catch (IOException ex) {
-                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            } catch (final IOException e) {
+                logSevere(FileUtils.class, e);
             }
         }
 
@@ -231,8 +232,8 @@ public final class FileUtils {
                 // finish the zip entry, but let the try-with-resources handle the close
                 zipOut.finish();
             }
-        } catch (final IOException ex) {
-            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        } catch (final IOException e) {
+            logSevere(FileUtils.class, e);
         }
     }
 
@@ -253,8 +254,8 @@ public final class FileUtils {
             try {
                 fileList.addAll(Files.list(directory).filter(path -> p.matcher(path.toString()).matches())
                         .collect(Collectors.toList()));
-            } catch (final IOException ex) {
-                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            } catch (final IOException e) {
+                logSevere(FileUtils.class, e);
             }
 
             Collections.sort(fileList); // sort in natural order
