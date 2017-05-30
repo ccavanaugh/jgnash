@@ -129,6 +129,7 @@ public class ImportScriptsDialogController {
         tableViewManager.setPreferenceKeyFactory(() -> DEFAULT);
 
         JavaFXUtils.runLater(tableViewManager::restoreLayout);
+        JavaFXUtils.runLater(tableViewManager::packTable);
     }
 
     /**
