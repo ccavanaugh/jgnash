@@ -19,12 +19,12 @@
 // Cleans up common noise and garbage from a bank download
 
 var processMemo = function (memo) {
-    return memo.toLocaleLowerCase();
-};
+    return capitalizeFirstLetter(memo.toLocaleLowerCase());
+}
 
 var processPayee = function (payee) {
-    return payee.toLocaleLowerCase();
-};
+    return titleCase(payee.toLocaleLowerCase());
+}
 
 var getDescription = function (locale) {
 
@@ -36,4 +36,12 @@ var getDescription = function (locale) {
         default:
             return "Tidy Memo and Payee fields";
     }
-};
+}
+
+function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function titleCase(str) {
+    return str.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
+}
