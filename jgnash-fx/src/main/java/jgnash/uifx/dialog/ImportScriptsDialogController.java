@@ -17,8 +17,11 @@
  */
 package jgnash.uifx.dialog;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -80,6 +83,8 @@ public class ImportScriptsDialogController {
 
     private final IntegerProperty selectedIndexProperty = new SimpleIntegerProperty();
 
+    private final ObjectProperty<Consumer<List<ImportFilter>>> acceptanceConsumerProperty = new SimpleObjectProperty<>();
+
     @SuppressWarnings("FieldCanBeLocal")
     private TableViewManager<Script> tableViewManager;
 
@@ -104,7 +109,7 @@ public class ImportScriptsDialogController {
         tableView.getColumns().add(descriptionColumn);
 
         final TableColumn<Script, String> scriptColumn = new TableColumn<>(resources.getString("Column.Script"));
-        scriptColumn.setCellValueFactory(param -> param.getValue().pathProperty);
+        scriptColumn.setCellValueFactory(param -> param.getValue().scriptProperty);
         tableView.getColumns().add(scriptColumn);
 
         tableView.setEditable(true);
@@ -123,21 +128,49 @@ public class ImportScriptsDialogController {
         tableViewManager.setColumnWeightFactory(column -> PREF_COLUMN_WEIGHTS[column]);
         tableViewManager.setPreferenceKeyFactory(() -> DEFAULT);
 
-        JavaFXUtils.runLater(this::loadScripts);
-
         JavaFXUtils.runLater(tableViewManager::restoreLayout);
     }
 
+    /**
+     * Loads remain scripts that have not been enabled
+     */
     private void loadScripts() {
         for (final ImportFilter importFilter : ImportFilter.getImportFilters()) {
+
+            boolean exists = false;
+
+            for (Script script : tableView.getItems()) {
+                if (script.scriptProperty.get().equals(importFilter.getScript())) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                final Script script = new Script();
+
+                script.descriptionProperty.setValue(importFilter.getDescription());
+                script.scriptProperty.setValue(importFilter.getScript());
+                script.importFilter = importFilter;
+
+                tableView.getItems().add(script);
+            }
+        }
+    }
+
+    public void setEnabledScripts(final List<ImportFilter> importFilters) {
+        for (final ImportFilter importFilter : importFilters) {
             final Script script = new Script();
 
             script.descriptionProperty.setValue(importFilter.getDescription());
-            script.pathProperty.setValue(importFilter.getScript());
-            //script.enabledProperty.setValue(true);
+            script.scriptProperty.setValue(importFilter.getScript());
+            script.importFilter = importFilter;
+            script.enabledProperty.setValue(true);
 
             tableView.getItems().add(script);
         }
+
+        loadScripts();
     }
 
     @FXML
@@ -148,6 +181,18 @@ public class ImportScriptsDialogController {
     @FXML
     private  void handleOkayCloseAction() {
         ((Stage) parent.get().getWindow()).close();
+
+        if (acceptanceConsumerProperty.get() != null) {
+            final List<ImportFilter> filterList = new ArrayList<>();
+
+            for (final Script script : tableView.getItems()) {
+                if (script.enabledProperty.get()) {
+                    filterList.add(script.importFilter);
+                }
+            }
+
+            acceptanceConsumerProperty.get().accept(filterList);
+        }
     }
 
     @FXML
@@ -160,11 +205,17 @@ public class ImportScriptsDialogController {
         Collections.swap(tableView.getItems(), selectedIndexProperty.get(), selectedIndexProperty.get() + 1);
     }
 
+    public void setAcceptanceConsumer(final Consumer<List<ImportFilter>> acceptanceConsumer) {
+        acceptanceConsumerProperty.setValue(acceptanceConsumer);
+    }
+
     private class Script {
         final BooleanProperty enabledProperty = new SimpleBooleanProperty(false);
 
         final StringProperty descriptionProperty = new SimpleStringProperty();
 
-        final StringProperty pathProperty = new SimpleStringProperty();
+        final StringProperty scriptProperty = new SimpleStringProperty();
+
+        ImportFilter importFilter;
     }
 }

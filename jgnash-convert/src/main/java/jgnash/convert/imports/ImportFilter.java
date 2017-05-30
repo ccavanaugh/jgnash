@@ -29,15 +29,19 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.util.EncodeDecode;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 import jgnash.util.OS;
@@ -49,17 +53,19 @@ import static jgnash.util.FileUtils.separator;
  */
 public class ImportFilter {
 
+    private final static String ENABLED_FILTERS = "enabledFilters";
+
     private final static String IMPORT_SCRIPT_DIRECTORY_NAME = "importScripts";
 
     private static final String JS_REGEX_PATTERN = ".*.js";
+
+    private static final Logger logger = Logger.getLogger(ImportFilter.class.getName());
 
     private static String[] KNOWN_SCRIPTS = {"/jgnash/imports/tidy.js"};
 
     private final ScriptEngine engine;
 
     private final String script;
-
-    private static final Logger logger = Logger.getLogger(ImportFilter.class.getName());
 
     ImportFilter(final String script) {
         engine = new ScriptEngineManager().getEngineByName("nashorn");
@@ -86,6 +92,63 @@ public class ImportFilter {
         }
 
         return importFilterList;
+    }
+
+    public static List<ImportFilter> getEnabledImportFilters() {
+        List<ImportFilter> filterList = new ArrayList<>();
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        for (final String string : EncodeDecode.decodeStringCollection(engine.getPreference(ENABLED_FILTERS))) {
+            filterList.add(new ImportFilter(string));
+        }
+
+        return filterList;
+    }
+
+    public static void saveEnabledImportFilters(final List<ImportFilter> filters) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        if (filters != null && filters.size() > 0) {
+            final List<String> scripts = filters.stream().map(ImportFilter::getScript).collect(Collectors.toList());
+            engine.setPreference(ENABLED_FILTERS, EncodeDecode.encodeStringCollection(scripts));
+        } else {
+            engine.setPreference(ENABLED_FILTERS, null);
+        }
+    }
+
+    private static Path getUserImportScriptDirectory() {
+
+        String scriptDirectory = System.getProperty("user.home");
+
+        // decode to correctly handle spaces, etc. in the returned path
+        try {
+            scriptDirectory = URLDecoder.decode(scriptDirectory, StandardCharsets.UTF_8.name());
+        } catch (final UnsupportedEncodingException ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        }
+
+        if (OS.isSystemWindows()) {
+            scriptDirectory += separator + "AppData" + separator + "Local" + separator
+                    + "jgnash" + separator + IMPORT_SCRIPT_DIRECTORY_NAME;
+        } else { // unix, osx
+            scriptDirectory += separator + ".jgnash" + separator + IMPORT_SCRIPT_DIRECTORY_NAME;
+        }
+
+        logger.log(Level.INFO, "Import Script path: {0}", scriptDirectory);
+
+
+        return Paths.get(scriptDirectory);
+    }
+
+    private static Path getBaseFileImportScriptDirectory(@NotNull final Path baseFile) {
+        if (baseFile.getParent() != null) {
+            return Paths.get(baseFile.getParent() + separator + IMPORT_SCRIPT_DIRECTORY_NAME);
+        }
+
+        return null;
     }
 
     public String getScript() {
@@ -145,37 +208,5 @@ public class ImportFilter {
             return Files.newBufferedReader(Paths.get(script));
         }
         return new InputStreamReader(Object.class.getResourceAsStream(script));
-    }
-
-    private static Path getUserImportScriptDirectory() {
-
-        String scriptDirectory = System.getProperty("user.home");
-
-        // decode to correctly handle spaces, etc. in the returned path
-        try {
-            scriptDirectory = URLDecoder.decode(scriptDirectory, StandardCharsets.UTF_8.name());
-        } catch (final UnsupportedEncodingException ex) {
-            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
-        }
-
-        if (OS.isSystemWindows()) {
-            scriptDirectory += separator + "AppData" + separator + "Local" + separator
-                    + "jgnash" + separator + IMPORT_SCRIPT_DIRECTORY_NAME;
-        } else { // unix, osx
-            scriptDirectory += separator + ".jgnash" + separator + IMPORT_SCRIPT_DIRECTORY_NAME;
-        }
-
-        logger.log(Level.INFO, "Import Script path: {0}", scriptDirectory);
-
-
-        return Paths.get(scriptDirectory);
-    }
-
-    private static Path getBaseFileImportScriptDirectory(@NotNull final Path baseFile) {
-        if (baseFile.getParent() != null) {
-           return Paths.get(baseFile.getParent() + separator + IMPORT_SCRIPT_DIRECTORY_NAME);
-        }
-
-        return null;
     }
 }

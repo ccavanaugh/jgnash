@@ -30,6 +30,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 
+import jgnash.convert.imports.ImportFilter;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -532,6 +533,10 @@ public class MenuBarController implements MessageListener {
         final FXMLUtils.Pair<ImportScriptsDialogController> pair =
                 FXMLUtils.load(ImportScriptsDialogController.class.getResource("ImportScriptsDialog.fxml"),
                         resources.getString("Title.ConfigTransImportFilters"));
+
+        pair.getController().setEnabledScripts(ImportFilter.getEnabledImportFilters());
+
+        pair.getController().setAcceptanceConsumer(ImportFilter::saveEnabledImportFilters);
 
         pair.getStage().show();
 
