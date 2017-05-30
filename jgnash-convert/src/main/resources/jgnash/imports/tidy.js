@@ -18,11 +18,11 @@
 
 // Cleans up common noise and garbage from a bank download
 
-var processMemo = function (memo) {
+function processMemo(memo) {
     return capitalizeFirstLetter(memo.toLocaleLowerCase());
 }
 
-var processPayee = function (payee) {
+function processPayee(payee) {
     return titleCase(payee.toLocaleLowerCase());
 }
 
@@ -36,7 +36,7 @@ var getDescription = function (locale) {
         default:
             return "Tidy Memo and Payee fields";
     }
-}
+};
 
 function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
