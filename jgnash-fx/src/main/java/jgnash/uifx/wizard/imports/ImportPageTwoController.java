@@ -49,6 +49,7 @@ import javafx.scene.text.TextFlow;
 import jgnash.convert.imports.BayesImportClassifier;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportFilter;
 import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
@@ -314,8 +315,17 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             numberFormat.setMinimumFractionDigits(currencyNode.getScale());
             numberFormat.setMaximumFractionDigits(currencyNode.getScale());
 
+            // List of enabled import filters
+            final List<ImportFilter> importFilterList = ImportFilter.getEnabledImportFilters();
+
             // set to sane account assuming it's going to be a single entry
             for (final ImportTransaction t : list) {
+
+                // Process transactions with the import filter
+                for (final ImportFilter importFilter : importFilterList) {
+                    t.setMemo(importFilter.processMemo(t.getMemo()));
+                    t.setPayee(importFilter.processPayee(t.getPayee()));
+                }
 
                 if (t.getTransactionType() != TransactionType.REINVESTDIV) {
                     t.setAccount(baseAccount);
