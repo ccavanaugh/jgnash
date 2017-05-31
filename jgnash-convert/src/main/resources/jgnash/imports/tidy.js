@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Cleans up common noise and garbage from a bank download
+// Normalizes the case of the payee and memo fields
 
 function processMemo(memo) {
     return capitalizeFirstLetter(memo.toLocaleLowerCase());
