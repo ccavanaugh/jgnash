@@ -9,7 +9,7 @@
 
 [[_legal]]
 == Legal
-[big]*jGnash 2.28.x User Guide*
+[big]*jGnash 2.32.x User Guide*
 
 Copyright (C) 2001-2017 Craig Cavanaugh
 
@@ -55,7 +55,7 @@ A brief list of features is below:
 * Budgeting with multiple scenario options and export to spreadsheet capability. 
 * Investment Accounts and automatic import of Stocks, Bond, and Funds price history. 
 * Nestable accounts with automatic rollup of totals and intelligent handling of mixed currencies. 
-* OFX, QFX, mt940, and QIF import capabilities. 
+* OFX, QFX, mt940, and QIF import with the ability to pre-process using JavaScript.
 * Reminders and automatic transaction entry and notifications. 
 * Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates. 
 * Printable reports with PDF and spreadsheet export capability. 
@@ -754,10 +754,10 @@ of some spreadsheet applications.
 
 [[_reconciliation]]
 == Reconciliation
-Reconciliation is a simple and visual process of matching up the transactions listed in an account's register against a paper or electronic statement provided by a financial institution.
-If differences do exist, then any missing or erroneous transactions must be addressed until the differences are resolved.
-Statements should come from you bank, investment broker, credit card issuer, etc.
-on a periodic basis. 
+Reconciliation is a simple and visual process of matching up the transactions listed in an account's register against a
+paper or electronic statement provided by a financial institution. If differences do exist, then any missing or erroneous
+transactions must be addressed until the differences are resolved. Statements should come from you bank, investment
+broker, credit card issuer, etc. on a periodic basis.
 
 Periodically reconciling an account helps ensure transaction entry errors do not creep in  over time. _Reconciliation
 is also a great tool for monitoring your accounts for fraudulent transactions._
@@ -929,7 +929,72 @@ What do you do if you have marked all transactions as reconciled and the differe
 If you need to to exit the Reconciliation Wizard before finishing, the btn:[Finish Later] button may be used.
 This will close the dialog and mark selected transactions as **Cleared**.
 This makes it easy to restart the process with transaction you have already marked as reconcilable identified.
-You will still need to reselect those transactions when you restart the process. 
+You will still need to reselect those transactions when you restart the process.
+
+[[_imports]]
+== Importing Transactions
+
+=== JavaScript filters
+When importing transactions from OFX/QFX, mt940, and QIF bank statements downloads, transactions may be pre-processed
+using custom JavaScript files.  As of jGnash release 2.32.0, the scripts may be used to alter the memo or payee of the
+transactions being imported.
+
+You have three options for making a JavaScript file available for use:
+
+. Some scripts are included by default.  These show up as /jgnash/imports/_xxx.js_ in the *Script* column of the table.
+. Place the JavaScript file into a [path]_importScripts_ sub directory where your jGnash data file is installed.
+. Place the JAR file into your home directly where jGnash will find it.
+.. $HOME/.jgnash/importScripts for UNIX and BSD based operating systems.
+.. USER_HOME\AppData\Local\jgnash\importScripts for Windows operating systems.
+
+These import scripts must be specifically enabled for use and the order in which they will be executed can be changed
+using the menu:Tools[Configure Transaction Imports Filters…] menu as shown below.
+
+image:importFilters.png[width="333"]
+
+Below is an example JavaScript file.  The first three functions are required for correct operation.  These functions
+accept a *string* and are expected to return a *string*.
+
+The full jGnash API may be accessed within these scripts for advanced processing capabilities.
+See the <<_javascript,JavaScript>> section of the manual for more details.
+
+[[app-listing]]
+[source,javascript]
+----
+/* Normalizes the case of the payee and memo fields */
+
+// this is a required function
+function processMemo(memo) {
+    return capitalizeFirstLetter(memo.toLocaleLowerCase());
+}
+
+// this is a required function
+function processPayee(payee) {
+    return titleCase(payee.toLocaleLowerCase());
+}
+
+// this is a required function
+var getDescription = function (locale) {
+    var Locale = Packages.java.util.Locale;
+
+    switch (locale) {
+        case Locale.ENGLISH:
+            return "Tidy Memo and Payee fields";
+        default:
+            return "Tidy Memo and Payee fields";
+    }
+};
+
+// Capitalizes the first letter or a String
+function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Converts a string to Title Case
+function titleCase(str) {
+    return str.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
+}
+----
 
 [[_reports]]
 == Reports
@@ -1043,7 +1108,7 @@ directory jGnash is installed.
 
 You have two options for manually installing a Plugin:
 
-. Place the JAR file into the [path]_plugins_ sub directory where jGnash is installed and restarting.
+. Place the JAR file into the [path]_plugins_ sub directory where jGnash is installed and restart jGnash.
 . Place the JAR file into your home directly where jGnash will find it.
 .. $HOME/.jgnash/plugins for UNIX and BSD based operating systems.
 .. USER_HOME\AppData\Local\jgnash\plugins for Windows operating systems.
@@ -1051,6 +1116,7 @@ You have two options for manually installing a Plugin:
 The jGnash JavaDoc may be referenced if you are interested in creating a jGnash Plugin.
 The MT940 import is written as a standard Plugin and may be referenced as an example of how to write one. 
 
+[[_javascript]]
 === JavaScript
 In addition to use of Plugins, jGnash allows you to create and run JavaScript programs.
 The internals of the jGnash engine and some user interface functions can be accessed to create custom reports, create
