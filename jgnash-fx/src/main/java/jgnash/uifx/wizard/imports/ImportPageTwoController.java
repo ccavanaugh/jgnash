@@ -433,6 +433,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     class AccountComboBoxTableCell<S> extends TableCell<S, Account> {
 
         private final AccountComboBox comboBox;
+
         private boolean firstPassEdit = false;
 
         AccountComboBoxTableCell() {
@@ -458,9 +459,13 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             if (row != null) {
                 final ImportTransaction importTransaction = (ImportTransaction) row.getItem();
 
-                editableProperty().setValue(!(!importTransaction.isInvestmentTransaction()
-                        || (importTransaction.isInvestmentTransaction()
-                        && importTransaction.getTransactionType() == TransactionType.REINVESTDIV)));
+                if (!importTransaction.isInvestmentTransaction()) {
+                    editableProperty().setValue(true);
+                } else {
+                    editableProperty().setValue(!(!importTransaction.isInvestmentTransaction()
+                            || (importTransaction.isInvestmentTransaction()
+                            && importTransaction.getTransactionType() == TransactionType.REINVESTDIV)));
+                }
             }
 
             if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
@@ -512,6 +517,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     class IncomeAccountComboBoxTableCell<S extends ImportTransaction> extends TableCell<S, Account> {
 
         private final AccountComboBox comboBox;
+
         private boolean firstPassEdit = false;
 
         IncomeAccountComboBoxTableCell() {
@@ -596,6 +602,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     class ExpenseAccountComboBoxTableCell<S extends ImportTransaction> extends TableCell<S, Account> {
 
         private final AccountComboBox comboBox;
+
         private boolean firstPassEdit = false;
 
         ExpenseAccountComboBoxTableCell() {
