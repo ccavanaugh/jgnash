@@ -23,6 +23,7 @@ WANTS
 
 Release 2.32.0
 --------------
+* 06/03/17 Expanded Manual content for importing transactions.
 * 06/03/17 Fixed a regression that was preventing the selection of the transaction's account when importing. (Fx)
 * 05/30/17 Added the ability to pre-process imported transaction memos and payees using user supplied JavaScript. (Fx)
 * 05/28/17 Minor improvements to the button behavior when editing the transaction number list. (Fx)
