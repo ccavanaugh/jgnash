@@ -42,7 +42,7 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
 
     private static final int TICK_MARKS = 14;
 
-    private final SimpleObjectProperty<SecurityNode> securityNode = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<SecurityNode> securityNodeProperty = new SimpleObjectProperty<>();
 
     private final NumberAxis xAxis;
 
@@ -64,44 +64,44 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
     }
 
     public SimpleObjectProperty<SecurityNode> securityNodeProperty() {
-        return securityNode;
+        return securityNodeProperty;
     }
 
     public void update() {
-        if (securityNodeProperty() != null) {
-            new Thread(() -> {
-                final SecurityNode securityNode = securityNodeProperty().get();
-                final List<List<SecurityHistoryNode>> groups = securityNode.getHistoryNodeGroupsBySplits();
 
-                final Optional<LocalDate[]> optional = securityNode.getLocalDateBounds();
+        new Thread(() -> {
+            final SecurityNode securityNode = securityNodeProperty().get();
+            final List<List<SecurityHistoryNode>> groups = securityNode.getHistoryNodeGroupsBySplits();
 
-                optional.ifPresent(localDates -> {
-                    Platform.runLater(() -> getData().clear());
+            final Optional<LocalDate[]> optional = securityNode.getLocalDateBounds();
 
-                    for (int i = 0; i < groups.size(); i++) {
-                        final Series<Number, Number> series = new Series<>();
-                        series.setName(securityNode.getSymbol() + i);
+            optional.ifPresent(localDates -> {
+                Platform.runLater(() -> getData().clear());
 
-                        for (final SecurityHistoryNode node : groups.get(i)) {
-                            series.getData().add(new Data<>(node.getLocalDate().toEpochDay(), node.getAdjustedPrice()));
-                        }
+                for (int i = 0; i < groups.size(); i++) {
+                    final Series<Number, Number> series = new Series<>();
+                    series.setName(securityNode.getSymbol() + i);
 
-                        Platform.runLater(() -> getData().add(series));
+                    for (final SecurityHistoryNode node : groups.get(i)) {
+                        series.getData().add(new Data<>(node.getLocalDate().toEpochDay(), node.getAdjustedPrice()));
                     }
 
-                    xAxis.setLowerBound(localDates[0].toEpochDay());
-                    xAxis.setUpperBound(localDates[1].toEpochDay());
+                    Platform.runLater(() -> getData().add(series));
+                }
 
-                    final long range = localDates[1].toEpochDay() - localDates[0].toEpochDay();
+                xAxis.setLowerBound(localDates[0].toEpochDay());
+                xAxis.setUpperBound(localDates[1].toEpochDay());
 
-                    if (range > TICK_MARKS) {
-                        xAxis.setTickUnit((localDates[1].toEpochDay() - localDates[0].toEpochDay()) / TICK_MARKS);
-                    } else {
-                        xAxis.setTickUnit(range - 1);
-                    }
-                });
-            }).start();
-        }
+                final long range = localDates[1].toEpochDay() - localDates[0].toEpochDay();
+
+                if (range > TICK_MARKS) {
+                    xAxis.setTickUnit((localDates[1].toEpochDay() - localDates[0].toEpochDay()) / TICK_MARKS);
+                } else {
+                    xAxis.setTickUnit(range - 1);
+                }
+            });
+        }).start();
+
     }
 
     private static class NumberDateStringConverter extends StringConverter<Number> {
