@@ -23,6 +23,7 @@ WANTS
 
 Release 2.32.0
 --------------
+* 06/12/17 The security history chart would incorrectly show a prior chart if no data existed. (Fx)
 * 06/11/17 Updated to the new Yahoo Finance API for retrieving dividend and stock split information.
 * 06/03/17 Expanded Manual content for importing transactions.
 * 06/03/17 Fixed a regression that was preventing the selection of the transaction's account when importing. (Fx)

@@ -22,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
@@ -32,6 +31,7 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.uifx.Options;
 import jgnash.time.DateUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Extends and AreaChart to encapsulate generation of a SecurityNode chart.
@@ -69,14 +69,14 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
 
     public void update() {
 
+        JavaFXUtils.runLater(getData()::clear); // clear old data
+
         new Thread(() -> {
             final SecurityNode securityNode = securityNodeProperty().get();
-            final List<List<SecurityHistoryNode>> groups = securityNode.getHistoryNodeGroupsBySplits();
-
             final Optional<LocalDate[]> optional = securityNode.getLocalDateBounds();
 
             optional.ifPresent(localDates -> {
-                Platform.runLater(() -> getData().clear());
+                final List<List<SecurityHistoryNode>> groups = securityNode.getHistoryNodeGroupsBySplits();
 
                 for (int i = 0; i < groups.size(); i++) {
                     final Series<Number, Number> series = new Series<>();
@@ -86,7 +86,7 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
                         series.getData().add(new Data<>(node.getLocalDate().toEpochDay(), node.getAdjustedPrice()));
                     }
 
-                    Platform.runLater(() -> getData().add(series));
+                    JavaFXUtils.runLater(() -> getData().add(series));
                 }
 
                 xAxis.setLowerBound(localDates[0].toEpochDay());
