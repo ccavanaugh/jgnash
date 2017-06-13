@@ -17,21 +17,11 @@
  */
 package jgnash.net.security;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -54,12 +44,9 @@ import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
-import jgnash.net.ConnectionFactory;
 import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
-
-import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
 
 /**
  * Fetches latest stock prices in the background.
@@ -69,8 +56,6 @@ import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
 public class UpdateFactory {
 
     private static final String UPDATE_ON_STARTUP = "updateSecuritiesOnStartup";
-
-    private static final String RESPONSE_HEADER = "Date,Open,High,Low,Close,Volume,Adj Close";
 
     // static reference is kept so LogManager cannot garbage collect the logger
     private static final Logger logger = Logger.getLogger(UpdateFactory.class.getName());
@@ -193,85 +178,11 @@ public class UpdateFactory {
     public static List<SecurityHistoryNode> downloadHistory(final SecurityNode securityNode, final LocalDate startDate,
                                                             final LocalDate endDate) {
 
-        final List<SecurityHistoryNode> newSecurityNodes = new ArrayList<>();
+        final List<SecurityHistoryNode> newSecurityNodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+                startDate, endDate);
 
-        final String s = securityNode.getSymbol().toLowerCase(Locale.ROOT);
-
-        final String a = Integer.toString(startDate.getMonthValue() - 1);
-        final String b = Integer.toString(startDate.getDayOfMonth());
-        final String c = Integer.toString(startDate.getYear());
-
-        final String d = Integer.toString(endDate.getMonthValue() - 1);
-        final String e = Integer.toString(endDate.getDayOfMonth());
-        final String f = Integer.toString(endDate.getYear());
-
-        // http://ichart.finance.yahoo.com/table.csv?s=AMD&d=1&e=14&f=2007&g=d&a=2&b=21&c=1983&ignore=.csv << new URL 2.14.07
-
-        StringBuilder r = new StringBuilder("http://ichart.finance.yahoo.com/table.csv?a=");
-        r.append(a).append("&b=").append(b).append("&c=").append(c);
-        r.append("&d=").append(d).append("&e=").append(e);
-        r.append("&f=").append(f).append("&s=").append(s);
-        r.append("&y=0&g=d&ignore=.csv");
-
-        URLConnection connection = null;
-
-        try {
-
-            /* Yahoo uses the English locale for the date... force the locale */
-            final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
-            connection = ConnectionFactory.openConnection(r.toString());
-
-            if (connection != null) {
-
-                // Read, parse, and load the new history nodes into a list to be persisted later.  A relational
-                // database may stall and cause the network connection to timeout if persisted inline
-                try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
-                        StandardCharsets.UTF_8))) {
-
-                    String line = in.readLine();
-
-                    // make sure that we have valid data format.
-                    if (RESPONSE_HEADER.equals(line)) {
-
-                        //Date,Open,High,Low,Close,Volume,Adj Close
-                        //2007-02-13,14.75,14.86,14.47,14.60,17824500,14.60
-
-                        line = in.readLine(); // prime the first read
-
-                        while (line != null) {
-                            if (Thread.currentThread().isInterrupted()) {
-                                Thread.currentThread().interrupt();
-                            }
-
-                            if (line.charAt(0) != '<') { // may have comments in file
-
-                                final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
-
-                                final LocalDate date = DateUtils.asLocalDate(df.parse(fields[0]));
-                                final BigDecimal high = new BigDecimal(fields[2]);
-                                final BigDecimal low = new BigDecimal(fields[3]);
-                                final BigDecimal close = new BigDecimal(fields[4]);
-                                final long volume = Long.parseLong(fields[5]);
-
-                                newSecurityNodes.add(new SecurityHistoryNode(date, close, volume, high, low));
-                            }
-
-                            line = in.readLine();
-                        }
-                    }
-                }
-
-                logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
-            }
-        } catch (NullPointerException | IOException | ParseException | NumberFormatException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } finally {
-            if (connection != null) {
-                if (connection instanceof HttpURLConnection) {
-                    ((HttpURLConnection) connection).disconnect();
-                }
-            }
+        if (newSecurityNodes.size() > 0) {
+            logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
         }
 
         return newSecurityNodes;

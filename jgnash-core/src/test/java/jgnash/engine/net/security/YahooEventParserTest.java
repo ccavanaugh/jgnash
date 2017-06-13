@@ -17,10 +17,13 @@
  */
 package jgnash.engine.net.security;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 import java.util.Set;
 
 import jgnash.engine.AbstractEngineTest;
@@ -31,8 +34,6 @@ import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.security.YahooEventParser;
-
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -71,5 +72,20 @@ public class YahooEventParserTest extends AbstractEngineTest {
         assertNotNull(events);
 
         assertEquals(219, events.size());
+    }
+
+    @Test
+    public void testHistoricalDownload() {
+        final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
+        ibm.setSymbol("IBM");
+        ibm.setScale((byte) 2);
+
+        e.addSecurity(ibm);
+
+        final List<SecurityHistoryNode> events = YahooEventParser.retrieveHistoricalPrice(ibm, LocalDate.of(2016,
+                Month.JANUARY, 1), LocalDate.of(2016, Month.DECEMBER, 30));
+
+        assertEquals(252, events.size());
+
     }
 }

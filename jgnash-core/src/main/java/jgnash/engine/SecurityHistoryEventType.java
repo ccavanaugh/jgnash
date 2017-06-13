@@ -26,7 +26,8 @@ import jgnash.util.ResourceUtils;
  */
 public enum SecurityHistoryEventType {
     SPLIT(ResourceUtils.getString("SecurityEvent.Split")),
-    DIVIDEND(ResourceUtils.getString("SecurityEvent.Dividend"));
+    DIVIDEND(ResourceUtils.getString("SecurityEvent.Dividend")),
+    PRICE("SecurityEvent.Price");
 
     private final transient String description;
 
