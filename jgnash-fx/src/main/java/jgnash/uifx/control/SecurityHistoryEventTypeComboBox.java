@@ -44,7 +44,7 @@ public class SecurityHistoryEventTypeComboBox extends ComboBox<SecurityHistoryEv
         // warp in a sorted list
         setItems(new SortedList<>(items, null));
 
-        items.addAll(SecurityHistoryEventType.values());
+        items.addAll(SecurityHistoryEventType.DIVIDEND, SecurityHistoryEventType.SPLIT);
 
         setValue(SecurityHistoryEventType.DIVIDEND);
     }
