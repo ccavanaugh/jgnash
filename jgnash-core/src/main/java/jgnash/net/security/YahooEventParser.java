@@ -32,9 +32,11 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -94,184 +96,124 @@ public class YahooEventParser {
         return events;
     }
 
-    private static Set<SecurityHistoryEvent> retrieveNewDividends(@NotNull final SecurityNode securityNode,
-                                                                  final LocalDate startDate, final LocalDate endDate) {
-
-        final Set<SecurityHistoryEvent> events = new HashSet<>();
+    private static List<SecurityHistoryEvent> retrieveNewDividends(@NotNull final SecurityNode securityNode,
+                                                                   final LocalDate startDate, final LocalDate endDate) {
 
         /*
         Date,Dividends
         1989-02-02,0.275
         1989-08-03,0.3025
-        2010-08-06,0.65
-        1997-11-06,0.1
         1964-02-04,0.00167
         1964-08-04,0.00208
         */
 
-        final String url = buildYahooQuery(securityNode, startDate, endDate, SecurityHistoryEventType.DIVIDEND);
+        return parseStream(securityNode, startDate, endDate,
+                SecurityHistoryEventType.DIVIDEND, DIV_RESPONSE_HEADER::equals,
+                line -> {
+                    final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
 
-        URLConnection connection = null;
+                    if (fields.length == 2) {   // if fields are != 2, then it's not valid data
+                        try {
+                            return new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND,
+                                    parseYahooDate(fields[0]), new BigDecimal(fields[1]));
 
-        try {
-            connection = ConnectionFactory.openConnection(url);
-
-
-            if (connection != null) {
-
-                // required by Yahoo
-                connection.setRequestProperty("Cookie", YahooCrumbManager.getCookie());
-
-                try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
-                        StandardCharsets.UTF_8))) {
-
-                    String line = in.readLine();
-
-                    if (DIV_RESPONSE_HEADER.equals(line)) {
-                        line = in.readLine(); // prime the first read
-
-                        while (line != null) {
-                            if (Thread.currentThread().isInterrupted()) {
-                                Thread.currentThread().interrupt();
-                            }
-
-                            final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
-
-                            if (fields.length == 2) {   // if fields are != 2, then it's not valid data
-
-                                try {
-                                    final LocalDate date = parseYahooDate(fields[0].trim());
-
-                                    final BigDecimal dividend = new BigDecimal(fields[1]);
-                                    events.add(new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date,
-                                            dividend));
-
-                                } catch (final DateTimeException | NumberFormatException ex) {
-                                    Logger.getLogger(YahooEventParser.class.getName()).log(Level.INFO, line);
-                                    LogUtil.logSevere(YahooEventParser.class, ex);
-                                }
-                            }
-
-                            line = in.readLine();
+                        } catch (final DateTimeException | NumberFormatException ex) {
+                            Logger.getLogger(YahooEventParser.class.getName()).log(Level.INFO, line);
+                            LogUtil.logSevere(YahooEventParser.class, ex);
                         }
                     }
-                }
-            }
-        } catch (final NullPointerException | IOException ex) {
-            Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
-        } finally {
-            if (connection != null) {
-                if (connection instanceof HttpURLConnection) {
-                    ((HttpURLConnection) connection).disconnect();
-                }
-            }
-        }
+                    return null;
+                });
+    }
+
+    public static List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
+                                                                    final LocalDate startDate, final LocalDate endDate) {
+
+        /*
+         Date,Open,High,Low,Close,Adj Close,Volume
+         2016-01-04,128.344070,128.694244,127.056824,135.949997,128.675323,5229400
+         2016-01-05,129.441956,129.565018,127.634193,135.850006,128.580673,3924800
+         2016-01-06,127.189331,128.325134,126.469986,135.169998,127.937050,4310900
+         */
+
+        final List<SecurityHistoryNode> events = parseStream(securityNode, startDate, endDate,
+                SecurityHistoryEventType.PRICE, HISTORY_RESPONSE_HEADER::equals,
+                line -> {
+                    final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
+
+                    if (fields.length == 7) {   // if fields are != 7, then it's not valid data
+                        try {
+                            // Date,Open,High,Low,Close,Adj Close,Volume
+                            final LocalDate date = parseYahooDate(fields[0]);
+                            final BigDecimal high = new BigDecimal(fields[2]);
+                            final BigDecimal low = new BigDecimal(fields[3]);
+                            final BigDecimal close = new BigDecimal(fields[4]);
+                            final long volume = Long.parseLong(fields[6]);
+
+                            return new SecurityHistoryNode(date, close, volume, high, low);
+                        } catch (final DateTimeException | NumberFormatException ex) {
+                            Logger.getLogger(YahooEventParser.class.getName()).log(Level.INFO, line);
+                            LogUtil.logSevere(YahooEventParser.class, ex);
+
+                        }
+                    }
+                    return null;
+                });
+
+        Collections.reverse(events);    // reverse for better chronological order
 
         return events;
     }
 
-    public static List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
-                                                                  final LocalDate startDate, final LocalDate endDate) {
 
-        final List<SecurityHistoryNode> events = new ArrayList<>();
+    private static List<SecurityHistoryEvent> retrieveNewSplits(@NotNull final SecurityNode securityNode,
+                                                                final LocalDate startDate, final LocalDate endDate) {
+
+         /*
+        Date,Stock Splits
+        1973-05-29,5/4
+        1964-05-18,5/4
+        1997-05-28,2/1
+        */
+
+        return parseStream(securityNode, startDate, endDate,
+                SecurityHistoryEventType.SPLIT, SPLIT_RESPONSE_HEADER::equals,
+                line -> {
+                    final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
+
+                    if (fields.length == 2) {   // if fields are != 2, then it's not valid data
+                        try {
+                            final String[] fraction = fields[1].split("/");
+
+                            final BigDecimal value = new BigDecimal(fraction[0])
+                                    .divide(new BigDecimal(fraction[1]), MathContext.DECIMAL32);
+
+                            return new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, parseYahooDate(fields[0]),
+                                    value);
+
+                        } catch (final DateTimeException | NumberFormatException ex) {
+                            Logger.getLogger(YahooEventParser.class.getName()).log(Level.INFO, line);
+                            LogUtil.logSevere(YahooEventParser.class, ex);
+                        }
+                    }
+                    return null;
+                });
+
+    }
+
+    private static <T> List<T> parseStream(@NotNull final SecurityNode securityNode, final LocalDate startDate,
+                                           final LocalDate endDate, final SecurityHistoryEventType type,
+                                           final Function<String, Boolean> acceptHeaderFunction,
+                                           final Function<String, T> processLineFunction) {
+
+        final List<T> events = new ArrayList<>();
 
         // Ensure we have a valid cookie and crumb
         if (!YahooCrumbManager.authorize(securityNode.getSymbol())) {
             return events;
         }
 
-        /*
-        Date,Open,High,Low,Close,Adj Close,Volume
-        2016-01-04,128.344070,128.694244,127.056824,135.949997,128.675323,5229400
-        2016-01-05,129.441956,129.565018,127.634193,135.850006,128.580673,3924800
-        2016-01-06,127.189331,128.325134,126.469986,135.169998,127.937050,4310900
-        */
-
-        final String url = buildYahooQuery(securityNode, startDate, endDate, SecurityHistoryEventType.PRICE);
-
-        System.out.println(url);
-
-        URLConnection connection = null;
-
-        try {
-            connection = ConnectionFactory.openConnection(url);
-
-
-            if (connection != null) {
-
-                // required by Yahoo
-                connection.setRequestProperty("Cookie", YahooCrumbManager.getCookie());
-
-                try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
-                        StandardCharsets.UTF_8))) {
-
-                    String line = in.readLine();
-
-                    if (HISTORY_RESPONSE_HEADER.equals(line)) {
-                        line = in.readLine(); // prime the first read
-
-                        while (line != null) {
-                            if (Thread.currentThread().isInterrupted()) {
-                                Thread.currentThread().interrupt();
-                            }
-
-                            final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
-
-                            if (fields.length == 7) {   // if fields are != 7, then it's not valid data
-
-                                try {
-
-                                    // Date,Open,High,Low,Close,Adj Close,Volume
-                                    final LocalDate date = parseYahooDate(fields[0]);
-                                    final BigDecimal high = new BigDecimal(fields[2]);
-                                    final BigDecimal low = new BigDecimal(fields[3]);
-                                    final BigDecimal close = new BigDecimal(fields[4]);
-                                    final long volume = Long.parseLong(fields[6]);
-
-                                    events.add(new SecurityHistoryNode(date, close, volume, high, low));
-
-                                } catch (final DateTimeException | NumberFormatException ex) {
-                                    Logger.getLogger(YahooEventParser.class.getName()).log(Level.INFO, line);
-                                    LogUtil.logSevere(YahooEventParser.class, ex);
-                                }
-                            }
-
-                            line = in.readLine();
-                        }
-                    }
-                }
-            }
-        } catch (final NullPointerException | IOException ex) {
-            Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
-        } finally {
-            if (connection != null) {
-                if (connection instanceof HttpURLConnection) {
-                    ((HttpURLConnection) connection).disconnect();
-                }
-            }
-        }
-
-        return events;
-    }
-
-
-    private static Set<SecurityHistoryEvent> retrieveNewSplits(@NotNull final SecurityNode securityNode,
-                                                               final LocalDate startDate, final LocalDate endDate) {
-
-        final Set<SecurityHistoryEvent> events = new HashSet<>();
-
-        /*
-        Date,Stock Splits
-        1973-05-29,5/4
-        1964-05-18,5/4
-        1997-05-28,2/1
-        1999-05-27,2/1
-        1966-05-18,3/2
-        1968-04-23,2/1
-        1979-06-01,4/1
-        */
-
-        final String url = buildYahooQuery(securityNode, startDate, endDate, SecurityHistoryEventType.SPLIT);
+        final String url = buildYahooQuery(securityNode, startDate, endDate, type);
 
         URLConnection connection = null;
 
@@ -288,7 +230,7 @@ public class YahooEventParser {
 
                     String line = in.readLine();
 
-                    if (SPLIT_RESPONSE_HEADER.equals(line)) {
+                    if (acceptHeaderFunction.apply(line)) {
                         line = in.readLine(); // prime the first read
 
                         while (line != null) {
@@ -296,26 +238,7 @@ public class YahooEventParser {
                                 Thread.currentThread().interrupt();
                             }
 
-                            final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
-
-                            if (fields.length == 2) {   // if fields are != 2, then it's not valid data
-
-                                try {
-                                    final LocalDate date = parseYahooDate(fields[0].trim());
-
-                                    final String[] fraction = fields[1].split("/");
-
-                                    final BigDecimal value = new BigDecimal(fraction[0])
-                                            .divide(new BigDecimal(fraction[1]), MathContext.DECIMAL32);
-
-                                    events.add(new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, date,
-                                            value));
-
-                                } catch (final DateTimeException | NumberFormatException ex) {
-                                    Logger.getLogger(YahooEventParser.class.getName()).log(Level.INFO, line);
-                                    LogUtil.logSevere(YahooEventParser.class, ex);
-                                }
-                            }
+                            events.add(processLineFunction.apply(line));
 
                             line = in.readLine();
                         }
@@ -323,7 +246,7 @@ public class YahooEventParser {
                 }
             }
         } catch (final NullPointerException | IOException ex) {
-            Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            LogUtil.logSevere(YahooEventParser.class, ex);
         } finally {
             if (connection != null) {
                 if (connection instanceof HttpURLConnection) {
