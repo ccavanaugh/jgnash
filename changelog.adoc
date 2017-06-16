@@ -23,6 +23,7 @@ WANTS
 
 Release 2.3x.0
 --------------
+* 06/16/17 Updated to the latest Netty dependency
 * 06/16/17 Updated to the latest XStream dependency
 * 06/16/17 Updated to the latest H2 database dependency
 
