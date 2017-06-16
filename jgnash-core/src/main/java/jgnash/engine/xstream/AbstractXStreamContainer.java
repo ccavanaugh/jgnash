@@ -72,6 +72,10 @@ import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
 import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
+import com.thoughtworks.xstream.security.WildcardTypePermission;
 
 /**
  * Abstract XStream container.
@@ -130,6 +134,13 @@ abstract class AbstractXStreamContainer {
     }
 
     static XStream configureXStream(final XStream xstream) {
+
+        // configure XStream security
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xstream.addPermission(ArrayTypePermission.ARRAYS);
+        xstream.addPermission(new WildcardTypePermission(new String[] {"java.**", "jgnash.engine.**"}));
+
         xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
 
         xstream.setMode(XStream.ID_REFERENCES);
@@ -205,10 +216,6 @@ abstract class AbstractXStreamContainer {
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
-
-        // Converters for new Java time API
-        xstream.registerConverter(new LocalDateConverter());
-        xstream.registerConverter(new LocalDateTimeConverter());
 
         return xstream;
     }

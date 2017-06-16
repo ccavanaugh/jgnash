@@ -17,6 +17,22 @@
  */
 package jgnash.engine;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSetConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
+import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
+import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
+import com.thoughtworks.xstream.security.WildcardTypePermission;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,22 +55,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.xstream.LocalDateConverter;
-import jgnash.engine.xstream.LocalDateTimeConverter;
 import jgnash.util.ClassPathUtils;
 import jgnash.util.ResourceUtils;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedMapConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSetConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
-import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
-import com.thoughtworks.xstream.io.xml.KXml2Driver;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
  * Import and export a tree of accounts using XML files.
@@ -78,6 +80,12 @@ public class AccountTreeXMLFactory {
                 return new HibernateMapper(next);
             }
         };
+
+        // configure XStream security
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xstream.addPermission(ArrayTypePermission.ARRAYS);
+        xstream.addPermission(new WildcardTypePermission(new String[] {"java.**", "jgnash.engine.**"}));
 
         xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
 
@@ -122,10 +130,6 @@ public class AccountTreeXMLFactory {
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
-
-        // Converters for new Java time API
-        xstream.registerConverter(new LocalDateConverter());
-        xstream.registerConverter(new LocalDateTimeConverter());
 
         return xstream;
     }
