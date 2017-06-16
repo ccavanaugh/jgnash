@@ -21,6 +21,10 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.3x.0
+--------------
+* 06/16/17 Updated to the latest H2 database dependency
+
 Release 2.32.0
 --------------
 * 06/13/17 Updated to the new Yahoo Finance API for retrieving historical stock price information.
