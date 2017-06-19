@@ -20,9 +20,11 @@ WANTS
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
 * Reinstate archive capability.
+* Pay Now option for reminders
 
 Release 2.3x.0
 --------------
+* 06/19/17 Added a command button to execute a Reminder on demand.
 * 06/16/17 Updated to the latest Netty dependency
 * 06/16/17 Updated to the latest XStream dependency
 * 06/16/17 Updated to the latest H2 database dependency

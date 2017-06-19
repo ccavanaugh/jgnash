@@ -31,6 +31,11 @@
                     <FontAwesomeLabel glyphName="REFRESH"/>
                 </graphic>
             </Button>
+            <Button fx:id="nowButton" text="%Button.ExecuteNow" onAction="#handleNowAction" mnemonicParsing="false">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CLOCK"/>
+                </graphic>
+            </Button>
         </ToolBar>
     </top>
     <center>

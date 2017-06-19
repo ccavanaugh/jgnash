@@ -20,6 +20,7 @@ package jgnash.uifx.views.recurring;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -68,10 +69,13 @@ import jgnash.uifx.util.JavaFXUtils;
 public class RecurringViewController implements MessageListener {
 
     @FXML
+    private Button deleteButton;
+
+    @FXML
     private Button modifyButton;
 
     @FXML
-    private Button deleteButton;
+    private Button nowButton;
 
     @FXML
     private TableView<Reminder> tableView;
@@ -184,6 +188,7 @@ public class RecurringViewController implements MessageListener {
         // bind enabled state of the buttons to the selected reminder property
         deleteButton.disableProperty().bind(Bindings.isNull(selectedReminder));
         modifyButton.disableProperty().bind(Bindings.isNull(selectedReminder));
+        nowButton.disableProperty().bind(Bindings.isNull(selectedReminder));
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
 
@@ -326,6 +331,25 @@ public class RecurringViewController implements MessageListener {
             });
         } catch (final CloneNotSupportedException e) {
             Logger.getLogger(RecurringViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+    }
+
+    @FXML
+    private void handleNowAction() {
+        if (selectedReminder.get().isEnabled()) {
+            if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"),
+                    resources.getString("Message.Confirm.ExecuteReminder"))
+                    .getButtonData() != ButtonBar.ButtonData.YES) {
+                return;
+            }
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            final PendingReminder pendingReminder = engine.getPendingReminder(selectedReminder.get());
+            pendingReminder.setApproved(true);
+
+            engine.processPendingReminders(Collections.singletonList(pendingReminder));
         }
     }
 }

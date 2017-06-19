@@ -696,6 +696,17 @@ public class Engine {
         return pendingList;
     }
 
+    public PendingReminder getPendingReminder(@NotNull Reminder reminder) {
+        final RecurringIterator ri = reminder.getIterator();
+        LocalDate next = ri.next();
+
+        if (next != null) {
+            return new PendingReminder(reminder, next);
+        }
+
+        return null;
+    }
+
     public void processPendingReminders(final Collection<PendingReminder> pendingReminders) {
         pendingReminders.stream().filter(PendingReminder::isApproved).forEach(pending -> {
             final Reminder reminder = pending.getReminder();
