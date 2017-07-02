@@ -225,28 +225,35 @@ public class YahooEventParser {
                 // required by Yahoo
                 connection.setRequestProperty("Cookie", YahooCrumbManager.getCookie());
 
-                try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
-                        StandardCharsets.UTF_8))) {
+                int responseCode = ((HttpURLConnection)connection).getResponseCode();
 
-                    String line = in.readLine();
+                if (responseCode == 401) {  // TODO: rerun query
+                    YahooCrumbManager.clearAuthorization();
+                } else {
+                    try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
+                            StandardCharsets.UTF_8))) {
 
-                    if (acceptHeaderFunction.apply(line)) {
-                        line = in.readLine(); // prime the first read
+                        String line = in.readLine();
 
-                        while (line != null) {
-                            if (Thread.currentThread().isInterrupted()) {
-                                Thread.currentThread().interrupt();
+                        if (acceptHeaderFunction.apply(line)) {
+                            line = in.readLine(); // prime the first read
+
+                            while (line != null) {
+                                if (Thread.currentThread().isInterrupted()) {
+                                    Thread.currentThread().interrupt();
+                                }
+
+                                events.add(processLineFunction.apply(line));
+
+                                line = in.readLine();
                             }
-
-                            events.add(processLineFunction.apply(line));
-
-                            line = in.readLine();
                         }
                     }
                 }
             }
         } catch (final NullPointerException | IOException ex) {
             LogUtil.logSevere(YahooEventParser.class, ex);
+            YahooCrumbManager.clearAuthorization();
         } finally {
             if (connection != null) {
                 if (connection instanceof HttpURLConnection) {

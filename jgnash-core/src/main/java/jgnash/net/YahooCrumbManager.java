@@ -78,14 +78,17 @@ public class YahooCrumbManager {
 
             final ZonedDateTime expires = ZonedDateTime.parse(preferences.get(EXPIRES, null));
 
-            if (ZonedDateTime.now().compareTo(expires) == -1) {
+            if (ZonedDateTime.now().compareTo(expires) < 0) {
                 crumb = preferences.get(CRUMB, null);
                 cookie = preferences.get(COOKIE, null);
 
                 if (cookie != null && crumb != null) {
                     return true;
                 }
+            } else {
+                clearAuthorization();
             }
+
         }
 
         final String url = "https://finance.yahoo.com/quote/" + symbol + "?p=" + symbol;
