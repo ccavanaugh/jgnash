@@ -20,7 +20,6 @@ WANTS
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
 * Reinstate archive capability.
-* Pay Now option for reminders
 
 Release 2.32.1
 --------------
