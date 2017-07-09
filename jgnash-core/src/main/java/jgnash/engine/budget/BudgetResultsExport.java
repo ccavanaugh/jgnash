@@ -37,12 +37,16 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -95,21 +99,21 @@ public class BudgetResultsExport {
 
             headerFont.setFontHeightInPoints((short) 11);
             headerFont.setColor(IndexedColors.BLACK.getIndex());
-            headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            headerFont.setBold(true);
 
             // Set the other cell style and formatting
-            headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
-            headerStyle.setBorderTop(CellStyle.BORDER_THIN);
-            headerStyle.setBorderLeft(CellStyle.BORDER_THIN);
-            headerStyle.setBorderRight(CellStyle.BORDER_THIN);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+            headerStyle.setBorderTop(BorderStyle.THIN);
+            headerStyle.setBorderLeft(BorderStyle.THIN);
+            headerStyle.setBorderRight(BorderStyle.THIN);
             headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
             DataFormat df_header = wb.createDataFormat();
 
             headerStyle.setDataFormat(df_header.getFormat("text"));
             headerStyle.setFont(headerFont);
-            headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
 
             int row = 0;
             Row r = s.createRow(row);
@@ -181,7 +185,7 @@ public class BudgetResultsExport {
 
                 CellStyle cs = wb.createCellStyle();
                 cs.cloneStyleFrom(headerStyle);
-                cs.setAlignment(CellStyle.ALIGN_LEFT);
+                cs.setAlignment(HorizontalAlignment.LEFT);
                 cs.setIndention((short) (model.getDepth(account) * 2));
 
                 Cell c = r.createCell(col);
@@ -197,7 +201,7 @@ public class BudgetResultsExport {
                     BudgetPeriodResults results = model.getResults(model.getDescriptorList().get(i), account);
 
                     c = r.createCell(++col);
-                    c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                    c.setCellType(CellType.NUMERIC);
                     c.setCellValue(results.getBudgeted().doubleValue());
                     c.setCellStyle(amountStyle);
 
@@ -205,7 +209,7 @@ public class BudgetResultsExport {
                     budgetedRefList.add(budgetedRef);
 
                     c = r.createCell(++col);
-                    c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                    c.setCellType(CellType.NUMERIC);
                     c.setCellValue(results.getChange().doubleValue());
                     c.setCellStyle(amountStyle);
 
@@ -213,7 +217,7 @@ public class BudgetResultsExport {
                     changeRefList.add(changeRef);
 
                     c = r.createCell(++col);
-                    c.setCellType(Cell.CELL_TYPE_FORMULA);
+                    c.setCellType(CellType.FORMULA);
                     c.setCellStyle(amountStyle);
                     c.setCellFormula(budgetedRef.formatAsString() + "-" + changeRef.formatAsString());
 
@@ -234,11 +238,11 @@ public class BudgetResultsExport {
                 final CellStyle amountStyle = wb.createCellStyle();
                 amountStyle.setFont(amountFont);
                 amountStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                amountStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-                amountStyle.setBorderBottom(CellStyle.BORDER_THIN);
-                amountStyle.setBorderTop(CellStyle.BORDER_THIN);
-                amountStyle.setBorderLeft(CellStyle.BORDER_THIN);
-                amountStyle.setBorderRight(CellStyle.BORDER_THIN);
+                amountStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                amountStyle.setBorderBottom(BorderStyle.THIN);
+                amountStyle.setBorderTop(BorderStyle.THIN);
+                amountStyle.setBorderLeft(BorderStyle.THIN);
+                amountStyle.setBorderRight(BorderStyle.THIN);
 
                 final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(model.getBaseCurrency());
                 final String pattern = format.toLocalizedPattern().replace("¤", model.getBaseCurrency().getPrefix());
@@ -252,7 +256,7 @@ public class BudgetResultsExport {
 
                 CellStyle cs = wb.createCellStyle();
                 cs.cloneStyleFrom(headerStyle);
-                cs.setAlignment(CellStyle.ALIGN_LEFT);
+                cs.setAlignment(HorizontalAlignment.LEFT);
 
                 Cell c = r.createCell(col);
                 c.setCellValue(createHelper.createRichTextString(group.toString()));
@@ -267,7 +271,7 @@ public class BudgetResultsExport {
                     BudgetPeriodResults results = model.getResults(model.getDescriptorList().get(i), group);
 
                     c = r.createCell(++col);
-                    c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                    c.setCellType(CellType.NUMERIC);
                     c.setCellValue(results.getBudgeted().doubleValue());
                     c.setCellStyle(amountStyle);
 
@@ -275,7 +279,7 @@ public class BudgetResultsExport {
                     budgetedRefList.add(budgetedRef);
 
                     c = r.createCell(++col);
-                    c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                    c.setCellType(CellType.NUMERIC);
                     c.setCellValue(results.getChange().doubleValue());
                     c.setCellStyle(amountStyle);
 
@@ -283,7 +287,7 @@ public class BudgetResultsExport {
                     changeRefList.add(changeRef);
 
                     c = r.createCell(++col);
-                    c.setCellType(Cell.CELL_TYPE_FORMULA);
+                    c.setCellType(CellType.FORMULA);
                     c.setCellStyle(amountStyle);
                     c.setCellFormula(budgetedRef.formatAsString() + "-" + changeRef.formatAsString());
 
@@ -335,7 +339,7 @@ public class BudgetResultsExport {
 
     private static void addSummaryCell(final Row row, final int col, final List<CellReference> cellReferenceList, final CellStyle style) {
         final Cell c = row.createCell(col);
-        c.setCellType(Cell.CELL_TYPE_FORMULA);
+        c.setCellType(CellType.FORMULA);
         c.setCellStyle(style);
         c.setCellFormula(buildAddFormula(cellReferenceList));
     }

@@ -38,11 +38,15 @@ import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -82,24 +86,24 @@ public class AccountExport {
 
             headerFont.setFontHeightInPoints((short) 11);
             headerFont.setColor(IndexedColors.BLACK.getIndex());
-            headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            headerFont.setBold(true);
 
             // create header cell styles
             final CellStyle headerStyle = wb.createCellStyle();
 
             // Set the other cell style and formatting
-            headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
-            headerStyle.setBorderTop(CellStyle.BORDER_THIN);
-            headerStyle.setBorderLeft(CellStyle.BORDER_THIN);
-            headerStyle.setBorderRight(CellStyle.BORDER_THIN);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+            headerStyle.setBorderTop(BorderStyle.THIN);
+            headerStyle.setBorderLeft(BorderStyle.THIN);
+            headerStyle.setBorderRight(BorderStyle.THIN);
             headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
             DataFormat df_header = wb.createDataFormat();
 
             headerStyle.setDataFormat(df_header.getFormat("text"));
             headerStyle.setFont(headerFont);
-            headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
 
             final CellStyle dateStyle = wb.createCellStyle();
             dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yy"));
@@ -114,7 +118,7 @@ public class AccountExport {
 
             final CellStyle amountStyle = wb.createCellStyle();
             amountStyle.setFont(defaultFont);
-            amountStyle.setAlignment(CellStyle.ALIGN_RIGHT);
+            amountStyle.setAlignment(HorizontalAlignment.RIGHT);
 
             final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
             final String pattern = format.toLocalizedPattern().replace("¤", account.getCurrencyNode().getPrefix());
@@ -138,43 +142,43 @@ public class AccountExport {
 
                 // date
                 Cell c = r.createCell(col);
-                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellType(CellType.STRING);
                 c.setCellValue(DateUtils.asDate(transaction.getLocalDate()));
                 c.setCellStyle(dateStyle);
 
                 // timestamp
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellType(CellType.STRING);
                 c.setCellValue(DateUtils.asDate(transaction.getTimestamp()));
                 c.setCellStyle(timestampStyle);
 
                 // number
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellType(CellType.STRING);
                 c.setCellValue(transaction.getNumber());
                 c.setCellStyle(textStyle);
 
                 // payee
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellType(CellType.STRING);
                 c.setCellValue(transaction.getPayee());
                 c.setCellStyle(textStyle);
 
                 // memo
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellType(CellType.STRING);
                 c.setCellValue(transaction.getMemo());
                 c.setCellStyle(textStyle);
 
                 // account
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellType(CellType.STRING);
                 c.setCellValue(getAccountColumnValue(transaction, account));
                 c.setCellStyle(textStyle);
 
                 // clr
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellType(CellType.STRING);
                 c.setCellValue(transaction.getReconciled(account).toString());
                 c.setCellStyle(textStyle);
 
@@ -182,7 +186,7 @@ public class AccountExport {
 
                 // increase
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                c.setCellType(CellType.NUMERIC);
                 if (amount.signum() >= 0) {
                     c.setCellValue(amount.doubleValue());
                 }
@@ -190,7 +194,7 @@ public class AccountExport {
 
                 // decrease
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                c.setCellType(CellType.NUMERIC);
                 if (amount.signum() < 0) {
                     c.setCellValue(amount.abs().doubleValue());
                 }
@@ -198,7 +202,7 @@ public class AccountExport {
 
                 // balance
                 c = r.createCell(++col);
-                c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                c.setCellType(CellType.NUMERIC);
                 c.setCellValue(account.getBalanceAt(transaction).doubleValue());
                 c.setCellStyle(amountStyle);
             }
