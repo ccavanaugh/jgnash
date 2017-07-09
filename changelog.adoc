@@ -23,13 +23,14 @@ WANTS
 
 Release 2.32.1
 --------------
-* 07/09/17 Updated to the latest Apache POI dependency
-* 07/02/17 Further improvements to handling Yahoo Fiance API errors
+* 07/09/17 Updated to the latest DynamicJasper and JasperReports dependencies.
+* 07/09/17 Updated to the latest Apache POI dependency.
+* 07/02/17 Further improvements to handling Yahoo Fiance API errors.
 * 07/02/17 Potential fix for a Budget Exception occurring when OSX users are using a relational database.
 * 06/19/17 Added a command button to execute a Reminder on demand.
-* 06/16/17 Updated to the latest Netty dependency
-* 06/16/17 Updated to the latest XStream dependency
-* 06/16/17 Updated to the latest H2 database dependency
+* 06/16/17 Updated to the latest Netty dependency.
+* 06/16/17 Updated to the latest XStream dependency.
+* 06/16/17 Updated to the latest H2 database dependency.
 
 Release 2.32.0
 --------------

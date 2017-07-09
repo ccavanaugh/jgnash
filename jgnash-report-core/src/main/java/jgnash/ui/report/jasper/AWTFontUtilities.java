@@ -67,7 +67,7 @@ public class AWTFontUtilities {
      * @return the width of the given string in 1/72" dpi.
      */
     public static int getStringWidth(final String text, final Style style) {
-        Font font = new Font(style.getFont().getFontName(), Font.PLAIN, style.getFont().getFontSize());
+        Font font = new Font(style.getFont().getFontName(), Font.PLAIN, (int)style.getFont().getFontSize());
 
         if (style.getFont().isBold()) {
             font = font.deriveFont(Font.BOLD);

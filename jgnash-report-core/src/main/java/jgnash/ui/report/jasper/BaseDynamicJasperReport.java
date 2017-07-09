@@ -320,7 +320,7 @@ public abstract class BaseDynamicJasperReport {
 
             assignPageFormat(drb);
 
-            drb.setHeaderHeight(getStyle(model.getColumnHeaderStyle(0), formatForCSV).getFont().getFontSize() * 2);
+            drb.setHeaderHeight((int)getStyle(model.getColumnHeaderStyle(0), formatForCSV).getFont().getFontSize() * 2);
             drb.setDetailHeight(getBaseFontSize() * 2);
 
             logger.info("Creating column model for report");
