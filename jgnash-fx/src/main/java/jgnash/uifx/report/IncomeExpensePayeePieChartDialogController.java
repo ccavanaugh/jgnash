@@ -78,7 +78,7 @@ public class IncomeExpensePayeePieChartDialogController {
 
     private static final String FILTERS = "filters";
 
-    private static final char DELIMITER = '◼';
+    private static final char DELIMITER = 0x25FC;
 
     private static final int CREDIT = 0;
 
