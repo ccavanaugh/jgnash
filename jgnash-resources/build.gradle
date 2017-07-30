@@ -1,0 +1,26 @@
+import org.gradle.internal.jvm.Jvm
+import static org.gradle.internal.os.OperatingSystem.*
+
+description = 'jGnash Resources'
+
+ext {
+    javaVersion = Jvm.current()
+    osName = current()
+    timeStamp = new Date()
+}
+
+
+processResources {
+
+    filesMatching('**/constants.properties') {
+        expand(version: version, javaVersion: javaVersion, timeStamp: timeStamp, osName: osName)
+    }
+
+    filesMatching('**/notice.html') {
+        expand(version: version, javaVersion: javaVersion, timeStamp: timeStamp, osName: osName)
+    }
+}
+
+
+
+

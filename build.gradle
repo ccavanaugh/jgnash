@@ -1,0 +1,90 @@
+plugins {
+    id 'com.github.ben-manes.versions' version '0.15.0'
+}
+
+allprojects {
+
+    // jgnash-help is not a compiled sub-project
+    if (!it.name.startsWith('jgnash-help')) {
+        apply plugin: 'java'
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    group = 'jgnash'
+    version = '2.32.0'
+
+    project.ext {
+        joptSimpleVerion = '5.0.3'
+
+        commonsLang3Version = '3.3.2'
+
+        junitVersion = '4.12'
+        hamcrestVersion = '1.3'
+
+        c3p0Version = '0.9.5.2'
+        h2Version = '1.4.196'
+        hibernateVersion = '5.2.10.Final'
+        hibernateJPAVersion = '1.0.0.Final'
+        hsqldbVersion = '2.4.0'
+
+        xstreamVersion = '1.4.10'
+        apachePoiVersion = '3.16'
+        dynamicJasperVersion = '5.1.0'
+        jasperReportsVersion = '6.4.1'
+        itextVersion = '2.1.7.js5'
+        opencsvVersion = '3.8'
+        nettyVersion = '4.1.12.Final'
+        kxmlVersion = '2.3.0'
+
+        slf4jVersion = '1.7.21'
+        log4jVersion = '1.2.17'
+
+        jfreeChartVersion = '1.0.19'
+        substanceVersion = '7.3'
+        swingxVersion = '1.6.5-1'
+    }
+}
+
+subprojects {
+    repositories {
+        jcenter()
+        mavenLocal()
+        maven { url "http://nexus.fdvs.com.ar/content/groups/public/" }
+    }
+
+    // jgnash-help is not a compiled sub-project
+    if (!it.name.startsWith('jgnash-help')) {
+        dependencies {
+            testCompile group: 'junit', name: 'junit', version: junitVersion
+            testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion
+        }
+    }
+
+    test {
+        //we want display the following test events
+        testLogging {
+            events "PASSED", "STARTED", "FAILED", "SKIPPED"
+            showStandardStreams = true
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0.2'
+}
+
+task distZip {
+    doLast {
+        ant.echo('hello from Ant')
+
+        ant.zip(destfile: 'jgnash-' + version + '-bin.zip', duplicate: 'preserve', update: 'false') {
+            zipgroupfileset(dir: '.', includes: 'jgnash-swing/build/distributions/jGnashSwing-' + version + '.zip')
+            zipgroupfileset(dir: '.', includes: 'jgnash-fx/build/distributions/jGnashFx-' + version + '.zip')
+        }
+    }
+}
+
+distZip.dependsOn(":jgnash-fx:distZip")
+distZip.dependsOn(":jgnash-swing:distZip")

@@ -472,12 +472,23 @@ jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Pl
 <div class="sect2">
 <h3 id="_to_run">To Run:</h3>
 <div class="paragraph">
-<p>Simply type the following below at a command line
-or double click on the jar or exe file in Windows.</p>
+<p>Executable files are provided for Windows and UN*X users at the root of the installation directory.
+The jGnashFx executables will launch jGnash with the latest interface and the jGnash2 files with launch jGnash with
+the old legacy Java Swing interface.</p>
+</div>
+<div class="paragraph">
+<p>Simply double click on the *.exe file of choice in Windows.</p>
+</div>
+<div class="paragraph">
+<p>UN*X users can start jGnash with the provided Bash scripts.  If they fail to launch, check your file permissions and
+make sure they are set to be executable or use a unzip tool that preserves file permissions.</p>
+</div>
+<div class="paragraph">
+<p>An example for UN*X users is show below assuming you have changed to the installation directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>java -jar jGnash2.jar</code></pre>
+<pre class="highlight"><code>./jGnashFx</code></pre>
 </div>
 </div>
 <div class="sect3">
@@ -517,7 +528,7 @@ to operate correctly.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>try
-    do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/jgnash2.jar"
+    do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/lib/jgnash-fx-x.jar"
 end try</code></pre>
 </div>
 </div>
@@ -541,18 +552,16 @@ end try</code></pre>
 <div class="sect2">
 <h3 id="_building_jgnash">Building jGnash:</h3>
 <div class="paragraph">
+<p>Gradle is used as the primary build system for jGnash.  The Gradle Wrapper is included so that you do not need to
+install Gradle.  The Wrapper will automatically download the necessary dependencies.</p>
+</div>
+<div class="paragraph">
 <p>To build jGnash you&#8217;ll need the following software installed and correctly configured on your system:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK 8u71</a> or later.</p>
-</li>
-<li>
-<p><a href="http://ant.apache.org">Apache Ant</a> 1.9.0 or later</p>
-</li>
-<li>
-<p><a href="http://maven.apache.org">Apache Maven</a> 3.3 or later</p>
 </li>
 </ol>
 </div>
@@ -563,14 +572,24 @@ Otherwise, the Maven build may fail when building the windows executables.</em><
 <div class="paragraph">
 <p>To create the distribution zip file, start at the main directory and run:</p>
 </div>
+<div class="paragraph">
+<p>Building on Windows</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>mvn package
-ant -f release.xml</code></pre>
+<pre class="highlight"><code>gradlew distZip</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The distribution zip file will be produced at <code>jgnash-`<em>version</em></code>-bin.zip`.</p>
+<p>Building on UN*X</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>./gradlew distZip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A distributable zip file will be produced at the root of the build directory called jGnash-<em>version</em>-bin.zip.</p>
 </div>
 </div>
 </div>
@@ -631,7 +650,7 @@ stability with the Oracle release or OpenJDK with OpenJFX.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-08 05:37:55 EST
+Last updated 2017-07-30 18:58:30 EDT
 </div>
 </div>
 </body>

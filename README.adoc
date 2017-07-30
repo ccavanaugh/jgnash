@@ -30,12 +30,20 @@ You can download jGnash from the https://sourceforge.net/projects/jgnash/files/A
 
 === To Run:
 
-Simply type the following below at a command line
-or double click on the jar or exe file in Windows.
+Executable files are provided for Windows and UN*X users at the root of the installation directory.
+The jGnashFx executables will launch jGnash with the latest interface and the jGnash2 files with launch jGnash with
+the old legacy Java Swing interface.
+
+Simply double click on the *.exe file of choice in Windows.
+
+UN*X users can start jGnash with the provided Bash scripts.  If they fail to launch, check your file permissions and
+make sure they are set to be executable or use a unzip tool that preserves file permissions.
+
+An example for UN*X users is show below assuming you have changed to the installation directory.
 
 [source]
 ----
-java -jar jGnash2.jar
+./jGnashFx
 ----
 
 ==== OpenJDK Tips:
@@ -62,7 +70,7 @@ Create the following script:
 [source]
 ----
 try
-    do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/jgnash2.jar"
+    do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/lib/jgnash-fx-x.jar"
 end try
 ----
 
@@ -78,24 +86,33 @@ See the integrated help for command line options.
 
 === Building jGnash:
 
+Gradle is used as the primary build system for jGnash.  The Gradle Wrapper is included so that you do not need to
+install Gradle.  The Wrapper will automatically download the necessary dependencies.
+
 To build jGnash you'll need the following software installed and correctly configured on your system:
 
 . http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 8u71] or later.
-. http://ant.apache.org[Apache Ant] 1.9.0 or later
-. http://maven.apache.org[Apache Maven] 3.3 or later
 
 _If you are building with a recent 64 bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
 Otherwise, the Maven build may fail when building the windows executables._
 
 To create the distribution zip file, start at the main directory and run:
 
+Building on Windows
+
 [source]
 ----
-mvn package
-ant -f release.xml
+gradlew distZip
 ----
 
-The distribution zip file will be produced at `jgnash-`_version_`-bin.zip`.
+Building on UN*X
+
+[source]
+----
+./gradlew distZip
+----
+
+A distributable zip file will be produced at the root of the build directory called jGnash-_version_-bin.zip.
 
 == jGnashFx Version
 

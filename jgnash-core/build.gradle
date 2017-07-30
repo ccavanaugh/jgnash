@@ -1,0 +1,33 @@
+description = 'jGnash Core'
+
+dependencies {
+    compile project(':jgnash-resources')
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion
+    compile group: 'log4j', name: 'log4j', version: log4jVersion
+
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateVersion
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: hibernateJPAVersion
+    compile(group: 'org.hibernate', name: 'hibernate-c3p0', version: hibernateVersion) {
+        exclude(module: 'c3p0')
+    }
+    compile group: 'com.mchange', name: 'c3p0', version: c3p0Version
+    compile group: 'com.h2database', name: 'h2', version: h2Version
+    compile group: 'org.hsqldb', name: 'hsqldb', version: hsqldbVersion
+
+    compile(group: 'com.thoughtworks.xstream', name: 'xstream', version: xstreamVersion) {
+        exclude(module: 'xmlpull')
+        exclude(module: 'xpp3_min') }
+    compile group: 'com.thoughtworks.xstream', name: 'xstream-hibernate', version: xstreamVersion
+    compile group: 'net.sf.kxml', name: 'kxml2', version: kxmlVersion
+
+    compile group: 'io.netty', name: 'netty-codec', version: nettyVersion
+
+    compile(group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion) {
+        exclude(module: 'stax-api')
+        exclude(module: 'xml-apis')
+    }
+
+    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
+}

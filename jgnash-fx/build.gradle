@@ -1,0 +1,81 @@
+plugins {
+    id 'edu.sc.seis.launch4j' version '2.3.0'
+}
+
+apply plugin: 'distribution'
+apply plugin: 'application' // creates a task to run the full application
+
+description = 'jGnash JavaFx'
+mainClassName = "jGnashFx"
+
+dependencies {
+    compile project(':jgnash-help')
+    compile project(':jgnash-core')
+    compile project(':jgnash-convert')
+    compile project(':jgnash-report-core')
+    compile project(':jgnash-plugin')
+
+    compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: joptSimpleVerion
+}
+
+launch4j {
+    copyright = 'Copyright (C) 2001-2017 Craig Cavanaugh'
+    mainClassName = 'jGnashFx'
+    outfile = 'jGnashFx.exe'
+    dontWrapJar = true
+    icon = '../../gnome-money.ico'
+}
+
+task createStartScripts(type: CreateStartScripts) {
+    outputDir = file('../../')
+}
+
+// call launch4j prior to creating the zip file
+distZip.dependsOn(createExe)
+
+// build the mt940 plugin prior to creating the zip file without creating a circular loop
+distZip.dependsOn(":mt940:build")
+
+// ensure the manual is built and included
+distZip.dependsOn(":jgnash-help:asciidoctor")
+
+distZip {
+    into("jGnash-$version") {
+        from '.'
+        include 'scripts/*'
+    }
+
+    into("jGnash-$version") {
+        from '../mt940/build/libs'
+        include '*'
+        into "jGnash-$version/plugins"
+    }
+
+    doLast {
+        file("$destinationDir/$archiveName").renameTo("$destinationDir/"+'jGnashFx-'+version+'.zip')
+    }
+}
+
+distributions {
+    main {
+        baseName = 'jGnash'
+        contents {
+            from { '../jgnash-help/build/asciidoc/pdf/Manual.pdf' }
+            from { '../changelog.adoc' }
+            from { 'build/launch4j/jGnashFx.exe' }
+            from { '../README.html' }
+            from { '../README.adoc' }
+            from { '../jGnashFx' }
+        }
+    }
+}
+
+jar {
+    // Keep jar clean:
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+
+    manifest {
+        attributes  'Main-Class': 'jGnashFx',
+                    'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+    }
+}

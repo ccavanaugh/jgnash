@@ -1,0 +1,6 @@
+description = 'jGnash Test Plugin'
+
+dependencies {
+  compile project(':jgnash-core')
+  compile project(':jgnash-fx')
+}

@@ -1,0 +1,5 @@
+description = 'jGnash Plugin'
+
+dependencies {
+    compile project(':jgnash-resources')
+}
