@@ -114,6 +114,8 @@ Building on UN*X
 
 A distributable zip file will be produced at the root of the build directory called jGnash-_version_-bin.zip.
 
+_When building on Windows OS, the manual is not generated and included due to some current Asciidoctor limitations._
+
 == jGnashFx Version
 
 The distribution now contains a version of jGnash that utilizes JavaFX for the user interface. Long term this version

@@ -36,8 +36,14 @@ distZip.dependsOn(createExe)
 // build the mt940 plugin prior to creating the zip file without creating a circular loop
 distZip.dependsOn(":mt940:build")
 
-// ensure the manual is built and included
-distZip.dependsOn(":jgnash-help:asciidoctor")
+
+// The manual does not currently build on Windows OS
+String osName = System.getProperty("os.name").toLowerCase()
+
+if (!osName.contains("windows")) {
+    // ensure the manual is built and included
+    distZip.dependsOn(":jgnash-help:asciidoctor")
+}
 
 distZip {
     into("jGnash-$version") {
