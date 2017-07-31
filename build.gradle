@@ -16,7 +16,7 @@ allprojects {
     version = '2.32.0'
 
     project.ext {
-        joptSimpleVerion = '5.0.3'
+        joptSimpleVerion = '5.0.4'
 
         commonsLang3Version = '3.3.2'
 
