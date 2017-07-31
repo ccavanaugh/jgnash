@@ -77,8 +77,6 @@ task wrapper(type: Wrapper) {
 
 task distZip {
     doLast {
-        ant.echo('hello from Ant')
-
         ant.zip(destfile: 'jgnash-' + version + '-bin.zip', duplicate: 'preserve', update: 'false') {
             zipgroupfileset(dir: '.', includes: 'jgnash-swing/build/distributions/jGnashSwing-' + version + '.zip')
             zipgroupfileset(dir: '.', includes: 'jgnash-fx/build/distributions/jGnashFx-' + version + '.zip')
