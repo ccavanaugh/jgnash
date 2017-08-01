@@ -96,6 +96,7 @@
         <class>jgnash.engine.ExchangeRateHistoryNode</class>
         <class>jgnash.engine.InvestmentTransaction</class>
         <class>jgnash.engine.RootAccount</class>
+        <class>jgnash.engine.SecurityHistoryEvent</class>
         <class>jgnash.engine.SecurityHistoryNode</class>
         <class>jgnash.engine.SecurityNode</class>
         <class>jgnash.engine.Transaction</class>
