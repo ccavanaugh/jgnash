@@ -5,7 +5,6 @@ target/
 .settings/
 .project
 .classpath
-*.iml
 .idea/
 *.log
 nb-configuration.xml
