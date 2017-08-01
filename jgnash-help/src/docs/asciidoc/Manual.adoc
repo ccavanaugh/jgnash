@@ -1,10 +1,14 @@
 :imagesdir: ./images
 
 = jGnash 2.32.x User Manual
+Published {localdate}
 :doctype: book
+:encoding: utf-8
+:lang: en
 :sectnums:
 :toc: left
 :icons: font
+:media: prepress
 :experimental:
 
 [[_legal]]
@@ -94,28 +98,26 @@ Use a new location or delete the existing files first.
 After the [path]_jGnash_ directory has been extracted from the zip file, you should see several files in the directory.
 Of interest at this point are the jar and exe files.
 
-If you are running on a Windows(TM) based computer, you can simply double click on the [path]_jGnash2.exe_ file to
-start jGnash. If you want, you can also double click on the [path]_jGnash2.jar_ file as an alternate means for starting
-the application.
+If you are running on a Windows(TM) based computer, you can simply double click on the [path]_jGnashFx.exe_ file to
+start jGnash. Alternatively, you can also double click on the [path]_bin/jgnash-fx.bat_ file as an alternate means for
+starting the application in a console so that logging messages are visible.
 
-If you are running on a Unix based system you can start jGnash from a terminal as shown below.
-Alternatively, you can create your own application launcher in your desktop environment of choice.
-
+If you are running on a Un*x or BSD based system you can start jGnash from a terminal as shown below using the included
+Bash script. You can also create your own application launcher using the Bash script in your desktop environment of choice.
 
 ----
-java -jar jGnash2.jar
+./jGnashFx
 ----
 jGnash has several advanced features such as running as a portable application or using jGnash as a multi-user home
-networked application.
-These advanced features are accessible via the command line.
-Please see <<_commandline,Command Line Options
-        >> for more details.
+networked application. These advanced features are accessible via the command line.
+Please see <<_commandline,Command Line Options>> for more details.
 
 === Running for the First Time
 A license acceptance screen will be displayed the first time you start jGnash.
 jGnash will not run unless the license is accepted.
-The short of the license agreement is jGnash is a freely available program comprised of other freely available software, and should anything bad happen during use, the authors involved are not libel for any damages.
-The license also details how jGnash may be distributed and used.
+The short of the license agreement is jGnash is a freely available program comprised of other freely available software,
+and should anything bad happen during use, the authors involved are not libel for any damages. The license also details
+how jGnash may be distributed and used.
 
 [sidebar]
 If the license agreement sounds daunting, take a look at the license agreements of commercially available personal
