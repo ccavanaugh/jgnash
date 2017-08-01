@@ -1,6 +1,7 @@
-target/
+**/target/
+**/build/
+**/out/
 .svn/
-*.class
 *.directory
 .settings/
 .project
@@ -12,3 +13,4 @@ nb-configuration.xml
 /pref.xml
 /gradle-app.setting
 /*.zip
+.gradle/
