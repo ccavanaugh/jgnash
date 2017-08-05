@@ -148,6 +148,7 @@ public class FontAwesomeLabel extends Label {
         ARROWS("\uf047"),
         ARROWS_H("\uf07e"),
         ARROWS_V("\uf07d"),
+        BANK("\uf19c"),
         BELL("\uf0f3"),
         BOOKMARK("\uf02e"),
         BUG("\uf188"),
