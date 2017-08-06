@@ -33,7 +33,7 @@ allprojects {
         apachePoiVersion = '3.16'
         dynamicJasperVersion = '5.1.0'
         jasperReportsVersion = '6.4.1'
-        itextVersion = '2.1.7.js5'
+        itextVersion = '2.1.7.js6'
         opencsvVersion = '3.8'
         nettyVersion = '4.1.12.Final'
         kxmlVersion = '2.3.0'
@@ -52,6 +52,7 @@ subprojects {
         jcenter()
         mavenLocal()
         maven { url "http://nexus.fdvs.com.ar/content/groups/public/" }
+        maven { url "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/" }
     }
 
     // jgnash-help is not a compiled sub-project
