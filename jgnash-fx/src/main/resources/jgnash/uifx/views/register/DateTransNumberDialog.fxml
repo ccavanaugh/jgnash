@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.control.TransactionNumberComboBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="jgnash.uifx.views.register.DateTransNumberDialogController" styleClass="dialog, form">
+
+    <GridPane styleClass="form">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <Label text="%Label.Date"/>
+        <DatePickerEx fx:id="dateField" GridPane.columnIndex="1"/>
+
+        <Label text="%Label.Number" GridPane.rowIndex="1"/>
+        <TransactionNumberComboBox fx:id="transactionNumberField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    </GridPane>
+
+    <ButtonBar VBox.vgrow="NEVER">
+        <buttons>
+            <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+            <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+        </buttons>
+    </ButtonBar>
+</VBox>
+
+

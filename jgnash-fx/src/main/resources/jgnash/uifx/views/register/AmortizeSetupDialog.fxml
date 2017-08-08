@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import jgnash.uifx.control.AccountComboBox?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.control.DecimalTextField?>
+<?import jgnash.uifx.control.IntegerTextField?>
+<?import jgnash.uifx.control.TextFieldEx?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="jgnash.uifx.views.register.AmortizeSetupDialogController" styleClass="dialog, form">
+
+    <TitledPane text="%Title.AmortizationSetup" VBox.vgrow="ALWAYS" collapsible="false">
+        <GridPane styleClass="form, dialog">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Label text="%Label.AnIntRate"/>
+            <DecimalTextField fx:id="interestField" GridPane.columnIndex="1"/>
+
+            <Label text="%Label.OrigLoanAmt" GridPane.rowIndex="1"/>
+            <DecimalTextField fx:id="loanAmountField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="%Label.LoanTerm" GridPane.rowIndex="2"/>
+            <IntegerTextField fx:id="loanTermField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="%Label.PayPerTerm" GridPane.rowIndex="3"/>
+            <IntegerTextField  fx:id="payPeriodsField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="%Label.CompPerTerm" GridPane.rowIndex="4"/>
+            <IntegerTextField  fx:id="intPeriodsField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <Label text="%Label.FirstPayDate" GridPane.rowIndex="5"/>
+            <DatePickerEx fx:id="dateField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+            <Label text="%Label.EscrowPmi" GridPane.rowIndex="6"/>
+            <DecimalTextField fx:id="feesField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+            <CheckBox fx:id="useDaysButton" text="%Button.UseDailyRate" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+            <Label text="%Label.CompDaysPerYear" GridPane.rowIndex="8"/>
+            <DecimalTextField fx:id="daysField" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane animated="false" text="%Title.TransactionSetup" VBox.vgrow="ALWAYS" collapsible="false">
+        <GridPane styleClass="form, dialog">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Label text="%Label.InterestAccount"/>
+            <AccountComboBox fx:id="interestAccountCombo" maxWidth="200" GridPane.columnIndex="1"/>
+
+            <Label text="%Label.BankAccount" GridPane.rowIndex="1"/>
+            <AccountComboBox fx:id="bankAccountCombo" maxWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="%Label.FeesAccount" GridPane.rowIndex="2"/>
+            <AccountComboBox fx:id="feesAccountCombo" maxWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="%Label.Payee" GridPane.rowIndex="3"/>
+            <TextFieldEx  fx:id="payeeField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="%Label.Memo" GridPane.rowIndex="4"/>
+            <TextFieldEx  fx:id="memoField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+        </GridPane>
+    </TitledPane>
+
+    <ButtonBar VBox.vgrow="NEVER">
+        <buttons>
+            <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+            <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+        </buttons>
+    </ButtonBar>
+</VBox>
+
+

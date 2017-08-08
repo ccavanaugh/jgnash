@@ -163,6 +163,8 @@ public class RegisterViewController {
         } else {
             if (account.memberOf(AccountGroup.INVEST)) {
                 formResource = "InvestmentRegisterPane.fxml";
+            } else if (account.memberOf(AccountGroup.LIABILITY)) {
+                formResource = "LiabilityRegisterPane.fxml";
             } else {
                 formResource = "BasicRegisterPane.fxml";
             }
