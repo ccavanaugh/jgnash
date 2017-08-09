@@ -17,38 +17,40 @@
     <bottom>
         <TitledPane fx:id="titledPane" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" maxWidth="Infinity">
             <graphic>
-                <ButtonBar>
+                <ButtonBar fx:id="buttonBar">
                     <buttons>
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"
-                                ButtonBar.buttonUniformSize="false">
+                                ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="LEFT">
                             <graphic>
                                 <FontAwesomeLabel glyphName="MONEY"/>
                             </graphic>
                         </Button>
                         <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction"
-                                text="%Button.Duplicate" ButtonBar.buttonUniformSize="false">
+                                text="%Button.Duplicate" ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="LEFT">
                             <graphic>
                                 <FontAwesomeLabel glyphName="COPY"/>
                             </graphic>
                         </Button>
                         <Button fx:id="jumpButton" mnemonicParsing="false" onAction="#handleJumpAction"
-                                text="%Button.Jump" ButtonBar.buttonUniformSize="false">
+                                text="%Button.Jump" ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="LEFT">
                             <graphic>
                                 <FontAwesomeLabel glyphName="EXTERNAL_LINK"/>
                             </graphic>
                         </Button>
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction"
-                                text="%Button.Delete" ButtonBar.buttonUniformSize="false">
+                                text="%Button.Delete" ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="LEFT">
                             <graphic>
                                 <FontAwesomeLabel glyphName="TRASH_O"/>
                             </graphic>
                         </Button>
-                        <Button text="%Button.NewPayment" onAction="#handleNewPaymentAction" ButtonBar.buttonData="RIGHT">
+                        <Button text="%Button.NewPayment" onAction="#handleNewPaymentAction"
+                                ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="RIGHT">
                             <graphic>
                                 <FontAwesomeLabel glyphName="MONEY"/>
                             </graphic>
                         </Button>
-                        <Button text="%Button.Amortize" onAction="#handleAmortizeAction" ButtonBar.buttonData="RIGHT">
+                        <Button text="%Button.Amortize" onAction="#handleAmortizeAction"
+                                ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="RIGHT">
                             <graphic>
                                 <FontAwesomeLabel glyphName="BANK"/>
                             </graphic>

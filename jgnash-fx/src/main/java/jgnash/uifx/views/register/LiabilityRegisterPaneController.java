@@ -17,9 +17,12 @@
  */
 package jgnash.uifx.views.register;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -41,6 +44,20 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class LiabilityRegisterPaneController extends BankRegisterPaneController {
+
+    // TODO:  CSS lookup
+    private final DoubleProperty titledPanePadding = new SimpleDoubleProperty(37);
+
+    @FXML
+    private ButtonBar buttonBar;
+
+    @FXML
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        buttonBar.minWidthProperty().bind(titledPane.widthProperty().subtract(titledPanePadding));
+    }
 
     @FXML
     private void handleAmortizeAction() {
