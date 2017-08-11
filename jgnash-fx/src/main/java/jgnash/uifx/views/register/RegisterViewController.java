@@ -36,6 +36,7 @@ import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
@@ -163,7 +164,7 @@ public class RegisterViewController {
         } else {
             if (account.memberOf(AccountGroup.INVEST)) {
                 formResource = "InvestmentRegisterPane.fxml";
-            } else if (account.memberOf(AccountGroup.LIABILITY)) {
+            } else if (account.getAccountType() == AccountType.LIABILITY) {
                 formResource = "LiabilityRegisterPane.fxml";
             } else {
                 formResource = "BasicRegisterPane.fxml";
