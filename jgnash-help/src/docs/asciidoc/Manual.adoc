@@ -1,6 +1,6 @@
 :imagesdir: ./images
 
-= jGnash 2.32.x User Manual
+= jGnash 2.33.x Manual
 Published {localdate}
 :doctype: book
 :encoding: utf-8
@@ -13,7 +13,7 @@ Published {localdate}
 
 [[_legal]]
 == Legal
-[big]*jGnash 2.32.x User Guide*
+[big]*jGnash 2.33.x Manual*
 
 Copyright (C) 2001-2017 Craig Cavanaugh
 
