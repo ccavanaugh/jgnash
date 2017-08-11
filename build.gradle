@@ -35,7 +35,7 @@ allprojects {
         jasperReportsVersion = '6.4.1'
         itextVersion = '2.1.7.js6'
         opencsvVersion = '3.8'
-        nettyVersion = '4.1.12.Final'
+        nettyVersion = '4.1.14.Final'
         kxmlVersion = '2.3.0'
 
         slf4jVersion = '1.7.21'

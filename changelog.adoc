@@ -23,6 +23,7 @@ WANTS
 
 Release 2.33.0
 --------------
+* 08/11/17 Updated to the latest Netty dependency.
 * 08/09/17 Implemented amortized payments for the Fx interface. (Fx)
 * 07/31/17 Build system has been converted to Gradle.  Unix executable shell scripts are now provided.
 * 07/31/17 Updated to the latest jopt-simple database dependency.
