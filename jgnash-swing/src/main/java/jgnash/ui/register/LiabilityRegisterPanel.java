@@ -19,23 +19,16 @@ package jgnash.ui.register;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
-
-import java.awt.event.ActionEvent;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import jgnash.engine.Account;
 import jgnash.engine.AmortizeObject;
-import jgnash.engine.CommodityNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
-import jgnash.engine.TransactionEntry;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.account.AmortizeDialog;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Register panel for liability accounts.
@@ -104,8 +97,6 @@ public class LiabilityRegisterPanel extends RegisterPanel {
 
         if (ao != null) {
 
-            Transaction tran = null;
-
             DateChkNumberDialog d = new DateChkNumberDialog(ao.getBankAccount(), rb.getString("Title.NewTrans"));
             d.setVisible(true);
 
@@ -113,82 +104,7 @@ public class LiabilityRegisterPanel extends RegisterPanel {
                 return;
             }
 
-            BigDecimal balance = account.getBalance().abs();
-            double payment = ao.getPayment();
-
-            double interest;
-
-            if (ao.getUseDailyRate()) {
-                LocalDate today = d.getDate();
-
-                LocalDate last;
-
-                if (account.getTransactionCount() > 0) {
-                    last = account.getTransactionAt(account.getTransactionCount() - 1).getLocalDate();
-                } else {
-                    last = today;
-                }
-
-                interest = ao.getIPayment(balance, last, today); // get the interest portion
-
-            } else {
-                interest = ao.getIPayment(balance); // get the interest portion
-            }
-                       
-            // get debit account
-            Account bank = ao.getBankAccount();
-
-            if (bank != null) {
-                CommodityNode n = bank.getCurrencyNode();
-
-                Transaction transaction = new Transaction();
-                transaction.setDate(d.getDate());
-                transaction.setNumber(d.getNumber());
-                transaction.setPayee(ao.getPayee());
-                
-                // transaction is made relative to the debit/checking account              
-
-                TransactionEntry e = new TransactionEntry();
-
-                // this entry is the principal payment              
-                e.setCreditAccount(account);
-                e.setDebitAccount(bank);
-                e.setAmount(n.round(payment - interest));
-                e.setMemo(ao.getMemo());
-
-                transaction.addTransactionEntry(e);
-            
-                // handle interest portion of the payment
-                Account i = ao.getInterestAccount();
-                if (i != null && interest != 0.0) {
-                    e = new TransactionEntry();
-                    e.setCreditAccount(i);
-                    e.setDebitAccount(bank);
-                    e.setAmount(n.round(interest));
-                    e.setMemo(rb.getString("Word.Interest"));
-                    transaction.addTransactionEntry(e);
-
-                    //System.out.println(e.getAmount());
-                }
-
-                // a fee has been assigned
-                if (ao.getFees().compareTo(BigDecimal.ZERO) != 0) {
-                    Account f = ao.getFeesAccount();
-                    if (f != null) {
-                        e = new TransactionEntry();
-                        e.setCreditAccount(f);
-                        e.setDebitAccount(bank);
-                        e.setAmount(ao.getFees());
-                        e.setMemo(rb.getString("Word.Fees"));
-                        transaction.addTransactionEntry(e);
-
-                        //System.out.println(e.getAmount());
-                    }
-                }
-
-                // the remainder of the balance should be loan principal
-                tran = transaction;
-            }
+            final Transaction tran = ao.generateTransaction(account, d.getDate(), d.getNumber());
 
             if (tran != null) {// display the transaction in the register
                 EditTransactionDialog dlg = new EditTransactionDialog(ao.getBankAccount(), PanelType.DECREASE);
@@ -202,104 +118,6 @@ public class LiabilityRegisterPanel extends RegisterPanel {
         }
     }
 
-    /**
-     * Creates a payment transaction relative to the liability account
-     */
-    /*
-    private void paymentActionLiability() {
-
-    AmortizeObject ao = ((LiabilityAccount)account).getAmortizeObject();
-    Transaction tran = null;
-
-    if (ao != null) {
-    DateChkNumberDialog d = new DateChkNumberDialog(null, engine.getAccount(ao.getInterestAccount()));
-    d.show();
-
-    if (!d.getResult()) {
-    return;
-    }
-
-    BigDecimal balance = account.getBalance().abs();
-    BigDecimal fees = ao.getFees();
-    double payment = ao.getPayment();
-
-    double interest;
-
-    if (ao.getUseDailyRate()) {
-    Date today = d.getDate();
-    Date last = account.getTransactionAt(account.getTransactionCount() - 1).getDate();
-    interest = ao.getIPayment(balance, last, today); // get the interest portion
-    } else {
-    interest = ao.getIPayment(balance); // get the interest portion
-    }
-
-    Account b = engine.getAccount(ao.getBankAccount());
-    if (b != null) {
-    CommodityNode n = b.getCommodityNode();
-    SplitEntryTransaction e;
-
-    SplitTransaction t = new SplitTransaction(b.getCommodityNode());
-    t.setAccount(b);
-    t.setMemo(ao.getMemo());
-    t.setPayee(ao.getPayee());
-    t.setNumber(d.getNumber());
-    t.setDate(d.getDate());
-
-    // this entry is the complete payment
-    e = new SplitEntryTransaction(n);
-    e.setCreditAccount(account);
-    e.setDebitAccount(b);
-    e.setAmount(n.round(payment));
-    e.setMemo(ao.getMemo());
-    t.addSplit(e);
-
-    try {   // maintain transaction order (stretch time)
-    Thread.sleep(2);
-    } catch (Exception ie) {}
-
-    // handle interest portion of the payment
-    Account i = engine.getAccount(ao.getInterestAccount());
-    if (i != null) {
-    e = new SplitEntryTransaction(n);
-    e.setCreditAccount(i);
-    e.setDebitAccount(account);
-    e.setAmount(n.round(interest));
-    e.setMemo(rb.getString("Word.Interest"));
-    t.addSplit(e);
-    }
-
-    try {   // maintain transaction order (stretch time)
-    Thread.sleep(2);
-    } catch (Exception ie) {}
-
-    // a fee has been assigned
-    if (ao.getFees().compareTo(new BigDecimal("0")) != 0) {
-    Account f = engine.getAccount(ao.getFeesAccount());
-    if (f != null) {
-    e = new SplitEntryTransaction(n);
-    e.setCreditAccount(f);
-    e.setDebitAccount(account);
-    e.setAmount(ao.getFees());
-    e.setMemo(rb.getString("Word.Fees"));
-    t.addSplit(e);
-    }
-    }
-
-    // the total should be the debit to the checking account
-    tran = t;
-    }
-    }
-
-    if (tran != null) {// display the transaction in the register
-    newTransaction(tran);
-    } else {    // could not generate the transaction
-    if (ao == null) {
-    Logger.getLogger("jgnashEngine").warning("Please configure amortization");
-    } else {
-    Logger.getLogger("jgnashEngine").warning("Not enough information");
-    }
-    }
-    }*/
     @Override
     public void actionPerformed(final ActionEvent e) {
         super.actionPerformed(e);

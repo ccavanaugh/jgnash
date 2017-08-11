@@ -17,6 +17,10 @@
  */
 package jgnash.engine;
 
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
+import jgnash.util.ResourceUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -369,7 +373,7 @@ public class AmortizeObject implements Serializable {
      *
      * @return the payment
      */
-    public double getPayment() {
+    private double getPayment() {
         return getPIPayment() + fees.doubleValue();
     }
 
@@ -380,7 +384,7 @@ public class AmortizeObject implements Serializable {
      * @param balance remaining balance
      * @return interest
      */
-    public double getIPayment(final BigDecimal balance) {
+    private double getIPayment(final BigDecimal balance) {
         if (balance != null) {
             double i = getEffectiveInterestRate();
             return i * balance.doubleValue();
@@ -397,7 +401,7 @@ public class AmortizeObject implements Serializable {
      * @param end     end date
      * @return interest
      */
-    public double getIPayment(final BigDecimal balance, final LocalDate start, final LocalDate end) {
+    private double getIPayment(final BigDecimal balance, final LocalDate start, final LocalDate end) {
         if (balance != null) {
 
             int dayEnd = end.getDayOfYear();
@@ -421,4 +425,179 @@ public class AmortizeObject implements Serializable {
     //	public double getPPayment(BigDecimal balance) {
     //		return getPIPayment() - getIPayment(balance);
     //	}
+
+    @Nullable
+    public Transaction generateTransaction(@NotNull final Account account, @NotNull final LocalDate date, final String number) {
+
+        BigDecimal balance = account.getBalance().abs();
+        double payment = getPayment();
+
+        double interest;
+
+        if (getUseDailyRate()) {
+
+            LocalDate last;
+
+            if (account.getTransactionCount() > 0) {
+                last = account.getTransactionAt(account.getTransactionCount() - 1).getLocalDate();
+            } else {
+                last = date;
+            }
+
+            interest = getIPayment(balance, last, date); // get the interest portion
+
+        } else {
+            interest = getIPayment(balance); // get the interest portion
+        }
+
+        // get debit account
+        final Account bank = getBankAccount();
+
+        if (bank != null) {
+            CommodityNode n = bank.getCurrencyNode();
+
+            Transaction transaction = new Transaction();
+            transaction.setDate(date);
+            transaction.setNumber(number);
+            transaction.setPayee(getPayee());
+
+            // transaction is made relative to the debit/checking account
+
+            TransactionEntry entry = new TransactionEntry();
+
+            // this entry is the principal payment
+            entry.setCreditAccount(account);
+            entry.setDebitAccount(bank);
+            entry.setAmount(n.round(payment - interest));
+            entry.setMemo(getMemo());
+
+            transaction.addTransactionEntry(entry);
+
+            // handle interest portion of the payment
+            Account i = getInterestAccount();
+            if (i != null && interest != 0.0) {
+                entry = new TransactionEntry();
+                entry.setCreditAccount(i);
+                entry.setDebitAccount(bank);
+                entry.setAmount(n.round(interest));
+                entry.setMemo(ResourceUtils.getString("Word.Interest"));
+                transaction.addTransactionEntry(entry);
+            }
+
+            // a fee has been assigned
+            if (getFees().compareTo(BigDecimal.ZERO) != 0) {
+                Account f = getFeesAccount();
+                if (f != null) {
+                    entry = new TransactionEntry();
+                    entry.setCreditAccount(f);
+                    entry.setDebitAccount(bank);
+                    entry.setAmount(getFees());
+                    entry.setMemo(ResourceUtils.getString("Word.Fees"));
+                    transaction.addTransactionEntry(entry);
+                }
+            }
+
+            return transaction;
+        }
+
+        return null;
+    }
+
+
+     //Creates a payment transaction relative to the liability account
+    /*
+    private void paymentActionLiability() {
+
+    AmortizeObject ao = ((LiabilityAccount)account).getAmortizeObject();
+    Transaction tran = null;
+
+    if (ao != null) {
+    DateChkNumberDialog d = new DateChkNumberDialog(null, engine.getAccount(ao.getInterestAccount()));
+    d.show();
+
+    if (!d.getResult()) {
+    return;
+    }
+
+    BigDecimal balance = account.getBalance().abs();
+    BigDecimal fees = ao.getFees();
+    double payment = ao.getPayment();
+
+    double interest;
+
+    if (ao.getUseDailyRate()) {
+    Date today = d.getDate();
+    Date last = account.getTransactionAt(account.getTransactionCount() - 1).getDate();
+    interest = ao.getIPayment(balance, last, today); // get the interest portion
+    } else {
+    interest = ao.getIPayment(balance); // get the interest portion
+    }
+
+    Account b = engine.getAccount(ao.getBankAccount());
+    if (b != null) {
+    CommodityNode n = b.getCommodityNode();
+    SplitEntryTransaction e;
+
+    SplitTransaction t = new SplitTransaction(b.getCommodityNode());
+    t.setAccount(b);
+    t.setMemo(ao.getMemo());
+    t.setPayee(ao.getPayee());
+    t.setNumber(d.getNumber());
+    t.setDate(d.getDate());
+
+    // this entry is the complete payment
+    e = new SplitEntryTransaction(n);
+    e.setCreditAccount(account);
+    e.setDebitAccount(b);
+    e.setAmount(n.round(payment));
+    e.setMemo(ao.getMemo());
+    t.addSplit(e);
+
+    try {   // maintain transaction order (stretch time)
+    Thread.sleep(2);
+    } catch (Exception ie) {}
+
+    // handle interest portion of the payment
+    Account i = engine.getAccount(ao.getInterestAccount());
+    if (i != null) {
+    e = new SplitEntryTransaction(n);
+    e.setCreditAccount(i);
+    e.setDebitAccount(account);
+    e.setAmount(n.round(interest));
+    e.setMemo(rb.getString("Word.Interest"));
+    t.addSplit(e);
+    }
+
+    try {   // maintain transaction order (stretch time)
+    Thread.sleep(2);
+    } catch (Exception ie) {}
+
+    // a fee has been assigned
+    if (ao.getFees().compareTo(new BigDecimal("0")) != 0) {
+    Account f = engine.getAccount(ao.getFeesAccount());
+    if (f != null) {
+    e = new SplitEntryTransaction(n);
+    e.setCreditAccount(f);
+    e.setDebitAccount(account);
+    e.setAmount(ao.getFees());
+    e.setMemo(rb.getString("Word.Fees"));
+    t.addSplit(e);
+    }
+    }
+
+    // the total should be the debit to the checking account
+    tran = t;
+    }
+    }
+
+    if (tran != null) {// display the transaction in the register
+    newTransaction(tran);
+    } else {    // could not generate the transaction
+    if (ao == null) {
+    Logger.getLogger("jgnashEngine").warning("Please configure amortization");
+    } else {
+    Logger.getLogger("jgnashEngine").warning("Not enough information");
+    }
+    }
+    }*/
 }
