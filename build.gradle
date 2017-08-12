@@ -9,6 +9,8 @@ allprojects {
         apply plugin: 'java'
     }
 
+    apply plugin: 'findbugs'
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
@@ -44,6 +46,18 @@ allprojects {
         jfreeChartVersion = '1.0.19'
         substanceVersion = '7.3'
         swingxVersion = '1.6.5-1'
+    }
+
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+
+    findbugs {
+        ignoreFailures = true
+        excludeFilter = file("$rootProject.projectDir/findbugs-exclude-filter.xml")
     }
 }
 
