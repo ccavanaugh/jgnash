@@ -517,8 +517,7 @@ to operate correctly.</p>
 <p>Copy the jGnash folder to <code>/Applications</code>.</p>
 </li>
 <li>
-<p>Open AppleScript Editor.
-.</p>
+<p>Open AppleScript Editor.</p>
 </li>
 </ol>
 </div>
@@ -531,9 +530,6 @@ to operate correctly.</p>
     do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/lib/jgnash-fx-x.jar"
 end try</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>.</p>
 </div>
 <div class="paragraph">
 <p>Save it as an Application called <code>jGnash.app</code> in <code>/Applications/jGnash</code></p>
@@ -567,7 +563,7 @@ install Gradle.  The Wrapper will automatically download the necessary dependenc
 </div>
 <div class="paragraph">
 <p><em>If you are building with a recent 64 bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
-Otherwise, the Maven build may fail when building the windows executables.</em></p>
+Otherwise, the Gradle build may fail when building the windows executables.</em></p>
 </div>
 <div class="paragraph">
 <p>To create the distribution zip file, start at the main directory and run:</p>
@@ -577,7 +573,7 @@ Otherwise, the Maven build may fail when building the windows executables.</em><
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>gradlew distZip</code></pre>
+<pre class="highlight"><code>gradlew clean distZip</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -585,7 +581,7 @@ Otherwise, the Maven build may fail when building the windows executables.</em><
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>./gradlew distZip</code></pre>
+<pre class="highlight"><code>./gradlew clean distZip</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -650,7 +646,7 @@ stability with the Oracle release or OpenJDK with OpenJFX.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-07-30 18:58:30 EDT
+Last updated 2017-08-12 05:14:41 EDT
 </div>
 </div>
 </body>

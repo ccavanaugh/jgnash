@@ -63,7 +63,6 @@ For Mac OS X users, a minimum of Mac OS X 10.7 is required unless you want to ex
 
 . Copy the jGnash folder to `/Applications`.
 . Open AppleScript Editor.
-. 
 
 Create the following script:
 
@@ -73,8 +72,6 @@ try
     do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/lib/jgnash-fx-x.jar"
 end try
 ----
-
-. 
 
 Save it as an Application called `jGnash.app` in `/Applications/jGnash`
 
@@ -94,7 +91,7 @@ To build jGnash you'll need the following software installed and correctly confi
 . http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 8u71] or later.
 
 _If you are building with a recent 64 bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
-Otherwise, the Maven build may fail when building the windows executables._
+Otherwise, the Gradle build may fail when building the windows executables._
 
 To create the distribution zip file, start at the main directory and run:
 
@@ -102,14 +99,14 @@ Building on Windows
 
 [source]
 ----
-gradlew distZip
+gradlew clean distZip
 ----
 
 Building on UN*X
 
 [source]
 ----
-./gradlew distZip
+./gradlew clean distZip
 ----
 
 A distributable zip file will be produced at the root of the build directory called jGnash-_version_-bin.zip.
