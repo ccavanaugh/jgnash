@@ -75,6 +75,12 @@ end try
 
 Save it as an Application called `jGnash.app` in `/Applications/jGnash`
 
+=== Java 9 Requirements
+jGnash 2.x is designed to operate with Java 8.
+
+An additional command line option `--add-modules java.xml.bind` is required if you want to operate under Java 9.
+
+
 ==== NOTES:
 
 When upgrading from 1.x to 2.x, you will have to recreate your reminders.

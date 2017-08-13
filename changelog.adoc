@@ -24,8 +24,8 @@ WANTS
 Release 2.33.1
 --------------
 * 08/13/17 The open dialog was incorrectly allowing selection of a file when a remote connection was selected. (Fx)
-* 08/13/17 Internal changes made to allow operation with Java 9 using XML or BXDS files.  Relational databases are not
-           yet supported on Java 9.
+* 08/13/17 Internal were changes made to allow operation with Java 9 with the addition of the command line option
+           `--add-modules java.xml.bind`
 
 Release 2.33.0
 --------------
