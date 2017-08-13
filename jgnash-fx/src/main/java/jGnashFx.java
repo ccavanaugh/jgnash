@@ -94,10 +94,12 @@ public class jGnashFx extends Application {
             return;
         }
 
-        if (OS.getJavaRelease() < OS.JVM_RELEASE_71) {
-            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
-                    ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            return;
+        if (OS.getJavaVersion() <= 1.8f) {
+            if (OS.getJavaRelease() < OS.JVM_RELEASE_71) {
+                JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
+                        ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
 
         // Register the default exception handler

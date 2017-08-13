@@ -21,6 +21,10 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.33.1 (WIP)
+-------------------
+* 08/13/17 Correctly handle changes made to Java 9 versioning that were preventing jGnash from starting.
+
 Release 2.33.0
 --------------
 * 08/11/17 Updated to the latest Netty dependency.

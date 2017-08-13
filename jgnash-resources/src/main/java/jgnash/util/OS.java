@@ -30,6 +30,8 @@ public final class OS {
 
     private static final String JAVA_VERSION = "java.version";
 
+    private static final String JAVA_SPEC_VERSION = "java.specification.version";
+
     /**
      * The minimum working release to use for JavaFx due to needed API changes and critical bugs
      */
@@ -70,7 +72,7 @@ public final class OS {
      * @return returns 1.8 given 1.8.0_60
      */
     public static float getJavaVersion() {
-        return Float.parseFloat(System.getProperty(JAVA_VERSION).substring(0, 3));
+        return Float.parseFloat(System.getProperty(JAVA_SPEC_VERSION));
     }
 
     /**

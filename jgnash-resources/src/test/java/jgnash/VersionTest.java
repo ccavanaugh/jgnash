@@ -32,4 +32,12 @@ public class VersionTest {
         assertTrue(OS.getJavaRelease() > 0);
 
     }
+
+    @Test
+    public void testJavaVersion() {
+
+        System.out.println("Java Version: " + OS.getJavaVersion());
+
+        assertTrue(OS.getJavaVersion() > 0);
+    }
 }
