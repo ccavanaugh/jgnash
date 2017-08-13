@@ -54,7 +54,7 @@ public class Ofx2Test {
     @Test
     public void parseSpec201() {
                 
-        try (InputStream stream =  Object.class.getResourceAsStream("/ofx_spec201_stmtrs_example.xml")) {
+        try (InputStream stream =  Ofx2Test.class.getResourceAsStream("/ofx_spec201_stmtrs_example.xml")) {
             parser.parse(stream);
 
             assertEquals("ENG", parser.getLanguage());
@@ -78,13 +78,13 @@ public class Ofx2Test {
     public void parseActivity() {
         final String testFile = "/activity.ofx";
 
-        final URL url = Object.class.getResource(testFile);
+        final URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("ENG", parser.getLanguage());
@@ -113,13 +113,13 @@ public class Ofx2Test {
     public void parseBankOne() {
         final String testFile = "/bank1.ofx";
 
-        URL url = Object.class.getResource(testFile);
+        URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("ENG", parser.getLanguage());
@@ -149,13 +149,13 @@ public class Ofx2Test {
     public void parseBankOneCommas() {
         final String testFile = "/bank1-commas.ofx";
 
-        URL url = Object.class.getResource(testFile);
+        URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("ENG", parser.getLanguage());
@@ -191,13 +191,13 @@ public class Ofx2Test {
     public void parseCheckingOne() {
         final String testFile = "/checking1.ofx";
 
-        URL url = Object.class.getResource(testFile);
+        URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("ENG", parser.getLanguage());
@@ -224,13 +224,13 @@ public class Ofx2Test {
 
         final String testFile = "/chequing.ofx";
 
-        URL url = Object.class.getResource(testFile);
+        URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("ENG", parser.getLanguage());
@@ -257,13 +257,13 @@ public class Ofx2Test {
 
         final String testFile = "/comptes.ofx";
 
-        URL url = Object.class.getResource(testFile);
+        URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("FRA", parser.getLanguage());
@@ -290,7 +290,7 @@ public class Ofx2Test {
 
         final String testFile = "/demobank.ofx";
 
-        try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+        try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
             parser.parse(OfxV1ToV2.convertToXML(stream), "ISO-8859-1");
 
             assertEquals("JPN", parser.getLanguage());
@@ -312,7 +312,7 @@ public class Ofx2Test {
     public void parseSample() {
         final String testFile = "/Sample.ofx";
 
-        URL url = Object.class.getResource(testFile);
+        URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
@@ -320,7 +320,7 @@ public class Ofx2Test {
 
             assertTrue(FileMagic.isOfxV1(Paths.get(url.toURI())));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("JPN", parser.getLanguage());
@@ -346,13 +346,13 @@ public class Ofx2Test {
     public void parseFileWithAccents() {
         final String testFile = "/File_with_Accents.ofx";
 
-        URL url = Object.class.getResource(testFile);
+        URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
                 assertEquals("FRA", parser.getLanguage());
@@ -377,12 +377,12 @@ public class Ofx2Test {
     public void parseInvest() {
         final String testFile = "/invest.xml";
 
-        final URL url = Object.class.getResource(testFile);
+        final URL url = Ofx2Test.class.getResource(testFile);
 
         try {
             assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
 
-            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (final InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(stream);
 
                 OfxBank ofxBank = parser.getBank();
@@ -413,12 +413,12 @@ public class Ofx2Test {
     public void parse401k() {
         final String testFile = "/401k.xml";
 
-        final URL url = Object.class.getResource(testFile);
+        final URL url = Ofx2Test.class.getResource(testFile);
 
         try {
             assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
 
-            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (final InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(stream);
 
                 OfxBank ofxBank = parser.getBank();
@@ -450,12 +450,12 @@ public class Ofx2Test {
     public void parseInvest2() {
         final String testFile = "/invest2.xml";
 
-        final URL url = Object.class.getResource(testFile);
+        final URL url = Ofx2Test.class.getResource(testFile);
 
         try {
             assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
 
-            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (final InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
                 parser.parse(stream);
 
                 OfxBank ofxBank = parser.getBank();
@@ -487,13 +487,13 @@ public class Ofx2Test {
     public void parseUglyFile() throws Exception {
         final String testFile = "/uglyFormat.ofx";
 
-        final Path path = Paths.get(Object.class.getResource(testFile).toURI());
+        final Path path = Paths.get(Ofx2Test.class.getResource(testFile).toURI());
 
         assertTrue(Files.exists(path));
 
         assertTrue(FileMagic.isOfxV1(path));
 
-        try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+        try (final InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
             String result = OfxV1ToV2.convertToXML(stream);
             System.out.println(result);
         } catch (final IOException e) {
@@ -501,13 +501,13 @@ public class Ofx2Test {
             fail();
         }
 
-        final URL url = Object.class.getResource(testFile);
+        final URL url = Ofx2Test.class.getResource(testFile);
         String encoding;
 
         try {
             encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
 
-            try (final InputStream stream = Object.class.getResourceAsStream(testFile)) {
+            try (final InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
 
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
@@ -520,7 +520,7 @@ public class Ofx2Test {
                 logSevere(Ofx2Test.class, e);
                 fail();
             }
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             logSevere(Ofx2Test.class, e);
             fail();
         }

@@ -38,11 +38,9 @@ public class OfxConvertTest {
     @Test
     public void parseBankOne() {
         
-        try (InputStream stream = Object.class.getResourceAsStream("/bank1.ofx")) {
-            String result = OfxV1ToV2.convertToXML(stream);
-
-            System.out.println(result);            
-        } catch (IOException e) {
+        try (InputStream stream = OfxConvertTest.class.getResourceAsStream("/bank1.ofx")) {
+            System.out.println(OfxV1ToV2.convertToXML(stream));
+        } catch (final IOException e) {
             Logger.getLogger(OfxConvertTest.class.getName()).log(Level.SEVERE, null, e);
             fail();
         }

@@ -40,7 +40,7 @@ public class FileMagicTest {
     @Test
     public void jGnash1xTest() {
 
-        URL url = Object.class.getResource("/test1.jgnash.xml");
+        URL url = FileMagicTest.class.getResource("/test1.jgnash.xml");
 
         try {
             assertTrue(FileMagic.isValidVersion1File(Paths.get(url.toURI())));
@@ -51,7 +51,7 @@ public class FileMagicTest {
 
     @Test
     public void testH2Magic() throws URISyntaxException {
-        URL url = Object.class.getResource("/h2-test.h2.db");
+        URL url = FileMagicTest.class.getResource("/h2-test.h2.db");
 
         FileMagic.FileType type = FileMagic.magic(Paths.get(url.toURI()));
 
@@ -64,7 +64,7 @@ public class FileMagicTest {
     @Test
     public void OfxV1Test() {
 
-        URL url = Object.class.getResource("/bank1.ofx");
+        URL url = FileMagicTest.class.getResource("/bank1.ofx");
 
         try {
             assertTrue(FileMagic.isOfxV1(Paths.get(url.toURI())));
@@ -72,7 +72,7 @@ public class FileMagicTest {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        url = Object.class.getResource("/ofx_spec201_stmtrs_example.xml");
+        url = FileMagicTest.class.getResource("/ofx_spec201_stmtrs_example.xml");
 
         try {
             assertFalse(FileMagic.isOfxV1(Paths.get(url.toURI())));
@@ -87,7 +87,7 @@ public class FileMagicTest {
     @Test
     public void OfxV1EncodingTest1() {
 
-        URL url = Object.class.getResource("/bank1.ofx");
+        URL url = FileMagicTest.class.getResource("/bank1.ofx");
 
         try {
             assertTrue(FileMagic.getOfxV1Encoding(Paths.get(url.toURI())).equals("windows-1252"));
@@ -102,7 +102,7 @@ public class FileMagicTest {
     @Test
     public void OfxV1EncodingTest2() throws URISyntaxException {
 
-        URL url = Object.class.getResource("/File_with_Accents.ofx");
+        URL url = FileMagicTest.class.getResource("/File_with_Accents.ofx");
 
         try {
             assertTrue(FileMagic.getOfxV1Encoding(Paths.get(url.toURI())).equals("ISO-8859-1"));
@@ -117,7 +117,7 @@ public class FileMagicTest {
     @Test
     public void OfxV2Test() {
 
-        URL url = Object.class.getResource("/ofx_spec201_stmtrs_example.xml");
+        URL url = FileMagicTest.class.getResource("/ofx_spec201_stmtrs_example.xml");
 
         try {
             assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
@@ -125,7 +125,7 @@ public class FileMagicTest {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        url = Object.class.getResource("/bank1.ofx");
+        url = FileMagicTest.class.getResource("/bank1.ofx");
 
         try {
             assertFalse(FileMagic.isOfxV2(Paths.get(url.toURI())));

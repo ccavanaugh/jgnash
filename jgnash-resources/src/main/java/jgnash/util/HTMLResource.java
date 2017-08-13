@@ -47,32 +47,13 @@ public class HTMLResource {
     public static URL getURL(final String fileName) {
         String lang = Locale.getDefault().getLanguage();
 
-        URL url = Object.class.getResource(ROOT_PATH + lang + "/" + fileName);
+        URL url = HTMLResource.class.getResource(ROOT_PATH + lang + "/" + fileName);
 
         if (url != null) {
             return url;
         }
 
         // try to get the default
-        return Object.class.getResource(DEFAULT + fileName);
+        return HTMLResource.class.getResource(DEFAULT + fileName);
     }
-
-    /**
-     * Find a locale specific html file given the file name.
-     * 
-     * @param fileName the file name of the html file to look for.
-     * @return a URL for reading the resource, or null if the resource could not be found
-     *//*
-    public static InputStream getInputStream(final String fileName) {
-        String lang = Locale.getDefault().getLanguage();
-
-        InputStream inputStream = Object.class.getResourceAsStream(ROOT_PATH + lang + "/" + fileName);
-
-        if (inputStream != null) {
-            return inputStream;
-        }
-
-        // try to get the default
-        return Object.class.getResourceAsStream(DEFAULT + fileName);
-    }*/
 }

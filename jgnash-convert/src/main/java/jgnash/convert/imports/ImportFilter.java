@@ -207,6 +207,6 @@ public class ImportFilter {
         if (Files.exists(Paths.get(script))) {
             return Files.newBufferedReader(Paths.get(script));
         }
-        return new InputStreamReader(Object.class.getResourceAsStream(script));
+        return new InputStreamReader(ImportFilter.class.getResourceAsStream(script));
     }
 }

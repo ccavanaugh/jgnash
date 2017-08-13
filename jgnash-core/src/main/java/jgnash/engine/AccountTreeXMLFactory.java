@@ -234,7 +234,7 @@ public class AccountTreeXMLFactory {
 
         for (final String string : getAccountSetList()) {
 
-            try (final InputStream stream = Object.class.getResourceAsStream(string)) {
+            try (final InputStream stream = AccountTreeXMLFactory.class.getResourceAsStream(string)) {
                 final RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
                 files.add(account);
             } catch (final IOException e) {
@@ -251,7 +251,7 @@ public class AccountTreeXMLFactory {
         final List<String> set = new ArrayList<>();
 
         if (path != null) {
-            try (final InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
+            try (final InputStream stream = AccountTreeXMLFactory.class.getResourceAsStream(path + "/set.txt");
                  final BufferedReader r = new BufferedReader(new InputStreamReader(stream, ENCODING))) {
 
                 String line = r.readLine();

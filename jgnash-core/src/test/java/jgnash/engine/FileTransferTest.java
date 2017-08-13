@@ -103,7 +103,7 @@ public class FileTransferTest {
             account.setName("test");
             e.addAccount(e.getRootAccount(), account);
 
-            Path tempAttachment = Paths.get(Object.class.getResource("/jgnash-logo.png").toURI());
+            Path tempAttachment = Paths.get(FileTransferTest.class.getResource("/jgnash-logo.png").toURI());
             assertTrue(Files.exists(tempAttachment));
 
             assertTrue(e.addAttachment(tempAttachment, true));  // push a copy of the attachment
@@ -198,7 +198,7 @@ public class FileTransferTest {
             account.setName("test");
             e.addAccount(e.getRootAccount(), account);
 
-            Path tempAttachment = Paths.get(Object.class.getResource("/jgnash-logo.png").toURI());
+            Path tempAttachment = Paths.get(FileTransferTest.class.getResource("/jgnash-logo.png").toURI());
             assertTrue(Files.exists(tempAttachment));
 
             assertTrue(e.addAttachment(tempAttachment, true));  // push a copy of the attachment

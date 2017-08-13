@@ -50,9 +50,9 @@ public class TextResource {
         final String root = ClassPathUtils.getLocalizedPath(ROOT_PATH);
         final StringBuilder sb = new StringBuilder();
 
-        try (InputStream s = Object.class.getResourceAsStream(root + "/" + fileName)) {
+        try (final InputStream s = TextResource.class.getResourceAsStream(root + "/" + fileName)) {
             if (s != null) {
-                try (BufferedReader b = new BufferedReader(new InputStreamReader(s, "UTF-8"))) {
+                try (final BufferedReader b = new BufferedReader(new InputStreamReader(s, "UTF-8"))) {
                     String t = loadConvert(b.readLine());
                     while (t != null) {
                         sb.append(t);
@@ -63,7 +63,7 @@ public class TextResource {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Logger.getLogger(TextResource.class.getName()).log(Level.SEVERE, null, e);
         }
 
