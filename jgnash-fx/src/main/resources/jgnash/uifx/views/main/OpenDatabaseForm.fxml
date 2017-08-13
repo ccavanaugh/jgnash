@@ -32,7 +32,7 @@
     <Label text="%Label.DatabaseName" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
     <TextField fx:id="localDatabaseField" editable="false" prefWidth="200.0" GridPane.columnIndex="1"
                GridPane.rowIndex="0"/>
-    <Button onAction="#handleSelectFileAction" GridPane.columnIndex="2" GridPane.rowIndex="0">
+    <Button fx:id="selectFileButton" onAction="#handleSelectFileAction" GridPane.columnIndex="2" GridPane.rowIndex="0">
         <graphic>
             <FontAwesomeLabel glyphName="ELLIPSIS_H"/>
         </graphic>

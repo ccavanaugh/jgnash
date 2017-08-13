@@ -23,6 +23,7 @@ import java.util.prefs.Preferences;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
@@ -44,6 +45,9 @@ import jgnash.uifx.tasks.BootEngineTask;
 public class OpenDatabaseController {
 
     private static final String LAST_DIR = "LastDir";
+
+    @FXML
+    private Button selectFileButton;
 
     @FXML
     protected ButtonBar buttonBar;
@@ -78,6 +82,7 @@ public class OpenDatabaseController {
         localDatabaseField.disableProperty().bind(remoteServerCheckBox.selectedProperty());
         portField.disableProperty().bind(remoteServerCheckBox.selectedProperty().not());
         databaseServerField.disableProperty().bind(remoteServerCheckBox.selectedProperty().not());
+        selectFileButton.disableProperty().bind(remoteServerCheckBox.selectedProperty());
     }
 
     @FXML
