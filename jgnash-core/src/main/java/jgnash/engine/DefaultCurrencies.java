@@ -63,7 +63,9 @@ public class DefaultCurrencies {
                     if (Currency.getInstance(locale) != null) {
                         set.add(buildNode(locale));
                     }
-                } catch (Exception ex) {
+                } catch (final IllegalArgumentException ignored) {
+                    // ignored, locale is not a supported ISO 3166 country code
+                } catch (final Exception ex) {
                     Logger.getLogger(DefaultCurrencies.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
