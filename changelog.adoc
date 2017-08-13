@@ -21,9 +21,11 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
-Release 2.33.1 (WIP)
--------------------
-* 08/13/17 Correctly handle changes made to Java 9 versioning that were preventing jGnash from starting.
+Release 2.33.1
+--------------
+* 08/13/17 The open dialog was incorrectly allowing selection of a file when a remote connection was selected. (Fx)
+* 08/13/17 Internal changes made to allow operation with Java 9 using XML or BXDS files.  Relational databases are not
+           yet supported on Java 9.
 
 Release 2.33.0
 --------------
