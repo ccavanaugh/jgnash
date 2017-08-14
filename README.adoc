@@ -80,6 +80,18 @@ jGnash 2.x is designed to operate with Java 8.
 
 An additional command line option `--add-modules java.xml.bind` is required if you want to operate under Java 9.
 
+An illegal reflective access Warning will be displayed on the console similar to the following.  It may be ignored and
+should improve at a later date as the Java Ecosystem migrates to Java 9.
+
+[source]
+----
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by javassist.util.proxy.SecurityActions (file:/home/craig/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/a9cbcdfb7e9f86fbc74d3afae65f2248bfbf82a0/javassist-3.20.0-GA.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of javassist.util.proxy.SecurityActions
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+----
+
 
 ==== NOTES:
 
