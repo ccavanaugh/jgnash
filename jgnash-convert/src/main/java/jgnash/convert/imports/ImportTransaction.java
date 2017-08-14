@@ -38,6 +38,9 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     private final String uuid = UUID.randomUUID().toString();
 
+    /**
+     * The destination account
+     */
     private Account account;
 
     /**
@@ -108,6 +111,9 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     private String subAccount;
 
     private String currency;
+
+    // OFX, transfer account id
+    private String accountTo;
 
     /**
      * @return returns the destination account
@@ -448,5 +454,13 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
                 getRefNum() + ", " +
                 getPayeeId() + ", " +
                 getCurrency();
+    }
+
+    public String getAccountTo() {
+        return accountTo;
+    }
+
+    public void setAccountTo(String accountTo) {
+        this.accountTo = accountTo;
     }
 }

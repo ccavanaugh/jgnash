@@ -55,7 +55,7 @@ import jgnash.util.ResourceUtils;
 
 /**
  * StAX based parser for 2.x OFX (XML) files.
- *
+ * <p>
  * This parser will intentionally absorb higher level elements and drop through to simplify and reduce code.
  *
  * @author Craig Cavanaugh
@@ -83,6 +83,16 @@ public class OfxV2Parser implements OfxTags {
      * Status message from sign-on process
      */
     private String statusMessage;
+
+    /**
+     * Support class
+     */
+    private class AccountInfo {
+        String bankId;
+        String accountId;
+        String accountType;
+        String branchId;
+    }
 
     static void enableDetailedLogFile() {
         try {
@@ -306,7 +316,7 @@ public class OfxV2Parser implements OfxTags {
                             bank.currency = reader.getElementText();
                             break;
                         case INVACCTFROM:
-                            parseAccountInfo(reader);
+                            parseAccountInfo(bank, parseAccountInfo(reader));
                             break;
                         case INVTRANLIST:
                             parseInvestmentTransactionList(reader);
@@ -372,7 +382,7 @@ public class OfxV2Parser implements OfxTags {
                             parseAvailableBalance(reader);
                             break;
                         case BANKACCTFROM:
-                            parseAccountInfo(reader);
+                            parseAccountInfo(bank, parseAccountInfo(reader));
                             break;
                         case BANKTRANLIST:
                             parseBankTransactionList(reader);
@@ -429,7 +439,7 @@ public class OfxV2Parser implements OfxTags {
                             parseAvailableBalance(reader);
                             break;
                         case CCACCTFROM:
-                            parseAccountInfo(reader);
+                            parseAccountInfo(bank, parseAccountInfo(reader));
                             break;
                         case BANKTRANLIST:
                             parseBankTransactionList(reader);
@@ -907,6 +917,10 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case STMTTRN:   // consume, occurs with an investment account transfer
                             break;
+                        case BANKACCTTO:
+                        case CCACCTTO:
+                            parseAccountInfo(tran, parseAccountInfo(reader));
+                            break;
                         default:
                             logger.log(Level.WARNING, "Unknown STMTTRN element: {0}", reader.getLocalName());
                             break;
@@ -926,6 +940,10 @@ public class OfxV2Parser implements OfxTags {
 
         logger.exiting(OfxV2Parser.class.getName(), "parseBankTransaction");
     }
+    
+    private void parseAccountInfo(final ImportTransaction importTransaction, final AccountInfo accountInfo) {
+        importTransaction.setAccountTo(accountInfo.accountId);
+    }
 
     /**
      * Parses a BANKACCTFROM element
@@ -933,10 +951,12 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    private void parseAccountInfo(final XMLStreamReader reader) throws XMLStreamException {
+    private AccountInfo parseAccountInfo(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseAccountInfo");
 
         final QName parsingElement = reader.getName();
+
+        final AccountInfo accountInfo = new AccountInfo();
 
         parse:
         while (reader.hasNext()) {
@@ -947,16 +967,16 @@ public class OfxV2Parser implements OfxTags {
                     switch (reader.getLocalName()) {
                         case BANKID:
                         case BROKERID:  // normally a URL per the OFX specification
-                            bank.bankId = reader.getElementText();
+                            accountInfo.bankId = reader.getElementText();
                             break;
                         case ACCTID:
-                            bank.accountId = reader.getElementText();
+                            accountInfo.accountId = reader.getElementText();
                             break;
                         case ACCTTYPE:
-                            bank.accountType = reader.getElementText();
+                            accountInfo.accountType = reader.getElementText();
                             break;
                         case BRANCHID:
-                            bank.branchId = reader.getElementText();
+                            accountInfo.branchId = reader.getElementText();
                             break;
                         default:
                             logger.log(Level.WARNING, "Unknown BANKACCTFROM element: {0}", reader.getLocalName());
@@ -974,6 +994,15 @@ public class OfxV2Parser implements OfxTags {
         }
 
         logger.exiting(OfxV2Parser.class.getName(), "parseAccountInfo");
+
+        return accountInfo;
+    }
+
+    private void parseAccountInfo(final OfxBank ofxBank, final AccountInfo accountInfo) {
+        ofxBank.bankId = accountInfo.bankId;
+        ofxBank.branchId = accountInfo.branchId;
+        ofxBank.accountId = accountInfo.accountId;
+        ofxBank.accountType = accountInfo.accountType;
     }
 
     /**

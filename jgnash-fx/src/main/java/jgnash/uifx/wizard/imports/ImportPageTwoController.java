@@ -52,6 +52,7 @@ import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportFilter;
 import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
+import jgnash.convert.imports.ImportUtils;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
@@ -372,6 +373,15 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                 BayesImportClassifier.classifyTransactions(list, transactions, baseAccount);
             } else {
                 BayesImportClassifier.classifyTransactions(list, baseAccount.getSortedTransactionList(), baseAccount);
+            }
+
+            // override the classifier if an account has been specified already
+            for (final ImportTransaction importTransaction : list) {
+                final Account account = ImportUtils.matchAccount(importTransaction);
+
+                if (account != null) {
+                    importTransaction.setAccount(account);
+                }
             }
 
             tableView.getItems().setAll(list);

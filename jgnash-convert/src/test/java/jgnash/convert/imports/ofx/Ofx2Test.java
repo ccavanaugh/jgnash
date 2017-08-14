@@ -141,6 +141,38 @@ public class Ofx2Test {
         }
     }
 
+    @Test
+    public void parseBankTwo() {
+        final String testFile = "/bank2.ofx";
+
+        URL url = Ofx2Test.class.getResource(testFile);
+        String encoding;
+
+        try {
+            encoding = FileMagic.getOfxV1Encoding(Paths.get(url.toURI()));
+
+            try (InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
+                assertEquals(0, parser.getBank().statusCode);
+                assertEquals("INFO", parser.getBank().statusSeverity);
+                assertEquals(null, parser.getBank().statusMessage);
+
+                assertFalse(parser.getBank().isInvestmentAccount());
+            } catch (IOException e) {
+                logSevere(Ofx2Test.class, e);
+                fail();
+            }
+        } catch (URISyntaxException e) {
+            logSevere(Ofx2Test.class, e);
+            fail();
+        }
+    }
+
 
     /**
      * Test for amounts that use a comma as a decimal separator

@@ -51,6 +51,11 @@ public interface OfxTags {
     String BANKACCTFROM = "BANKACCTFROM";
 
     /**
+     * Bank Account info for a transfer
+     */
+    String BANKACCTTO = "BANKACCTTO";
+
+    /**
      * CASH Tag
      */
     String CASH = "CASH";
@@ -59,6 +64,11 @@ public interface OfxTags {
      * Credit Card info
      */
     String CCACCTFROM = "CCACCTFROM";
+
+    /**
+     * Credit Account info for a transfer
+     */
+    String CCACCTTO = "CCACCTTO";
 
     /**
      * Investment Account info

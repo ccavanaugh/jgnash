@@ -28,6 +28,8 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 
 /**
+ * Various utility methods used when importing transactions
+ *
  * @author Craig Cavanaugh
  */
 public class ImportUtils {
@@ -47,6 +49,31 @@ public class ImportUtils {
         Objects.requireNonNull(engine);
 
         return searchForRootType(engine.getRootAccount(), AccountType.INCOME);
+    }
+
+    /**
+     * Matches an ImportTransaction to an Account based on an AccountTo tag if it exists
+     * @param importTransaction Import transaction to test
+     * @return Account if found, null otherwise
+     */
+    public static Account matchAccount(final ImportTransaction importTransaction) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final String number = importTransaction.getAccountTo();
+
+        Account account = null;
+
+        if (number != null) {
+            for (final Account a : engine.getAccountList()) {
+                if (a.getAccountNumber().equals(number)) {
+                    account = a;
+                    break;
+                }
+            }
+        }
+
+        return account;
     }
 
     private static Account searchForRootType(final Account account, final AccountType accountType) {
@@ -93,5 +120,4 @@ public class ImportUtils {
 
         return securityNode;
     }
-
 }
