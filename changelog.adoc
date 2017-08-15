@@ -23,6 +23,8 @@ WANTS
 
 Release 2.33.1
 --------------
+* 08/15/17 Display a console message with the successful uninstallation of application preferences. (Swing, Fx)
+* 08/15/17 The command line help system was not being displayed on the console correctly. (Swing, Fx)
 * 08/14/17 OFX import now supports transfers between accounts
 * 08/13/17 The open dialog was incorrectly allowing selection of a file when a remote connection was selected. (Fx)
 * 08/13/17 Internal were changes made to allow operation with Java 9 with the addition of the command line option

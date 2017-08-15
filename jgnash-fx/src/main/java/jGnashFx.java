@@ -112,6 +112,11 @@ public class jGnashFx extends Application {
         try {
             final OptionSet options = parser.parse(args);
 
+            if (options.has(HELP_OPTION_SHORT)) {
+                parser.printHelpOn(System.err);
+                System.exit(0);
+            }
+
             // Does the user want to uninstall and clear their registry settings
             if (options.has(UNINSTALL_OPTION_SHORT)) {
                 PortablePreferences.deleteUserPreferences();

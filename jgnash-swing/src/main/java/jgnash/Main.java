@@ -197,6 +197,11 @@ public final class Main {
         try {
             final OptionSet options = parser.parse(args);
 
+            if (options.has(HELP_OPTION_SHORT)) {
+                parser.printHelpOn(System.err);
+                System.exit(0);
+            }
+
             /* handle a file name passed in as an argument without use of the -file argument
                assumed behavior for windows users */
             if (!options.nonOptionArguments().isEmpty()) {
@@ -275,6 +280,7 @@ public final class Main {
                 MessageBus.getInstance().shutDownRemoteServer(hostName, port + 1, password);
             } else if (options.has(UNINSTALL_OPTION_SHORT)) { /* Dump the registry settings if requested */
                 PortablePreferences.deleteUserPreferences();
+                System.exit(0);
             } else if (serverFile != null) {
                 try {
                     if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {
