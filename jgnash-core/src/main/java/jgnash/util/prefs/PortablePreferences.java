@@ -77,6 +77,7 @@ public class PortablePreferences {
                 Preferences jgnash = p.node("/jgnash");
                 jgnash.removeNode();
                 p.flush();
+                System.out.println(ResourceUtils.getString("Message.UninstallGood"));
             } else {
                 System.err.println(ResourceUtils.getString("Message.PrefFail"));
             }
