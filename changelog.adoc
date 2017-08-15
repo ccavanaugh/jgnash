@@ -23,6 +23,7 @@ WANTS
 
 Release 2.33.1
 --------------
+* 08/15/17 Simple use of portable preferences was failing with use of -p or --portable. (Swing, Fx)
 * 08/15/17 Display a console message with the successful uninstallation of application preferences. (Swing, Fx)
 * 08/15/17 The command line help system was not being displayed on the console correctly. (Swing, Fx)
 * 08/14/17 OFX import now supports transfers between accounts

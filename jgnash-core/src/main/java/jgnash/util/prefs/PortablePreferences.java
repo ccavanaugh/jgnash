@@ -56,7 +56,7 @@ public class PortablePreferences {
     private static void importPreferences(final String file) {
         final Path importFile = getPreferenceFile(file);
 
-        if (Files.isReadable(Paths.get(file))) {
+        if (Files.isReadable(importFile)) {
             Logger.getLogger(PortablePreferences.class.getName()).info("Importing preferences");
 
             try (final InputStream is = Files.newInputStream(importFile)) {
