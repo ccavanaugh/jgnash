@@ -919,6 +919,7 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case BANKACCTTO:
                         case CCACCTTO:
+                        case INVACCTTO:
                             parseAccountInfo(tran, parseAccountInfo(reader));
                             break;
                         default:
