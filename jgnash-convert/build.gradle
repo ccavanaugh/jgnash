@@ -4,6 +4,8 @@ dependencies {
     compile project(':jgnash-core')
     compile project(':jgnash-bayes')
 
+    testCompile project(':jgnash-core').sourceSets.test.output
+
     compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: joptSimpleVerion
     compile group: 'com.opencsv', name: 'opencsv', version: opencsvVersion
 }
