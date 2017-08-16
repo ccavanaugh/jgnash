@@ -267,6 +267,7 @@ public final class Main {
                 final File file = (File) options.valueOf(PORTABLE_FILE_OPTION);
                 if (file.exists()) {
                     portableFile = file;
+                    portable = true;
                 }
             } else if (options.has(PORTABLE_OPTION_SHORT)) {  // simple use of portable preferences
                 portable = true;
@@ -296,9 +297,13 @@ public final class Main {
                     logSevere(Main.class, e);
                 }
             } else { // start the UI
-                if (portable || portableFile != null) { // must hook in the preferences implementation first
-                    // for best operation
-                    PortablePreferences.initPortablePreferences(portableFile.getAbsolutePath());
+
+                if (portable) { // must hook in the preferences implementation first
+                    if (portableFile != null) {
+                        PortablePreferences.initPortablePreferences(portableFile.getAbsolutePath());
+                    } else {
+                        PortablePreferences.initPortablePreferences(null);
+                    }
                 }
 
                 enableAntialiasing();
@@ -344,14 +349,17 @@ public final class Main {
                 acceptsAll(asList(FILE_OPTION_SHORT, FILE_OPTION_LONG), "File to load at start").withRequiredArg()
                         .ofType(File.class);
                 accepts(PASSWORD_OPTION, "Password for a local File, server or client").withRequiredArg();
+
                 acceptsAll(asList(PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG), "Enable portable preferences");
                 accepts(PORTABLE_FILE_OPTION, "Enable portable preferences and specify the file")
                         .withRequiredArg().ofType(File.class);
+
                 accepts(PORT_OPTION, "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT
                         + ")").withRequiredArg().ofType(Integer.class);
                 accepts(HOST_OPTION, "Server host name or address").requiredIf(PORT_OPTION).withRequiredArg();
                 accepts(SERVER_OPTION, "Runs as a server using the specified file")
                         .withRequiredArg().ofType(File.class);
+
                 accepts(XRENDER_OPTION, "Enable the XRender-based Java 2D rendering pipeline");
                 accepts(OPEN_GL_OPTION, "Enable OpenGL acceleration");
                 accepts(HANG_DETECT_OPTION, "Enable hang detection on the EDT");
