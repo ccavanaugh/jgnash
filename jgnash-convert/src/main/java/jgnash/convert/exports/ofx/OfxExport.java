@@ -37,6 +37,7 @@ import jgnash.engine.AccountType;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
 import jgnash.util.FileUtils;
 
 /**
@@ -242,7 +243,7 @@ public class OfxExport implements OfxTags {
     private void writeBankTransaction(final Transaction transaction) {
         indentedWriter.println(wrapOpen(STMTTRN), indentLevel++);
         indentedWriter.println(wrapOpen(TRNTYPE)
-                + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
+                + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) >= 1 ? CREDIT : DEBIT), indentLevel);
 
         indentedWriter.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getLocalDate()), indentLevel);
         indentedWriter.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
@@ -257,6 +258,19 @@ public class OfxExport implements OfxTags {
 
         // write out the banks transaction id if previously imported
         writeFitID(transaction);
+
+        // write out the account to
+        if (transaction.getTransactionType() == TransactionType.DOUBLEENTRY) {
+            final Account other = transaction.getTransactionEntries().get(0).getCreditAccount() != account
+                    ? transaction.getTransactionEntries().get(0).getCreditAccount()
+                    : transaction.getTransactionEntries().get(0).getDebitAccount();
+
+            if (other != null && other.getAccountNumber() != null && other.getAccountNumber().length() > 0) {
+                if (other.getAccountType() != AccountType.EXPENSE && other.getAccountType() != AccountType.INCOME) {
+                    writeAccountTo(other);
+                }
+            }
+        }
 
         indentedWriter.println(wrapClose(STMTTRN), --indentLevel);
     }
@@ -415,6 +429,48 @@ public class OfxExport implements OfxTags {
         return wrapOpen(element) + text + wrapClose(element);
     }
 
+    private void writeAccountTo(Account account) {
+        // write account identification
+        indentedWriter.println(wrapOpen(getAccountToAggregate(account)), indentLevel++);
+
+        switch (account.getAccountType()) {
+            case INVEST:
+            case MUTUAL:
+                indentedWriter.println(wrapOpen(BROKERID), indentLevel); //  required for investment accounts, but jGnash does not manage a broker ID, normally a web URL
+                break;
+            default:
+                indentedWriter.println(wrapOpen(BANKID) + account.getBankId(), indentLevel); // savings and checking only
+                break;
+        }
+
+        indentedWriter.println(wrapOpen(ACCTID) + account.getAccountNumber(), indentLevel);
+
+        // write the required account type
+        switch (account.getAccountType()) {
+            case CHECKING:
+                indentedWriter.println(wrapOpen(ACCTTYPE) + CHECKING, indentLevel);
+                break;
+            case ASSET:
+            case BANK:
+            case CASH:
+                indentedWriter.println(wrapOpen(ACCTTYPE) + SAVINGS, indentLevel);
+                break;
+            case CREDIT:
+            case LIABILITY:
+                indentedWriter.println(wrapOpen(ACCTTYPE) + CREDITLINE, indentLevel);
+                break;
+            case SIMPLEINVEST:
+            case MONEYMKRT:
+                indentedWriter.println(wrapOpen(ACCTTYPE) + MONEYMRKT, indentLevel);
+                break;
+            default:
+                break;
+        }
+
+        indentedWriter.println(wrapClose(getAccountToAggregate(account)), --indentLevel);
+
+    }
+
     private static String getBankingMessageSetAggregate(final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
@@ -486,6 +542,25 @@ public class OfxExport implements OfxTags {
             case INVEST:
             case MUTUAL:
                 return INVACCTFROM;
+            default:
+                return "";
+        }
+    }
+
+    private static String getAccountToAggregate(final Account account) {
+        switch (account.getAccountType()) {
+            case ASSET:
+            case BANK:
+            case CASH:
+            case CHECKING:
+            case SIMPLEINVEST:
+                return BANKACCTTO;
+            case CREDIT:
+            case LIABILITY:
+                return CCACCTTO;
+            case INVEST:
+            case MUTUAL:
+                return INVACCTTO;
             default:
                 return "";
         }
