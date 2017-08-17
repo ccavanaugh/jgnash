@@ -51,6 +51,8 @@ public abstract class AbstractEngineTest {
 
     protected Account usdBankAccount;
 
+    protected Account checkingAccount;
+
     Account equityAccount;
 
     protected Account investAccount;
@@ -75,12 +77,6 @@ public abstract class AbstractEngineTest {
         CurrencyNode cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
         e.addCurrency(cadCurrency);
 
-        // Creating securities
-        securityNode1 = new SecurityNode(defaultCurrency);
-
-        securityNode1.setSymbol("GOOGLE");
-        assertTrue(e.addSecurity(securityNode1));
-
         // Creating accounts
         incomeAccount = new Account(AccountType.INCOME, defaultCurrency);
         incomeAccount.setName("Income Account");
@@ -92,7 +88,15 @@ public abstract class AbstractEngineTest {
 
         usdBankAccount = new Account(AccountType.BANK, defaultCurrency);
         usdBankAccount.setName("USD Bank Account");
+        usdBankAccount.setBankId("xyzabc");
+        usdBankAccount.setAccountNumber("10001-A01");
         e.addAccount(e.getRootAccount(), usdBankAccount);
+
+        checkingAccount = new Account(AccountType.CHECKING, defaultCurrency);
+        checkingAccount.setName("Checking Account");
+        checkingAccount.setBankId("xyzabc");
+        checkingAccount.setAccountNumber("10001-C01");
+        e.addAccount(e.getRootAccount(), checkingAccount);
 
         Account cadBankAccount = new Account(AccountType.BANK, cadCurrency);
         cadBankAccount.setName("CAD Bank Account");
@@ -109,6 +113,11 @@ public abstract class AbstractEngineTest {
         investAccount = new Account(AccountType.INVEST, defaultCurrency);
         investAccount.setName("Invest Account");
         e.addAccount(e.getRootAccount(), investAccount);
+
+        // Creating securities
+        securityNode1 = new SecurityNode(defaultCurrency);
+        securityNode1.setSymbol("GOOGLE");
+        assertTrue(e.addSecurity(securityNode1));
 
         // Adding security to the invest account
         List<SecurityNode> securityNodeList = new ArrayList<>();
