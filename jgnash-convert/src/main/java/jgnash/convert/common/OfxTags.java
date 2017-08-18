@@ -76,6 +76,11 @@ public interface OfxTags {
     String INVACCTFROM = "INVACCTFROM";
 
     /**
+     * Investment Account info for a transfer
+     */
+    String INVACCTTO = "INVACCTTO";
+
+    /**
      * Bank ID
      */
     String BANKID = "BANKID";
