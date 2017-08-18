@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -144,6 +145,8 @@ abstract class AbstractXStreamContainer {
         xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
 
         xstream.setMode(XStream.ID_REFERENCES);
+
+        xstream.alias("date", LocalDate.class); // use date instead of local-date by default
 
         xstream.alias("Decimal", BigDecimal.class);
 
