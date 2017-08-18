@@ -45,6 +45,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -90,6 +91,8 @@ public class AccountTreeXMLFactory {
         xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
 
         xstream.setMode(XStream.ID_REFERENCES);
+
+        xstream.alias("date", LocalDate.class); // use date instead of local-date by default
 
         xstream.alias("Account", Account.class);
         xstream.alias("RootAccount", RootAccount.class);
