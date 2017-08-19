@@ -210,7 +210,7 @@ public class ImportScriptsDialogController {
         acceptanceConsumerProperty.setValue(acceptanceConsumer);
     }
 
-    private class Script {
+    private static class Script {
         final BooleanProperty enabledProperty = new SimpleBooleanProperty(false);
 
         final StringProperty descriptionProperty = new SimpleStringProperty();
