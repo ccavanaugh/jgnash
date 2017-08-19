@@ -88,7 +88,7 @@ public class OfxV2Parser implements OfxTags {
     /**
      * Support class
      */
-    private class AccountInfo {
+    private static class AccountInfo {
         String bankId;
         String accountId;
         String accountType;
@@ -236,8 +236,10 @@ public class OfxV2Parser implements OfxTags {
         bank = new OfxBank();
 
         final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 
-        try (InputStream input = new BufferedInputStream(stream)) {
+        try (final InputStream input = new BufferedInputStream(stream)) {
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, encoding);
             readOfx(reader);
         } catch (IOException | XMLStreamException e) {

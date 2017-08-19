@@ -24,6 +24,7 @@ WANTS
 Release 2.33.2
 --------------
 * 08/19/17 Switched from MD5 to SHA-256 has function from encrypted client / server operation. (Swing, Fx)
+* 08/19/17 Protect against the import of an OFX file with malicious content. (Swing, Fx)
 
 Release 2.33.1
 --------------
