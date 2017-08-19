@@ -51,6 +51,7 @@ import jgnash.convert.imports.ImportSecurity;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.TransactionType;
 import jgnash.util.FileMagic;
+import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -96,7 +97,7 @@ public class OfxV2Parser implements OfxTags {
 
     static void enableDetailedLogFile() {
         try {
-            final Handler fh = new FileHandler("%h/jgnash-ofx.log", false);
+            final Handler fh = new FileHandler("%t/jgnash-ofx.log", false);
             fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
             logger.setLevel(Level.ALL);
@@ -105,7 +106,7 @@ public class OfxV2Parser implements OfxTags {
         }
     }
 
-    public static OfxBank parse(final Path file) throws Exception {
+    public static OfxBank parse(@NotNull final Path file) throws Exception {
 
         final OfxV2Parser parser = new OfxV2Parser();
 
