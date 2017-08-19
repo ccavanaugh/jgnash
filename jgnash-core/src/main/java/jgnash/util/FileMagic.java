@@ -331,6 +331,10 @@ public class FileMagic {
         try (final InputStream input = Files.newInputStream(path)) {
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
+            // Protect against external entity attacks
+            inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+            inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
 
             parse:
