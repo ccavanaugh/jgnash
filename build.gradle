@@ -15,7 +15,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '2.33.0'
+    version = '2.33.1'
 
     project.ext {
         joptSimpleVerion = '5.0.4'

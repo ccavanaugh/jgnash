@@ -23,15 +23,15 @@ WANTS
 
 Release 2.33.1
 --------------
-* 08/18/17 Corrected an issue with optimal data storage in xml and bxds files caused by a regression introduced in 2.33.0
-* 08/16/17 The OFX export will now generate required information for transfer between accounts
+* 08/18/17 Corrected an issue with optimal Date storage in xml and bxds files caused by a regression introduced in 2.33.0
+* 08/16/17 The OFX export will now generate required information for transfer between accounts. (Swing, Fx)
 * 08/15/17 Simple use of portable preferences was failing with use of -p or --portable. (Swing, Fx)
 * 08/15/17 Display a console message with the successful uninstallation of application preferences. (Swing, Fx)
 * 08/15/17 The command line help system was not being displayed on the console correctly. (Swing, Fx)
-* 08/14/17 OFX import now supports transfers between accounts
+* 08/14/17 OFX import now supports transfers between accounts. (Fx)
 * 08/13/17 The open dialog was incorrectly allowing selection of a file when a remote connection was selected. (Fx)
 * 08/13/17 Internal were changes made to allow operation with Java 9 with the addition of the command line option
-           `--add-modules java.xml.bind`
+           `--add-modules java.xml.bind`. (Swing, Fx)
 
 Release 2.33.0
 --------------
