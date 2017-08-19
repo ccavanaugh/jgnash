@@ -51,6 +51,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -184,6 +185,8 @@ public final class ActionParser extends DefaultHandler {
         parserFactory.setValidating(false);
 
         try {
+            parserFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
             final SAXParser parser = parserFactory.newSAXParser();
             parser.parse(stream, this);
 
