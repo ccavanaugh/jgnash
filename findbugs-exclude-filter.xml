@@ -14,6 +14,22 @@
     </Match>
 
     <Match>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="CRLF_INJECTION_LOGS"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="OBJECT_DESERIALIZATION"/>
+    </Match>
+
+    <Match>
         <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
     </Match>
 
