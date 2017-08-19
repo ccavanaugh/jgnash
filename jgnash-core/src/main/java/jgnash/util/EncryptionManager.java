@@ -56,7 +56,7 @@ public class EncryptionManager {
         byte[] encryptionKey = "fake".getBytes(StandardCharsets.UTF_8);
 
         try {
-            final MessageDigest md = MessageDigest.getInstance("MD5");
+            final MessageDigest md = MessageDigest.getInstance("SHA-256");
 
             final StringBuilder builder = new StringBuilder(new String(password));
 

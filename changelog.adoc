@@ -21,6 +21,10 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
+Release 2.33.2
+--------------
+* 08/19/17 Switched from MD5 to SHA-256 has function from encrypted client / server operation. (Swing, Fx)
+
 Release 2.33.1
 --------------
 * 08/18/17 Corrected an issue with optimal Date storage in xml and bxds files caused by a regression introduced in 2.33.0
