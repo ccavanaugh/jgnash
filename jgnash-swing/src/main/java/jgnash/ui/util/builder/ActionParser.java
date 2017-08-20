@@ -58,6 +58,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.util.IconUtils;
+import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
 
 import org.xml.sax.Attributes;
@@ -336,7 +337,7 @@ public final class ActionParser extends DefaultHandler {
             final String accel = aa.getValue(ACCEL_INDEX);
 
             if (accel != null && !accel.trim().isEmpty()) {
-                final KeyStroke stroke = jgnash.ui.util.Resource.getKeyStroke(accel);
+                final KeyStroke stroke = getKeyStroke(accel);
                 if (stroke != null) {
                     action.putValue(Action.ACCELERATOR_KEY, stroke);
                 } else {
@@ -356,11 +357,6 @@ public final class ActionParser extends DefaultHandler {
             if (aa.getValue(DESC_INDEX) != null) {
                 action.putValue(Action.SHORT_DESCRIPTION, rb.getString(aa.getValue(DESC_INDEX)));
             }
-
-            // validate length of mnemonic before trying
-            /*if (aa.getValue(MNEMONIC_INDEX) != null && rb.getString(aa.getValue(MNEMONIC_INDEX)).trim().length() == 1) {
-                action.putValue(Action.MNEMONIC_KEY, (int) jgnash.ui.util.Resource.getMnemonic(aa.getValue(MNEMONIC_INDEX)));
-            }*/
 
             // load the ID into the action so it can be recalled later
             action.putValue(ID_ATTRIBUTE, aa.getValue(ID_INDEX));
@@ -442,6 +438,28 @@ public final class ActionParser extends DefaultHandler {
         public String getValue(int index) {
             return array[index];
         }
+    }
+
+    /**
+     * Gets a localized keystroke.
+     *
+     * @param key KeyStroke key
+     * @return localized KeyStroke
+     */
+    private static KeyStroke getKeyStroke(final String key) {
+        String value = ResourceUtils.getString(key);
+
+        // if working on an QSX system, use the meta key instead of the control key
+        if (value != null && value.contains("control") && OS.isSystemOSX()) {
+            value = value.replace("control", "meta");
+        }
+
+        final KeyStroke keyStroke = KeyStroke.getKeyStroke(value);
+        if (keyStroke == null && value != null && !value.isEmpty()) {
+            Logger.getLogger(ActionParser.class.getName()).log(Level.WARNING,
+                    "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
+        }
+        return keyStroke;
     }
 
     private static class ActionNode {
