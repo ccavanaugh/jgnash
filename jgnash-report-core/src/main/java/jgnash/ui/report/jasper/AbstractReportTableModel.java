@@ -129,13 +129,9 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
                     if (groupColumn >= 0) {
                         final String group = (String) getValueAt(i, groupColumn);
-
                         final BigDecimal o = groupMap.get(group);
-                        if (o != null) {
-                            groupMap.put(group, o.add(value));
-                        } else {
-                            groupMap.put(group, value);
-                        }
+
+                        groupMap.put(group, o != null ? o.add(value) : value);
                     }
                 }
             }
