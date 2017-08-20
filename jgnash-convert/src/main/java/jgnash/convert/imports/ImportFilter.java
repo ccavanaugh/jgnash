@@ -61,7 +61,7 @@ public class ImportFilter {
 
     private static final Logger logger = Logger.getLogger(ImportFilter.class.getName());
 
-    private static String[] KNOWN_SCRIPTS = {"/jgnash/imports/tidy.js"};
+    private static final String[] KNOWN_SCRIPTS = {"/jgnash/imports/tidy.js"};
 
     private final ScriptEngine engine;
 
