@@ -36,10 +36,10 @@ public class ChangeCredentialsAction extends AbstractEnabledAction {
         EventQueue.invokeLater(() -> new ChangeDatabasePasswordDialog().setVisible(true));
     }
 
-    @Override
     /**
      * Inverts the enabled operation
      */
+    @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(!enabled);
     }

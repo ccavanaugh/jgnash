@@ -58,7 +58,7 @@ class MainViewPanel extends JPanel implements ActionListener {
 
     private static final String LAST_VIEW = "lastview";
 
-    public MainViewPanel() {
+    MainViewPanel() {
         super();
         init();
     }
@@ -119,9 +119,11 @@ class MainViewPanel extends JPanel implements ActionListener {
         }
     }
 
-    @Override
-    /** Override to clear only the button panel and the content panel of their contents
+
+    /**
+     * Override to clear only the button panel and the content panel of their contents
      */
+    @Override
     public void removeAll() {
         last = null;
         buttonPanel.removeAll();
@@ -157,7 +159,7 @@ class MainViewPanel extends JPanel implements ActionListener {
      * 
      * @return the visible component
      */
-    public Component getVisibleComponent() {
+    Component getVisibleComponent() {
         return last;
     }
 
@@ -243,7 +245,7 @@ class MainViewPanel extends JPanel implements ActionListener {
 
         private FormLayout layout = null;
 
-        public ButtonPanel() {
+        ButtonPanel() {
             super();
             setLayout();
         }
