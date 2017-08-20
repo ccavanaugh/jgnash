@@ -70,16 +70,16 @@ public class BaseColorDialogController {
 
     @FXML
     private void handleDefaultColorAction() {
-        colorPicker.setValue(ThemeManager.getDefaultBaseColor(ThemeManager.getCurrentTheme()));
+        colorPicker.setValue(ThemeManager.getDefaultColor(ThemeManager.getCurrentTheme(), ThemeManager.BASE));
     }
 
     @FXML
     private void handleDefaultAccentColorAction() {
-        accentColorPicker.setValue(ThemeManager.getDefaultAccentColor(ThemeManager.getCurrentTheme()));
+        accentColorPicker.setValue(ThemeManager.getDefaultColor(ThemeManager.getCurrentTheme(), ThemeManager.ACCENT));
     }
 
     @FXML
     private void handleDefaultFocusColorAction() {
-        focusColorPicker.setValue(ThemeManager.getDefaultFocusColor(ThemeManager.getCurrentTheme()));
+        focusColorPicker.setValue(ThemeManager.getDefaultColor(ThemeManager.getCurrentTheme(), ThemeManager.FOCUS));
     }
 }

@@ -72,9 +72,36 @@ public class ThemeManager {
 
     private static final ThemeHandler themeHandler = new ThemeHandler();
 
+    private static final byte CASPIAN = 0;
+
+    private static final byte MODENA = 1;
+
+    static final byte ACCENT = 0;
+
+    static final byte BASE = 1;
+
+    static final byte FOCUS = 2;
+
+    private static final String DEFAULT_CASPIAN_ACCENT_COLOR = "#0093ff";
+
+    private static final String DEFAULT_MODENA_ACCENT_COLOR = "#0096c9";
+
+    private static final String DEFAULT_CASPIAN_BASE_COLOR = "#d0d0d0";
+
+    private static final String DEFAULT_MODENA_BASE_COLOR = "#ececec";
+
+    private static final String DEFAULT_CASPIAN_FOCUS_COLOR = "#0093ff";
+
+    private static final String DEFAULT_MODENA_FOCUS_COLOR = "#039ED3";
+
     private static final String[][] KNOWN_THEMES = {
             {"Modena", Application.STYLESHEET_MODENA},
             {"Caspian", Application.STYLESHEET_CASPIAN},
+    };
+
+    private static final String[][] DEFAULT_COLORS = {
+            {DEFAULT_CASPIAN_ACCENT_COLOR, DEFAULT_CASPIAN_BASE_COLOR, DEFAULT_CASPIAN_FOCUS_COLOR},
+            {DEFAULT_MODENA_ACCENT_COLOR,  DEFAULT_MODENA_BASE_COLOR,  DEFAULT_MODENA_FOCUS_COLOR}
     };
 
     private static final DoubleProperty fontScale = new SimpleDoubleProperty(1);
@@ -88,18 +115,6 @@ public class ThemeManager {
     private static final SimpleObjectProperty<Paint> controlTextFill = new SimpleObjectProperty<>(Color.BLACK);
 
     private static final StringExpression styleProperty;
-
-    private static final String DEFAULT_CASPIAN_ACCENT_COLOR = "#0093ff";
-
-    private static final String DEFAULT_MODENA_ACCENT_COLOR = "#0096c9";
-
-    private static final String DEFAULT_CASPIAN_BASE_COLOR = "#d0d0d0";
-
-    private static final String DEFAULT_MODENA_BASE_COLOR = "#ececec";
-
-    private static final String DEFAULT_MODENA_FOCUS_COLOR = "#039ED3";
-
-    private static final String DEFAULT_CASPIAN_FOCUS_COLOR = "#0093ff";
 
     private static final double WINDOWS_DEFAULT = 0.95;
 
@@ -186,36 +201,18 @@ public class ThemeManager {
         // Utility class
     }
 
-    static Color getDefaultAccentColor(final String theme) {
-        switch (theme) {
-            case Application.STYLESHEET_CASPIAN:
-                return Color.web(DEFAULT_CASPIAN_ACCENT_COLOR);
-            case Application.STYLESHEET_MODENA:
-                return Color.web(DEFAULT_MODENA_ACCENT_COLOR);
-            default:
-                return Color.web(DEFAULT_MODENA_ACCENT_COLOR);
-        }
+    static Color getDefaultColor(final String theme, final byte colorIndex) {
+        return Color.web(DEFAULT_COLORS[themeToIndex(theme)][colorIndex]);
     }
 
-    static Color getDefaultBaseColor(final String theme) {
+    private static byte themeToIndex(final String theme) {
         switch (theme) {
             case Application.STYLESHEET_CASPIAN:
-                return Color.web(DEFAULT_CASPIAN_BASE_COLOR);
+                return CASPIAN;
             case Application.STYLESHEET_MODENA:
-                return Color.web(DEFAULT_MODENA_BASE_COLOR);
+                return MODENA;
             default:
-                return Color.web(DEFAULT_MODENA_BASE_COLOR);
-        }
-    }
-
-    static Color getDefaultFocusColor(final String theme) {
-        switch (theme) {
-            case Application.STYLESHEET_CASPIAN:
-                return Color.web(DEFAULT_CASPIAN_FOCUS_COLOR);
-            case Application.STYLESHEET_MODENA:
-                return Color.web(DEFAULT_MODENA_FOCUS_COLOR);
-            default:
-                return Color.web(DEFAULT_MODENA_FOCUS_COLOR);
+                return MODENA;
         }
     }
 
