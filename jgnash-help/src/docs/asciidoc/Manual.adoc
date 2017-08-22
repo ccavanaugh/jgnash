@@ -953,8 +953,9 @@ QIF is an old format that was not well defined and is generated inconsistently
 between financial institutions.  There are two significantly different formats
 with one consisting of transnational data only and the other format attempts to
 serve as an export / import format with account information for financial
-applications.  If at all possible, avoid use of QIF files and use an OFX or QFX
-file.
+applications.  Use of date formats within the QIF format will vary and can lead
+to incorrect or failed import of transactions.  If at all possible, avoid use of
+QIF files and use an OFX or QFX file.
 
 OFX and QFX files are a well defined standard and jGnash will easily process
 these. This is the preferred file format for importing transactions into jGnash.
@@ -1007,7 +1008,7 @@ columns may be preprocessed using JavaScript Filters as described later.
 The Account column can be double clicked and changed to suit.  The selected
 account will normally be an income or expense account unless it was a transfer
 to another bank account or financial institution.  This column is also the
-equivalent to Categories for some other financial applications.
+equivalent to _Categories_ for some other financial applications.
 
 The Amount column can be double clicked and edited.  This is normally not
 needed and not recommended, but allowed for some specialized uses when working
@@ -1024,6 +1025,34 @@ improves with increased quantity of transactions over time.
 The last step of the Import Wizard allows you to review basic information about
 the import before committing to the changes.  After clicking on btn:[Finish],
 the dialog will close and jGnash will begin the import process.
+
+=== OFX imports
+Taking the time to correctly configure your jGnash Account properties can help
+reduce the effort needed to automatically identify Accounts when importing OFX
+transactions.
+
+OFX files may contain enough information to identify transfers between accounts.
+Most financial institutions will correctly identify transactions between checking
+and savings accounts with the bank, but others may include enough information
+when transferring between finance institutions.
+
+Below is a fragment of the OFX file content defining the transfer.  jGnash will
+attempt to match the *<ACCTID>* identifier to an existing *Account Number*
+that is specified within the properties of your jGnash account.
+
+[listing]
+----
+ <BANKACCTTO>
+    <BANKID>100000009
+    <BRANCHID>TEST
+    <ACCTID>555555-C01 //<1>
+    <ACCTTYPE>CHECKING
+</BANKACCTTO>
+----
+<1> Account identifier
+
+The *Account Number* is easily changed by modifying the Account properties as described
+in  the <<_newaccount>> section of the manual.
 
 === JavaScript Filters
 When importing transactions from OFX/QFX, mt940, and QIF bank statements
