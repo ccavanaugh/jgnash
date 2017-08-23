@@ -34,12 +34,12 @@ import jgnash.convert.imports.ImportTransaction;
  */
 public class QifTransaction extends ImportTransaction {
 
-    private static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("/|'|\\.|-");
+    private static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("[/'.-]");
 
     /**
      * Original date before conversion
      */
-    public String oDate;
+    String oDate;
 
     String status = null;
 
@@ -52,11 +52,11 @@ public class QifTransaction extends ImportTransaction {
 
     public final ArrayList<QifSplitTransaction> splits = new ArrayList<>();
 
-    public void addSplit(QifSplitTransaction split) {
+    void addSplit(QifSplitTransaction split) {
         splits.add(split);
     }
 
-    public boolean hasSplits() {
+    boolean hasSplits() {
         return !splits.isEmpty();
     }
 
@@ -74,25 +74,29 @@ public class QifTransaction extends ImportTransaction {
         return buf.toString();
     }
 
-    public static DateFormat determineDateFormat(final Collection<QifTransaction> transactions) {
+    static DateFormat determineDateFormat(final Collection<QifTransaction> transactions) {
         Objects.requireNonNull(transactions);
 
         DateFormat dateFormat = DateFormat.US;   // US date is assumed
 
         for (final QifTransaction transaction : transactions) {
-            int zero;
-            int one;
-            //int two;
 
-            final String[] chunks = QifTransaction.DATE_DELIMITER_PATTERN.split(transaction.oDate);
+            // protect against a transaction missing a date Github issue #30
+            if (transaction.oDate != null) {
+                int zero;
+                int one;
+                //int two;
 
-            zero = Integer.parseInt(chunks[0].trim());
-            one = Integer.parseInt(chunks[1].trim());
-            //two = Integer.parseInt(chunks[2].trim());
+                final String[] chunks = QifTransaction.DATE_DELIMITER_PATTERN.split(transaction.oDate);
 
-            if (zero > 12 && one <= 12) {   // must have a EU date format
-                dateFormat = DateFormat.EU;
-                break;
+                zero = Integer.parseInt(chunks[0].trim());
+                one = Integer.parseInt(chunks[1].trim());
+                //two = Integer.parseInt(chunks[2].trim());
+
+                if (zero > 12 && one <= 12) {   // must have a EU date format
+                    dateFormat = DateFormat.EU;
+                    break;
+                }
             }
         }
 
@@ -113,14 +117,14 @@ public class QifTransaction extends ImportTransaction {
      * European dd/mm/yyyy
      * 21/2/07 -> 02/21/2007 UK
      * Quicken 2007 D15/2/07
-     * }
+     * }``
      *
      * @param sDate  String QIF date to parse
      * @param format String identifier of format to parse
      * @return Returns parsed date and current date if an error occurs
      */
     @SuppressWarnings("MagicConstant")
-    public static LocalDate parseDate(final String sDate, final DateFormat format) throws java.time.DateTimeException {
+    static LocalDate parseDate(final String sDate, final DateFormat format) throws java.time.DateTimeException {
 
         int month = 0;
         int day = 0;
