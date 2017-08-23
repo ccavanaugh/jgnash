@@ -351,8 +351,7 @@ transaction in them.  Transactions must be manually deleted from an account befo
 
 [[_newaccount]]
 ==== Creating Accounts
-A new account is created by clicking on the btn:[New]
- button in the account list view.
+A new account is created by clicking on the btn:[New] button in the account list view.
 
 image:new-account.png[]
 
@@ -1120,6 +1119,11 @@ function titleCase(str) {
 The full jGnash API may be accessed within these scripts for advanced processing capabilities.
 See the <<_javascript,JavaScript>> section of the manual for more details.
 
+[NOTE]
+====
+JavaScript files are expected to be encoded as UTF-8 Files.  An incorrect file encoding may cause script failures.
+====
+
 [[_reports]]
 == Reports
 A variety of reports exist that present your financial history and status in
@@ -1256,7 +1260,7 @@ display a simple dialog.  To try the program, create a text file using your favo
 that ends with a .js extension.  After creating the file, simply using the menu:Tools[Run JavaScript] command to select
 the program and run it.
 
-[[app-listing]]
+[[app-listing2]]
 [source,javascript]
 ----
 load("nashorn:mozilla_compat.js");  // Load compatibility script
@@ -1290,6 +1294,11 @@ for (var i = 0; i; accountList.size(); i++)
 // just to show how to use Swing
 var optionPane = JOptionPane.showMessageDialog(null, 'Hello, world!');
 ----
+
+[NOTE]
+====
+JavaScript files are expected to be encoded as UTF-8 Files.  An incorrect file encoding may cause script failures.
+====
 
 JavaScript programs have the advantage of not requiring the use of an IDE or Java compiler to create and test a program.
 The disadvantage is troubleshooting syntax and logic errors can be more difficult than writing a jGnash Plugin.
