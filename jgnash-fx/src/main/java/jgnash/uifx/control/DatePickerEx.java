@@ -41,7 +41,7 @@ public class DatePickerEx extends DatePicker {
 
     private final DateTimeFormatter dateFormatter;
 
-    private static char dateFormatSeparator = '/';
+    private char dateFormatSeparator = '/';
 
     /**
      * Reference is needed to prevent premature garbage collection.
@@ -63,7 +63,6 @@ public class DatePickerEx extends DatePicker {
                 if (buf.indexOf(Character.toString(aChar)) == -1) {
                     buf.append(aChar);
 
-                    //System.out.println(aChar);
                     dateFormatSeparator = aChar;
                 }
             }
