@@ -132,25 +132,21 @@ public class QifTransaction extends ImportTransaction {
 
         final String[] chunks = DATE_DELIMITER_PATTERN.split(sDate);
 
-        switch (format) {
-            case US:
-                try {
+        try {
+            switch (format) {
+                case US:
                     month = Integer.parseInt(chunks[0].trim());
                     day = Integer.parseInt(chunks[1].trim());
                     year = Integer.parseInt(chunks[2].trim());
-                } catch (Exception e) {
-                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
-                }
-                break;
-            case EU:
-                try {
+                    break;
+                case EU:
                     day = Integer.parseInt(chunks[0].trim());
                     month = Integer.parseInt(chunks[1].trim());
                     year = Integer.parseInt(chunks[2].trim());
-                } catch (Exception e) {
-                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
-                }
-                break;
+                    break;
+            }
+        } catch (final NumberFormatException e) {
+            Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
         }
 
         if (year < 100) {
