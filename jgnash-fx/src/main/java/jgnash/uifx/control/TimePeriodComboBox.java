@@ -17,13 +17,13 @@
  */
 package jgnash.uifx.control;
 
-import java.util.ResourceBundle;
-
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.scene.control.ComboBox;
-
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.ResourceUtils;
+
+import java.util.ResourceBundle;
 
 /**
  * ComboBox that allows for selection of predetermined periods of times.
@@ -45,6 +45,8 @@ public class TimePeriodComboBox extends ComboBox<String> {
         // Update the period property automatically
         valueProperty().addListener((observable, oldValue, newValue)
                 -> period.setValue(periods[getSelectionModel().getSelectedIndex()]));
+
+        JavaFXUtils.runLater(() -> setSelectedPeriod(getPeriods()[0]));
     }
 
     public ReadOnlyIntegerProperty periodProperty() {
@@ -58,7 +60,6 @@ public class TimePeriodComboBox extends ComboBox<String> {
         assert periods.length == descriptions.length;
 
         getItems().addAll(getDescriptions());
-        getItems().get(0);
     }
 
     /**

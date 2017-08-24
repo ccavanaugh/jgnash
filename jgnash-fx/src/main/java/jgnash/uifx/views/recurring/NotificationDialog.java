@@ -45,6 +45,7 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.time.DateUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -128,10 +129,12 @@ class NotificationDialog extends Stage implements MessageListener {
         clearAllButton.onActionProperty().set(event -> handleClearAllAction());
         invertButton.onActionProperty().set(event -> handleInvertSelectionAction());
 
-        snoozeComboBox.setSelectedPeriod(Options.reminderSnoozePeriodProperty().get());
+        JavaFXUtils.runLater(() -> {
+            snoozeComboBox.setSelectedPeriod(Options.reminderSnoozePeriodProperty().get());
 
-        // Bind options to the snooze period property
-        Options.reminderSnoozePeriodProperty().bind(snoozeComboBox.periodProperty());
+            // Bind options to the snooze period property
+            Options.reminderSnoozePeriodProperty().bind(snoozeComboBox.periodProperty());
+        });
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
@@ -169,7 +172,7 @@ class NotificationDialog extends Stage implements MessageListener {
     @Override
     public void close() {
         MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
-        super.close();
+        JavaFXUtils.runLater(NotificationDialog.super::close);
     }
 
     @Override

@@ -23,6 +23,7 @@ WANTS
 
 Release 2.33.2
 --------------
+* 08/24/17 The reminders dialog was not correctly restoring the last used snooze period. (Fx)
 * 08/19/17 Switched from a MD5 to SHA-256 hash function for encrypted client / server operation. (Swing, Fx)
 * 08/19/17 Protect against the import of an OFX file with malicious content. (Swing, Fx)
 
