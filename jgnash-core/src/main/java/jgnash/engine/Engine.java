@@ -259,7 +259,7 @@ public class Engine {
                     // Check for a dividend, etc that may have returned a price of zero
                     final BigDecimal p = ((InvestmentTransaction) t).getPrice();
 
-                    if (p != null && p.compareTo(BigDecimal.ZERO) == 1) {
+                    if (p != null && p.compareTo(BigDecimal.ZERO) > 0) {
                         price = p;
                         priceDate = t.getLocalDate();
                     }

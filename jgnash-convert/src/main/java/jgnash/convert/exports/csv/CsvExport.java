@@ -90,10 +90,10 @@ public class CsvExport {
 
                 final String timeStamp = timestampFormatter.format(transaction.getTimestamp());
 
-                final String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == -1 ? ""
+                final String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) < 0 ? ""
                         : transaction.getAmount(account).abs().toPlainString();
 
-                final String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? ""
+                final String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) > 0 ? ""
                         : transaction.getAmount(account).abs().toPlainString();
 
                 final String balance = account.getBalanceAt(transaction).toPlainString();

@@ -435,7 +435,7 @@ public class PayeePieChart {
             for (final Map.Entry<String, BigDecimal> entry : names.entrySet()) {
                 BigDecimal value = entry.getValue();
 
-                if (value.compareTo(BigDecimal.ZERO) == -1) {
+                if (value.compareTo(BigDecimal.ZERO) < 0) {
                     value = value.negate();
                     returnValue[DEBIT].setValue(entry.getKey(), value);
                 } else {
