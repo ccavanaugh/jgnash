@@ -30,7 +30,7 @@ for (var i = 0; i < securities.size(); i++) {
         var historyNode = securityHistory.get(j);
         var dayOfWeek = historyNode.getLocalDate().getDayOfWeek();
         
-        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+        if (dayOfWeek === DayOfWeek.SATURDAY || dayOfWeek === DayOfWeek.SUNDAY) {
             debug("removing one");
             engine.removeSecurityHistory(security, historyNode.getLocalDate());
         }
