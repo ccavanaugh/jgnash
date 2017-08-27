@@ -1260,7 +1260,7 @@ display a simple dialog.  To try the program, create a text file using your favo
 that ends with a .js extension.  After creating the file, simply using the menu:Tools[Run JavaScript] command to select
 the program and run it.
 
-[[app-listing2]]
+[[app-listTwo]]
 [source,javascript]
 ----
 load("nashorn:mozilla_compat.js");  // Load compatibility script
