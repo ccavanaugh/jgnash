@@ -367,7 +367,7 @@ public class PayeePieChart {
 
         final Transaction transaction;
 
-        public TranTuple(Account account, Transaction transaction) {
+        TranTuple(Account account, Transaction transaction) {
             this.account = account;
             this.transaction = transaction;
         }
