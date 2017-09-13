@@ -71,7 +71,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
         assertNotNull(events);
 
-        assertEquals(219, events.size());
+        assertEquals(220, events.size());
     }
 
     @Test
