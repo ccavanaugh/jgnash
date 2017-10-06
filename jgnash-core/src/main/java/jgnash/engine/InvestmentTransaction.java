@@ -254,6 +254,31 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
+     * Calculates the total of the value of the shares, gains, fees, etc. as it
+     * pertains to an account, but leaves out any cash transfer.
+     * <p>
+     * @param account The {@code Account} to calculate the total against
+     * @return total resulting total for this transaction
+     * @see getTotal()
+     */
+    public BigDecimal getTotalWithoutCashTransfer(final Account account) {
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (final TransactionEntry e : transactionEntries) {
+            if (e.getTransactionTag() != TransactionTag.INVESTMENT_CASH_TRANSFER) {
+                if (e instanceof AbstractInvestmentTransactionEntry) {
+                    total = total.add(((AbstractInvestmentTransactionEntry) e).getTotal());
+                } else {
+                    total = total.add(e.getAmount(account));
+                }
+            }
+        }
+
+        return total;
+    }
+    
+    /**
      * Calculates the total cash value of the transaction.
      * <p>
      * <b>Not intended for use to calculate account balances</b>

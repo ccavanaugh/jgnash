@@ -193,7 +193,7 @@ public class InvestmentPerformanceSummary {
                             totalSales = totalSales.add(price.multiply(quantity).subtract(fees));
                             break;
                         case DIVIDEND:
-                            totalSales = totalSales.add(t.getTotal(t.getInvestmentAccount()).multiply(rate));
+                            totalSales = totalSales.add(t.getTotalWithoutCashTransfer(t.getInvestmentAccount()).multiply(rate));
                             break;
                         case REINVESTDIV:
                             totalSales = totalSales.add(t.getTotal(t.getInvestmentAccount()).multiply(rate)).subtract(fees);
