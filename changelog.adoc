@@ -1,5 +1,4 @@
-WANTS
------
+== WANTS
 * Support for Derby database
 * CSV Import
 * OFX export
@@ -21,14 +20,13 @@ WANTS
 ** flexible start date for the week
 * Reinstate archive capability.
 
-Release 2.33.2
---------------
+== Release 2.33.2
+* 10/22/17 Updated to latest Hibernate and Netty dependencies.
 * 08/24/17 The reminders dialog was not correctly restoring the last used snooze period. (Fx)
 * 08/19/17 Switched from a MD5 to SHA-256 hash function for encrypted client / server operation. (Swing, Fx)
 * 08/19/17 Protect against the import of an OFX file with malicious content. (Swing, Fx)
 
-Release 2.33.1
---------------
+== Release 2.33.1
 * 08/18/17 Corrected an issue with optimal Date storage in xml and bxds files caused by a regression introduced in 2.33.0
 * 08/16/17 The OFX export will now generate required information for transfer between accounts. (Swing, Fx)
 * 08/15/17 Simple use of portable preferences was failing with use of -p or --portable. (Swing, Fx)
@@ -39,8 +37,7 @@ Release 2.33.1
 * 08/13/17 Internal were changes made to allow operation with Java 9 with the addition of the command line option
            `--add-modules java.xml.bind`. (Swing, Fx)
 
-Release 2.33.0
---------------
+== Release 2.33.0
 * 08/11/17 Updated to the latest Netty dependency.
 * 08/09/17 Implemented amortized payments for the Fx interface. (Fx)
 * 07/31/17 Build system has been converted to Gradle.  Unix executable shell scripts are now provided.
@@ -54,8 +51,7 @@ Release 2.33.0
 * 06/16/17 Updated to the latest XStream dependency.
 * 06/16/17 Updated to the latest H2 database dependency.
 
-Release 2.32.0
---------------
+== Release 2.32.0
 * 06/13/17 Updated to the new Yahoo Finance API for retrieving historical stock price information.
 * 06/12/17 The security history chart would incorrectly show a prior chart if no data existed. (Fx)
 * 06/11/17 Updated to the new Yahoo Finance API for retrieving dividend and stock split information.
@@ -69,8 +65,7 @@ Release 2.32.0
 * 05/13/17 Reworked exchange rate popup because display quality was inconsistent when first shown. (Fx)
 * 05/11/17 Fixed missing icons for the currency exchange rate dialog. (Fx)
 
-Release 2.31.0
---------------
+== Release 2.31.0
 * 05/10/17 Added a General configuration option to allow full manual control of table column widths. (Fx)
 * 05/10/17 The Options dialog now remembers the last tab that was used. (Fx)
 * 05/08/17 Corrected handling of OFX files written with a windows-1252 character set. (Swing, Fx)
@@ -91,8 +86,7 @@ Release 2.31.0
 * 04/09/17 Relaxed date entry requirements.  Single digit months may be now be typed in. (Swing, Fx)
 * 04/09/17 The Account Register report was not reporting split entries correctly and consistent with the UI. (Fx)
 
-Release 2.30.0
---------------
+== Release 2.30.0
 * 04/09/17 Fixed a bug that was causing Buy and Sell transactions not using the cash balance of the investment account
            to generate an incorrect cash account amount. (Fx)
 * 04/06/17 Fixed an issue with importing OFX 1.x files with ugly white space formatting. (Swing, Fx)
@@ -104,8 +98,7 @@ Release 2.30.0
 * 03/22/17 Corrected a random IllegalStateException occurring during transaction edits. (Fx)
 * 03/11/17 Updated to the latest Netty dependency.
 
-Release 2.29.0
---------------
+== Release 2.29.0
 * 02/25/17 Improved UI performance when performing large batch updates of transactions. (Fx, GitHub Issue #23)
 * 02/24/17 Updated to the latest Hibernate dependency.
 * 02/22/17 Backup files were not being preserved correctly in some instances depending on the pattern of the file names
@@ -121,27 +114,23 @@ Release 2.29.0
 * 01/30/17 Corrected an OFX import regression that reduced effectiveness of detecting a duplicate import. (Swing, Fx)
 * 01/29/17 Entity trash was being checked too frequently. (Swing, Fx, GitHub Issue #21)
 
-Release 2.28.4
---------------
+== Release 2.28.4
 * 01/26/17 Fixed an OFX import bug.  File header was in an unanticipated format that prevented correct identification.
 
-Release 2.28.3
---------------
+== Release 2.28.3
 * 01/23/17 Manual was expanded with specifics of transaction entry
 * 01/20/17 Updated to the latest Hibernate and HSQLDB dependencies.
 * 01/18/17 Corrected a performance regression loading and saving bxds and zip files introduced in 2.28.0.
 * 01/17/17 Updates and  corrections to translations.  Parts of text for some languages were corrupt due to an editor bug.
 * 01/15/17 More stability improvements when under heavy background loads and using a relational database.
 
-Release 2.28.2
---------------
+== Release 2.28.2
 * 01/14/17 Corrected a bug with file locking on Windows OS.
 * 01/14/17 Added the Account and Amount columns to the Reminders table. (Fx)
 * 01/14/17 Corrected errors with the Polish translation. (Sławomir Szarkowicz)
 * 01/14/17 Fixed a regression that removed the Ticker/Investment column from the Investment account register. (Fx)
 
-Release 2.28.1
---------------
+== Release 2.28.1
 * 01/14/17 Corrected issues with inconsistent behavior of the reported memos of split transactions. (Swing, Fx)
 * 01/14/17 Updated to the latest Netty dependency.
 * 01/08/17 The Investment Register was not sizing the Quantity column correctly. (Fx)
@@ -153,8 +142,7 @@ Release 2.28.1
 * 12/01/16 Corrected an NPE that was occurring during import of a OFX/QFX files. (Fx)
 * 11/30/16 Improved the behavior of background removal of securities history.
 
-Release 2.28.0
---------------
+== Release 2.28.0
 * 11/27/16 Added the transaction timestamp to the CSV export. (Swing, Fx)
 * 11/27/16 The xls and xlsx Account exports were broken by the addition of timestamps in Release 2.27.0. (Swing, Fx)
 * 11/27/16 Updated to the latest Hibernate, DynamicJasper, JasperReports and OpenCSV dependencies.
@@ -176,8 +164,7 @@ Release 2.28.0
 * 11/08/16 Up and Down arrows can be used for selection within the Transaction number box
 * 11/05/16 Improved visual feedback for placeholder accounts and sums in the Budget interface. (Fx) (Feature Request 116)
 
-Release 2.27.0
---------------
+== Release 2.27.0
 * 11/05/16 Improved window positioning behavior on multi-monitor systems. (Fx)
 * 11/05/16 The Budget Goals dialog had the wrong title and layout behavior was poor. (Fx)
 * 11/03/16 Budgets results may now be display as running totals instead of per period values. (Fx)
@@ -198,12 +185,10 @@ Release 2.27.0
 * 10/16/16 Make the last selected transaction account sticky for the OFX/QIF/MT940 Import wizard. (Fx)
 * 10/14/16 The OFX/QIF/MT940 Import wizard was not displaying consistent precision for transaction amounts. (Fx)
 
-Release 2.26.1
---------------
+== Release 2.26.1
 * 10/13/16 Binary and XML files were not loading in the Fx interface. (Fx)
 
-Release 2.26.0 __(File format change)__
----------------------------------------
+== Release 2.26.0 __(File format change)__
 === Notes:
 H2 databases will be upgraded automatically.
 
@@ -226,8 +211,7 @@ be saved back to a HyperSql database afterwards.
 * 08/21/16 Removed support for corrections to older file formats (Prior to release 2.22.0).  Existing files must have
            been loaded with jGnash release 2.22 - 2.25 prior to using with this release.
 
-Release 2.25.0
---------------
+== Release 2.25.0
 * 08/20/16 JavaFx interface is now considered stable for daily use.  Remove -ea suffix off executables. (Fx)
 * 08/16/16 Fixed a rare transaction and security history concurrency bug for relational databases. (Swing, Fx)
 * 08/11/16 Running totals for Spit transaction forms were not updating correctly. (Fx)
@@ -243,8 +227,7 @@ Release 2.25.0
 * 06/26/16 Plugins were not being loaded from the correct location.  This prevented the mt940 plugin from loading. (Swing)
 * 06/26/16 Added print capability and a status bar to the transaction attachment viewer. (Fx)
 
-Release 2.24.0
---------------
+== Release 2.24.0
 * 06/23/16 Improved performance for loading large files, working with large accounts and reports. (Swing, Fx)
 * 06/22/16 Fixed some bugs related to editing of split transactions. (Fx)
 * 06/22/16 Enable use of concatenated memos within the Swing interface. (Swing)
@@ -257,8 +240,7 @@ Release 2.24.0
 * 05/27/16 Update to the latest Netty and include only the needed dependencies. (Swing, Fx)
 * 05/26/16 Improved the name of the application in the OSX and Gnome global menu. (Fx)
 
-Release 2.23.0
---------------
+== Release 2.23.0
 * 05/14/16 Added the Periodic Account Balance report. (Fx)
 * 05/04/16 Implemented the Reminders dialog for the FX interface. (Fx)
 * 05/03/16 Implemented the "Shutdown Server" command for the FX interface. (Fx)
@@ -276,8 +258,7 @@ Release 2.23.0
 * 04/15/16 Display a message at startup when a newer version is available for download. (Swing, Fx)
 * 04/10/16 Language files now use UTF-8 file encoding. (Swing, Fx)
 
-Release 2.22.1
---------------
+== Release 2.22.1
 * 04/03/16 Fix for Fx UI font scaling issues for locales that use a comma for the decimal separator. (t-pa)
 * 03/29/16 Preserve the tree structure in budget exports. (t-pa)
 * 03/28/16 Fixed random deadlocks when loading budgets in the Swing interface. (t-pa)
@@ -291,8 +272,7 @@ Release 2.22.1
 * 02/28/16 NPE was occurring when editing transactions with an empty payee or memo's. (Fx)
 * 02/28/16 OFX/QFX files with a capitalised file extension were not visible for import. (Fx)
 
-Release 2.22.0 __(File format change)__
----------------------------------------
+== Release 2.22.0 __(File format change)__
 * 02/20/16 Fixed behavior of manual date input.  It would sometimes reposition the caret and ignore input. (Fx)
 * 02/18/16 Fixed a bug that was preventing removal of stale data from the relational database file formats.
 * 02/14/16 Changed storage format for Budgets
@@ -307,8 +287,7 @@ Release 2.22.0 __(File format change)__
 * 01/18/16 Incorrect accounts were available for selection in the account ComboBox. (Fx)
 * 01/10/16 Added the Monthly Account Balance CSV export report to the jGnashFx UI. (Fx)
 
-Release 2.21.0
---------------
+== Release 2.21.0
 * 01/09/16 Fixed a bug that was causing Investment Accounts to loose Securities resulting in exceptions.  It was triggered
          when a Security was added to more than one Investment Account and only users of a relational database would be
          impacted. Files will be repaired automatically (Swing, Fx)
@@ -330,8 +309,7 @@ Release 2.21.0
 * 11/26/15 Improved general dialog sizing and positioning behavior. (Fx)
 * 11/24/15 The transaction register may now be filtered/searched by date, reconciled state, memo, and payee. (Fx only)
 
-Release 2.20.0
---------------
+== Release 2.20.0
 * 11/22/15 Fixed several potential locale specific bugs.
 * 11/17/15 Added a context menu to the account tree table. (Fx)
 * 11/16/15 Right aligned decimal values in the account tree table. (Fx)
@@ -357,8 +335,7 @@ Release 2.20.0
 * 10/14/15 Increase the darkness of the alternating tabular data row color from 2% to 6%. (Fx)
 * 10/11/15 Added keyboard accelerators. (Fx)
 
-Release 2.19.0
---------------
+== Release 2.19.0
 * 10/10/15 Cleaned up Transaction Import API.  External import plugins will need to be updated.
 * 10/09/15 Updated to latest Netty release
 * 10/08/15 Improved layout behavior for investment transaction forms. (Fx)
@@ -378,20 +355,17 @@ Release 2.19.0
 * 09/15/15 Added CSV, OFX, XLS, and XLSX file export capability to the transaction register (Fx)
 * 09/14/15 Fixed ellipse mark that made it into the Open toolbar button (Swing)
 
-Release 2.18.0
---------------
+== Release 2.18.0
 * 09/13/15 jGnashFx Early Access is now included with the distribution.
 * 09/08/15 The NetWorth and BalanceSheet reports were not including Simple Investment account types.
 * 09/06/15 Fixed QIF date parsing import bug introduced by 2.17.0
 * 09/01/15 (FX) DatePicker now increments and decrements with use of vertical and horizontal scroll input
 * 08/29/15 Remove support for importing jGnash 1.x files
 
-Release 2.17.1
---------------
+== Release 2.17.1
 * 09/01/15 Fix for a one day shift when converting Dates to LocalDates for XML and BXDS file formats.
 
-Release 2.17.0 __(File format change)__
----------------------------------------
+== Release 2.17.0 __(File format change)__
 * 08/28/15 Automatic backup preferences are now stored within the data file.  This is better for users working off of
          portable storage and multiple computers.  You will need to update your preferences with this release.
 * 08/24/15 Securities historical charts now factor in stock splits and reverse splits.
@@ -414,8 +388,7 @@ Release 2.17.0 __(File format change)__
 * 07/09/15 Add Last Posted date and Due date columns to the reminder table for easy reference
 * 07/09/15 Add new capability to create a new recurring transaction from an existing transaction (context menu in the register)
 
-Release 2.16.0 __(Java 8)__
----------------------------
+== Release 2.16.0 __(Java 8)__
 * 07/03/15 Dependencies updates, fixes for some Hsqldb database issues and minor performance improvements.
 * 06/26/15 General cleanup and internal changes to support the new FX user interface in development.
 * 05/31/15 An exception would occur if a Security was removed immediately after it was created and loaded with history (Bug #208)
@@ -427,8 +400,7 @@ Release 2.16.0 __(Java 8)__
 * 03/14/15 Java 8 is now required for 2.16.0 and newer
 
 
-Release 2.15.2
---------------
+== Release 2.15.2
 * 02/12/15 Add tooltip to the investment gains and fees details buttons
 * 02/09/15 SecurityHistoryNodes are now immutable to prevent database corruption
 * 02/08/15 Insure resource cleanup if an SQL error is thrown
@@ -437,13 +409,11 @@ Release 2.15.2
 * 01/23/15 Initial sort order for security history was incorrect for XML and BXDS file formats
 * 01/22/15 Dependencies updates, fix for some H2 database and Hibernate warnings
 
-Release 2.15.1
---------------
+== Release 2.15.1
 * 12/24/14 Fixed import of an exported account tree
 * 12/24/14 Fixed security price import from Yahoo UK
 
-Release 2.15.0 __(File format change)__
----------------------------------------
+== Release 2.15.0 __(File format change)__
 * 12/07/14 Display a warning dialog if loan amortization is not configured instead of logging to the status bar.
 * 12/03/14 Correct database at load if a transaction was incorrectly marked as orphaned and removable.
 * 11/26/14 The simple investment account type was moved to it's own group to improve program logic
@@ -460,8 +430,7 @@ Release 2.15.0 __(File format change)__
 * 11/06/14 Reconcile settings were moved into the data file for consistent behavior when the file is shared on multiple
          systems (Changes file format)
 
-Release 2.14.1
---------------
+== Release 2.14.1
 * 10/31/14 Fixed a bug that was preventing Securities history from being deleted if added within the same jGnash session
          for relational databases.
 * 10/31/14 Updated to latest Hibernate 4.3.7 release
@@ -476,8 +445,7 @@ Release 2.14.1
          calculated twice.  Correct behavior is to not show the sum of the splits.
 * 10/21/14 Updated to the latest dependencies for report generation and XLS file exports.
 
-Release 2.14.0
---------------
+== Release 2.14.0
 * 10/19/14 PDF version of the integrated help is now packaged with the zip distribution.
 * 10/14/14 When using the reconcile Wizard, Finish Later will now mark the transaction as Cleared and not Reconciled.
 * 10/12/14 Redesigned the reconcile behavior to use the statement end date. Public and internal API's have changed for
@@ -492,8 +460,7 @@ Release 2.14.0
 * 09/26/14 Bug fix for false positives identifying duplicate transactions when importing QIF files.
 * 09/25/14 Handle non-standard OFX files that use commas as a decimal separator for amounts
 
-Release 2.13.6
---------------
+== Release 2.13.6
 * 09/21/14 Updated to latest Insubstantial release.  This fixes the Substance look and feel compatibility with Java 8
 * 09/20/14 Updated to the latest JGoodies dependencies.  This should improve font appearance on Windows systems in some instances
 * 09/20/14 Fixed the build process for the mt940 plugin so it always stays current
@@ -504,8 +471,7 @@ Release 2.13.6
 * 04/17/14 Updated to latest H2 database release
 * 04/17/14 Updated to latest Hibernate 4.2.x release
 
-Release 2.13.5
---------------
+== Release 2.13.5
 * 02/23/14 Fixed an NPE when cleaning out orphaned transactions from a prior jGnash bug
 * 02/22/14 Update to the latest HSQLDB database release
 * 02/22/14 Update to the latest H2 database release
@@ -518,8 +484,7 @@ Release 2.13.5
 * 01/11/14 When an account register was open in it's own window, window focus could be lost when deleting and duplicating
          transactions.
 
-Release 2.13.4
---------------
+== Release 2.13.4
 * 01/01/14 Accounts appearing in the budget model now respect the budget visibility of the ancestor accounts.
 * 01/01/14 Fixed a bug with encrypted file attachment transfers
 * 12/31/13 Fixed a race condition that could hang the UI at startup when loading a large file.
@@ -531,25 +496,21 @@ Release 2.13.4
 * 12/15/13 A Java bug was preventing new files from being created if a default currency was not determinable.
 * 12/12/13 Changed the name of the Budget Column from "Change" to "Actual" to clarify intent.
 
-Release 2.13.3
---------------
+== Release 2.13.3
 * 12/05/13 Client/Server communications are now fully encrypted if enabled from command line for supported locales.
 * 11/29/13 Allow loading of a file with duplicate Config objects.  The file will be corrected at load time.
 
-Release 2.13.2
---------------
+== Release 2.13.2
 * 11/17/13 A caching bug was causing the first transaction added to an account after restart of jGnash to show up twice.
          After restart the duplicate transaction would go away.
 
-Release 2.13.1
---------------
+== Release 2.13.1
 * 11/12/13 Update to latest Netty, H2, and Hibernate dependencies.  Users using H2 database may notice more consistent
          shutdown times.
 * 10/29/13 Fix a race condition that was causing an ArrayIndexOutOfBoundsException in the GUI when
          adding a new transaction.
 
-Release 2.13.0
---------------
+== Release 2.13.0
 * 10/15/13 Correctly report and handle an attempt to open a wrong file type. (Bug #206)
 * 10/15/13 Correctly report an attempt to open a directory instead of a file. (Bug #205)
 * 10/02/13 Excess UI updates could occur when updating a budget goal and create performance issues.
@@ -572,8 +533,7 @@ Release 2.13.0
 * 03/25/13 Create a versioned backup of the old file automatically if the file format has been changed.
 * 03/21/13 Changed binary and xml file structure for amortization objects.
 
-Release 2.12.0
---------------
+== Release 2.12.0
 * 03/03/13 When importing transactions, display a tooltip for payee and memo fields to make transaction determination easier. (Feature Request #107)
 * 03/02/13 Automatically update the exchange rate tables when a multi-currency transaction is entered for a given date if one has not been set.
 * 03/01/13 Updated to DynamicJasper 4.0.3.
@@ -595,8 +555,7 @@ Release 2.12.0
 * 11/10/12 Backup files were not being created in the same directory as the data file.
 * 11/04/12 Update to Mina 2.0.7
 
-Release 2.11.0
---------------
+== Release 2.11.0
 * 10/24/12 Tabular style reports will start with a better default page size the first time the report is run.
 * 10/23/12 Reminder dates were not correct if it was modified after being executed.
 * 10/21/12 Display a message if an error occurs during a budget export (Read only file, etc)
@@ -619,8 +578,7 @@ Release 2.11.0
 * 10/03/12 Updated the Spanish Translation. (Marcelo Abeldaño)
 * 09/03/12 A exception would occur when trying to generate a loan payment with a zero percent interest rate.
 
-Release 2.10.0
---------------
+== Release 2.10.0
 * 09/02/12 The Jump button would not work from a register in a separate window (Bug #3563951)
 * 09/02/12 Do not preload report fonts to reduce startup time and reduce memory usage if reports are not being generated.
 * 08/28/12 Changed busy indicator for significant memory usage reduction.
@@ -633,8 +591,7 @@ Release 2.10.0
 * 05/18/12 Imported transactions are automatically assigned an account using a Naive Bayes classifier.
 * 05/17/12 Improved imported transaction match against manually entered transactions
 
-Release 2.9.0
--------------
+== Release 2.9.0
 * 05/03/12 Check for Java 7 or newer before executing
 * 05/02/12 Added an alternating pattern fill option to the budget goal entry dialog
 * 04/26/12 Strip extra white space when importing OFX files
@@ -651,8 +608,7 @@ Release 2.9.0
 * 03/17/12 Modularized jGnash into several Maven modules and separated the UI code from the core engine code
 * 03/17/12 jGnash was causing Java 7 JRE to seg-fault on close.
 
-Release 2.8.0
--------------
+== Release 2.8.0
 * 03/10/12 Help build system no longer requires OS level installed dependencies
 * 03/05/12 Update to Insubstantial 7.1 and the latest JGoodies dependencies
 * 03/05/12 Fixed an NPE that would randomly occur at startup
@@ -664,8 +620,7 @@ Release 2.8.0
 * 02/13/12 Working xls and xlsx export of budget results
 * 02/12/12 Improve handling of multiple currencies in the budget UI
 
-Release 2.7.0
--------------
+== Release 2.7.0
 * 02/08/12 Added functionality to sort the Profit and Loss report by Account balance and percentiles (Patch #3154343, Klemen Zagar)
 * 02/06/12 Removed duplicate code in budget results UI
 * 02/05/12 Fixed formatting of the creation date on printed and pdf reports
@@ -677,8 +632,7 @@ Release 2.7.0
 * 01/29/12 Reworked the summary information for the budget view including the addition of a row footer and options
          to display the summary information
 
-Release 2.6.2
--------------
+== Release 2.6.2
 * 01/21/12 Set the jGnash file filter as the default when choosing a file
 * 01/21/12 Improve budget UI performance when transaction event and budget changes occur
 * 01/19/12 Budget results would randomly show 0 if the CPU was heavily loaded
@@ -686,8 +640,7 @@ Release 2.6.2
          the first day of the week.
 * 01/11/12 Budget totals were calculated incorrectly after a budget's properties/period were modified
 
-Release 2.6.1
--------------
+== Release 2.6.1
 * 01/08/12 A default user and password is now set if not specified when using client / server functionality
 * 01/08/12 Add a Yearly period option for Budgets
 * 01/08/12 Add a command line option to help detect UI code that hangs the EDT
@@ -701,8 +654,7 @@ Release 2.6.1
 * 12/26/11 Update to the latest, JGoodies, XStream, Mina, JFreeChart external dependencies
 * 12/25/11 Update to the latest args4j external dependencies
 
-Release 2.6.0
--------------
+== Release 2.6.0
 * 12/24/11 Add help content for the new budget feature
 * 12/14/11 Additional fixes for hierarchical display of the budget
 * 12/13/11 Improved performance when working files with large account structure and many transactions.
@@ -759,8 +711,7 @@ Release 2.6.0
 * 01/16/11 Base API for Budgets added to the engine
 * 01/16/11 Use Annotations to reduce amount of managed code for UI actions
 
-Release 2.5.1
--------------
+== Release 2.5.1
 * 01/02/11 Added new option to change the font size of the Nimbus Look and Feel
 * 01/02/11 Reorganized the Options Dialog to reduce the required space for small displays
 * 01/02/11 Added option to control network connection timeouts
@@ -782,8 +733,7 @@ Release 2.5.1
 * 10/17/10 Protect against incomplete XML file writes
 * 09/26/10 Enable selection of an account in the accounts tree by pressing the first letter of the account name
 
-Release 2.5.0
--------------
+== Release 2.5.0
 * 09/19/10 Added additional integrated help content.
 * 09/18/10 Improved error handling when the selected font size for a report is too large.
 * 09/12/10 Added new options to reverse the display of account balances (Patch #2935203, Peter Vida)
@@ -802,15 +752,13 @@ Release 2.5.0
 * 08/21/10 Reports would not show if a default font was not available (Bug #3050057)
 * 08/11/10 The color for reconciled balance in the account list view was not always correct (Bug #3040309)
 
-Release 2.4.1
--------------
+== Release 2.4.1
 * 07/21/10 Added CTRL-F4 shortcut to close the active register window (Feature Request #2889093)
 * 07/21/10 Added an option to disable the Substance Look and Feel animations
 * 07/21/10 The report print button would not work when using the Substance Look and Feel
 * 07/21/10 Updated to the latest DynamicJasper and JasperReports
 
-Release 2.4.0
--------------
+== Release 2.4.0
 * 07/18/10 Add functionality to adjust the global font size when using the Substance look and feel
 * 07/18/10 Add Startup option to control automatic load of the last open file (Feature Request #2933793)
 * 07/18/10 Improve duplicate transaction functionality (Feature Request #1683578)
@@ -823,8 +771,7 @@ Release 2.4.0
 * 07/02/10 Reimplement the account list view so the appearance is correct for certain look and feels
 * 06/27/10 Add Substance Look and Feel to the main distribution
 
-Release 2.3.5
--------------
+== Release 2.3.5
 * 05/20/10 Removed percent gains and unrealized gains from portfolio report because they cannot
          be accurately calculated
 * 05/08/10 Added Czech localization (Patch #2981896 & 2991446, Luboš Hilgert)
@@ -842,8 +789,7 @@ Release 2.3.5
 * 02/24/10 Add context sensitive help capability.
 * 02/24/10 Income tab names were reversed when using accounting terms.
 
-Release 2.3.4
--------------
+== Release 2.3.4
 * 02/21/10 Expanded help content
 * 02/03/10 Add Ukrainian translation (Vitaliy Aksyonov)
 * 01/20/10 Update to latest JGoodies Forms and Looks to improve layout on OSX and L&F issues on Windows 7
@@ -866,8 +812,7 @@ Release 2.3.4
 * 12/26/09 Style the report footer text
 * 12/26/09 Update to DynamicJasper 3.0.14
 
-Release 2.3.3
--------------
+== Release 2.3.3
 * 12/25/09 Reconcile columns were not labeled correctly in the dialog (Bug #2902064)
 * 12/24/09 The latest memorized transaction would not always be recalled
 * 12/17/09 The remote sever now performs periodic XML backups for long running periods if changes have been made
@@ -881,12 +826,10 @@ Release 2.3.3
 * 11/03/09 File import actions should be enabled only if a file is open (Bugs #2890420, #2890422, #2890426)
 * 11/03/09 Update to SwingX 1.6
 
-Release 2.3.2
--------------
+== Release 2.3.2
 11/02/09 Reports with totals were broken in the 2.3.1 release (Bug #2890310)
 
-Release 2.3.1
--------------
+== Release 2.3.1
 * 10/30/09 Reports would hang if certain characters were in currency prefix or suffixes (Bug #2884085)
 * 10/23/09 Transaction tab names were reversed when using accounting terms for credit and liability accounts (Bug #2770638)
 * 10/19/09 Reminders with no last date would default to current date when using the XML file format (Bug #2860259)
@@ -902,8 +845,7 @@ Release 2.3.1
 * 07/07/09 Show the sum of the selected transactions in the register using a tooltip
 * 07/07/09 Liability register was missing the Jump button
 
-Release 2.3.0
--------------
+== Release 2.3.0
 * 06/26/09 Detect and correct accounts with self parenting
 * 06/20/09 Prevent a user from assigning an account's parent as itself.
 * 06/18/09 Begin migration to MigLayout to replace Forms Layout
@@ -925,8 +867,7 @@ Release 2.3.0
 * 04/10/09 Add an escape key listener to most all dialogs and add additional bounds listening to dialogs that
          did not already have it.
 
-Release 2.2.0
--------------
+== Release 2.2.0
 * 03/31/09 Correct identification of OFX 2.0 files that are now starting to show up in the wild.
 * 03/26/09 Fixed report of multiple currencies for the Monthly and End-of-Month account balance charts.
 * 03/26/09 Switched to DocBook for creating content for the JavaHelp system.
@@ -944,8 +885,7 @@ Release 2.2.0
          DynamicJasper report APIs.
 * 02/15/09 Render investment quantities with a fixed decimal to improve appearance.
 
-Release 2.1.0
--------------
+== Release 2.1.0
 * 02/01/09 Fixed issues with multiple network clients not communicating with each other.
 * 01/14/09 Fixed a problem with duplicate default currencies when creating a new default account set.
 * 01/12/09 Investment account balance was not calculated correctly if the last transaction was a dividend
@@ -954,8 +894,7 @@ Release 2.1.0
 * 12/30/08 Added -portable command line options to save jGnash preferences to an external location for
          users who want to run jGnash from a USB drive.
 
-Release 2.0.3
--------------
+== Release 2.0.3
 * 12/30/08 Checks would print with test border.
 * 12/30/08 Feature Request #2474667, If an invalid file extension is provided during File |  Save As,
          default to the db4o file type and extension.
@@ -971,8 +910,7 @@ Release 2.0.3
 * 12/03/08 jGnash can now import Ofx version 1 and 2 bank account files.
 * 12/03/08 Fix problem with null account numbers
 
-Release 2.0.2
--------------
+== Release 2.0.2
 * 11/28/08 Set the default selected account for buy and sell transactions to the base investment account.
 * 11/28/08 Fixed an incorrect warning to the console when modifying and reinvested dividend transaction.
 * 11/28/08 Improved the appearance of the investment transaction entry panels when using the Nimbus look and feel.
@@ -986,8 +924,7 @@ Release 2.0.2
 * 11/17/08 Converted the MonthBalanceCSV text report from a Beanshell script to a compiled report.
 * 11/16/08 Converted the ProfitLoss text report from a Beanshell script to a compiled report.
 
-Release 2.0.1
--------------
+== Release 2.0.1
 * 11/16/08 Update to the latest Pentaho reporting jars.
 * 11/15/08 Prevent the removal of a currency assigned to a security node.
 * 11/10/08 Currency exchange rate was not factored in for investment transaction reconciliation.
@@ -996,8 +933,7 @@ Release 2.0.1
 * 11/09/08 Fix for Bug #2222143, Multiple RootAccounts were being created and making import
          look like it failed.
 
-Release 2.0.0
--------------
+== Release 2.0.0
 * 11/02/08 The reconciled market balance was not factoring in the exchange rate of currencies
 * 11/02/08 Update to latest JGoodies Looks
 * 10/29/08 Improve appearance of the date selector for modern look and feels (Nimbus and JGoodies)
@@ -1011,8 +947,7 @@ Release 2.0.0
 * 10/12/08 Fix Portfolio report summary row value
 * 10/10/08 Updated Spanish translation (Marcelo Abeldaño)
 
-Release 2.0.0-RC4
------------------
+== Release 2.0.0-RC4
 * 10/05/08 Typing a 'T' or 't' inside a date field changes it to the current date.
 * 10/05/08 Prevent an exception from occurring if the overall length of a date field is
          shortened when a shortcut key is used.
@@ -1022,8 +957,7 @@ Release 2.0.0-RC4
 * 10/04/08 Fix the UI layout for the Account Register and Portfolio Reports
 * 10/04/08 Remove unused jar dependency
 
-Release 2.0.0-RC3
------------------
+== Release 2.0.0-RC3
 * 10/01/08 Yahoo UK has reverted to the security symbol instead of the ISIN number for
          downloading data
 * 10/01/08 Fix for Bug #1991337.  The portfolio report should use the account currency
@@ -1048,8 +982,7 @@ Release 2.0.0-RC3
 * 08/20/08 Localization fixes
 * 08/18/08 Update to latest Pentaho reporting jar
 
-Release 2.0.0-RC2
------------------
+== Release 2.0.0-RC2
 * 08/18/08 Add sort capability to currency exchange table
 * 08/17/08 Add Copy to Clipboard button to Console and Exception dialogs
 * 08/17/08 HTTP connections were left open when downloading security history
@@ -1069,8 +1002,7 @@ Release 2.0.0-RC2
 * 07/27/08 Yahoo UK parser was not using the ISIN number
 * 07/27/08 Fix more EDT issues
 
-Release 2.0.0-RC1
------------------
+== Release 2.0.0-RC1
 * 07/27/08 The lookup mechanism for default account sets when creating a new file did not work
          when jGnash was run from a jar or exe.
 * 07/26/08 Currency Exchange history dialog was not always showing the correct conversion direction
@@ -1086,8 +1018,7 @@ Release 2.0.0-RC1
 * 07/16/08 Save a time-stamped and compressed file on exit if enabled
 * 07/14/08 Implement full Save As functionality.  It is now possible to switch between file formats.
 
-Release 2.0.0 - Beta 3
-----------------------
+== Release 2.0.0 - Beta 3
 * 07/12/08 Lock XML file at OS level to prevent overwrite from multiple instances of jGnash
 * 07/07/08 New icons to update UI appearance
 * 07/06/08 Add a reconciled balance column to the accounts overview
@@ -1101,8 +1032,7 @@ Release 2.0.0 - Beta 3
 * 06/18/08 Balance Sheet report was not pulling all account types correctly
 * 06/17/08 Fix bad validation code for jGnash 1.x import.  Depends on update release of Java 6.
 
-Release 2.0.0 - Beta 2
-----------------------
+== Release 2.0.0 - Beta 2
 * 06/16/08 Preselect default transaction form tab based on account type
 * 06/15/08 Dump GnuCash import support
 * 06/15/08 SecurityNode and TransactionEntry db schema change.  db4o does not handle changes to enums well
@@ -1115,8 +1045,7 @@ Release 2.0.0 - Beta 2
 * 06/11/08 Fix enabled state of the account combo for split transaction entry
 * 06/09/08 Fix the display of split details for the account register report
 
-Release 2.0.0 - Beta 1
-----------------------
+== Release 2.0.0 - Beta 1
 * 06/08/08 Reduce XML export file size by 45%
 * 06/06/08 Dumped some unused legacy methods from TransactionEntry and subclasses
 * 06/05/08 Fix transaction generation for basic double entry panel
@@ -1152,8 +1081,7 @@ Release 2.0.0 - Beta 1
 * 12/27/07 A button was added to the investment register to allow selection of available securities.
 * 12/26/07 Improve generated payee of investment transactions.
 
-Release 2.0.0 - Alpha 3
------------------------
+== Release 2.0.0 - Alpha 3
 * 12/26/07 Added Working OFX import for savings and checking accounts.
 * 12/17/07 Improved new account wizard so user can add default account structures
 * 12/10/07 Added import and export of the account tree

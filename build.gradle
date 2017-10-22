@@ -27,7 +27,7 @@ allprojects {
 
         c3p0Version = '0.9.5.2'
         h2Version = '1.4.196'
-        hibernateVersion = '5.2.10.Final'
+        hibernateVersion = '5.2.12.Final'
         hibernateJPAVersion = '1.0.0.Final'
         hsqldbVersion = '2.4.0'
 
@@ -37,7 +37,7 @@ allprojects {
         jasperReportsVersion = '6.4.1'
         itextVersion = '2.1.7.js6'
         opencsvVersion = '3.8'
-        nettyVersion = '4.1.14.Final'
+        nettyVersion = '4.1.16.Final'
         kxmlVersion = '2.3.0'
 
         slf4jVersion = '1.7.21'
