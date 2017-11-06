@@ -112,9 +112,9 @@ class OfxV1ToV2 {
     private static String sanitize(final String xml) {
         String ugly = xml;
 
-        // ugly = ugly.replaceAll("\"(?!(?:quot);)", "&quot;");
-
         ugly = ugly.replaceAll("&(?!(?:amp);)", "&amp;");
+        ugly = ugly.replaceAll("\"", "&quot;");
+        ugly = ugly.replaceAll("'", "&apos;");
 
         return ugly;
     }

@@ -551,11 +551,15 @@ public class Ofx2Test {
 
                 assertEquals(5, parser.getBank().getTransactions().size());
 
-                System.out.println(parser.getBank().getTransactions().get(4).getPayee());
+                // System.out.println(parser.getBank().getTransactions().get(4).getPayee());
 
                 assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("& &"));
 
-                // assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("\""));
+                assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("\""));
+
+                assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("'"));
+
+                assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("Am'ount"));
 
                 assertFalse(parser.getBank().getTransactions().get(0).getPayee().contains("&"));
             } catch (IOException e) {
