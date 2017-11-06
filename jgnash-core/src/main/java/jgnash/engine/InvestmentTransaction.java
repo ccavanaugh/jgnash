@@ -259,9 +259,9 @@ public class InvestmentTransaction extends Transaction {
      * <p>
      * @param account The {@code Account} to calculate the total against
      * @return total resulting total for this transaction
-     * @see getTotal()
+     * @see #getTotal(Account)
      */
-    public BigDecimal getTotalWithoutCashTransfer(final Account account) {
+    BigDecimal getTotalWithoutCashTransfer(final Account account) {
 
         BigDecimal total = BigDecimal.ZERO;
 
