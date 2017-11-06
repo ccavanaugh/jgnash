@@ -105,11 +105,18 @@ class OfxV1ToV2 {
 
     /**
      * Replaces illegal XML characters with escaped characters
+     *
      * @param xml String to process
      * @return valid string
      */
     private static String sanitize(final String xml) {
-        return xml.replaceAll("&", "&amp;");
+        String ugly = xml;
+
+        // ugly = ugly.replaceAll("\"(?!(?:quot);)", "&quot;");
+
+        ugly = ugly.replaceAll("&(?!(?:amp);)", "&amp;");
+
+        return ugly;
     }
 
     private static String concat(final Collection<String> strings) {
