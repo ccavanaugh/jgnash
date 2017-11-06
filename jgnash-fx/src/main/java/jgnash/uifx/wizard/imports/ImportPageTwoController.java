@@ -119,7 +119,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     private Account lastFeesAccount;
 
     static {
-        NOP_EXPENSE_ACCOUNT.setName("¡­");   // universal N/A for tabular data
+        NOP_EXPENSE_ACCOUNT.setName("â€¦");   // universal N/A for tabular data
     }
 
     @FXML
