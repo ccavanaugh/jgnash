@@ -18,7 +18,7 @@
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
-* Reinstate archive capability.
+* Reinstate archive capability
 
 == Release 2.33.2
 * 11/06/17 Ignore cash transfers for dividends in realized gains calculations. (Swing, Fx) _[t-pa]_
