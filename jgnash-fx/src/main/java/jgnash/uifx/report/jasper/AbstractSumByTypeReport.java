@@ -17,6 +17,23 @@
  */
 package jgnash.uifx.report.jasper;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.time.DateUtils;
+import jgnash.ui.report.Row;
+import jgnash.ui.report.jasper.AbstractReportTableModel;
+import jgnash.ui.report.jasper.ColumnHeaderStyle;
+import jgnash.ui.report.jasper.ColumnStyle;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.util.ResourceUtils;
+import net.sf.jasperreports.engine.JasperPrint;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -28,28 +45,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
-
-import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.ui.report.Row;
-import jgnash.ui.report.jasper.AbstractReportTableModel;
-import jgnash.ui.report.jasper.ColumnHeaderStyle;
-import jgnash.ui.report.jasper.ColumnStyle;
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
-
-import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  * Abstract Report that groups and sums by {@code AccountGroup} and has a
@@ -173,10 +170,8 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        Set<Account> accountSet = engine.getAccountList().stream().
-                filter(a -> types.contains(a.getAccountType())).collect(Collectors.toCollection(TreeSet::new));
-
-        return new ArrayList<>(accountSet);
+        return engine.getAccountList().stream().
+                filter(a -> types.contains(a.getAccountType())).distinct().sorted().collect(Collectors.toList());
     }
 
     /**

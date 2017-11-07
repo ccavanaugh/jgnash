@@ -406,9 +406,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     private List<TransactionEntry> getTransactionEntries(final Account account) {
-        return new ArrayList<>(transactionEntries.stream()
+        return transactionEntries.stream()
                 .filter(transactionEntry -> transactionEntry.getCreditAccount().equals(account)
-                        || transactionEntry.getDebitAccount().equals(account)).collect(Collectors.toList()));
+                        || transactionEntry.getDebitAccount().equals(account)).collect(Collectors.toList());
     }
 
 
@@ -420,8 +420,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * returned if none are found
      */
     List<TransactionEntry> getTransactionEntriesByTag(final TransactionTag tag) {
-        return new ArrayList<>(transactionEntries.stream()
-                .filter(e -> e.getTransactionTag() == tag).collect(Collectors.toList()));
+        return transactionEntries.stream().filter(e -> e.getTransactionTag() == tag).collect(Collectors.toList());
     }
 
     /**
