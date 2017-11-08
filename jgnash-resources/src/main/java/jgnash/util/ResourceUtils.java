@@ -123,12 +123,14 @@ public class ResourceUtils {
             final Pattern LOCALE_DELIMITER_PATTERN = Pattern.compile("\\x2E");
 
             final String[] array = LOCALE_DELIMITER_PATTERN.split(locale);
-            if (array.length == 3) {
-                return new Locale(array[0], array[1], array[2]);
-            } else if (array.length == 2) {
-                return new Locale(array[0], array[1]);
-            } else { // should not happen
-                return Locale.getDefault();
+
+            switch (array.length) {
+                case 3:
+                    return new Locale(array[0], array[1], array[2]);
+                case 2:
+                    return new Locale(array[0], array[1]);
+                default:  // should not happen
+                    return Locale.getDefault();
             }
         }
     }

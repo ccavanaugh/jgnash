@@ -17,31 +17,14 @@
  */
 package jgnash.ui.budget;
 
-import java.awt.EventQueue;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.ToolTipManager;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
-
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Transaction;
 import jgnash.engine.budget.BudgetPeriodResults;
 import jgnash.engine.budget.BudgetResultsModel;
-import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
@@ -49,13 +32,23 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.ResourceUtils;
-
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.JXTitledPanel;
+
+import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
+import java.awt.*;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 import static javax.swing.event.TableModelEvent.UPDATE;
@@ -83,7 +76,7 @@ public class AccountRowFooterPanel extends JPanel {
 
     private final BudgetResultsModel resultsModel;
 
-    public AccountRowFooterPanel(final ExpandingBudgetTableModel model) {
+    AccountRowFooterPanel(final ExpandingBudgetTableModel model) {
         this.model = model;
 
         this.resultsModel = model.getResultsModel();
@@ -176,7 +169,7 @@ public class AccountRowFooterPanel extends JPanel {
 
     private class SummaryTable extends AbstractResultsTable {
 
-        public SummaryTable(final TableModel model) {
+        SummaryTable(final TableModel model) {
             super(model);
         }
 
@@ -327,12 +320,17 @@ public class AccountRowFooterPanel extends JPanel {
 
         @Override
         public void messagePosted(final Message event) {
-            if (event.getEvent() == ChannelEvent.TRANSACTION_ADD || event.getEvent() == ChannelEvent.TRANSACTION_REMOVE) {
-                processTransactionEvent(event);
-            } else if (event.getEvent() == ChannelEvent.FILE_CLOSING) {
-                unregisterListeners();
-            } else if (event.getEvent() == ChannelEvent.BUDGET_GOAL_UPDATE) {
-                processBudgetGoalUpdate(event);
+            switch (event.getEvent()) {
+                case TRANSACTION_ADD:
+                case TRANSACTION_REMOVE:
+                    processTransactionEvent(event);
+                    break;
+                case FILE_CLOSING:
+                    unregisterListeners();
+                    break;
+                case BUDGET_GOAL_UPDATE:
+                    processBudgetGoalUpdate(event);
+                    break;
             }
         }
 

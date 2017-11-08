@@ -360,16 +360,17 @@ public class EngineFactory {
     private static DataStoreType getDataStoreByType(final Path file) {
         final FileType type = FileMagic.magic(file);
 
-        if (type == FileType.jGnash2XML) {
-            return DataStoreType.XML;
-        } else if (type == FileType.BinaryXStream) {
-            return DataStoreType.BINARY_XSTREAM;
-        } else if (type == FileType.h2) {
-            return DataStoreType.H2_DATABASE;
-        } else if (type == FileType.h2mv) {
-            return DataStoreType.H2MV_DATABASE;
-        } else if (type == FileType.hsql) {
-            return DataStoreType.HSQL_DATABASE;
+        switch (type) {
+            case jGnash2XML:
+                return DataStoreType.XML;
+            case BinaryXStream:
+                return DataStoreType.BINARY_XSTREAM;
+            case h2:
+                return DataStoreType.H2_DATABASE;
+            case h2mv:
+                return DataStoreType.H2MV_DATABASE;
+            case hsql:
+                return DataStoreType.HSQL_DATABASE;
         }
 
         return null;
@@ -384,16 +385,22 @@ public class EngineFactory {
 
         final FileType type = FileMagic.magic(file);
 
-        if (type == FileType.jGnash2XML) {
-            version = XMLDataStore.getFileVersion(file);
-        } else if (type == FileType.BinaryXStream) {
-            version = BinaryXStreamDataStore.getFileVersion(file);
-        } else if (type == FileType.h2 || type == FileType.h2mv || type == FileType.hsql) {
-            try {
-                version = SqlUtils.getFileVersion(file.toString(), password);
-            } catch (final Exception e) {
-                version = 0;
-            }
+        switch (type) {
+            case jGnash2XML:
+                version = XMLDataStore.getFileVersion(file);
+                break;
+            case BinaryXStream:
+                version = BinaryXStreamDataStore.getFileVersion(file);
+                break;
+            case h2:
+            case h2mv:
+            case hsql:
+                try {
+                    version = SqlUtils.getFileVersion(file.toString(), password);
+                } catch (final Exception e) {
+                    version = 0;
+                }
+                break;
         }
 
         return version;

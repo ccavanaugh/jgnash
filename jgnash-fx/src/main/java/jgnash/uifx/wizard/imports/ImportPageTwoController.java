@@ -158,14 +158,19 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                     final ImportTransaction t = tableView.getItems().get(((TableCell<?, ?>) event.getSource())
                             .getTableRow().getIndex());
 
-                    if (t.getState() == ImportState.EQUAL) {
-                        t.setState(ImportState.NOT_EQUAL);
-                    } else if (t.getState() == ImportState.NOT_EQUAL) {
-                        t.setState(ImportState.EQUAL);
-                    } else if (t.getState() == ImportState.NEW) {
-                        t.setState(ImportState.IGNORE);
-                    } else if (t.getState() == ImportState.IGNORE) {
-                        t.setState(ImportState.NEW);
+                    switch (t.getState()) {
+                        case EQUAL:
+                            t.setState(ImportState.NOT_EQUAL);
+                            break;
+                        case NOT_EQUAL:
+                            t.setState(ImportState.EQUAL);
+                            break;
+                        case NEW:
+                            t.setState(ImportState.IGNORE);
+                            break;
+                        case IGNORE:
+                            t.setState(ImportState.NEW);
+                            break;
                     }
 
                     Platform.runLater(tableView::refresh);

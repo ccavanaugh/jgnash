@@ -210,12 +210,16 @@ public class IncomeExpensePieChartDialogController {
             final String title;
 
             // pick an appropriate title
-            if (a.getAccountType() == AccountType.EXPENSE) {
-                title = resources.getString("Title.PercentExpense");
-            } else if (a.getAccountType() == AccountType.INCOME) {
-                title = resources.getString("Title.PercentIncome");
-            } else {
-                title = resources.getString("Title.PercentDist");
+            switch (a.getAccountType()) {
+                case EXPENSE:
+                    title = resources.getString("Title.PercentExpense");
+                    break;
+                case INCOME:
+                    title = resources.getString("Title.PercentIncome");
+                    break;
+                default:
+                    title = resources.getString("Title.PercentDist");
+                    break;
             }
 
             pieChart.setTitle(title);

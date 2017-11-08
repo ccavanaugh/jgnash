@@ -483,7 +483,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         private final JMenuItem newReminder;
         private final JMenuItem jump;
 
-        public TransactionPopup() {
+        TransactionPopup() {
 
             JMenu markSub = new JMenu(rb.getString("Menu.MarkAs.Name"));
 
@@ -554,12 +554,16 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             Transaction t = getSelectedTransaction();
 
             if (t != null) {
-                if (t.getReconciled(getAccount()) == ReconciledState.RECONCILED) {
-                    reconciled.setSelected(true);
-                } else if (t.getReconciled(getAccount()) == ReconciledState.CLEARED) {
-                    cleared.setSelected(true);
-                } else {
-                    unreconciled.setSelected(true);
+                switch (t.getReconciled(getAccount())) {
+                    case RECONCILED:
+                        reconciled.setSelected(true);
+                        break;
+                    case CLEARED:
+                        cleared.setSelected(true);
+                        break;
+                    default:
+                        unreconciled.setSelected(true);
+                        break;
                 }
             }
             super.show(invoker, x, y);
