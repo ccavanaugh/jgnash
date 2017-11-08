@@ -79,7 +79,7 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
     private final transient MessageBusListener messageListener = new MessageBusListener();
 
-    public ExpandingAccountTableModel() {
+    ExpandingAccountTableModel() {
         logger.setLevel(Level.ALL);
 
         ResourceBundle rb = ResourceUtils.getBundle();
@@ -115,22 +115,16 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
     @Override
     public boolean isVisible(final Account object) {
         if (super.isVisible(object)) {
-            AccountType type = object.getAccountType();
+            final AccountType type = object.getAccountType();
+
             if (type == AccountType.INCOME && isIncomeVisible()) {
-                if (!object.isVisible() && isHiddenVisible() || object.isVisible()) {
-                    return true;
-                }
+                return !object.isVisible() && isHiddenVisible() || object.isVisible();
             } else if (type == AccountType.EXPENSE && isExpenseVisible()) {
-                if (!object.isVisible() && isHiddenVisible() || object.isVisible()) {
-                    return true;
-                }
+                return !object.isVisible() && isHiddenVisible() || object.isVisible();
             } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && isAccountVisible()) {
-                if (!object.isVisible() && isHiddenVisible() || object.isVisible()) {
-                    return true;
-                }
+                return !object.isVisible() && isHiddenVisible() || object.isVisible();
             }
         }
-
         return false;
     }
 

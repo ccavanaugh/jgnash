@@ -46,7 +46,7 @@ class AccountTreeModel extends DefaultTreeModel {
 
     final private Object lock = new Object();
 
-    public AccountTreeModel() {
+    AccountTreeModel() {
         super(null);
 
         loadAccountTree();
@@ -129,19 +129,15 @@ class AccountTreeModel extends DefaultTreeModel {
      */
     private synchronized boolean isAccountVisible(final Account a) {
         final AccountType type = a.getAccountType();
+
         if (type == AccountType.INCOME && incomeVisible) {
-            if (!a.isVisible() && hiddenVisible || a.isVisible()) {
-                return true;
-            }
+            return !a.isVisible() && hiddenVisible || a.isVisible();
         } else if (type == AccountType.EXPENSE && expenseVisible) {
-            if (!a.isVisible() && hiddenVisible || a.isVisible()) {
-                return true;
-            }
+            return !a.isVisible() && hiddenVisible || a.isVisible();
         } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && accountVisible) {
-            if (!a.isVisible() && hiddenVisible || a.isVisible()) {
-                return true;
-            }
+            return !a.isVisible() && hiddenVisible || a.isVisible();
         }
+
         return false;
     }
 
