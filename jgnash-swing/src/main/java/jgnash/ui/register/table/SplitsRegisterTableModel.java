@@ -17,18 +17,15 @@
  */
 package jgnash.ui.register.table;
 
+import jgnash.engine.Account;
+import jgnash.engine.TransactionEntry;
+
+import javax.swing.table.AbstractTableModel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.ResourceBundle;
-
-import javax.swing.table.AbstractTableModel;
-
-import jgnash.engine.Account;
-import jgnash.engine.TransactionEntry;
-import jgnash.util.ResourceUtils;
 
 /**
  * Table model for displaying TransactionEntry objects
@@ -37,13 +34,10 @@ import jgnash.util.ResourceUtils;
  */
 public class SplitsRegisterTableModel extends AbstractTableModel implements AccountTableModel {
 
-    private final ResourceBundle rb = ResourceUtils.getBundle();
-
     /**
      * Names of the columns
      */
-    private String[] cNames = { rb.getString("Column.Account"), rb.getString("Column.Clr"), rb.getString("Column.Memo"),
-            rb.getString("Column.Credit"), rb.getString("Column.Debit"), rb.getString("Column.Balance") };
+    private String[] cNames;
 
     private final Class<?>[] cClass = { String.class, String.class, String.class, ShortCommodityStyle.class,
             ShortCommodityStyle.class, FullCommodityStyle.class };
@@ -159,7 +153,7 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
             }
         }
 
-        public int getNumSplits() {
+        int getNumSplits() {
             return splits.size();
         }
 
@@ -184,7 +178,7 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
             }
         }
 
-        public ArrayList<TransactionEntry> getSplits() {
+        ArrayList<TransactionEntry> getSplits() {
             return splits;
         }
 

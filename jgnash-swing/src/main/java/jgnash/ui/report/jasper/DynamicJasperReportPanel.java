@@ -123,7 +123,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     /**
      * the screen resolution.
      */
-    private int screenResolution = REPORT_RESOLUTION;
+    private int screenResolution;
 
     /**
      * the zoom ratio adjusted to the screen resolution.
@@ -132,7 +132,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     private final DecimalFormat zoomFormat = new DecimalFormat("#.#");
 
-    private ResourceBundle resourceBundle = null;
+    private ResourceBundle resourceBundle;
 
     private JToggleButton actualSizeButton;
 
@@ -892,12 +892,15 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     }
 
     private void fontAction() {
-        int oldSize = report.getBaseFontSize();
-        int newSize = (Integer) fontSizeComboBox.getSelectedItem();
 
-        if (oldSize != newSize) {
-            report.setBaseFontSize(newSize);
-            refreshReport();
+        if (fontSizeComboBox.getSelectedItem() != null) {   // protect against possible NPE
+            int oldSize = report.getBaseFontSize();
+            int newSize = (Integer) fontSizeComboBox.getSelectedItem();
+
+            if (oldSize != newSize) {
+                report.setBaseFontSize(newSize);
+                refreshReport();
+            }
         }
     }
 
@@ -942,7 +945,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     private static class PageRenderer extends JLabel {
 
-        private DynamicJasperReportPanel viewer = null;
+        private DynamicJasperReportPanel viewer;
 
         PageRenderer(final DynamicJasperReportPanel viewer) {
             this.viewer = viewer;

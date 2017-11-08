@@ -66,9 +66,9 @@ import com.thoughtworks.xstream.io.xml.CompactWriter;
  * @author Craig Cavanaugh
  */
 class MessageBusClient {
-    private String host = EngineFactory.LOCALHOST;
+    private String host;
 
-    private int port = 0;
+    private int port;
 
     private static final Logger logger = Logger.getLogger(MessageBusClient.class.getName());
 
@@ -151,7 +151,7 @@ class MessageBusClient {
     private class MessageBusClientInitializer extends ChannelInitializer<SocketChannel> {
 
         @Override
-        public void initChannel(final SocketChannel ch) throws Exception {
+        public void initChannel(final SocketChannel ch) {
             ChannelPipeline pipeline = ch.pipeline();
 
             // Add the text line codec combination first,

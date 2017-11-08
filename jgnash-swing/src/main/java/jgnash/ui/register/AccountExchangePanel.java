@@ -79,7 +79,7 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
     /**
      * supplied by constructor
      */
-    private JFloatField amountField = null;
+    private JFloatField amountField;
 
     private final JPopupMenu detailWindow;
 

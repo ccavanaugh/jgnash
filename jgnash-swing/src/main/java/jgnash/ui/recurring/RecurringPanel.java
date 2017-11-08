@@ -93,7 +93,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
 
     private Timer timer = null;
 
-    private static boolean confirmReminderDelete = false;
+    private static boolean confirmReminderDelete;
 
     private static final String CONFIRM_DELETE = "confirmdelete";
 
@@ -340,7 +340,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
         SwingWorker<List<PendingReminder>, Void> worker = new SwingWorker<List<PendingReminder>, Void>() {
 
             @Override
-            protected List<PendingReminder> doInBackground() throws Exception {
+            protected List<PendingReminder> doInBackground() {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 Objects.requireNonNull(engine);
 

@@ -41,11 +41,11 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  */
 class ExpandingAccountTablePane extends JScrollPane {
 
-    ExpandingAccountTableModel model = new ExpandingAccountTableModel();
+    ExpandingAccountTableModel model;
 
     final JTable accountTable;
 
-    public ExpandingAccountTablePane() {
+    ExpandingAccountTablePane() {
         model = new ExpandingAccountTableModel();
 
         accountTable = new ExpandingAccountTable(model);
@@ -71,7 +71,7 @@ class ExpandingAccountTablePane extends JScrollPane {
 
     private final class ExpandingAccountTable extends ExpandingTable<Account> {            
 
-        public ExpandingAccountTable(ExpandingAccountTableModel model) {
+        ExpandingAccountTable(ExpandingAccountTableModel model) {
             super(model);
         }
 

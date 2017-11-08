@@ -66,9 +66,9 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
 
     protected TransactionEntry oldEntry;
 
-    private SplitsRegisterTableModel model = null;
+    private SplitsRegisterTableModel model;
 
-    protected AbstractTransactionEntryPanel(SplitsRegisterTableModel model) {
+    protected AbstractTransactionEntryPanel(final SplitsRegisterTableModel model) {
 
         this.model = model;
         account = model.getAccount();

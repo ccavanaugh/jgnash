@@ -65,7 +65,7 @@ public class MessageBusServer {
 
     static final String EOL_DELIMITER = "\r\n";
 
-    private int port = 0;
+    private int port;
 
     private String dataBasePath = "";
 
@@ -200,7 +200,7 @@ public class MessageBusServer {
     private class MessageBusRemoteInitializer extends ChannelInitializer<SocketChannel> {
 
         @Override
-        public void initChannel(final SocketChannel ch) throws Exception {
+        public void initChannel(final SocketChannel ch) {
             ChannelPipeline pipeline = ch.pipeline();
 
             // Add the text line codec combination first,
@@ -219,7 +219,7 @@ public class MessageBusServer {
     private class MessageBusServerHandler extends ChannelInboundHandlerAdapter {
 
         @Override
-        public void channelActive(final ChannelHandlerContext ctx) throws Exception {
+        public void channelActive(final ChannelHandlerContext ctx) {
             channelGroup.add(ctx.channel()); // maintain channels
 
             logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
@@ -266,7 +266,7 @@ public class MessageBusServer {
         }
 
         @Override
-        public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+        public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
             logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
             ctx.close();
         }

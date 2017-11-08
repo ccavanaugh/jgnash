@@ -33,7 +33,7 @@ public class JTextFieldEx extends JTextField {
 
     private static final String SELECT_ON_FOCUS = "selectOnFocus";
 
-    private static boolean select = false;
+    private static boolean select;
 
     static {
         Preferences p = Preferences.userNodeForPackage(JTextFieldEx.class);
