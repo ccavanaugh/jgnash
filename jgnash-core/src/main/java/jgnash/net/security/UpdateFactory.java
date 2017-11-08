@@ -231,6 +231,9 @@ public class UpdateFactory {
         }
     }
 
+    /**
+     * Updates historical information for one day
+     */
     public static class UpdateSecurityNodeCallable implements Callable<Boolean> {
 
         private final SecurityNode securityNode;
@@ -246,14 +249,13 @@ public class UpdateFactory {
             final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
             if (e != null && securityNode.getQuoteSource() != QuoteSource.NONE) {
-                final SecurityParser parser = securityNode.getQuoteSource().getParser();
 
-                if (parser != null && !Thread.currentThread().isInterrupted()) {  // check for thread interruption
-                    if (parser.parse(securityNode)) {
+                if (!Thread.currentThread().isInterrupted()) {  // check for thread interruption
 
-                        final SecurityHistoryNode node = new SecurityHistoryNode(parser.getDate(),
-                                parser.getPrice(), parser.getVolume(), parser.getHigh(), parser.getLow());
+                    final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+                            LocalDate.now().minusDays(1), LocalDate.now());
 
+                    for (final SecurityHistoryNode node : nodes) {
                         if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
                             result = e.addSecurityHistory(securityNode, node);
 

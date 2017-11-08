@@ -17,48 +17,6 @@
  */
 package jgnash.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Path;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JFrame;
-import javax.swing.JLayer;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.RepaintManager;
-import javax.swing.SwingWorker;
-import javax.swing.WindowConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.DefaultEditorKit;
-
 import jgnash.Main;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -67,7 +25,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
-import jgnash.net.security.YahooParser;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
 import jgnash.plugin.SwingPlugin;
@@ -88,9 +45,31 @@ import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
-
 import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXStatusBar;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 /**
  * The JFrame for the application.
@@ -182,7 +161,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         Engine.addLogHandler(logHandler);
         EngineFactory.addLogHandler(logHandler);
-        YahooParser.addLogHandler(logHandler);
         UpdateFactory.addLogHandler(logHandler);
 
         loadPlugins();

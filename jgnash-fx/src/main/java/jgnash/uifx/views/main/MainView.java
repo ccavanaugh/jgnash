@@ -17,16 +17,6 @@
  */
 package jgnash.uifx.views.main;
 
-import java.io.File;
-import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
@@ -42,7 +32,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -50,7 +39,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
-import jgnash.net.security.YahooParser;
 import jgnash.plugin.FxPlugin;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
@@ -75,6 +63,16 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
+
+import java.io.File;
+import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 /**
  * JavaFX version of jGnash.
@@ -212,7 +210,6 @@ public class MainView implements MessageListener {
 
         Engine.addLogHandler(statusBarLogHandler);
         EngineFactory.addLogHandler(statusBarLogHandler);
-        YahooParser.addLogHandler(statusBarLogHandler);
         UpdateFactory.addLogHandler(statusBarLogHandler);
         logger.addHandler(statusBarLogHandler); // listen to my own logger
 

@@ -21,6 +21,7 @@
 * Reinstate archive capability
 
 == Release 2.33.2
+* 11/08/17 New workaround for Yahoo discontinuing a portion of their Securites history API. (Swing, Fx)
 * 11/06/17 Correct handling of special characters when importing OFX files. (Swing, Fx, GitHub Issue #35)
 * 11/06/17 Ignore cash transfers for dividends in realized gains calculations. (Swing, Fx) _[t-pa]_
 * 11/06/17 Significant update for the zh-ch locale translation. (Swing, Fx) _[kevinzhwl]_
