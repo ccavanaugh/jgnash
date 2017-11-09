@@ -28,7 +28,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.CheckBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -68,9 +67,6 @@ public class ReconcileSettingsDialogController {
     private DecimalTextField closingBalanceTextField;
 
     @FXML
-    private CheckBox autofillClosingBalanceCheckBox;
-
-    @FXML
     private DatePickerEx datePicker;
 
     private final ObjectProperty<Account> account = new SimpleObjectProperty<>();
@@ -96,10 +92,6 @@ public class ReconcileSettingsDialogController {
         // Last date of the month for the 1st unreconciled transaction
         LocalDate statementDate = account.getFirstUnreconciledTransactionDate().with(TemporalAdjusters.lastDayOfMonth());
 
-        determineBalances(account, statementDate);
-    }
-
-    private void determineBalances(final Account account, LocalDate statementDate) {
         // Balance at the 1st unreconciled transaction
         BigDecimal openingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                 account.getOpeningBalanceForReconcile());
@@ -153,16 +145,6 @@ public class ReconcileSettingsDialogController {
         datePicker.setValue(statementDate);
         openingBalanceTextField.setDecimal(openingBalance);
         closingBalanceTextField.setDecimal(closingBalance);
-    }
-
-    @FXML
-    private void handleUpdateBalance() {
-        final Account account = accountProperty().get();
-        LocalDate statementDate = datePicker.getValue();
-
-        if (autofillClosingBalanceCheckBox.isSelected()) {
-            determineBalances(account, statementDate);
-        }
     }
 
     @FXML
