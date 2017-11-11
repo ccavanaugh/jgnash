@@ -169,7 +169,7 @@ class NotificationDialog extends Stage implements MessageListener {
     @Override
     public void close() {
         MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
-        JavaFXUtils.runLater(NotificationDialog.super::close);
+        NotificationDialog.super.close();
     }
 
     @Override

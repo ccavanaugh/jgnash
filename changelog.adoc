@@ -21,6 +21,7 @@
 * Reinstate archive capability
 
 == Release 2.33.2
+* 11/11/17 The reminders dialog would not close properly if dismissed with a button. (Fx)
 * 11/11/17 The reminders dialog was not correctly restoring the last used snooze period. (Fx)
 * 11/11/17 Corrected a Hibernate configure error for Account objects that may have been causing subtle bugs. (Swing, Fx)
 * 11/08/17 New workaround for Yahoo discontinuing a portion of their Securites history API. (Swing, Fx)
