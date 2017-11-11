@@ -130,10 +130,18 @@ class NotificationDialog extends Stage implements MessageListener {
         invertButton.onActionProperty().set(event -> handleInvertSelectionAction());
 
         JavaFXUtils.runLater(() -> {
+
+            System.out.println("here");
+
             snoozeComboBox.setSelectedPeriod(Options.reminderSnoozePeriodProperty().get());
+
+
+            System.out.println(snoozeComboBox.periodProperty());
 
             // Bind options to the snooze period property
             Options.reminderSnoozePeriodProperty().bind(snoozeComboBox.periodProperty());
+
+
         });
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
