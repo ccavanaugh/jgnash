@@ -90,17 +90,11 @@ public class AccountTypeFilter {
         final AccountType type = a.getAccountType();
 
         if (type == AccountType.INCOME && incomeTypesVisible.get()) {
-            if (!a.isVisible() && hiddenTypesVisible.get() || a.isVisible()) {
-                return true;
-            }
+            return !a.isVisible() && hiddenTypesVisible.get() || a.isVisible();
         } else if (type == AccountType.EXPENSE && expenseTypesVisible.get()) {
-            if (!a.isVisible() && hiddenTypesVisible.get() || a.isVisible()) {
-                return true;
-            }
+            return !a.isVisible() && hiddenTypesVisible.get() || a.isVisible();
         } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && accountTypesVisible.get()) {
-            if (!a.isVisible() && hiddenTypesVisible.get() || a.isVisible()) {
-                return true;
-            }
+            return !a.isVisible() && hiddenTypesVisible.get() || a.isVisible();
         }
         return false;
     }

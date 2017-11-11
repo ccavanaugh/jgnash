@@ -39,7 +39,7 @@ public class PackDatabaseTask extends Task<Void> {
     private static final int INDETERMINATE = -1;
 
     private final String file;
-    private char[] password = new char[]{};
+    private char[] password;
 
     PackDatabaseTask(final String file, final char[] password) {
         this.file = file;

@@ -43,7 +43,7 @@ import org.jdesktop.swingx.JXStatusBar;
  */
 final class DynamicJasperReportFrame extends JFrame {
 
-    private DynamicJasperReportPanel viewer = null;
+    private DynamicJasperReportPanel viewer;
 
     private JPanel mainPanel;
 

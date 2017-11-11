@@ -16,9 +16,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.net.NetworkAuthenticator;
+import jgnash.uifx.views.main.MainView;
+import jgnash.util.FileUtils;
+import jgnash.util.OS;
+import jgnash.util.ResourceUtils;
+import jgnash.util.prefs.PortablePreferences;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.Authenticator;
@@ -29,23 +42,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-
-import javax.swing.JOptionPane;
-
-import javafx.application.Application;
-import javafx.stage.Stage;
-
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.jpa.JpaNetworkServer;
-import jgnash.net.security.YahooParser;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.net.NetworkAuthenticator;
-import jgnash.uifx.views.main.MainView;
-import jgnash.util.FileUtils;
-import jgnash.util.OS;
-import jgnash.util.ResourceUtils;
-import jgnash.util.prefs.PortablePreferences;
 
 import static java.util.Arrays.asList;
 import static jgnash.util.LogUtil.logSevere;
@@ -202,7 +198,7 @@ public class jGnashFx extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         System.exit(0); // Platform.exit() is not always enough for a complete shutdown, force closure
     }
 
@@ -248,7 +244,6 @@ public class jGnashFx extends Application {
         }
 
         Engine.getLogger().setLevel(Level.ALL);
-        YahooParser.logger.setLevel(Level.ALL);
     }
 
     private static OptionParser buildParser() {

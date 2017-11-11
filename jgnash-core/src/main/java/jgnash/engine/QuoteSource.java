@@ -24,23 +24,21 @@ import java.util.logging.Logger;
 
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
-import jgnash.net.security.YahooAUParser;
-import jgnash.net.security.YahooUKParser;
-import jgnash.net.security.YahooUSParser;
 import jgnash.util.ResourceUtils;
 
 /**
  * Enumeration for quote download source.
  *
+ * Not actually used at this time
+ *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings({"UnusedDeclaration"})
 public enum QuoteSource {
 
     NONE(ResourceUtils.getString("QuoteSource.None"), NullParser.class),
-    YAHOO(ResourceUtils.getString("QuoteSource.Yahoo"), YahooUSParser.class),
-    YAHOO_UK(ResourceUtils.getString("QuoteSource.YahooUK"), YahooUKParser.class),
-    YAHOO_AUS(ResourceUtils.getString("QuoteSource.YahooAus"), YahooAUParser.class);
+    YAHOO(ResourceUtils.getString("QuoteSource.Yahoo"), NullParser.class),
+    YAHOO_UK(ResourceUtils.getString("QuoteSource.YahooUK"), NullParser.class),
+    YAHOO_AUS(ResourceUtils.getString("QuoteSource.YahooAus"), NullParser.class);
 
     private final transient String description;
 

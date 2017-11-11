@@ -66,7 +66,7 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 
 /**
  * Abstract report controller base class that may be extended to create a report
- * 
+ *
  * @author Craig Cavanaugh
  */
 public abstract class BaseDynamicJasperReport {
@@ -135,7 +135,7 @@ public abstract class BaseDynamicJasperReport {
 
     /**
      * Creates a JasperPrint object.
-     * 
+     *
      * @param formatForCSV {@code true} if the report should be formatted for CSV export
      * @return JasperPrint object
      */
@@ -143,28 +143,28 @@ public abstract class BaseDynamicJasperReport {
 
     /**
      * Returns the name of the report
-     * 
+     *
      * @return report name
      */
     public abstract String getReportName();
 
     /**
      * Returns the legend for the grand total
-     * 
+     *
      * @return report name
      */
     protected abstract String getGrandTotalLegend();
 
     /**
      * Returns the general label for the group footer
-     * 
+     *
      * @return footer label
      */
     protected abstract String getGroupFooterLabel();
 
     /**
      * Returns the subtitle for the report
-     * 
+     *
      * @return subtitle
      */
     protected String getSubTitle() {
@@ -173,7 +173,7 @@ public abstract class BaseDynamicJasperReport {
 
     /**
      * Creates and add the default title to the report
-     * 
+     *
      * @param drb {@code DynamicReportBuilder} to add title to
      */
     private void buildTitle(final DynamicReportBuilder drb) {
@@ -320,7 +320,7 @@ public abstract class BaseDynamicJasperReport {
 
             assignPageFormat(drb);
 
-            drb.setHeaderHeight((int)getStyle(model.getColumnHeaderStyle(0), formatForCSV).getFont().getFontSize() * 2);
+            drb.setHeaderHeight((int) getStyle(model.getColumnHeaderStyle(0), formatForCSV).getFont().getFontSize() * 2);
             drb.setDetailHeight(getBaseFontSize() * 2);
 
             logger.info("Creating column model for report");
@@ -352,24 +352,39 @@ public abstract class BaseDynamicJasperReport {
                     builder.setTruncateSuffix("\u2026");
 
                     // set the format pattern for decimal values
-                    if (model.getColumnStyle(i) == ColumnStyle.AMOUNT_SUM || model.getColumnStyle(i) == ColumnStyle.BALANCE || model.getColumnStyle(i) == ColumnStyle.BALANCE_WITH_SUM || model.getColumnStyle(i) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL || model.getColumnStyle(i) == ColumnStyle.CROSSTAB_TOTAL) {
-                        String pattern = CommodityFormat.getFullNumberPattern(model.getCurrency());
-                        builder.setPattern(pattern);
-                    } else if (model.getColumnStyle(i) == ColumnStyle.PERCENTAGE) {
-                        NumberFormat nf = ReportFactory.getPercentageFormat();
-                        String pattern = ((DecimalFormat) nf).toPattern();
-                        builder.setPattern(pattern);
-                    } else if (model.getColumnStyle(i) == ColumnStyle.QUANTITY) {
-                        NumberFormat nf = ReportFactory.getQuantityFormat();
-                        String pattern = ((DecimalFormat) nf).toPattern();
-                        builder.setPattern(pattern);
-                    } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_DATE) {
-                        builder.setTextFormatter(DateUtils.getShortDateFormatter().toFormat());
-                    } else if (model.getColumnStyle(i) == ColumnStyle.TIMESTAMP) {
-                        builder.setTextFormatter(DateUtils.getShortDateTimeFormatter().toFormat());
-                    } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_AMOUNT) {
-                        String pattern = CommodityFormat.getShortNumberPattern(model.getCurrency());
-                        builder.setPattern(pattern);
+                    switch (model.getColumnStyle(i)) {
+                        case AMOUNT_SUM:
+                        case BALANCE:
+                        case BALANCE_WITH_SUM:
+                        case BALANCE_WITH_SUM_AND_GLOBAL:
+                        case CROSSTAB_TOTAL: {
+                            final String pattern = CommodityFormat.getFullNumberPattern(model.getCurrency());
+                            builder.setPattern(pattern);
+                            break;
+                        }
+                        case PERCENTAGE: {
+                            final NumberFormat nf = ReportFactory.getPercentageFormat();
+                            final String pattern = ((DecimalFormat) nf).toPattern();
+                            builder.setPattern(pattern);
+                            break;
+                        }
+                        case QUANTITY: {
+                            final NumberFormat nf = ReportFactory.getQuantityFormat();
+                            final String pattern = ((DecimalFormat) nf).toPattern();
+                            builder.setPattern(pattern);
+                            break;
+                        }
+                        case SHORT_DATE:
+                            builder.setTextFormatter(DateUtils.getShortDateFormatter().toFormat());
+                            break;
+                        case TIMESTAMP:
+                            builder.setTextFormatter(DateUtils.getShortDateTimeFormatter().toFormat());
+                            break;
+                        case SHORT_AMOUNT: {
+                            final String pattern = CommodityFormat.getShortNumberPattern(model.getCurrency());
+                            builder.setPattern(pattern);
+                            break;
+                        }
                     }
 
                     if (model.isColumnFixedWidth(i) && !formatForCSV) {
@@ -459,7 +474,7 @@ public abstract class BaseDynamicJasperReport {
 
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);           
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
         buildTitle(drb);
@@ -468,9 +483,9 @@ public abstract class BaseDynamicJasperReport {
 
         if (!formatForCSV) {
             final Style footerStyle = getPageFooterStyle();
-            
-            final int halfWidth = (int)(getPageFormat().getWidth() * .5);
-            
+
+            final int halfWidth = (int) (getPageFormat().getWidth() * .5);
+
             final AutoText date = new AutoText(AutoText.AUTOTEXT_CREATED_ON, AutoText.POSITION_FOOTER,
                     HorizontalBandAlignment.LEFT, AutoText.PATTERN_DATE_DATE_TIME, halfWidth);
             date.setStyle(footerStyle);

@@ -27,6 +27,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ButtonBar;
+import jgnash.uifx.control.TimePeriodComboBox;
 
 /**
  * Manages application preferences.
@@ -73,7 +74,7 @@ public class Options {
 
     private final static String GLOBAL_BAYES_ENABLED = "globalBayesEnabled";
 
-    private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
+    private static final int DEFAULT_SNOOZE = TimePeriodComboBox.getPeriods()[0];
 
     private static final SimpleBooleanProperty useAccountingTerms;
 

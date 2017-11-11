@@ -175,14 +175,10 @@ public class QifImport {
      */
     private List<Account> getBankAccountList() {
 
-        final List<Account> retList = new ArrayList<>();
         final List<Account> list = engine.getAccountList();
 
-        retList.addAll(list.stream()
-                .filter(a -> a.getAccountType() == AccountType.BANK || a.getAccountType() == AccountType.CASH)
-                .collect(Collectors.toList()));
-
-        return retList;
+        return list.stream().filter(a -> a.getAccountType() == AccountType.BANK
+                || a.getAccountType() == AccountType.CASH).collect(Collectors.toList());
     }
 
     private void loadAccountMap() {

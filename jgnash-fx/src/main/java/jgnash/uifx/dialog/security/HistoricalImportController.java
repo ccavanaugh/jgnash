@@ -111,9 +111,8 @@ public class HistoricalImportController {
         Objects.requireNonNull(engine);
 
         final List<SecurityNode> securityNodes = engine.getSecurities().stream()
-                .filter(securityNode -> securityNode.getQuoteSource() != QuoteSource.NONE).collect(Collectors.toList());
-
-        Collections.sort(securityNodes);
+                .filter(securityNode -> securityNode.getQuoteSource() != QuoteSource.NONE)
+                .sorted().collect(Collectors.toList());
 
         checkListView.getItems().addAll(securityNodes);
 

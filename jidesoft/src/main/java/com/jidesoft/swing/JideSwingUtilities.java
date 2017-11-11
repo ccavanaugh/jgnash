@@ -54,9 +54,7 @@ class JideSwingUtilities implements SwingConstants {
             @SuppressWarnings("unchecked")
             Map<JViewport, Integer> slaveViewportMap = (Map) property;
 
-            Map<JViewport, Integer> allViewportToSync = new HashMap<>();
-
-            allViewportToSync.putAll(slaveViewportMap);
+            Map<JViewport, Integer> allViewportToSync = new HashMap<>(slaveViewportMap);
 
             do {
                 Map<JViewport, Integer> viewportToAdd = new HashMap<>();

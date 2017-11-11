@@ -34,7 +34,7 @@ import jgnash.util.ResourceUtils;
  */
 public class TimePeriodCombo extends JComboBox<String> {
 
-    private int[] periods = new int[0];
+    private int[] periods;
 
     public TimePeriodCombo() {
         super();

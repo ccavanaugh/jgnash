@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2006-2009, Alexander Potochkin
  * All rights reserved.
  *

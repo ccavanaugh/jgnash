@@ -92,18 +92,23 @@ class ImportTable extends FormattedJTable {
                         if (col == 0) {
                             ImportTransaction t = transactions.get(row);
 
-                            if (t.getState() == ImportState.EQUAL) {
-                                t.setState(ImportState.NOT_EQUAL);
-                                model.fireTableCellUpdated(row, col);
-                            } else if (t.getState() == ImportState.NOT_EQUAL) {
-                                t.setState(ImportState.EQUAL);
-                                model.fireTableCellUpdated(row, col);
-                            } else if (t.getState() == ImportState.NEW) {
-                                t.setState(ImportState.IGNORE);
-                                model.fireTableCellUpdated(row, col);
-                            } else if (t.getState() == ImportState.IGNORE) {
-                                t.setState(ImportState.NEW);
-                                model.fireTableCellUpdated(row, col);
+                            switch (t.getState()) {
+                                case EQUAL:
+                                    t.setState(ImportState.NOT_EQUAL);
+                                    model.fireTableCellUpdated(row, col);
+                                    break;
+                                case NOT_EQUAL:
+                                    t.setState(ImportState.EQUAL);
+                                    model.fireTableCellUpdated(row, col);
+                                    break;
+                                case NEW:
+                                    t.setState(ImportState.IGNORE);
+                                    model.fireTableCellUpdated(row, col);
+                                    break;
+                                case IGNORE:
+                                    t.setState(ImportState.NEW);
+                                    model.fireTableCellUpdated(row, col);
+                                    break;
                             }
                         }
                     }
@@ -176,13 +181,13 @@ class ImportTable extends FormattedJTable {
 
     class Model extends AbstractTableModel {
 
-        private ImageIcon equalIcon = null;
+        private ImageIcon equalIcon;
 
-        private ImageIcon addIcon = null;
+        private ImageIcon addIcon;
 
-        private ImageIcon notEqualIcon = null;
+        private ImageIcon notEqualIcon;
 
-        private ImageIcon removeIcon = null;
+        private ImageIcon removeIcon;
 
         private final String[] cNames = {" ", rb.getString("Column.Date"), rb.getString("Column.Num"),
                 rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
@@ -260,15 +265,16 @@ class ImportTable extends FormattedJTable {
             ImportTransaction transaction = transactions.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    if (transaction.getState() == ImportState.EQUAL) {
-                        return equalIcon;
-                    } else if (transaction.getState() == ImportState.NOT_EQUAL) {
-                        return notEqualIcon;
-                    } else if (transaction.getState() == ImportState.IGNORE) {
-                        return removeIcon;
+                    switch (transaction.getState()) {
+                        case EQUAL:
+                            return equalIcon;
+                        case NOT_EQUAL:
+                            return notEqualIcon;
+                        case IGNORE:
+                            return removeIcon;
+                        default:
+                            return addIcon;
                     }
-
-                    return addIcon;
                 case 1:
                     return dateTimeFormatter.format(transaction.getDatePosted());
                 case 2:

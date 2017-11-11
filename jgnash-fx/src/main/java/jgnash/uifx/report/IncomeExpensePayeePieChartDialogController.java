@@ -86,7 +86,7 @@ public class IncomeExpensePayeePieChartDialogController {
 
     private static final int MAX_NAME_LENGTH = 12;
 
-    private static final String ELLIPSIS = "¡­";
+    private static final String ELLIPSIS = "â€¦";
 
     private static final String CHART_CSS = "jgnash/skin/incomeExpensePieChart.css";
 

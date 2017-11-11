@@ -42,7 +42,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
 
     private ArrayList<TransactionWrapper> data; // internal data is a list which contains all account transactions *including their possible split entries*
 
-    private boolean showSplitDetails = false;
+    private boolean showSplitDetails;
 
     public RegisterTableWithSplitEntriesModel(final Account account, final String[] names, final boolean detailSplits) {
         super(account, names, _clazz);

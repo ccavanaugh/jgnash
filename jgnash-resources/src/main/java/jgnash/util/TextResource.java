@@ -135,14 +135,19 @@ public class TextResource {
                     }
                     outBuffer.append((char) value);
                 } else {
-                    if (aChar == 't') {
-                        aChar = '\t';
-                    } else if (aChar == 'r') {
-                        aChar = '\r';
-                    } else if (aChar == 'n') {
-                        aChar = '\n';
-                    } else if (aChar == 'f') {
-                        aChar = '\f';
+                    switch (aChar) {
+                        case 't':
+                            aChar = '\t';
+                            break;
+                        case 'r':
+                            aChar = '\r';
+                            break;
+                        case 'n':
+                            aChar = '\n';
+                            break;
+                        case 'f':
+                            aChar = '\f';
+                            break;
                     }
                     outBuffer.append(aChar);
                 }

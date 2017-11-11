@@ -369,12 +369,8 @@ public class SecurityNode extends CommodityNode {
         lock.readLock().lock();
 
         try {
-            final List<SecurityHistoryEvent> splits = securityHistoryEvents.stream().filter(historyEvent
-                    -> historyEvent.getType() == SecurityHistoryEventType.SPLIT).collect(Collectors.toList());
-
-            Collections.sort(splits);
-
-            return splits;
+            return securityHistoryEvents.stream().filter(historyEvent
+                    -> historyEvent.getType() == SecurityHistoryEventType.SPLIT).sorted().collect(Collectors.toList());
         } finally {
             lock.readLock().unlock();
         }

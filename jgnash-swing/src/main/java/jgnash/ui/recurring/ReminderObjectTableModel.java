@@ -39,7 +39,7 @@ class ReminderObjectTableModel extends AbstractTableModel {
     private final String[] cNames = { rb.getString("Column.Approve"), rb.getString("Column.Description"),
                     rb.getString("Column.Date") };
 
-    private List<PendingReminder> reminders = null;
+    private List<PendingReminder> reminders;
 
     private final DateTimeFormatter formatter = DateUtils.getShortDateFormatter();
 

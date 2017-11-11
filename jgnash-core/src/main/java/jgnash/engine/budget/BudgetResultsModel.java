@@ -77,7 +77,7 @@ public class BudgetResultsModel implements MessageListener {
 
     private final Map<BudgetPeriodDescriptor, Map<AccountGroup, BudgetPeriodResults>> descriptorAccountGroupResultsCache;
 
-    private boolean useRunningTotals = false;
+    private boolean useRunningTotals;
 
     /**
      * Message proxy.

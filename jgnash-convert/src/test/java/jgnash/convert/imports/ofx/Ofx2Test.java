@@ -46,7 +46,7 @@ public class Ofx2Test {
     private static OfxV2Parser parser;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         OfxV2Parser.enableDetailedLogFile();  // enable debugging
         parser = new OfxV2Parser();
     }
@@ -548,6 +548,20 @@ public class Ofx2Test {
                 assertEquals(0, parser.getStatusCode());
 
                 assertFalse(parser.getBank().isInvestmentAccount());
+
+                assertEquals(5, parser.getBank().getTransactions().size());
+
+                // System.out.println(parser.getBank().getTransactions().get(4).getPayee());
+
+                assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("& &"));
+
+                assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("\""));
+
+                assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("'"));
+
+                assertTrue(parser.getBank().getTransactions().get(4).getPayee().contains("Am'ount"));
+
+                assertFalse(parser.getBank().getTransactions().get(0).getPayee().contains("&"));
             } catch (IOException e) {
                 logSevere(Ofx2Test.class, e);
                 fail();

@@ -60,17 +60,21 @@ class AccountOptions extends JPanel implements ActionListener, FocusListener {
 
     private JRadioButton incomeExpenseAccountsButton;
 
-    public AccountOptions() {
+    AccountOptions() {
         layoutMainPanel();
 
         useAccountTermsCheckBox.setSelected(RegisterFactory.isAccountingTermsEnabled());
 
-        if (AccountBalanceDisplayManager.getDisplayMode() == AccountBalanceDisplayMode.NONE) {
-            noneButton.setSelected(true);
-        } else if (AccountBalanceDisplayManager.getDisplayMode() == AccountBalanceDisplayMode.REVERSE_CREDIT) {
-            creditAccountsButton.setSelected(true);
-        } else {
-            incomeExpenseAccountsButton.setSelected(true);
+        switch (AccountBalanceDisplayManager.getDisplayMode()) {
+            case NONE:
+                noneButton.setSelected(true);
+                break;
+            case REVERSE_CREDIT:
+                creditAccountsButton.setSelected(true);
+                break;
+            default:
+                incomeExpenseAccountsButton.setSelected(true);
+                break;
         }
 
         registerListeners();

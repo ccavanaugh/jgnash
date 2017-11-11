@@ -99,7 +99,24 @@ class OfxV1ToV2 {
                 }
             }
         }
-        return xml.toString();
+
+        return sanitize(xml.toString());
+    }
+
+    /**
+     * Replaces illegal XML characters with escaped characters
+     *
+     * @param xml String to process
+     * @return valid string
+     */
+    private static String sanitize(final String xml) {
+        String ugly = xml;
+
+        ugly = ugly.replaceAll("&(?!(?:amp);)", "&amp;");
+        ugly = ugly.replaceAll("\"", "&quot;");
+        ugly = ugly.replaceAll("'", "&apos;");
+
+        return ugly;
     }
 
     private static String concat(final Collection<String> strings) {

@@ -139,8 +139,7 @@ public class FXMLUtils {
     }
 
     private static Field[] getDeclaredFields(final Class<?> clazz) {
-        final List<Field> fields = new ArrayList<>();
-        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+        final List<Field> fields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
 
         if (clazz.getSuperclass() != null) {
             fields.addAll(Arrays.asList(getDeclaredFields(clazz.getSuperclass())));

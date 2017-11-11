@@ -65,21 +65,18 @@ import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-/**
+/*
  * This displays a dialog that shows the monthly balance for a selected account
  *
  * @author Craig Cavanaugh
  * @author Dany Veilleux
  * @author Peter Vida
  * @author Pranay Kumar
- */
-
-/**
+ *
  * Modified by Pranay Kumar - Compare accounts on the same chart - Show target currency on the chart axis label (must
  * for people working with multiple currencies) - Use same code for recursive and non recursive account balance
  * calculations
  */
-
 public class MonthlyAccountBalanceChartCompare {
 
     private final FilteredAccountListComboBox combo1 = new FilteredAccountListComboBox(false, false);

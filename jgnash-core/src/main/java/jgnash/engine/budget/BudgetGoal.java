@@ -61,6 +61,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     // cache the hash code
     private transient int hash;
 
+    @SuppressWarnings("UnusedAssignment")
     @ElementCollection(fetch = FetchType.EAGER)
     @OrderColumn(name = "INDEX")
     private List<BigDecimal> budgetGoals = new ArrayList<>();

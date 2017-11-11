@@ -17,26 +17,10 @@
  */
 package jgnash;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
-import javax.swing.JOptionPane;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.message.MessageBus;
-import jgnash.net.security.YahooParser;
 import jgnash.ui.MainFrame;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.OpenAction;
@@ -46,6 +30,19 @@ import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
 import jgnash.util.prefs.PortablePreferences;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import static java.util.Arrays.asList;
 import static jgnash.util.LogUtil.logSevere;
@@ -148,7 +145,6 @@ public final class Main {
         Engine.getLogger().setLevel(Level.ALL);
         MainFrame.logger.setLevel(Level.ALL);
         OpenAction.logger.setLevel(Level.ALL);
-        YahooParser.logger.setLevel(Level.ALL);
     }
 
     private static void enableAntialiasing() {

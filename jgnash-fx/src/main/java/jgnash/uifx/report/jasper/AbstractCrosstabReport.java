@@ -17,12 +17,28 @@
  */
 package jgnash.uifx.report.jasper;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.time.DateUtils;
+import jgnash.ui.report.jasper.AbstractReportTableModel;
+import jgnash.ui.report.jasper.ColumnHeaderStyle;
+import jgnash.ui.report.jasper.ColumnStyle;
+import jgnash.uifx.control.DatePickerEx;
+import net.sf.jasperreports.engine.JasperPrint;
+
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,25 +47,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.prefs.Preferences;
-
-import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.Comparators;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.ui.report.jasper.AbstractReportTableModel;
-import jgnash.ui.report.jasper.ColumnHeaderStyle;
-import jgnash.ui.report.jasper.ColumnStyle;
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.time.DateUtils;
-
-import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  * Abstract Report that groups and sums by {@code AccountGroup}, has a line for a global sum, and cross tabulates
@@ -380,7 +377,7 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private final CurrencyNode baseCurrency;
 
-        private List<Account> accountList = Collections.emptyList();
+        private List<Account> accountList;
 
         ReportModel(final List<Account> accountList, final CurrencyNode currency) {
             this.accountList = accountList;
