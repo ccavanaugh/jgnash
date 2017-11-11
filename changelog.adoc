@@ -21,13 +21,13 @@
 * Reinstate archive capability
 
 == Release 2.33.2
+* 11/11/17 The reminders dialog was not correctly restoring the last used snooze period. (Fx)
 * 11/11/17 Corrected a Hibernate configure error for Account objects that may have been causing subtle bugs. (Swing, Fx)
 * 11/08/17 New workaround for Yahoo discontinuing a portion of their Securites history API. (Swing, Fx)
 * 11/06/17 Correct handling of special characters when importing OFX files. (Swing, Fx, GitHub Issue #35)
 * 11/06/17 Ignore cash transfers for dividends in realized gains calculations. (Swing, Fx) _[t-pa]_
 * 11/06/17 Significant update for the zh-ch locale translation. (Swing, Fx) _[kevinzhwl]_
 * 10/22/17 Updated to latest Hibernate and Netty dependencies.
-* 08/24/17 The reminders dialog was not correctly restoring the last used snooze period. (Fx)
 * 08/19/17 Switched from a MD5 to SHA-256 hash function for encrypted client / server operation. (Swing, Fx)
 * 08/19/17 Protect against the import of an OFX file with malicious content. (Swing, Fx)
 
