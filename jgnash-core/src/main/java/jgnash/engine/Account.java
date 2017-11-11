@@ -1069,20 +1069,24 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the commodity node for this account.
+     * Returns the commodity node for this account
+     *
+     * Note: method may not be final for Hibernate.
      *
      * @return the commodity node for this account.
      */
-    public final CurrencyNode getCurrencyNode() {
+    public CurrencyNode getCurrencyNode() {
         return currencyNode;
     }
 
     /**
      * Sets the commodity node for this account.
      *
+     * Note: method may not be final for Hibernate
+     *
      * @param node The new commodity node for this account.
      */
-    final void setCurrencyNode(@NotNull final CurrencyNode node) {
+    void setCurrencyNode(@NotNull final CurrencyNode node) {
         Objects.requireNonNull(node);
 
         if (!node.equals(currencyNode)) {
@@ -1140,7 +1144,14 @@ public class Account extends StoredObject implements Comparable<Account> {
         return accountType;
     }
 
-    final void setAccountType(final AccountType type) {
+    /**
+     * Sets the account type
+     *
+     * Note: method may not be final for Hibernate
+     *
+     * @param type new account type
+     */
+    void setAccountType(final AccountType type) {
         Objects.requireNonNull(type);
 
         if (accountType != null && !accountType.isMutable()) {
