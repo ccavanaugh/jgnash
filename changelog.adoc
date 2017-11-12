@@ -20,6 +20,9 @@
 ** flexible start date for the week
 * Reinstate archive capability
 
+== Release 2.33.3
+* 11/12/17 Significant update to the Polish translation _[Sławomir Szarkowicz]_
+
 == Release 2.33.2
 * 11/12/17 The opening Reconcile dialog now has a button to calculate ending balance based on the closing date. (Fx) _[Pranay Kumar]_
 * 11/11/17 The Reminders dialog would not close properly if dismissed with a button. (Fx)
