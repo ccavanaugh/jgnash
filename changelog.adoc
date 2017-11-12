@@ -21,8 +21,9 @@
 * Reinstate archive capability
 
 == Release 2.33.2
-* 11/11/17 The reminders dialog would not close properly if dismissed with a button. (Fx)
-* 11/11/17 The reminders dialog was not correctly restoring the last used snooze period. (Fx)
+* 11/12/17 The opening Reconcile dialog now has a button to calculate ending balance based on the closing date. (Fx) _[Pranay Kumar]_
+* 11/11/17 The Reminders dialog would not close properly if dismissed with a button. (Fx)
+* 11/11/17 The Reminders dialog was not correctly restoring the last used snooze period. (Fx)
 * 11/11/17 Corrected a Hibernate configure error for Account objects that may have been causing subtle bugs. (Swing, Fx)
 * 11/08/17 New workaround for Yahoo discontinuing a portion of their Securites history API. (Swing, Fx)
 * 11/06/17 Correct handling of special characters when importing OFX files. (Swing, Fx, GitHub Issue #35)
