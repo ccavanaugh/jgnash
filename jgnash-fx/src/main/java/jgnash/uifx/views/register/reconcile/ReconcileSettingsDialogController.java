@@ -28,6 +28,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -65,6 +66,9 @@ public class ReconcileSettingsDialogController {
 
     @FXML
     private DecimalTextField closingBalanceTextField;
+
+    @FXML
+    private CheckBox autofillClosingBalanceCheckBox;
 
     @FXML
     private DatePickerEx datePicker;
@@ -145,6 +149,19 @@ public class ReconcileSettingsDialogController {
         datePicker.setValue(statementDate);
         openingBalanceTextField.setDecimal(openingBalance);
         closingBalanceTextField.setDecimal(closingBalance);
+    }
+
+    @FXML
+    private void handleUpdateBalance() {
+        final Account account = accountProperty().get();
+        LocalDate statementDate = datePicker.getValue();
+
+        if (autofillClosingBalanceCheckBox.isSelected()) {
+            // Balance at the statement date
+            BigDecimal closingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), 
+                    account.getBalance(statementDate));
+            closingBalanceTextField.setDecimal(closingBalance);
+        }
     }
 
     @FXML
