@@ -1,0 +1,3 @@
+The currencies available for account creation can be selected below.  If you do not wish to use multiple currencies, do not change this form.
+
+Currencies can be added and removed at any time.
