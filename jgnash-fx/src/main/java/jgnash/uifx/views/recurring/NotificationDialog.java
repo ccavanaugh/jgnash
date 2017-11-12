@@ -45,7 +45,6 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.time.DateUtils;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.ResourceUtils;
 
 /**
