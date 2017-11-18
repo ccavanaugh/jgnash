@@ -17,7 +17,7 @@
  */
 package jgnash.util;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -29,14 +29,16 @@ import static org.junit.Assert.assertEquals;
  */
 public class EncryptionManagerTest {
 
-    private static final String PASSWORD = RandomStringUtils.random(20);
+    private static RandomStringGenerator generator = new RandomStringGenerator.Builder().build();
+
+    private static final String PASSWORD = generator.generate(20);
 
     @Test
     public void test() {
         final EncryptionManager encryptionManager = new EncryptionManager(PASSWORD.toCharArray());
 
         for (int i = 1; i < 8192; i++) {
-            String testString = RandomStringUtils.random(i);
+            String testString = generator.generate(i);
 
             final String encrypted = encryptionManager.encrypt(testString);
 

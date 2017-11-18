@@ -29,5 +29,5 @@ dependencies {
         exclude(module: 'xml-apis')
     }
 
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
+    testCompile group: 'org.apache.commons', name: 'commons-text', version: commons_text
 }
