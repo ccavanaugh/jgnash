@@ -21,6 +21,7 @@
 * Reinstate archive capability
 
 == Release 2.33.3
+* 11/18/17 Switched from Opencsv to Apache Commons CSV for exports to reduce distribution size and dependencies. (Swing, Fx)
 * 11/12/17 Significant update to the Polish translation _[Sławomir Szarkowicz]_
 
 == Release 2.33.2
