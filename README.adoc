@@ -59,7 +59,7 @@ to operate correctly.
 
 ==== Mac OS X Installation:
 
-For Mac OS X users, a minimum of Mac OS X 10.7 is required unless you want to experiment with the SoyLatte Java distribution.
+For Mac OS X users, a minimum of Mac OS X 10.8.3 is required
 
 . Copy the jGnash folder to `/Applications`.
 . Open AppleScript Editor.
@@ -69,7 +69,7 @@ Create the following script:
 [source]
 ----
 try
-    do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/lib/jgnash-fx-x.jar"
+    do shell script "/Applications/jGnash/jGnashFx"
 end try
 ----
 
