@@ -63,12 +63,12 @@ public class ImportFilter {
 
     private static final String[] KNOWN_SCRIPTS = {"/jgnash/imports/tidy.js"};
 
-    private final ScriptEngine engine;
+    private final ScriptEngine scriptEngine;
 
     private final String script;
 
     ImportFilter(final String script) {
-        engine = new ScriptEngineManager().getEngineByName("nashorn");
+        scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
         this.script = script;
     }
 
@@ -158,9 +158,9 @@ public class ImportFilter {
     public String processMemo(final String memo) {
 
         try (final Reader reader = getReader()) {
-            engine.eval(reader);
+            scriptEngine.eval(reader);
 
-            final Invocable invocable = (Invocable) engine;
+            final Invocable invocable = (Invocable) scriptEngine;
 
             final Object result = invocable.invokeFunction("processMemo", memo);
 
@@ -174,9 +174,9 @@ public class ImportFilter {
     public String processPayee(final String payee) {
 
         try (final Reader reader = getReader()) {
-            engine.eval(reader);
+            scriptEngine.eval(reader);
 
-            final Invocable invocable = (Invocable) engine;
+            final Invocable invocable = (Invocable) scriptEngine;
 
             final Object result = invocable.invokeFunction("processPayee", payee);
 
@@ -190,9 +190,9 @@ public class ImportFilter {
     public String getDescription() {
 
         try (final Reader reader = getReader()) {
-            engine.eval(reader);
+            scriptEngine.eval(reader);
 
-            final Invocable invocable = (Invocable) engine;
+            final Invocable invocable = (Invocable) scriptEngine;
 
             final Object result = invocable.invokeFunction("getDescription", Locale.getDefault());
 
