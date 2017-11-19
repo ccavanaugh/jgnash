@@ -1075,13 +1075,28 @@ using the menu:Tools[Configure Transaction Imports Filters…] menu as shown bel
 image:importFilters.png[width="600"]
 
 <<<
-Below is an example JavaScript file.  The first three functions are required for correct operation.  These functions
-accept a *string* and are expected to return a *string*.
+Below is an example JavaScript file.  The first four functions are required for correct operation.
+
+The first function accepts an *ImportTransaction* for advanced manipulation of the imported data.
+
+The second and third functions accept a *string* and are expected to return a *string*.
+
+The *getDescription* function should return a meaningful description of the script.
 
 [[app-listing]]
 [source,javascript]
 ----
 /* Normalizes the case of the payee and memo fields */
+
+// place holder for the passed ImportTransaction
+var importTransaction;
+
+// This will be called first and passed the ImportTransaction
+function acceptTransaction(transaction) {
+
+    // does nothing with it in this script
+    importTransaction = transaction;
+}
 
 // This is a required function
 function processMemo(memo) {
