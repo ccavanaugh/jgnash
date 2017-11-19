@@ -17,6 +17,17 @@
  */
 package jgnash.convert.imports;
 
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.util.EncodeDecode;
+import jgnash.util.FileUtils;
+import jgnash.util.NotNull;
+import jgnash.util.OS;
+
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -34,21 +45,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.util.EncodeDecode;
-import jgnash.util.FileUtils;
-import jgnash.util.NotNull;
-import jgnash.util.OS;
-
 import static jgnash.util.FileUtils.separator;
 
 /**
+ * Transaction Import filter.
+ * <p>
+ * This class is responsible for calling the supplied javascript file.
+ *
  * @author Craig Cavanaugh
  */
 public class ImportFilter {
@@ -70,6 +73,7 @@ public class ImportFilter {
     ImportFilter(final String script) {
         scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
         this.script = script;
+        evalScript();
     }
 
     public static List<ImportFilter> getImportFilters() {
@@ -155,52 +159,62 @@ public class ImportFilter {
         return script;
     }
 
-    public String processMemo(final String memo) {
-
+    private void evalScript() {
         try (final Reader reader = getReader()) {
             scriptEngine.eval(reader);
+        } catch (final ScriptException | IOException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+    }
 
+    public String processMemo(final String memo) {
+        try {
             final Invocable invocable = (Invocable) scriptEngine;
 
             final Object result = invocable.invokeFunction("processMemo", memo);
 
             return result.toString();
-        } catch (final ScriptException | IOException | NoSuchMethodException e) {
+        } catch (final ScriptException | NoSuchMethodException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
         return memo;
     }
 
     public String processPayee(final String payee) {
-
-        try (final Reader reader = getReader()) {
-            scriptEngine.eval(reader);
-
+        try {
             final Invocable invocable = (Invocable) scriptEngine;
 
             final Object result = invocable.invokeFunction("processPayee", payee);
 
             return result.toString();
-        } catch (final ScriptException | IOException | NoSuchMethodException e) {
+        } catch (final ScriptException | NoSuchMethodException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
         return payee;
     }
 
     public String getDescription() {
-
-        try (final Reader reader = getReader()) {
-            scriptEngine.eval(reader);
-
+        try {
             final Invocable invocable = (Invocable) scriptEngine;
 
             final Object result = invocable.invokeFunction("getDescription", Locale.getDefault());
 
             return result.toString();
-        } catch (final ScriptException | IOException | NoSuchMethodException e) {
+        } catch (final ScriptException | NoSuchMethodException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
         return "";
+    }
+
+    public void acceptTransaction(final ImportTransaction importTransaction) {
+        try {
+            final Invocable invocable = (Invocable) scriptEngine;
+
+            invocable.invokeFunction("acceptTransaction", importTransaction);
+
+        } catch (final ScriptException | NoSuchMethodException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 
     private Reader getReader() throws IOException {
