@@ -21,6 +21,7 @@
 * Reinstate archive capability
 
 == Release 2.33.3
+* 11/22/17 Prevent a deadlock due to a poorly configured or corrupt printer configuration at the OS level. (Swing, Fx)
 * 11/22/17 Fixed a Platform thread exception on exit when the application was closed soon after closing a Reminder dialog. (Fx)
 * 11/19/17 Expanded the import filter script interface to allow advanced manipulation of ImportTransactions. (Fx)
 * 11/18/17 Switched from Opencsv to Apache Commons CSV for exports to reduce distribution size and dependencies. (Swing, Fx)

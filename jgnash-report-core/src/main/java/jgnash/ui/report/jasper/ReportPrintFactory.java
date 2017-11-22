@@ -69,15 +69,22 @@ class ReportPrintFactory {
         int height = (int) (defaultMediaSize.getY(MediaSize.INCH) / (1f / 72f));       
 
         paper.setSize(width, height);
-        paper.setImageableArea(DEFAULT_MARGIN, DEFAULT_MARGIN, width - (2 * DEFAULT_MARGIN), height - (2 * DEFAULT_MARGIN));
+        paper.setImageableArea(DEFAULT_MARGIN, DEFAULT_MARGIN, width - (2 * DEFAULT_MARGIN),
+                height - (2 * DEFAULT_MARGIN));
 
         PageFormat format = new PageFormat();
         format.setPaper(paper);
 
         /* if a default printer is found, validate the page */
-        PrintService[] services = PrinterJob.lookupPrintServices();
-        if (services.length != 0) { // no printers found on the system.                     
-            format = PrinterJob.getPrinterJob().validatePage(format);
+        try {
+
+            PrintService[] services = PrinterJob.lookupPrintServices();
+            if (services.length != 0) { // no printers found on the system.
+                format = PrinterJob.getPrinterJob().validatePage(format);
+            }
+        } catch (final Exception ignored) {
+            // NPE can be triggered if the underlying system has a poor printer setup or configuration.
+            System.err.println("Poor printer configuration at the OS level.");
         }
 
         return format;
