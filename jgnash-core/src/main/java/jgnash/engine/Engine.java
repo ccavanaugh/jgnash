@@ -595,7 +595,7 @@ public class Engine {
     /**
      * Creates a default reminder given a transaction and the primary account.  The Reminder will need to persisted.
      *
-     * @param transaction Transaction for the reminder.  The transaction wil be cloned
+     * @param transaction Transaction for the reminder.  The transaction will be cloned
      * @param account     primary account
      * @return new default {@code MonthlyReminder}
      */
