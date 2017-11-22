@@ -133,6 +133,10 @@ class NotificationDialog extends Stage implements MessageListener {
         Options.reminderSnoozePeriodProperty().bind(snoozeComboBox.periodProperty());
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
+
+        // unregister the listener when closing
+        setOnHiding(event -> MessageBus.getInstance().unregisterListener(NotificationDialog.this,
+                MessageChannel.SYSTEM));
     }
 
     private void handleSelectAllAction() {
@@ -163,12 +167,6 @@ class NotificationDialog extends Stage implements MessageListener {
 
     private void handleOkayAction() {
         close();
-    }
-
-    @Override
-    public void close() {
-        MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
-        NotificationDialog.super.close();
     }
 
     @Override
