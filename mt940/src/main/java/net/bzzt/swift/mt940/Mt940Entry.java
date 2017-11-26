@@ -93,17 +93,14 @@ public class Mt940Entry {
         this.betrag = betrag;
     }
 
-	public void addToMehrzweckfeld(String string) {
-		if (mehrzweckfeld == null || "".equals(mehrzweckfeld.trim()))
-		{
-			mehrzweckfeld = string;
-		}
-		else
-		{
-			mehrzweckfeld += " ";
-			mehrzweckfeld += string;
-		}
-	}
+    public void addToMehrzweckfeld(String string) {
+        if (mehrzweckfeld == null || "".equals(mehrzweckfeld.trim())) {
+            mehrzweckfeld = string;
+        } else {
+            mehrzweckfeld += " ";
+            mehrzweckfeld += string;
+        }
+    }
 
     public void setKontobezeichnung(String kontobezeichnung) {
         this.kontobezeichnung = kontobezeichnung;
