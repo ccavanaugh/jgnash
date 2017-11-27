@@ -203,7 +203,7 @@ public class PortfolioReport extends DynamicJasperReport {
 
         @Override
         public int getColumnCount() {
-            return 12;
+            return 13;
         }
 
         @Override
@@ -242,8 +242,10 @@ public class PortfolioReport extends DynamicJasperReport {
                 case 9:
                     return pd.getTotalGainsPercentage();
                 case 10:
-                    return pd.getPercentPortfolio();
+                    return pd.getInternalRateOfReturn();
                 case 11:
+                    return pd.getPercentPortfolio();
+                case 12:
                     return "group";
                 default:
                     return "ERR";
@@ -275,8 +277,10 @@ public class PortfolioReport extends DynamicJasperReport {
                 case 9:
                     return rb.getString("Column.Short.TotalGainPercentage");
                 case 10:
-                    return rb.getString("Column.Short.PercentagePortfolio");
+                    return rb.getString("Column.Short.InternalRateOfReturn");
                 case 11:
+                    return rb.getString("Column.Short.PercentagePortfolio");
+                case 12:
                     return "group";
                 default:
                     return "ERR";
@@ -285,7 +289,7 @@ public class PortfolioReport extends DynamicJasperReport {
 
         @Override
         public Class<?> getColumnClass(final int columnIndex) {
-            if (columnIndex == 0 || columnIndex == 11) {
+            if (columnIndex == 0 || columnIndex == 12) {
                 return String.class;
             }
 
@@ -317,8 +321,9 @@ public class PortfolioReport extends DynamicJasperReport {
                     return ColumnStyle.AMOUNT_SUM;
                 case 9:
                 case 10:
-                    return ColumnStyle.PERCENTAGE;
                 case 11:
+                    return ColumnStyle.PERCENTAGE;
+                case 12:
                     return ColumnStyle.GROUP_NO_HEADER;
                 default:
                     return ColumnStyle.STRING;
