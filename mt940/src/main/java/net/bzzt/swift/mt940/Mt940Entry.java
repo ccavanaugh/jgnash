@@ -37,6 +37,8 @@ public class Mt940Entry {
 
     private String mehrzweckfeld;
 
+    private String kontobezeichnung;
+
     public LocalDate getValutaDatum() {
         return valutaDatum;
     }
@@ -47,7 +49,24 @@ public class Mt940Entry {
 
     @Override
     public String toString() {
-        return "At " + valutaDatum + ", " + sollHabenKennung + ": " + betrag + " for " + mehrzweckfeld;
+        StringBuilder sb = new StringBuilder("At ").append(valutaDatum);
+        if (kontobezeichnung != null) {
+            sb.append(" (");
+            sb.append(kontobezeichnung);
+            sb.append(")");
+        }
+        sb.append(", ");
+        sb.append(sollHabenKennung);
+        sb.append(": ");
+        if (betrag != null) {
+            // Set scale to 2 digits and round if neccesary, then to plain string for nicer output.
+            sb.append(betrag.setScale(2, BigDecimal.ROUND_HALF_EVEN).toPlainString());
+        } else {
+            sb.append("-");
+        }
+        sb.append(" for ");
+        sb.append(mehrzweckfeld);
+        return sb.toString();
     }
 
     public SollHabenKennung getSollHabenKennung() {
@@ -74,15 +93,20 @@ public class Mt940Entry {
         this.betrag = betrag;
     }
 
-	public void addToMehrzweckfeld(String string) {
-		if (mehrzweckfeld == null || "".equals(mehrzweckfeld.trim()))
-		{
-			mehrzweckfeld = string;
-		}
-		else
-		{
-			mehrzweckfeld += " ";
-			mehrzweckfeld += string;
-		}
-	}
+    public void addToMehrzweckfeld(String string) {
+        if (mehrzweckfeld == null || "".equals(mehrzweckfeld.trim())) {
+            mehrzweckfeld = string;
+        } else {
+            mehrzweckfeld += " ";
+            mehrzweckfeld += string;
+        }
+    }
+
+    public void setKontobezeichnung(String kontobezeichnung) {
+        this.kontobezeichnung = kontobezeichnung;
+    }
+
+    public String getKontobezeichnung() {
+        return kontobezeichnung;
+    }
 }
