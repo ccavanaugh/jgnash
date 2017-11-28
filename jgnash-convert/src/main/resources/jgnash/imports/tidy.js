@@ -28,7 +28,6 @@ function acceptTransaction(transaction) {
 }
 
 function processMemo(memo) {
-    print(importTransaction.getMemo());
     return capitalizeFirstLetter(memo.toLocaleLowerCase());
 }
 
