@@ -104,8 +104,9 @@ See the integrated help for command line options.
 Gradle is used as the primary build system for jGnash.  The Gradle Wrapper is included so that you do not need to
 install Gradle.  The Wrapper will automatically download the necessary dependencies.
 
+[NOTE]
 Depending on your OS (almost always Windows and OSX) the JCE Unlimited Strength Jurisdiction Policy Files for Java 8
-need to be installed for the unit tests to complete correctly.  If you do not want to install these files or are
+are needed for the unit tests to complete correctly.  If you do not want to install these files or are
 restricted by your locale, modify the test build or disable tests.  jGnash uses encryption for client / server
 communication and unit tests are performed to prevent regressions.
 
