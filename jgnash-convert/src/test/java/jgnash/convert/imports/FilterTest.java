@@ -32,6 +32,11 @@ public class FilterTest {
 
         ImportFilter importFilter = new ImportFilter("/jgnash/imports/tidy.js");
 
+        ImportTransaction importTransaction = new ImportTransaction();
+        importTransaction.setMemo("test");
+
+        importFilter.acceptTransaction(importTransaction);
+
         assertEquals("Fuzzy Wuzzy", importFilter.processPayee("FuZZy WUzzY"));
         assertEquals("Hair cut", importFilter.processMemo("HaIR cUT"));
         assertEquals("Tidy Memo and Payee fields", importFilter.getDescription());
