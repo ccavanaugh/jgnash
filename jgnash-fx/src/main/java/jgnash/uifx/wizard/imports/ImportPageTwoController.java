@@ -365,6 +365,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             expenseAccountColumn.setVisible(bank.isInvestmentAccount());
             typeColumn.setVisible(bank.isInvestmentAccount());
 
+            ImportUtils.matchPayee(list);
+
             // match up any pre-existing transactions
             GenericImport.matchTransactions(list, baseAccount);
 

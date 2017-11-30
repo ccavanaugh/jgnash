@@ -17,7 +17,13 @@
  */
 package jgnash.util;
 
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.ratios.SimpleRatio;
+
+import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Search Utility class.
@@ -27,6 +33,34 @@ import java.util.regex.Pattern;
 public class SearchUtils {
 
     private SearchUtils() {
+    }
+
+    @NotNull
+    public static String closestMatch(final String original, final List<String> stringList, final int threshold) {
+        String match = original;
+
+        if (!stringList.isEmpty()) {    // protect original against compares against an empty list
+
+            // scores the match ratio and returns a sorted map use all available cores
+            final TreeMap<Integer, String> treeMap = stringList.parallelStream()
+                    .collect(Collectors.toMap(s -> FuzzySearch.weightedRatio(original, s), s -> s, (a, b) -> b,
+                            TreeMap::new));
+
+            int lastResult = treeMap.lastKey();
+
+            if (lastResult > threshold) {
+
+                // the best match should be the last value
+                match = treeMap.lastEntry().getValue();
+
+                System.out.println(original + ", " + match + ", " + lastResult);
+            }
+
+            // top 3 matches limited by cutoff....
+            FuzzySearch.extractTop(original, stringList, new SimpleRatio(), 3, 50);
+        }
+
+        return match;
     }
 
     /**

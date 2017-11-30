@@ -29,5 +29,7 @@ dependencies {
         exclude(module: 'xml-apis')
     }
 
+    compile 'me.xdrop:fuzzywuzzy:1.1.9'
+
     testCompile group: 'org.apache.commons', name: 'commons-text', version: commons_text
 }

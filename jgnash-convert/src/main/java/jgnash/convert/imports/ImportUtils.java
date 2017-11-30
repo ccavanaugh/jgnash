@@ -17,6 +17,8 @@
  */
 package jgnash.convert.imports;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,6 +28,8 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
+import jgnash.engine.Transaction;
+import jgnash.util.SearchUtils;
 
 /**
  * Various utility methods used when importing transactions
@@ -74,6 +78,27 @@ public class ImportUtils {
         }
 
         return account;
+    }
+
+    public static void matchPayee(final List<ImportTransaction> importTransactions) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        // create a list of existing payees
+        List<String> payees = new ArrayList<>();
+
+        // Add memo and payee... Some Financial inst. will flip the two
+        for (final Transaction transaction : engine.getTransactions()) {
+            payees.add(transaction.getPayee());
+            payees.add(transaction.getMemo());
+        }
+
+        for (final ImportTransaction importTransaction : importTransactions) {
+            if (!importTransaction.getPayee().isEmpty()) {
+                importTransaction.setClosestMatchPayee(SearchUtils.closestMatch(importTransaction.getPayee(),
+                        payees, 50));
+            }
+        }
     }
 
     private static Account searchForRootType(final Account account, final AccountType accountType) {

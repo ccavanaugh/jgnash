@@ -68,6 +68,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     @NotNull
     private String payee = "";
 
+    private String closestMatchPayee = "";
+
     // OFX
     private String payeeId;
 
@@ -462,5 +464,13 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setAccountTo(String accountTo) {
         this.accountTo = accountTo;
+    }
+
+    public String getClosestMatchPayee() {
+        return closestMatchPayee;
+    }
+
+    public void setClosestMatchPayee(final String closestMatchPayee) {
+        this.closestMatchPayee = closestMatchPayee;
     }
 }
