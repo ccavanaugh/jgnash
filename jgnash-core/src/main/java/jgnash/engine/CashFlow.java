@@ -17,11 +17,14 @@
  */
 package jgnash.engine;
 
+import static java.lang.Math.abs;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Stores a history of cash flow items and calculates their internal rate of
@@ -35,6 +38,8 @@ public class CashFlow {
     private static final double DAYS_PER_YEAR = 365;
     private static final int MAX_ITERATIONS = 1000;
     
+    private static final Logger logger = Logger.getLogger(CashFlow.class.getName());
+    
     private class CashFlowItem {
         LocalDate date;
         BigDecimal amount;
@@ -42,6 +47,11 @@ public class CashFlow {
         public CashFlowItem(LocalDate date, BigDecimal amount) {
             this.date = date;
             this.amount = amount;
+        }
+        
+        @Override
+        public String toString() {
+            return String.format("[%s, %f]", date.toString(), amount);
         }
     }
     
@@ -77,6 +87,7 @@ public class CashFlow {
         
         // iteratively calculate the IRR with the secant method
         int i = 0;
+        boolean hasConverged;
         do {
             double npv = netPresentValue(referenceDate, rate);
             double newRate = rate - npv * (rate - lastRate) / (npv - lastNPV);
@@ -84,10 +95,19 @@ public class CashFlow {
             lastRate = rate;
             lastNPV = npv;
             rate = newRate;
+            
             i++;
-        } while (Math.abs(rate-lastRate) > 1.e-6 && i < MAX_ITERATIONS);
+            if (rate != 0 || lastRate != 0) {
+                hasConverged = abs(rate-lastRate)/(abs(rate)+abs(lastRate)) < 1.e-5;
+            } else {
+                hasConverged = true;
+            }
+        } while (!hasConverged && i < MAX_ITERATIONS);
         
-        if (i == MAX_ITERATIONS) rate = Double.NaN;
+        if (!hasConverged) {
+            rate = Double.NaN;
+            logger.log(Level.INFO, "IRR calculation did not converge. Data: {0}", cashFlows);
+        }
         
         return rate;
     }
