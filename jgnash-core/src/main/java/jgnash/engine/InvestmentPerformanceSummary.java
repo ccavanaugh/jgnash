@@ -342,7 +342,7 @@ public class InvestmentPerformanceSummary {
         // unrealized gains
         cashFlow.add(getEndDate(), totalShares.multiply(getMarketPrice(node, getEndDate())));
         
-        data.setInternalRateOfReturn(BigDecimal.valueOf(cashFlow.internalRateOfReturn()));
+        data.setInternalRateOfReturn(cashFlow.internalRateOfReturn());
     }
 
     private void runCalculations(final boolean recursive) {
@@ -450,7 +450,7 @@ public class InvestmentPerformanceSummary {
 
         private BigDecimal percentPortfolio = BigDecimal.ZERO;
         
-        private BigDecimal internalRateOfReturn = BigDecimal.ZERO;
+        private double internalRateOfReturn = 0.;
 
         SecurityPerformanceData(final SecurityNode node) {
             setNode(node);
@@ -512,7 +512,7 @@ public class InvestmentPerformanceSummary {
             return unrealizedGains;
         }
 
-        public BigDecimal getInternalRateOfReturn() {
+        public double getInternalRateOfReturn() {
             return internalRateOfReturn;
         }
 
@@ -572,7 +572,7 @@ public class InvestmentPerformanceSummary {
             this.percentPortfolio = percentPortfolio;
         }
 
-        public void setInternalRateOfReturn(final BigDecimal internalRateOfReturn) {
+        public void setInternalRateOfReturn(final double internalRateOfReturn) {
             this.internalRateOfReturn = internalRateOfReturn;
         }
     }

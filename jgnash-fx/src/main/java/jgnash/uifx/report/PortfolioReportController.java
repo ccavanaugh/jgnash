@@ -174,7 +174,8 @@ public class PortfolioReportController extends DynamicJasperReport {
                 case 9:
                     return pd.getTotalGainsPercentage();
                 case 10:
-                    return pd.getInternalRateOfReturn();
+                    double irr = pd.getInternalRateOfReturn();
+                    return (Double.isNaN(irr)) ? null : BigDecimal.valueOf(irr);
                 case 11:
                     return pd.getPercentPortfolio();
                 case 12:
