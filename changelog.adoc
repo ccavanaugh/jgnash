@@ -21,6 +21,7 @@
 * Reinstate archive capability
 
 == Release 2.33.3
+* 12/02/17 The Portfolio report now calculates Internal Rate of Return. (Swing, Fx) _[t-pa]_
 * 11/28/17 Improve MT940 import to handle Kontobezeichung (Swing, Fx) _[laeubi and sschuberth]_
 * 11/22/17 Prevent a deadlock due to a poor or corrupt printer configuration at the OS level. (Swing, Fx)
 * 11/22/17 Fixed a Platform thread exception on exit when the application was closed soon after closing a Reminder dialog. (Fx)
