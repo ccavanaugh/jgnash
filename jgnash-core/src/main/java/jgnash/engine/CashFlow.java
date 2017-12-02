@@ -40,11 +40,11 @@ public class CashFlow {
     
     private static final Logger logger = Logger.getLogger(CashFlow.class.getName());
     
-    private class CashFlowItem {
-        LocalDate date;
-        BigDecimal amount;
+    private static class CashFlowItem {
+        final LocalDate date;
+        final BigDecimal amount;
 
-        public CashFlowItem(LocalDate date, BigDecimal amount) {
+        CashFlowItem(final LocalDate date, final BigDecimal amount) {
             this.date = date;
             this.amount = amount;
         }
@@ -63,7 +63,7 @@ public class CashFlow {
      * @param date  the date of the cash flow
      * @param amount  the amount; negative for an investment, positive for a payout
      */
-    public void add(LocalDate date, BigDecimal amount) {
+    public void add(final LocalDate date, final BigDecimal amount) {
         cashFlows.add(new CashFlowItem(date, amount));
     }
     
@@ -119,10 +119,10 @@ public class CashFlow {
      * @param rate  the discount rate
      * @return the net present value
      */
-    public double netPresentValue(LocalDate referenceDate, double rate) {
+    private double netPresentValue(final LocalDate referenceDate, final double rate) {
         double npv = 0;
         
-        for (CashFlowItem item : cashFlows) {
+        for (final CashFlowItem item : cashFlows) {
             double timeDifference = referenceDate.until(item.date, DAYS) / DAYS_PER_YEAR;
             npv += item.amount.doubleValue() / Math.pow(1+rate, timeDifference);
         }
