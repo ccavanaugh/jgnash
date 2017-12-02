@@ -19,6 +19,8 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,7 +39,7 @@ public class CashFlowTest {
         cashFlow.add(today.plusDays(365), BigDecimal.valueOf(103));
         
         double irr = cashFlow.internalRateOfReturn();
-        Assert.assertEquals(irr, 0.03, 1.e-5);
+        Assert.assertEquals(0.03, irr,1.e-5);
     }
 
     @Test
@@ -49,7 +51,29 @@ public class CashFlowTest {
         cashFlow.add(today.minusDays(365), BigDecimal.valueOf(-100));
         
         double irr = cashFlow.internalRateOfReturn();
-        Assert.assertEquals(irr, -0.03, 1.e-5);
+        Assert.assertEquals(-0.03, irr,1.e-5);
+    }
+
+    @Test
+    public void testUglyData() {
+        CashFlow cashFlow = new CashFlow();
+
+        cashFlow.add(LocalDate.of(2012, Month.JANUARY, 9), new BigDecimal(0.1));
+        cashFlow.add(LocalDate.of(2012, Month.FEBRUARY, 2), new BigDecimal(1.03));
+        cashFlow.add(LocalDate.of(2012, Month.MARCH, 12), new BigDecimal(1.04));
+        cashFlow.add(LocalDate.of(2012, Month.APRIL, 12), new BigDecimal(0.91));
+        cashFlow.add(LocalDate.of(2012, Month.MAY, 10), new BigDecimal(0.87));
+        cashFlow.add(LocalDate.of(2012, Month.JUNE, 12), new BigDecimal(0.9));
+        cashFlow.add(LocalDate.of(2012, Month.JULY, 12), new BigDecimal(0.84));
+        cashFlow.add(LocalDate.of(2012, Month.AUGUST, 12), new BigDecimal(0.83));
+        cashFlow.add(LocalDate.of(2012, Month.SEPTEMBER, 13), new BigDecimal(0.83));
+        cashFlow.add(LocalDate.of(2012, Month.OCTOBER, 10), new BigDecimal(0.79));
+        cashFlow.add(LocalDate.of(2012, Month.NOVEMBER, 12), new BigDecimal(0.92));
+        cashFlow.add(LocalDate.of(2012, Month.DECEMBER, 2), new BigDecimal(8.885624));
+
+
+        double irr = cashFlow.internalRateOfReturn();
+        Assert.assertEquals(1, irr, 1.e-5);
     }
 
 }
