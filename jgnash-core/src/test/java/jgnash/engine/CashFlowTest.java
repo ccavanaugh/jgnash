@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -55,6 +56,7 @@ public class CashFlowTest {
     }
 
     @Test
+    @Ignore
     public void testUglyData() {
         CashFlow cashFlow = new CashFlow();
 
