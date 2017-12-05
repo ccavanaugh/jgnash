@@ -15,7 +15,7 @@ Published {localdate}
 == Legal
 [big]*jGnash 2.33.x Manual*
 
-Copyright (C) 2001-2017 Craig Cavanaugh
+Copyright (C) 2001-{docyear} Craig Cavanaugh
 
 jGnash comes with *ABSOLUTELY NO WARRANTY*.
 
@@ -429,7 +429,8 @@ Room for extra information about the account if desired.
 At any later time, the btn:[Modify] button may be used to change an existing account.
 If the account contains transactions, certain options may not be changed.
 
-****
+[NOTE]
+====
 jGnash does not have a place to specify an opening balance in keeping with correct practices for double entry accounting.
 
 *However, it is still possible to set and opening balance:*
@@ -440,7 +441,7 @@ your choice.  Most people will choose or create an "Opening Balance" account.
 This follows well known accounting practices.
 
 _If you are not concerned about correct accounting practices, you can create an Adjustment Transaction instead._
-****
+====
 
 [[_accounttypes]]
 === Account Types
@@ -650,6 +651,16 @@ Single Entry transaction into a Double Entry Transaction after you find the need
 ==== Transfer Transaction
 The Transfer tab provides a slightly faster way to move money between accounts without requiring as much information.
 If go back to edit the Transaction, the edits will be performed within the Deposit or Withdrawal forms.
+
+=== Investment Accounts
+Investment Accounts need to be populated correctly if the Portfolio report is to work correctly.
+
+* Accounts with prior history should purchase securities from the "Opening Balance" Equity account.  Ensure the quantity of
+securites is correct and use the current price.
+
+* Cash balances should be transfers from the "Opening Balance" Equity account.
+
+* Dividends, sells, etc. should occur after opening securities and cash balances are established.
 
 [[_budgets]]
 == Budgets
@@ -1189,10 +1200,14 @@ Many times, the column heading text may dictate the displayed width of a column.
 Try choosing a proportional font with condensed spacing.
 You may also want to check the default paper size and adjust if needed.
 
-==== My PDF exports are missing information or don't look correct ona different computers
+==== My PDF exports are missing information or don't look correct on different computers
 Not all fonts are able to be embedded within a [path]_PDF_ file.
 You may need to experiment with different fonts to achieve good portability.
 In most cases, the defaults jGnash chooses will give you good results.
+
+==== The IRR is not being displayed in my Portfolio report ====
+Your investment account may not be setup properly. Ensure that stocks have been added
+or purchased prior to sells, buys, dividends, etc.
 
 [[_administration]]
 == Administration
@@ -1422,6 +1437,11 @@ java -jar jGnash2.jar --shutdown
 == Frequently Asked Questions
 
 [qanda]
+Where do I set my opening account balance?::
+Create an Equity Account called "Opening Balances" and transfer money from the Equity account to they
+new account which will establish an opening balance.  The "Opening Balances" account may be hidden
+later if you do not want it visible.
+
 What happened to transaction categories?::
 Most commercial personal finance applications use categories to help track spending and income.
 jGnash uses Income and Expense accounts instead of categories for tracking where your money
