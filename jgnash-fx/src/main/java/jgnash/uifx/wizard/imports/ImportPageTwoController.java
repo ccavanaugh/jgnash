@@ -329,6 +329,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                 // Process transactions with the import filter
                 for (final ImportFilter importFilter : importFilterList) {
+                    importFilter.acceptTransaction(t);  // pass the import transaction for manipulation by the script
                     t.setMemo(importFilter.processMemo(t.getMemo()));
                     t.setPayee(importFilter.processPayee(t.getPayee()));
                 }

@@ -59,17 +59,17 @@ to operate correctly.
 
 ==== Mac OS X Installation:
 
-For Mac OS X users, a minimum of Mac OS X 10.7 is required unless you want to experiment with the SoyLatte Java distribution.
+For Mac OS X users, a minimum of Mac OS X 10.8.3 is required
 
-. Copy the jGnash folder to `/Applications`.
-. Open AppleScript Editor.
+. Copy the jGnash folder to `/Applications` and remove the version so the final path looks like `/Applications/jGnash`.
+. Open the AppleScript Editor.
 
 Create the following script:
 
 [source]
 ----
 try
-    do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/1.8.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/lib/jgnash-fx-x.jar"
+    do shell script "/Applications/jGnash/jGnashFx"
 end try
 ----
 
@@ -103,6 +103,12 @@ See the integrated help for command line options.
 
 Gradle is used as the primary build system for jGnash.  The Gradle Wrapper is included so that you do not need to
 install Gradle.  The Wrapper will automatically download the necessary dependencies.
+
+[NOTE]
+Depending on your OS (almost always Windows and OSX) the JCE Unlimited Strength Jurisdiction Policy Files for Java 8
+are needed for the unit tests to complete correctly.  If you do not want to install these files or are
+restricted by your locale, modify the test build or disable tests.  jGnash uses encryption for client / server
+communication and unit tests are performed to prevent regressions.
 
 To build jGnash you'll need the following software installed and correctly configured on your system:
 
@@ -164,3 +170,5 @@ stability with the Oracle release or OpenJDK with OpenJFX.
 The IDE used for the development of jGnash is:
 
 image:https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJIDEA.png["IntelliJIDEA Logo", height=90, link="https://www.jetbrains.com/idea/"]
+
+Travis-CI Build Status image:https://travis-ci.org/ccavanaugh/jgnash.svg?branch=master["Build Status", link="https://travis-ci.org/ccavanaugh/jgnash"]

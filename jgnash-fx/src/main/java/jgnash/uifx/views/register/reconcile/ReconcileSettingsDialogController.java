@@ -22,12 +22,14 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Objects;
+import java.util.prefs.Preferences;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -52,6 +54,8 @@ import jgnash.util.ResourceUtils;
  */
 public class ReconcileSettingsDialogController {
 
+    private static final String CALC_BAL = "calcClosingBalance";
+
     private static final int FUZZY_DATE_RANGE = 2;
 
     @InjectFXML
@@ -67,13 +71,20 @@ public class ReconcileSettingsDialogController {
     private DecimalTextField closingBalanceTextField;
 
     @FXML
+    private CheckBox autoFillClosingBalanceCheckBox;
+
+    @FXML
     private DatePickerEx datePicker;
 
     private final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
+    private final Preferences preferences = Preferences.userNodeForPackage(ReconcileSettingsDialogController.class);
+
     @FXML
     private void initialize() {
         buttonBar.buttonOrderProperty().bind(Options.buttonOrderProperty());
+
+        autoFillClosingBalanceCheckBox.selectedProperty().set(preferences.getBoolean(CALC_BAL, false));
 
         accountProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -145,6 +156,20 @@ public class ReconcileSettingsDialogController {
         datePicker.setValue(statementDate);
         openingBalanceTextField.setDecimal(openingBalance);
         closingBalanceTextField.setDecimal(closingBalance);
+    }
+
+    @FXML
+    private void handleUpdateBalance() {
+        if (autoFillClosingBalanceCheckBox.isSelected()) {
+            final Account account = accountProperty().get();
+
+            // Balance at the statement date
+            final BigDecimal closingBalance = AccountBalanceDisplayManager
+                    .convertToSelectedBalanceMode(account.getAccountType(), account.getBalance(datePicker.getValue()));
+            closingBalanceTextField.setDecimal(closingBalance);
+        }
+
+        preferences.putBoolean(CALC_BAL, autoFillClosingBalanceCheckBox.isSelected());
     }
 
     @FXML

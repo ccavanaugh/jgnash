@@ -39,6 +39,10 @@ import net.bzzt.swift.mt940.Mt940Record;
  */
 public class Mt940Parser {
 
+    private static final String PREFIX_MERHZWECKFELD = ":86:";
+    private static final String PREFIX_KONTOBEZEICHNUNG = ":25:";
+    private static final String PREFIX_ENTRY_START = ":61:";
+
     /**
      * Parse the Mt940-file. Mt940 records are delimited by '-'.
      *
@@ -126,11 +130,16 @@ public class Mt940Parser {
         List<String> mergedLines = mergeLines(recordLines);
 
         Mt940Entry currentEntry = null;
+        String currentAccount = null;
         for (String line : mergedLines) {
-            if (line.startsWith(":61:")) {
-                currentEntry = nextEntry(mt940Record.getEntries(), currentEntry);
+            if (line.startsWith(PREFIX_KONTOBEZEICHNUNG)) {
+                currentAccount = line.substring(PREFIX_KONTOBEZEICHNUNG.length());
+            }
 
-                line = line.substring(4);
+            if (line.startsWith(PREFIX_ENTRY_START)) {
+                currentEntry = nextEntry(mt940Record.getEntries(), currentEntry, currentAccount);
+
+                line = line.substring(PREFIX_ENTRY_START.length());
                 line = parseDatumJJMMTT(currentEntry, line);
                 // for now don't handle the buchungsdatum. It is optional.
                 if (startsWithBuchungsDatum(line)) {
@@ -140,13 +149,13 @@ public class Mt940Parser {
                 line = parseSollHabenKennung(currentEntry, line);
                 line = parseBetrag(currentEntry, line);
             }
-            if (line.startsWith(":86:") && currentEntry != null) {
-                currentEntry.addToMehrzweckfeld(line.substring(4));
+            if (line.startsWith(PREFIX_MERHZWECKFELD) && currentEntry != null) {
+                currentEntry.addToMehrzweckfeld(line.substring(PREFIX_MERHZWECKFELD.length()));
             }
         }
 
         // add the last one:
-        nextEntry(mt940Record.getEntries(), currentEntry);
+        nextEntry(mt940Record.getEntries(), currentEntry, currentAccount);
 
         return mt940Record;
     }
@@ -158,11 +167,14 @@ public class Mt940Parser {
      * @param previousEntry entry to add if not null;
      * @return new working {@code Mt940Entry}
      */
-    private static Mt940Entry nextEntry(List<Mt940Entry> entries, Mt940Entry previousEntry) {
+    private static Mt940Entry nextEntry(List<Mt940Entry> entries, Mt940Entry previousEntry, String currentAccount) {
         if (previousEntry != null) {
             entries.add(previousEntry);
         }
-        return new Mt940Entry();
+
+        Mt940Entry entry = new Mt940Entry();
+        entry.setKontobezeichnung(currentAccount);
+        return entry;
     }
 
     /**

@@ -16,7 +16,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Normalizes the case of the payee and memo fields
+/*
+This scripts normalizes the case of the payee and memo fields
+*/
+
+var importTransaction;  // place holder for the passed ImportTransaction
+
+/* This will be called first and passed the ImportTransaction */
+function acceptTransaction(transaction) {
+    importTransaction = transaction;    // do nothing with it in this script
+}
 
 function processMemo(memo) {
     return capitalizeFirstLetter(memo.toLocaleLowerCase());

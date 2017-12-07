@@ -1,0 +1,14 @@
+language: java
+
+sudo: required
+
+before_install:
+  - sudo add-apt-repository ppa:webupd8team/java -y
+  - sudo apt-get update -q
+  - sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 -y
+  - sudo apt install oracle-java8-unlimited-jce-policy -y
+  #  - sudo apt-get install openjfx
+
+jdk:
+    - oraclejdk8
+#    - openjdk8

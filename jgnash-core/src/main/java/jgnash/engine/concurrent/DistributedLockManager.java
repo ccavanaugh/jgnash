@@ -269,7 +269,7 @@ public class DistributedLockManager implements LockManager {
     private class Initializer extends ChannelInitializer<SocketChannel> {
 
         @Override
-        public void initChannel(final SocketChannel ch) throws Exception {
+        public void initChannel(final SocketChannel ch) {
             ChannelPipeline pipeline = ch.pipeline();
 
             // Add the text line codec combination first,

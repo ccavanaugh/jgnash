@@ -38,6 +38,10 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.util.FileUtils;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.QuoteMode;
+
 import static java.time.temporal.ChronoField.*;
 
 /**
@@ -59,14 +63,15 @@ public class CsvExport {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
 
+        final CSVFormat csvFormat = CSVFormat.EXCEL.withQuoteMode(QuoteMode.ALL);
+
         try (final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(Files.newOutputStream(Paths.get(fileName)),
                 StandardCharsets.UTF_8);
-
-             final AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(outputStreamWriter))) {
+             final CSVPrinter writer = new CSVPrinter(new BufferedWriter(outputStreamWriter), csvFormat)) {
 
             outputStreamWriter.write('\ufeff'); // write UTF-8 byte order mark to the file for easier imports
 
-            writer.writeNextRow("Account", "Number", "Debit", "Credit", "Balance", "Date", "Timestamp",
+            writer.printRecord("Account", "Number", "Debit", "Credit", "Balance", "Date", "Timestamp",
                     "Memo", "Payee", "Reconciled");
 
             // write the transactions
@@ -101,7 +106,7 @@ public class CsvExport {
                 final String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED
                         ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
-                writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date, timeStamp,
+                writer.printRecord(account.getName(), transaction.getNumber(), debit, credit, balance, date, timeStamp,
                         transaction.getMemo(), transaction.getPayee(), reconciled);
             }
         } catch (final IOException e) {

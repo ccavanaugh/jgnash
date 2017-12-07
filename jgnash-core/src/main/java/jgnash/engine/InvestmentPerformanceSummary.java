@@ -43,7 +43,7 @@ public class InvestmentPerformanceSummary {
     private LocalDate endDate;
 
     private final Map<SecurityNode, SecurityPerformanceData> performanceData = new TreeMap<>();
-
+    
     private List<Transaction> transactions;
 
     private CurrencyNode baseCurrency;
@@ -196,7 +196,7 @@ public class InvestmentPerformanceSummary {
                             totalSales = totalSales.add(t.getTotalWithoutCashTransfer(t.getInvestmentAccount()).multiply(rate));
                             break;
                         case REINVESTDIV:
-                            totalSales = totalSales.add(t.getTotal(t.getInvestmentAccount()).multiply(rate)).subtract(fees);
+                            totalSales = totalSales.add(t.getTotalWithoutCashTransfer(t.getInvestmentAccount()).multiply(rate)).subtract(fees);
                             break;
                         default:
                             break;
@@ -282,6 +282,69 @@ public class InvestmentPerformanceSummary {
         }
     }
 
+    /**
+     * Calculates the internal rate of return of a given security.
+     * 
+     * @param data SecurityPerformanceData object to save the result in
+     * @param transactions transactions to obtain the cash flow
+     */
+    private void calculateInternalRateOfReturn(final SecurityPerformanceData data, final List<Transaction> transactions) {
+        SecurityNode node = data.getNode();
+
+        CashFlow cashFlow = new CashFlow();
+        
+        BigDecimal totalShares = BigDecimal.ZERO;
+
+        for (Transaction transaction : transactions) {
+            if (transaction instanceof InvestmentTransaction) {
+                InvestmentTransaction t = (InvestmentTransaction) transaction;
+
+                if (t.getSecurityNode().equals(node)) {
+
+                    BigDecimal rate = baseCurrency.getExchangeRate(t.getInvestmentAccount().getCurrencyNode());
+
+                    BigDecimal fees = t.getFees().multiply(rate);
+                    BigDecimal quantity = t.getQuantity();
+                    BigDecimal price = t.getPrice().multiply(rate);
+
+                    switch (t.getTransactionType()) {
+                        case BUYSHARE:
+                            totalShares = totalShares.add(quantity);
+                            cashFlow.add(t.getLocalDate(), price.multiply(quantity).add(fees).negate());
+                            break;
+                        case SELLSHARE:
+                            totalShares = totalShares.subtract(quantity);
+                            cashFlow.add(t.getLocalDate(), price.multiply(quantity).subtract(fees));
+                            break;
+                        case SPLITSHARE:
+                        case ADDSHARE:
+                            totalShares = totalShares.add(quantity);
+                            break;
+                        case MERGESHARE:
+                        case REMOVESHARE:
+                            totalShares = totalShares.subtract(quantity);
+                            break;
+                        case DIVIDEND:
+                        case RETURNOFCAPITAL:
+                            cashFlow.add(t.getLocalDate(), t.getTotalWithoutCashTransfer(t.getInvestmentAccount()).multiply(rate));
+                            break;
+                        case REINVESTDIV:
+                            totalShares = totalShares.add(quantity);
+                            cashFlow.add(t.getLocalDate(), t.getTotalWithoutCashTransfer(t.getInvestmentAccount()).multiply(rate));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        // unrealized gains
+        cashFlow.add(getEndDate(), totalShares.multiply(getMarketPrice(node, getEndDate())));
+        
+        data.setInternalRateOfReturn(cashFlow.internalRateOfReturn());
+    }
+
     private void runCalculations(final boolean recursive) {
 
         Set<SecurityNode> nodes = account.getSecurities();
@@ -304,6 +367,8 @@ public class InvestmentPerformanceSummary {
             calculateUnrealizedGains(data);
 
             calculateTotalGains(data);
+            
+            calculateInternalRateOfReturn(data, transactions);
         }
 
         calculatePercentPortfolio();
@@ -338,6 +403,7 @@ public class InvestmentPerformanceSummary {
             b.append("sharesSold: ").append(data.getSharesSold().toPlainString()).append(lineSep);
             b.append("avgSalePrice: ").append(data.getAvgSalePrice().toPlainString()).append(lineSep);
             b.append("percentPortfolio: ").append(percentageFormat.format(data.getPercentPortfolio())).append(lineSep);
+            b.append("internalRateOfReturn: ").append(percentageFormat.format(data.getInternalRateOfReturn())).append(lineSep);
             b.append(lineSep);
         }
 
@@ -383,6 +449,8 @@ public class InvestmentPerformanceSummary {
         private BigDecimal totalGainsPercentage = BigDecimal.ZERO;
 
         private BigDecimal percentPortfolio = BigDecimal.ZERO;
+        
+        private double internalRateOfReturn = 0.;
 
         SecurityPerformanceData(final SecurityNode node) {
             setNode(node);
@@ -444,6 +512,10 @@ public class InvestmentPerformanceSummary {
             return unrealizedGains;
         }
 
+        public double getInternalRateOfReturn() {
+            return internalRateOfReturn;
+        }
+
         void setCostBasisPerShare(final BigDecimal costBasis) {
             this.costBasisPerShare = costBasis;
         }
@@ -498,6 +570,10 @@ public class InvestmentPerformanceSummary {
 
         public void setPercentPortfolio(final BigDecimal percentPortfolio) {
             this.percentPortfolio = percentPortfolio;
+        }
+
+        public void setInternalRateOfReturn(final double internalRateOfReturn) {
+            this.internalRateOfReturn = internalRateOfReturn;
         }
     }
 }

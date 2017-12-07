@@ -1,5 +1,5 @@
 plugins {
-    id 'edu.sc.seis.launch4j' version '2.3.0'
+    id 'edu.sc.seis.launch4j' version '2.4.2'
 }
 
 apply plugin: 'distribution'
