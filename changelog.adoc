@@ -21,6 +21,7 @@
 * Reinstate archive capability
 
 == Release 2.33.3
+* 12/10/17 Another significant update for the zh-ch locale translation. (Swing, Fx) _[kevinzhwl]_
 * 12/06/16 Updated to latest Netty dependency.
 * 12/02/17 The Portfolio report now calculates Internal Rate of Return. (Swing, Fx) _[t-pa]_
 * 11/28/17 Improve MT940 import to handle Kontobezeichung (Swing, Fx) _[laeubi and sschuberth]_
