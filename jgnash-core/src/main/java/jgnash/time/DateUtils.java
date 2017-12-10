@@ -91,14 +91,10 @@ public class DateUtils {
 
         preferences.put(DATE_FORMAT, pattern);
 
-        try {
-            shortDateFormatter = DateTimeFormatter.ofPattern(pattern).withResolverStyle(ResolverStyle.SMART);
+        shortDateFormatter = DateTimeFormatter.ofPattern(pattern).withResolverStyle(ResolverStyle.SMART);
 
-            shortDateManualEntryFormatter = DateTimeFormatter.ofPattern(getShortDateManualEntryPattern())
-                    .withResolverStyle(ResolverStyle.SMART);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
-        }
+        shortDateManualEntryFormatter = DateTimeFormatter.ofPattern(getShortDateManualEntryPattern())
+                .withResolverStyle(ResolverStyle.SMART);
     }
 
     public static Set<String> getAvailableDateFormats() {
