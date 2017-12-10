@@ -82,9 +82,16 @@ public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, S
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         SecurityHistoryEvent event = (SecurityHistoryEvent) o;
+
         return Objects.equals(type, event.type) && date.compareTo(((SecurityHistoryEvent) o).getDate()) == 0;
     }
 

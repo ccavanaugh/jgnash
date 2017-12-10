@@ -74,7 +74,9 @@ public class CashFlow {
      * @return an approximation of the (annualized) internal rate of return
      */
     public double internalRateOfReturn() {
-        if (cashFlows.isEmpty()) return 0.;
+        if (cashFlows.isEmpty()) {
+            return 0.0;
+        }
         
         // the reference date is arbitrary, but for better numerical accuracy,
         // use one of the actual dates in the cash flow history
