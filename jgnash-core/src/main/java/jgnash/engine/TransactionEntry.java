@@ -28,13 +28,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Transaction Entry
@@ -362,22 +359,22 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        TransactionEntry e = null;
-
-        try {
-            e = (TransactionEntry) super.clone();
-            e.id = 0; // clones id must be reset
-        } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(TransactionEntry.class.getName()).log(Level.SEVERE, ex.toString(), ex);
-        }
+        final TransactionEntry e = (TransactionEntry) super.clone();
+        e.id = 0; // clones id must be reset
 
         return e;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         TransactionEntry that = (TransactionEntry) o;
         return Objects.equals(transactionTag, that.transactionTag) &&
                 Objects.equals(debitAccount, that.debitAccount) &&
