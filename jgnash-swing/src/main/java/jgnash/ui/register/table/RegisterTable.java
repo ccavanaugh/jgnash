@@ -104,7 +104,7 @@ public class RegisterTable extends FormattedJTable {
             if (QuantityStyle.class.isAssignableFrom(getColumnClass(column)) && t instanceof InvestmentTransaction && c instanceof JLabel) {
                 ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
 
-                if (value != null && value instanceof Number) {
+                if (value instanceof Number) {
                     final NumberFormat numberFormat = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) t).getSecurityNode());
                     ((JLabel) c).setText(numberFormat.format(value));
                 } else {
@@ -114,14 +114,14 @@ public class RegisterTable extends FormattedJTable {
         }
 
         if (LocalDate.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
-            if (value != null && value instanceof LocalDate) {
+            if (value instanceof LocalDate) {
                 ((JLabel) c).setText(dateFormatter.format((TemporalAccessor) value));
             }
         } else if (FullCommodityStyle.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
 
             ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
 
-            if (value != null && value instanceof Number) {
+            if (value instanceof Number) {
 
                 if (!isRowSelected(row) && ((BigDecimal) value).signum() < 0) {
                     c.setForeground(Color.RED);
@@ -135,7 +135,7 @@ public class RegisterTable extends FormattedJTable {
 
             ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
 
-            if (value != null && value instanceof Number) {
+            if (value instanceof Number) {
                 ((JLabel) c).setText(shortFormat.format(value));
             } else {
                 ((JLabel) c).setText("");
