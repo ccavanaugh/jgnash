@@ -1,0 +1,4 @@
+You may change the QIF transactions here before completing the import.
+在完成导入前，您可以修改QIF交易
+You may want to review the destination account to better organize your income and expenses.
+您也许希望检查目标的账户以便更好的安排收支

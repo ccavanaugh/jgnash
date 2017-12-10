@@ -80,7 +80,7 @@ public class RecTransaction implements Comparable<RecTransaction> {
     public boolean equals(final Object obj) {
         boolean result = false;
 
-        if (obj != null && obj instanceof RecTransaction) {
+        if (obj instanceof RecTransaction) {
             final RecTransaction other = (RecTransaction) obj;
 
             if (getTransaction().equals(other.getTransaction()) && reconciledState == other.reconciledState) {

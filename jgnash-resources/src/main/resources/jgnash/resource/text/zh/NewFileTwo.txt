@@ -1,0 +1,4 @@
+The default currency should be the currency you use most.  In most cases, only one currency will be used which will be your local currency.
+默认的币种应是您使最常用的货币种类。在大多数情况下，只有您所在地使用的货币是唯一的币种。
+All accounts created within jGnash will use this currency by default, but other currencies can be selected when creating new accounts.
+jGnash创建的所有账户都将只是用这一货币作为默认币种，但在创建新账户时也可以选择其他币种。

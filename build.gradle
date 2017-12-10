@@ -15,30 +15,35 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '2.33.2'
+    version = '2.33.3'
 
     project.ext {
+        junitVersion = '4.12'
+
         joptSimpleVerion = '5.0.4'
 
+        apachePoiVersion = '3.17'
         commons_cvs = '1.5'
         commons_text = '1.1'
 
-        junitVersion = '4.12'
         hamcrestVersion = '1.3'
 
-        c3p0Version = '0.9.5.2'
         h2Version = '1.4.196'
-        hibernateVersion = '5.2.12.Final'
-        hibernateJPAVersion = '1.0.0.Final'
         hsqldbVersion = '2.4.0'
 
         xstreamVersion = '1.4.10'
-        apachePoiVersion = '3.16'
-        dynamicJasperVersion = '5.1.0'
-        jasperReportsVersion = '6.4.1'
-        itextVersion = '2.1.7.js6'
-        nettyVersion = '4.1.16.Final'
         kxmlVersion = '2.3.0'
+
+        hibernateVersion = '5.2.12.Final'
+        hibernateJPAVersion = '1.0.0.Final'
+
+        c3p0Version = '0.9.5.2'
+
+        dynamicJasperVersion = '5.1.0'
+        jasperReportsVersion = '6.4.3'
+        itextVersion = '2.1.7.js6'
+
+        nettyVersion = '4.1.17.Final'
 
         slf4jVersion = '1.7.21'
         log4jVersion = '1.2.17'
@@ -87,7 +92,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
+    gradleVersion = '4.4'
 }
 
 task distZip {

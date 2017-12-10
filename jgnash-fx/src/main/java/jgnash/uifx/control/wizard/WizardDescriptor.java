@@ -32,7 +32,7 @@ class WizardDescriptor {
 
     private String description = "";
 
-    public WizardDescriptor(@NotNull final String description) {
+    WizardDescriptor(@NotNull final String description) {
         Objects.requireNonNull(description);
 
         setDescription(description);
@@ -59,8 +59,14 @@ class WizardDescriptor {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         WizardDescriptor that = (WizardDescriptor) o;
         return Objects.equals(getDescription(), that.getDescription());
     }

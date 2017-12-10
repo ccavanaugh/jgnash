@@ -61,8 +61,8 @@ to operate correctly.
 
 For Mac OS X users, a minimum of Mac OS X 10.8.3 is required
 
-. Copy the jGnash folder to `/Applications`.
-. Open AppleScript Editor.
+. Copy the jGnash folder to `/Applications` and remove the version so the final path looks like `/Applications/jGnash`.
+. Open the AppleScript Editor.
 
 Create the following script:
 

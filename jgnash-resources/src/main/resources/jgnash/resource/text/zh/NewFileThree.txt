@@ -1,0 +1,4 @@
+The currencies available for account creation can be selected below.  If you do not wish to use multiple currencies, do not change this form.
+在下面可以选择创建账户时可用的币种。如果你不愿意使用多币种，则无需做改变。
+Currencies can be added and removed at any time.
+可以在任何时候添加或删除币种。

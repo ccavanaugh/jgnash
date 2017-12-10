@@ -1,0 +1,4 @@
+Enter the the name of the database you would like to use.
+键入您希望使用的数据库名称。
+In most cases, the defaults will be fine, but advanced users can change them if needed.
+在大多数情况下，默认设置可以工作良好，但对于资深用户可以按需修改。

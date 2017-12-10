@@ -1,0 +1,2 @@
+Choose a destination account for the imported transactions.
+为导入交易记录选择一个目标账户

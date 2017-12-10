@@ -56,7 +56,7 @@ public class LocaleObject implements Comparable<LocaleObject> {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && obj instanceof LocaleObject) {
+        if (obj instanceof LocaleObject) {
             return equals((LocaleObject) obj);
         }
         return false;

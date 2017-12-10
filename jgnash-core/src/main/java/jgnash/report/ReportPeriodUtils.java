@@ -32,6 +32,10 @@ import jgnash.util.NotNull;
  */
 public class ReportPeriodUtils {
 
+    private ReportPeriodUtils() {
+        // utility class
+    }
+
     public static class Descriptor {
 
         private final LocalDate startDate;

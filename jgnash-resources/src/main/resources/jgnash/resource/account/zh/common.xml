@@ -1,0 +1,512 @@
+<object-stream>
+  <RootAccount id="1" placeHolder="false" locked="false" visible="true" name="常用账户" description="Common Accounts">
+    <accountType>ROOT</accountType>
+    <notes></notes>
+    <currencyNode id="3" locale="zh_CN" symbol="RMB" scale="2" prefix="￥" suffix="" description="zh_CN"/>
+    <children id="4">
+      <Account id="5" placeHolder="true" locked="false" visible="true" name="银行类" description="Bank Accounts">
+        <accountType>BANK</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="7">
+          <Account id="8" placeHolder="false" locked="false" visible="true" name="现金" description="Cash Account">
+            <accountType>BANK</accountType>
+            <parentAccount reference="5"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="9"/>
+            <securities id="10"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="11"/>
+          </Account>
+          <Account id="12" placeHolder="false" locked="false" visible="true" name="储蓄" description="Savings Account">
+            <accountType>BANK</accountType>
+            <parentAccount reference="5"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="13"/>
+            <securities id="14"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="15"/>
+          </Account>
+        </children>
+        <securities id="16"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="17"/>
+      </Account>
+      <Account id="18" placeHolder="true" locked="false" visible="true" name="支出类" description="Expense Accounts">
+        <accountType>EXPENSE</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="20">
+          <Account id="21" placeHolder="true" locked="false" visible="true" name="车辆类" description="Description">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="22">
+              <Account id="23" placeHolder="false" locked="false" visible="true" name="汽油" description="Fuel Expenses">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="21"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="24"/>
+                <securities id="25"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="26"/>
+              </Account>
+              <Account id="27" placeHolder="false" locked="false" visible="true" name="车险" description="Auto Insurance">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="21"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="28"/>
+                <securities id="29"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="30"/>
+              </Account>
+              <Account id="31" placeHolder="false" locked="false" visible="true" name="保养维护" description="Auto Services">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="21"/>
+                <notes>Oil, tires, etc.</notes>
+                <currencyNode reference="3"/>
+                <children id="32"/>
+                <securities id="33"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="34"/>
+              </Account>
+            </children>
+            <securities id="35"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="36"/>
+          </Account>
+          <Account id="37" placeHolder="true" locked="false" visible="true" name="账单类" description="Bills">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="38">
+              <Account id="39" placeHolder="false" locked="false" visible="true" name="手机" description="Cell Phone">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="37"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="40"/>
+                <securities id="41"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="42"/>
+              </Account>
+              <Account id="43" placeHolder="false" locked="false" visible="true" name="固定电话" description="Telephone">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="37"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="44"/>
+                <securities id="45"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="46"/>
+              </Account>
+            </children>
+            <securities id="47"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="48"/>
+          </Account>
+          <Account id="49" placeHolder="true" locked="false" visible="true" name="食物" description="Food">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="50">              
+              <Account id="51" placeHolder="false" locked="false" visible="true" name="正餐" description="Dining Out">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="49"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="52"/>
+                <securities id="53"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="54"/>
+              </Account>
+              <Account id="55" placeHolder="false" locked="false" visible="true" name="杂货" description="Groceries">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="49"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="56"/>
+                <securities id="57"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="58"/>
+              </Account>
+            </children>
+            <securities id="59"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="60"/>
+          </Account>
+          <Account id="61" placeHolder="true" locked="false" visible="true" name="健康医疗类" description="Health">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="62">
+              <Account id="63" placeHolder="false" locked="false" visible="true" name="医疗保险" description="Medical insurance">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="61"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="64"/>
+                <securities id="65"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="66"/>
+              </Account>
+              <Account id="67" placeHolder="false" locked="false" visible="true" name="大宗医疗费用" description="Major Medical Expense">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="61"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="68"/>
+                <securities id="69"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="70"/>
+              </Account>
+              <Account id="71" placeHolder="false" locked="false" visible="true" name="药物药剂" description="Medication">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="61"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="72"/>
+                <securities id="73"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="74"/>
+              </Account>
+              <Account id="75" placeHolder="false" locked="false" visible="true" name="诊所就医" description="Office Visits">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="61"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="76"/>
+                <securities id="77"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="78"/>
+              </Account>
+              <Account id="79" placeHolder="false" locked="false" visible="true" name="健身" description="Wellness">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="61"/>
+                <notes>Hait cuts, etc.</notes>
+                <currencyNode reference="3"/>
+                <children id="80"/>
+                <securities id="81"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="82"/>
+              </Account>
+            </children>
+            <securities id="83"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="84"/>
+          </Account>
+          <Account id="85" placeHolder="true" locked="false" visible="true" name="家务类" description="Houseold">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="86">
+              <Account id="87" placeHolder="false" locked="false" visible="true" name="家具饰品" description="Appliances and Furniture">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="85"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="88"/>
+                <securities id="89"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="90"/>
+              </Account>
+              <Account id="91" placeHolder="false" locked="false" visible="true" name="衣物寝具" description="Clothing and Bedding">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="85"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="92"/>
+                <securities id="93"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="94"/>
+              </Account>
+              <Account id="95" placeHolder="false" locked="false" visible="true" name="电器" description="Electronics for the house">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="85"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="96"/>
+                <securities id="97"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="98"/>
+              </Account>
+              <Account id="99" placeHolder="false" locked="false" visible="true" name="其他耗材" description="Misc Consumables">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="85"/>
+                <notes>Stamps, batteries, etc</notes>
+                <currencyNode reference="3"/>
+                <children id="100"/>
+                <securities id="101"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="102"/>
+              </Account>
+              <Account id="103" placeHolder="false" locked="false" visible="true" name="厕卫用品" description="Toiletries">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="85"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="104"/>
+                <securities id="105"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="106"/>
+              </Account>
+            </children>
+            <securities id="107"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="108"/>
+          </Account>
+          <Account id="109" placeHolder="false" locked="false" visible="true" name="未分类" description="Miscellaneous">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="110">
+              <Account id="111" placeHolder="false" locked="false" visible="true" name="银行手续费" description="Bank Fees">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="109"/>
+                <notes>ATM Fees, OD protection, etc.</notes>
+                <currencyNode reference="3"/>
+                <children id="112"/>
+                <securities id="113"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="114"/>
+              </Account>
+              <Account id="115" placeHolder="false" locked="false" visible="true" name="慈善捐助" description="Charitable Contributions">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="109"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="116"/>
+                <securities id="117"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="118"/>
+              </Account>
+              <Account id="119" placeHolder="false" locked="false" visible="true" name="人寿保险" description="Life Insurance">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="109"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="120"/>
+                <securities id="121"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="122"/>
+              </Account>
+            </children>
+            <securities id="123"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="124"/>
+          </Account>
+          <Account id="125" placeHolder="true" locked="false" visible="true" name="消遣类" description="">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="126">
+              <Account id="127" placeHolder="false" locked="false" visible="true" name="书籍杂志" description="Books and Magazines">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="125"/>
+                <notes>Books and magzines</notes>
+                <currencyNode reference="3"/>
+                <children id="128"/>
+                <securities id="129"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="130"/>
+              </Account>
+              <Account id="131" placeHolder="false" locked="false" visible="true" name="电影及演出" description="">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="125"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="132"/>
+                <securities id="133"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="134"/>
+              </Account>
+              <Account id="135" placeHolder="false" locked="false" visible="true" name="爱好" description="Misc Hobbies">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="125"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="136"/>
+                <securities id="137"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="138"/>
+              </Account>
+              <Account id="139" placeHolder="false" locked="false" visible="true" name="住宿" description="Hotels / Etc.">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="125"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="140"/>
+                <securities id="141"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="142"/>
+              </Account>
+              <Account id="143" placeHolder="false" locked="false" visible="true" name="其他杂项" description="Misc">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="125"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="144"/>
+                <securities id="145"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="146"/>
+              </Account>
+              <Account id="147" placeHolder="false" locked="false" visible="true" name="订阅" description="Magazine Subscriptions">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="125"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="148"/>
+                <securities id="149"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="150"/>
+              </Account>
+            </children>
+            <securities id="151"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="152"/>
+          </Account>
+          <Account id="153" placeHolder="true" locked="false" visible="true" name="税费类" description="Description">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="18"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="154">
+              <Account id="155" placeHolder="false" locked="false" visible="true" name="其他税费" description="County tax">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="153"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="156"/>
+                <securities id="157"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="158"/>
+              </Account>
+              <Account id="159" placeHolder="false" locked="false" visible="true" name="国税" description="Description">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="153"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="160"/>
+                <securities id="161"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="162"/>
+              </Account>
+              <Account id="163" placeHolder="false" locked="false" visible="true" name="医疗保险" description="">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="153"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="164"/>
+                <securities id="165"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="166"/>
+              </Account>
+              <Account id="167" placeHolder="false" locked="false" visible="true" name="社会保险" description="">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="153"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="168"/>
+                <securities id="169"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="170"/>
+              </Account>
+              <Account id="171" placeHolder="false" locked="false" visible="true" name="地税" description="Description">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="153"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="172"/>
+                <securities id="173"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="174"/>
+              </Account>
+            </children>
+            <securities id="175"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="176"/>
+          </Account>
+        </children>
+        <securities id="177"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="178"/>
+      </Account>
+      <Account id="179" placeHolder="true" locked="false" visible="true" name="收入类" description="Income Accounts">
+        <accountType>INCOME</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="181">
+          <Account id="182" placeHolder="false" locked="false" visible="true" name="免税收入" description="Non taxable income">
+            <accountType>INCOME</accountType>
+            <parentAccount reference="179"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="183"/>
+            <securities id="184"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="185"/>
+          </Account>
+          <Account id="186" placeHolder="false" locked="false" visible="true" name="利息" description="Interest Income">
+            <accountType>INCOME</accountType>
+            <parentAccount reference="179"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="187"/>
+            <securities id="188"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="189"/>
+          </Account>
+          <Account id="190" placeHolder="false" locked="false" visible="true" name="其他收入" description="Other">
+            <accountType>INCOME</accountType>
+            <parentAccount reference="179"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="191"/>
+            <securities id="192"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="193"/>
+          </Account>
+          <Account id="194" placeHolder="false" locked="false" visible="true" name="薪水" description="Salary">
+            <accountType>INCOME</accountType>
+            <parentAccount reference="179"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="195"/>
+            <securities id="196"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="197"/>
+          </Account>
+        </children>
+        <securities id="198"/>
+        <accountNumber>95</accountNumber>
+        <propertyMap id="199"/>
+      </Account>
+      <Account id="200" placeHolder="false" locked="false" visible="false" name="期初余额" description="Opening Balances">
+        <accountType>EQUITY</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="202"/>
+        <securities id="203"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="204"/>
+      </Account>
+    </children>
+    <securities id="205"/>
+    <propertyMap id="206"/>
+  </RootAccount>
+</object-stream>

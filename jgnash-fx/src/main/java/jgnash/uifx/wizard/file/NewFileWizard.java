@@ -89,8 +89,8 @@ public class NewFileWizard {
             pane = fxmlLoader.load();
             wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException e) {
+            StaticUIMethods.displayError(e.getLocalizedMessage());
         }
 
         pair.getStage().setResizable(false);
@@ -110,7 +110,7 @@ public class NewFileWizard {
             try {
                 NewFileUtility.buildNewFile(fileName, type, password.toCharArray(), defaultCurrency, nodes, accountList);
             } catch (final IOException e) {
-                StaticUIMethods.displayError(e.getMessage());
+                StaticUIMethods.displayError(e.getLocalizedMessage());
             }
         }
     }

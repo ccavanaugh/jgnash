@@ -16,23 +16,21 @@
  */
 package net.bzzt.swift.mt940;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
+import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportTransaction;
 import net.bzzt.swift.mt940.exporter.Mt940Exporter;
 import net.bzzt.swift.mt940.parser.Mt940Parser;
-
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.text.ParseException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import jgnash.convert.imports.ImportBank;
-import jgnash.convert.imports.ImportTransaction;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests for SWIFT Mt940 importing
@@ -59,7 +57,7 @@ public class Mt940Test {
 
         InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
 
-        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream))) {
+        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
             Mt940File file = parser.parse(reader);
 
             assertEquals(nTransactions, file.getEntries().size());
@@ -78,7 +76,7 @@ public class Mt940Test {
     public void testMt940Kontobezeichnung() throws Exception {
         Mt940Parser parser = new Mt940Parser();
         InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream));
+        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1));
         Mt940File file = parser.parse(reader);
         List<Mt940Entry> entries = file.getEntries();
         assertFalse(entries.isEmpty());
@@ -96,7 +94,7 @@ public class Mt940Test {
     public void testMt940KontobezeichnungRabobank() throws Exception {
         Mt940Parser parser = new Mt940Parser();
         InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream));
+        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1));
         Mt940File file = parser.parse(reader);
         List<Mt940Entry> entries = file.getEntries();
         assertFalse(entries.isEmpty());
@@ -114,7 +112,7 @@ public class Mt940Test {
     public void testMt940KontobezeichnungMulticash() throws Exception {
         Mt940Parser parser = new Mt940Parser();
         InputStream inputStream = this.getClass().getResourceAsStream("/multiaccounts.sta");
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream));
+        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1));
         Mt940File file = parser.parse(reader);
         List<Mt940Entry> entries = file.getEntries();
         assertEquals(2, entries.size());
@@ -125,19 +123,18 @@ public class Mt940Test {
     /**
      * Test parsing an (anonimized) mt940 file as produced by the Rabobank
      * online bank
-     * 
-     * @throws ParseException thrown if a parse exception occurs while reading the file
+     *
      * @throws IOException thrown if an IO exception occurs while reading the file
      */
     @Test
-    public void testMt940Rabobank() throws IOException, ParseException {
+    public void testMt940Rabobank() throws IOException {
         int nTransactions = 6;
 
         Mt940Parser parser = new Mt940Parser();
 
         InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");        
         
-        try(LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream))) {
+        try(LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             Mt940File file = parser.parse(reader);
             assertEquals(nTransactions, file.getEntries().size());
 
