@@ -17,18 +17,17 @@
  */
 package jgnash.engine.message;
 
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.StoredObject;
+import jgnash.util.NotNull;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.StoredObject;
 
 /**
  * Message object.
@@ -85,7 +84,7 @@ public class Message implements Serializable, Cloneable {
      * @param value message value
      * @throws NullPointerException throws an exception if value is null
      */
-    public void setObject(final MessageProperty key, final StoredObject value) throws NullPointerException {
+    public void setObject(@NotNull final MessageProperty key, @NotNull final StoredObject value) throws NullPointerException {
         properties.put(Objects.requireNonNull(key), Objects.requireNonNull(value));
     }
 
@@ -168,14 +167,8 @@ public class Message implements Serializable, Cloneable {
 
     @Override
     public Message clone() throws CloneNotSupportedException {
-        Message m = null;
-
-        try {
-            m = (Message) super.clone();
-            m.properties = properties.clone();
-        } catch (CloneNotSupportedException e) {
-            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, e.toString(), e);
-        }
+        final Message m = (Message) super.clone();
+        m.properties = properties.clone();
 
         return m;
     }
