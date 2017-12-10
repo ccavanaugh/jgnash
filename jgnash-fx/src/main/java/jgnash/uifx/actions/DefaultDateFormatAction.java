@@ -46,7 +46,7 @@ public class DefaultDateFormatAction {
             private Set<String> dateFormats;
 
             @Override
-            protected Set<String> call() throws Exception {
+            protected Set<String> call() {
                 dateFormats = DateUtils.getAvailableDateFormats();
                 return dateFormats;
             }
