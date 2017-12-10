@@ -1,0 +1,6 @@
+The QIF file you have selected does not specify a destination account for the transactions. 
+This is normal for QIF files received from online banking and similar sources.
+您挑选QIF文件没有指定目的账户，这对从在线银行之类来源的QIF较为常见。
+Select a destination account for the transactions.
+The new transactions will be Single Entry transactions because of a lack of information supplied in the QIF file.
+选择一个目的账户存放交易条目。由于QIF缺乏相关信息，新的交易记录都将是单条目交易记录。

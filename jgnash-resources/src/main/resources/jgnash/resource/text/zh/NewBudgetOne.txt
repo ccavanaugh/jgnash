@@ -1,0 +1,6 @@
+This builds a new budget based on the prior years income and expenses.
+基于前一年的收支创建新的预算
+Select the historical method of choice for creating a budget.
+选择创建预算的历史数据的选择方法
+Budget amounts may be refined at a later time if needed.
+如果需要，预算数量可以在稍后重新设置

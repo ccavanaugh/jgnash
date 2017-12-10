@@ -1,0 +1,4 @@
+A default Equity Account must be selected to transfer opening balances from.
+必须选中一个默认资产净值用于转入初始的余额。
+If an acceptable Equity Account does not exist.  Exit the wizard and create a new Equity Account before continuing.
+如果不存在一个可用的资产净值账户，退出此向导并创建一个新的资产净值账户，再继续。

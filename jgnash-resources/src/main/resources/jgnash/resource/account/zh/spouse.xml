@@ -1,0 +1,135 @@
+<object-stream>
+  <RootAccount id="1" placeHolder="false" locked="false" visible="true" name="配偶的收入" description="Spouse&apos;s Income">
+    <accountType>ROOT</accountType>
+    <notes></notes>
+    <currencyNode id="3" locale="zh_CN" symbol="RMB" scale="2" prefix="￥" suffix="" description="zh_CN"/>
+    <children id="4">
+      <Account id="5" placeHolder="true" locked="false" visible="true" name="支出类" description="Expense Accounts">
+        <accountType>EXPENSE</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="7">
+          <Account id="8" placeHolder="true" locked="false" visible="true" name="配偶的税费" description="Spouse&apos;s Taxes">
+            <accountType>EXPENSE</accountType>
+            <parentAccount reference="5"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="9">
+              <Account id="10" placeHolder="false" locked="false" visible="true" name="其他税费" description="County tax">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="8"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="11"/>
+                <securities id="12"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="13"/>
+              </Account>
+              <Account id="14" placeHolder="false" locked="false" visible="true" name="医疗保险" description="">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="8"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="15"/>
+                <securities id="16"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="17"/>
+              </Account>
+              <Account id="18" placeHolder="false" locked="false" visible="true" name="社会保险" description="">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="8"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="19"/>
+                <securities id="20"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="21"/>
+              </Account>
+              <Account id="22" placeHolder="false" locked="false" visible="true" name="地税" description="Description">
+                <accountType>EXPENSE</accountType>
+                <parentAccount reference="8"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="23"/>
+                <securities id="24"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="25"/>
+              </Account>
+            </children>
+            <securities id="26"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="27"/>
+          </Account>
+        </children>
+        <securities id="28"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="29"/>
+      </Account>
+      <Account id="30" placeHolder="true" locked="false" visible="true" name="收入类" description="Income Accounts">
+        <accountType>INCOME</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="32">
+          <Account id="33" placeHolder="true" locked="false" visible="true" name="配偶的收入" description="Spouse&apos;s Income Accounts">
+            <accountType>INCOME</accountType>
+            <parentAccount reference="30"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="34">
+              <Account id="35" placeHolder="false" locked="false" visible="true" name="免税收入" description="Non taxable income">
+                <accountType>INCOME</accountType>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="36"/>
+                <securities id="37"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="38"/>
+              </Account>
+              <Account id="39" placeHolder="false" locked="false" visible="true" name="利息" description="Interest Income">
+                <accountType>INCOME</accountType>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="40"/>
+                <securities id="41"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="42"/>
+              </Account>
+              <Account id="43" placeHolder="false" locked="false" visible="true" name="其他收入" description="Other">
+                <accountType>INCOME</accountType>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="44"/>
+                <securities id="45"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="46"/>
+              </Account>
+              <Account id="47" placeHolder="false" locked="false" visible="true" name="薪水" description="Salary">
+                <accountType>INCOME</accountType>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="48"/>
+                <securities id="49"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="50"/>
+              </Account>
+            </children>
+            <securities id="51"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="52"/>
+          </Account>
+        </children>
+        <securities id="53"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="54"/>
+      </Account>
+    </children>
+    <securities id="55"/>
+    <propertyMap id="56"/>
+  </RootAccount>
+</object-stream>

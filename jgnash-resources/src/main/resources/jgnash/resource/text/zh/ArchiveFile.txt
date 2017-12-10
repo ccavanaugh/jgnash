@@ -1,0 +1,2 @@
+Choose a filename for the new file.  Do not choose your existing file.
+选择一个新文件名称。不要选择您已经存在的文件。

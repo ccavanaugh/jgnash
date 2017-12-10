@@ -1,0 +1,2 @@
+Duplicate transactions were found during the import.在导入过程中发现重复的交易记录。
+Do you want to save the duplicate transactions?您是否希望保存这些重复的记录？
