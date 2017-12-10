@@ -22,7 +22,7 @@ allprojects {
 
         joptSimpleVerion = '5.0.4'
 
-        apachePoiVersion = '3.16'
+        apachePoiVersion = '3.17'
         commons_cvs = '1.5'
         commons_text = '1.1'
 
@@ -40,7 +40,7 @@ allprojects {
         c3p0Version = '0.9.5.2'
 
         dynamicJasperVersion = '5.1.0'
-        jasperReportsVersion = '6.4.1'
+        jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
 
         nettyVersion = '4.1.17.Final'
