@@ -39,7 +39,7 @@ dependencies {
 }
 
 launch4j {
-    copyright = 'Copyright (C) 2001-2017 Craig Cavanaugh'
+    copyright = 'Copyright (C) 2001-2018 Craig Cavanaugh'
     mainClassName = 'jgnash.Main'
     outfile = 'jGnash2.exe'
     dontWrapJar = true
