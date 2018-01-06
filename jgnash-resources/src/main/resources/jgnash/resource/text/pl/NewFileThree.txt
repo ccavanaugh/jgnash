@@ -1,0 +1,3 @@
+Waluty dostępne podczas tworzenia nowych kont mogą zostać wybrane poniżej. Jeśli nie chcesz używać wielu walut, nie zmieniaj tego wyboru.
+
+Waluty można dodać lub usunąć w dowolnym czasie.

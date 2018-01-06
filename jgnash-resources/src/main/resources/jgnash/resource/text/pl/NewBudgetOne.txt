@@ -1,0 +1,5 @@
+To stworzy nowy budżet opierając się na zeszłorocznych dochodach i wydatkach.
+
+Aby stworzyć budżet, wybierz historyczną metodę wyboru.
+
+Jeśli potrzeba, kwoty w budżecie mogą zostać później poprawione.

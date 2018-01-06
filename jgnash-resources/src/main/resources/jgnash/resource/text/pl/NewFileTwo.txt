@@ -1,0 +1,3 @@
+Walutą domyślną powinna być waluta, której używasz najczęściej. W większości przypadków używana będzie tylko jedna waluta, która jest twoją walutą lokalną.
+
+Wszystkie konta stworzone w jGnash będą używać waluty domyślnej, ale podczas tworzenia konta można wybrać inną walutę.

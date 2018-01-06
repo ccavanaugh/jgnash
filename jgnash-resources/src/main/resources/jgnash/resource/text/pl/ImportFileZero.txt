@@ -1,0 +1,1 @@
+Wybierz plik jGnash 1.11.x lub nowszy, który ma zostać zaimportowany.

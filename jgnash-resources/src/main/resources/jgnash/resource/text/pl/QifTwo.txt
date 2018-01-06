@@ -1,0 +1,3 @@
+Tutaj możesz zmienić transakcje QIF przed zakończeniem importu.
+
+Aby lepiej zorganizować swoje dochody i wydatki, możesz chcieć przejrzeć konto docelowe.

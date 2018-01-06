@@ -1,0 +1,3 @@
+Aby przenieść saldo bilansu otwarcia, należy wybrać domyślne konto kapitału.
+
+Jeśli nie istnieje akceptowalne konto kapitału, zanim będziesz kontynuować opuść asystenta i stwórz nowe konto kapitału.

@@ -1,0 +1,5 @@
+Tutaj możesz modyfikować importowane transakcje przed zakończeniem importu.
+
+Aby lepiej zorganizować swoje przychody i wydatki, możesz chcieć przejrzeć konto docelowe.
+
+Nowe transakcje mogą zostać usunięte lub wyłączone z importu. Jeśli transakcja zostanie wykryta jako już istniejąca, może zostać zastąpiona a import wymuszony.
