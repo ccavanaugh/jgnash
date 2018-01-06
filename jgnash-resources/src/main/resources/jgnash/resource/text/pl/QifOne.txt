@@ -1,0 +1,5 @@
+Wybrany plik QIF nie wskazuje konta docelowego dla transakcji. 
+To jest typowe dla plików QIF otrzymanych z bankowości online lub podobnych źródeł.
+
+Wybierz konto docelowe dla transakcji.
+Nowe transakcje będą transakcjami jednostronnymi z powodu braku informacji dostarczonej w pliku QIF.

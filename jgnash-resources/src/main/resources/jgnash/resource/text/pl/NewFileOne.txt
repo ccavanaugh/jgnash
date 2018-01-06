@@ -1,0 +1,3 @@
+Wprowadź nazwę bazy danych, której chciałbyś użyć.
+
+W większości przypadków wystarczy nazwa domyślna. Jeśli potrzeba, użytkownicy zaawansowani mogą ją jednak zmienić.

@@ -1,0 +1,1 @@
+Data odcięcia wskazuje, kiedy nastąpi podział między transakcjami archiwalnymi a zachowanymi.
