@@ -206,7 +206,7 @@ class InvestmentAccountProxy extends AccountProxy {
             final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
             // build lookup map for market prices
-            for (SecurityNode node : account.getSecurities()) {
+            for (final SecurityNode node : account.getSecurities()) {
                 priceMap.put(node, getMarketPrice(node, end));
             }
 
@@ -223,7 +223,7 @@ class InvestmentAccountProxy extends AccountProxy {
                 }
             }
 
-            return balance;
+            return round(balance);
         } finally {
             l.unlock();
         }
@@ -245,7 +245,7 @@ class InvestmentAccountProxy extends AccountProxy {
             LocalDate today = LocalDate.now();
 
             // build lookup map for market prices
-            for (SecurityNode node : account.getSecurities()) {
+            for (final SecurityNode node : account.getSecurities()) {
                 priceMap.put(node, getMarketPrice(node, today));
             }
 
@@ -259,7 +259,7 @@ class InvestmentAccountProxy extends AccountProxy {
                 }
             }
 
-            return balance;
+            return round(balance);
         } finally {
             l.unlock();
         }
@@ -273,7 +273,7 @@ class InvestmentAccountProxy extends AccountProxy {
             final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
             // build lookup map for market prices
-            for (SecurityNode node :account.getSecurities()) {
+            for (final SecurityNode node :account.getSecurities()) {
                 priceMap.put(node, getMarketPrice(node, LocalDate.now()));
             }
 
@@ -282,13 +282,13 @@ class InvestmentAccountProxy extends AccountProxy {
             // Get a defensive copy, JPA lazy updates can have side effects
             List<Transaction> transactions = account.getSortedTransactionList();
 
-            for (Transaction t : transactions) {
+            for (final Transaction t : transactions) {
                 if (t instanceof InvestmentTransaction && t.getReconciled(account) == ReconciledState.RECONCILED) {
                     balance = balance.add(((InvestmentTransaction) t).getMarketValue(priceMap.get(((InvestmentTransaction) t).getSecurityNode())));
                 }
             }
 
-            return balance;
+            return round(balance);
         } finally {
             l.unlock();
         }
@@ -331,9 +331,20 @@ class InvestmentAccountProxy extends AccountProxy {
                 }
             }
 
-            return balance;
+            return round(balance);
         } finally {
             l.unlock();
         }
+    }
+
+    /**
+     * Scales / Rounds a given value to the scale of the accounts currency.  Calculating Market value will result
+     * in minor discrepancies.  Use this before returning values for consistent calculations.
+     *
+     * @param value value to round
+     * @return rounded value
+     */
+    private BigDecimal round(final BigDecimal value) {
+        return value.setScale(account.getCurrencyNode().getScale(), MathConstants.roundingMode);
     }
 }
