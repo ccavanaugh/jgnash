@@ -3,22 +3,27 @@ image:https://jgnash.github.io/img/jgnash-logo.png[jGnash Logo]
 == jGnash README
 
 https://sourceforge.net/projects/jgnash/[jGnash] is a free (no strings attached!) personal finance manager with many
-of the same features as commercially-available software. It was created in order to make tracking your personal finances
-easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on
-any operating system that has a working Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
+of the same features as commercially-available software. It was created in order to make tracking personal finances
+easy, but also provides the functionality needed by advanced users. jGnash is cross-platform and will run on
+any operating system that has a current Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
 
-jGnash 2.x requires that the Java Platform version 8 or newer be installed.
-jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Platform.
+jGnash 2.x requires that Java 8 or newer be installed and has been tested with the Oracle JVM as well as the open source OpenJDK Platform.
 
-=== Getting Java
+=== Donations
 
-Most users of jGnash will want the latest version of http://www.java.com/en/download/[Oracle Java Runtime Environment].
+Donations are always welcome and appreciated.  This helps to defer the cost of computer hardware and internet access.
 
-Developers will want the Java Development Kit (see build instructions below.)
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TYN4QECUL5C44[image:https://img.shields.io/badge/Donate-PayPal-green.svg[PayPal]]
 
-=== Learn about jGnash
+=== Learn about jGnash / Support
 
 To learn about the features of jGnash, visit the https://sourceforge.net/projects/jgnash/[jGnash Website].
+
+The jGnash download includes a user manual to help get you started with the basics if you are new to tracking finances.
+It also covers some of the more subtle features and shortcuts that are not immediately obvious.
+
+The https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group] is always a good source if you need help and
+is the prefered method of contact.  Your first post to the group will be moderated to filter spam.
 
 === Download jGnash
 
@@ -26,6 +31,8 @@ You can download jGnash from the https://sourceforge.net/projects/jgnash/files/A
 
 === To Install jGnash:
 
+. Install Java 8 or newer.  Most users of jGnash will want to use the latest version of http://www.java.com/en/download/[Oracle Java Runtime Environment].
+ Developers will want the Java Development Kit (see build instructions below.)
 . Unzip all files into a directory of your choice leaving the directory structure unchanged.
 
 === To Run:
@@ -57,6 +64,9 @@ jGnash is not compatible with the GCJ Java installation pre-installed on older L
 You will need to install the OpenJDK or Oracle Java Platform and correctly set the default for jGnash
 to operate correctly.
 
+Some Linux distributions separate the installation of the Open JavaFx libraries from the base JVM package.
+If the Fx version of the UI does not work, verify the required openjfx package is installed.
+
 ==== Mac OS X Installation:
 
 For Mac OS X users, a minimum of Mac OS X 10.8.3 is required
@@ -76,7 +86,7 @@ end try
 Save it as an Application called `jGnash.app` in `/Applications/jGnash`
 
 === Java 9 Requirements
-jGnash 2.x is designed to operate with Java 8.
+jGnash is designed to operate with Java 8 but will operate correctly under Java 9 with some tweaks.
 
 An additional command line option `--add-modules java.xml.bind` is required if you want to operate under Java 9.
 
