@@ -2,6 +2,7 @@ package jgnash.engine;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Month;
@@ -225,10 +226,10 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Checking the result
         Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+                investAccount.getBalance(), investAccount.getMarketValue().setScale(2, RoundingMode.DOWN), investAccount.getCashBalance()};
 
         Object expected[] = {new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
-                BigDecimal.ZERO, new BigDecimal("250.00")};
+                BigDecimal.ZERO.setScale(2, RoundingMode.DOWN), new BigDecimal("250.00")};
 
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
@@ -293,9 +294,12 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Checking the result
         Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+                investAccount.getBalance(), investAccount.getMarketValue().setScale(2, RoundingMode.DOWN),
+                investAccount.getCashBalance()};
+
         Object expected[] = {new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
-                new BigDecimal("125.00"), BigDecimal.ZERO, new BigDecimal("125.00")};
+                new BigDecimal("125.00"), BigDecimal.ZERO.setScale(2, RoundingMode.DOWN), new BigDecimal("125.00")};
+
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
