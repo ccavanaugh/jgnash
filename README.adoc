@@ -7,7 +7,21 @@ of the same features as commercially-available software. It was created in order
 easy, but also provides the functionality needed by advanced users. jGnash is cross-platform and will run on
 any operating system that has a current Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
 
-jGnash 2.x requires that Java 8 or newer be installed and has been tested with the Oracle JVM as well as the open source OpenJDK Platform.
+jGnash 2.x requires that Java 8 or newer be installed.
+jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Platform.
+
+=== Features
+
+- Operates on any operating system with Java 8 or newer installed
+- Double Entry Accounting with reconciliation tools
+- OFX, QFX, mt940, and QIF import capabilities
+- Investment Accounts and automatic import of Stocks, Bond, and Funds price history
+- Nestable accounts with automatic rollup of totals and intelligent handling of mixed currencies
+- Reminders with automatic transaction entry
+- Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates
+- Printable reports with PDF and spreadsheet export capability
+- XML and relational database file formats
+- Supports concurrent multiple users over a network
 
 === Donations
 
