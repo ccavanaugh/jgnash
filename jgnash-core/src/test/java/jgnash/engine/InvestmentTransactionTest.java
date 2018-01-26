@@ -1,15 +1,14 @@
 package jgnash.engine;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Test;
 
 import static jgnash.engine.TransactionFactory.*;
 import static org.junit.Assert.*;
@@ -213,7 +212,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     }
 
     @Test
-    public void TransferCashIn() throws ParseException {
+    public void TransferCashIn() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
 
