@@ -34,7 +34,7 @@ https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TYN4QECUL5C
 To learn about the features of jGnash, visit the https://sourceforge.net/projects/jgnash/[jGnash Website].
 
 The jGnash download includes a user manual to help get you started with the basics if you are new to tracking finances.
-It also covers some of the more subtle features and shortcuts that are not immediately obvious.
+It also covers some of the more subtle features, command line options, and shortcuts that are not immediately obvious.
 
 The https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group] is always a good source if you need help and
 is the prefered method of contact.  Your first post to the group will be moderated to filter spam.
@@ -110,13 +110,6 @@ WARNING: Please consider reporting this to the maintainers of javassist.util.pro
 WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
 WARNING: All illegal access operations will be denied in a future release
 ----
-
-
-==== NOTES:
-
-When upgrading from 1.x to 2.x, you will have to recreate your reminders.
-
-See the integrated help for command line options.
 
 === Building jGnash:
 
