@@ -67,11 +67,6 @@ An example for UN*X users is show below assuming you have changed to the install
 ./jGnashFx
 ----
 
-==== OpenJDK Tips:
-
-If you are using the OpenJDK, enabling OpenGL acceleration can significantly improve
-graphics performance. See the integrated help for use of the `-opengl` option.
-
 ==== Linux Tips:
 
 jGnash is not compatible with the GCJ Java installation pre-installed on older Linux distributions.
