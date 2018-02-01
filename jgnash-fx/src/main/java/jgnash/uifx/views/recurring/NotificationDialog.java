@@ -80,6 +80,8 @@ class NotificationDialog extends Stage implements MessageListener {
 
     private final ObservableList<PendingReminder> observableReminderList = FXCollections.observableArrayList();
 
+    private boolean isSnoozed = false;
+
     NotificationDialog() {
         FXMLUtils.loadFXML(this, "NotificationDialog.fxml", ResourceUtils.getBundle());
         setTitle(ResourceUtils.getString("Title.Reminder"));
@@ -162,11 +164,17 @@ class NotificationDialog extends Stage implements MessageListener {
 
     private void handleCancelAction() {
         observableReminderList.clear(); // dump the list so caller sees nothing
+        isSnoozed = true;
         close();
     }
 
     private void handleOkayAction() {
+        isSnoozed = false;
         close();
+    }
+
+    public final boolean isSnoozed() {
+        return isSnoozed;
     }
 
     @Override
