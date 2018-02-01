@@ -46,7 +46,7 @@ public class TimePeriodComboBox extends ComboBox<String> {
         valueProperty().addListener((observable, oldValue, newValue)
                 -> period.setValue(periods[getSelectionModel().getSelectedIndex()]));
 
-        JavaFXUtils.runLater(() -> setSelectedPeriod(getPeriods()[0]));
+    //    JavaFXUtils.runLater(() -> setSelectedPeriod(getPeriods()[0]));
     }
 
     public ReadOnlyIntegerProperty periodProperty() {
