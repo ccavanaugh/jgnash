@@ -573,7 +573,7 @@ abstract class RegisterTableController {
                                     tableView.getComparator());
 
                             if (index < 0) {
-                                observableTransactions.add(-index - 1, addedTransaction);
+                                JavaFXUtils.runLater(() -> observableTransactions.add(-index - 1, addedTransaction));
                             }
 
                             // scroll to the new transaction
