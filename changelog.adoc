@@ -23,6 +23,7 @@
 * Add export function for the account tree balance/table
 
 == Release 2.34.1
+* 02/03/18 Updated to latest Netty dependency.
 * 02/02/18 Corrected an IllegalStateException when manually reconciling transactions. (Fx)
 * 01/12/18 Nested Investment accounts were summing with small fractional errors depending on Market price. (Swing, Fx)
 
