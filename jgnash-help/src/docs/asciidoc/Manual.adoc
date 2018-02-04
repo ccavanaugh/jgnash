@@ -357,7 +357,7 @@ image:new-account.png[]
 
 A new dialog box will be displayed that allows you to create a new account to suit your particular needs.
 
-image:account-dialog.png[]
+image:account-dialog.png[scaledwidth=55%]
 
 [float]
 ===== Account Information
