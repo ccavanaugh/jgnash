@@ -352,7 +352,7 @@ abstract class RegisterTableController {
     void deleteTransactions() {
         final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
 
-        RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[transactionList.size()]));
+        RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[0]));
     }
 
     private void duplicateTransactions() {
@@ -540,6 +540,13 @@ abstract class RegisterTableController {
             updateTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
         }
 
+        private void refreshTable() {
+            updateTableExecutor.execute(() -> {
+                tableView.refresh();
+                tableViewManager.packTable();
+            });
+        }
+
         @Override
         public void messagePosted(final Message event) {
             final Account account = RegisterTableController.this.account.getValue();
@@ -560,29 +567,26 @@ abstract class RegisterTableController {
                             JavaFXUtils.runLater(() -> observableTransactions.remove(removedTransaction));
 
                             // this will force the running balance to recalculate
-                            updateTableExecutor.execute(() -> {
-                                tableView.refresh();
-                                tableViewManager.packTable();
-                            });
+                            refreshTable();
 
                             break;
                         case TRANSACTION_ADD:
                             final Transaction addedTransaction = event.getObject(MessageProperty.TRANSACTION);
 
-                            final int index = Collections.binarySearch(observableTransactions, addedTransaction,
-                                    tableView.getComparator());
+                            JavaFXUtils.runLater(() -> {
 
-                            if (index < 0) {
-                                JavaFXUtils.runLater(() -> observableTransactions.add(-index - 1, addedTransaction));
-                            }
+                                final int index = Collections.binarySearch(observableTransactions, addedTransaction,
+                                        tableView.getComparator());
 
-                            // scroll to the new transaction
-                            JavaFXUtils.runLater(() -> scrollToTransaction(addedTransaction));
+                                if (index < 0) {
+                                    observableTransactions.add(-index - 1, addedTransaction);
+                                }
 
-                            // this will force the running balance to recalculate
-                            updateTableExecutor.execute(() -> {
-                                tableView.refresh();
-                                tableViewManager.packTable();
+                                // scroll to the new transaction
+                                JavaFXUtils.runLater(() -> scrollToTransaction(addedTransaction));
+
+                                // this will force the running balance to recalculate
+                                refreshTable();
                             });
 
                             break;
