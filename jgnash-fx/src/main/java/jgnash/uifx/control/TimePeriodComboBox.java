@@ -20,7 +20,6 @@ package jgnash.uifx.control;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.scene.control.ComboBox;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.ResourceUtils;
 
 import java.util.ResourceBundle;
