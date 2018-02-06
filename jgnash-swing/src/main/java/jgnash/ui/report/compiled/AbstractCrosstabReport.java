@@ -339,7 +339,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         ci.isFixedWidth = false;
         columnsList.add(ci);
 
-        columns = columnsList.toArray(new ColumnInfo[columnsList.size()]);
+        columns = columnsList.toArray(new ColumnInfo[0]);
 
         return new ReportModel(accounts, baseCurrency);
     }

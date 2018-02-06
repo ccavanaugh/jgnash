@@ -128,7 +128,7 @@ public class BalanceByMonthCSVReport {
             t = t.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
         }
 
-        return list.toArray(new LocalDate[list.size()]);
+        return list.toArray(new LocalDate[0]);
 
     }
 

@@ -83,11 +83,11 @@ class PrintableCheckLayout implements Printable {
         pageFormat = getPrinterJob().defaultPage();
     }
 
-    public void setCheckLayout(final CheckLayout layout) {
+    void setCheckLayout(final CheckLayout layout) {
         this.checkLayout = layout;
     }
 
-    public CheckLayout getCheckLayout() {
+    CheckLayout getCheckLayout() {
         return checkLayout;
     }
 
@@ -130,26 +130,26 @@ class PrintableCheckLayout implements Printable {
         print();
     }
 
-    public CheckObject[] getCheckObjects() {
+    CheckObject[] getCheckObjects() {
 
         List<CheckObject> checkObjects = checkLayout.getCheckObjects();
 
-        return checkObjects.toArray(new CheckObject[checkObjects.size()]);
+        return checkObjects.toArray(new CheckObject[0]);
     }
 
-    public double getCheckHeight() {
+    double getCheckHeight() {
         return checkLayout.getCheckHeight();
     }
 
-    public void setNumChecks(final int count) {
+    void setNumChecks(final int count) {
         checkLayout.setNumberOfChecks(count);
     }
 
-    public int getNumChecks() {
+    int getNumChecks() {
         return checkLayout.getNumberOfChecks();
     }
 
-    public PageFormat getPageFormat() {
+    PageFormat getPageFormat() {
 
         PrintRequestAttributeSet printAttributes = checkLayout.getPrintAttributes();
 
@@ -190,7 +190,7 @@ class PrintableCheckLayout implements Printable {
         return pageFormat;
     }
 
-    public void setTestPrint(final boolean testPrint) {
+    void setTestPrint(final boolean testPrint) {
         this.testPrint = testPrint;
     }
 

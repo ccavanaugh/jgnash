@@ -84,6 +84,6 @@ public class LocaleObject implements Comparable<LocaleObject> {
         }
 
         Collections.sort(localeObjects);
-        return localeObjects.toArray(new LocaleObject[localeObjects.size()]);
+        return localeObjects.toArray(new LocaleObject[0]);
     }
 }

@@ -298,7 +298,7 @@ public class QifImport {
      * @return duplicate transactions if found
      */
     public Transaction[] getDuplicates() {
-        return duplicates.toArray(new Transaction[duplicates.size()]);
+        return duplicates.toArray(new Transaction[0]);
     }
 
     private void addCategories() {

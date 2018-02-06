@@ -280,7 +280,7 @@ public class DateUtils {
             dates.add(allWeeks[i]);
         }
 
-        return dates.toArray(new LocalDate[dates.size()]);
+        return dates.toArray(new LocalDate[0]);
     }
 
     /**
@@ -361,7 +361,7 @@ public class DateUtils {
             dates.add(localeDate);
         }
 
-        return dates.toArray(new LocalDate[dates.size()]);
+        return dates.toArray(new LocalDate[0]);
     }
 
     /**
@@ -390,7 +390,7 @@ public class DateUtils {
             dates.add(LocalDate.ofYearDay(year, i));
         }
 
-        return dates.toArray(new LocalDate[dates.size()]);
+        return dates.toArray(new LocalDate[0]);
     }
 
     /**

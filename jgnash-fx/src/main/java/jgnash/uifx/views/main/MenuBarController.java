@@ -284,7 +284,7 @@ public class MenuBarController implements MessageListener {
     private void closeAllWindows() {
         // create a copy to avoid concurrent modification issues
         final RegisterStage[] stages = RegisterStage.registerStageList()
-                .toArray(new RegisterStage[RegisterStage.registerStageList().size()]);
+                .toArray(new RegisterStage[0]);
 
         for (final RegisterStage stage : stages) {
             stage.close();

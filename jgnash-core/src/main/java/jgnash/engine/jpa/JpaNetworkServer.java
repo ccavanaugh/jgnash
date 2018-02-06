@@ -230,7 +230,7 @@ public class JpaNetworkServer {
                 serverArgs.add("-tcpSSL");
             }*/
 
-            server = org.h2.tools.Server.createTcpServer(serverArgs.toArray(new String[serverArgs.size()]));
+            server = org.h2.tools.Server.createTcpServer(serverArgs.toArray(new String[0]));
             server.start();
 
         } catch (final SQLException e) {

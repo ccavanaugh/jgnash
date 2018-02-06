@@ -144,7 +144,7 @@ public class FXMLUtils {
         if (clazz.getSuperclass() != null) {
             fields.addAll(Arrays.asList(getDeclaredFields(clazz.getSuperclass())));
         }
-        return fields.toArray(new Field[fields.size()]);
+        return fields.toArray(new Field[0]);
     }
 
     /**

@@ -62,7 +62,7 @@ public class DefaultDateFormatAction extends AbstractAction {
 
             final Set<String> availableDateFormats = DateUtils.getAvailableDateFormats();
 
-            return availableDateFormats.toArray(new String[availableDateFormats.size()]);
+            return availableDateFormats.toArray(new String[0]);
         }
 
         @Override
