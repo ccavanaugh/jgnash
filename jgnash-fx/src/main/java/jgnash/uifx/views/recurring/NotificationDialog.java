@@ -173,7 +173,7 @@ class NotificationDialog extends Stage implements MessageListener {
         close();
     }
 
-    public final boolean isSnoozed() {
+    final boolean isSnoozed() {
         return isSnoozed;
     }
 
