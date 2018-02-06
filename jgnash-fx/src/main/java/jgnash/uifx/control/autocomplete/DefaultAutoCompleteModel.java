@@ -96,9 +96,7 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
         if (content != null && !content.isEmpty()) {
             synchronized (list) {
                 if (fuzzyMatchEnabled.get()) {
-                    if (list.contains(content)) {
-                        list.remove(content); // remove old instance
-                    }
+                    list.remove(content);       // remove old instance
                     list.add(0, content); // push it to the top of the search list
                 } else {
                     int index = Collections.binarySearch(list, content);

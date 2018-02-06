@@ -39,7 +39,7 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
 
     private boolean fuzzyMatch = false;
 
-    public void setIgnoreCase(final boolean ignoreCase) {
+    protected void setIgnoreCase(final boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
     }
 
@@ -47,7 +47,7 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
         this.enabled = enabled;
     }
 
-    public void setFuzzyMatch(final boolean fuzzyMatch) {
+    protected void setFuzzyMatch(final boolean fuzzyMatch) {
         this.fuzzyMatch = fuzzyMatch;
     }
 
@@ -94,13 +94,11 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
         return null;
     }
 
-    public void addString(final String content) {
+    protected void addString(final String content) {
         if (content != null && !content.isEmpty()) {
             synchronized (list) {
                 if (fuzzyMatch) {
-                    if (list.contains(content)) {
-                        list.remove(content); // remove old instance
-                    }
+                    list.remove(content);       // remove old instance
                     list.add(0, content); // push it to the top of the search list
                 } else {
                     int index = Collections.binarySearch(list, content);
@@ -116,7 +114,7 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
     /**
      * Removes all of the strings that have been remembered
      */
-    public void purge() {
+    protected void purge() {
         synchronized (list) {
             list.clear();
         }
