@@ -94,7 +94,6 @@ public class RecurringViewController implements MessageListener {
     private static final int START_UP_DELAY = 45 * 1000;   // 45 seconds
 
     final private AtomicBoolean dialogShowing = new AtomicBoolean(false);
-    private boolean isSnoozed = false;
 
     @FXML
     private void initialize() {
@@ -195,7 +194,7 @@ public class RecurringViewController implements MessageListener {
 
         JavaFXUtils.runLater(this::loadTable);
 
-        startTimer();
+        startTimer(true);
 
         // Update the period when the snooze value changes
         Options.reminderSnoozePeriodProperty().addListener((observable, oldValue, newValue) -> {
@@ -204,7 +203,7 @@ public class RecurringViewController implements MessageListener {
             // Don't start the timer if the dialog is up, otherwise events may get backed up
             // while the dialog is up.
             if (!dialogShowing.get()) {
-                startTimer();
+                startTimer(false);
             }
         });
     }
@@ -217,29 +216,25 @@ public class RecurringViewController implements MessageListener {
         observableReminderList.setAll(engine.getReminders());
     }
 
-    private void startTimer() {
+    /**
+     * Starts the timer
+     *
+     * @param startup should be true for initialization and false for restarts
+     */
+    private void startTimer(final boolean startup) {
         if (timer == null) {
             timer = new Timer(true);
-            if (isSnoozed) {
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        JavaFXUtils.runLater(RecurringViewController.this::showReminderDialog);
-                    }
-                }, Options.reminderSnoozePeriodProperty().get());
 
-                Logger.getLogger(RecurringViewController.class.getName()).info("Recurring timer started snooze: " +  Options.reminderSnoozePeriodProperty().get() / 1000 + " secs");
-            }
-            else {
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        JavaFXUtils.runLater(RecurringViewController.this::showReminderDialog);
-                    }
-                }, START_UP_DELAY, Options.reminderSnoozePeriodProperty().get());
+            timer.schedule(new TimerTask() {
+                               @Override
+                               public void run() {
+                                   JavaFXUtils.runLater(RecurringViewController.this::showReminderDialog);
+                               }
+                           }, startup ? START_UP_DELAY : Options.reminderSnoozePeriodProperty().get(),
+                    Options.reminderSnoozePeriodProperty().get());
 
-                Logger.getLogger(RecurringViewController.class.getName()).info("Recurring timer started: " +  Options.reminderSnoozePeriodProperty().get() / 1000 + " secs");
-            }
+            Logger.getLogger(RecurringViewController.class.getName()).info("Recurring timer started: "
+                    + Options.reminderSnoozePeriodProperty().get() / 1000 + " secs");
         }
     }
 
@@ -272,8 +267,7 @@ public class RecurringViewController implements MessageListener {
 
                 engine.processPendingReminders(notificationDialog.getApprovedReminders());
 
-                isSnoozed = notificationDialog.isSnoozed();
-                startTimer();
+                startTimer(false);
             }
 
             dialogShowing.getAndSet(false);
