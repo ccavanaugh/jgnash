@@ -17,6 +17,7 @@
  */
 package jgnash.engine.net.security;
 
+import jgnash.net.YahooCrumbManager;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -81,6 +82,8 @@ public class YahooEventParserTest extends AbstractEngineTest {
         ibm.setScale((byte) 2);
 
         e.addSecurity(ibm);
+
+        YahooCrumbManager.clearAuthorization();     // force re-authorization to prevent failed unit test
 
         final List<SecurityHistoryNode> events = YahooEventParser.retrieveHistoricalPrice(ibm, LocalDate.of(2016,
                 Month.JANUARY, 1), LocalDate.of(2016, Month.DECEMBER, 30));
