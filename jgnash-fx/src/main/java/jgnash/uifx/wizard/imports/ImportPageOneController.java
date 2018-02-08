@@ -99,7 +99,7 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
 
             final ImportBank<?> bank = (ImportBank<?>) map.get(ImportWizard.Settings.BANK);
 
-            if (bank != null && bank instanceof QifAccount) {
+            if (bank instanceof QifAccount) {
                 ((QifAccount) bank).setDateFormat(dateFormatChoiceBox.getValue());
             }
         }
@@ -124,7 +124,7 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
         }
 
         if (!dateFormatChoiceBox.isDisabled()) {
-            if (bank != null && bank instanceof QifAccount) {
+            if (bank instanceof QifAccount) {
                 dateFormatChoiceBox.setValue(((QifAccount) bank).getDateFormat());
             }
         }

@@ -424,7 +424,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
             final Object value = model.getValueAt(convertRowIndexToModel(row), convertColumnIndexToModel(column));
 
             if (LocalDate.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
-                if (value != null && value instanceof LocalDate) {
+                if (value instanceof LocalDate) {
                     ((JLabel) c).setText(dateTimeFormatter.format((TemporalAccessor) value));
                 }
             } else if (Long.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {

@@ -179,7 +179,7 @@ public class Comparators {
             do {
                 pa1 = path1.pollFirst();
                 pa2 = path2.pollFirst();
-            } while (pa1 != null && pa2 != null && pa1.equals(pa2));
+            } while (pa1 != null && pa1.equals(pa2));
 
             if (pa1 == null && pa2 == null) {
                 // this can only happen if a1 equals a2

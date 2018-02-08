@@ -89,7 +89,7 @@ public class StaticUIMethods {
             KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             Window window = keyboardFocusManager.getActiveWindow();
 
-            if (window != null && window instanceof Frame) {
+            if (window instanceof Frame) {
                 frame = (Frame) window;
             }
 

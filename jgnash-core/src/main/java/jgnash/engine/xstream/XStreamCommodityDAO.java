@@ -114,7 +114,7 @@ class XStreamCommodityDAO extends AbstractXStreamDAO implements CommodityDAO {
 
         StoredObject o = container.get(uuid);
 
-        if (o != null && o instanceof ExchangeRate) {
+        if (o instanceof ExchangeRate) {
             exchangeRate = (ExchangeRate) o;
         }
 

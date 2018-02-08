@@ -248,7 +248,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                 for (JMenuItem menuItem : menuItems) {
                     final Object precedingId = menuItem.getClientProperty(SwingPlugin.PRECEDING_MENU_IDREF);
 
-                    if (precedingId != null && precedingId instanceof String) {
+                    if (precedingId instanceof String) {
                         addMenuItem((String) precedingId, menuItem);
                     }
                 }
@@ -725,7 +725,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     private final class UpdateTitleWorker extends SwingWorker<Engine, Void> {
 
         @Override
-        protected Engine doInBackground() throws Exception {
+        protected Engine doInBackground() {
             return EngineFactory.getEngine(EngineFactory.DEFAULT);
         }
 

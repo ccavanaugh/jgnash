@@ -186,7 +186,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         SwingWorker<StoredObject, Void> worker = new SwingWorker<StoredObject, Void>() {
 
             @Override
-            protected StoredObject doInBackground() throws Exception {
+            protected StoredObject doInBackground() {
                 Preferences preferences = Preferences.userNodeForPackage(BudgetPanel.class);
                 String lastBudgetUUID = preferences.get(LAST_BUDGET, null);
 
@@ -204,7 +204,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 try {
                     StoredObject o = get();
 
-                    if (o != null && o instanceof Budget) {
+                    if (o instanceof Budget) {
                         budgetCombo.setSelectedBudget((Budget) o);
                         activeBudget = (Budget) o;
                     }
@@ -243,7 +243,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         SwingWorker<Integer, Void> worker = new SwingWorker<Integer, Void>() {
 
             @Override
-            protected Integer doInBackground() throws Exception {
+            protected Integer doInBackground() {
                 return engine.getBudgetList().size(); // could take awhile if the engine is busy
             }
 
@@ -672,7 +672,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
             final class Export extends SwingWorker<String, Void> {
 
                 @Override
-                protected String doInBackground() throws Exception {
+                protected String doInBackground() {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
                     return BudgetResultsExport.exportBudgetResultsModel(file.toPath(), resultsModel);
