@@ -23,9 +23,10 @@
 * Add export function for the account tree balance/table
 
 == Release 2.34.1
+* 02/08/18 Updated to the latest Hibernate dependency.
 * 02/06/18 Improved snooze behavior for reminders. (Fx) _[leeboardtools]_
 * 02/05/18 Corrected a race condition in the transaction register that would cause a rare sorting issue and IndexOutOfBoundsExceptions. (Fx)
-* 02/03/18 Updated to latest Netty dependency.
+* 02/03/18 Updated to the latest Netty dependency.
 * 02/02/18 Corrected an IllegalStateException when manually reconciling transactions. (Fx)
 * 01/12/18 Nested Investment accounts were summing with small fractional errors depending on Market price. (Swing, Fx)
 

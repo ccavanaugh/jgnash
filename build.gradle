@@ -34,7 +34,7 @@ allprojects {
         xstreamVersion = '1.4.10'
         kxmlVersion = '2.3.0'
 
-        hibernateVersion = '5.2.12.Final'
+        hibernateVersion = '5.2.13.Final'
         hibernateJPAVersion = '1.0.0.Final'
 
         c3p0Version = '0.9.5.2'
