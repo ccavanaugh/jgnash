@@ -188,7 +188,6 @@ public class StageUtils {
                         Double.parseDouble(array[WIDTH]), Double.parseDouble(array[HEIGHT]));
             } catch (final NumberFormatException nfe) {
                 Logger.getLogger(StageUtils.class.getName()).log(Level.SEVERE, null, nfe);
-                rectangle = null;
             }
         }
 

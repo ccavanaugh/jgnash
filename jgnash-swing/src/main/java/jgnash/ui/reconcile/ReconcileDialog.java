@@ -209,7 +209,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
         private final NumberFormat commodityFormatter;
 
-        public ReconcileTable(final AbstractReconcileTableModel model) {
+        ReconcileTable(final AbstractReconcileTableModel model) {
             super(model);
 
             commodityFormatter = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
@@ -337,7 +337,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
         final class CommitChangesWorker extends SwingWorker<Void, Void> {
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
                 creditModel.commitChanges(reconciledState);

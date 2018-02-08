@@ -129,16 +129,12 @@ public class QifUtils {
                     result = true;
                     break;
                 } else if (startsWith(line, "!Type:Bank")) { // QIF from an online bank statement... assumes the account is known
-                    result = false;
                     break;
                 } else if (startsWith(line, "!Type:CCard")) { // QIF from an online credit card statement
-                    result = false;
                     break;
                 } else if (startsWith(line, "!Type:Oth")) { // QIF from an online credit card statement
-                    result = false;
                     break;
                 } else if (startsWith(line, "!Type:Cash")) { // Partial QIF export
-                    result = false;
                     break;
                 } else if (startsWith(line, "!Option:AutoSwitch")) {
                     Logger.getLogger(QifUtils.class.getName()).fine("!Option:AutoSwitch");

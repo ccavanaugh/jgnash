@@ -74,10 +74,13 @@ public class DefaultLocaleAction extends AbstractAction {
 
                 if (result == JOptionPane.YES_OPTION) {
                     final LocaleObject o = (LocaleObject) combo.getSelectedItem();
-                    ResourceUtils.setLocale(o.getLocale());
 
-                    JOptionPane.showMessageDialog(UIApplication.getFrame(),
-                            o + "\n" + rb.getString("Message.RestartLocale"));
+                    if (o != null) {
+                        ResourceUtils.setLocale(o.getLocale());
+
+                        JOptionPane.showMessageDialog(UIApplication.getFrame(),
+                                o + "\n" + rb.getString("Message.RestartLocale"));
+                    }
                 }
             } catch (final InterruptedException | ExecutionException | HeadlessException e) {
                 Logger.getLogger(LocaleSwingWorker.class.getName()).log(Level.SEVERE, null, e);

@@ -53,7 +53,7 @@ public final class PluginFactory {
     private static boolean pluginsStarted = false;
     private static boolean pluginsLoaded = false;
 
-    public static final String separator = System.getProperty("file.separator");
+    private static final String separator = System.getProperty("file.separator");
 
     private PluginFactory() {
         // Utility class

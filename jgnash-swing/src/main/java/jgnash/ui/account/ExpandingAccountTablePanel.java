@@ -322,7 +322,7 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
 
         private static final String NEW = "new";
 
-        public AccountPopup() {
+        AccountPopup() {
             JMenuItem menuItem = new JMenuItem(rb.getString("Menu.New.Name"));
             menuItem.setActionCommand(NEW);
             menuItem.addActionListener(this);

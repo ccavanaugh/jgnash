@@ -587,7 +587,7 @@ public class OfxExport implements OfxTags {
             super(out);
         }
 
-        public void println(final String x, final int indentLevel) {
+        void println(final String x, final int indentLevel) {
             for (int i = 0; i < indentLevel; i++) {
                 write(INDENT);
             }

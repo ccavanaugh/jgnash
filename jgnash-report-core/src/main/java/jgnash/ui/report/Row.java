@@ -28,7 +28,7 @@ public abstract class Row<T> {
 
     private final T object;
 
-    public Row(@Nullable T object) {
+    protected Row(@Nullable T object) {
         this.object = object;
     }
 

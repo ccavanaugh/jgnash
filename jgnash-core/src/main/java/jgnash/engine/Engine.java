@@ -2004,9 +2004,7 @@ public class Engine {
         try {
             boolean result = false;
 
-            if (account.getTransactionCount() > 0 || account.getChildCount() > 0) {
-                result = false;
-            } else {
+            if (account.getTransactionCount() == 0 && account.getChildCount() == 0) {
                 Account parent = account.getParent();
 
                 if (parent != null) {

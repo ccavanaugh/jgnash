@@ -64,7 +64,7 @@ public class FXMLUtils {
         private final C controller;
         private final Stage stage;
 
-        public Pair(final C controller, final Stage stage) {
+        Pair(final C controller, final Stage stage) {
             this.controller = controller;
             this.stage = stage;
         }
