@@ -23,7 +23,7 @@
 * Add export function for the account tree balance/table
 
 == Release 2.34.1
-* 03/28/18 Updated to the latest H2 dependency.
+* 03/28/18 Updated to the latest Netty and H2 dependency.
 * 02/08/18 Updated to the latest Hibernate dependency.
 * 02/06/18 Improved snooze behavior for reminders. (Fx) _[leeboardtools]_
 * 02/05/18 Corrected a race condition in the transaction register that would cause a rare sorting issue and IndexOutOfBoundsExceptions. (Fx)

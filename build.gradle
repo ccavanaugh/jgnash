@@ -43,7 +43,7 @@ allprojects {
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
 
-        nettyVersion = '4.1.20.Final'
+        nettyVersion = '4.1.22.Final'
 
         slf4jVersion = '1.7.21'
         log4jVersion = '1.2.17'
