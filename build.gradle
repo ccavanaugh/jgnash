@@ -34,7 +34,7 @@ allprojects {
         xstreamVersion = '1.4.10'
         kxmlVersion = '2.3.0'
 
-        hibernateVersion = '5.2.13.Final'
+        hibernateVersion = '5.2.16.Final'
         hibernateJPAVersion = '1.0.0.Final'
 
         c3p0Version = '0.9.5.2'
@@ -92,7 +92,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
+    gradleVersion = '4.6'
 }
 
 task distZip {
