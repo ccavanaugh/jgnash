@@ -131,11 +131,11 @@ class AccountTreeModel extends DefaultTreeModel {
         final AccountType type = a.getAccountType();
 
         if (type == AccountType.INCOME && incomeVisible) {
-            return !a.isVisible() && hiddenVisible || a.isVisible();
+            return a.isVisible() || hiddenVisible;
         } else if (type == AccountType.EXPENSE && expenseVisible) {
-            return !a.isVisible() && hiddenVisible || a.isVisible();
+            return a.isVisible() || hiddenVisible;
         } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && accountVisible) {
-            return !a.isVisible() && hiddenVisible || a.isVisible();
+            return a.isVisible() || hiddenVisible;
         }
 
         return false;

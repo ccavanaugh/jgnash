@@ -118,11 +118,11 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
             final AccountType type = object.getAccountType();
 
             if (type == AccountType.INCOME && isIncomeVisible()) {
-                return !object.isVisible() && isHiddenVisible() || object.isVisible();
+                return object.isVisible() || isHiddenVisible();
             } else if (type == AccountType.EXPENSE && isExpenseVisible()) {
-                return !object.isVisible() && isHiddenVisible() || object.isVisible();
+                return object.isVisible() || isHiddenVisible();
             } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && isAccountVisible()) {
-                return !object.isVisible() && isHiddenVisible() || object.isVisible();
+                return object.isVisible() || isHiddenVisible();
             }
         }
         return false;
