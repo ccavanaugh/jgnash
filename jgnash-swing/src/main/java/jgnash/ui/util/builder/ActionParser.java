@@ -162,10 +162,10 @@ public final class ActionParser extends DefaultHandler {
 
             for (Class<?> aClass : classes) {
 
-                Annotation annotation = aClass.getAnnotation(jgnash.ui.util.builder.Action.class);
+                jgnash.ui.util.builder.Action annotation = aClass.getAnnotation(jgnash.ui.util.builder.Action.class);
 
                 if (annotation != null) {
-                    jgnash.ui.util.builder.Action action = (jgnash.ui.util.builder.Action) annotation;
+                    jgnash.ui.util.builder.Action action = annotation;
                     preLoadAction(action.value(), (Action) aClass.newInstance());
                 }
             }
@@ -207,9 +207,9 @@ public final class ActionParser extends DefaultHandler {
     }
 
     public JMenuItem getJMenuItem(final String idref) {
-        Object o = menuItemMap.get(idref);
+        JMenuItem o = menuItemMap.get(idref);
         if (o != null) {
-            return (JMenuItem) o;
+            return o;
         }
         return null;
     }
@@ -217,10 +217,10 @@ public final class ActionParser extends DefaultHandler {
     public JMenuBar createMenuBar(final String id) {
         JMenuBar menuBar = new JMenuBar();
 
-        Object o = actionTrees.get(id);
+        ActionNode o = actionTrees.get(id);
 
         if (o != null) {
-            ActionNode node = (ActionNode) o;
+            ActionNode node = o;
             for (int i = 0; i < node.size(); i++) {
                 JMenuItem item = createMenuItem(node.getChildAt(i));
 

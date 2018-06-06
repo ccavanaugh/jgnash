@@ -196,10 +196,10 @@ class PrintCheckDialog extends JDialog implements ActionListener {
 
     private void loadLayout(final String file) {
         if (new File(file).exists()) { // check for existence before trying to load
-            Object o = CheckLayoutSerializationFactory.loadLayout(file);
+            CheckLayout o = CheckLayoutSerializationFactory.loadLayout(file);
 
             if (o != null) {
-                checkLayout = (CheckLayout) o;
+                checkLayout = o;
                 setupSpinner();
                 layoutField.setText(file);
             }

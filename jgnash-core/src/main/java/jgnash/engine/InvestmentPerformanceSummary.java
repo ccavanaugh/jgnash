@@ -18,7 +18,6 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
-import java.text.Format;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -380,10 +379,10 @@ public class InvestmentPerformanceSummary {
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder();
+        final StringBuilder b = new StringBuilder();
 
-        Format percentageFormat = NumberFormat.getPercentInstance();
-        ((NumberFormat) percentageFormat).setMinimumFractionDigits(2);
+        final NumberFormat percentageFormat = NumberFormat.getPercentInstance();
+        percentageFormat.setMinimumFractionDigits(2);
         
         final String lineSep = System.lineSeparator();
         

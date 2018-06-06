@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -71,7 +72,7 @@ public class Version {
             connection.setConnectTimeout(CONNECT_TIMEOUT);
 
             try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
-                    "UTF-8"))) {
+                    StandardCharsets.UTF_8))) {
                 for (String line; (line = reader.readLine()) != null; ) {
                     builder.append(line);
                 }

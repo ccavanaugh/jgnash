@@ -335,10 +335,10 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
         if (fn != null) {
 
-            Object o = CheckLayoutSerializationFactory.loadLayout(fn);
+            CheckLayout o = CheckLayoutSerializationFactory.loadLayout(fn);
 
             if (o != null) {
-                checkLayout = (CheckLayout) o;
+                checkLayout = o;
                 layout.setCheckLayout(checkLayout);
                 layout.setTestPrint(true);
                 loadModel();
