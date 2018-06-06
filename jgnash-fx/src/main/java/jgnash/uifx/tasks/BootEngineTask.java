@@ -96,9 +96,21 @@ public class BootEngineTask extends Task<String> {
                 updateMessage(message);
                 message = resources.getString("Message.Error.FileNotFound") + ": " + localFile;
             } else if (FileUtils.isFileLocked(localFile)) {
-                message = resources.getString("Message.FileIsLocked") + ": " + localFile;
-                updateMessage(message);
-                Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
+
+                if (FileUtils.isLockFileStale(localFile)) {
+                    // try to remove the lockfile first
+                    Logger.getLogger(BootEngineTask.class.getName()).info("Attempting to remove stale file lock");
+
+                    if (FileUtils.deleteLockFile(localFile)) {
+                        return call();  // recursive call to rerun the task and load the file to keep code simple
+                    } else {
+                        Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
+                    }
+                } else {
+                    message = resources.getString("Message.FileIsLocked") + ": " + localFile;
+                    updateMessage(message);
+                    Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
+                }
             } else if (checkAndBackupOldVersion(localFile, password)) {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
                 updateMessage(resources.getString("Message.FileLoadComplete"));

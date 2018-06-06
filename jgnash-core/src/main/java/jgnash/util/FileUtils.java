@@ -71,6 +71,12 @@ public final class FileUtils {
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
+    // HSQLDB ~10.10 seconds
+    // H2 database ~2.0 seconds
+    private static final long LOCK_FILE_PERIOD = 11000;
+
+    private static final int LOCK_WAIT_PERIOD = 20;
+
     private FileUtils() {
     }
 
@@ -138,6 +144,60 @@ public final class FileUtils {
     }
 
     /**
+     * Determines if a lock file is stale / leftover from a crash
+     * @param fileName database file/lockfile to test
+     * @return true if the lock file is determined to be stale
+     * @throws IOException thrown if file does not exist or it is a directory
+     */
+    public static boolean isLockFileStale(final String fileName) throws IOException {
+        boolean result = false;
+
+        final long maxIterations = LOCK_FILE_PERIOD / LOCK_WAIT_PERIOD;
+
+        search:
+        for (final String extension : FILE_LOCK_EXTENSIONS) {
+
+            final Path path = Paths.get(FileUtils.stripFileExtension(fileName) + extension);
+
+            if (Files.exists(path)) {
+
+                for (int i = 0; i < maxIterations; i++) {
+
+                    long timeStamp = lastModified(path);
+
+                    if (System.currentTimeMillis() - timeStamp > LOCK_FILE_PERIOD) {
+                        result = true;
+                        break search;
+                    }
+
+                    try {
+                        Thread.sleep(LOCK_WAIT_PERIOD);
+                    } catch (final InterruptedException e) {
+                        logSevere(FileUtils.class, e);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static boolean deleteLockFile(final String fileName) throws IOException {
+        boolean result = false;
+
+        for (final String extension : FILE_LOCK_EXTENSIONS) {
+            final Path path = Paths.get(FileUtils.stripFileExtension(fileName) + extension);
+
+            if (Files.exists(path)) {
+                Files.delete(path);
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Strips the extension off of the supplied filename including the period. If the supplied
      * filename does not contain an extension then the original is returned
      *
@@ -146,6 +206,17 @@ public final class FileUtils {
      */
     public static String stripFileExtension(final String fileName) {
         return FILE_EXTENSION_SPLIT_PATTERN.split(fileName)[0];
+    }
+
+    /**
+     * Returns the modification time of a file
+     *
+     * @param path file to check
+     * @return last modification timestamp in millis
+     * @throws IOException thrown if file is not found
+     */
+    private static long lastModified(final Path path) throws IOException {
+        return Files.getLastModifiedTime(path).toMillis();
     }
 
     /**
@@ -240,8 +311,8 @@ public final class FileUtils {
     /**
      * Returns a sorted list of files in a specified directory that match a regex search pattern.
      *
-     * @param directory base directory for the search
-     * @param regexPattern   regex search pattern
+     * @param directory    base directory for the search
+     * @param regexPattern regex search pattern
      * @return a List of matching Files. The list will be empty if no matches
      * are found or if the directory is not valid.
      */
