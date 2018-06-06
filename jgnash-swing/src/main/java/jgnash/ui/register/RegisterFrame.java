@@ -56,9 +56,9 @@ public final class RegisterFrame extends JFrame implements MessageListener {
 
     private static final List<RegisterFrame> dialogList = new ArrayList<>();
 
-    private Account account = null;
+    private Account account;
 
-    private AbstractRegisterPanel panel = null;
+    private AbstractRegisterPanel panel;
 
     private RegisterFrame(final Account account) {
         super();

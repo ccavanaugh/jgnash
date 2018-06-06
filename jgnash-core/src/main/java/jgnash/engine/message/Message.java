@@ -127,8 +127,8 @@ public class Message implements Serializable, Cloneable {
         // write the property count
         s.writeInt(properties.size());
 
-        StoredObject[] values = properties.values().toArray(new StoredObject[properties.size()]);
-        MessageProperty[] keys = properties.keySet().toArray(new MessageProperty[properties.size()]);
+        StoredObject[] values = properties.values().toArray(new StoredObject[0]);
+        MessageProperty[] keys = properties.keySet().toArray(new MessageProperty[0]);
 
         for (int i = 0; i < properties.size(); i++) {
             s.writeObject(keys[i]);

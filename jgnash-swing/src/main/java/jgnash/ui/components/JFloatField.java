@@ -59,7 +59,7 @@ public class JFloatField extends JTextFieldEx {
      */
     private static final String MATH_OPERATORS = "()+*/";
 
-    private int scale = 2;
+    private int scale;
 
     private static char group = ',';
 

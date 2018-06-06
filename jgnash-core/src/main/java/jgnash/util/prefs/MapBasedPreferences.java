@@ -69,7 +69,7 @@ class MapBasedPreferences extends AbstractPreferences {
 
     @Override
     protected String[] keysSpi() throws BackingStoreException {
-        return map.keySet().toArray(new String[map.size()]);
+        return map.keySet().toArray(new String[0]);
     }
 
     @Override

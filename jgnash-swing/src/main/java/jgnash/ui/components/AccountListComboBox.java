@@ -172,7 +172,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         List<Account> accounts = new ArrayList<>();
 
-        Account baseAccount = null;
+        Account baseAccount;
 
         Object selectedItem;
 
