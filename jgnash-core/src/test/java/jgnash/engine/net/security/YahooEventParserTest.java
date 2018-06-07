@@ -38,6 +38,7 @@ import jgnash.net.security.YahooEventParser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit test for the Yahoo security downloader.
@@ -72,7 +73,8 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
         assertNotNull(events);
 
-        assertEquals(220, events.size());
+        // size fluctuates
+        assertTrue(220 <= events.size() && events.size() <= 221);
     }
 
     @Test
