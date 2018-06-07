@@ -287,14 +287,13 @@ public final class QifParser {
                         acc = new QifAccount();
                     }
                 } else {
-                    result = false;
                     break;
                 }
 
                 line = in.readLine();
             }
-        } catch (IOException e) {
-            result = false;
+        } catch (IOException ignored) {
+
         }
 
         logger.exiting(this.getClass().getName(), "parseAccount", result);
@@ -396,8 +395,6 @@ public final class QifParser {
                         tran.addSplit(split);
                         logger.finest("*** Added a Split Transaction ***");
                     }
-                } else if (line.charAt(0) == '$') {
-                    tran.amountTrans = line.substring(1);
                 } else {
                     logger.log(Level.SEVERE, "Unknown field: {0}", line);
                 }
