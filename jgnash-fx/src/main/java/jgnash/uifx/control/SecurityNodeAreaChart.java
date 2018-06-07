@@ -95,7 +95,7 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
                 final long range = localDates[1].toEpochDay() - localDates[0].toEpochDay();
 
                 if (range > TICK_MARKS) {
-                    xAxis.setTickUnit((localDates[1].toEpochDay() - localDates[0].toEpochDay()) / TICK_MARKS);
+                    xAxis.setTickUnit((int)((localDates[1].toEpochDay() - localDates[0].toEpochDay()) / TICK_MARKS));
                 } else {
                     xAxis.setTickUnit(range - 1);
                 }
