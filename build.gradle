@@ -34,16 +34,16 @@ allprojects {
         xstreamVersion = '1.4.10'
         kxmlVersion = '2.3.0'
 
-        hibernateVersion = '5.2.16.Final'
+        hibernateVersion = '5.2.17.Final'
         hibernateJPAVersion = '1.0.0.Final'
 
         c3p0Version = '0.9.5.2'
 
-        dynamicJasperVersion = '5.1.0'
+        dynamicJasperVersion = '5.1.1'
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
 
-        nettyVersion = '4.1.22.Final'
+        nettyVersion = '4.1.25.Final'
 
         slf4jVersion = '1.7.21'
         log4jVersion = '1.2.17'

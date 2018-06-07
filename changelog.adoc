@@ -23,9 +23,9 @@
 * Add export function for the account tree balance/table
 
 == Release 2.34.1
-* 06/27/18 Updated to the latest Hsqldb dependency.
+* 06/07/18 Updated to the latest Hibernate, Netty, Hsqldb, and DynamicJasper dependencies.
 * 06/06/18 Remove stale relational database lock files if a crash had occurred.
-* 03/28/18 Updated to the latest Hibernate, Netty and H2 dependencies.
+* 03/28/18 Updated to the latest H2 dependency.
 * 02/06/18 Improved snooze behavior for reminders. (Fx) _[leeboardtools]_
 * 02/05/18 Corrected a race condition in the transaction register that would cause a rare sorting issue and IndexOutOfBoundsExceptions. (Fx)
 * 02/03/18 Updated to the latest Netty dependency.
