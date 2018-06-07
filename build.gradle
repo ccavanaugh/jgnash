@@ -15,7 +15,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '2.34.0'
+    version = '2.34.1'
 
     project.ext {
         junitVersion = '4.12'
