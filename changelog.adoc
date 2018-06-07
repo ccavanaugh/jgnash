@@ -23,6 +23,7 @@
 * Add export function for the account tree balance/table
 
 == Release 2.34.1
+* 06/07/18 Updated Russian translation. (Swing, Fx) _[pchurzin]_
 * 06/07/18 Updated to the latest Hibernate, Netty, Hsqldb, and DynamicJasper dependencies.
 * 06/06/18 Remove stale relational database lock files if a crash had occurred.
 * 03/28/18 Updated to the latest H2 dependency.
