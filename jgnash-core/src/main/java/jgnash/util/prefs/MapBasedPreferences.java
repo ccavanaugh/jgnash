@@ -20,7 +20,6 @@ package jgnash.util.prefs;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.AbstractPreferences;
-import java.util.prefs.BackingStoreException;
 
 /**
  * Map based Preferences implementation.  Preferences must be persisted using the
@@ -63,17 +62,17 @@ class MapBasedPreferences extends AbstractPreferences {
     }
 
     @Override
-    protected void removeNodeSpi() throws BackingStoreException {
+    protected void removeNodeSpi() {
         map.clear();
     }
 
     @Override
-    protected String[] keysSpi() throws BackingStoreException {
+    protected String[] keysSpi() {
         return map.keySet().toArray(new String[0]);
     }
 
     @Override
-    protected String[] childrenNamesSpi() throws BackingStoreException {
+    protected String[] childrenNamesSpi() {
         return new String[0];
     }
 
@@ -83,12 +82,12 @@ class MapBasedPreferences extends AbstractPreferences {
     }
 
     @Override
-    protected void syncSpi() throws BackingStoreException {
+    protected void syncSpi() {
 
     }
 
     @Override
-    protected void flushSpi() throws BackingStoreException {
+    protected void flushSpi() {
 
     }
 }
