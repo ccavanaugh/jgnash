@@ -17,9 +17,7 @@ package jgnash.ui.debug;
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-import java.awt.AWTEvent;
-import java.awt.EventQueue;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -98,11 +96,11 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
         // The last time in milliseconds at which we saw a dispatch on the above thread.
         private long lastDispatchTimeMillis = System.currentTimeMillis();
 
-        public DispatchInfo() {
-            // All initialization is done by the field initializers.
+        DispatchInfo() {
+            // All initialization is done by the field initializer.
         }
 
-        public void checkForHang() {
+        void checkForHang() {
             if (timeSoFar() > UNREASONABLE_DISPATCH_DURATION_MS) {
                 examineHang();
             }
@@ -165,7 +163,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
             return (System.currentTimeMillis() - lastDispatchTimeMillis);
         }
 
-        public void dispose() {
+        void dispose() {
             if (lastReportedStack != null) {
                 Log.warn("(hang #" + hangNumber + ") event dispatch thread unstuck after " + timeSoFar() + " ms.");
             }
@@ -230,11 +228,9 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
         }
     }
 
-    private void debug(String which) {
+    private void debug(final String which) {
         if (DEBUG) {
-            for (int i = dispatches.size(); i >= 0; --i) {
-                System.out.print(' ');
-            }
+            System.out.print((dispatches.size() == 0) ? "" : String.format("%" + dispatches.size() + "s", ""));
             System.out.println(which);
         }
     }
@@ -301,7 +297,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
 
     private static class Log {
 
-        public static void warn(String str) {
+        static void warn(String str) {
             System.out.println(str);
         }
     }
