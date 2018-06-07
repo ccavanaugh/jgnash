@@ -23,6 +23,7 @@
 * Add export function for the account tree balance/table
 
 == Release 2.34.1
+* 06/27/18 Updated to the latest Hsqldb dependency.
 * 06/06/18 Remove stale relational database lock files if a crash had occurred.
 * 03/28/18 Updated to the latest Hibernate, Netty and H2 dependencies.
 * 02/06/18 Improved snooze behavior for reminders. (Fx) _[leeboardtools]_

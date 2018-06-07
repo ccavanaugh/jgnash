@@ -29,7 +29,7 @@ allprojects {
         hamcrestVersion = '1.3'
 
         h2Version = '1.4.197'
-        hsqldbVersion = '2.4.0'
+        hsqldbVersion = '2.4.1'
 
         xstreamVersion = '1.4.10'
         kxmlVersion = '2.3.0'
