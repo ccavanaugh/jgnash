@@ -233,8 +233,8 @@ public class SqlUtils {
     @SuppressWarnings("SameReturnValue")
     static boolean isConnectionValid(final String url) throws Exception {
 
-        try (final Connection connection = DriverManager.getConnection(url)){
-            connection.close();
+        try (final Connection ignored = DriverManager.getConnection(url)){
+            logger.fine("Connection is valid");
         } catch (final Exception e) {
             if (e instanceof SQLSyntaxErrorException) {
                 if (e.toString().contains("Unknown database")) {
