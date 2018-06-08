@@ -17,7 +17,6 @@
  */
 package jgnash.engine.search;
 
-import jgnash.engine.Transaction;
 
 /**
  * Matcher .
@@ -26,11 +25,4 @@ import jgnash.engine.Transaction;
  */
 interface Matcher {
 
-    /**
-     * Regex match against a Transaction.
-     *
-     * @param t Transaction to match
-     * @return true if Transaction matches
-     */
-    boolean matches(Transaction t);
 }

@@ -37,7 +37,6 @@ public class PayeeMatcher extends AbstractStringMatcher {
         super(pattern, caseSensitive);
     }
 
-    @Override
     public boolean matches(final Transaction t) {
         java.util.regex.Matcher m = p.matcher(t.getPayee());
 
