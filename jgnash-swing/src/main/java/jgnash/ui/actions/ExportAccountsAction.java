@@ -63,7 +63,7 @@ public class ExportAccountsAction extends AbstractEnabledAction {
             final class Export extends SwingWorker<Void, Void> {
 
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void doInBackground() {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                     AccountTreeXMLFactory.exportAccountTree(EngineFactory.getEngine(EngineFactory.DEFAULT), file);
                     return null;

@@ -75,7 +75,7 @@ public class ExportTransactionsAction {
             final class Export extends SwingWorker<Void, Void> {
 
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void doInBackground() {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
                     if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {

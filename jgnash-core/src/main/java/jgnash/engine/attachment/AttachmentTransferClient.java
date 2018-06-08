@@ -160,7 +160,7 @@ class AttachmentTransferClient {
     private class Initializer extends ChannelInitializer<SocketChannel> {
 
         @Override
-        public void initChannel(final SocketChannel ch) throws Exception {
+        public void initChannel(final SocketChannel ch) {
 
             ch.pipeline().addLast(
                     new DelimiterBasedFrameDecoder(((TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + PATH_MAX,

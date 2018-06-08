@@ -88,7 +88,7 @@ public class ExportAccountsAction {
         }
 
         @Override
-        protected Void call() throws Exception {
+        protected Void call() {
             updateMessage(ResourceUtils.getString("Message.PleaseWait"));
             updateProgress(-1, Long.MAX_VALUE);
 

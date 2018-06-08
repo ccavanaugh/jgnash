@@ -57,7 +57,7 @@ public class ImportAccountsAction extends AbstractEnabledAction {
             final class Import extends SwingWorker<Void, Void> {
 
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void doInBackground() {
                     UIApplication.getFrame().displayWaitMessage(ResourceUtils.getString("Message.ImportWait"));
 
                     RootAccount root = AccountTreeXMLFactory.loadAccountTree(file.toPath());

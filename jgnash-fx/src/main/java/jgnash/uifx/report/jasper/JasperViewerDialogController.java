@@ -349,7 +349,7 @@ public final class JasperViewerDialogController {
             if (reportExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
                 final Task<Void> task = new Task<Void>() {
                     @Override
-                    protected Void call() throws Exception {
+                    protected Void call() {
                         updateMessage(resources.getString("Message.CompilingReport"));
                         updateProgress(-1, Long.MAX_VALUE);
 
@@ -553,7 +553,7 @@ public final class JasperViewerDialogController {
     private void handlePrintAction() {
         final Task<Void> task = new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 try {
                     parent.get().setCursor(Cursor.WAIT);
 

@@ -245,7 +245,7 @@ public class ConsoleDialog {
         }
 
         @Override
-        public void write(int b) throws IOException {
+        public void write(int b) {
 
         }
 

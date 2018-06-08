@@ -64,7 +64,7 @@ public class SaveAsTask extends Task<Void> {
     }
 
     @Override
-    protected Void call() throws Exception {
+    protected Void call() {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 

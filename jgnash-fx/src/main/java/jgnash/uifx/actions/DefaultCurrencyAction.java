@@ -49,7 +49,7 @@ public class DefaultCurrencyAction {
             private List<CurrencyNode> currencyNodeList;
 
             @Override
-            protected List<CurrencyNode> call() throws Exception {
+            protected List<CurrencyNode> call() {
 
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 Objects.requireNonNull(engine);

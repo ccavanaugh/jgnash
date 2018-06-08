@@ -175,7 +175,7 @@ public class RegisterActions {
 
             final Task<Void> exportTask = new Task<Void>() {
                 @Override
-                protected Void call() throws Exception {
+                protected Void call() {
                     updateMessage(resources.getString("Message.PleaseWait"));
                     updateProgress(-1, Long.MAX_VALUE);
 

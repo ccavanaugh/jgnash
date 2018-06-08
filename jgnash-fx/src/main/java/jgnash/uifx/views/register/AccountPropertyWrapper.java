@@ -105,7 +105,7 @@ class AccountPropertyWrapper implements MessageListener {
 
         executorService.submit(new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 synchronized (numberFormatLock) {
                     if (account.get() != null) {
                         final Account account = AccountPropertyWrapper.this.account.get();
@@ -124,7 +124,7 @@ class AccountPropertyWrapper implements MessageListener {
 
         executorService.submit(new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 synchronized (numberFormatLock) {
                     if (account.get() != null) {
                         final Account account = AccountPropertyWrapper.this.account.get();
@@ -144,7 +144,7 @@ class AccountPropertyWrapper implements MessageListener {
         if (account.get() != null && account.get().memberOf(AccountGroup.INVEST)) {
             executorService.submit(new Task<Void>() {
                 @Override
-                protected Void call() throws Exception {
+                protected Void call() {
                     synchronized (numberFormatLock) {
                         if (account.get() != null) {
                             final Account account = AccountPropertyWrapper.this.account.get();
@@ -163,7 +163,7 @@ class AccountPropertyWrapper implements MessageListener {
 
             executorService.submit(new Task<Void>() {
                 @Override
-                protected Void call() throws Exception {
+                protected Void call() {
                     synchronized (numberFormatLock) {
                         if (account.get() != null) {
                             JavaFXUtils.runLater(() -> marketValue.set(numberFormat.format(account.get().getMarketValue())));

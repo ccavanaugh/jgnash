@@ -274,7 +274,7 @@ public class EditExchangeRatesController implements MessageListener {
 
         updateTask = new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
 
                 final List<CurrencyNode> list = engine.getCurrencies();
 

@@ -136,7 +136,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         }
     }
 
-    public void toggleExpansion(final E object) {
+    void toggleExpansion(final E object) {
         WriteLock writeLock = rwl.writeLock();
         writeLock.lock();
 
@@ -205,7 +205,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         }
     }
 
-    public boolean isExpanded(final E object) {
+    boolean isExpanded(final E object) {
         return getNode(object).isExpanded();
     }
 
@@ -481,7 +481,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     private final class InitializeModelWorker extends SwingWorker<Void, Void> {
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             loadModel();
             buildVisibleModel();
             restoreExpansionState(preferences.get(EXPANSION_STATE, null));

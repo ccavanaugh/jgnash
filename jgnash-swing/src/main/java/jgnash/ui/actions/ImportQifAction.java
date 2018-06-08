@@ -106,7 +106,7 @@ public class ImportQifAction extends AbstractEnabledAction {
                 class ImportFile extends SwingWorker<Void, Void> {
 
                     @Override
-                    protected Void doInBackground() throws Exception {
+                    protected Void doInBackground() {
                         UIApplication.getFrame().displayWaitMessage(rb.getString("Message.ImportWait"));
                         QifImport imp = new QifImport();
 

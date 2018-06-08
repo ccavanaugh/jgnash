@@ -87,7 +87,7 @@ public class AttachmentTransferServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
 
                         @Override
-                        public void initChannel(final SocketChannel ch) throws Exception {
+                        public void initChannel(final SocketChannel ch) {
 
                             ch.pipeline().addLast(
                                     new DelimiterBasedFrameDecoder(((TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + PATH_MAX,
@@ -139,7 +139,7 @@ public class AttachmentTransferServer {
         }
 
         @Override
-        public void channelActive(final ChannelHandlerContext ctx) throws Exception {
+        public void channelActive(final ChannelHandlerContext ctx) {
             channelGroup.add(ctx.channel()); // maintain channels
 
             logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());

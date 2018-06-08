@@ -128,7 +128,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(final ChannelHandlerContext ctx) {
         for (Attachment object : fileMap.values()) {
             try {
                 object.outputStream.close();

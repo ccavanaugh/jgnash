@@ -74,7 +74,7 @@ public class NewFileDialog extends WizardDialog {
 
             @SuppressWarnings("unchecked")
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
                 final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));

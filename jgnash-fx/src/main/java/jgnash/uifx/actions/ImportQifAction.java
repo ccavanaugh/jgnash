@@ -90,7 +90,7 @@ public class ImportQifAction {
         }
 
         @Override
-        protected QifImport call() throws Exception {
+        protected QifImport call() {
             if (QifUtils.isFullFile(file)) {
                 StaticUIMethods.displayError("Only bank statement based QIF file are supported at this time");
                 cancel();

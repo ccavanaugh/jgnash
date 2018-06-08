@@ -46,7 +46,7 @@ public class DefaultLocaleAction {
             private LocaleObject[] localeObjects;
 
             @Override
-            protected LocaleObject[] call() throws Exception {
+            protected LocaleObject[] call() {
                 localeObjects = LocaleObject.getLocaleObjects();
                 return localeObjects;
             }

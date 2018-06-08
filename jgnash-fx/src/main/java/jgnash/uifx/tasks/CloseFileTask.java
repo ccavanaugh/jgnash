@@ -59,7 +59,7 @@ public class CloseFileTask extends Task<String> {
     }
 
     @Override
-    protected String call() throws Exception {
+    protected String call() {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
         try {

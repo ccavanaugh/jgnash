@@ -77,7 +77,7 @@ public class CurrencyUpdateFactory {
     public static class UpdateExchangeRatesCallable implements Callable<Void> {
 
         @Override
-        public Void call() throws Exception {
+        public Void call() {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
             if (engine != null) {

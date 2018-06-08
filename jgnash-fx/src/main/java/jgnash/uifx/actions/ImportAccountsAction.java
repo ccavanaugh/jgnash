@@ -89,7 +89,7 @@ public class ImportAccountsAction {
         }
 
         @Override
-        protected Void call() throws Exception {
+        protected Void call() {
             updateMessage(ResourceUtils.getString("Message.ImportWait"));
             updateProgress(-1, Long.MAX_VALUE);
 

@@ -272,7 +272,7 @@ public class ReconcileDialogController implements MessageListener {
     private void handleFinishLaterAction() {
         final Task<Void> commitTask = new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 updateMessage(resources.getString("Message.PleaseWait"));
                 updateProgress(-1, Long.MAX_VALUE);
 
@@ -293,7 +293,7 @@ public class ReconcileDialogController implements MessageListener {
 
         final Task<Void> commitTask = new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 updateMessage(resources.getString("Message.PleaseWait"));
                 updateProgress(-1, Long.MAX_VALUE);
 

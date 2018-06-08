@@ -210,7 +210,7 @@ public class UpdateFactory {
         }
 
         @Override
-        public Boolean call() throws Exception {
+        public Boolean call() {
             boolean result = true;
 
             try {
@@ -243,7 +243,7 @@ public class UpdateFactory {
         }
 
         @Override
-        public Boolean call() throws Exception {
+        public Boolean call() {
             boolean result = false;
 
             final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -280,7 +280,7 @@ public class UpdateFactory {
         }
 
         @Override
-        public Boolean call() throws Exception {
+        public Boolean call() {
 
             boolean result = true;
 
