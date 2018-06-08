@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
@@ -165,8 +164,7 @@ public final class ActionParser extends DefaultHandler {
                 jgnash.ui.util.builder.Action annotation = aClass.getAnnotation(jgnash.ui.util.builder.Action.class);
 
                 if (annotation != null) {
-                    jgnash.ui.util.builder.Action action = annotation;
-                    preLoadAction(action.value(), (Action) aClass.newInstance());
+                    preLoadAction(annotation.value(), (Action) aClass.newInstance());
                 }
             }
 
@@ -217,12 +215,11 @@ public final class ActionParser extends DefaultHandler {
     public JMenuBar createMenuBar(final String id) {
         JMenuBar menuBar = new JMenuBar();
 
-        ActionNode o = actionTrees.get(id);
+        ActionNode actionNode = actionTrees.get(id);
 
-        if (o != null) {
-            ActionNode node = o;
-            for (int i = 0; i < node.size(); i++) {
-                JMenuItem item = createMenuItem(node.getChildAt(i));
+        if (actionNode != null) {
+            for (int i = 0; i < actionNode.size(); i++) {
+                JMenuItem item = createMenuItem(actionNode.getChildAt(i));
 
                 if (item instanceof JMenu) {
                     menuBar.add((JMenu) item);
