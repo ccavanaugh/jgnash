@@ -45,8 +45,6 @@ import javax.persistence.Table;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
-import static java.util.stream.Collectors.joining;
-
 /**
  * Base class for transactions.  Transaction should be treated as immutable as in not modified if they have
  * been persisted within the database.
@@ -522,7 +520,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
                 -> !transactionEntry.getMemo().isEmpty() && !memoList.contains(transactionEntry.getMemo()))
                 .forEachOrdered(transactionEntry -> memoList.add(transactionEntry.getMemo()));
 
-        return memoList.stream().collect(joining(", "));
+        return String.join(", ", memoList);
     }
 
     public boolean isMemoConcatenated() {
