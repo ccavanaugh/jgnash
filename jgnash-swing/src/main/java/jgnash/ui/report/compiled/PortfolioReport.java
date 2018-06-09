@@ -194,11 +194,10 @@ public class PortfolioReport extends DynamicJasperReport {
 
             try {
                 performanceSummary = new InvestmentPerformanceSummary(accountCombo.getSelectedAccount(), subAccountCheckBox.isSelected());
-            } catch (Exception e) {           
+                Logger.getLogger(PortfolioReportTableModel.class.getName()).info(performanceSummary.toString());
+            } catch (final Exception e) {
                 Logger.getLogger(PortfolioReportTableModel.class.getName()).log(Level.SEVERE, null, e);
             }
-
-             Logger.getLogger(PortfolioReportTableModel.class.getName()).info(performanceSummary.toString());
         }
 
         @Override
