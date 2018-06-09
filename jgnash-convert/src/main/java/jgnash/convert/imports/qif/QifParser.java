@@ -704,7 +704,6 @@ public final class QifParser {
             line = in.readLine();
             while (line != null) {
                 if (line.startsWith("^")) {
-                    result = true;
                     break;
                 }
                 line = in.readLine();

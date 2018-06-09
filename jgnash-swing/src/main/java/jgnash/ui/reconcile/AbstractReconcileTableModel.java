@@ -76,7 +76,6 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
     AbstractReconcileTableModel(final Account account, final LocalDate closingDate) {
         Objects.requireNonNull(account);
-        assert cNames.length == cClass.length;
 
         this.account = account;
         this.closingDate = closingDate;
@@ -224,7 +223,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
     }
 
-    public BigDecimal getReconciledTotal() {
+    BigDecimal getReconciledTotal() {
         BigDecimal sum = BigDecimal.ZERO;
 
         rwl.readLock().lock();

@@ -91,7 +91,7 @@ class OfxV1ToV2 {
                         if (xml.indexOf("</" + tag + ">", tagEnd) == -1) {
 
                             readPos = xml.indexOf("<", tagEnd);
-                            xml = xml.insert(readPos, "</" + tag + ">");
+                            xml.insert(readPos, "</" + tag + ">");
                         }
                     }
                 } else {

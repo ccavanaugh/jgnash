@@ -51,7 +51,7 @@ public class TabViewPane extends TabPane {
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
     }
 
-    public Tab addTab(final Node node, final String description) {
+    public void addTab(final Node node, final String description) {
         BorderPane borderPane = new BorderPane();
         TitledPane titledPane = new TitledPane(description, null);
         titledPane.setCollapsible(false);
@@ -68,7 +68,5 @@ public class TabViewPane extends TabPane {
         tab.setContent(borderPane);
 
         getTabs().add(tab);
-
-        return tab;
     }
 }
