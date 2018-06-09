@@ -157,11 +157,12 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                 amountField.setEditable(true);
             }
             splits = dlg.getSplits();
+
             if (splits.isEmpty()) {
                 splits = null; // set to null to clear
             }
 
-            if (RegisterFactory.getConcatenateMemos() && splits.size() > 0) {
+            if (RegisterFactory.getConcatenateMemos() && splits != null) {
                 memoField.setEnabled(false);
                 memoField.setText(Transaction.getMemo(splits));
             } else {
