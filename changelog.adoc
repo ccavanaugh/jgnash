@@ -21,6 +21,7 @@
 * Reinstate archive capability
 * Disable the portfolio report if there are no investment accounts.
 * Add export function for the account tree balance/table
+* Open zipped backups instead of manually unzipping
 
 == Release 2.34.1
 * 06/07/18 Updated Russian translation. (Swing, Fx) _[pchurzin]_
