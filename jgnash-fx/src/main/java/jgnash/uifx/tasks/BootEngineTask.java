@@ -1,22 +1,16 @@
 package jgnash.uifx.tasks;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-
-import jgnash.engine.DataStoreType;
-import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.jpa.SqlUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * Boots the engine with a local file or connection to a remote server.
@@ -111,7 +105,7 @@ public class BootEngineTask extends Task<String> {
                     updateMessage(message);
                     Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
                 }
-            } else if (checkAndBackupOldVersion(localFile, password)) {
+            } else  {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
                 updateMessage(resources.getString("Message.FileLoadComplete"));
                 Thread.sleep(FORCED_DELAY); // force delay for better visual feedback
@@ -119,69 +113,5 @@ public class BootEngineTask extends Task<String> {
         }
 
         return message;
-    }
-
-    /**
-     * Check and determine if the file is an old format and backup in necessary.
-     *
-     * @param fileName fileName to verify
-     * @param password assumed password
-     * @return true if no errors are encountered
-     */
-    private static boolean checkAndBackupOldVersion(final String fileName, final char[] password) {
-
-        boolean result = false;
-
-        if (Files.exists(Paths.get(fileName))) {
-            final float version = EngineFactory.getFileVersion(Paths.get(fileName), password);
-            final DataStoreType type = EngineFactory.getDataStoreByType(fileName);
-
-            boolean oldSchema = false;
-
-            if (type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE) {
-                oldSchema = SqlUtils.useOldPersistenceUnit(fileName, password);
-            }
-
-            if (type == DataStoreType.H2_DATABASE && oldSchema) {
-                Platform.runLater(()
-                        -> StaticUIMethods.displayMessage(ResourceUtils.getString("Message.Info.LongUpgrade")));
-
-                final PackDatabaseTask packDatabaseTask = new PackDatabaseTask(fileName, password);
-
-                new Thread(packDatabaseTask).start();
-
-                Platform.runLater(() -> StaticUIMethods.displayTaskProgress(packDatabaseTask));
-
-                try {   // block until complete
-                    packDatabaseTask.get();
-                } catch (final InterruptedException | ExecutionException e) {
-                    Logger.getLogger(BootEngineTask.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-                }
-            }
-
-            if (type == DataStoreType.HSQL_DATABASE && oldSchema) {
-                final String errorMessage = ResourceUtils.getString("Message.Error.OldHsqlFile");
-
-                Platform.runLater(() -> StaticUIMethods.displayError(errorMessage));
-            } else if (version <= 0) {
-                final String errorMessage = ResourceUtils.getString("Message.Error.InvalidUserPass");
-
-                Platform.runLater(() -> StaticUIMethods.displayError(errorMessage));
-
-            } else {
-                result = true;
-
-                // make a versioned backup first
-                if (version < Engine.CURRENT_VERSION) {
-                    FileUtils.copyFile(Paths.get(fileName), Paths.get(fileName + "." + version));
-
-                    Platform.runLater(() ->
-                            StaticUIMethods.displayMessage(ResourceUtils.getString("Message.Info.Upgrade",
-                                    fileName + "." + version)));
-                }
-            }
-        }
-
-        return result;
     }
 }

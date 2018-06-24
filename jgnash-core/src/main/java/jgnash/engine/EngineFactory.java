@@ -238,7 +238,7 @@ public class EngineFactory {
      * @see Engine
      */
     public static synchronized Engine bootLocalEngine(final String fileName, final String engineName,
-                                                      final char[] password) throws IOException {
+                                                      final char[] password) {
         final DataStoreType type = getDataStoreByType(fileName);
 
         Engine engine = null;
@@ -263,21 +263,13 @@ public class EngineFactory {
      * @see DataStoreType
      */
     public static synchronized Engine bootLocalEngine(final String fileName, final String engineName,
-                                                      final char[] password, final DataStoreType type)
-            throws IOException {
+                                                      final char[] password, final DataStoreType type) {
 
         Instant start = Instant.now();
 
         MessageBus.getInstance(engineName).setLocal();
 
         final DataStore dataStore = type.getDataStore();
-
-        // If the file exist, check for need to manually upgrade first
-        if (Files.exists(Paths.get(fileName)) && type == DataStoreType.HSQL_DATABASE) {
-            if (SqlUtils.useOldPersistenceUnit(fileName, password)) {
-                throw new IOException("HyperSQL files must be converted before opening in this release.");
-            }
-        }
 
         final Engine engine = dataStore.getLocalEngine(fileName, engineName, password);
 

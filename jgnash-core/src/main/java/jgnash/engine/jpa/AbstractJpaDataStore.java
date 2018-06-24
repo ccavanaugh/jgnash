@@ -164,14 +164,10 @@ abstract class AbstractJpaDataStore implements DataStore {
         try {
             if (!FileUtils.isFileLocked(fileName)) {
                 try {
-                    if (SqlUtils.useOldPersistenceUnit(fileName, password)) {
-                        System.out.println("Using old database schema");
-                        factory = Persistence.createEntityManagerFactory(JpaConfiguration.OLD_UNIT_NAME, properties);
-                    } else {
-                        System.out.println("Using new database schema");
-                        factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
-                    }
 
+                    /* specifies the unit name and properties.  Unit name can be used to specify a different persistence
+                       unit defined in persistence.xml */
+                    factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
                     em = factory.createEntityManager();
 
                     logger.info("Created local JPA container and engine");
@@ -227,7 +223,7 @@ abstract class AbstractJpaDataStore implements DataStore {
 
                 em.getTransaction().begin();
 
-                for (StoredObject o : objects) {
+                for (StoredObject o: objects) {
                     em.persist(o);
                 }
 

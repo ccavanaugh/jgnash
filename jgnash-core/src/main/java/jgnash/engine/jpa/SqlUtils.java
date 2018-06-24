@@ -137,47 +137,6 @@ public class SqlUtils {
         return fileVersion;
     }
 
-    public static boolean useOldPersistenceUnit(final String fileName, final char[] password) {
-        boolean result = false;  // return false only if an error occurs
-
-        try {
-            if (Files.exists(Paths.get(fileName))) {
-                if (!FileUtils.isFileLocked(fileName)) {
-                    final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-                    final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
-                            false);
-                    final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
-
-                    try (final Connection connection = DriverManager.getConnection(url)) {
-                        final DatabaseMetaData metaData = connection.getMetaData();
-
-                        try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
-                            while (resultSet.next()) {
-                                if (resultSet.getString(COLUMN_NAME).equals("SEQUENCE_NEXT_HI_VALUE")
-                                        && resultSet.getString(TABLE_NAME).equals("HIBERNATE_SEQUENCES")) {
-
-                                    result = true;
-                                }
-                            }
-                        }
-
-                        // must issue a shutdown for correct file closure
-                        try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
-                            statement.execute();
-                        }
-                    } catch (final SQLException e) {
-                        logger.log(Level.SEVERE, e.getMessage(), e);
-                    }
-                } else {
-                    logger.severe("File was locked");
-                }
-            }
-        } catch (final IOException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-        return result;
-    }
-
     /**
      * Diagnostic utility method to dump a list of table names and columns to the console.
      * Assumes the file is not password protected.

@@ -29,7 +29,9 @@ Relational databases will need to be saved to a .xml or .bxds file format in the
 be saved back to a relational database format afterwards.
 
 * 06/24/2018 Updated to the latest Hibernate dependency.  This breaks schema compatibility with older relational
-             database files
+             database files.
+* 06/24/2018 Dropped support for the old jgnash Hibernate persistence unit / schema.
+
 
 == Release 2.34.1
 * 06/07/18 Updated Russian translation. (Swing, Fx) _[pchurzin]_
