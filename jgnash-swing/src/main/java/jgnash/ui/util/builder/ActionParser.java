@@ -164,11 +164,11 @@ public final class ActionParser extends DefaultHandler {
                 jgnash.ui.util.builder.Action annotation = aClass.getAnnotation(jgnash.ui.util.builder.Action.class);
 
                 if (annotation != null) {
-                    preLoadAction(annotation.value(), (Action) aClass.newInstance());
+                    preLoadAction(annotation.value(), (Action) aClass.getDeclaredConstructor().newInstance());
                 }
             }
 
-        } catch (ClassNotFoundException | IOException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | IOException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             log.log(Level.SEVERE, e.toString(), e);
         }
     }

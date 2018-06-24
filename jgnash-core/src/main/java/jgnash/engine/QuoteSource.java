@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,8 +60,7 @@ public enum QuoteSource {
      */
     public SecurityParser getParser() {
         try {
-            Constructor<?> accConst = parser.getDeclaredConstructor();
-            return (SecurityParser) accConst.newInstance();
+            return parser.getDeclaredConstructor().newInstance();
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             Logger.getLogger(QuoteSource.class.getName()).log(Level.SEVERE, e.toString(), e);
             return null; // unable to create object

@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -213,7 +214,7 @@ public final class PluginFactory {
         try {
 
             if (pluginActivator != null) {
-                final Object object = classLoader.loadClass(pluginActivator).newInstance();
+                final Object object = classLoader.loadClass(pluginActivator).getDeclaredConstructor().newInstance();
 
                 if (object instanceof Plugin) {
                     plugin = (Plugin) object;
@@ -221,7 +222,7 @@ public final class PluginFactory {
             } else {
                 logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
             }
-        } catch (final NoClassDefFoundError e) {
+        } catch (final NoClassDefFoundError | NoSuchMethodException | InvocationTargetException e) {
             // This is expected when a Swing instance tries to load a Fx instance of a plugin
             logger.log(Level.INFO, "Plugin type was not compatible; not loaded: " + jarFileName);
         }

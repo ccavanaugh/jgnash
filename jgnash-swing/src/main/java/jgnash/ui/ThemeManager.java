@@ -17,6 +17,7 @@
  */
 package jgnash.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -120,9 +121,9 @@ public class ThemeManager {
 
         try {
             Class<?> themeClass = Class.forName(theme);
-            MetalTheme themeObject = (MetalTheme) themeClass.newInstance();
+            MetalTheme themeObject = (MetalTheme) themeClass.getDeclaredConstructor().newInstance();
             MetalLookAndFeel.setCurrentTheme(themeObject);
-        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             Logger.getLogger(ThemeManager.class.getName()).log(Level.SEVERE, "Could not install theme: {0}\n{1}",
                     new Object[] { theme, e.toString() });
         }
@@ -133,8 +134,7 @@ public class ThemeManager {
         String theme = pref.get(THEME, DEFAULT_THEME);
 
         try {
-            Class<?> lafClass = Class.forName(lookAndFeel);
-            Object lafInstance = lafClass.newInstance();
+            final Object lafInstance = Class.forName(lookAndFeel).getDeclaredConstructor().newInstance();
 
             if (lafInstance instanceof SubstanceSkin) {
                 UIManager.put(SubstanceLookAndFeel.SHOW_EXTRA_WIDGETS, Boolean.TRUE);
@@ -155,8 +155,7 @@ public class ThemeManager {
             } else if (lafInstance instanceof LookAndFeel) {
                 UIManager.setLookAndFeel((LookAndFeel) lafInstance);
             }
-        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException e) {
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | InvocationTargetException e) {
             Logger.getLogger(ThemeManager.class.getName()).log(Level.WARNING, null, e);
         }
     }
@@ -192,10 +191,10 @@ public class ThemeManager {
 
         Collections.sort(lookAndFeels);
 
-        for (String lookAndFeel : lookAndFeels) {
+        for (final String lookAndFeel : lookAndFeels) {
             try {
                 Class<?> lnfClass = Class.forName(lookAndFeel);
-                LookAndFeel newLAF = (LookAndFeel) lnfClass.newInstance();
+                LookAndFeel newLAF = (LookAndFeel) lnfClass.getDeclaredConstructor().newInstance();
 
                 JRadioButtonMenuItem button = new JRadioButtonMenuItem();
 
@@ -217,7 +216,7 @@ public class ThemeManager {
                 if (newLAF.getName().equals(activeLookAndFeelName)) {
                     button.setSelected(true);
                 }
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 Logger.getLogger(ThemeManager.class.getName()).log(Level.WARNING, null, e);
             }
         }
@@ -260,9 +259,8 @@ public class ThemeManager {
     @SuppressWarnings({ "rawtypes" })
     private void addTheme(final String theme) {
         try {
-            Class c = Class.forName(theme);
-            themeList.add(c.newInstance());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            themeList.add(Class.forName(theme).getDeclaredConstructor().newInstance());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             Logger.getLogger(ThemeManager.class.getName()).log(Level.WARNING, "Could not add theme: " + theme, e);
         }
     }
@@ -365,11 +363,11 @@ public class ThemeManager {
     @SuppressWarnings("rawtypes")
     private static boolean isLookAndFeelAvailable(final String laf) {
         try {
-            Class lnfClass = Class.forName(laf);
-            LookAndFeel newLAF = (LookAndFeel) lnfClass.newInstance();
+            Class<?> lnfClass = Class.forName(laf);
+            LookAndFeel newLAF = (LookAndFeel) lnfClass.getDeclaredConstructor().newInstance();
 
             return newLAF.isSupportedLookAndFeel();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) { // If ANYTHING bad happens, return false
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) { // If ANYTHING bad happens, return false
             Logger.getLogger(ThemeManager.class.getName()).log(Level.FINEST, e.getLocalizedMessage(), e);
             return false;
         }
