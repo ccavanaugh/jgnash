@@ -17,19 +17,19 @@
  */
 package jgnash.engine;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Objects;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
+import javax.persistence.SequenceGenerator;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Historical data for a {@code SecurityNode}.
@@ -37,10 +37,12 @@ import jgnash.util.Nullable;
  * @author Craig Cavanaugh
  */
 @Entity
+@SequenceGenerator(name = "sequence", allocationSize = 10)
 public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Serializable {
 
     @SuppressWarnings("unused")
-    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    @Id
+    @GeneratedValue(generator = "sequence", strategy = GenerationType.SEQUENCE)
     public long id;
 
     private LocalDate date = LocalDate.now();
@@ -71,11 +73,11 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     /**
      * Public constructor for creating a history node.
      *
-     * @param date date
-     * @param price closing price
+     * @param date   date
+     * @param price  closing price
      * @param volume closing volume
-     * @param high high price for the day
-     * @param low low price for the day
+     * @param high   high price for the day
+     * @param low    low price for the day
      */
     public SecurityHistoryNode(@NotNull final LocalDate date, @Nullable final BigDecimal price, final long volume,
                                @Nullable final BigDecimal high, @Nullable final BigDecimal low) {
@@ -138,7 +140,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
      *
      * @return the adjusted price
      */
-    public @NotNull BigDecimal getAdjustedPrice() {
+    public @NotNull
+    BigDecimal getAdjustedPrice() {
         if (adjustedPrice != null) {
             return adjustedPrice;
         }
@@ -150,7 +153,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
      *
      * @return the adjusted price
      */
-    public @NotNull BigDecimal getAdjustedHigh() {
+    public @NotNull
+    BigDecimal getAdjustedHigh() {
         if (adjustedHigh != null) {
             return adjustedHigh;
         }
@@ -162,7 +166,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
      *
      * @return the adjusted price
      */
-    public @NotNull BigDecimal getAdjustedLow() {
+    public @NotNull
+    BigDecimal getAdjustedLow() {
         if (adjustedLow != null) {
             return adjustedLow;
         }
@@ -211,8 +216,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
                 .compareTo(((SecurityHistoryNode) obj).date) == 0;
     }
 
-   @Override
+    @Override
     public int hashCode() {
-       return date.hashCode();
+        return date.hashCode();
     }
 }

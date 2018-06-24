@@ -17,13 +17,13 @@
  */
 package jgnash.engine.jpa;
 
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 
 import static jgnash.util.LogUtil.logSevere;
 
@@ -34,10 +34,12 @@ import static jgnash.util.LogUtil.logSevere;
  * @author Craig Cavanaugh
  */
 @Entity
+@SequenceGenerator(name = "sequence", allocationSize = 10)
 public class JpaTrashEntity {
 
     @SuppressWarnings("unused")
-    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    @Id
+    @GeneratedValue(generator = "sequence", strategy = GenerationType.SEQUENCE)
     private long id;
 
     private long entityId;

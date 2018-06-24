@@ -54,7 +54,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
     /**
      * Unique ID for every object.
      */
-    @Id()
+    @Id
     @Column(nullable = false, length = 36)
     private String uuid = UUIDUtil.getUID();
 

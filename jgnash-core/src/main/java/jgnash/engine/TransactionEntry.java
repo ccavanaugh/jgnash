@@ -28,6 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -47,6 +48,7 @@ import java.util.Objects;
  * @author Craig Cavanaugh
  */
 @Entity
+@SequenceGenerator(name = "sequence", allocationSize = 10)
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
 
     /**
@@ -56,7 +58,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     @SuppressWarnings("unused")
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(generator = "sequence", strategy = GenerationType.SEQUENCE)
     private long id;
 
     @Enumerated(EnumType.STRING)

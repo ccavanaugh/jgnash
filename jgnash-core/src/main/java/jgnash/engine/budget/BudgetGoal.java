@@ -17,12 +17,8 @@
  */
 package jgnash.engine.budget;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import jgnash.engine.MathConstants;
+import jgnash.time.Period;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -34,9 +30,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OrderColumn;
-
-import jgnash.engine.MathConstants;
-import jgnash.time.Period;
+import javax.persistence.SequenceGenerator;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Budget Goal Object
@@ -46,11 +46,12 @@ import jgnash.time.Period;
  * @author Craig Cavanaugh
  */
 @Entity
+@SequenceGenerator(name = "sequence", allocationSize = 10)
 public class BudgetGoal implements Cloneable, Serializable {
 
     @SuppressWarnings("unused")
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(generator = "sequence", strategy = GenerationType.SEQUENCE)
     public long id;
 
     /**

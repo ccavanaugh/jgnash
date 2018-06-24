@@ -17,10 +17,7 @@
  */
 package jgnash.engine;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Objects;
+import jgnash.util.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,21 +26,26 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import jgnash.util.NotNull;
+import javax.persistence.SequenceGenerator;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Represents security history events such as splits and dividends.
- *
+ * <p>
  * Equality is assumed if the date and type match.
  *
  * @author Craig Cavanaugh
  */
 @Entity
+@SequenceGenerator(name = "sequence", allocationSize = 10)
 public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, Serializable {
 
     @SuppressWarnings("unused")
-    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    @Id
+    @GeneratedValue(generator = "sequence", strategy = GenerationType.SEQUENCE)
     public long id;
 
     @Enumerated(EnumType.STRING)

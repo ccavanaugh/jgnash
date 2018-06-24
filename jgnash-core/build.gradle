@@ -8,7 +8,6 @@ dependencies {
     compile group: 'log4j', name: 'log4j', version: log4jVersion
 
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateVersion
-    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: hibernateJPAVersion
     compile(group: 'org.hibernate', name: 'hibernate-c3p0', version: hibernateVersion) {
         exclude(module: 'c3p0')
     }

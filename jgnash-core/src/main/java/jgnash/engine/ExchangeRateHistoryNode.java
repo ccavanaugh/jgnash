@@ -17,18 +17,18 @@
  */
 package jgnash.engine;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Objects;
+import jgnash.util.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import jgnash.util.NotNull;
+import javax.persistence.SequenceGenerator;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Exchange rate history node for a {@code ExchangeRate}.
@@ -37,10 +37,12 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  */
 @Entity
+@SequenceGenerator(name = "sequence", allocationSize = 10)
 public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNode>, Serializable {
 
     @SuppressWarnings("UnusedDeclaration")
-    @Id @GeneratedValue(strategy = GenerationType.TABLE)
+    @Id
+    @GeneratedValue(generator = "sequence", strategy = GenerationType.SEQUENCE)
     public long id;
 
     @Column(precision = 20, scale = 8)
@@ -60,7 +62,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
      * Constructor.
      *
      * @param localDate date for this history node.  The date will be trimmed
-     * @param rate exchange rate for the given date
+     * @param rate      exchange rate for the given date
      */
     ExchangeRateHistoryNode(final LocalDate localDate, final BigDecimal rate) {
         Objects.requireNonNull(date);

@@ -23,6 +23,14 @@
 * Add export function for the account tree balance/table
 * Open zipped backups instead of manually unzipping
 
+== Release 2.35.0 __(File format change)__
+=== Notes:
+Relational databases will need to be saved to a .xml or .bxds file format in the prior release of jGnash.  They may
+be saved back to a relational database format afterwards.
+
+* 06/24/2018 Updated to the latest Hibernate dependency.  This breaks schema compatibility with older relational
+             database files
+
 == Release 2.34.1
 * 06/07/18 Updated Russian translation. (Swing, Fx) _[pchurzin]_
 * 06/07/18 Updated to the latest Hibernate, Netty, Hsqldb, and DynamicJasper dependencies.
