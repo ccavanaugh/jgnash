@@ -8,10 +8,9 @@ dependencies {
     compile group: 'log4j', name: 'log4j', version: log4jVersion
 
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateVersion
-    compile(group: 'org.hibernate', name: 'hibernate-c3p0', version: hibernateVersion) {
-        exclude(module: 'c3p0')
-    }
-    compile group: 'com.mchange', name: 'c3p0', version: c3p0Version
+    compile(group: 'org.hibernate', name: 'hibernate-hikaricp', version: hibernateVersion)
+    compile group: 'com.zaxxer', name: 'HikariCP', version: hikariVersion
+
     compile group: 'com.h2database', name: 'h2', version: h2Version
     compile group: 'org.hsqldb', name: 'hsqldb', version: hsqldbVersion
 

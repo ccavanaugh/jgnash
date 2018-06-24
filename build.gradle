@@ -15,7 +15,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '2.34.1'
+    version = '2.35.0'
 
     project.ext {
         junitVersion = '4.12'
@@ -36,6 +36,7 @@ allprojects {
 
         hibernateVersion = '5.3.1.Final'
         c3p0Version = '0.9.5.2'
+        hikariVersion = '3.2.0'
 
         dynamicJasperVersion = '5.1.1'
         jasperReportsVersion = '6.4.3'
