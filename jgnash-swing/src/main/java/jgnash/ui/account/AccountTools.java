@@ -142,11 +142,8 @@ class AccountTools {
             dlg.disableAccountCurrency();
         }
 
-        if (account.getTransactionCount() > 0) {
-            dlg.setPlaceholderEnabled(false);
-        } else {
-            dlg.setAccountPlaceholder(account.isPlaceHolder());
-        }
+        dlg.setPlaceholderEnabled(account.getTransactionCount() == 0);
+        dlg.setAccountPlaceholder(account.isPlaceHolder());
 
         dlg.setVisible(true);
 

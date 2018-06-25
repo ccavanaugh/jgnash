@@ -141,12 +141,12 @@ class AccountDialog extends JDialog implements ActionListener {
         return accountPanel.isAccountLocked();
     }
 
-    void setAccountPlaceholder(final boolean b) {
-        accountPanel.setPlaceholder(b);
-    }
-
     boolean isAccountPlaceholder() {
         return accountPanel.isPlaceholder();
+    }
+
+    void setAccountPlaceholder(final boolean b) {
+        accountPanel.setPlaceholder(b);
     }
 
     void setPlaceholderEnabled(final boolean enabled) {

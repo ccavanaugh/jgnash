@@ -91,7 +91,7 @@ final class AccountPanel extends JPanel implements ActionListener {
 
     private Account modifyingAccount;
 
-    public AccountPanel() {
+    AccountPanel() {
         layoutMainPanel();
 
         setAccountType(AccountType.BANK);
@@ -184,65 +184,65 @@ final class AccountPanel extends JPanel implements ActionListener {
         updateCommodityButton();
     }
 
-    public void setParentAccount(final Account parentAccount) {
+    void setParentAccount(final Account parentAccount) {
         this.parentAccount = parentAccount;
         parentButton.setText(parentAccount.getName());
         setAccountCurrency(parentAccount.getCurrencyNode());
     }
 
-    public Account getParentAccount() {
+    Account getParentAccount() {
         return parentAccount;
     }
 
-    public String getAccountName() {
+    String getAccountName() {
         return nameField.getText();
     }
 
-    public void setAccountName(final String name) {
+    void setAccountName(final String name) {
         nameField.setText(name);
     }
 
-    public void setBankId(final String id) {
+    void setBankId(final String id) {
         bankIdField.setText(id);
     }
 
-    public void setAccountHidden(final boolean hide) {
+    void setAccountHidden(final boolean hide) {
         hideCheckBox.setSelected(hide);
     }
 
-    public String getAccountNumber() {
+    String getAccountNumber() {
         return accountNumberField.getText();
     }
 
-    public void setAccountNumber(final String accountNumber) {
+    void setAccountNumber(final String accountNumber) {
         accountNumberField.setText(accountNumber);
     }
 
-    public int getAccountCode() {
+    int getAccountCode() {
         return accountCodeField.intValue();
     }
 
-    public void setAccountCode(final int accountCode) {
+    void setAccountCode(final int accountCode) {
         accountCodeField.setIntValue(accountCode);
     }
 
-    public String getBankId() {
+    String getBankId() {
         return bankIdField.getText();
     }
 
-    public void setAccountDescription(final String description) {
+    void setAccountDescription(final String description) {
         descriptionField.setText(description);
     }
 
-    public String getAccountDescription() {
+    String getAccountDescription() {
         return descriptionField.getText();
     }
 
-    public void setAccountCurrency(final CurrencyNode node) {
+    void setAccountCurrency(final CurrencyNode node) {
         currencyCombo.setSelectedNode(node);
     }
 
-    public CurrencyNode getAccountCurrency() {
+    CurrencyNode getAccountCurrency() {
         return currencyCombo.getSelectedNode();
     }
 
@@ -250,36 +250,36 @@ final class AccountPanel extends JPanel implements ActionListener {
         currencyCombo.setEnabled(false);
     }
 
-    public void setAccountNotes(String notes) {
+    void setAccountNotes(String notes) {
         notesArea.setText(notes);
     }
 
-    public String getAccountNotes() {
+    String getAccountNotes() {
         return notesArea.getText();
     }
 
-    public void setAccountLocked(final boolean locked) {
+    void setAccountLocked(final boolean locked) {
         lockedCheckBox.setSelected(locked);
     }
 
-    public boolean isAccountLocked() {
+    boolean isAccountLocked() {
         return lockedCheckBox.isSelected();
     }
 
-    public void setPlaceholder(final boolean selected) {
+    void setPlaceholder(final boolean selected) {
         placeholderCheckBox.setSelected(selected);
     }
 
-    public boolean isPlaceholder() {
+    boolean isPlaceholder() {
         return placeholderCheckBox.isSelected();
     }
 
-    public void setAccountType(final AccountType type) {
+    void setAccountType(final AccountType type) {
         accountTypeCombo.setSelectedItem(type);
         updateCommodityButton();
     }
 
-    public void setModifyingAccount(final Account account) {
+    void setModifyingAccount(final Account account) {
         modifyingAccount = account;
     }
 
@@ -287,24 +287,24 @@ final class AccountPanel extends JPanel implements ActionListener {
         return (AccountType) accountTypeCombo.getSelectedItem();
     }
 
-    public boolean isAccountHidden() {
+    boolean isAccountHidden() {
         return hideCheckBox.isSelected();
     }
 
-    public void setExcludedFromBudget(final boolean excludeBudget) {
+    void setExcludedFromBudget(final boolean excludeBudget) {
         excludeBudgetCheckBox.setSelected(excludeBudget);
     }
 
-    public boolean isExcludedFromBudget() {
+    boolean isExcludedFromBudget() {
         return excludeBudgetCheckBox.isSelected();
     }
 
-    public void setAccountSecurities(final Set<SecurityNode> list) {
+    void setAccountSecurities(final Set<SecurityNode> list) {
         commodityList.clear();
         commodityList.addAll(list);
     }
 
-    public Set<SecurityNode> getAccountSecurities() {
+    Set<SecurityNode> getAccountSecurities() {
         return commodityList;
     }
 
