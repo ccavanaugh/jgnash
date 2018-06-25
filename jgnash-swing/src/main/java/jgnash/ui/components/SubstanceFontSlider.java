@@ -119,7 +119,7 @@ public class SubstanceFontSlider extends JPanel {
 
         private final FontSet delegate;
 
-        public WrapperFontSet(final FontSet delegate, final int adjust) {
+        WrapperFontSet(final FontSet delegate, final int adjust) {
             super();
             this.delegate = delegate;
             this.adjust = adjust;

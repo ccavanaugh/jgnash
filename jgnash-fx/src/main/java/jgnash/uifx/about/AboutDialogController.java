@@ -78,7 +78,7 @@ public class AboutDialogController {
 
     }
 
-    private Tab addHTMLTab(final String name, final String resource) {
+    private static Tab addHTMLTab(final String name, final String resource) {
         final WebView webView = new WebView();
 
         webView.setFontScale(FONT_SCALE);
@@ -130,7 +130,7 @@ public class AboutDialogController {
         return new Tab(ResourceUtils.getString("Tab.SysInfo"), tableView);
     }
 
-    private void dumpPropertiesToClipboard(final TableView<SystemProperty> tableView) {
+    private static void dumpPropertiesToClipboard(final TableView<SystemProperty> tableView) {
         final StringBuilder buffer = new StringBuilder();
 
         tableView.getSelectionModel().getSelectedItems().stream().filter(systemProperty ->
@@ -177,7 +177,7 @@ public class AboutDialogController {
             return key;
         }
 
-        public StringProperty valueProperty() {
+        StringProperty valueProperty() {
             return value;
         }
 

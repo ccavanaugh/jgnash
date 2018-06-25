@@ -73,7 +73,7 @@ abstract class AbstractAccountEnabledTreeCellRenderer implements TreeCellRendere
      */
     private class SelectionModel extends DefaultTreeSelectionModel {
 
-        public SelectionModel() {
+        SelectionModel() {
             super();
             setSelectionMode(SINGLE_TREE_SELECTION);
         }

@@ -180,16 +180,16 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         final private Object lock = new Object();
 
-        public AbstractModel() {
+        AbstractModel() {
             this(null);
         }
 
-        public AbstractModel(final Account exclude, final Set<AccountType> types) {
+        AbstractModel(final Account exclude, final Set<AccountType> types) {
             baseAccount = exclude;
             this.types = types;
         }
 
-        public AbstractModel(final Account exclude) {
+        AbstractModel(final Account exclude) {
             baseAccount = exclude;
         }
 
@@ -301,7 +301,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     private final static class FullModel extends AbstractModel {
 
-        public FullModel() {
+        FullModel() {
             super();
             loadAccounts();
         }
@@ -320,7 +320,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     private final static class ParentTypeModel extends AbstractModel {
 
-        public ParentTypeModel(final Account base, final Set<AccountType> types) {
+        ParentTypeModel(final Account base, final Set<AccountType> types) {
             super(base, types);
 
             Objects.requireNonNull(base);
@@ -344,7 +344,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     private final static class AccountTypeModel extends AbstractModel {
 
-        public AccountTypeModel(final Set<AccountType> types) {
+        AccountTypeModel(final Set<AccountType> types) {
             super(null, types);
             loadAccounts();
         }
@@ -367,7 +367,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     private final static class DefaultModel extends AbstractModel {
 
-        public DefaultModel(final Account exclude) {
+        DefaultModel(final Account exclude) {
             super(exclude);
             loadAccounts();
         }
@@ -397,7 +397,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         private final ListCellRenderer<? super Account> delegate;
 
-        public Renderer(final ListCellRenderer<? super Account> delegate) {
+        Renderer(final ListCellRenderer<? super Account> delegate) {
             this.delegate = delegate;
         }
 

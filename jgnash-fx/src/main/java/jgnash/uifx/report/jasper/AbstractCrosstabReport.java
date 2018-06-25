@@ -432,7 +432,7 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private static abstract class ColumnInfo {
 
-        public abstract Object getValue(int rowIndex);
+        protected abstract Object getValue(int rowIndex);
 
         ColumnHeaderStyle headerStyle;
 

@@ -143,19 +143,19 @@ public final class IndeterminateCheckBox extends JCheckBox {
         private transient final Icon icon;
         private final boolean original;
 
-        public ButtonModelEx(final SelectionState initialState, final IndeterminateCheckBox indeterminateCheckBox,
-                             final boolean original) {
+        ButtonModelEx(final SelectionState initialState, final IndeterminateCheckBox indeterminateCheckBox,
+                      final boolean original) {
             setState(initialState);
             this.indeterminateCheckBox = indeterminateCheckBox;
             icon = new CheckBoxIcon();
             this.original = original;
         }
 
-        public void setIndeterminate() {
+        void setIndeterminate() {
             setState(SelectionState.INDETERMINATE);
         }
 
-        public boolean isIndeterminate() {
+        boolean isIndeterminate() {
             return state == SelectionState.INDETERMINATE;
         }
 
@@ -358,12 +358,12 @@ public final class IndeterminateCheckBox extends JCheckBox {
 
         private final Color focusColor = UIManager.getLookAndFeelDefaults().getColor("nimbusFocus");
 
-        public NimbusFocusBorder(final float radius) {
+        NimbusFocusBorder(final float radius) {
             insideRadius = radius * 2;
             outsideRadius = insideRadius + 2.8f;
         }
 
-        public void paintBorder(final Graphics g, final int x, final int y, final int w, final int h) {
+        void paintBorder(final Graphics g, final int x, final int y, final int w, final int h) {
             ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             g.setColor(focusColor);

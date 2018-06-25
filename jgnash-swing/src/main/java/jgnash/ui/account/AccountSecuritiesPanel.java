@@ -192,7 +192,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
             this.enabled = enabled;
         }
 
-        public boolean isEnabled() {
+        boolean isEnabled() {
             return enabled;
         }
 

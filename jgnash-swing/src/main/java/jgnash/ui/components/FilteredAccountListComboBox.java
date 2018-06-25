@@ -57,7 +57,7 @@ public class FilteredAccountListComboBox extends AccountListComboBox {
 
         private final boolean hidePlaceholder;
 
-        public FilteredModel(final Account exclude, final boolean hideLocked, final boolean hidePlaceholder) {
+        FilteredModel(final Account exclude, final boolean hideLocked, final boolean hidePlaceholder) {
             super(exclude);
             this.hideLocked = hideLocked;
             this.hidePlaceholder = hidePlaceholder;

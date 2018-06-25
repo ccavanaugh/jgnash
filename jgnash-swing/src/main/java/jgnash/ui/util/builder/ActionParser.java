@@ -432,7 +432,7 @@ public final class ActionParser extends DefaultHandler {
          * @param index one of ActionManager.._INDEX
          * @return value
          */
-        public String getValue(int index) {
+        String getValue(int index) {
             return array[index];
         }
     }

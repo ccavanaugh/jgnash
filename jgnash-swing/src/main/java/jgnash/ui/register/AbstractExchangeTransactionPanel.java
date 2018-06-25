@@ -55,7 +55,7 @@ public abstract class AbstractExchangeTransactionPanel extends AbstractBankTrans
     }
 
     @Override
-    public boolean validateForm() {
+    protected boolean validateForm() {
         return accountPanel.getSelectedAccount() != null && super.validateForm();
     }
 
