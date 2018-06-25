@@ -230,7 +230,11 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
             registerPane.setDividerLocation(pos); // restore the old location
 
             if (!layout) {
-                EventQueue.invokeLater(() -> JTableUtils.packTable(getActiveTable()));
+                final JTable table = getActiveTable();
+
+                if (table != null) {
+                    EventQueue.invokeLater(() -> JTableUtils.packTable(table));
+                }
             }
 
             // remember the divider position
@@ -372,8 +376,12 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
         } else if (e.getSource() == zoomButton) {
             zoomAction();
         } else if (e.getSource() == resizeButton) {
-            JTableUtils.packTable(getActiveTable());
-            saveCurrentRegisterLayout();
+            final JTable table = getActiveTable();
+
+            if (table != null) {
+                JTableUtils.packTable(table);
+                saveCurrentRegisterLayout();
+            }
         } else if (e.getSource() == printButton) {
             printAction();
         } else if (e.getSource() == exportButton) {
