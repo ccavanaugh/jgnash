@@ -25,7 +25,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -143,11 +142,6 @@ class XMLContainer extends AbstractXStreamContainer {
 
             final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
                     new KXml2Driver()));
-
-            // Filters out any java.sql.Dates that sneaked in when saving from a relational database
-            // and forces to a LocalDate
-            // TODO: Remove at a later date
-            xstream.alias("sql-date", LocalDate.class);
 
             try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
                 in.readObject();
