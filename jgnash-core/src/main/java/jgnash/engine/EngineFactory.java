@@ -363,6 +363,8 @@ public class EngineFactory {
                 return DataStoreType.H2MV_DATABASE;
             case hsql:
                 return DataStoreType.HSQL_DATABASE;
+            default:            	
+            	break;
         }
 
         return null;
@@ -393,6 +395,8 @@ public class EngineFactory {
                     version = 0;
                 }
                 break;
+            default:
+            	break;
         }
 
         return version;
