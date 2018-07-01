@@ -42,6 +42,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class GainLossPane extends DetailedDecimalTextField {
 
     @FXML

@@ -62,7 +62,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
     /**
      * Remote connection if {@code true}.
      */
-    boolean isRemote;
+    final boolean isRemote;
 
     AbstractJpaDAO(final EntityManager entityManager, final boolean isRemote) {
         Objects.requireNonNull(entityManager);

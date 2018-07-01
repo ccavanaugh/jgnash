@@ -77,7 +77,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
     private final Map<String, Icon> iconCache = new HashMap<>();
 
-    public ExpandingTable(final AbstractExpandingTableModel<E> model) {
+    protected ExpandingTable(final AbstractExpandingTableModel<E> model) {
         super(model);
 
         this.model = model;

@@ -465,7 +465,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         private boolean invert = false;
 
-        public HistoryModel() {
+        HistoryModel() {
             decimalFormat = NumberFormat.getInstance();
 
             if (decimalFormat instanceof DecimalFormat) {
@@ -474,7 +474,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             }
         }
 
-        public void setExchangeRate(final ExchangeRate exchangeRate) {
+        void setExchangeRate(final ExchangeRate exchangeRate) {
             this.exchangeRate = exchangeRate;
 
             if (exchangeRate == null) {

@@ -43,7 +43,7 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
         this.ignoreCase = ignoreCase;
     }
 
-    public void setEnabled(final boolean enabled) {
+    protected void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 

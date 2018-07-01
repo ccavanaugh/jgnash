@@ -181,13 +181,13 @@ class ImportTable extends FormattedJTable {
 
     class Model extends AbstractTableModel {
 
-        private ImageIcon equalIcon;
+        private final ImageIcon equalIcon;
 
-        private ImageIcon addIcon;
+        private final ImageIcon addIcon;
 
-        private ImageIcon notEqualIcon;
+        private final ImageIcon notEqualIcon;
 
-        private ImageIcon removeIcon;
+        private final ImageIcon removeIcon;
 
         private final String[] cNames = {" ", rb.getString("Column.Date"), rb.getString("Column.Num"),
                 rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),

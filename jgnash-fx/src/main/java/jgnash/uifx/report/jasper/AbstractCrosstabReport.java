@@ -377,7 +377,7 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private final CurrencyNode baseCurrency;
 
-        private List<Account> accountList;
+        private final List<Account> accountList;
 
         ReportModel(final List<Account> accountList, final CurrencyNode currency) {
             this.accountList = accountList;

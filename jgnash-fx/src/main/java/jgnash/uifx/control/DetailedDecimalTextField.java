@@ -18,6 +18,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
 
     private static final String STYLE_CLASS_COMBO_BOX = "combo-box"; //NON-NLS
@@ -87,7 +88,7 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
      *
      * @return a DecimalTextField
      */
-    private DecimalTextField createDecimalTextField() {
+    private static DecimalTextField createDecimalTextField() {
         return new DecimalTextField();
     }
 

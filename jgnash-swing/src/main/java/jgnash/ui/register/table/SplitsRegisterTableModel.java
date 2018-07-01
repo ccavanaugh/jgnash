@@ -37,7 +37,7 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
     /**
      * Names of the columns
      */
-    private String[] cNames;
+    private final String[] cNames;
 
     private final Class<?>[] cClass = { String.class, String.class, String.class, ShortCommodityStyle.class,
             ShortCommodityStyle.class, FullCommodityStyle.class };

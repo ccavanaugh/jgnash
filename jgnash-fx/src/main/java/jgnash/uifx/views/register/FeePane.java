@@ -42,6 +42,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("WeakerAccess")
 public class FeePane extends DetailedDecimalTextField {
     @FXML
     private ResourceBundle resources;

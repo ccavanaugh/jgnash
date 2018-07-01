@@ -36,7 +36,7 @@ public class ImportSecurity {
     private LocalDate localDate;
     private String id;
     public String idType;
-    public String currency;
+    private String currency;
     private BigDecimal currencyRate;
 
     private SecurityNode securityNode;

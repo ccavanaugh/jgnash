@@ -28,12 +28,12 @@ import jgnash.util.NotNull;
  */
 public class PendingReminder implements Comparable<PendingReminder> {
 
-    private Reminder reminder;
+    private final Reminder reminder;
 
     /**
      * The date for the register if a transaction is generated.
      */
-    private LocalDate commitDate;
+    final private LocalDate commitDate;
 
     /**
      * Approved state of the reminder.
