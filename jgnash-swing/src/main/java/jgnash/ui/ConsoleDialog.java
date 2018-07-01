@@ -23,12 +23,9 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.ResourceBundle;
 import java.util.logging.Handler;
@@ -36,7 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import javax.management.MBeanServer;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -44,17 +40,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileSystemView;
 
 import jgnash.engine.Engine;
 import jgnash.ui.components.MemoryMonitor;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
-import com.sun.management.HotSpotDiagnosticMXBean;
 
 /**
  * Simple dialog to display info dumped to the console. Makes it easy for end
@@ -126,29 +119,7 @@ public class ConsoleDialog {
             });
         }
     }
-
-    private static void dumpHeap() {
-
-        final String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
-
-        for (int i = 1; i < MAX_DUMP_FILES; i++) {  // no more than 1000 dumps
-            final File dumpFile = new File(base + FileUtils.separator + "jGnashHeapDump" + i + ".bin");
-
-            if (!dumpFile.exists()) {
-                final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-
-                try {
-                    final HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
-
-                    bean.dumpHeap(dumpFile.getAbsolutePath(), true);
-                } catch (IOException e) {
-                    Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
-                }
-                break;
-            }
-        }
-    }
-
+    
     public static void show() {
         if (dialog == null) { // only one visible window
             init();
@@ -167,15 +138,7 @@ public class ConsoleDialog {
             JButton gcButton = new JButton(rb.getString("Button.ForceGC"));
 
             gcButton.addActionListener(e -> System.gc());
-
-            JButton heapButton = new JButton(rb.getString("Button.CreateHeapDump"));
-
-            heapButton.addActionListener(e -> {
-                if (console != null) {
-                    dumpHeap();
-                }
-            });
-
+           
             dialog = new JDialog(UIApplication.getFrame(), Dialog.ModalityType.MODELESS);
 
             dialog.setTitle(rb.getString("Title.Console"));
@@ -208,7 +171,7 @@ public class ConsoleDialog {
             panel.add(new MemoryMonitor(), BorderLayout.NORTH);
             panel.add(new JScrollPane(console), BorderLayout.CENTER);
 
-            JPanel buttonPanel = StaticUIMethods.buildRightAlignedBar(heapButton, gcButton, copyButton);
+            JPanel buttonPanel = StaticUIMethods.buildRightAlignedBar(gcButton, copyButton);
             buttonPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
 
             panel.add(buttonPanel, BorderLayout.SOUTH);
