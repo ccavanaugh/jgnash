@@ -87,9 +87,7 @@ public class FileMagic {
             return FileType.h2mv;
         } else if (isHsqlFile(path)) {
             return FileType.hsql;
-        } else if (isValidVersion1File(path)) {
-            return FileType.jGnash1XML;
-        } else if (isOfxV1(path)) {
+        }  else if (isOfxV1(path)) {
             return FileType.OfxV1;
         } else if (isOfxV2(path)) {
             return FileType.OfxV2;
@@ -296,10 +294,6 @@ public class FileMagic {
         return result;
     }
 
-    static boolean isValidVersion1File(final Path path) {
-        return isValidVersionXFile(path, "1");
-    }
-
     private static boolean isValidVersion2File(final Path path) {
         return isValidVersionXFile(path, "2");
     }
@@ -368,6 +362,6 @@ public class FileMagic {
     }
 
     public enum FileType {
-        BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, h2mv, hsql, unknown
+        BinaryXStream, OfxV1, OfxV2, jGnash2XML, h2, h2mv, hsql, unknown
     }
 }

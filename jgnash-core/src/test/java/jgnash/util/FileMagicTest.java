@@ -34,21 +34,6 @@ import static org.junit.Assert.*;
  */
 public class FileMagicTest {
 
-    /**
-     * Test for jGnash 1.x file identification
-     */
-    @Test
-    public void jGnash1xTest() {
-
-        URL url = FileMagicTest.class.getResource("/test1.jgnash.xml");
-
-        try {
-            assertTrue(FileMagic.isValidVersion1File(Paths.get(url.toURI())));
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     @Test
     public void testH2Magic() throws URISyntaxException {
         URL url = FileMagicTest.class.getResource("/h2-test.h2.db");
