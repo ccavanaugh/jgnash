@@ -92,14 +92,14 @@ public class BootEngineTask extends Task<String> {
             } else if (FileUtils.isFileLocked(localFile)) {
 
                 if (FileUtils.isLockFileStale(localFile)) {
-                    // try to remove the lockfile first
+                    // try to remove the lock file first
                     Logger.getLogger(BootEngineTask.class.getName()).info("Attempting to remove stale file lock");
 
                     if (FileUtils.deleteLockFile(localFile)) {
                         return call();  // recursive call to rerun the task and load the file to keep code simple
-                    } else {
-                        Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
                     }
+                    
+					Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
                 } else {
                     message = resources.getString("Message.FileIsLocked") + ": " + localFile;
                     updateMessage(message);

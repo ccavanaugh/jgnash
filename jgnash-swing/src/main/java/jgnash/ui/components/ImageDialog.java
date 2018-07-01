@@ -164,9 +164,9 @@ public class ImageDialog extends JDialog {
                         g2.dispose();
                     }
                 }
-            } else {
-                return GraphicsUtilities.createThumbnail(originalImage, _width, _height);
             }
+            
+			return GraphicsUtilities.createThumbnail(originalImage, _width, _height);
         }
 
     }

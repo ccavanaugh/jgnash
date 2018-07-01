@@ -185,7 +185,8 @@ public final class Main {
         }
     }
 
-    private void init(final String args[]) {
+    @SuppressWarnings("unused")
+	private void init(final String args[]) {
         configureLogging();
 
         final OptionParser parser = buildParser();
@@ -207,9 +208,8 @@ public final class Main {
                         if (Files.exists(Paths.get((String)object))) {
                             file = new File((String) object);
                             break;
-                        } else {
-                            System.err.println(object + " was not a valid file");
-                        }
+                        }                        
+						System.err.println(object + " was not a valid file");
                     }
                 }
             }

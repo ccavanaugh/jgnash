@@ -377,9 +377,9 @@ public class IncomeExpensePayeePieChartDialogController {
     private static String truncateString(final String string) {
         if (string.length() <= MAX_NAME_LENGTH) {
             return string;
-        } else {
-            return string.substring(0, MAX_NAME_LENGTH - 1) + ELLIPSIS;
         }
+        
+		return string.substring(0, MAX_NAME_LENGTH - 1) + ELLIPSIS;
     }
 
     private static class TranTuple {

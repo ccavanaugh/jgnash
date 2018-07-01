@@ -115,9 +115,9 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
         int getColumnCount() {
             if (runningTotal) {
                 return dates.size() + 2;
-            } else {
-                return dates.size() - 1 + 2;
             }
+            
+			return dates.size() - 1 + 2;
         }
 
         /**

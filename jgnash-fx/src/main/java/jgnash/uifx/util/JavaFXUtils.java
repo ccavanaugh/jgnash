@@ -254,9 +254,11 @@ public class JavaFXUtils {
         return width;
     }
 
-    private static double _getDisplayedTextWidth(@NotNull final String displayString, @Nullable final String style) {
+    @SuppressWarnings("unused")
+	private static double _getDisplayedTextWidth(@NotNull final String displayString, @Nullable final String style) {
         final Text text = new Text(displayString);
-        new Scene(new Group(text));
+        
+        new Scene(new Group(text));	// text must be placed into a Scene for bounds to be calculated correctly.
 
         text.setStyle(style);
         text.applyCss();

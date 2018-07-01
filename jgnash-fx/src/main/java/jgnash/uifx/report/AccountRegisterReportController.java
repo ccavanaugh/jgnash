@@ -155,11 +155,11 @@ public class AccountRegisterReportController extends DynamicJasperReport {
         if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
             return new InvestmentAccountReportModel(accountComboBox.getValue(), startDate, endDate,
                     memoFilterTextField.getText(), showTimestampCheckBox.isSelected());
-        } else {
-            return new AccountReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(),
-                    startDate, endDate, memoFilterTextField.getText(), payeeFilterTextField.getText(),
-                    showTimestampCheckBox.isSelected());
         }
+        
+		return new AccountReportModel(accountComboBox.getValue(), showSplitsCheckBox.isSelected(),
+		        startDate, endDate, memoFilterTextField.getText(), payeeFilterTextField.getText(),
+		        showTimestampCheckBox.isSelected());
     }
 
     @Override
@@ -401,14 +401,14 @@ public class AccountRegisterReportController extends DynamicJasperReport {
 
                             if (count > 1) {
                                 return "[ " + count + " " + SPLIT + " ]";
-                            } else {
-                                final TransactionEntry entry = transaction.getTransactionEntries().get(0);
-
-                                if (entry.getCreditAccount() != account) {
-                                    return entry.getCreditAccount().getName();
-                                }
-                                return entry.getDebitAccount().getName();
                             }
+                            
+							final TransactionEntry entry = transaction.getTransactionEntries().get(0);
+	
+							if (entry.getCreditAccount() != account) {
+							    return entry.getCreditAccount().getName();
+							}
+							return entry.getDebitAccount().getName();
                         case 6:
                             return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
                                     ? transaction.getReconciled(account).toString() : null;
@@ -427,32 +427,32 @@ public class AccountRegisterReportController extends DynamicJasperReport {
                         default:
                             return null;
                     }
-                } else {    // detailed split
-                    switch (columnIndex) {
-                        case 4:
-                            return transactionEntry.getMemo();
-                        case 5:
-                            if (transactionEntry.getCreditAccount() != account) {
-                                return INDENT_PREFIX + transactionEntry.getCreditAccount().getName();
-                            }
-                            return INDENT_PREFIX + transactionEntry.getDebitAccount().getName();
-                        case 6:
-                            return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
-                                    ? transaction.getReconciled(account).toString() : null;
-                        case 7:
-                            if (signum >= 0) {
-                                return amount;
-                            }
-                            return null;
-                        case 8:
-                            if (signum < 0) {
-                                return amount.abs();
-                            }
-                            return null;
-                        default:
-                            return null;
-                    }
                 }
+                
+				switch (columnIndex) {
+				    case 4:
+				        return transactionEntry.getMemo();
+				    case 5:
+				        if (transactionEntry.getCreditAccount() != account) {
+				            return INDENT_PREFIX + transactionEntry.getCreditAccount().getName();
+				        }
+				        return INDENT_PREFIX + transactionEntry.getDebitAccount().getName();
+				    case 6:
+				        return transaction.getReconciled(account) != ReconciledState.NOT_RECONCILED
+				                ? transaction.getReconciled(account).toString() : null;
+				    case 7:
+				        if (signum >= 0) {
+				            return amount;
+				        }
+				        return null;
+				    case 8:
+				        if (signum < 0) {
+				            return amount.abs();
+				        }
+				        return null;
+				    default:
+				        return null;
+				}
             }
         }
     }

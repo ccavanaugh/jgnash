@@ -120,9 +120,9 @@ public class BalanceSheetReportController extends AbstractSumByTypeReport {
         private int getColumnCount() {
             if (runningTotal) {
                 return dates.size() + 2;
-            } else {
-                return dates.size() - 1 + 2;
             }
+            
+			return dates.size() - 1 + 2;
         }
 
         /**

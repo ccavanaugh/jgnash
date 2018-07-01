@@ -193,9 +193,9 @@ public class AccountExchangePane extends GridPane {
     private BigDecimal getAmount() {
         if (amount.get() != null) {
             return amount.get();
-        } else {
-            return BigDecimal.ZERO;
         }
+        
+		return BigDecimal.ZERO;
     }
 
     private void amountFieldAction() {

@@ -272,9 +272,9 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         public int getColumnCount() {
             if (runningTotal) {
                 return dates.size() + 2;
-            } else {
-                return dates.size() - 1 + 2;
             }
+            
+			return dates.size() - 1 + 2;
         }
 
         @Override
@@ -317,12 +317,12 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
             if (runningTotal) {
                 return dateFormat.format(dates.get(columnIndex - 1));
-            } else {
-                LocalDate startDate = dates.get(columnIndex - 1);
-                LocalDate endDate = dates.get(columnIndex).minusDays(1);
-
-                return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
             }
+            
+			LocalDate startDate = dates.get(columnIndex - 1);
+			LocalDate endDate = dates.get(columnIndex).minusDays(1);
+			
+			return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
         }
 
         @Override
@@ -363,12 +363,12 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
                 } else if (columnIndex > 0 && columnIndex <= dates.size()) {
                     if (runningTotal) {
                         return account.getBalance(dates.get(columnIndex - 1), getCurrency());
-                    } else {
-                        final LocalDate startDate = dates.get(columnIndex - 1);
-                        final LocalDate endDate = dates.get(columnIndex).minusDays(1);
-
-                        return account.getBalance(startDate, endDate, getCurrency()).negate();
                     }
+                    
+					final LocalDate startDate = dates.get(columnIndex - 1);
+					final LocalDate endDate = dates.get(columnIndex).minusDays(1);
+
+					return account.getBalance(startDate, endDate, getCurrency()).negate();
                 }
                 return null;
             }

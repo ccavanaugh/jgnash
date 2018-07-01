@@ -38,14 +38,16 @@ public class TreeSearch {
 
         if (treeItem.getValue().equals(value)) {
             return treeItem;
-        } else {
-            TreeItem<T> childItem;
-            for (TreeItem<T> child : treeItem.getChildren()) {
-                if ((childItem = findTreeItem(child, value)) != null) {
-                    return childItem;
-                }
-            }
         }
+        
+		TreeItem<T> childItem;
+		
+		for (TreeItem<T> child : treeItem.getChildren()) {
+		    if ((childItem = findTreeItem(child, value)) != null) {
+		        return childItem;
+		    }
+		}
+		
         return null;
     }
 }

@@ -154,10 +154,10 @@ public class jGnashFx extends Application {
                         if (Files.exists(Paths.get((String) object))) {
                             dataFile = new File((String) object);
                             break;
-                        } else {
-                            System.err.println(object + " was not a valid file");
-                            System.exit(1); // force an exit with an error
                         }
+                        
+						System.err.println(object + " was not a valid file");
+						System.exit(1); // force an exit with an error
                     }
                 }
             }

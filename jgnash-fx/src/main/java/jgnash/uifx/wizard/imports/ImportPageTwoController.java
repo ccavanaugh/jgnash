@@ -243,9 +243,9 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             if (param.getValue() != null && param.getValue().getFeesAccount() != null) {
                 if (param.getValue().getFees().compareTo(BigDecimal.ZERO) != 0) {
                     return new SimpleObjectProperty<>(param.getValue().getFeesAccount());
-                } else {
-                    return new SimpleObjectProperty<>(NOP_EXPENSE_ACCOUNT);  // no-opp account
                 }
+                
+				return new SimpleObjectProperty<>(NOP_EXPENSE_ACCOUNT);  // nop account
             }
             return null;
         });

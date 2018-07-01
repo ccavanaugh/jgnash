@@ -126,7 +126,7 @@ public class Options {
                 p.putInt(((SimpleIntegerProperty) observable).getName(), (Integer) newValue);
 
         stringChangeListener = (observable, oldValue, newValue) ->
-                p.put(((SimpleStringProperty) observable).getName(), (String) newValue);
+                p.put(((SimpleStringProperty) observable).getName(), newValue);
 
         useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
         checkForUpdates = createBooleanProperty(CHECK_UPDATES, true);
