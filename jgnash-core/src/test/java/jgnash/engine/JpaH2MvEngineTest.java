@@ -63,7 +63,7 @@ public class JpaH2MvEngineTest extends EngineTest {
     }
 
     @Test
-    public void dumpTableAndColumnNames() throws InterruptedException {
+    public void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         final Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile);

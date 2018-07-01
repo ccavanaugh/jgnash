@@ -124,7 +124,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testReminders() throws IOException {
+    public void testReminders() {
 
         assertEquals(0, e.getReminders().size());
 
@@ -157,7 +157,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetStoredObjectByUuid() throws IOException {
+    public void testGetStoredObjectByUuid() {
 
         // close and reopen to force check for persistence
         closeEngine();
@@ -177,7 +177,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAddCommodity() throws IOException {
+    public void testAddCommodity() {
         // close and reopen to force check for persistence
         closeEngine();
 
@@ -190,7 +190,7 @@ public abstract class EngineTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testPreferences() throws IOException {
+    public void testPreferences() {
         e.setPreference("myKey", "myValue");
         e.setPreference("myNumber", BigDecimal.TEN.toString());
 
@@ -204,7 +204,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testSecurityNodeStorage() throws IOException {
+    public void testSecurityNodeStorage() {
 
         final String SECURITY_SYMBOL ="GOOG";
 
@@ -289,7 +289,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testBudget() throws IOException {
+    public void testBudget() {
 
         final String ACCOUNT_NAME = "testAccount";
 
@@ -392,7 +392,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetCurrencies() throws IOException {
+    public void testGetCurrencies() {
 
         // close and reopen to force check for persistence
         closeEngine();
@@ -411,7 +411,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetExchangeRate() throws IOException {
+    public void testGetExchangeRate() {
 
         final LocalDate today = LocalDate.now();
         final LocalDate yesterday = today.minusDays(1);
@@ -535,7 +535,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetIncomeAccountList() throws IOException {
+    public void testGetIncomeAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.INCOME, node);
@@ -550,7 +550,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetExpenseAccountList() throws IOException {
+    public void testGetExpenseAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.EXPENSE, node);
@@ -565,7 +565,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetBankAccountList() throws IOException {
+    public void testGetBankAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
@@ -580,7 +580,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetInvestmentAccountList() throws IOException {
+    public void testGetInvestmentAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.INVEST, node);
@@ -595,7 +595,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAccounts() throws IOException {
+    public void testAccounts() {
 
         CurrencyNode node = e.getDefaultCurrency();
 
@@ -650,7 +650,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAccountAttributes() throws IOException {
+    public void testAccountAttributes() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
@@ -701,7 +701,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testRemoveAccount() throws IOException {
+    public void testRemoveAccount() {
         final String ACCOUNT_NAME = "testIsStored";
         CurrencyNode node = e.getDefaultCurrency();
 
@@ -750,7 +750,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAddGetTransactions() throws IOException {
+    public void testAddGetTransactions() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -780,7 +780,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetTransactionsWithAttachments() throws IOException {
+    public void testGetTransactionsWithAttachments() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();

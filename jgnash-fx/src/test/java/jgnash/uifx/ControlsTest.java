@@ -155,7 +155,7 @@ public class ControlsTest extends Application {
         cleanup();
     }
 
-    private Engine createEngine() throws IOException {
+    private Engine createEngine() {
         try {
             testFile = Files.createTempFile("test",
                     DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();

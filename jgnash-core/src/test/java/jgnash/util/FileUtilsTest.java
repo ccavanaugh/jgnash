@@ -54,7 +54,7 @@ public class FileUtilsTest {
     }
 
     @Test
-    public void testFileLock() throws IOException, InterruptedException {
+    public void testFileLock() throws IOException {
         final Path tempFile = Files.createTempFile("temp", null);
 
         try (final Writer writer = Files.newBufferedWriter(tempFile)) {

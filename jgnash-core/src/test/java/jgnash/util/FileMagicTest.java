@@ -100,7 +100,7 @@ public class FileMagicTest {
      * Test for Ofx version 1 file encoding.
      */
     @Test
-    public void OfxV1EncodingTest2() throws URISyntaxException {
+    public void OfxV1EncodingTest2() {
 
         URL url = FileMagicTest.class.getResource("/File_with_Accents.ofx");
 

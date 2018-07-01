@@ -58,7 +58,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testPreferences() throws IOException {
+    public void testPreferences() {
         e.setPreference("myKey", "myValue");
         e.setPreference("myNumber", BigDecimal.TEN.toString());
 
@@ -140,7 +140,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testAccountAttributes() throws IOException {
+    public void testAccountAttributes() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
