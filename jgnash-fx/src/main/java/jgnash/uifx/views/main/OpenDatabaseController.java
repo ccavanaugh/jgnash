@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -106,7 +105,7 @@ public class OpenDatabaseController {
     }
 
     @FXML
-    protected void handleSelectFileAction(final ActionEvent event) {
+    protected void handleSelectFileAction() {
         final File file = DatabasePathAction.getFileToOpen();
 
         if (file != null) {

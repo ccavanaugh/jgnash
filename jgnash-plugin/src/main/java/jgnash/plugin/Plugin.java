@@ -56,7 +56,8 @@ public interface Plugin {
     /**
      * Called by the PluginFactory to start the plugin.
      */
-    default void start(PluginPlatform pluginPlatform) {
+    @SuppressWarnings("unused")
+	default void start(PluginPlatform pluginPlatform) {
     }
 
     /**

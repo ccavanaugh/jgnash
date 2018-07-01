@@ -308,7 +308,7 @@ public class IncomeExpensePayeePieChartDialogController {
     private ObservableList<PieChart.Data>[] createPieDataSet(@NotNull final Account account) {
 
         @SuppressWarnings("unchecked")
-        final ObservableList<PieChart.Data>[] chartData = (ObservableList<PieChart.Data>[]) new ObservableList[2];
+        final ObservableList<PieChart.Data>[] chartData = new ObservableList[2];
 
         chartData[CREDIT] = FXCollections.observableArrayList();
         chartData[DEBIT] = FXCollections.observableArrayList();

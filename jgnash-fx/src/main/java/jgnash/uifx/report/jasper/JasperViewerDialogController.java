@@ -305,7 +305,7 @@ public final class JasperViewerDialogController {
         scrollPane.vvalueProperty().addListener(
                 (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
 
-                    final double interval = 1d / (double) pageCount.get();
+                    final double interval = 1d / pageCount.get();
                     double low = pageIndex.get() * interval;
                     double hi = low + interval;
 

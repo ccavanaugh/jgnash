@@ -115,7 +115,8 @@ public class NewFileWizard {
         }
     }
 
-    public static void showAndWait() {
+    @SuppressWarnings("unused")
+	public static void showAndWait() {
         new NewFileWizard();
     }
 }
