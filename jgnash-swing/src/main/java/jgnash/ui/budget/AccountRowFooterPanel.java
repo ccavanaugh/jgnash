@@ -331,6 +331,8 @@ public class AccountRowFooterPanel extends JPanel {
                 case BUDGET_GOAL_UPDATE:
                     processBudgetGoalUpdate(event);
                     break;
+                default:
+                	break;
             }
         }
 

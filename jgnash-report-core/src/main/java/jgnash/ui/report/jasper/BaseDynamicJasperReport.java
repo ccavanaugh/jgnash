@@ -385,6 +385,8 @@ public abstract class BaseDynamicJasperReport {
                             builder.setPattern(pattern);
                             break;
                         }
+                        default:
+                        	break;
                     }
 
                     if (model.isColumnFixedWidth(i) && !formatForCSV) {
