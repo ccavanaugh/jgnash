@@ -65,8 +65,18 @@ public class ConsoleDialog {
     private static boolean init = false;
 
     private static final Object consoleLock = new Object();
+    
+    private static PrintStream oldOutStream;
 
-    private ConsoleDialog() {
+    private static PrintStream oldErrStream;
+
+    private static PrintStream outStream;
+
+    private static PrintStream errStream;
+    
+    private static Handler logHandler;
+
+    public ConsoleDialog() {
     }
 
     /* Only need to initialize one time.  After that the output
@@ -76,25 +86,26 @@ public class ConsoleDialog {
     private static void init() {
         if (!init) {
             init = true;
+            
+            oldErrStream = System.err;
+            oldOutStream = System.out;
 
-            try {
-                final PrintStream oldOut = System.out;
-                PrintStream outStream = new PrintStream(new ConsoleStream(oldOut), false, Charset.defaultCharset().name());
+            try {                
+                outStream = new PrintStream(new ConsoleStream(oldOutStream), false, Charset.defaultCharset().name());
                 System.setOut(outStream);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(ConsoleDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            try {
-                final PrintStream oldErr = System.err;
-                PrintStream errStream = new PrintStream(new ConsoleStream(oldErr), false, Charset.defaultCharset().name());
+            try {               
+                errStream = new PrintStream(new ConsoleStream(oldErrStream), false, Charset.defaultCharset().name());
                 System.setErr(errStream);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(ConsoleDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             // capture the engine log
-            Engine.getLogger().addHandler(new Handler() {
+             logHandler = new Handler() {
                 @Override
                 public void close() throws SecurityException {
                 }
@@ -114,7 +125,9 @@ public class ConsoleDialog {
                         }
                     });
                 }
-            });
+            };
+            
+            Engine.getLogger().addHandler(logHandler);
         }
     }
     
@@ -179,7 +192,7 @@ public class ConsoleDialog {
             dialog.pack();
             dialog.setMinimumSize(dialog.getSize()); // Minimum size
             dialog.setFocusableWindowState(false);
-
+           
             dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
             DialogUtils.addBoundsListener(dialog);
@@ -191,9 +204,26 @@ public class ConsoleDialog {
     private static void close() {
         synchronized (consoleLock) {
             if (dialog != null) {
+            	Engine.getLogger().removeHandler(logHandler); 
+            	logHandler = null;
+            	
                 dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
                 dialog = null;
                 console = null;
+                
+                System.setOut(oldOutStream);
+                System.setErr(oldErrStream);
+                
+                outStream.close();
+                errStream.close();
+                
+                oldOutStream = null;
+                oldErrStream = null;
+                
+                outStream = null;
+                errStream = null;
+                
+                init = false;                               
             }
         }
     }
