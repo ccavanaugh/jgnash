@@ -94,9 +94,9 @@ public class Engine {
      */
     public static final int CURRENT_MAJOR_VERSION = 2;
 
-    public static final int CURRENT_MINOR_VERSION = 26;
+    public static final int CURRENT_MINOR_VERSION = 35;
 
-    public static final float CURRENT_VERSION = (float) CURRENT_MAJOR_VERSION + ((float) CURRENT_MINOR_VERSION / 100f);
+    public static final float CURRENT_VERSION = CURRENT_MAJOR_VERSION + (CURRENT_MINOR_VERSION / 100f);
 
     // Lock name
     private static final String BIG_LOCK = "bigLock";
@@ -165,6 +165,8 @@ public class Engine {
     public Engine(final EngineDAO eDAO, final LockManager lockManager, final AttachmentManager attachmentManager, final String name) {
         Objects.requireNonNull(name, "The engine name may not be null");
         Objects.requireNonNull(eDAO, "The engineDAO may not be null");
+        
+        System.out.println(CURRENT_VERSION);
 
         this.attachmentManager = attachmentManager;
         this.eDAO = eDAO;
