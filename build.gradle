@@ -35,7 +35,6 @@ allprojects {
         kxmlVersion = '2.3.0'
 
         hibernateVersion = '5.3.1.Final'
-        c3p0Version = '0.9.5.2'
         hikariVersion = '3.2.0'
 
         dynamicJasperVersion = '5.1.1'
