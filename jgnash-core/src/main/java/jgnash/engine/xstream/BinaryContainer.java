@@ -27,7 +27,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -144,12 +143,6 @@ class BinaryContainer extends AbstractXStreamContainer {
 
             final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
                     new BinaryStreamDriver()));
-
-            // Filters out any java.sql.Dates that sneaked in when saving from a relational database
-            // and forces to a LocalDate
-            // TODO: Remove at a later date
-            xstream.alias("sql-date", LocalDate.class);
-
 
             try (final ObjectInputStream in = xstream.createObjectInputStream(fis)) {
                 in.readObject();
