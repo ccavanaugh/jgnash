@@ -39,107 +39,115 @@ import static org.junit.Assert.assertFalse;
  */
 public class Mt940Test {
 
-    /**
-     * Rudimentary test for mt940 importing: creates a parser, parses a given
-     * mt940 file and checks that indeed, 18 transactions have been generated.
-     * 
-     * Then, converts the parsed file to an ImportBank and verifies that there's
-     * still 18 transactions.
-     * 
-     * @throws Exception
-     *             throws assert exception
-     */
-    @Test
-    public void testMt940() throws Exception {
-        int nTransactions = 18;
+	/**
+	 * Rudimentary test for mt940 importing: creates a parser, parses a given mt940
+	 * file and checks that indeed, 18 transactions have been generated.
+	 * 
+	 * Then, converts the parsed file to an ImportBank and verifies that there's
+	 * still 18 transactions.
+	 * 
+	 * @throws Exception throws assert exception
+	 */
+	@Test
+	public void testMt940() throws Exception {
+		int nTransactions = 18;
 
-        Mt940Parser parser = new Mt940Parser();
+		Mt940Parser parser = new Mt940Parser();
 
-        InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
+		InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
 
-        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
-            Mt940File file = parser.parse(reader);
+		try (LineNumberReader reader = new LineNumberReader(
+				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
+			Mt940File file = parser.parse(reader);
 
-            assertEquals(nTransactions, file.getEntries().size());
+			assertEquals(nTransactions, file.getEntries().size());
 
-            ImportBank<ImportTransaction> bank = Mt940Exporter.convert(file);
-            assertEquals(nTransactions, bank.getTransactions().size());
-        }
-    }
+			ImportBank<ImportTransaction> bank = Mt940Exporter.convert(file);
+			assertEquals(nTransactions, bank.getTransactions().size());
+		}
+	}
 
-    /**
-     * Test that ckontobezeichnung get reads in 
-     * @throws Exception
-     *             throws assert exception
-     */
-    @Test
-    public void testMt940Kontobezeichnung() throws Exception {
-        Mt940Parser parser = new Mt940Parser();
-        InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1));
-        Mt940File file = parser.parse(reader);
-        List<Mt940Entry> entries = file.getEntries();
-        assertFalse(entries.isEmpty());
-        for (Mt940Entry mt940Entry : entries) {
-            assertEquals("531848396", mt940Entry.getKontobezeichnung());
-        }
-    }
+	/**
+	 * Test that ckontobezeichnung get reads in
+	 * 
+	 * @throws Exception throws assert exception
+	 */
+	@Test
+	public void testMt940Kontobezeichnung() throws Exception {
+		Mt940Parser parser = new Mt940Parser();
+		InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
+		try (LineNumberReader reader = new LineNumberReader(
+				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
+			Mt940File file = parser.parse(reader);
+			List<Mt940Entry> entries = file.getEntries();
+			assertFalse(entries.isEmpty());
+			for (Mt940Entry mt940Entry : entries) {
+				assertEquals("531848396", mt940Entry.getKontobezeichnung());
+			}
+		}
+	}
 
-    /**
-     * Test that ckontobezeichnung get reads in 
-     * @throws Exception
-     *             throws assert exception
-     */
-    @Test
-    public void testMt940KontobezeichnungRabobank() throws Exception {
-        Mt940Parser parser = new Mt940Parser();
-        InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1));
-        Mt940File file = parser.parse(reader);
-        List<Mt940Entry> entries = file.getEntries();
-        assertFalse(entries.isEmpty());
-        for (Mt940Entry mt940Entry : entries) {
-            assertEquals("3xxxxxx.013EUR", mt940Entry.getKontobezeichnung().trim());
-        }
-    }
+	/**
+	 * Test that ckontobezeichnung get reads in
+	 * 
+	 * @throws Exception throws assert exception
+	 */
+	@Test
+	public void testMt940KontobezeichnungRabobank() throws Exception {
+		Mt940Parser parser = new Mt940Parser();
+		InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
 
-    /**
-     * Test that ckontobezeichnung get reads in 
-     * @throws Exception
-     *             throws assert exception
-     */
-    @Test
-    public void testMt940KontobezeichnungMulticash() throws Exception {
-        Mt940Parser parser = new Mt940Parser();
-        InputStream inputStream = this.getClass().getResourceAsStream("/multiaccounts.sta");
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1));
-        Mt940File file = parser.parse(reader);
-        List<Mt940Entry> entries = file.getEntries();
-        assertEquals(2, entries.size());
-        assertEquals("531848396", entries.get(0).getKontobezeichnung());
-        assertEquals("3xxxxxx.013EUR", entries.get(1).getKontobezeichnung().trim());
-    }
+		try (LineNumberReader reader = new LineNumberReader(
+				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
+			Mt940File file = parser.parse(reader);
+			List<Mt940Entry> entries = file.getEntries();
+			assertFalse(entries.isEmpty());
+			for (Mt940Entry mt940Entry : entries) {
+				assertEquals("3xxxxxx.013EUR", mt940Entry.getKontobezeichnung().trim());
+			}
+		}
+	}
 
-    /**
-     * Test parsing an (anonimized) mt940 file as produced by the Rabobank
-     * online bank
-     *
-     * @throws IOException thrown if an IO exception occurs while reading the file
-     */
-    @Test
-    public void testMt940Rabobank() throws IOException {
-        int nTransactions = 6;
+	/**
+	 * Test that ckontobezeichnung get reads in
+	 * 
+	 * @throws Exception throws assert exception
+	 */
+	@Test
+	public void testMt940KontobezeichnungMulticash() throws Exception {
+		Mt940Parser parser = new Mt940Parser();
+		InputStream inputStream = this.getClass().getResourceAsStream("/multiaccounts.sta");
+		try (LineNumberReader reader = new LineNumberReader(
+				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
+			Mt940File file = parser.parse(reader);
+			List<Mt940Entry> entries = file.getEntries();
+			assertEquals(2, entries.size());
+			assertEquals("531848396", entries.get(0).getKontobezeichnung());
+			assertEquals("3xxxxxx.013EUR", entries.get(1).getKontobezeichnung().trim());
+		}
+	}
 
-        Mt940Parser parser = new Mt940Parser();
+	/**
+	 * Test parsing an (anonimized) mt940 file as produced by the Rabobank online
+	 * bank
+	 *
+	 * @throws IOException thrown if an IO exception occurs while reading the file
+	 */
+	@Test
+	public void testMt940Rabobank() throws IOException {
+		int nTransactions = 6;
 
-        InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");        
-        
-        try(LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            Mt940File file = parser.parse(reader);
-            assertEquals(nTransactions, file.getEntries().size());
+		Mt940Parser parser = new Mt940Parser();
 
-            ImportBank<ImportTransaction> bank = Mt940Exporter.convert(file);
-            assertEquals(nTransactions, bank.getTransactions().size());            
-        }        
-    }
+		InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
+
+		try (LineNumberReader reader = new LineNumberReader(
+				new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+			Mt940File file = parser.parse(reader);
+			assertEquals(nTransactions, file.getEntries().size());
+
+			ImportBank<ImportTransaction> bank = Mt940Exporter.convert(file);
+			assertEquals(nTransactions, bank.getTransactions().size());
+		}
+	}
 }
