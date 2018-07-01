@@ -58,8 +58,6 @@ import com.jgoodies.forms.factories.Borders;
 @SuppressWarnings("restriction")
 public class ConsoleDialog {
 
-    private static final int MAX_DUMP_FILES = 1000;
-
     private static JTextArea console;
 
     private static JDialog dialog;
