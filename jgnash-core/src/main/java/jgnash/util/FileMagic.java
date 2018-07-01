@@ -346,8 +346,7 @@ public class FileMagic {
                         String name = reader.getPITarget();
                         String data = reader.getPIData();
 
-                        // TODO: fileVersion is depreciated as of release 2.25
-                        if (name.equals("fileVersion") || name.equals("fileFormat")) {
+                        if (name.equals("fileFormat")) {
                             version = data;
                             break parse;
                         }
