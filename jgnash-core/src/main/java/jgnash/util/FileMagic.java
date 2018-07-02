@@ -295,10 +295,6 @@ public class FileMagic {
     }
 
     private static boolean isValidVersion2File(final Path path) {
-        return isValidVersionXFile(path, "2");
-    }
-
-    private static boolean isValidVersionXFile(final Path path, final String majorVersion) {
 
         if (!Files.exists(path) || !Files.isReadable(path) || !Files.isRegularFile(path)) {
             return false;
@@ -307,7 +303,7 @@ public class FileMagic {
         boolean result = false;
 
         if (isFile(path, XML_HEADER)) {
-            result = getXMLVersion(path).startsWith(majorVersion);
+            result = getXMLVersion(path).startsWith("2");
         }
 
         return result;
