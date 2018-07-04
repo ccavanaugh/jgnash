@@ -252,24 +252,24 @@ public final class Main {
             }
 
             if (options.has(SERVER_OPTION)) {
-                final File file = (File) options.valueOf(SERVER_OPTION);
-                if (file.exists()) {
-                    serverFile = file;
+                final File sFile = (File) options.valueOf(SERVER_OPTION);
+                if (sFile.exists()) {
+                    serverFile = sFile;
                 }
             }
 
             // Check to see if portable preferences are being used
             if (options.has(PORTABLE_FILE_OPTION)) {
-                final File file = (File) options.valueOf(PORTABLE_FILE_OPTION);
-                if (file.exists()) {
-                    portableFile = file;
+                final File pFile = (File) options.valueOf(PORTABLE_FILE_OPTION);
+                if (pFile.exists()) {
+                    portableFile = pFile;
                     portable = true;
                 }
             } else if (options.has(PORTABLE_OPTION_SHORT)) {  // simple use of portable preferences
                 portable = true;
             }
 
-            /* If a shutdown request is found, it trumps any other commandline options */
+            /* If a shutdown request is found, it trumps any other command line options */
             if (options.has(SHUTDOWN_OPTION)) {
                 if (hostName == null) {
                     hostName = EngineFactory.LOCALHOST;

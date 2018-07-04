@@ -24,9 +24,9 @@ package jgnash.util;
  */
 public final class OS {
 
-    private static final boolean isOSX;
+    private static final boolean IS_OSX;
 
-    private static final boolean isWindows;
+    private static final boolean IS_WINDOWS;
 
     private static final String JAVA_VERSION = "java.version";
 
@@ -40,8 +40,8 @@ public final class OS {
     static {
         final String os = System.getProperty("os.name");
 
-        isOSX = os.startsWith("Darwin") || os.startsWith("Mac");
-        isWindows = os.startsWith("Windows");
+        IS_OSX = os.startsWith("Darwin") || os.startsWith("Mac");
+        IS_WINDOWS = os.startsWith("Windows");
     }
 
     private OS() {
@@ -54,7 +54,7 @@ public final class OS {
      * @return true if running on OSX
      */
     public static boolean isSystemOSX() {
-        return isOSX;
+        return IS_OSX;
     }
 
     /**
@@ -63,7 +63,7 @@ public final class OS {
      * @return true if running on Windows
      */
     public static boolean isSystemWindows() {
-        return isWindows;
+        return IS_WINDOWS;
     }
 
     /**

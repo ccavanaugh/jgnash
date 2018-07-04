@@ -90,12 +90,10 @@ public class jGnashFx extends Application {
             return;
         }
 
-        if (OS.getJavaVersion() <= 1.8f) {
-            if (OS.getJavaRelease() < OS.JVM_RELEASE_71) {
-                JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
-                        ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        if (OS.getJavaVersion() >= 1.8f && OS.getJavaRelease() < OS.JVM_RELEASE_71) {           
+            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
+                    ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            return;           
         }
 
         // Register the default exception handler
@@ -171,9 +169,7 @@ public class jGnashFx extends Application {
                 if (file.exists()) {
                     serverFile = file;
                 }
-            }
-
-            //parser.printHelpOn(System.err);
+            }         
 
             if (serverFile != null) {
                 parser = null;  // not needed anymore, trigger GC
