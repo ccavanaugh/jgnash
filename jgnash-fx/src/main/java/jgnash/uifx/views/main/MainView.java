@@ -224,6 +224,7 @@ public class MainView implements MessageListener {
                             -> BootEngineTask.initiateBoot(null, password, true, host, port)));
                 } catch (InterruptedException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    Thread.currentThread().interrupt();
                 }
             }).start();
         } else if (dataFile != null) { // Load the specified file, this overrides the last open file
@@ -234,6 +235,7 @@ public class MainView implements MessageListener {
                             -> BootEngineTask.initiateBoot(dataFile.getAbsolutePath(), password, false, null, 0)));
                 } catch (InterruptedException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    Thread.currentThread().interrupt();
                 }
             }).start();
         } else if (Options.openLastProperty().get()) { // Load the last open file if enabled
@@ -243,6 +245,7 @@ public class MainView implements MessageListener {
                     backgroundExecutor.execute(() -> JavaFXUtils.runLater(BootEngineTask::openLast));
                 } catch (InterruptedException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    Thread.currentThread().interrupt();
                 }
             }).start();
         }
@@ -255,7 +258,7 @@ public class MainView implements MessageListener {
     private void checkForLatestRelease() {
         new Thread(() -> {
             try {
-                Thread.sleep(BootEngineTask.FORCED_DELAY * 3);
+                Thread.sleep(BootEngineTask.FORCED_DELAY * 3L);
                 if (Options.checkForUpdatesProperty().get()) {
                     if (!Version.isReleaseCurrent()) {
                         JavaFXUtils.runLater(() ->
@@ -265,6 +268,7 @@ public class MainView implements MessageListener {
                 }
             } catch (InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                Thread.currentThread().interrupt();
             }
         }).start();
     }
@@ -425,44 +429,42 @@ public class MainView implements MessageListener {
                 }
             });
         });
-    }
-
-    /*private void registerLogHandler(final Class<?> clazz) {
-        Logger.getLogger(clazz.getName()).addHandler(statusBarLogHandler);
-    }*/
+    }   
 
     private class StatusBarLogHandler extends Handler {
 
         private static final double GRAPHIC_SIZE = 11;
 
-        final Node INFO;
+        final Node info;
 
-        final Node WARNING;
+        final Node warning;
 
-        final Node SEVERE;
+        final Node severe;
 
         StatusBarLogHandler() {
-            INFO = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO, GRAPHIC_SIZE);
-            WARNING = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.FLAG, GRAPHIC_SIZE);
-            SEVERE = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
+            info = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO, GRAPHIC_SIZE);
+            warning = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.FLAG, GRAPHIC_SIZE);
+            severe = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
         }
 
         @Override
-        public void close() throws SecurityException {
+        public void close() {
+        	// not used
         }
 
         @Override
         public void flush() {
+        	// not used
         }
 
         @Override
         public synchronized void publish(final LogRecord record) {
             if (record.getLevel() == Level.INFO) {
-                updateStatus(record.getMessage(), INFO);
+                updateStatus(record.getMessage(), info);
             } else if (record.getLevel() == Level.WARNING) {
-                updateStatus(record.getMessage(), WARNING);
+                updateStatus(record.getMessage(), warning);
             } else if (record.getLevel() == Level.SEVERE) {
-                updateStatus(record.getMessage(), SEVERE);
+                updateStatus(record.getMessage(), severe);
             }
         }
 
