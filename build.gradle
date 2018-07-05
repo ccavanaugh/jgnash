@@ -34,7 +34,7 @@ allprojects {
         xstreamVersion = '1.4.10'
         kxmlVersion = '2.3.0'
 
-        hibernateVersion = '5.3.1.Final'
+        hibernateVersion = '5.3.2.Final'
         hikariVersion = '3.2.0'
 
         dynamicJasperVersion = '5.1.1'
