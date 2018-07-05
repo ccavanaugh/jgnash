@@ -51,13 +51,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     private boolean autoCreate;
 
     /**
-     * Display notice of the automatically created transaction.
-     */
-    @Deprecated
-    @SuppressWarnings("unused")
-    private boolean autoCreateNotify;
-
-    /**
      * Description for this reminder.
      */
     private String description;
@@ -88,13 +81,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      * Notes for this reminder.
      */
     private String notes = null;
-
-    /**
-     * Delete on completion.
-     */
-    @Deprecated
-    @SuppressWarnings("unused")
-    private boolean removable = false;
 
     /**
      * The start date of this reminder.
