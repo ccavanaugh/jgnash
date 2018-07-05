@@ -39,7 +39,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
 
 import jgnash.util.NotNull;
@@ -67,13 +66,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Date of entry from form entry, used for sort order.
      */
     LocalDate date = LocalDate.now();
-
-    /**
-     * Date transaction was created.
-     */
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated
-    private LocalDate dateEntered;
 
     /**
      * Timestamp for transaction creation.
@@ -648,24 +640,5 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
 
         return b.toString();
-    }
-
-    /**
-     * Required by XStream for proper initialization.
-     *
-     * @return Properly initialized Transaction
-     */
-    protected Object readResolve() {
-        postLoad();
-        return this;
-    }
-
-    @SuppressWarnings("deprecation")
-    @PostLoad
-    private void postLoad() {
-        if (dateEntered != null) {
-            timestamp = dateEntered.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            dateEntered = null;
-        }
     }
 }
