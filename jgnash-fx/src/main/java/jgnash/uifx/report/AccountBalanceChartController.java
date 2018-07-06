@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,6 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.StoredObject;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
 import jgnash.text.CommodityFormat;
@@ -228,8 +228,8 @@ public class AccountBalanceChartController {
      * Stores a list of selected accounts.
      */
     private void saveSelectedAccounts() {
-        final List<String> accounts
-                = getSelectedAccounts().stream().map(StoredObject::getUuid).collect(Collectors.toList());
+        final List<String> accounts = getSelectedAccounts().stream().map(account -> account.getUuid().toString())
+                .collect(Collectors.toList());
 
         preferences.put(SELECTED_ACCOUNTS, EncodeDecode.encodeStringCollection(accounts));
     }
@@ -243,14 +243,14 @@ public class AccountBalanceChartController {
 
         if (!accountIds.isEmpty()) {
             // set Primary account
-            Account account = engine.getAccountByUuid(accountIds.get(0));
+            Account account = engine.getAccountByUuid(UUID.fromString(accountIds.get(0)));
             if (account != null) {
                 accountComboBox.setValue(account);
             }
 
             if (accountIds.size() > 1) {
                 for (int i = 1; i < accountIds.size(); i++) {
-                    account = engine.getAccountByUuid(accountIds.get(i));
+                    account = engine.getAccountByUuid(UUID.fromString(accountIds.get(i)));
                     if (account != null) {
                         addAuxAccountCombo(account);
                     }

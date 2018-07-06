@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -135,8 +136,10 @@ public class Engine {
      * Unique identifier for this engine instance.
      * Used by this distributed lock manager to keep track of who has a lock
      */
-    private final String uuid = UUIDUtil.getUID();
+    private final String uuid = UUID.randomUUID().toString();
+
     private final EngineDAO eDAO;
+
     private final AttachmentManager attachmentManager;
 
     /**
@@ -664,7 +667,7 @@ public class Engine {
         return getReminderDAO().getReminderList();
     }
 
-    public Reminder getReminderByUuid(final String uuid) {
+    public Reminder getReminderByUuid(final UUID uuid) {
         return getReminderDAO().getReminderByUuid(uuid);
     }
 
@@ -728,7 +731,7 @@ public class Engine {
         });
     }
 
-    public <T extends StoredObject> T getStoredObjectByUuid(final Class<T> tClass, final String uuid) {
+    public <T extends StoredObject> T getStoredObjectByUuid(final Class<T> tClass, final UUID uuid) {
         return eDAO.getObjectByUuid(tClass, uuid);
     }
 
@@ -1096,7 +1099,7 @@ public class Engine {
         }
     }
 
-    public CurrencyNode getCurrencyNodeByUuid(final String uuid) {
+    public CurrencyNode getCurrencyNodeByUuid(final UUID uuid) {
         return getCommodityDAO().getCurrencyByUuid(uuid);
     }
 
@@ -1110,7 +1113,7 @@ public class Engine {
         }
     }
 
-    public ExchangeRate getExchangeRateByUuid(final String uuid) {
+    public ExchangeRate getExchangeRateByUuid(final UUID uuid) {
         return getCommodityDAO().getExchangeRateByUuid(uuid);
     }
 
@@ -1151,7 +1154,7 @@ public class Engine {
         }
     }
 
-    public SecurityNode getSecurityNodeByUuid(final String uuid) {
+    public SecurityNode getSecurityNodeByUuid(final UUID uuid) {
         return getCommodityDAO().getSecurityByUuid(uuid);
     }
 
@@ -1629,7 +1632,7 @@ public class Engine {
         return accounts;
     }
 
-    public Account getAccountByUuid(final String id) {
+    public Account getAccountByUuid(final UUID id) {
         return getAccountDAO().getAccountByUuid(id);
     }
 
@@ -2370,7 +2373,7 @@ public class Engine {
         }
     }
 
-    public Budget getBudgetByUuid(final String uuid) {
+    public Budget getBudgetByUuid(final UUID uuid) {
         return getBudgetDAO().getBudgetByUuid(uuid);
     }
 
@@ -2610,7 +2613,7 @@ public class Engine {
         return getTransactionDAO().getTransactionsWithAttachments();
     }
 
-    public Transaction getTransactionByUuid(final String uuid) {
+    public Transaction getTransactionByUuid(final UUID uuid) {
         return getTransactionDAO().getTransactionByUuid(uuid);
     }
 

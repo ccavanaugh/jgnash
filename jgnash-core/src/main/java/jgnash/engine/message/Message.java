@@ -28,6 +28,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Message object.
@@ -133,7 +134,7 @@ public class Message implements Serializable, Cloneable {
         for (int i = 0; i < properties.size(); i++) {
             s.writeObject(keys[i]);
             s.writeUTF(values[i].getClass().getName());
-            s.writeUTF(values[i].getUuid());
+            s.writeUTF(values[i].getUuid().toString());
         }
     }
 
@@ -160,7 +161,7 @@ public class Message implements Serializable, Cloneable {
         for (int i = 0; i < size; i++) {
             MessageProperty key = (MessageProperty) s.readObject();
             Class<? extends StoredObject> clazz = (Class<? extends StoredObject>) Class.forName(s.readUTF());
-            StoredObject value = engine.getStoredObjectByUuid(clazz, s.readUTF());
+            StoredObject value = engine.getStoredObjectByUuid(clazz, UUID.fromString(s.readUTF()));
             properties.put(key, value);
         }
     }

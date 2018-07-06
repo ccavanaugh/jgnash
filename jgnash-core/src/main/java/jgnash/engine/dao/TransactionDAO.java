@@ -18,6 +18,7 @@
 package jgnash.engine.dao;
 
 import java.util.List;
+import java.util.UUID;
 
 import jgnash.engine.Transaction;
 
@@ -37,7 +38,7 @@ public interface TransactionDAO {
 
     boolean addTransaction(Transaction transaction);
 
-    Transaction getTransactionByUuid(final String uuid);
+    Transaction getTransactionByUuid(final UUID uuid);
 
     boolean removeTransaction(Transaction transaction);
 

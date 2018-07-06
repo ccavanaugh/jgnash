@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -583,7 +584,7 @@ public class EngineFactory {
         Objects.requireNonNull(newFileName);
         Objects.requireNonNull(password);
 
-        final String ENGINE = UUIDUtil.getUID();    // create a temporary engine ID for utility use only
+        final String ENGINE = UUID.randomUUID().toString();    // create a temporary engine ID for utility use only
 
         final String fileExtension = "." + FileUtils.getFileExtension(newFileName);
 

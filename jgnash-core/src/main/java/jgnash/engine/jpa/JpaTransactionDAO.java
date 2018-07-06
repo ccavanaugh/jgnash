@@ -20,6 +20,7 @@ package jgnash.engine.jpa;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -109,7 +110,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     }
 
     @Override
-    public Transaction getTransactionByUuid(final String uuid) {
+    public Transaction getTransactionByUuid(final UUID uuid) {
         return getObjectByUuid(Transaction.class, uuid);
     }
 

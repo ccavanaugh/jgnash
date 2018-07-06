@@ -18,6 +18,7 @@
 package jgnash.engine.xstream;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -103,7 +104,7 @@ class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO {
     }
 
     @Override
-    public Account getAccountByUuid(final String uuid) {
+    public Account getAccountByUuid(final UUID uuid) {
         return getObjectByUuid(Account.class, uuid);
     }
 

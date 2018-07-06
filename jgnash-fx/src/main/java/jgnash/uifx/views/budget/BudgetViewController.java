@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -87,7 +88,7 @@ public class BudgetViewController implements MessageListener {
 
             availableBudgetsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
-                    preferences.put(LAST_BUDGET, newValue.getUuid());
+                    preferences.put(LAST_BUDGET, newValue.getUuid().toString());
                 }
 
                 Platform.runLater(() -> budgetTableController.budgetProperty().set(newValue));
@@ -110,12 +111,16 @@ public class BudgetViewController implements MessageListener {
 
         availableBudgetsComboBox.getItems().setAll(budgetList);
 
-        final Budget lastBudget = engine.getBudgetByUuid(preferences.get(LAST_BUDGET, ""));
+        String uuid = preferences.get(LAST_BUDGET, "");
 
-        if (budgetList.contains(lastBudget)) {
-            availableBudgetsComboBox.setValue(lastBudget);
-        } else if (availableBudgetsComboBox.getItems().size() > 0) {
-            availableBudgetsComboBox.setValue(availableBudgetsComboBox.getItems().get(0));
+        if (!uuid.isEmpty()) {
+            final Budget lastBudget = engine.getBudgetByUuid(UUID.fromString(uuid));
+
+            if (budgetList.contains(lastBudget)) {
+                availableBudgetsComboBox.setValue(lastBudget);
+            } else if (availableBudgetsComboBox.getItems().size() > 0) {
+                availableBudgetsComboBox.setValue(availableBudgetsComboBox.getItems().get(0));
+            }
         }
     }
 

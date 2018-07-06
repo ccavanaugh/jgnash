@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 import javax.swing.JComboBox;
@@ -68,7 +69,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
-    public PartialOne(QifAccount qAcc) {
+    PartialOne(final QifAccount qAcc) {
         this.qAcc = qAcc;
         layoutMainPanel();
     }
@@ -93,13 +94,16 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
         /* Try a set the comboBox to the last selected account */
         String lastAccount = pref.get(LAST_ACCOUNT, "");
 
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
+        if (!lastAccount.isEmpty()) {
 
-        final Account last = engine.getAccountByUuid(lastAccount);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
-        if (last != null) {
-            setAccount(last);
+            final Account last = engine.getAccountByUuid(UUID.fromString(lastAccount));
+
+            if (last != null) {
+                setAccount(last);
+            }
         }
     }
 
@@ -129,7 +133,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
         /* Save the id of the selected account */
         if (destinationAccount != null) {
-            pref.put(LAST_ACCOUNT, destinationAccount.getUuid());
+            pref.put(LAST_ACCOUNT, destinationAccount.getUuid().toString());
             pref.putInt(DATE_FORMAT, dateFormatCombo.getSelectedIndex());
         }
     }

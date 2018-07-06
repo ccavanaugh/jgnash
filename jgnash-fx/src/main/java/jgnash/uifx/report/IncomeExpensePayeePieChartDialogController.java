@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -163,13 +164,18 @@ public class IncomeExpensePayeePieChartDialogController {
         accountComboBox.setPredicate(AccountComboBox.getShowAllPredicate());
 
         if (preferences.get(LAST_ACCOUNT, null) != null) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
+            final String uuid = preferences.get(LAST_ACCOUNT, "");
 
-            final Account account = engine.getAccountByUuid(preferences.get(LAST_ACCOUNT, null));
+            if (!uuid.isEmpty()) {
 
-            if (account != null) {
-                accountComboBox.setValue(account);
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                final Account account = engine.getAccountByUuid(UUID.fromString(uuid));
+
+                if (account != null) {
+                    accountComboBox.setValue(account);
+                }
             }
         }
 
@@ -178,7 +184,7 @@ public class IncomeExpensePayeePieChartDialogController {
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateCharts();
-                preferences.put(LAST_ACCOUNT, accountComboBox.getValue().getUuid());
+                preferences.put(LAST_ACCOUNT, accountComboBox.getValue().getUuid().toString());
             }
         };
 

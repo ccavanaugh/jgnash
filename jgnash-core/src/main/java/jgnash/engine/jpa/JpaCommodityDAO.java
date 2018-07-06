@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -131,7 +132,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     }
 
     @Override
-    public CurrencyNode getCurrencyByUuid(final String uuid) {
+    public CurrencyNode getCurrencyByUuid(final UUID uuid) {
         return getObjectByUuid(CurrencyNode.class, uuid);
     }
 
@@ -178,12 +179,12 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     }
 
     @Override
-    public ExchangeRate getExchangeRateByUuid(final String uuid) {
+    public ExchangeRate getExchangeRateByUuid(final UUID uuid) {
         return getObjectByUuid(ExchangeRate.class, uuid);
     }
 
     @Override
-    public SecurityNode getSecurityByUuid(final String uuid) {
+    public SecurityNode getSecurityByUuid(final UUID uuid) {
         return getObjectByUuid(SecurityNode.class, uuid);
     }
 

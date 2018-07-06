@@ -18,6 +18,7 @@
 package jgnash.engine.dao;
 
 import java.util.List;
+import java.util.UUID;
 
 import jgnash.engine.budget.Budget;
 
@@ -34,5 +35,5 @@ public interface BudgetDAO {
 
     List<Budget> getBudgets();
 
-    Budget getBudgetByUuid(final String uuid);
+    Budget getBudgetByUuid(final UUID uuid);
 }

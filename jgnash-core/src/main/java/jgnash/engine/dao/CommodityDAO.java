@@ -19,6 +19,7 @@ package jgnash.engine.dao;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
@@ -75,13 +76,13 @@ public interface CommodityDAO {
 
     List<CurrencyNode> getCurrencies();
 
-    CurrencyNode getCurrencyByUuid(final String uuid);
+    CurrencyNode getCurrencyByUuid(final UUID uuid);
 
-    SecurityNode getSecurityByUuid(final String uuid);
+    SecurityNode getSecurityByUuid(final UUID uuid);
 
     ExchangeRate getExchangeNode(final String rateId);
 
-    ExchangeRate getExchangeRateByUuid(final String uuid);
+    ExchangeRate getExchangeRateByUuid(final UUID uuid);
 
     @NotNull List<SecurityNode> getSecurities();
 

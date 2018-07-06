@@ -19,6 +19,7 @@ package jgnash.engine.xstream;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jgnash.engine.Account;
@@ -85,12 +86,12 @@ class XStreamCommodityDAO extends AbstractXStreamDAO implements CommodityDAO {
     }
 
     @Override
-    public CurrencyNode getCurrencyByUuid(final String uuid) {
+    public CurrencyNode getCurrencyByUuid(final UUID uuid) {
         return getObjectByUuid(CurrencyNode.class, uuid);
     }
 
     @Override
-    public SecurityNode getSecurityByUuid(final String uuid) {
+    public SecurityNode getSecurityByUuid(final UUID uuid) {
         return getObjectByUuid(SecurityNode.class, uuid);
     }
 
@@ -109,7 +110,7 @@ class XStreamCommodityDAO extends AbstractXStreamDAO implements CommodityDAO {
     }
 
     @Override
-    public ExchangeRate getExchangeRateByUuid(final String uuid) {
+    public ExchangeRate getExchangeRateByUuid(final UUID uuid) {
         ExchangeRate exchangeRate = null;
 
         StoredObject o = container.get(uuid);

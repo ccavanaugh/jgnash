@@ -17,11 +17,13 @@
  */
 package jgnash.engine.dao;
 
+import java.util.UUID;
+
 /**
  * Base DAO Interface.
  *
  * @author Craig Cavanaugh
  */
 public interface DAO {
-    <T> T getObjectByUuid(final Class<T> tClass, final String uuid);
+    <T> T getObjectByUuid(final Class<T> tClass, final UUID uuid);
 }

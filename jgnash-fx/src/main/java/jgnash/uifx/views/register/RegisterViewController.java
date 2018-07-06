@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
@@ -132,7 +133,7 @@ public class RegisterViewController {
 
         // Remember the last account selection
         accountTreeController.getSelectedAccountProperty().addListener((observable, oldValue, newValue) -> {
-            executorService.submit(() -> preferences.put(LAST_ACCOUNT, newValue.getUuid()));
+            executorService.submit(() -> preferences.put(LAST_ACCOUNT, newValue.getUuid().toString()));
             showAccount();
         });
 
@@ -181,11 +182,11 @@ public class RegisterViewController {
 
     private void restoreLastSelectedAccount() {
         executorService.submit(() -> {
-            final String lastAccountUuid = preferences.get(LAST_ACCOUNT, null);
-            if (lastAccountUuid != null) {
+            final String lastAccountUuid = preferences.get(LAST_ACCOUNT, "");
+            if (!lastAccountUuid.isEmpty()) {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 if (engine != null) {
-                    final Account account = engine.getAccountByUuid(lastAccountUuid);
+                    final Account account = engine.getAccountByUuid(UUID.fromString(lastAccountUuid));
                     if (account != null) {
                         accountTreeController.setSelectedAccount(account);
                     }

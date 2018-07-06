@@ -18,6 +18,7 @@
 package jgnash.engine.dao;
 
 import java.util.List;
+import java.util.UUID;
 
 import jgnash.engine.recurring.Reminder;
 
@@ -32,7 +33,7 @@ public interface RecurringDAO {
 
     boolean addReminder(Reminder reminder);
 
-    Reminder getReminderByUuid(final String uuid);
+    Reminder getReminderByUuid(final UUID uuid);
 
     boolean updateReminder(Reminder reminder);
 }

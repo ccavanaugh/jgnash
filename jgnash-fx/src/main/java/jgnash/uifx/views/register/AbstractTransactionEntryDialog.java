@@ -155,7 +155,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
     private void loadTable() {
         tableViewManager = new TableViewManager<>(tableView, getPrefNode());
         tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
-        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());
+        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid().toString());
 
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 

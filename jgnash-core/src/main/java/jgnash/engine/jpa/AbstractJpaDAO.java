@@ -18,6 +18,7 @@
 package jgnash.engine.jpa;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -158,7 +159,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
     }
 
     @Override
-    public <T> T getObjectByUuid(final Class<T> tClass, final String uuid) {
+    public <T> T getObjectByUuid(final Class<T> tClass, final UUID uuid) {
         T object = null;
 
         try {

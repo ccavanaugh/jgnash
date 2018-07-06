@@ -28,6 +28,7 @@
 Relational databases will need to be saved to a .xml or .bxds file format in the prior release of jGnash.  They may
 be saved back to a relational database format afterwards.
 
+* 07/06/2018 Reduced memory usage and improved performance for relational database users.
 * 07/01/2018 Removed support for handling old XML file formats from 2017 and detection of 1.x files.
 * 07/01/2018 Removed Dump Heap button from Console Dialog because API use is restricted in future JVMs. (Swing)
 * 06/24/2018 Replaced c3p0 with HikariCP for reduced application size and improved performance.

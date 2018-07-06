@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -263,7 +264,7 @@ abstract class AbstractXStreamContainer {
         }
     }
 
-    StoredObject get(final String uuid) {
+    StoredObject get(final UUID uuid) {
         StoredObject result = null;
 
         Lock l = readWriteLock.readLock();

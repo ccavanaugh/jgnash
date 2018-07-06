@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -193,7 +194,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 StoredObject o = null;
 
                 if (lastBudgetUUID != null) {
-                    o = engine.getBudgetByUuid(lastBudgetUUID);
+                    o = engine.getBudgetByUuid(UUID.fromString(lastBudgetUUID));
                 }
 
                 return o;
@@ -359,7 +360,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
             activeBudget.setWorkingYear(budgetYear);
 
-            preferences.put(LAST_BUDGET, activeBudget.getUuid());
+            preferences.put(LAST_BUDGET, activeBudget.getUuid().toString());
 
             List<BudgetPeriodPanel> newPanels = buildPeriodPanels();
 

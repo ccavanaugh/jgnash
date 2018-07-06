@@ -167,13 +167,13 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
     private void saveLastTabUsed(final int index) {
         final Preferences tabPreferences = Preferences.userRoot().node(RECENT_TAB);
-        tabPreferences.putInt(accountProperty().get().getUuid(), index);
+        tabPreferences.putInt(accountProperty().get().getUuid().toString(), index);
     }
 
     private void restoreLastTabUsed() {
         if (Options.restoreLastTabProperty().get()) {
             Preferences tabPreferences = Preferences.userRoot().node(RECENT_TAB);
-            String id = accountProperty().get().getUuid();
+            String id = accountProperty().get().getUuid().toString();
 
             final int index = tabPreferences.getInt(id, transactionForms.getSelectionModel().getSelectedIndex());
 

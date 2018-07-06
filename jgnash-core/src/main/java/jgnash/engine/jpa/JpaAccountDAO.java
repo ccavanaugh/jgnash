@@ -20,6 +20,7 @@ package jgnash.engine.jpa;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -227,10 +228,10 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     }
 
     /*
-     * @see jgnash.engine.AccountDAOInterface#getAccountByUuid(java.lang.String)
+     * @see jgnash.engine.AccountDAOInterface#getAccountByUuid(java.util.UUID)
      */
     @Override
-    public Account getAccountByUuid(final String uuid) {
+    public Account getAccountByUuid(final UUID uuid) {
         return getObjectByUuid(Account.class, uuid);
     }
 

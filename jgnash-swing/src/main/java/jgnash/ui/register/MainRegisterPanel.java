@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 import javax.swing.JButton;
@@ -205,7 +206,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 Objects.requireNonNull(engine);
 
-                setAccount(engine.getAccountByUuid(uuid));
+                setAccount(engine.getAccountByUuid(UUID.fromString(uuid)));
             }
         });
     }
@@ -241,7 +242,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
             prefs.putInt(DIVIDER, pos);
 
             // remember the current active account
-            prefs.put(ACTIVE_ACCOUNT, account.getUuid()); // update the active account
+            prefs.put(ACTIVE_ACCOUNT, account.getUuid().toString()); // update the active account
         });
     }
 

@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -107,10 +108,14 @@ public class IncomeExpensePieChartDialogController {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            final Account account = engine.getAccountByUuid(preferences.get(LAST_ACCOUNT, null));
+            final String uuid = preferences.get(LAST_ACCOUNT, "");
 
-            if (account != null) {
-                accountComboBox.setValue(account);
+            if (!uuid.isEmpty()) {
+                final Account account = engine.getAccountByUuid(UUID.fromString(uuid));
+
+                if (account != null) {
+                    accountComboBox.setValue(account);
+                }
             }
         }
 
@@ -119,7 +124,7 @@ public class IncomeExpensePieChartDialogController {
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateChart();
-                preferences.put(LAST_ACCOUNT, accountComboBox.getValue().getUuid());
+                preferences.put(LAST_ACCOUNT, accountComboBox.getValue().getUuid().toString());
             }
         };
 

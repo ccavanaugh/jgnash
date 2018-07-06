@@ -20,6 +20,7 @@ package jgnash.engine.jpa;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -81,7 +82,7 @@ class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     }
 
     @Override
-    public Budget getBudgetByUuid(final String uuid) {
+    public Budget getBudgetByUuid(final UUID uuid) {
         return getObjectByUuid(Budget.class, uuid);
     }
 }

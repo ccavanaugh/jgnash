@@ -18,6 +18,7 @@
 package jgnash.engine.dao;
 
 import java.util.List;
+import java.util.UUID;
 
 import jgnash.engine.Account;
 import jgnash.engine.RootAccount;
@@ -68,7 +69,7 @@ public interface AccountDAO {
      */
     List<Account> getInvestmentAccountList();
 
-    Account getAccountByUuid(final String uuid);
+    Account getAccountByUuid(final UUID uuid);
 
     boolean updateAccount(Account account);
 

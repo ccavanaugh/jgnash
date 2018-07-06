@@ -171,7 +171,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         Preferences ppos = Preferences.userRoot().node(NODE_REG_POS);
         Preferences pvis = Preferences.userRoot().node(NODE_REG_VIS);
 
-        String id = getAccount().getUuid();
+        String id = getAccount().getUuid().toString();
 
         String colVis = pvis.get(id, null);
 
@@ -194,7 +194,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         Preferences ppos = Preferences.userRoot().node(NODE_REG_POS);
         Preferences pvis = Preferences.userRoot().node(NODE_REG_VIS);
 
-        String id = getAccount().getUuid();
+        String id = getAccount().getUuid().toString();
 
         ppos.put(id, getColumnPositions());
         pwidth.put(id, getColumnWidths());
@@ -305,7 +305,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         return null;
     }
 
-    public void setSelectedTransaction(final Transaction t) {
+    void setSelectedTransaction(final Transaction t) {
 
         EventQueue.invokeLater(() -> {
             final int row = getTableModel().indexOf(t);

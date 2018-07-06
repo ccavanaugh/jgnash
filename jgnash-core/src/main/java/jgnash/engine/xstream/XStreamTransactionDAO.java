@@ -18,6 +18,7 @@
 package jgnash.engine.xstream;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jgnash.engine.Transaction;
@@ -48,7 +49,7 @@ class XStreamTransactionDAO extends AbstractXStreamDAO implements TransactionDAO
     }
 
     @Override
-    public Transaction getTransactionByUuid(final String uuid) {
+    public Transaction getTransactionByUuid(final UUID uuid) {
         return getObjectByUuid(Transaction.class, uuid);
     }
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
@@ -166,7 +167,7 @@ public abstract class EngineTest {
 
         assertNotNull(e);
 
-        String uuid = e.getDefaultCurrency().getUuid();
+        UUID uuid = e.getDefaultCurrency().getUuid();
 
         assertSame(e.getDefaultCurrency(), e.getCurrencyNodeByUuid(uuid));
     }
@@ -515,7 +516,7 @@ public abstract class EngineTest {
 
     @Test
     public void testGetAccountByUuid() {
-        String rootUUID = e.getRootAccount().getUuid();
+        UUID rootUUID = e.getRootAccount().getUuid();
 
         assertEquals(e.getRootAccount(), e.getAccountByUuid(rootUUID));
     }

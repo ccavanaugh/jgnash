@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -52,18 +53,18 @@ public abstract class StoredObject implements Cloneable, Serializable {
     private boolean markedForRemoval = false;
 
     /**
-     * Unique ID for every object.
+     * String based Unique ID for every object.
      */
     @Id
-    @Column(nullable = false, length = 36)
-    private String uuid = UUIDUtil.getUID();
+    @Column(name = "uuid", nullable = false, updatable = false)
+    private UUID uuid = UUID.randomUUID();
 
     /**
      * Getter for the uuid.
      *
      * @return uuid of the object
      */
-    public final String getUuid() {
+    public final UUID getUuid() {
         return uuid;
     }
 
@@ -72,7 +73,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
      *
      * @param uuid uuid to assign the object
      */
-    private void setUuid(final String uuid) {
+    private void setUuid(final UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -112,7 +113,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
 
         try {
             o = (StoredObject) super.clone();
-            o.setUuid(UUIDUtil.getUID());   // force a unique id
+            o.setUuid(UUID.randomUUID());   // force a new UUID
             o.markedForRemoval = false;
         } catch (final CloneNotSupportedException e) {
             logSevere(StoredObject.class, e);

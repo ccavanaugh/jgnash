@@ -18,6 +18,7 @@
 package jgnash.engine.xstream;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -52,13 +53,13 @@ abstract class AbstractXStreamDAO extends AbstractDAO implements DAO {
         this.container = container;
     }
 
-    private StoredObject getObjectByUuid(final String uuid) {
+    private StoredObject getObjectByUuid(final UUID uuid) {
         return container.get(uuid);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getObjectByUuid(final Class<T> clazz, final String uuid) {
+    public <T> T getObjectByUuid(final Class<T> clazz, final UUID uuid) {
         Object o = getObjectByUuid(uuid);
 
         if (o != null) {

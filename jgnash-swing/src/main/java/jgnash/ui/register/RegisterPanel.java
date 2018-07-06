@@ -186,17 +186,13 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
 
     private void saveLastTabUsed(final int index) {
         Preferences tabPreferences = Preferences.userRoot().node(NODE_REG_TAB);
-        String id = getAccount().getUuid();
-        tabPreferences.putInt(id, index);
+        tabPreferences.putInt(getAccount().getUuid().toString(), index);
     }
 
     private void restoreLastTabUsed() {
         if (RegisterFactory.isRestoreLastTransactionTabEnabled()) {
-
             Preferences tabPreferences = Preferences.userRoot().node(NODE_REG_TAB);
-            String id = getAccount().getUuid();
-
-            final int index = tabPreferences.getInt(id, tabbedPane.getSelectedIndex());
+            final int index = tabPreferences.getInt(getAccount().getUuid().toString(), tabbedPane.getSelectedIndex());
 
             EventQueue.invokeLater(() -> tabbedPane.setSelectedIndex(index));
         }

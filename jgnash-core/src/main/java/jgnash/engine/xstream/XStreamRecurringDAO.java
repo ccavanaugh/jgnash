@@ -21,6 +21,7 @@ import jgnash.engine.dao.RecurringDAO;
 import jgnash.engine.recurring.Reminder;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Recurring XML DAO.
@@ -46,7 +47,7 @@ class XStreamRecurringDAO extends AbstractXStreamDAO implements RecurringDAO {
     }
 
     @Override
-    public Reminder getReminderByUuid(final String uuid) {
+    public Reminder getReminderByUuid(final UUID uuid) {
         return getObjectByUuid(Reminder.class, uuid);
     }
 

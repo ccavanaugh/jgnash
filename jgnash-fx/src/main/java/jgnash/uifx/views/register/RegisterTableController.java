@@ -265,7 +265,7 @@ abstract class RegisterTableController {
 
     private void loadAccount() {
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
-        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());
+        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid().toString());
         tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         tableViewManager.setDefaultColumnVisibilityFactory(getColumnVisibilityFactory());
         tableViewManager.manualColumnPackingProperty().bind(Options.autoPackTablesProperty().not());

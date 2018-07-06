@@ -21,6 +21,7 @@ package jgnash.engine.jpa;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -91,7 +92,7 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
     }
 
     @Override
-    public Reminder getReminderByUuid(final String uuid) {
+    public Reminder getReminderByUuid(final UUID uuid) {
         return getObjectByUuid(Reminder.class, uuid);
     }
 

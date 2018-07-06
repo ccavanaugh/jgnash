@@ -280,7 +280,7 @@ public class OfxExport implements OfxTags {
         if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
             indentedWriter.println(wrap(FITID, transaction.getFitid()), indentLevel);
         } else {
-            indentedWriter.println(wrap(FITID, transaction.getUuid()), indentLevel);
+            indentedWriter.println(wrap(FITID, transaction.getUuid().toString()), indentLevel);
         }
     }
 

@@ -115,13 +115,13 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
         Objects.requireNonNull(account);
         Objects.requireNonNull(budgetGoal);
 
-        accountGoals.put(account.getUuid(), budgetGoal);
+        accountGoals.put(account.getUuid().toString(), budgetGoal);
     }
 
     public void removeBudgetGoal(final Account account) {
         Objects.requireNonNull(account);
 
-        accountGoals.remove(account.getUuid());
+        accountGoals.remove(account.getUuid().toString());
     }
 
     /**
@@ -134,13 +134,13 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     public BudgetGoal getBudgetGoal(final Account account) {
         Objects.requireNonNull(account);
 
-        BudgetGoal goal = accountGoals.get(account.getUuid());
+        BudgetGoal goal = accountGoals.get(account.getUuid().toString());
 
         if (goal == null) {
             goal = new BudgetGoal();
             goal.setBudgetPeriod(getBudgetPeriod());
 
-            accountGoals.put(account.getUuid(), goal);
+            accountGoals.put(account.getUuid().toString(), goal);
         }
 
         return goal;
