@@ -18,6 +18,7 @@
 package jgnash.net.security;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -86,7 +87,7 @@ public class YahooEventParser {
 
         final List<SecurityHistoryNode> historyNodeList = securityNode.getHistoryNodes();
 
-        if (historyNodeList.size() > 0) {
+        if (!historyNodeList.isEmpty()) {
             startDate = historyNodeList.get(0).getLocalDate();
         }
 
@@ -227,7 +228,7 @@ public class YahooEventParser {
 
                 int responseCode = ((HttpURLConnection)connection).getResponseCode();
 
-                if (responseCode == 401) {  // TODO: rerun query
+                if (responseCode == 401) {
                     YahooCrumbManager.clearAuthorization();
                 } else {
                     try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
@@ -248,6 +249,8 @@ public class YahooEventParser {
                                 line = in.readLine();
                             }
                         }
+                    } catch (final FileNotFoundException ignored) {
+                        // silently ignored, history may not exist
                     }
                 }
             }
@@ -255,10 +258,8 @@ public class YahooEventParser {
             LogUtil.logSevere(YahooEventParser.class, ex);
             YahooCrumbManager.clearAuthorization();
         } finally {
-            if (connection != null) {
-                if (connection instanceof HttpURLConnection) {
-                    ((HttpURLConnection) connection).disconnect();
-                }
+            if (connection instanceof HttpURLConnection) {
+                ((HttpURLConnection) connection).disconnect();
             }
         }
 
