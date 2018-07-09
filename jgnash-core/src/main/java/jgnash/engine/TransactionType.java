@@ -45,7 +45,7 @@ public enum TransactionType {
 
     INVALID(ResourceUtils.getString("Word.Invalid"));
 
-    final transient private String transactionTypeName;
+    private final transient String transactionTypeName;
 
     TransactionType(String name) {
         transactionTypeName = name;

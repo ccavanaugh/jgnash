@@ -33,10 +33,10 @@ public class BayesClassifier<E> {
      */
     private final E defaultClass;
 
-    private final static double ASSUMED_PROBABILITY = 0.5;
-    private final static double THRESHOLD = 1.0;
-    private final static double WEIGHT = 1.0;
-    private final static String WHITE_SPACE_REGEX = "[,\\s]+";
+    private static final double ASSUMED_PROBABILITY = 0.5;
+    private static final double THRESHOLD = 1.0;
+    private static final double WEIGHT = 1.0;
+    private static final String WHITE_SPACE_REGEX = "[,\\s]+";
     // private final static String NUMBERS_REGEX = "(?>-?\\d+(?:[\\./]\\d+)?)";
 
     private final Map<String, Map<E, Integer>> featureCounter = new HashMap<>();

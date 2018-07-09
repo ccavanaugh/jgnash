@@ -61,6 +61,7 @@ abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipControll
     DecimalTextField totalField;
 
     @FXML
+    @Override
     public void initialize() {
         super.initialize();
 

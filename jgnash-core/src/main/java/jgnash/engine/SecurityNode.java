@@ -257,7 +257,7 @@ public class SecurityNode extends CommodityNode {
         try {
             final List<SecurityHistoryEvent> splits = getSplitEvents();
 
-            if (splits.size() > 0) {
+            if (!splits.isEmpty()) {
                 BigDecimal scalar = BigDecimal.ONE;
 
                 final ListIterator<SecurityHistoryEvent> historyEventIterator = splits.listIterator(splits.size());
@@ -319,7 +319,7 @@ public class SecurityNode extends CommodityNode {
             final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
             final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
 
-            if (splitEvents.size() == 0) {
+            if (splitEvents.isEmpty()) {
                 groups.add(getHistoryNodes());
             } else {    // count should be split events + 1 when complete
 

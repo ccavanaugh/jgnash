@@ -43,7 +43,7 @@ public class Message implements Serializable, Cloneable {
 
     private String source;
 
-    transient private EnumMap<MessageProperty, StoredObject> properties = new EnumMap<>(MessageProperty.class);
+    private transient EnumMap<MessageProperty, StoredObject> properties = new EnumMap<>(MessageProperty.class);
 
     /**
      * Used to flag message sent remotely.
@@ -83,9 +83,8 @@ public class Message implements Serializable, Cloneable {
      *
      * @param key   property key
      * @param value message value
-     * @throws NullPointerException throws an exception if value is null
      */
-    public void setObject(@NotNull final MessageProperty key, @NotNull final StoredObject value) throws NullPointerException {
+    public void setObject(@NotNull final MessageProperty key, @NotNull final StoredObject value) {
         properties.put(Objects.requireNonNull(key), Objects.requireNonNull(value));
     }
 

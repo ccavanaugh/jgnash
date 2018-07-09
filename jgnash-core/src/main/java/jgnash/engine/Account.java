@@ -1124,7 +1124,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         return name;
     }
 
-    public void setName(final String newName) {
+    public synchronized void setName(final String newName) {
         if (!newName.equals(name)) {
             name = newName;
         }

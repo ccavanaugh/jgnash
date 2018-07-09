@@ -62,10 +62,8 @@ abstract class AbstractXStreamDAO extends AbstractDAO implements DAO {
     public <T> T getObjectByUuid(final Class<T> clazz, final UUID uuid) {
         Object o = getObjectByUuid(uuid);
 
-        if (o != null) {
-            if (clazz.isAssignableFrom(o.getClass())) {
-                return (T) o;
-            }
+        if (o != null && clazz.isAssignableFrom(o.getClass())) {
+            return (T) o;
         }
 
         return null;

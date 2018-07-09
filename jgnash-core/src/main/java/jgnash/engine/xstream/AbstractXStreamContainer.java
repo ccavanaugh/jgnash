@@ -110,8 +110,7 @@ abstract class AbstractXStreamContainer {
                     Files.delete(backup);
                 } catch (IOException e) {
                     Logger.getLogger(AbstractXStreamContainer.class.getName())
-                            .log(Level.WARNING, "Was not able to delete the old backup file: {0}",
-                                    backup.toString());
+                            .log(Level.WARNING, "Was not able to delete the old backup file: {0}", backup);
                 }
             }
 

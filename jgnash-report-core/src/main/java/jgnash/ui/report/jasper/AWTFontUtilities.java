@@ -80,7 +80,7 @@ public class AWTFontUtilities {
         return getStringWidth(text, font);
     }
 
-    private synchronized static FontRenderContext getFontRenderContext() {
+    private static synchronized FontRenderContext getFontRenderContext() {
         FontRenderContext context = contextReference.get();
 
         if (context == null) {

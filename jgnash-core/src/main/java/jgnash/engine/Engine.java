@@ -104,7 +104,7 @@ public class Engine {
 
     private static final Logger logger = Logger.getLogger(Engine.class.getName());
 
-    private final static long MAXIMUM_TRASH_AGE = 2 * 60 * 1000; // 2 minutes
+    private static final long MAXIMUM_TRASH_AGE = 2L * 60L * 1000L; // 2 minutes
 
     /**
      * The maximum number of network errors before scheduled tasks are stopped.
@@ -193,7 +193,7 @@ public class Engine {
             if (!Thread.currentThread().isInterrupted()) {
                 emptyTrash();
             }
-        }, 45, 5 * 60, TimeUnit.SECONDS);
+        }, 45, 5L * 60L, TimeUnit.SECONDS);
 
         // Engine needs to be registered before the update factories can find it.  Push the check to the background executor
         backgroundExecutorService.schedule(() -> {
@@ -824,7 +824,7 @@ public class Engine {
 
             if (status) {
                 status = getCommodityDAO().addCommodity(node);
-                logger.log(Level.FINE, "Adding: {0}", node.toString());
+                logger.log(Level.FINE, "Adding: {0}", node);
             }
 
             Message message;
@@ -876,7 +876,7 @@ public class Engine {
 
             if (status) {
                 status = getCommodityDAO().addCommodity(node);
-                logger.log(Level.FINE, "Adding: {0}", node.toString());
+                logger.log(Level.FINE, "Adding: {0}", node);
             }
 
             Message message;
@@ -1704,7 +1704,7 @@ public class Engine {
         Objects.requireNonNull(child.getUuid());
 
         if (child.getAccountType() == AccountType.ROOT) {
-            throw new RuntimeException("Invalid Account");
+            throw new IllegalArgumentException("Invalid Account");
         }
 
         dataLock.writeLock().lock();
@@ -2854,7 +2854,7 @@ public class Engine {
      */
     private class BackgroundCallable<E> implements Callable<E> {
 
-        final private Callable<E> callable;
+        private final Callable<E> callable;
 
         BackgroundCallable(@NotNull final Callable<E> callable) {
             this.callable = callable;

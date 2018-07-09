@@ -112,8 +112,8 @@ public class Version {
             } else if (version.startsWith("${")) {   // running withing a development environment
                 return true;
             } else {
-                final String gitVersion[] = release.get().split("\\.");
-                final String thisVersion[] = version.split("\\.");
+                final String[] gitVersion = release.get().split("\\.");
+                final String[] thisVersion = version.split("\\.");
 
                 for (int i = 0; i < 3; i++) {   // x.x.x is tested for
                     if (i < gitVersion.length && i < thisVersion.length) {

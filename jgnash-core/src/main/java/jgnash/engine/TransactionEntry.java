@@ -54,7 +54,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     /**
      * Cached hashcode.
      */
-    private volatile transient int hashCode = 0;
+    private transient volatile int hashCode = 0;
 
     @SuppressWarnings("unused")
     @Id
@@ -195,7 +195,9 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     public final void setAmount(@NotNull final BigDecimal amount) {
         Objects.requireNonNull(amount);
 
-        assert amount.signum() >= 0;
+        if (amount.signum() < 0) {
+            throw new IllegalArgumentException("Amount must not be negative");
+        }
 
         creditAmount = amount;
         debitAmount = amount.negate();
@@ -228,7 +230,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         } else if (account == getCreditAccount()) {
             return creditReconciled;
         }
-        //log.warning("Invalid account!: " + account.getPathName());
+
         return ReconciledState.NOT_RECONCILED;
     }
 

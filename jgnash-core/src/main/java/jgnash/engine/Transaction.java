@@ -123,6 +123,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Public constructor.
      */
     public Transaction() {
+        // zero arg constructor required for persistence
     }
 
     /**
@@ -220,7 +221,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public void addTransactionEntry(@NotNull final TransactionEntry entry) {
         Objects.requireNonNull(entry);
 
-        assert !transactionEntries.contains(entry);
+        if (transactionEntries.contains(entry)) {
+            throw new IllegalArgumentException("Duplicate entry is not allowed");
+        }
 
         transactionEntries.add(entry);
     }
@@ -463,7 +466,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return resultant memo
      */
     @NotNull
-    synchronized public String getMemo() {
+    public synchronized String getMemo() {
         if (memo != null) {
             if (isMemoConcatenated()) {
                 if (concatMemo == null) {

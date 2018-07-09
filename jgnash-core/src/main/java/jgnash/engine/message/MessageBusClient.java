@@ -257,7 +257,7 @@ class MessageBusClient {
 
         sendRemoteMessage(writer.toString());
 
-        logger.log(Level.FINE, "sent: {0}", writer.toString());
+        logger.log(Level.FINE, "sent: {0}", writer);
     }
 
     void sendRemoteShutdownRequest() {
@@ -361,16 +361,10 @@ class MessageBusClient {
             }
         }
 
-        if (message.getChannel() == MessageChannel.CONFIG) {
-            switch (message.getEvent()) {
-                case CONFIG_MODIFY:
-                    final Config config = message.getObject(MessageProperty.CONFIG);
-                    engine.refresh(config);
-                    message.setObject(MessageProperty.CONFIG, engine.getStoredObjectByUuid(Config.class, config.getUuid()));
-                    break;
-                default:
-                    break;
-            }
+        if (message.getChannel() == MessageChannel.CONFIG && message.getEvent() == ChannelEvent.CONFIG_MODIFY) {
+            final Config config = message.getObject(MessageProperty.CONFIG);
+            engine.refresh(config);
+            message.setObject(MessageProperty.CONFIG, engine.getStoredObjectByUuid(Config.class, config.getUuid()));
         }
 
         if (message.getChannel() == MessageChannel.REMINDER) {

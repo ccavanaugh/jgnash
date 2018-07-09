@@ -155,10 +155,8 @@ abstract class AbstractJpaDataStore implements DataStore {
             System.out.println(FileUtils.stripFileExtension(fileName));
         }
 
-        if (!exists(fileName)) {
-            if (!initEmptyDatabase(fileName)) {
-                return null;
-            }
+        if (!exists(fileName) && !initEmptyDatabase(fileName)) {
+            return null;
         }
 
         try {
@@ -214,29 +212,29 @@ abstract class AbstractJpaDataStore implements DataStore {
             final Properties properties = JpaConfiguration.getLocalProperties(getType(), path.toString(),
                     new char[]{}, false);
 
-            EntityManagerFactory factory = null;
-            EntityManager em = null;
+            EntityManagerFactory emFactory = null;
+            EntityManager entityManager = null;
 
             try {
-                factory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
-                em = factory.createEntityManager();
+                emFactory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
+                entityManager = emFactory.createEntityManager();
 
-                em.getTransaction().begin();
+                entityManager.getTransaction().begin();
 
                 for (StoredObject o: objects) {
-                    em.persist(o);
+                    entityManager.persist(o);
                 }
 
-                em.getTransaction().commit();
+                entityManager.getTransaction().commit();
             } catch (Exception e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             } finally {
-                if (em != null) {
-                    em.close();
+                if (entityManager != null) {
+                    entityManager.close();
                 }
 
-                if (factory != null) {
-                    factory.close();
+                if (emFactory != null) {
+                    emFactory.close();
                 }
             }
 

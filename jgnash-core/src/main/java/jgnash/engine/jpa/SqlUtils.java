@@ -55,7 +55,7 @@ public class SqlUtils {
      * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2
      * seconds, but unit tests or large databases can sometimes take longer
      */
-    private static final long MAX_LOCK_RELEASE_TIME = 30 * 1000;
+    private static final long MAX_LOCK_RELEASE_TIME = 30L * 1000L;
 
     private static final int LOCK_WAIT_SLEEP = 750;
 
@@ -200,7 +200,7 @@ public class SqlUtils {
                     throw new Exception("Unknown database", e);
                 }
             } else if (e instanceof SQLException) {
-                throw new Exception("Password is not valid", e);
+                throw new IllegalArgumentException("Password is not valid", e);
             } else {
                 throw new Exception(e.toString(), e);
             }

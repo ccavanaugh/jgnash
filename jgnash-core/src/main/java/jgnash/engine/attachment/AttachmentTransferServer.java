@@ -142,7 +142,7 @@ public class AttachmentTransferServer {
         public void channelActive(final ChannelHandlerContext ctx) {
             channelGroup.add(ctx.channel()); // maintain channels
 
-            logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
+            logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress());
         }
     }
 }

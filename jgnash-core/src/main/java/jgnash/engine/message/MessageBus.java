@@ -51,7 +51,7 @@ public class MessageBus {
     /**
      * Maximum wait to get a valid response from the remote message bus before giving up.
      */
-    private static final long MAX_LATENCY = 5 * 1000;
+    private static final long MAX_LATENCY = 5L * 1000L;
 
     private static final Logger logger = Logger.getLogger(MessageBus.class.getName());
 
@@ -247,10 +247,8 @@ public class MessageBus {
              * Do not re-post a remote message otherwise it will just loop through the
              * remote message system
              * */
-            if (!message.isRemote()) {
-                if (messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {
-                    messageBusClient.sendRemoteMessage(message);
-                }
+            if (!message.isRemote() && messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {
+                messageBusClient.sendRemoteMessage(message);
             }
         });
     }
