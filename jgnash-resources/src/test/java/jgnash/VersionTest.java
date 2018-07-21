@@ -16,6 +16,11 @@ import static org.junit.Assert.assertTrue;
 public class VersionTest {
 
     @Test
+    public void gitHub() {
+        assertTrue(Version.getLatestGitHubRelease().isPresent());
+    }
+
+    @Test
     public void testVersion() {
         System.out.println(getAppVersion());
 
@@ -26,11 +31,9 @@ public class VersionTest {
 
     @Test
     public void testJavaRelease() {
-
         System.out.println("Java Release: " + OS.getJavaRelease());
 
         assertTrue(OS.getJavaRelease() > 0);
-
     }
 
     @Test

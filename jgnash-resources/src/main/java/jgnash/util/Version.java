@@ -62,7 +62,7 @@ public class Version {
         return ResourceBundle.getBundle(JGNASH_RESOURCE_CONSTANTS).getString(NAME);
     }
 
-    private static Optional<String> getLatestGitHubRelease() {
+    public static Optional<String> getLatestGitHubRelease() {
 
         try {
             final StringBuilder builder = new StringBuilder();
@@ -82,10 +82,8 @@ public class Version {
             final Matcher matcher = pattern.matcher(builder.toString());
 
             while (matcher.find()) {
-                if (matcher.group(1).equals(JSON_NAME)) {
-                    if (matcher.find()) {
-                        return Optional.ofNullable(matcher.group(1));
-                    }
+                if (matcher.group(1).equals(JSON_NAME) && matcher.find()) {
+                    return Optional.ofNullable(matcher.group(1));
                 }
             }
 
