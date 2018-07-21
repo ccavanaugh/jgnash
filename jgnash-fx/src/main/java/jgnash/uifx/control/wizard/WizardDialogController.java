@@ -172,7 +172,7 @@ public class WizardDialogController<K extends Enum<?>> {
             }
         }
 
-        throw new RuntimeException("Did not find a controller match for the descriptor");
+        throw new IllegalArgumentException("Did not find a controller match for the descriptor");
     }
 
     private void updateButtonState() {
@@ -183,15 +183,15 @@ public class WizardDialogController<K extends Enum<?>> {
         }
 
         if (selectedIndex.get() == taskList.getItems().size() - 1) {
-            boolean valid = true;
+            boolean isValid = true;
 
             for (WizardPaneController<K> wizardPaneController : paneMap.keySet()) {
                 if (!wizardPaneController.isPaneValid()) {
-                    valid = false;
+                    isValid = false;
                 }
             }
 
-            finishButton.setDisable(!valid);
+            finishButton.setDisable(!isValid);
         } else {
             finishButton.setDisable(true);
         }
