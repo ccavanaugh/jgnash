@@ -163,7 +163,7 @@ public class EngineFactory {
             Files.delete(xmlFile);
         } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile.toString());
+            logger.log(Level.WARNING, "Was not able to delete the temporary file: {0}", xmlFile);
         }
     }
 
@@ -185,7 +185,7 @@ public class EngineFactory {
                 try {
                     Files.delete(fileList.get(i));
                 } catch (final Exception e) {
-                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).toString());
+                    logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i));
                 }
             }
         }
@@ -290,16 +290,17 @@ public class EngineFactory {
                 pref.putBoolean(LAST_REMOTE, false);
             }
 
-            System.out.println("Boot time was " + ChronoUnit.MILLIS.between(start, Instant.now()) + " milliseconds");
+            logger.log(Level.INFO, "Boot time was {0} milliseconds",
+                    ChronoUnit.MILLIS.between(start, Instant.now()));
         }
         return engine;
     }
 
     public static synchronized Engine bootClientEngine(final String host, final int port, final char[] password,
-                                                       final String engineName) throws Exception {
+                                                       final String engineName) {
 
         if (engineMap.get(engineName) != null) {
-            throw new RuntimeException("A stale engine was found in the map");
+            throw new EngineException("A stale engine was found in the map");
         }
 
         final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
@@ -321,7 +322,7 @@ public class EngineFactory {
             final DataStoreType dataStoreType = messageBus.getRemoteDataStoreType();
 
             if (remoteDataBasePath == null || remoteDataBasePath.isEmpty() || dataStoreType == null) {
-                throw new Exception("Invalid connection wih the message bus");
+                throw new EngineException("Invalid connection wih the message bus");
             }
 
             logger.log(Level.INFO, "Remote path was {0}", remoteDataBasePath);
@@ -610,6 +611,8 @@ public class EngineFactory {
 
             // Need to know the datastore type for correct behavior
             final DataStoreType currentType = EngineFactory.getDataStoreByType(fileName);
+
+            Objects.requireNonNull(currentType);    // fail if type is null
 
             // Create a utility engine instead of using the default
             Engine engine = EngineFactory.bootLocalEngine(fileName, ENGINE, password);

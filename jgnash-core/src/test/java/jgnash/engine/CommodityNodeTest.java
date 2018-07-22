@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -75,8 +76,10 @@ public class CommodityNodeTest {
             assertEquals(BigDecimal.ONE, usdNode.getExchangeRate(usdNode));
             assertEquals(BigDecimal.ONE, cadNode.getExchangeRate(cadNode));
 
+            assertTrue(e.removeCommodity(cadNode));
+
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        } catch (final Exception e) {
+        } catch (final EngineException | IOException e) {
             fail(e.getMessage());
         }
     }
@@ -111,6 +114,9 @@ public class CommodityNodeTest {
 
             assertEquals(new BigDecimal("1.100"), usdNode.getExchangeRate(cadNode).setScale(3, RoundingMode.DOWN));
             assertEquals(new BigDecimal("0.909"), cadNode.getExchangeRate(usdNode).setScale(3, RoundingMode.DOWN));
+
+
+            assertTrue(e.removeCommodity(cadNode));
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         } catch (final Exception e) {

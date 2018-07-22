@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -75,6 +76,8 @@ public class AttachmentUtils {
      * @return directory for all attachments
      */
     public static Path getAttachmentDirectory(@NotNull final Path baseFile) {
+        Objects.requireNonNull(baseFile);
+
         if (baseFile.getParent() != null) {
             return Paths.get(baseFile.getParent() + FileUtils.SEPARATOR + ATTACHMENT_BASE);
         }

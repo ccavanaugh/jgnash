@@ -10,6 +10,7 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
+import jgnash.engine.EngineException;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
@@ -24,7 +25,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test methods for public API's.  These may duplicate some other tests but ensures intended API's remain publicly
- * accessible for plugins
+ * accessible for plugins and UIs
  *
  * @author Craig Cavanaugh
  */
@@ -35,8 +36,13 @@ public class ApiTest extends AbstractEngineTest {
         database = testFolder.newFile("api-test.bxds").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
-        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
-                DataStoreType.BINARY_XSTREAM);
+        try {
+            return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.BINARY_XSTREAM);
+        } catch (final EngineException e) {
+            fail("Fatal error occurred");
+            return  null;
+        }
     }
 
     private static void closeEngine() {
@@ -104,8 +110,7 @@ public class ApiTest extends AbstractEngineTest {
         assertEquals(BigDecimal.ZERO, securityNode.getMarketPrice(LocalDate.now(), e.getDefaultCurrency()));
 
         // Add the security node to the account
-        final List<SecurityNode> securitiesList = new ArrayList<>();
-        securitiesList.addAll(investAccount.getSecurities());
+        final List<SecurityNode> securitiesList = new ArrayList<>(investAccount.getSecurities());
         final int securityCount = securitiesList.size();
         securitiesList.add(securityNode);
         e.updateAccountSecurities(investAccount, securitiesList);
@@ -153,7 +158,7 @@ public class ApiTest extends AbstractEngineTest {
 
         Account b = e.getAccountByUuid(a.getUuid());
 
-        assertEquals("gobbleDeGook", e.getAccountAttribute(b, "myStuff"));
+        assertEquals("gobbleDeGook", Engine.getAccountAttribute(b, "myStuff"));
 
         // close and reopen to force check for persistence
         closeEngine();
@@ -161,10 +166,10 @@ public class ApiTest extends AbstractEngineTest {
         e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
         b = e.getAccountByUuid(a.getUuid());
-        assertEquals("gobbleDeGook", e.getAccountAttribute(b, "myStuff"));
-        assertEquals("myValue", e.getAccountAttribute(b, "myKey"));
+        assertEquals("gobbleDeGook", Engine.getAccountAttribute(b, "myStuff"));
+        assertEquals("myValue", Engine.getAccountAttribute(b, "myKey"));
 
-        String attribute = e.getAccountAttribute(b, "myNumber");
+        String attribute = Engine.getAccountAttribute(b, "myNumber");
 
         assertNotNull(attribute);
 

@@ -189,12 +189,14 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
             } catch (IOException | InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                Thread.currentThread().interrupt();
             }
         } else {
             try {
                 future = channel.writeAndFlush(encrypt(ERROR + "File not found: " + path) + EOL_DELIMITER).sync();
             } catch (final InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                Thread.currentThread().interrupt();
             }
             logger.log(Level.WARNING, "File not found: {0}", path);
         }

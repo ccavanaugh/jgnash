@@ -116,6 +116,10 @@ public class Engine {
      */
     private static final int SCHEDULED_DELAY = 30;
 
+    private static final String MESSAGE_ACCOUNT_MODIFY = "Message.AccountModify";
+
+    private static final String COMMODITY = "Commodity ";
+
     static {
         logger.setLevel(Level.ALL);
     }
@@ -168,8 +172,8 @@ public class Engine {
     public Engine(final EngineDAO eDAO, final LockManager lockManager, final AttachmentManager attachmentManager, final String name) {
         Objects.requireNonNull(name, "The engine name may not be null");
         Objects.requireNonNull(eDAO, "The engineDAO may not be null");
-        
-        System.out.println(CURRENT_VERSION);
+
+        logger.log(Level.INFO, "Release {0}", CURRENT_VERSION);
 
         this.attachmentManager = attachmentManager;
         this.eDAO = eDAO;
@@ -424,7 +428,7 @@ public class Engine {
 
                 if (!getAccountDAO().addRootAccount(root)) {
                     logSevere("Was not able to add the root account");
-                    throw new RuntimeException("Was not able to add the root account");
+                    throw new EngineException("Was not able to add the root account");
                 }
 
                 if (getDefaultCurrency() == null) {
@@ -468,7 +472,7 @@ public class Engine {
 
     private void clearObsoleteExchangeRates() {
         getCommodityDAO().getExchangeRates().stream()
-                .filter(rate -> getBaseCurrencies(rate.getRateId()) == null)
+                .filter(rate -> getBaseCurrencies(rate.getRateId()).length == 0)
                 .forEach(this::removeExchangeRate);
     }
 
@@ -604,7 +608,7 @@ public class Engine {
      * @param account     primary account
      * @return new default {@code MonthlyReminder}
      */
-    public Reminder createDefaultReminder(final Transaction transaction, final Account account) {
+    public static Reminder createDefaultReminder(final Transaction transaction, final Account account) {
         final Reminder reminder = new MonthlyReminder();
 
         try {
@@ -701,7 +705,7 @@ public class Engine {
         return pendingList;
     }
 
-    public PendingReminder getPendingReminder(@NotNull Reminder reminder) {
+    public static PendingReminder getPendingReminder(@NotNull Reminder reminder) {
         final RecurringIterator ri = reminder.getIterator();
         LocalDate next = ri.next();
 
@@ -782,18 +786,18 @@ public class Engine {
 
         if (node.getScale() < 0) {
             result = false;
-            logSevere("Commodity " + node + " had a scale less than zero");
+            logSevere(COMMODITY + node + " had a scale less than zero");
         }
 
         if (node instanceof SecurityNode && ((SecurityNode) node).getReportedCurrencyNode() == null) {
             result = false;
-            logSevere("Commodity " + node + " was not assigned a currency");
+            logSevere(COMMODITY + node + " was not assigned a currency");
         }
 
         // ensure the UUID being used is unique
         if (eDAO.getObjectByUuid(CommodityNode.class, node.getUuid()) != null) {
             result = false;
-            logSevere("Commodity " + node + " was not unique");
+            logSevere(COMMODITY + node + " was not unique");
         }
 
         return result;
@@ -1043,7 +1047,7 @@ public class Engine {
                     }
                 }
             }
-            return null;
+            return new CurrencyNode[0];
         } finally {
             dataLock.readLock().unlock();
         }
@@ -1416,7 +1420,9 @@ public class Engine {
                                 final BigDecimal rate, final LocalDate localDate) {
         Objects.requireNonNull(rate);
 
-        assert rate.compareTo(BigDecimal.ZERO) > 0;
+        if (rate.compareTo(BigDecimal.ZERO) < 1) {
+            throw new EngineException("Rate must be greater than zero");
+        }
 
         if (baseCurrency.equals(exchangeCurrency)) {
             return;
@@ -1509,7 +1515,9 @@ public class Engine {
         Objects.requireNonNull(oldNode);
         Objects.requireNonNull(templateNode);
 
-        assert oldNode != templateNode;
+        if (oldNode == templateNode) {
+            throw new EngineException("node were the same");
+        }
 
         dataLock.writeLock().lock();
 
@@ -1807,7 +1815,7 @@ public class Engine {
 
             messageBus.fireEvent(message);
 
-            logInfo(rb.getString("Message.AccountModify"));
+            logInfo(rb.getString(MESSAGE_ACCOUNT_MODIFY));
 
             return true;
         } finally {
@@ -1832,7 +1840,7 @@ public class Engine {
             message.setObject(MessageProperty.ACCOUNT, account);
             messageBus.fireEvent(message);
 
-            logInfo(rb.getString("Message.AccountModify"));
+            logInfo(rb.getString(MESSAGE_ACCOUNT_MODIFY));
         } else {
             final Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY_FAILED, this);
             message.setObject(MessageProperty.ACCOUNT, account);
@@ -1885,7 +1893,7 @@ public class Engine {
                 message.setObject(MessageProperty.ACCOUNT, account);
                 messageBus.fireEvent(message);
 
-                logInfo(rb.getString("Message.AccountModify"));
+                logInfo(rb.getString(MESSAGE_ACCOUNT_MODIFY));
             } else {
                 message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY_FAILED, this);
                 message.setObject(MessageProperty.ACCOUNT, account);
@@ -1944,7 +1952,7 @@ public class Engine {
             message.setObject(MessageProperty.ACCOUNT, account);
             messageBus.fireEvent(message);
 
-            logInfo(rb.getString("Message.AccountModify"));
+            logInfo(rb.getString(MESSAGE_ACCOUNT_MODIFY));
         } finally {
             dataLock.writeLock().unlock();
         }
@@ -1979,7 +1987,7 @@ public class Engine {
             message.setObject(MessageProperty.ACCOUNT, account);
             messageBus.fireEvent(message);
 
-            logInfo(rb.getString("Message.AccountModify"));
+            logInfo(rb.getString(MESSAGE_ACCOUNT_MODIFY));
         } finally {
             dataLock.writeLock().unlock();
         }
@@ -1992,7 +2000,7 @@ public class Engine {
      * @return the attribute if found
      * @see #setAccountAttribute
      */
-    public String getAccountAttribute(@NotNull final Account account, @NotNull final String key) {
+    public static String getAccountAttribute(@NotNull final Account account, @NotNull final String key) {
         return account.getAttribute(key);
     }
 
@@ -2829,6 +2837,7 @@ public class Engine {
                 } catch (final InterruptedException | ExecutionException | TimeoutException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                     errorCount++;
+                    Thread.currentThread().interrupt();
                 } catch (final CancellationException e) {
                     errorCount = Short.MAX_VALUE;   // force a failure
                     break; // futures are being canceled externally, exit the thread
