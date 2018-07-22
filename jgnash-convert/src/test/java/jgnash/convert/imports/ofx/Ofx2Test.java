@@ -175,7 +175,7 @@ public class Ofx2Test {
 
 
     /**
-     * Test for amounts that use a comma as a decimal separator
+     * Test for amounts that use a comma as a decimal SEPARATOR
      */
     @Test
     public void parseBankOneCommas() {

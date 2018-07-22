@@ -106,7 +106,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
         final Future<Void> future = fileClient.sendFile(path);
 
         // Determine the cache location the file needs to go to so it does not have to be requested
-        final Path newPath = Paths.get(tempAttachmentPath + FileUtils.separator + path.getFileName());
+        final Path newPath = Paths.get(tempAttachmentPath + FileUtils.SEPARATOR + path.getFileName());
 
         if (future != null) {   // if null, path was not valid
             try {
@@ -139,7 +139,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
     public Future<Path> getAttachment(final String attachment) {
 
         return executorService.submit(() -> {
-            Path path = Paths.get(tempAttachmentPath + FileUtils.separator + Paths.get(attachment).getFileName());
+            Path path = Paths.get(tempAttachmentPath + FileUtils.SEPARATOR + Paths.get(attachment).getFileName());
 
             if (Files.notExists(path)) {
                 fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location

@@ -110,7 +110,7 @@ public class FileTransferTest {
 
             Thread.sleep(4000); // wait for the transfer to finish, it may have been pushed into the background
 
-            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.separator + tempAttachment.getFileName());
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.SEPARATOR + tempAttachment.getFileName());
             newPath.toFile().deleteOnExit();
 
             // Verify copy has occurred
@@ -205,7 +205,7 @@ public class FileTransferTest {
 
             Thread.sleep(4000); // wait for transfer to finish
 
-            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.separator + tempAttachment.getFileName());
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.SEPARATOR + tempAttachment.getFileName());
             newPath.toFile().deleteOnExit();
 
             // Verify copy has occurred

@@ -71,7 +71,7 @@ public class JFloatField extends JTextFieldEx {
     private final NumberFormat format;
 
     /**
-     * Used to track state of fractional separator input on numeric pad
+     * Used to track state of fractional SEPARATOR input on numeric pad
      */
     private volatile boolean keypad = false;
 
@@ -370,7 +370,7 @@ public class JFloatField extends JTextFieldEx {
 
     /**
      * This is a KeyListener that looks at the number pad decimal and converts a
-     * grouping separator into a fraction separator in needed.
+     * grouping SEPARATOR into a fraction SEPARATOR in needed.
      */
     private final class KeyPadListener extends KeyAdapter {
 

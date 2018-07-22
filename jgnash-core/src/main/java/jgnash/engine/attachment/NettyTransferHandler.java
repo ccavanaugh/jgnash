@@ -103,7 +103,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         }
 
         if (plainMessage.startsWith(FILE_REQUEST)) {
-            sendFile(ctx, attachmentPath + FileUtils.separator + plainMessage.substring(FILE_REQUEST.length()));
+            sendFile(ctx, attachmentPath + FileUtils.SEPARATOR + plainMessage.substring(FILE_REQUEST.length()));
         } else if (plainMessage.startsWith(FILE_STARTS)) {
             openOutputStream(plainMessage.substring(FILE_STARTS.length()));
         } else if (plainMessage.startsWith(FILE_CHUNK)) {
@@ -116,7 +116,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
     }
 
     private void deleteFile(final String fileName) {
-        Path path = Paths.get(attachmentPath + FileUtils.separator + fileName);
+        Path path = Paths.get(attachmentPath + FileUtils.SEPARATOR + fileName);
 
         if (Files.exists(path)) {
             try {
@@ -241,7 +241,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         final String fileName = msgParts[0];
         final long fileLength = Long.parseLong(msgParts[1]);
 
-        final Path filePath = Paths.get(attachmentPath + FileUtils.separator + fileName);
+        final Path filePath = Paths.get(attachmentPath + FileUtils.SEPARATOR + fileName);
 
         // Lazy creation of the attachment path if needed
         if (!AttachmentUtils.createAttachmentDirectory(attachmentPath)) {

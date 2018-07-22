@@ -45,7 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static jgnash.util.FileUtils.separator;
+import static jgnash.util.FileUtils.SEPARATOR;
 
 /**
  * Transaction Import filter.
@@ -135,10 +135,10 @@ public class ImportFilter {
         }
 
         if (OS.isSystemWindows()) {
-            scriptDirectory += separator + "AppData" + separator + "Local" + separator
-                    + "jgnash" + separator + IMPORT_SCRIPT_DIRECTORY_NAME;
+            scriptDirectory += SEPARATOR + "AppData" + SEPARATOR + "Local" + SEPARATOR
+                    + "jgnash" + SEPARATOR + IMPORT_SCRIPT_DIRECTORY_NAME;
         } else { // unix, osx
-            scriptDirectory += separator + ".jgnash" + separator + IMPORT_SCRIPT_DIRECTORY_NAME;
+            scriptDirectory += SEPARATOR + ".jgnash" + SEPARATOR + IMPORT_SCRIPT_DIRECTORY_NAME;
         }
 
         logger.log(Level.INFO, "Import Script path: {0}", scriptDirectory);
@@ -149,7 +149,7 @@ public class ImportFilter {
 
     private static Path getBaseFileImportScriptDirectory(@NotNull final Path baseFile) {
         if (baseFile.getParent() != null) {
-            return Paths.get(baseFile.getParent() + separator + IMPORT_SCRIPT_DIRECTORY_NAME);
+            return Paths.get(baseFile.getParent() + SEPARATOR + IMPORT_SCRIPT_DIRECTORY_NAME);
         }
 
         return null;

@@ -223,7 +223,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                         moveAttachment = true;
 
                         Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
-                                FileUtils.separator + selectedFile.getName());
+                                FileUtils.SEPARATOR + selectedFile.getName());
 
                         if (newPath.toFile().exists()) {
                             message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),

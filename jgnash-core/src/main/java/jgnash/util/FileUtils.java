@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -60,14 +61,14 @@ public final class FileUtils {
     /**
      * Regular expression for returning the file extension.
      */
-    private final static String FILE_EXT_REGEX = "(?<=\\.).*$";
+    private static final String FILE_EXT_REGEX = "(?<=\\.).*$";
 
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
 
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
             JpaH2DataStore.LOCK_EXT, JpaH2MvDataStore.LOCK_EXT, ".lock"};
 
-    public static final String separator = System.getProperty("file.separator");
+    public static final String SEPARATOR = System.getProperty("file.SEPARATOR");
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
@@ -174,6 +175,7 @@ public final class FileUtils {
                         Thread.sleep(LOCK_WAIT_PERIOD);
                     } catch (final InterruptedException e) {
                         logSevere(FileUtils.class, e);
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -322,10 +324,10 @@ public final class FileUtils {
         if (directory != null && Files.isDirectory(directory)) {
             final Pattern p = Pattern.compile(regexPattern);
 
-            try {
-                fileList.addAll(Files.list(directory).filter(path -> p.matcher(path.toString()).matches())
+            try (final Stream<Path> stream = Files.list(directory)) {
+                fileList.addAll(stream.filter(path -> p.matcher(path.toString()).matches())
                         .collect(Collectors.toList()));
-            } catch (final IOException e) {
+            } catch (IOException e) {
                 logSevere(FileUtils.class, e);
             }
 

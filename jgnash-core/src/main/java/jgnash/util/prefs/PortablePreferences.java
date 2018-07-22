@@ -93,7 +93,7 @@ public class PortablePreferences {
         if (portableFile != null && !portableFile.isEmpty()) {
             exportFile = Paths.get(portableFile);
         } else {
-            exportFile = Paths.get(System.getProperty("user.dir") + FileUtils.separator + "pref.xml");
+            exportFile = Paths.get(System.getProperty("user.dir") + FileUtils.SEPARATOR + "pref.xml");
         }
         return exportFile;
     }

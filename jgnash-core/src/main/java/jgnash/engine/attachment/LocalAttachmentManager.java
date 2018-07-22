@@ -59,7 +59,7 @@ public class LocalAttachmentManager implements AttachmentManager {
 
         if (AttachmentUtils.createAttachmentDirectory(baseFile)) {  // create if needed
 
-            Path newPath = Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.separator + path.getFileName());
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.SEPARATOR + path.getFileName());
 
             try {
                 if (copy) {
@@ -82,7 +82,7 @@ public class LocalAttachmentManager implements AttachmentManager {
     public boolean removeAttachment(final String attachment) {
         boolean result = false;
 
-        Path path = Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.separator + attachment);
+        Path path = Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.SEPARATOR + attachment);
 
         try {
             Files.delete(path);
@@ -97,6 +97,6 @@ public class LocalAttachmentManager implements AttachmentManager {
     @Override
     public Future<Path> getAttachment(final String attachment) {
         return executorService.submit(() ->
-                Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.separator + attachment));
+                Paths.get(AttachmentUtils.getAttachmentPath() + FileUtils.SEPARATOR + attachment));
     }
 }

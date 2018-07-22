@@ -232,7 +232,7 @@ public class AttachmentPane extends GridPane {
                     moveAttachment = true;
 
                     final Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
-                            FileUtils.separator + selectedFile.getName());
+                            FileUtils.SEPARATOR + selectedFile.getName());
 
                     if (Files.exists(newPath)) {
                         message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),

@@ -412,7 +412,7 @@ public class EngineFactory {
         final String base = System.getProperty("user.home");
         final String userName = System.getProperty("user.name");
 
-        return base + FileUtils.separator + DEFAULT_DIR + FileUtils.separator + userName;
+        return base + FileUtils.SEPARATOR + DEFAULT_DIR + FileUtils.SEPARATOR + userName;
     }
 
     /**

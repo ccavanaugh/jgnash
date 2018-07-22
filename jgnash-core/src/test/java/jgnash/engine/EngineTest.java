@@ -112,7 +112,7 @@ public abstract class EngineTest {
 
         Files.deleteIfExists(Paths.get(testFile));
 
-        final String attachmentDir = System.getProperty("java.io.tmpdir") + System.getProperty("path.separator")
+        final String attachmentDir = System.getProperty("java.io.tmpdir") + System.getProperty("path.SEPARATOR")
                 + "attachments";
         final Path directory = Paths.get(attachmentDir);
 

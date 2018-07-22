@@ -70,7 +70,7 @@ public class DecimalTextField extends TextFieldEx {
     private final NumberFormat format;
 
     /**
-     * Used to track state of fractional separator input on numeric pad.
+     * Used to track state of fractional SEPARATOR input on numeric pad.
      */
     private volatile boolean forceFraction = false;
 

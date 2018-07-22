@@ -264,7 +264,7 @@ public final class ActionParser extends DefaultHandler {
             menu = new JMenu(a);
             for (int i = 0; i < node.size(); i++) {
                 ActionNode n = node.getChildAt(i);
-                if (n.id == null && n.idref == null) { // detect a separator
+                if (n.id == null && n.idref == null) { // detect a SEPARATOR
                     ((JMenu) menu).addSeparator();
                 } else {
                     JMenuItem item = createMenuItem(n);
@@ -400,7 +400,7 @@ public final class ActionParser extends DefaultHandler {
             } else {
                 currentNode = new ActionNode(atts); // initialize parent
             }
-        } else if (EMPTY_ELEMENT.equals(qName) && currentNode != null) { // separator
+        } else if (EMPTY_ELEMENT.equals(qName) && currentNode != null) { // SEPARATOR
             currentNode.addChild(new ActionNode());
         }
     }
@@ -474,7 +474,7 @@ public final class ActionParser extends DefaultHandler {
         ActionNode parent = null; // make it easy to walk back up the tree
 
         ActionNode() {
-        } // an empty node... use as a separator
+        } // an empty node... use as a SEPARATOR
 
         ActionNode(final Attributes attrs) {
             idref = attrs.getValue(ID_REF_ATTRIBUTE); // reference to action id

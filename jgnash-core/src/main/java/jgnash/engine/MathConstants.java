@@ -43,17 +43,17 @@ public final class MathConstants {
     public static final MathContext budgetMathContext = new MathContext(8, roundingMode);
 
     /**
-     * Number of significant digits to the right of the decimal separator.
+     * Number of significant digits to the right of the decimal SEPARATOR.
      */
     public static final int EXCHANGE_RATE_ACCURACY = 6;
 
     /**
-     * Number of significant digits to the right of the decimal separator.
+     * Number of significant digits to the right of the decimal SEPARATOR.
      */
     public static final int SECURITY_PRICE_ACCURACY = 6;
 
     /**
-     * Number of significant digits to the right of the decimal separator.
+     * Number of significant digits to the right of the decimal SEPARATOR.
      */
     public static final int SECURITY_QUANTITY_ACCURACY = 6;
 

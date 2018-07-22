@@ -124,7 +124,7 @@ public class DatePickerEx extends DatePicker {
             final LocalDate date = _getValue(); // force an update to the current value
 
             switch (event.getCode()) {
-                case PERIOD:    // substitute common separators with the current locale's separator
+                case PERIOD:    // substitute common separators with the current locale's SEPARATOR
                 case SLASH:     // while preventing entry of consecutive separators
                 case COMMA:
                 case BACK_SLASH:

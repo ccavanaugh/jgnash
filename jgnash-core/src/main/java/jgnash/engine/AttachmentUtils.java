@@ -76,7 +76,7 @@ public class AttachmentUtils {
      */
     public static Path getAttachmentDirectory(@NotNull final Path baseFile) {
         if (baseFile.getParent() != null) {
-            return Paths.get(baseFile.getParent() + FileUtils.separator + ATTACHMENT_BASE);
+            return Paths.get(baseFile.getParent() + FileUtils.SEPARATOR + ATTACHMENT_BASE);
         }
 
         return null;

@@ -629,7 +629,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     public String toString() {
         final StringBuilder b = new StringBuilder();
 
-        final String lineSep = System.getProperty("line.separator");
+        final String lineSep = System.getProperty("line.SEPARATOR");
 
         b.append("Transaction UUID: ").append(getUuid()).append(lineSep);
         b.append("Number:           ").append(getNumber()).append(lineSep);
