@@ -97,6 +97,7 @@ public class SecurityNode extends CommodityNode {
 
     @Override
     public void setPrefix(final String ignored) {
+        // prefix is controlled by the reported currency
     }
 
     /**
@@ -111,6 +112,7 @@ public class SecurityNode extends CommodityNode {
 
     @Override
     public void setSuffix(final String ignored) {
+        // suffix is controlled by the reported currency
     }
 
     /**
@@ -267,12 +269,11 @@ public class SecurityNode extends CommodityNode {
 
                 // work backwards
                 for (int i = sortedHistoryNodeCache.size() - 1; i >= 0; i--) {
-                    if (DateUtils.after(eventDate, sortedHistoryNodeCache.get(i).getLocalDate())) {
-                        if (historyEventIterator.hasPrevious()) {
-                            final SecurityHistoryEvent historyEvent = historyEventIterator.previous();
-                            eventDate = historyEvent.getDate();
-                            scalar = scalar.divide(historyEvent.getValue(), MathConstants.mathContext);
-                        }
+                    if (DateUtils.after(eventDate, sortedHistoryNodeCache.get(i).getLocalDate())
+                            && historyEventIterator.hasPrevious()) {
+                        final SecurityHistoryEvent historyEvent = historyEventIterator.previous();
+                        eventDate = historyEvent.getDate();
+                        scalar = scalar.divide(historyEvent.getValue(), MathConstants.mathContext);
                     }
 
                     sortedHistoryNodeCache.get(i).setAdjustmentMultiplier(scalar);
