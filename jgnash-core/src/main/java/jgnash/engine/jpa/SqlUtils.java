@@ -26,7 +26,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -62,6 +61,8 @@ public class SqlUtils {
     private static final int TABLE_NAME = 3;
 
     private static final int COLUMN_NAME = 4;
+
+    private static final String SHUTDOWN = "SHUTDOWN";
 
     private SqlUtils() {
     }
@@ -121,7 +122,7 @@ public class SqlUtils {
                         }
                     }
                     // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+                    try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
                         statement.execute();
                     }
                 } catch (final SQLException e) {
@@ -166,7 +167,7 @@ public class SqlUtils {
                     }
 
                     // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+                    try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
                         statement.execute();
                     }
                 } catch (final SQLException e) {
@@ -187,24 +188,20 @@ public class SqlUtils {
      *
      * @param url url to validate
      * @return {@code true} if valid
-     * @throws Exception exception is thrown if the url is not valid.  Exception can be checked for root cause.
+     * @throws SQLException exception is thrown if the url is not valid.  Exception can be checked for root cause.
      */
-    @SuppressWarnings("SameReturnValue")
-    static boolean isConnectionValid(final String url) throws Exception {
+    static boolean isConnectionValid(final String url) throws SQLException {
 
-        try (final Connection ignored = DriverManager.getConnection(url)){
+        try (final Connection ignored = DriverManager.getConnection(url)) {
             logger.fine("Connection is valid");
-        } catch (final Exception e) {
-            if (e instanceof SQLSyntaxErrorException) {
-                if (e.toString().contains("Unknown database")) {
-                    throw new Exception("Unknown database", e);
-                }
-            } else if (e instanceof SQLException) {
-                throw new IllegalArgumentException("Password is not valid", e);
-            } else {
-                throw new Exception(e.toString(), e);
+        } catch (final SQLException e) {
+            if (e.toString().contains("Unknown database")) {
+                logger.severe("Unknown database");
             }
-            throw new Exception(e.toString(), e);
+
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
         }
 
         return true;
@@ -233,7 +230,7 @@ public class SqlUtils {
             try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER,
                     new String(password))) {
                 // must issue a shutdown for correct file closure
-                try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+                try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
                     statement.execute();
                 }
             } catch (final SQLException e) {
@@ -257,6 +254,7 @@ public class SqlUtils {
                     Thread.sleep(LOCK_WAIT_SLEEP);
                 } catch (final InterruptedException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
+                    Thread.currentThread().interrupt();
                 }
             }
         }

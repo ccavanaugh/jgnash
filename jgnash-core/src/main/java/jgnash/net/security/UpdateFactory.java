@@ -181,7 +181,7 @@ public class UpdateFactory {
         final List<SecurityHistoryNode> newSecurityNodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
                 startDate, endDate);
 
-        if (newSecurityNodes.size() > 0) {
+        if (!newSecurityNodes.isEmpty()) {
             logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
         }
 
@@ -248,20 +248,20 @@ public class UpdateFactory {
 
             final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            if (e != null && securityNode.getQuoteSource() != QuoteSource.NONE) {
+            Objects.requireNonNull(e);
 
-                if (!Thread.currentThread().isInterrupted()) {  // check for thread interruption
+            // check for thread interruption
+            if (securityNode.getQuoteSource() != QuoteSource.NONE && !Thread.currentThread().isInterrupted()) {
 
-                    final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
-                            LocalDate.now().minusDays(1), LocalDate.now());
+                final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+                        LocalDate.now().minusDays(1), LocalDate.now());
 
-                    for (final SecurityHistoryNode node : nodes) {
-                        if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
-                            result = e.addSecurityHistory(securityNode, node);
+                for (final SecurityHistoryNode node : nodes) {
+                    if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
+                        result = e.addSecurityHistory(securityNode, node);
 
-                            if (result) {
-                                logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
-                            }
+                        if (result) {
+                            logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
                         }
                     }
                 }
@@ -294,7 +294,6 @@ public class UpdateFactory {
 
                 for (final SecurityHistoryEvent securityHistoryEvent : YahooEventParser.retrieveNew(securityNode)) {
                     if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
-
                         if (securityHistoryEvent.getDate().isAfter(oldest) || securityHistoryEvent.getDate().isEqual(oldest)) {
                             if (!oldHistoryEvents.contains(securityHistoryEvent)) {
                                 result = e.addSecurityHistoryEvent(securityNode, securityHistoryEvent);
