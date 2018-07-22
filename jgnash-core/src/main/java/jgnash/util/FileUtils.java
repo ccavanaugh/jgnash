@@ -68,7 +68,7 @@ public final class FileUtils {
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
             JpaH2DataStore.LOCK_EXT, JpaH2MvDataStore.LOCK_EXT, ".lock"};
 
-    public static final String SEPARATOR = System.getProperty("file.SEPARATOR");
+    public static final String SEPARATOR = System.getProperty("file.separator");
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
