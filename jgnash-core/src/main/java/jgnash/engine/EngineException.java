@@ -22,7 +22,7 @@ package jgnash.engine;
  */
 public class EngineException extends RuntimeException {
 
-    EngineException(final String message) {
+    public EngineException(final String message) {
         super(message);
     }
 }

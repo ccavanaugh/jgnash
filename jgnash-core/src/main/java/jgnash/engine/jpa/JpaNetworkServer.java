@@ -38,6 +38,7 @@ import javax.persistence.Persistence;
 import jgnash.engine.AttachmentUtils;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
+import jgnash.engine.EngineException;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.attachment.AttachmentTransferServer;
@@ -85,6 +86,8 @@ public class JpaNetworkServer {
 
     private static final Logger logger = Logger.getLogger(JpaNetworkServer.class.getName());
 
+    private Runnable callback = null;
+
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
         final Path file = Paths.get(fileName);
@@ -97,7 +100,7 @@ public class JpaNetworkServer {
                 try {
                     Files.createDirectories(parent);
                 } catch (IOException e) {
-                    throw new RuntimeException("Could not create directory for file: " + parent.toString());
+                    throw new EngineException("Could not create directory for file: " + parent.toString());
                 }
             }
         }
@@ -119,7 +122,13 @@ public class JpaNetworkServer {
         System.exit(0); // force exit
     }
 
-    private boolean run(final DataStoreType dataStoreType, final String fileName, final int port,
+    public synchronized void startServer(final String fileName, final int port, final char[] password,
+                                         final Runnable callback) {
+        this.callback = callback;
+        this.startServer(fileName, port, password);
+    }
+
+    private synchronized boolean run(final DataStoreType dataStoreType, final String fileName, final int port,
                         final char[] password) {
 
         boolean result = false;
@@ -168,6 +177,11 @@ public class JpaNetworkServer {
 
                     messageBusServer.addLocalListener(listener);
 
+                    // if a callback has been registered, call it
+                    if (callback != null) {
+                        callback.run();
+                    }
+
                     // wait here forever
                     try {
                         while (!stop) { // check for condition, handle a spurious wake up
@@ -175,6 +189,7 @@ public class JpaNetworkServer {
                         }
                     } catch (final InterruptedException ex) {
                         logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+                        Thread.currentThread().interrupt();
                     }
 
                     messageBusServer.removeLocalListener(listener);
@@ -267,9 +282,9 @@ public class JpaNetworkServer {
     /**
      * stops this server.
      */
-    synchronized private void stopServer() {
+    private synchronized void stopServer() {
         stop = true;
-        this.notify();
+        this.notifyAll();
     }
 
     private Engine createEngine(final DataStoreType dataStoreType, final String fileName, final int port,

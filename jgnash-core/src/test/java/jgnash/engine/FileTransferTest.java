@@ -18,17 +18,6 @@
 package jgnash.engine;
 
 import io.netty.util.ResourceLeakDetector;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
@@ -37,6 +26,19 @@ import jgnash.util.FileUtils;
 
 import org.junit.Test;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.*;
 
 /**
@@ -47,7 +49,7 @@ import static org.junit.Assert.*;
 public class FileTransferTest {
 
     @Test
-    public void encryptedNetworkedTest() throws Exception {
+    public void encryptedNetworkedTest() {
 
         final char[] password = new char[]{'p','a','s','s','w','o','r','d'};
 
@@ -90,10 +92,15 @@ public class FileTransferTest {
 
         final String serverFile = testFile;
 
-        System.out.println("starting server");
-        new StartServerThread(networkServer, serverFile, JpaNetworkServer.DEFAULT_PORT, password).start();
+        Logger.getLogger(FileTransferTest.class.getName()).info("Starting Server");
 
-        Thread.sleep(20000);    // give the server enough time to start on slower or virtualized systems
+        StartServerThread startServerThread = new StartServerThread(networkServer, serverFile,
+                JpaNetworkServer.DEFAULT_PORT, password);
+
+        startServerThread.start();
+
+        // wait until the server is up and running
+        await().atMost(20, TimeUnit.SECONDS).untilTrue(startServerThread.running);
 
         try {
             Engine e = EngineFactory.bootClientEngine(EngineFactory.LOCALHOST, JpaNetworkServer.DEFAULT_PORT,
@@ -108,10 +115,13 @@ public class FileTransferTest {
 
             assertTrue(e.addAttachment(tempAttachment, true));  // push a copy of the attachment
 
-            Thread.sleep(4000); // wait for the transfer to finish, it may have been pushed into the background
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile))
+                    + FileUtils.SEPARATOR + tempAttachment.getFileName());
 
-            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.SEPARATOR + tempAttachment.getFileName());
             newPath.toFile().deleteOnExit();
+
+            // wait for transfer to finish
+            await().atMost(10, TimeUnit.SECONDS).until(() -> Files.exists(newPath));
 
             // Verify copy has occurred
             assertEquals(tempAttachment.toFile().length(), newPath.toFile().length()); // same length?
@@ -145,7 +155,7 @@ public class FileTransferTest {
     }
 
     @Test
-    public void networkedTest() throws Exception {
+    public void networkedTest() {
         final int port = JpaNetworkServer.DEFAULT_PORT + 100;
 
         //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
@@ -186,9 +196,14 @@ public class FileTransferTest {
         final String serverFile = testFile;
 
         Logger.getLogger(FileTransferTest.class.getName()).info("Starting Server");
-        new StartServerThread(networkServer, serverFile, port, EngineFactory.EMPTY_PASSWORD).start();
 
-        Thread.sleep(4000);
+        StartServerThread startServerThread = new StartServerThread(networkServer, serverFile, port,
+                EngineFactory.EMPTY_PASSWORD);
+
+        startServerThread.start();
+
+        // wait until the server is up and running
+        await().atMost(20, TimeUnit.SECONDS).untilTrue(startServerThread.running);
 
         try {
             Engine e = EngineFactory.bootClientEngine(EngineFactory.LOCALHOST, port, EngineFactory.EMPTY_PASSWORD,
@@ -203,15 +218,17 @@ public class FileTransferTest {
 
             assertTrue(e.addAttachment(tempAttachment, true));  // push a copy of the attachment
 
-            Thread.sleep(4000); // wait for transfer to finish
+            final Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile))
+                    + FileUtils.SEPARATOR + tempAttachment.getFileName());
 
-            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + FileUtils.SEPARATOR + tempAttachment.getFileName());
+            // wait for transfer to finish
+            await().atMost(10, TimeUnit.SECONDS).until(() -> Files.exists(newPath));
+
             newPath.toFile().deleteOnExit();
 
             // Verify copy has occurred
             assertEquals(tempAttachment.toFile().length(), newPath.toFile().length()); // same length?
             assertNotEquals(tempAttachment.toString(), newPath.toString()); // different files?
-
 
             // Test that move is working
             Path moveFile = Files.createTempFile("jgnash", "test");
@@ -256,6 +273,8 @@ public class FileTransferTest {
         private final int port;
         private final char[] password;
 
+        AtomicBoolean running = new AtomicBoolean(false);
+
         StartServerThread(JpaNetworkServer networkServer, String serverFile, int port, char[] password) {
             this.networkServer = networkServer;
             this.serverFile = serverFile;
@@ -265,7 +284,7 @@ public class FileTransferTest {
 
         @Override
         public void run() {
-            networkServer.startServer(serverFile, port, password);
+            networkServer.startServer(serverFile, port, password, () -> running.set(true));
         }
     }
 }
