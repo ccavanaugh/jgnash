@@ -36,12 +36,16 @@ import jgnash.util.ResourceUtils;
 public class PackDatabaseTask extends Task<Void> {
 
     private static final int FORCED_DELAY = 1500;
+
     private static final int INDETERMINATE = -1;
 
+    private static final String MESSAGE_PLEASE_WAIT = "Message.PleaseWait";
+
     private final String file;
+
     private final char[] password;
 
-    PackDatabaseTask(final String file, final char[] password) {
+    private PackDatabaseTask(final String file, final char[] password) {
         this.file = file;
         this.password = password;
     }
@@ -62,7 +66,7 @@ public class PackDatabaseTask extends Task<Void> {
         boolean fileLoaded = false;
 
         try {
-            updateMessage(resources.getString("Message.PleaseWait"));
+            updateMessage(resources.getString(MESSAGE_PLEASE_WAIT));
             updateProgress(INDETERMINATE, Long.MAX_VALUE);
 
             // Close an active database
@@ -73,13 +77,13 @@ public class PackDatabaseTask extends Task<Void> {
                     fileLoaded = true;
                 }
 
-                updateMessage(resources.getString("Message.PleaseWait") + "\n"
+                updateMessage(resources.getString(MESSAGE_PLEASE_WAIT) + "\n"
                         + resources.getString("Message.ClosingFile"));
 
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
             }
 
-            updateMessage(resources.getString("Message.PleaseWait") + "\n"
+            updateMessage(resources.getString(MESSAGE_PLEASE_WAIT) + "\n"
                     + resources.getString("Message.PackingFile"));
 
             final DataStore dataStore = EngineFactory.getDataStoreByType(file).getDataStore();
@@ -99,7 +103,7 @@ public class PackDatabaseTask extends Task<Void> {
 
             updateProgress(1, 1);
             updateMessage(resources.getString("Message.PackingFileComplete"));
-            Thread.sleep(FORCED_DELAY * 2);
+            Thread.sleep(FORCED_DELAY * 2L);
         } catch (final Exception exception) {
             Platform.runLater(() -> StaticUIMethods.displayException(exception));
         }

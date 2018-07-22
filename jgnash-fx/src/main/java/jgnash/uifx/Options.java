@@ -58,21 +58,21 @@ public class Options {
 
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
 
-    private final static String REMINDER_SNOOZE = "reminderSnoozePeriod";
+    private static final String REMINDER_SNOOZE = "reminderSnoozePeriod";
 
-    private final static String OPEN_LAST = "openLastEnabled";
+    private static final String OPEN_LAST = "openLastEnabled";
 
-    private final static String SELECT_ON_FOCUS = "selectOnFocus";
+    private static final String SELECT_ON_FOCUS = "selectOnFocus";
 
-    private final static String BUTTON_ORDER = "buttonOrder";
+    private static final String BUTTON_ORDER = "buttonOrder";
 
-    private final static String ANIMATIONS_ENABLED = "animationsEnabled";
+    private static final String ANIMATIONS_ENABLED = "animationsEnabled";
 
-    private final static String RESTORE_LAST_TAB = "restoreLastTab";
+    private static final String RESTORE_LAST_TAB = "restoreLastTab";
 
-    private final static String REGEX_FOR_FILTERS = "regexForFilters";
+    private static final String REGEX_FOR_FILTERS = "regexForFilters";
 
-    private final static String GLOBAL_BAYES_ENABLED = "globalBayesEnabled";
+    private static final String GLOBAL_BAYES_ENABLED = "globalBayesEnabled";
 
     private static final int DEFAULT_SNOOZE = TimePeriodComboBox.getPeriods()[0];
 

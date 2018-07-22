@@ -83,11 +83,11 @@ class MapBasedPreferences extends AbstractPreferences {
 
     @Override
     protected void syncSpi() {
-
+        // implementation not needed, memory based
     }
 
     @Override
     protected void flushSpi() {
-
+        // implementation not needed, memory based
     }
 }

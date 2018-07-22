@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 import jgnash.text.CommodityFormat;
 import jgnash.util.ResourceUtils;
@@ -34,6 +33,8 @@ import jgnash.util.ResourceUtils;
  * @author Craig Cavanaugh
  */
 public class TransactionFactory {
+
+    private static final String MESSAGE_ERROR_INVALID_TRANSACTION_TAG = "Message.Error.InvalidTransactionTag";
 
     /**
      * Create an AddX investment transaction.
@@ -103,7 +104,7 @@ public class TransactionFactory {
         // verify fees are tagged correctly
         for (TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
+                throw new EngineException(ResourceUtils.getString(MESSAGE_ERROR_INVALID_TRANSACTION_TAG));
             }
         }
 
@@ -122,7 +123,7 @@ public class TransactionFactory {
         // process transaction fees
         processFees(transaction, account, investmentAccount, memo, fees, exchangeRate);
 
-        Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
+        // Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
         return transaction;
     }
@@ -157,7 +158,9 @@ public class TransactionFactory {
         Objects.requireNonNull(date);
         Objects.requireNonNull(memo);
 
-        assert incomeExchangedAmount.signum() <= 0;
+        if (incomeExchangedAmount.signum() > 0) {
+            throw new EngineException("Income exchange amount must be less than or equal to zero");
+        }
 
         final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
@@ -211,7 +214,9 @@ public class TransactionFactory {
         Objects.requireNonNull(date);
         Objects.requireNonNull(memo);
 
-        assert incomeExchangedAmount.signum() <= 0;
+        if (incomeExchangedAmount.signum() > 0) {
+            throw new EngineException("Income exchange amount must be less than or equal to zero");
+        }
 
         final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
@@ -257,7 +262,7 @@ public class TransactionFactory {
         Objects.requireNonNull(debitAccount);
 
         if (creditAccount == debitAccount) {
-            throw new RuntimeException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
+            throw new EngineException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
         }
 
         final Transaction transaction = new Transaction();
@@ -294,7 +299,7 @@ public class TransactionFactory {
         Objects.requireNonNull(debitAccount);
 
         if (creditAccount == debitAccount) {
-            throw new RuntimeException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
+            throw new EngineException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
         }
 
         final Transaction transaction = new Transaction();
@@ -379,13 +384,13 @@ public class TransactionFactory {
 
         for (final TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
+                throw new EngineException(ResourceUtils.getString(MESSAGE_ERROR_INVALID_TRANSACTION_TAG));
             }
         }
 
         for (final TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
-                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
+                throw new EngineException(ResourceUtils.getString(MESSAGE_ERROR_INVALID_TRANSACTION_TAG));
             }
         }
 
@@ -497,14 +502,14 @@ public class TransactionFactory {
         // verify fees are tagged correctly
         for (final TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
+                throw new EngineException(ResourceUtils.getString(MESSAGE_ERROR_INVALID_TRANSACTION_TAG));
             }
         }
 
         // verify gains are tagged correctly
         for (final TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
-                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
+                throw new EngineException(ResourceUtils.getString(MESSAGE_ERROR_INVALID_TRANSACTION_TAG));
             }
         }
 
@@ -526,7 +531,7 @@ public class TransactionFactory {
         // process gains
         processGains(transaction, investmentAccount, memo, gains);
 
-        Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
+        // Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
         return transaction;
     }
