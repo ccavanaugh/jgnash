@@ -87,6 +87,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
 
         } catch (final InterruptedException e) {
             logSevere(AbstractJpaDAO.class, e);
+            Thread.currentThread().interrupt();
         } finally {
             emLock.unlock();
         }
@@ -118,6 +119,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
             return future.get();    // block and return
         } catch (final InterruptedException | ExecutionException e) {
             logSevere(AbstractJpaDAO.class, e);
+            Thread.currentThread().interrupt();
             return null;
         }
     }
@@ -153,6 +155,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
 
         } catch (final InterruptedException | ExecutionException e) {
             logSevere(AbstractJpaDAO.class, e);
+            Thread.currentThread().interrupt();
         }
 
         return result;
@@ -179,6 +182,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                     new Object[]{tClass.getName(), uuid});
         } catch (ExecutionException | InterruptedException e) {
             logSevere(AbstractJpaDAO.class, e);
+            Thread.currentThread().interrupt();
         }
 
         return object;
