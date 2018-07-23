@@ -71,21 +71,21 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
  */
 public abstract class BaseDynamicJasperReport {
 
-    protected final ResourceBundle rb = ResourceUtils.getBundle();
+    protected static final ResourceBundle rb = ResourceUtils.getBundle();
 
-    private final static String COLUMN_PROPERTY = "COLUMN_";
+    private static final String COLUMN_PROPERTY = "COLUMN_";
 
-    private final static String BASE_FONT_SIZE = "baseFontSize";
+    private static final String BASE_FONT_SIZE = "baseFontSize";
 
     protected static final Logger logger = Logger.getLogger(BaseDynamicJasperReport.class.getName());
 
     protected abstract void displayError(final String message);
 
-    final public void setPageFormat(final PageFormat pageFormat) {
+    public final void setPageFormat(final PageFormat pageFormat) {
         ReportPrintFactory.savePageFormat(this, pageFormat);
     }
 
-    final public PageFormat getPageFormat() {
+    public final PageFormat getPageFormat() {
         return ReportPrintFactory.getPageFormat(this);
     }
 
@@ -267,7 +267,9 @@ public abstract class BaseDynamicJasperReport {
             case GROUP_NO_HEADER:
                 return getTypeHeaderStyle();
         }
-        System.err.println("Returning a null style");
+
+        logger.severe("Returning a null style");
+
         return null;
     }
 
@@ -357,34 +359,26 @@ public abstract class BaseDynamicJasperReport {
                         case BALANCE:
                         case BALANCE_WITH_SUM:
                         case BALANCE_WITH_SUM_AND_GLOBAL:
-                        case CROSSTAB_TOTAL: {
-                            final String pattern = CommodityFormat.getFullNumberPattern(model.getCurrency());
-                            builder.setPattern(pattern);
+                        case CROSSTAB_TOTAL:
+                            builder.setPattern(CommodityFormat.getFullNumberPattern(model.getCurrency()));
                             break;
-                        }
-                        case PERCENTAGE: {
-                            final NumberFormat nf = ReportFactory.getPercentageFormat();
-                            final String pattern = ((DecimalFormat) nf).toPattern();
-                            builder.setPattern(pattern);
+                        case PERCENTAGE:
+                            builder.setPattern(((DecimalFormat)ReportFactory.getPercentageFormat()).toPattern());
                             break;
-                        }
-                        case QUANTITY: {
+                        case QUANTITY:
                             final NumberFormat nf = ReportFactory.getQuantityFormat();
                             final String pattern = ((DecimalFormat) nf).toPattern();
                             builder.setPattern(pattern);
                             break;
-                        }
                         case SHORT_DATE:
                             builder.setTextFormatter(DateUtils.getShortDateFormatter().toFormat());
                             break;
                         case TIMESTAMP:
                             builder.setTextFormatter(DateUtils.getShortDateTimeFormatter().toFormat());
                             break;
-                        case SHORT_AMOUNT: {
-                            final String pattern = CommodityFormat.getShortNumberPattern(model.getCurrency());
-                            builder.setPattern(pattern);
+                        case SHORT_AMOUNT:
+                            builder.setPattern(CommodityFormat.getShortNumberPattern(model.getCurrency()));
                             break;
-                        }
                         default:
                         	break;
                     }

@@ -54,7 +54,7 @@ public class ResourceUtils {
         // Utility class
     }
 
-    public synchronized static ResourceBundle getBundle() {
+    public static synchronized ResourceBundle getBundle() {
         if (resourceBundle == null) {
 
             try {
@@ -120,9 +120,9 @@ public class ResourceUtils {
         } else if (locale.indexOf('.') == -1) {
             return new Locale(locale);
         } else {
-            final Pattern LOCALE_DELIMITER_PATTERN = Pattern.compile("\\x2E");
+            final Pattern pattern = Pattern.compile("\\x2E");
 
-            final String[] array = LOCALE_DELIMITER_PATTERN.split(locale);
+            final String[] array = pattern.split(locale);
 
             switch (array.length) {
                 case 3:

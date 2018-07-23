@@ -32,6 +32,7 @@ import jgnash.ui.report.jasper.AbstractReportTableModel;
 import jgnash.ui.report.jasper.ColumnHeaderStyle;
 import jgnash.ui.report.jasper.ColumnStyle;
 import jgnash.uifx.control.DatePickerEx;
+import jgnash.util.ResourceUtils;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import java.math.BigDecimal;
@@ -62,19 +63,18 @@ import java.util.prefs.Preferences;
 public abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     // ----- Resolution constants
-    private final String RES_YEAR = rb.getString("Word.Yearly");
+    private static final String RES_YEAR = ResourceUtils.getString("Word.Yearly");
 
-    private final String RES_QUARTER = rb.getString("Word.Quarterly");
+    private static final String RES_QUARTER = ResourceUtils.getString("Word.Quarterly");
 
-    private final String RES_MONTH = rb.getString("Word.Monthly");
+    private static final String RES_MONTH = ResourceUtils.getString("Word.Monthly");
 
     // ----- Sort order constants
+    private static final String SORT_ORDER_NAME = ResourceUtils.getString("SortOrder.AccountName");
 
-    private final String SORT_ORDER_NAME = rb.getString("SortOrder.AccountName");
+    private static final String SORT_ORDER_BALANCE_DESC = ResourceUtils.getString("SortOrder.AccountBalanceDesc");
 
-    private final String SORT_ORDER_BALANCE_DESC = rb.getString("SortOrder.AccountBalanceDesc");
-
-    private final String SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE = rb.getString("SortOrder.AccountBalanceDescWithPercentile");
+    private static final String SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE = ResourceUtils.getString("SortOrder.AccountBalanceDescWithPercentile");
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -430,7 +430,7 @@ public abstract class AbstractCrosstabReport extends DynamicJasperReport {
         }
     }
 
-    private static abstract class ColumnInfo {
+    private abstract static class ColumnInfo {
 
         protected abstract Object getValue(int rowIndex);
 
