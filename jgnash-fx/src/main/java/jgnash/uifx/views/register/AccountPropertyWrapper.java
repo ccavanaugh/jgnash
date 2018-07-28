@@ -47,7 +47,7 @@ import jgnash.util.DefaultDaemonThreadFactory;
  */
 class AccountPropertyWrapper implements MessageListener {
 
-    private final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     private final Object numberFormatLock = new Object();
 
@@ -108,10 +108,10 @@ class AccountPropertyWrapper implements MessageListener {
             protected Void call() {
                 synchronized (numberFormatLock) {
                     if (account.get() != null) {
-                        final Account account = AccountPropertyWrapper.this.account.get();
+                        final Account acc = AccountPropertyWrapper.this.account.get();
                         final BigDecimal balance =
-                                AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
-                                        account.getBalance());
+                                AccountBalanceDisplayManager.convertToSelectedBalanceMode(acc.getAccountType(),
+                                        acc.getBalance());
 
                         JavaFXUtils.runLater(() -> accountBalance.set(numberFormat.format(balance)));
                     } else {
@@ -127,10 +127,10 @@ class AccountPropertyWrapper implements MessageListener {
             protected Void call() {
                 synchronized (numberFormatLock) {
                     if (account.get() != null) {
-                        final Account account = AccountPropertyWrapper.this.account.get();
+                        final Account acc = AccountPropertyWrapper.this.account.get();
                         final BigDecimal balance =
-                                AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
-                                        account.getReconciledBalance());
+                                AccountBalanceDisplayManager.convertToSelectedBalanceMode(acc.getAccountType(),
+                                        acc.getReconciledBalance());
 
                         JavaFXUtils.runLater(() -> reconciledAmount.set(numberFormat.format(balance)));
                     } else {
@@ -147,10 +147,10 @@ class AccountPropertyWrapper implements MessageListener {
                 protected Void call() {
                     synchronized (numberFormatLock) {
                         if (account.get() != null) {
-                            final Account account = AccountPropertyWrapper.this.account.get();
+                            final Account acc = AccountPropertyWrapper.this.account.get();
                             final BigDecimal balance =
-                                    AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
-                                            account.getCashBalance());
+                                    AccountBalanceDisplayManager.convertToSelectedBalanceMode(acc.getAccountType(),
+                                            acc.getCashBalance());
 
                             JavaFXUtils.runLater(() -> cashBalance.set(numberFormat.format(balance)));
                         } else {

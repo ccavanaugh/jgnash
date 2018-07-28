@@ -139,5 +139,5 @@ abstract class AbstractInvSlipController implements Slip {
         reconciledButton.setIndeterminate(false);
     }
 
-    abstract protected void focusFirstComponent();
+    protected abstract void focusFirstComponent();
 }

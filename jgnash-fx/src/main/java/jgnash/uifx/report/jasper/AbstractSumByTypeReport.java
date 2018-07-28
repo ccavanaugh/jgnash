@@ -241,11 +241,10 @@ public abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         @Override
         public Class<?> getColumnClass(final int columnIndex) {
-            if (columnIndex == 0) { // accounts column
-                return String.class;
-            } else if (columnIndex == getColumnCount() - 1) { // group column
+            if (columnIndex == 0 || columnIndex == getColumnCount() - 1) { // accounts and group column
                 return String.class;
             }
+
             return BigDecimal.class;
         }
 

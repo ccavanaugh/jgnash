@@ -53,6 +53,10 @@ public class OpenAction {
 
     public static final Logger logger = Logger.getLogger(OpenAction.class.getName());
 
+    private static final String BOOTING_THE_ENGINE = "Booting the engine";
+
+    private static final String ENGINE_BOOT_COMPLETE = "Engine boot complete";
+
     private static boolean remoteConnectionFailed = false;
 
     /* The internal SwingWorker thread pool may be full at startup because of all the threads being launched
@@ -71,14 +75,14 @@ public class OpenAction {
 
         final class BootEngine extends SwingWorker<Void, Void> {
 
-            final private OpenDatabaseDialog dialog;
+            private final OpenDatabaseDialog dialog;
 
             private BootEngine(final OpenDatabaseDialog dialog) {
                 this.dialog = dialog;
             }
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
                 final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
@@ -157,7 +161,7 @@ public class OpenAction {
                 final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
-                logger.fine("Booting the engine");
+                logger.fine(BOOTING_THE_ENGINE);
 
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
@@ -168,7 +172,7 @@ public class OpenAction {
                         e.getRootAccount(); // prime the engine
                     }
 
-                    logger.fine("Engine boot complete");
+                    logger.fine(ENGINE_BOOT_COMPLETE);
                 }
 
                 return null;
@@ -203,14 +207,14 @@ public class OpenAction {
         final class BootEngine extends SwingWorker<Long, Void> {
 
             @Override
-            protected Long doInBackground() throws Exception {
+            protected Long doInBackground() {
 
                 final long startTime = System.currentTimeMillis();
 
                 final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
-                logger.fine("Booting the engine");
+                logger.fine(BOOTING_THE_ENGINE);
 
                 Engine engine = null;
 
@@ -236,7 +240,7 @@ public class OpenAction {
                 }
 
                 if (engine != null) {
-                    logger.fine("Engine boot complete");
+                    logger.fine(ENGINE_BOOT_COMPLETE);
                 }
 
                 return System.currentTimeMillis() - startTime;
@@ -247,7 +251,7 @@ public class OpenAction {
                 logger.info("openLastAction() done");
 
                 try {                  
-                    logger.log(Level.INFO, "Boot time was: {0} seconds", get(5, TimeUnit.SECONDS) / 1000f);
+                    logger.log(Level.INFO, "Boot time was {0} seconds", get(5, TimeUnit.SECONDS) / 1000f);
                 } catch (final InterruptedException | ExecutionException | TimeoutException e) {
                     logger.log(Level.SEVERE, e.toString(), e);
                 } finally {
@@ -289,13 +293,13 @@ public class OpenAction {
                 final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
-                logger.fine("Booting the engine");
+                logger.fine(BOOTING_THE_ENGINE);
 
                 Thread.sleep(750);
 
                 EngineFactory.bootClientEngine(host, port, password, EngineFactory.DEFAULT);
 
-                logger.fine("Engine boot complete");
+                logger.fine(ENGINE_BOOT_COMPLETE);
                 return null;
             }
 

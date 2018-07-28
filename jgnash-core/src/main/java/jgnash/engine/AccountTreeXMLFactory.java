@@ -270,7 +270,7 @@ public class AccountTreeXMLFactory {
         return set;
     }
 
-    static private class AccountImport {
+    private static class AccountImport {
 
         // merge map for accounts
         private final Map<Account, Account> mergeMap = new HashMap<>();
@@ -297,7 +297,7 @@ public class AccountTreeXMLFactory {
          * @param engine  Engine with existing currencies
          * @param account account to correct
          */
-        private void fixCurrencies(final Engine engine, final Account account) {
+        private static void fixCurrencies(final Engine engine, final Account account) {
 
             // If an existing currency matches, assign it to the account
             engine.getCurrencies().stream().filter(currencyNode -> account.getCurrencyNode()
@@ -351,7 +351,7 @@ public class AccountTreeXMLFactory {
          * @param engine  Engine with existing currencies
          * @param account account to correct
          */
-        private void forceCurrency(final Engine engine, final Account account) {
+        private static void forceCurrency(final Engine engine, final Account account) {
 
             account.setCurrencyNode(engine.getDefaultCurrency());
 

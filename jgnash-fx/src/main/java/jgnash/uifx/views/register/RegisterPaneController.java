@@ -167,6 +167,6 @@ abstract class RegisterPaneController {
         RegisterActions.duplicateTransaction(account.get(), registerTableController.get().getSelectedTransactions());
 
         // Request focus as it may have been lost
-        MainView.getInstance().requestFocus();
+        MainView.requestFocus();
     }
 }

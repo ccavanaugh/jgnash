@@ -73,6 +73,7 @@ public abstract class AbstractInvIncomeSlipController extends AbstractInvSlipCon
     private static final Logger logger = MainView.getLogger();
 
     @FXML
+    @Override
     public void initialize() {
         super.initialize();
 

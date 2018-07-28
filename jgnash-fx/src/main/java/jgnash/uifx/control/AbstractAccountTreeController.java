@@ -57,11 +57,11 @@ public abstract class AbstractAccountTreeController implements MessageListener {
      * @param account {@code Account} to determine visibility based on filter state
      * @return {@code true} if the {@code Account} should be visible
      */
-    abstract protected boolean isAccountVisible(Account account);
+    protected abstract boolean isAccountVisible(Account account);
 
-    abstract protected boolean isAccountSelectable(Account account);
+    protected abstract boolean isAccountSelectable(Account account);
 
-    final private ObservableSet<Account> filteredAccounts = FXCollections.observableSet(new TreeSet<>());
+    private final ObservableSet<Account> filteredAccounts = FXCollections.observableSet(new TreeSet<>());
 
     /**
      * Adds accounts to be excluded from the list of selectable accounts.

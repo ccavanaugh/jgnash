@@ -399,7 +399,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @throws IndexOutOfBoundsException if the index is out of bounds
      */
     @NotNull
-    public Transaction getTransactionAt(final int index) throws IndexOutOfBoundsException {
+    public Transaction getTransactionAt(final int index) {
         transactionLock.readLock().lock();
 
         try {
@@ -1155,7 +1155,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         Objects.requireNonNull(type);
 
         if (accountType != null && !accountType.isMutable()) {
-            throw new RuntimeException("Immutable account type");
+            throw new EngineException("Immutable account type");
         }
 
         accountType = type;
@@ -1452,7 +1452,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
         try {
             if (key.isEmpty()) {
-                throw new RuntimeException("Attribute key may not be empty or null");
+                throw new EngineException("Attribute key may not be empty or null");
             }
 
             if (value == null) {
@@ -1478,7 +1478,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
         try {
             if (key.isEmpty()) {
-                throw new RuntimeException("Attribute key may not be empty or null");
+                throw new EngineException("Attribute key may not be empty or null");
             }
 
             return attributes.get(key);
