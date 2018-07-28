@@ -65,6 +65,7 @@ import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -85,7 +86,7 @@ public class MainView implements MessageListener {
      */
     public static final String DEFAULT_CSS = "jgnash/skin/default.css";
 
-    private static final String title;
+    private static final String TITLE;
 
     private static final String LAST_TAB = "lastTab";
 
@@ -118,7 +119,7 @@ public class MainView implements MessageListener {
     private static MainView instance;
 
     static {
-        title = Version.getAppName() + " - " + Version.getAppVersion();
+        TITLE = Version.getAppName() + " - " + Version.getAppVersion();
     }
 
     public MainView() {
@@ -191,7 +192,7 @@ public class MainView implements MessageListener {
 
         scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 
-        stage.setTitle(title);
+        stage.setTitle(TITLE);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());
         stage.setScene(scene);
         stage.setResizable(true);
@@ -255,7 +256,7 @@ public class MainView implements MessageListener {
         checkForLatestRelease();
     }
 
-    private void checkForLatestRelease() {
+    private static void checkForLatestRelease() {
         new Thread(() -> {
             try {
                 Thread.sleep(BootEngineTask.FORCED_DELAY * 3L);
@@ -314,7 +315,7 @@ public class MainView implements MessageListener {
         }));
     }
 
-    private void installHandlers() {
+    private static void installHandlers() {
 
         // Close the file cleanly if it is still open
         getPrimaryStage().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
@@ -341,7 +342,7 @@ public class MainView implements MessageListener {
      *
      * @see javafx.stage.Stage#requestFocus()
      */
-    public void requestFocus() {
+    public static void requestFocus() {
         getPrimaryStage().requestFocus();
     }
 
@@ -355,7 +356,7 @@ public class MainView implements MessageListener {
         busyPane.setTask(task);
     }
 
-    private void loadPlugins() {
+    private static void loadPlugins() {
 
         // Wrap in an exception handler so a poorly behaving plugin does not prevent application startup
         try {
@@ -423,9 +424,9 @@ public class MainView implements MessageListener {
 
             JavaFXUtils.runLater(() -> {
                 if (engine != null) {
-                    getPrimaryStage().setTitle(title + "  [" + EngineFactory.getActiveDatabase() + ']');
+                    getPrimaryStage().setTitle(TITLE + "  [" + EngineFactory.getActiveDatabase() + ']');
                 } else {
-                    getPrimaryStage().setTitle(title);
+                    getPrimaryStage().setTitle(TITLE);
                 }
             });
         });
@@ -460,11 +461,11 @@ public class MainView implements MessageListener {
         @Override
         public synchronized void publish(final LogRecord record) {
             if (record.getLevel() == Level.INFO) {
-                updateStatus(record.getMessage(), info);
+                updateStatus(MessageFormat.format(record.getMessage(), record.getParameters()), info);
             } else if (record.getLevel() == Level.WARNING) {
-                updateStatus(record.getMessage(), warning);
+                updateStatus(MessageFormat.format(record.getMessage(), record.getParameters()), warning);
             } else if (record.getLevel() == Level.SEVERE) {
-                updateStatus(record.getMessage(), severe);
+                updateStatus(MessageFormat.format(record.getMessage(), record.getParameters()), severe);
             }
         }
 

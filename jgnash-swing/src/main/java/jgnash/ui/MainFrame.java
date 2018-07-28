@@ -61,6 +61,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -678,9 +679,9 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             EventQueue.invokeLater(() -> {
 
                 if (record.getLevel() == Level.WARNING || record.getLevel() == Level.SEVERE) {
-                    displayWarning(record.getMessage());
+                    displayWarning(MessageFormat.format(record.getMessage(), record.getParameters()));
                 } else if (record.getLevel() == Level.INFO) {
-                    displayStatus(record.getMessage());
+                    displayStatus(MessageFormat.format(record.getMessage(), record.getParameters()));
                 }
             });
         }
