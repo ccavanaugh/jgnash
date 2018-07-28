@@ -18,10 +18,9 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test methods for public API's.  These may duplicate some other tests but ensures intended API's remain publicly
@@ -33,7 +32,8 @@ public class ApiTest extends AbstractEngineTest {
 
     @Override
     protected Engine createEngine() throws IOException {
-        database = testFolder.newFile("api-test.bxds").getAbsolutePath();
+        database = testFolder.createFile("api-test.bxds").getAbsolutePath();
+
         EngineFactory.deleteDatabase(database);
 
         try {
@@ -50,7 +50,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testMove() {
+    void testMove() {
         Account test = new Account(AccountType.ASSET, e.getDefaultCurrency());
         test.setName("Test");
 
@@ -64,7 +64,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testPreferences() {
+    void testPreferences() {
         e.setPreference("myKey", "myValue");
         e.setPreference("myNumber", BigDecimal.TEN.toString());
 
@@ -96,7 +96,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testSecurities() {
+    void testSecurities() {
         SecurityNode securityNode = new SecurityNode(e.getDefaultCurrency());
         securityNode.setSymbol("GGG");
         securityNode.setScale((byte) 2);
@@ -145,7 +145,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testAccountAttributes() {
+    void testAccountAttributes() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
@@ -177,7 +177,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testTransactionAPI() {
+    void testTransactionAPI() {
         final String ACCOUNT_NAME = "testAccount";
 
         final CurrencyNode node = e.getDefaultCurrency();
@@ -201,7 +201,7 @@ public class ApiTest extends AbstractEngineTest {
     }
 
     @Test
-    public void placeHolder() {
+    void placeHolder() {
         assertTrue(e.getTransactionsWithAttachments().isEmpty());
     }
 }

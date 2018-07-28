@@ -28,20 +28,19 @@ import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.time.Period;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit test class to export a {@code BudgetResultsModel}.
  *
  * @author Craig Cavanaugh
  */
-public class BudgetResultsExportTest {
+class BudgetResultsExportTest {
 
     @Test
-    public void testExportBudgetResultsModel() throws Exception {
+    void testExportBudgetResultsModel() throws Exception {
 
         final String file = Files.createTempFile("budget-",
                 DataStoreType.XML.getDataStore().getFileExt()).toString();

@@ -18,26 +18,26 @@
 
 package jgnash.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests account ancestor depth API.
  *
  * @author Craig Cavanaugh
  */
-public class AccountTreeDepthTest {
+class AccountTreeDepthTest {
 
-    public AccountTreeDepthTest() {
+    AccountTreeDepthTest() {
     }
 
     @Test
-    public void getDepthTest() {
+    void getDepthTest() {
         CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
         RootAccount root = new RootAccount(defaultCurrency);
@@ -78,7 +78,7 @@ public class AccountTreeDepthTest {
     }
 
     @Test
-    public void getLineageTest() {
+    void getLineageTest() {
         CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
         RootAccount root = new RootAccount(defaultCurrency);
@@ -109,7 +109,7 @@ public class AccountTreeDepthTest {
     }
 
     @Test
-    public void getAncestorsTest() {
+    void getAncestorsTest() {
         CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
         RootAccount root = new RootAccount(defaultCurrency);

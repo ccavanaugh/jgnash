@@ -17,19 +17,19 @@
  */
 package jgnash.engine;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit for the Config API.
  *
  * @author Craig Cavanaugh
  */
-public class ConfigTest {
+class ConfigTest {
 
     @Test
-    public void testFileFormat() {
+    void testFileFormat() {
         Config config = new Config();
 
         assertEquals(Engine.CURRENT_MAJOR_VERSION, config.getMajorFileFormatVersion());

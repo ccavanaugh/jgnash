@@ -17,24 +17,24 @@
  */
 package jgnash.engine.recurring;
 
+import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Locale;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Unit test for Monthly Reminders.
  *
  * @author Craig Cavanaugh
  */
-public class MonthlyReminderTest {
+class MonthlyReminderTest {
 
     @Test
-    public void iteratorDateTestOne() {
+    void iteratorDateTestOne() {
         final MonthlyReminder reminder = new MonthlyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -64,7 +64,7 @@ public class MonthlyReminderTest {
     }
 
     @Test
-    public void iteratorDateTestTwo() {
+    void iteratorDateTestTwo() {
         final MonthlyReminder reminder = new MonthlyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -91,7 +91,7 @@ public class MonthlyReminderTest {
     }
 
     @Test
-    public void iteratorDateTestThree() {
+    void iteratorDateTestThree() {
         final MonthlyReminder reminder = new MonthlyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -117,7 +117,7 @@ public class MonthlyReminderTest {
     }
 
     @Test
-    public void iteratorDayTestOne() {
+    void iteratorDayTestOne() {
         Locale.setDefault(Locale.US);      // how weeks are counted depends on the locale
         
         final MonthlyReminder reminder = new MonthlyReminder();
@@ -149,7 +149,7 @@ public class MonthlyReminderTest {
     }
 
     @Test
-    public void iteratorDayTestTwo() {
+    void iteratorDayTestTwo() {
         Locale.setDefault(Locale.US);      // how weeks are counted depends on the locale
         
         final MonthlyReminder reminder = new MonthlyReminder();
@@ -179,7 +179,7 @@ public class MonthlyReminderTest {
     }
 
     @Test
-    public void iteratorDayTestThree() {
+    void iteratorDayTestThree() {
         final MonthlyReminder reminder = new MonthlyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -208,7 +208,7 @@ public class MonthlyReminderTest {
     }
 
     @Test
-    public void iteratorDayTestFour() {
+    void iteratorDayTestFour() {
         final MonthlyReminder reminder = new MonthlyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);

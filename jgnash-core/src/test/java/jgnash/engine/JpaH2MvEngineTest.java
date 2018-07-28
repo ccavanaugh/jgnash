@@ -17,8 +17,6 @@
  */
 package jgnash.engine;
 
-import org.junit.Test;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Set;
@@ -27,9 +25,10 @@ import java.util.logging.Logger;
 
 import jgnash.engine.jpa.JpaH2MvDataStore;
 import jgnash.engine.jpa.SqlUtils;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * H2 Relational database engine test.
@@ -40,7 +39,7 @@ public class JpaH2MvEngineTest extends EngineTest {
 
 
     @Override
-    public Engine createEngine() throws Exception {
+    public Engine createEngine() {
         testFile = "jpa-testmv" + JpaH2MvDataStore.FILE_EXT;
 
         try {
@@ -63,7 +62,7 @@ public class JpaH2MvEngineTest extends EngineTest {
     }
 
     @Test
-    public void dumpTableAndColumnNames() {
+    void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         final Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile);

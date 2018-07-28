@@ -17,18 +17,18 @@
  */
 package jgnash.convert.imports;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Craig Cavanaugh
  */
 
-public class FilterTest {
+class FilterTest {
 
     @Test
-    public void simpleTest() {
+    void simpleTest() {
 
         ImportFilter importFilter = new ImportFilter("/jgnash/imports/tidy.js");
 

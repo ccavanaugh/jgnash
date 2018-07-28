@@ -25,7 +25,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -33,13 +33,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OfxExportText extends AbstractEngineTest {
 
     @Override
     protected Engine createEngine() throws IOException {
-        database = testFolder.newFile("ofxExportTest.xml").getAbsolutePath();
+        database = testFolder.createFile("ofxExportTest.xml").getAbsolutePath();
+
         EngineFactory.deleteDatabase(database);
 
         return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
@@ -47,7 +50,7 @@ public class OfxExportText extends AbstractEngineTest {
     }
 
     @Test
-    public void testExport() throws Exception {
+    void testExport() throws Exception {
 
         Transaction transaction = TransactionFactory.generateDoubleEntryTransaction(checkingAccount, usdBankAccount,
                 BigDecimal.TEN, LocalDate.now(), "Transfer Test", "Transfer", "");

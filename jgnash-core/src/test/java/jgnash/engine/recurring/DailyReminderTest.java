@@ -17,23 +17,23 @@
  */
 package jgnash.engine.recurring;
 
+import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Unit test for DailyReminders.
  *
  * @author Craig Cavanaugh
  */
-public class DailyReminderTest {
+class DailyReminderTest {
 
     @Test
-    public void simpleTest() {
+    void simpleTest() {
         final DailyReminder reminder = new DailyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.AUGUST, 28);

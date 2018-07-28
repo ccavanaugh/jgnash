@@ -17,6 +17,8 @@
  */
 package jgnash.util;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -24,16 +26,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * File utilities test.
  *
  * @author Craig Cavanaugh
  */
-public class FileUtilsTest {
+class FileUtilsTest {
 
     private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
         final char[] buffer = new char[testdata.length()];
@@ -54,12 +54,11 @@ public class FileUtilsTest {
     }
 
     @Test
-    public void testFileLock() throws IOException {
+    void testFileLock() throws IOException {
         final Path tempFile = Files.createTempFile("temp", null);
 
         try (final Writer writer = Files.newBufferedWriter(tempFile)) {
         	writer.write("test");
-        	writer.close();
         } catch (Exception e) {
         	fail();
         }
@@ -80,25 +79,25 @@ public class FileUtilsTest {
     }
 
     @Test
-    public void fileExtensionStripTest() {
+    void fileExtensionStripTest() {
         assertTrue(FileUtils.fileHasExtension("text.txt"));
         assertTrue(FileUtils.fileHasExtension("text.txt.txt"));
         assertFalse(FileUtils.fileHasExtension("test"));
     }
 
     @Test
-    public void strip() {
+    void strip() {
         assertEquals("database", FileUtils.stripFileExtension("database.h2.db"));
         assertEquals("database", FileUtils.stripFileExtension("database.db"));
     }
 
     @Test
-    public void fileExtensionText() {
+    void fileExtensionText() {
         assertEquals(FileUtils.getFileExtension("test.txt"), "txt");
     }
 
     @Test
-    public void fileCopyToSelf() throws IOException {
+    void fileCopyToSelf() throws IOException {
         Path tempFile = Files.createTempFile("jgnash-test", ".jdb");
 
         String absolutePath = tempFile.toString();

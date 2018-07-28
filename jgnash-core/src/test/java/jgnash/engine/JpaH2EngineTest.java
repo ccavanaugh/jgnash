@@ -25,11 +25,10 @@ import java.util.logging.Logger;
 
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.SqlUtils;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * H2 Relational database engine test.
@@ -39,7 +38,7 @@ import static org.junit.Assert.fail;
 public class JpaH2EngineTest extends EngineTest {
 
     @Override
-    public Engine createEngine() throws Exception {
+    public Engine createEngine() {
         testFile = "jpa-test" + JpaH2DataStore.FILE_EXT;
 
         try {
@@ -62,7 +61,7 @@ public class JpaH2EngineTest extends EngineTest {
     }
 
     @Test
-    public void dumpTableAndColumnNames() {
+    void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         final Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile);

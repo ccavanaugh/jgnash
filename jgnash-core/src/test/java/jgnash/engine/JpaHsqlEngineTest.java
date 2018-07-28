@@ -27,11 +27,10 @@ import java.util.logging.Logger;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.util.FileUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
-import org.junit.AfterClass;
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * HSQLDB Relational database engine test.
@@ -67,7 +66,7 @@ public class JpaHsqlEngineTest extends EngineTest {
     }
 
     @Test
-    public void dumpTableAndColumnNames() {
+    void dumpTableAndColumnNames() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile);
@@ -75,8 +74,8 @@ public class JpaHsqlEngineTest extends EngineTest {
         tableNames.forEach(System.out::println);
     }
 
-    @AfterClass
-    public static void cleanup() throws IOException {
+    @AfterAll
+    static void cleanup() throws IOException {
         Files.deleteIfExists(Paths.get(base + ".properties"));
         Files.deleteIfExists(Paths.get(base + ".lobs"));
     }

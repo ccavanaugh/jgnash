@@ -1,5 +1,9 @@
 package jgnash.engine;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -9,19 +13,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import static jgnash.engine.TransactionFactory.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
   * Unit test for investment history and exchange rate combinations.
   *
   * @author Craig Cavanaugh
   */
- public class InvestmentHistoryExchangeTest {
+class InvestmentHistoryExchangeTest {
 
      private static final DateTimeFormatter SIMPLE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 
      private Account usdBankAccount;
 
-    private Account investAccount;
+     private Account investAccount;
 
      private SecurityNode securityNode;
 
@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
      private CurrencyNode cadCurrency;
 
      @Test
-     public void testExchangeRate() {
+     void testExchangeRate() {
          assertEquals(new BigDecimal("0.5"), usdCurrency.getExchangeRate(cadCurrency));
          assertEquals(new BigDecimal("2"), cadCurrency.getExchangeRate(usdCurrency));
      }
@@ -52,7 +52,7 @@ import static org.junit.Assert.*;
      }
 
      @Test
-     public void testHistorySearch() {
+     void testHistorySearch() {
 
          final SecurityHistoryNode old = new SecurityHistoryNode();
          old.setDate(getLocalDate("2014-06-26"));
@@ -121,19 +121,19 @@ import static org.junit.Assert.*;
          assertEquals(BigDecimal.ZERO, price);
 
          price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-25"));
-         assertTrue(price.compareTo(BigDecimal.ZERO) == 0);
+         assertEquals(0, price.compareTo(BigDecimal.ZERO));
 
          price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-26"));
-         assertTrue(price.compareTo(new BigDecimal("250.00")) == 0);
+         assertEquals(0, price.compareTo(new BigDecimal("250.00")));
 
          price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-27"));
-         assertTrue(price.compareTo(new BigDecimal("250.50")) == 0);
+         assertEquals(0, price.compareTo(new BigDecimal("250.50")));
 
          price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-28"));
-         assertTrue(price.compareTo(new BigDecimal("251.00")) == 0);
+         assertEquals(0, price.compareTo(new BigDecimal("251.00")));
 
          price = Engine.getMarketPrice(Collections.emptyList(), securityNode, cadCurrency, getLocalDate("2014-06-29"));
-         assertTrue(price.compareTo(new BigDecimal("251.00")) == 0);
+         assertEquals(0, price.compareTo(new BigDecimal("251.00")));
 
          /// Test with a transaction for history precedence ///
 
@@ -215,8 +215,8 @@ import static org.junit.Assert.*;
 
      }
 
-     @Before
-     public void setUp() {
+     @BeforeEach
+     void setUp() {
          try {
              database = Files.createTempFile("jgnash", ".bxds").toString();
              EngineFactory.deleteDatabase(database);
@@ -282,8 +282,8 @@ import static org.junit.Assert.*;
          }
      }
 
-     @After
-     public void tearDown() {
+     @AfterEach
+     void tearDown() {
          EngineFactory.closeEngine(EngineFactory.DEFAULT);
          EngineFactory.deleteDatabase(database);
      }

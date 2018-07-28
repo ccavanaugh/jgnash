@@ -2,26 +2,26 @@ package jgnash;
 
 import jgnash.util.OS;
 import jgnash.util.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static jgnash.util.Version.getAppVersion;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test methods
  *
  * @author Craig Cavanaugh
  */
-public class VersionTest {
+class VersionTest {
 
     @Test
-    public void gitHub() {
+    void gitHub() {
         assertTrue(Version.getLatestGitHubRelease().isPresent());
     }
 
     @Test
-    public void testVersion() {
+    void testVersion() {
         System.out.println(getAppVersion());
 
         assertFalse(Version.isReleaseCurrent("2.20"));
@@ -30,14 +30,14 @@ public class VersionTest {
     }
 
     @Test
-    public void testJavaRelease() {
+    void testJavaRelease() {
         System.out.println("Java Release: " + OS.getJavaRelease());
 
         assertTrue(OS.getJavaRelease() > 0);
     }
 
     @Test
-    public void testJavaVersion() {
+    void testJavaVersion() {
 
         System.out.println("Java Version: " + OS.getJavaVersion());
 

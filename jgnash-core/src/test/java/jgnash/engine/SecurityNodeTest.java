@@ -17,15 +17,15 @@
  */
 package jgnash.engine;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit test for SecurityNode API.
@@ -36,7 +36,8 @@ public class SecurityNodeTest extends AbstractEngineTest {
 
     @Override
     protected Engine createEngine() throws IOException {
-        database = testFolder.newFile("security-test.bxds").getAbsolutePath();
+        database = testFolder.createFile("security-test.bxds").getAbsolutePath();
+
         EngineFactory.deleteDatabase(database);
 
         return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
@@ -44,7 +45,7 @@ public class SecurityNodeTest extends AbstractEngineTest {
     }
 
     @Test
-    public void TestHistory() {
+    void TestHistory() {
         BigDecimal securityPrice1 = new BigDecimal("2.00");
 
         final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);

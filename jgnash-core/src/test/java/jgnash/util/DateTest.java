@@ -24,20 +24,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import jgnash.time.DateUtils;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit test for date utilities.
  *
  * @author Craig Cavanaugh
  */
-public class DateTest {
+class DateTest {
 
     @Test
-    public void formatTestOne() throws ParseException {
+    void formatTestOne() throws ParseException {
         final SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
         final Date date = format.parse("121206");
 
@@ -48,7 +47,7 @@ public class DateTest {
     }
 
     @Test
-    public void epochTest() {
+    void epochTest() {
         final LocalDate now = LocalDate.now();
 
         // round trip
@@ -56,7 +55,7 @@ public class DateTest {
     }
 
     @Test
-    public void getFirstDayWeeklyTest() {
+    void getFirstDayWeeklyTest() {
         // test days for year 2011
         LocalDate[] days = DateUtils.getFirstDayWeekly(2011);
 
@@ -100,7 +99,7 @@ public class DateTest {
     }
 
     @Test
-    public void getFirstDayBiWeeklyTest() {
+    void getFirstDayBiWeeklyTest() {
         // test days for year 2011
         LocalDate[] days = DateUtils.getFirstDayBiWeekly(2011);
 
@@ -117,7 +116,7 @@ public class DateTest {
     }
 
     @Test
-    public void getFirstDaysInMonthTest() {
+    void getFirstDaysInMonthTest() {
         LocalDate[] days = DateUtils.getFirstDayMonthly(2011);
 
         assertEquals(1, days[0].getDayOfYear());
@@ -130,7 +129,7 @@ public class DateTest {
     }
 
     @Test
-    public void getAllDaysTest() {
+    void getAllDaysTest() {
         LocalDate[] days = DateUtils.getAllDays(2011);
         assertEquals(365, days.length);
 
@@ -141,13 +140,13 @@ public class DateTest {
     }
 
     @Test
-    public void weekOfYear() {
+    void weekOfYear() {
         assertEquals(53, DateUtils.getWeekOfTheYear(LocalDate.ofYearDay(2016, 3)));
         assertEquals(1, DateUtils.getWeekOfTheYear(LocalDate.ofYearDay(2016, 4)));
     }
 
     @Test
-    public void weeksPerYear() {
+    void weeksPerYear() {
         assertEquals(53, DateUtils.getNumberOfWeeksInYear(2009));
         assertEquals(52, DateUtils.getNumberOfWeeksInYear(2014));
         assertEquals(53, DateUtils.getNumberOfWeeksInYear(2015));

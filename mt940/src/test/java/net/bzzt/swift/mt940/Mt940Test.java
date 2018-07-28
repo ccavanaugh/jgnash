@@ -20,7 +20,7 @@ import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
 import net.bzzt.swift.mt940.exporter.Mt940Exporter;
 import net.bzzt.swift.mt940.parser.Mt940Parser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,15 +29,15 @@ import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Tests for SWIFT Mt940 importing
  * 
  * @author arnouten
  */
-public class Mt940Test {
+class Mt940Test {
 
 	/**
 	 * Rudimentary test for mt940 importing: creates a parser, parses a given mt940
@@ -49,7 +49,7 @@ public class Mt940Test {
 	 * @throws Exception throws assert exception
 	 */
 	@Test
-	public void testMt940() throws Exception {
+	void testMt940() throws Exception {
 		int nTransactions = 18;
 
 		Mt940Parser parser = new Mt940Parser();
@@ -73,7 +73,7 @@ public class Mt940Test {
 	 * @throws Exception throws assert exception
 	 */
 	@Test
-	public void testMt940Kontobezeichnung() throws Exception {
+	void testMt940Kontobezeichnung() throws Exception {
 		Mt940Parser parser = new Mt940Parser();
 		InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
 		try (LineNumberReader reader = new LineNumberReader(
@@ -93,7 +93,7 @@ public class Mt940Test {
 	 * @throws Exception throws assert exception
 	 */
 	@Test
-	public void testMt940KontobezeichnungRabobank() throws Exception {
+	void testMt940KontobezeichnungRabobank() throws Exception {
 		Mt940Parser parser = new Mt940Parser();
 		InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
 
@@ -114,7 +114,7 @@ public class Mt940Test {
 	 * @throws Exception throws assert exception
 	 */
 	@Test
-	public void testMt940KontobezeichnungMulticash() throws Exception {
+	void testMt940KontobezeichnungMulticash() throws Exception {
 		Mt940Parser parser = new Mt940Parser();
 		InputStream inputStream = this.getClass().getResourceAsStream("/multiaccounts.sta");
 		try (LineNumberReader reader = new LineNumberReader(
@@ -134,7 +134,7 @@ public class Mt940Test {
 	 * @throws IOException thrown if an IO exception occurs while reading the file
 	 */
 	@Test
-	public void testMt940Rabobank() throws IOException {
+	void testMt940Rabobank() throws IOException {
 		int nTransactions = 6;
 
 		Mt940Parser parser = new Mt940Parser();

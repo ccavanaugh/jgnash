@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.AfterClass;
+import org.junit.jupiter.api.AfterAll;
 
 /**
  * Engine text for Binary XStream.
@@ -35,7 +35,7 @@ public class BinaryXStreamEngineTest extends EngineTest {
     private static String tempFile;
 
     @Override
-    public Engine createEngine() throws Exception {
+    public Engine createEngine() {
         try {
             testFile = Files.createTempFile("jgnash-", DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt())
                     .toString();
@@ -52,8 +52,8 @@ public class BinaryXStreamEngineTest extends EngineTest {
                 DataStoreType.BINARY_XSTREAM);
     }
 
-    @AfterClass
-    public static void cleanup() throws IOException {
+    @AfterAll
+    static void cleanup() throws IOException {
         Files.deleteIfExists(Paths.get(tempFile));
     }
 }

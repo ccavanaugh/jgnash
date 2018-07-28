@@ -17,29 +17,30 @@
  */
 package jgnash.engine;
 
+import io.github.glytching.junit.extension.folder.TemporaryFolder;
+import io.github.glytching.junit.extension.folder.TemporaryFolderExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract base for testing the core engine API's.
  *
  * @author Craig Cavanaugh
  */
+@ExtendWith(TemporaryFolderExtension.class)
 public abstract class AbstractEngineTest {
 
-    @Rule
-    public final TemporaryFolder testFolder = new TemporaryFolder();
+    protected TemporaryFolder testFolder;
 
     protected String database;
 
@@ -61,8 +62,11 @@ public abstract class AbstractEngineTest {
 
     protected abstract Engine createEngine() throws IOException;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp(final TemporaryFolder testFolder) throws Exception {
+
+        this.testFolder = testFolder;
+
         e = createEngine();
         e.setCreateBackups(false);
 
@@ -125,7 +129,7 @@ public abstract class AbstractEngineTest {
         assertTrue(e.updateAccountSecurities(investAccount, securityNodeList));
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws IOException {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
         EngineFactory.deleteDatabase(database);

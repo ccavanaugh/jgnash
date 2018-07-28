@@ -18,7 +18,8 @@ allprojects {
     version = '2.35.0'
 
     project.ext {
-        junitVersion = '4.12'
+        junitVersion = '5.2.0'
+        junitextensionsVersion = '2.2.0'
 
         joptSimpleVerion = '5.0.4'
 
@@ -41,7 +42,7 @@ allprojects {
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
 
-        nettyVersion = '4.1.25.Final'
+        nettyVersion = '4.1.28.Final'
 
         slf4jVersion = '1.7.21'
         log4jVersion = '1.2.17'
@@ -75,12 +76,18 @@ subprojects {
     // jgnash-help is not a compiled sub-project
     if (!it.name.startsWith('jgnash-help')) {
         dependencies {
-            testCompile group: 'junit', name: 'junit', version: junitVersion
-            testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion
+
+            testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
+            testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
+            testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+
+            testCompile group: 'io.github.glytching', name: 'junit-extensions', version: junitextensionsVersion
         }
     }
 
     test {
+        useJUnitPlatform()
+
         //we want display the following test events
         testLogging {
             events "PASSED", "STARTED", "FAILED", "SKIPPED"

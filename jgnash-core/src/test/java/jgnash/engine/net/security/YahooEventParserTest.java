@@ -18,7 +18,6 @@
 package jgnash.engine.net.security;
 
 import jgnash.net.YahooCrumbManager;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -35,10 +34,11 @@ import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.security.YahooEventParser;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit test for the Yahoo security downloader.
@@ -49,7 +49,8 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
     @Override
     protected Engine createEngine() throws IOException {
-        database = testFolder.newFile("yahoo-test.bxds").getAbsolutePath();
+
+        database = testFolder.createFile("yahoo-test.bxds").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
         return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
@@ -57,7 +58,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testParser() {
+    void testParser() {
 
         final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
         ibm.setSymbol("IBM");
@@ -78,7 +79,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
     }
 
     @Test
-    public void testHistoricalDownload() {
+    void testHistoricalDownload() {
         final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
         ibm.setSymbol("IBM");
         ibm.setScale((byte) 2);

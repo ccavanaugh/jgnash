@@ -17,10 +17,11 @@
  */
 package jgnash.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import io.github.glytching.junit.extension.folder.TemporaryFolder;
+import io.github.glytching.junit.extension.folder.TemporaryFolderExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -28,27 +29,29 @@ import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Set;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Commodity test.
  *
  * @author Craig Cavanaugh
  */
-public class CommodityNodeTest {
+@ExtendWith(TemporaryFolderExtension.class)
+class CommodityNodeTest {
 
-    @SuppressWarnings("CanBeFinal")
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+    private TemporaryFolder testFolder;
 
+    @BeforeEach
+    void setUp(final TemporaryFolder testFolder) {
+        this.testFolder = testFolder;
+    }
 
     @Test
-    public void ExchangeTest1() {
+    void ExchangeTest1() {
 
         try {
-            final String database = testFolder.newFile("exchange-test.xml").getAbsolutePath();
+            final String database = testFolder.createFile("exchange-test.xml").getAbsolutePath();
+
             EngineFactory.deleteDatabase(database);
 
             Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
@@ -85,9 +88,9 @@ public class CommodityNodeTest {
     }
 
     @Test
-    public void ExchangeTest2() {
+    void ExchangeTest2() {
         try {
-            final String database = testFolder.newFile("exchange-test2.xml").getAbsolutePath();
+            final String database = testFolder.createFile("exchange-test2.xml").getAbsolutePath();
             EngineFactory.deleteDatabase(database);
 
             // get an engine, create a commodity and then try to retrieve
@@ -125,10 +128,10 @@ public class CommodityNodeTest {
     }
 
     @Test
-    public void CommodityNodeStore() {
+    void CommodityNodeStore() {
 
         try {
-            final String database = testFolder.newFile("exchange-test3.xml").getAbsolutePath();
+            final String database = testFolder.createFile("exchange-test3.xml").getAbsolutePath();
             EngineFactory.deleteDatabase(database);
 
             // get an engine, create a commodity and then try to retrieve
@@ -159,10 +162,10 @@ public class CommodityNodeTest {
             System.out.println(cNode);
 
             //noinspection ConstantConditions
-            assertTrue("Returned object extends CurrencyNode", cNode instanceof CurrencyNode);
+            assertTrue(cNode instanceof CurrencyNode, "Returned object extends CurrencyNode");
 
             //noinspection ConstantConditions
-            assertTrue("Returned object extends StoredObject", cNode instanceof StoredObject);
+            assertTrue(cNode instanceof StoredObject, "Returned object extends StoredObject");
 
             Set<CurrencyNode> nodes = DefaultCurrencies.generateCurrencies();
 

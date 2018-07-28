@@ -17,23 +17,23 @@
  */
 package jgnash.engine.recurring;
 
+import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * JUnit test for weekly reminders.
  *
  * @author Craig Cavanaugh
  */
-public class WeeklyReminderTest {
+class WeeklyReminderTest {
 
     @Test
-    public void iteratorTestOne() {
+    void iteratorTestOne() {
         final WeeklyReminder reminder = new WeeklyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -61,7 +61,7 @@ public class WeeklyReminderTest {
     }
 
     @Test
-    public void iteratorTestTwo() {
+    void iteratorTestTwo() {
         final WeeklyReminder reminder = new WeeklyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -86,7 +86,7 @@ public class WeeklyReminderTest {
     }
 
     @Test
-    public void iteratorTestThree() {
+    void iteratorTestThree() {
         final WeeklyReminder reminder = new WeeklyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -111,7 +111,7 @@ public class WeeklyReminderTest {
     }
 
     @Test
-    public void iteratorTestFour() {
+    void iteratorTestFour() {
         WeeklyReminder reminder = new WeeklyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);
@@ -140,7 +140,7 @@ public class WeeklyReminderTest {
 
     // End date check
     @Test
-    public void iteratorTestFive() {
+    void iteratorTestFive() {
         WeeklyReminder reminder = new WeeklyReminder();
 
         final LocalDate startDate = LocalDate.of(2015, Month.JULY, 4);

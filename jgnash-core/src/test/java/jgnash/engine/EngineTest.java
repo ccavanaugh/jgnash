@@ -36,14 +36,12 @@ import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.util.FileUtils;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.number.BigDecimalCloseTo.closeTo;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Abstract base class for testing the Engine API.
@@ -64,8 +62,8 @@ public abstract class EngineTest {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         e = createEngine();
         e.setCreateBackups(false);
 
@@ -106,8 +104,8 @@ public abstract class EngineTest {
         assertNotNull(e);
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         Files.deleteIfExists(Paths.get(testFile));
@@ -120,12 +118,12 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         assertEquals(e.getName(), EngineFactory.DEFAULT);
     }
 
     @Test
-    public void testReminders() {
+    void testReminders() {
 
         assertEquals(0, e.getReminders().size());
 
@@ -158,7 +156,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetStoredObjectByUuid() {
+    void testGetStoredObjectByUuid() {
 
         // close and reopen to force check for persistence
         closeEngine();
@@ -173,12 +171,12 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetStoredObjects() {
+    void testGetStoredObjects() {
         assertTrue(!e.getStoredObjects().isEmpty());
     }
 
     @Test
-    public void testAddCommodity() {
+    void testAddCommodity() {
         // close and reopen to force check for persistence
         closeEngine();
 
@@ -191,7 +189,7 @@ public abstract class EngineTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testPreferences() {
+    void testPreferences() {
         e.setPreference("myKey", "myValue");
         e.setPreference("myNumber", BigDecimal.TEN.toString());
 
@@ -205,7 +203,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testSecurityNodeStorage() {
+    void testSecurityNodeStorage() {
 
         final String SECURITY_SYMBOL ="GOOG";
 
@@ -265,32 +263,32 @@ public abstract class EngineTest {
     }
 
 
-    @Ignore
+    @Disabled
     @Test
-    public void testGetInvestmentAccountListSecurityNode() {
+    void testGetInvestmentAccountListSecurityNode() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testGetMarketPrice() {
+    void testGetMarketPrice() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testBuildExchangeRateId() {
+    void testBuildExchangeRateId() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testGetBaseCurrencies() {
+    void testGetBaseCurrencies() {
         fail("Not yet implemented");
     }
 
     @Test
-    public void testBudget() {
+    void testBudget() {
 
         final String ACCOUNT_NAME = "testAccount";
 
@@ -349,7 +347,8 @@ public abstract class EngineTest {
 
         for (int i = 0; i < budgetGoals.length; i++) {
             //assertEquals(new BigDecimal(i), budgetGoals[i]);
-            assertThat(new BigDecimal(i), is(closeTo(budgetGoals[i], new BigDecimal(0.0001))));
+            //assertThat(new BigDecimal(i), is(closeTo(budgetGoals[i], new BigDecimal(0.0001))));
+            assertEquals(i, budgetGoals[i].doubleValue(), 0.0001);
         }
 
         // remove a budget
@@ -363,7 +362,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetActiveCurrencies() {
+    void testGetActiveCurrencies() {
         Set<CurrencyNode> nodes = e.getActiveCurrencies();
 
         assertNotNull(nodes);
@@ -378,13 +377,13 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetCurrencyStringLocale() {
+    void testGetCurrencyStringLocale() {
         CurrencyNode currency = e.getCurrency("USD");
         assertNotNull(currency);
     }
 
     @Test
-    public void testGetCurrencyString() {
+    void testGetCurrencyString() {
         CurrencyNode currency = e.getCurrency("USD");
         assertNotNull(currency);
 
@@ -393,7 +392,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetCurrencies() {
+    void testGetCurrencies() {
 
         // close and reopen to force check for persistence
         closeEngine();
@@ -405,14 +404,14 @@ public abstract class EngineTest {
         assertTrue(nodes.size() > 1);
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testGetSecurityHistory() {
+    void testGetSecurityHistory() {
         fail("Not yet implemented");
     }
 
     @Test
-    public void testGetExchangeRate() {
+    void testGetExchangeRate() {
 
         final LocalDate today = LocalDate.now();
         final LocalDate yesterday = today.minusDays(1);
@@ -430,62 +429,62 @@ public abstract class EngineTest {
         ExchangeRate rate = e.getExchangeRate(usd, cad);
         assertNotNull(rate);
 
-        assertTrue(new BigDecimal("1.02").compareTo(rate.getRate()) == 0);
-        assertTrue(new BigDecimal("1.01").compareTo(rate.getRate(yesterday)) == 0);
+        assertEquals(0, new BigDecimal("1.02").compareTo(rate.getRate()));
+        assertEquals(0, new BigDecimal("1.01").compareTo(rate.getRate(yesterday)));
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testGetSecurities() {
+    void testGetSecurities() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testRemoveCommodity() {
+    void testRemoveCommodity() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testRemoveSecurityHistory() {
+    void testRemoveSecurityHistory() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testSetDefaultCurrency() {
+    void testSetDefaultCurrency() {
         fail("Not yet implemented");
     }
 
     @Test
-    public void testGetDefaultCurrency() {
+    void testGetDefaultCurrency() {
         CurrencyNode defaultCurrency = e.getDefaultCurrency();
 
         assertNotNull(defaultCurrency);
         assertEquals(defaultCurrency.getSymbol(), "USD");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testRemoveExchangeRateHistory() {
+    void testRemoveExchangeRateHistory() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testUpdateCommodity() {
+    void testUpdateCommodity() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testUpdateReminder() {
+    void testUpdateReminder() {
         fail("Not yet implemented");
     }
 
     @Test
-    public void testSetAccountSeparator() {
+    void testSetAccountSeparator() {
         String newSep = ".";
 
         String oldSep = e.getAccountSeparator();
@@ -501,28 +500,28 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetAccountSeparator() {
+    void testGetAccountSeparator() {
         String sep = e.getAccountSeparator();
 
         assertNotNull(sep);
         assertTrue(!sep.isEmpty());
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void testGetAccountList() {
+    void testGetAccountList() {
         fail("Not yet implemented");
     }
 
     @Test
-    public void testGetAccountByUuid() {
+    void testGetAccountByUuid() {
         UUID rootUUID = e.getRootAccount().getUuid();
 
         assertEquals(e.getRootAccount(), e.getAccountByUuid(rootUUID));
     }
 
     @Test
-    public void testGetAccountByName() {
+    void testGetAccountByName() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -536,7 +535,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetIncomeAccountList() {
+    void testGetIncomeAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.INCOME, node);
@@ -551,7 +550,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetExpenseAccountList() {
+    void testGetExpenseAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.EXPENSE, node);
@@ -566,7 +565,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetBankAccountList() {
+    void testGetBankAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
@@ -581,7 +580,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetInvestmentAccountList() {
+    void testGetInvestmentAccountList() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.INVEST, node);
@@ -596,7 +595,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAccounts() {
+    void testAccounts() {
 
         CurrencyNode node = e.getDefaultCurrency();
 
@@ -651,7 +650,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAccountAttributes() {
+    void testAccountAttributes() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
@@ -683,7 +682,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAddAccount() {
+    void testAddAccount() {
         CurrencyNode node = e.getDefaultCurrency();
 
         Account a = new Account(AccountType.BANK, node);
@@ -695,14 +694,14 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetRootAccount() {
+    void testGetRootAccount() {
         RootAccount root = e.getRootAccount();
 
         assertNotNull(root);
     }
 
     @Test
-    public void testRemoveAccount() {
+    void testRemoveAccount() {
         final String ACCOUNT_NAME = "testIsStored";
         CurrencyNode node = e.getDefaultCurrency();
 
@@ -733,7 +732,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testIsStored() {
+    void testIsStored() {
 
         final String ACCOUNT_NAME = "testIsStored";
         CurrencyNode node = e.getDefaultCurrency();
@@ -751,7 +750,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testAddGetTransactions() {
+    void testAddGetTransactions() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -781,7 +780,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetTransactionsWithAttachments() {
+    void testGetTransactionsWithAttachments() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -812,13 +811,13 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetUuid() {
-        assertTrue(e.getUuid() != null);
+    void testGetUuid() {
+        assertNotNull(e.getUuid());
         assertTrue(!e.getUuid().isEmpty());
     }
 
     @Test
-    public void testVersion() {
+    void testVersion() {
         try {
             RootAccount account = e.getRootAccount();
 

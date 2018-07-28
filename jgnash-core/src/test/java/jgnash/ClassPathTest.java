@@ -18,22 +18,21 @@
 
 package jgnash;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Locale;
 
 import jgnash.util.ClassPathUtils;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit test for classpath utilities.
  *
  * @author Craig Cavanaugh
  */
-public class ClassPathTest {
+class ClassPathTest {
 
-    public ClassPathTest() {
+    ClassPathTest() {
     }
 
     //    @Test
@@ -49,17 +48,17 @@ public class ClassPathTest {
     //    }
 
     @Test
-    public void findRealPath() {
+    void findRealPath() {
 
         String path = ClassPathUtils.getLocalizedPath("/jgnash/resource/account");
 
-        System.out.println(path);
+        assertNotNull(path, "failed test");
 
-        assertNotNull("failed test", path);
+        System.out.println(path);
     }
 
     @Test
-    public void findFakePath() {
+    void findFakePath() {
 
         Locale defaultLocale = Locale.getDefault();
 
@@ -67,10 +66,10 @@ public class ClassPathTest {
 
         String path = ClassPathUtils.getLocalizedPath("/jgnash/resource/account");
 
-        System.out.println(path);
-
         Locale.setDefault(defaultLocale);
 
-        assertNotNull("failed test", path);
+        assertNotNull(path, "failed test");
+
+        System.out.println(path);
     }
 }

@@ -21,18 +21,17 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import jgnash.engine.concurrent.Priority;
 import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Craig Cavanaugh
  */
-public class PriorityThreadTest {
+class PriorityThreadTest {
 
     @Test
-    public void testPriorityThreadPoolExecutor() throws Exception {
+    void testPriorityThreadPoolExecutor() throws Exception {
 
         final AtomicLong atomicLongSequence = new AtomicLong(0);
 

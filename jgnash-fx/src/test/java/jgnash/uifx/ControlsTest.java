@@ -56,8 +56,8 @@ import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainView;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * UI controls test application.
@@ -78,7 +78,7 @@ public class ControlsTest extends Application {
     }
    
 	@Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) {
 
         Engine engine = createEngine();
         Objects.requireNonNull(engine);

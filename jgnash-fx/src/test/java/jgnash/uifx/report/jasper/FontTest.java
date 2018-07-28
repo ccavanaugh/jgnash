@@ -4,20 +4,19 @@ import ar.com.fdvs.dj.domain.Style;
 
 import jgnash.ui.report.jasper.AWTFontUtilities;
 import jgnash.ui.report.jasper.ReportFactory;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Font width unit test.
  *
  * @author Craig Cavanaugh
  */
-public class FontTest {
+class FontTest {
 
     @Test
-    public void getWidth() {
+    void getWidth() {
 
         Style style = new Style();
         style.setFont(ReportFactory.getDefaultMonoFont(12));

@@ -23,8 +23,7 @@ import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.util.FileUtils;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -39,17 +38,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * File transfer test.
  *
  * @author Craig Cavanaugh
  */
-public class FileTransferTest {
+class FileTransferTest {
 
     @Test
-    public void encryptedNetworkedTest() {
+    void encryptedNetworkedTest() {
 
         final char[] password = new char[]{'p','a','s','s','w','o','r','d'};
 
@@ -155,7 +155,7 @@ public class FileTransferTest {
     }
 
     @Test
-    public void networkedTest() {
+    void networkedTest() {
         final int port = JpaNetworkServer.DEFAULT_PORT + 100;
 
         //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");

@@ -17,13 +17,13 @@
  */
 package jgnash.engine;
 
+import org.junit.jupiter.api.AfterAll;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.junit.AfterClass;
 
 /**
  * JUnit test for XML storage with the Engine API.
@@ -35,7 +35,7 @@ public class XMLEngineTest extends EngineTest {
     private static String tempFile;
 
     @Override
-    public Engine createEngine() throws Exception {
+    public Engine createEngine() {
         try {
             testFile = Files.createTempFile("test", DataStoreType.XML.getDataStore().getFileExt()).toString();
             tempFile = testFile;
@@ -50,8 +50,8 @@ public class XMLEngineTest extends EngineTest {
                 DataStoreType.XML);
     }
 
-    @AfterClass
-    public static void cleanup() throws IOException {
+    @AfterAll
+    static void cleanup() throws IOException {
         Files.deleteIfExists(Paths.get(tempFile));
     }
 }

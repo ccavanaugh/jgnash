@@ -1,28 +1,28 @@
 package jgnash.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import io.github.glytching.junit.extension.folder.TemporaryFolder;
+import io.github.glytching.junit.extension.folder.TemporaryFolderExtension;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TransactionTest {
-
-    @SuppressWarnings("CanBeFinal")
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+class TransactionTest {
 
     @Test
-    public void testBackEnd() throws IOException {
+    @ExtendWith(TemporaryFolderExtension.class)
+    void testBackEnd(final TemporaryFolder testFolder) throws IOException {
 
-        final String database = testFolder.newFile("transaction-test.xml").getAbsolutePath();
+        assertNotNull(testFolder);
+
+        final String database = testFolder.createFile("transaction-test.xml").getAbsolutePath();
+
         EngineFactory.deleteDatabase(database);
 
         try {
@@ -73,15 +73,16 @@ public class TransactionTest {
             assertEquals(new BigDecimal("500.00"), usdBankAccount.getBalance());
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
-            assertTrue("passed test: ", true);
         } catch (final Exception e) {
             fail(e.getMessage());
         }
     }
 
     @Test
-    public void testEmptyAccount() throws IOException {
-        final String database = testFolder.newFile("empty-test.xml").getAbsolutePath();
+    @ExtendWith(TemporaryFolderExtension.class)
+    void testEmptyAccount(final TemporaryFolder testFolder) throws IOException {
+        final String database = testFolder.createFile("empty-test.xml").getAbsolutePath();
+
         EngineFactory.deleteDatabase(database);
 
         try {

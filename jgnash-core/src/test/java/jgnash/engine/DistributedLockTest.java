@@ -21,18 +21,18 @@ import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
 
 import io.netty.util.ResourceLeakDetector;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test to validate the Distributed lock manager.
@@ -49,7 +49,7 @@ public class DistributedLockTest {
 
     private static final Logger logger = Logger.getLogger(DistributedLockTest.class.getName());
 
-    @Before
+    @BeforeEach
     public void setUp() {
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
@@ -60,21 +60,21 @@ public class DistributedLockTest {
         manager.connectToServer(EngineFactory.EMPTY_PASSWORD);
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         manager.disconnectFromServer();
         server.stopServer();
     }
 
     @Test
-    public void testStartUp() throws Exception{
+    void testStartUp() throws Exception{
         Thread.sleep(1000); // helps with sort order of logging because it's so fast
 
         assertTrue(true);
     }
 
     @Test
-    public void simpleLock() {
+    void simpleLock() {
 
         ReadWriteLock accountLock = manager.getLock("account");
         ReadWriteLock transactionLock = manager.getLock("transaction");
@@ -95,7 +95,7 @@ public class DistributedLockTest {
     }
 
     @Test
-    public void multipleReadLocks() {
+    void multipleReadLocks() {
 
         class WriteLockTest extends Thread {
             @Override
@@ -148,7 +148,7 @@ public class DistributedLockTest {
     }
 
     @Test
-    public void writeLockTest() throws InterruptedException {
+    void writeLockTest() throws InterruptedException {
 
         class ReadLockThread implements Runnable {
             final private ReadWriteLock readWriteLock;
@@ -208,7 +208,7 @@ public class DistributedLockTest {
     }
 
     @Test
-    public void reentrantWriteTest() throws InterruptedException {
+    void reentrantWriteTest() throws InterruptedException {
         int count = 0;
 
         ReadWriteLock lock1 = manager.getLock("reentrant");
@@ -249,7 +249,7 @@ public class DistributedLockTest {
     }
 
     @Test
-    public void reentrantReadTest() throws InterruptedException {
+    void reentrantReadTest() throws InterruptedException {
         int count = 0;
 
         ReadWriteLock lock = manager.getLock("reentrant");

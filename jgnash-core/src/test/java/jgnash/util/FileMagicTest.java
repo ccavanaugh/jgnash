@@ -17,25 +17,27 @@
  */
 package jgnash.util;
 
+import org.junit.jupiter.api.Test;
+
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test FileMagic.
  * 
  * @author Craig Cavanaugh
  */
-public class FileMagicTest {
+class FileMagicTest {
 
     @Test
-    public void testH2Magic() throws URISyntaxException {
+    void testH2Magic() throws URISyntaxException {
         URL url = FileMagicTest.class.getResource("/h2-test.h2.db");
 
         FileMagic.FileType type = FileMagic.magic(Paths.get(url.toURI()));
@@ -47,7 +49,7 @@ public class FileMagicTest {
      * Test for Ofx version 1 file identification.
      */
     @Test
-    public void OfxV1Test() {
+    void OfxV1Test() {
 
         URL url = FileMagicTest.class.getResource("/bank1.ofx");
 
@@ -70,12 +72,12 @@ public class FileMagicTest {
      * Test for Ofx version 1 file encoding.
      */
     @Test
-    public void OfxV1EncodingTest1() {
+    void OfxV1EncodingTest1() {
 
         URL url = FileMagicTest.class.getResource("/bank1.ofx");
 
         try {
-            assertTrue(FileMagic.getOfxV1Encoding(Paths.get(url.toURI())).equals("windows-1252"));
+            assertEquals("windows-1252", FileMagic.getOfxV1Encoding(Paths.get(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -85,12 +87,12 @@ public class FileMagicTest {
      * Test for Ofx version 1 file encoding.
      */
     @Test
-    public void OfxV1EncodingTest2() {
+    void OfxV1EncodingTest2() {
 
         URL url = FileMagicTest.class.getResource("/File_with_Accents.ofx");
 
         try {
-            assertTrue(FileMagic.getOfxV1Encoding(Paths.get(url.toURI())).equals("ISO-8859-1"));
+            assertEquals("ISO-8859-1", FileMagic.getOfxV1Encoding(Paths.get(url.toURI())));
         } catch (final URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -100,7 +102,7 @@ public class FileMagicTest {
      * Test for Ofx version 2 file identification.
      */
     @Test
-    public void OfxV2Test() {
+    void OfxV2Test() {
 
         URL url = FileMagicTest.class.getResource("/ofx_spec201_stmtrs_example.xml");
 

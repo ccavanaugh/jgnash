@@ -1,6 +1,6 @@
 package jgnash.engine;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jgnash.engine.TransactionFactory.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * Unit tests for investment account transactions.
@@ -21,12 +23,13 @@ import static org.junit.Assert.*;
  */
 public class InvestmentTransactionTest extends AbstractEngineTest {
 
-    public InvestmentTransactionTest() {
+    InvestmentTransactionTest() {
     }
 
     @Override
     protected Engine createEngine() throws IOException {
-        database = testFolder.newFile("invest-transaction-test.xml").getAbsolutePath();
+        database = testFolder.createFile("invest-transaction-test.xml").getAbsolutePath();
+
         EngineFactory.deleteDatabase(database);
 
         return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
@@ -34,7 +37,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     }
 
     @Test
-    public void NoErrorIfSecurityHistoryEmpty() {
+    void NoErrorIfSecurityHistoryEmpty() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
 
@@ -78,7 +81,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     }
 
     @Test
-    public void BuyShares() {
+    void BuyShares() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
 
@@ -128,11 +131,11 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
                 investAccount.getMarketValue(), investAccount.getCashBalance()};
         Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), new BigDecimal("250.00"),
                 new BigDecimal("250.00"), new BigDecimal("0.00")};
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 
     @Test
-    public void SellShares() {
+    void SellShares() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
@@ -208,11 +211,11 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
         Object expected[] = {new BigDecimal("280.00"), new BigDecimal("60.00"), new BigDecimal("-30.00"),
                 new BigDecimal("285.00"), new BigDecimal("285.00"), new BigDecimal("0.00")};
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 
     @Test
-    public void TransferCashIn() {
+    void TransferCashIn() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
 
@@ -230,11 +233,11 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         Object expected[] = {new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
                 BigDecimal.ZERO.setScale(2, RoundingMode.DOWN), new BigDecimal("250.00")};
 
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 
     @Test
-    public void TransferCashOut() {
+    void TransferCashOut() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
@@ -299,11 +302,11 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         Object expected[] = {new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
                 new BigDecimal("125.00"), BigDecimal.ZERO.setScale(2, RoundingMode.DOWN), new BigDecimal("125.00")};
 
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 
     @Test
-    public void Dividend() {
+    void Dividend() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
@@ -357,11 +360,12 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
         Object expected[] = {new BigDecimal("270.00"), new BigDecimal("30.00"), new BigDecimal("-50.00"),
                 new BigDecimal("250.00"), new BigDecimal("250.00"), new BigDecimal("0.00")};
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 
     @Test
-    public void ReinvestDividend() {
+    void ReinvestDividend() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
@@ -426,13 +430,15 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         // Checking the result
         Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+
         Object expected[] = {new BigDecimal("220.00"), new BigDecimal("50.00"), new BigDecimal("-50.00"),
                 new BigDecimal("280.00"), new BigDecimal("280.00"), new BigDecimal("0.00")};
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 
     @Test
-    public void StockSplit() {
+    void StockSplit() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
@@ -485,11 +491,11 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
                 new BigDecimal("500.00"), new BigDecimal("500.00"), new BigDecimal("0.00")};
 
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 
     @Test
-    public void StockMerge() {
+    void StockMerge() {
         // Transferring some money to usdBankAccount
         final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
@@ -542,6 +548,6 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
                 new BigDecimal("200.00"), new BigDecimal("200.00"), new BigDecimal("0.00")};
 
-        assertArrayEquals("Account balances are not as expected!", expected, actual);
+        assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
 }

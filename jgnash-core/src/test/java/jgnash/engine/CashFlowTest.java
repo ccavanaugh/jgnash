@@ -17,22 +17,23 @@
  */
 package jgnash.engine;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 
  * @author t-pa
  */
-public class CashFlowTest {
+class CashFlowTest {
     
     @Test
-    public void testPositiveIRR() {
+    void testPositiveIRR() {
         CashFlow cashFlow = new CashFlow();
         
         LocalDate today = LocalDate.now();
@@ -40,11 +41,11 @@ public class CashFlowTest {
         cashFlow.add(today.plusDays(365), BigDecimal.valueOf(103));
         
         double irr = cashFlow.internalRateOfReturn();
-        Assert.assertEquals(0.03, irr,1.e-5);
+        assertEquals(0.03, irr,1.e-5);
     }
 
     @Test
-    public void testNegativeIRR() {
+    void testNegativeIRR() {
         CashFlow cashFlow = new CashFlow();
         
         LocalDate today = LocalDate.now();
@@ -52,12 +53,12 @@ public class CashFlowTest {
         cashFlow.add(today.minusDays(365), BigDecimal.valueOf(-100));
         
         double irr = cashFlow.internalRateOfReturn();
-        Assert.assertEquals(-0.03, irr,1.e-5);
+        assertEquals(-0.03, irr,1.e-5);
     }
 
     @Test
-    @Ignore
-    public void testUglyData() {
+    @Disabled
+    void testUglyData() {
         CashFlow cashFlow = new CashFlow();
 
         cashFlow.add(LocalDate.of(2012, Month.JANUARY, 9), new BigDecimal(0.1));
@@ -75,7 +76,7 @@ public class CashFlowTest {
 
 
         double irr = cashFlow.internalRateOfReturn();
-        Assert.assertEquals(1, irr, 1.e-5);
+        assertEquals(1, irr, 1.e-5);
     }
 
 }

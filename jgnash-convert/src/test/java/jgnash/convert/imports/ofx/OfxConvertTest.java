@@ -17,15 +17,15 @@
  */
 package jgnash.convert.imports.ofx;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit 4 test class
@@ -33,10 +33,10 @@ import static org.junit.Assert.fail;
  * @author Craig Cavanaugh
  */
 
-public class OfxConvertTest {
+class OfxConvertTest {
 
     @Test
-    public void parseBankOne() {
+    void parseBankOne() {
         
         try (InputStream stream = OfxConvertTest.class.getResourceAsStream("/bank1.ofx")) {
             System.out.println(OfxV1ToV2.convertToXML(stream));

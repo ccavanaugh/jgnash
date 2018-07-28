@@ -18,20 +18,21 @@
 
 package jgnash.convert.imports.qif;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Craig Cavanaugh
  *
  */
-public class QifUtilsTest {
+class QifUtilsTest {
 
-    public QifUtilsTest() {
+    QifUtilsTest() {
     }
 
     @Test
-    public void testTagStrip() {
+    void testTagStrip() {
         // Auto:Gas/matrix:Vacation > Auto:Gas
         assertEquals("Auto:Gas", QifUtils.stripCategoryTags("Auto:Gas/matrix:Vacation"));
     }

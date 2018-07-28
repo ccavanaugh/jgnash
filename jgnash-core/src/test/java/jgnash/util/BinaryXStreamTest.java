@@ -32,22 +32,22 @@ import java.util.stream.Collectors;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
 
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit test for binary xstream.
  *
  * @author Craig Cavanaugh
  */
-public class BinaryXStreamTest {
+class BinaryXStreamTest {
 
     private static Path tempFile;
 
     @Test
-    public void testFile() {
+    void testFile() {
 
         final List<String> stringData = new ArrayList<>();
 
@@ -98,8 +98,8 @@ public class BinaryXStreamTest {
 
     }
 
-    @AfterClass
-    public static void cleanup() throws IOException {
+    @AfterAll
+    static void cleanup() throws IOException {
         Files.deleteIfExists(tempFile);
     }
 }

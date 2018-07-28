@@ -17,9 +17,6 @@
  */
 package jgnash.convert.imports.ofx;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -32,27 +29,29 @@ import java.util.List;
 
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.util.FileMagic;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static jgnash.util.LogUtil.logSevere;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * JUnit 4 test class
+ * JUnit 5 test class
  * 
  * @author Craig Cavanaugh
  */
-public class Ofx2Test {
+class Ofx2Test {
 
     private static OfxV2Parser parser;
 
-    @BeforeClass
-    public static void setUp() {
+    @BeforeAll
+    static void setUp() {
         OfxV2Parser.enableDetailedLogFile();  // enable debugging
         parser = new OfxV2Parser();
     }
 
     @Test
-    public void parseSpec201() {
+    void parseSpec201() {
                 
         try (InputStream stream =  Ofx2Test.class.getResourceAsStream("/ofx_spec201_stmtrs_example.xml")) {
             parser.parse(stream);
@@ -75,7 +74,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseActivity() {
+    void parseActivity() {
         final String testFile = "/activity.ofx";
 
         final URL url = Ofx2Test.class.getResource(testFile);
@@ -110,7 +109,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseBankOne() {
+    void parseBankOne() {
         final String testFile = "/bank1.ofx";
 
         URL url = Ofx2Test.class.getResource(testFile);
@@ -128,7 +127,7 @@ public class Ofx2Test {
 
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
-                assertEquals(null, parser.getBank().statusMessage);
+                assertNull(parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
             } catch (IOException e) {
@@ -142,7 +141,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseBankTwo() {
+    void parseBankTwo() {
         final String testFile = "/bank2.ofx";
 
         URL url = Ofx2Test.class.getResource(testFile);
@@ -160,7 +159,7 @@ public class Ofx2Test {
 
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
-                assertEquals(null, parser.getBank().statusMessage);
+                assertNull(parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
             } catch (IOException e) {
@@ -178,7 +177,7 @@ public class Ofx2Test {
      * Test for amounts that use a comma as a decimal SEPARATOR
      */
     @Test
-    public void parseBankOneCommas() {
+    void parseBankOneCommas() {
         final String testFile = "/bank1-commas.ofx";
 
         URL url = Ofx2Test.class.getResource(testFile);
@@ -196,7 +195,7 @@ public class Ofx2Test {
 
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
-                assertEquals(null, parser.getBank().statusMessage);
+                assertNull(parser.getBank().statusMessage);
 
                 assertEquals(new BigDecimal("524.10"), parser.getBank().ledgerBalance);
                 assertEquals(new BigDecimal("519.10"), parser.getBank().availBalance);
@@ -220,7 +219,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseCheckingOne() {
+    void parseCheckingOne() {
         final String testFile = "/checking1.ofx";
 
         URL url = Ofx2Test.class.getResource(testFile);
@@ -238,7 +237,7 @@ public class Ofx2Test {
 
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
-                assertEquals(null, parser.getBank().statusMessage);
+                assertNull(parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
             } catch (IOException e) {
@@ -252,7 +251,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseChequing() {
+    void parseChequing() {
 
         final String testFile = "/chequing.ofx";
 
@@ -285,7 +284,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseComptes() {
+    void parseComptes() {
 
         final String testFile = "/comptes.ofx";
 
@@ -304,7 +303,7 @@ public class Ofx2Test {
 
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
-                assertEquals(null, parser.getBank().statusMessage);
+                assertNull(parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
             } catch (IOException e) {
@@ -318,7 +317,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseDemobank() {
+    void parseDemobank() {
 
         final String testFile = "/demobank.ofx";
 
@@ -331,7 +330,7 @@ public class Ofx2Test {
 
             assertEquals(0, parser.getBank().statusCode);
             assertEquals("INFO", parser.getBank().statusSeverity);
-            assertEquals(null, parser.getBank().statusMessage);
+            assertNull(parser.getBank().statusMessage);
 
             assertFalse(parser.getBank().isInvestmentAccount());
         } catch (IOException e) {
@@ -341,7 +340,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseSample() {
+    void parseSample() {
         final String testFile = "/Sample.ofx";
 
         URL url = Ofx2Test.class.getResource(testFile);
@@ -361,7 +360,7 @@ public class Ofx2Test {
 
                 assertEquals(0, parser.getBank().statusCode);
                 assertEquals("INFO", parser.getBank().statusSeverity);
-                assertEquals(null, parser.getBank().statusMessage);
+                assertNull(parser.getBank().statusMessage);
 
                 assertFalse(parser.getBank().isInvestmentAccount());
             } catch (IOException e) {
@@ -375,7 +374,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseFileWithAccents() {
+    void parseFileWithAccents() {
         final String testFile = "/File_with_Accents.ofx";
 
         URL url = Ofx2Test.class.getResource(testFile);
@@ -406,7 +405,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseInvest() {
+    void parseInvest() {
         final String testFile = "/invest.xml";
 
         final URL url = Ofx2Test.class.getResource(testFile);
@@ -425,7 +424,7 @@ public class Ofx2Test {
 
                 assertEquals(0, ofxBank.statusCode);
                 assertEquals("INFO", ofxBank.statusSeverity);
-                assertEquals(null, ofxBank.statusMessage);
+                assertNull(ofxBank.statusMessage);
 
                 assertEquals(2, ofxBank.getTransactions().size());
                 assertEquals(3, ofxBank.getSecurityList().size());
@@ -442,7 +441,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parse401k() {
+    void parse401k() {
         final String testFile = "/401k.xml";
 
         final URL url = Ofx2Test.class.getResource(testFile);
@@ -461,7 +460,7 @@ public class Ofx2Test {
 
                 assertEquals(0, ofxBank.statusCode);
                 assertEquals("INFO", ofxBank.statusSeverity);
-                assertEquals(null, ofxBank.statusMessage);
+                assertNull(ofxBank.statusMessage);
 
                 assertEquals(3, ofxBank.getTransactions().size());
                 assertEquals(3, ofxBank.getSecurityList().size());
@@ -479,7 +478,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseInvest2() {
+    void parseInvest2() {
         final String testFile = "/invest2.xml";
 
         final URL url = Ofx2Test.class.getResource(testFile);
@@ -499,7 +498,7 @@ public class Ofx2Test {
 
                 assertEquals(0, ofxBank.statusCode);
                 assertEquals("INFO", ofxBank.statusSeverity);
-                assertEquals(null, ofxBank.statusMessage);
+                assertNull(ofxBank.statusMessage);
 
                 assertEquals(60, ofxBank.getTransactions().size());
                 assertEquals(6, ofxBank.getSecurityList().size());
@@ -516,7 +515,7 @@ public class Ofx2Test {
     }
 
     @Test
-    public void parseUglyFile() throws Exception {
+    void parseUglyFile() throws Exception {
         final String testFile = "/uglyFormat.ofx";
 
         final Path path = Paths.get(Ofx2Test.class.getResource(testFile).toURI());

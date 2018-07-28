@@ -17,20 +17,20 @@
  */
 package jgnash.util;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Craig Cavanaugh
  */
-public class CollectionUtilsTest {
+class CollectionUtilsTest {
 
     @Test
-    public void partitionOdd() throws Exception {
+    void partitionOdd()  {
         final List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
 
         final List<List<Integer>> partitions = CollectionUtils.partition(numbers, 2);
@@ -40,7 +40,7 @@ public class CollectionUtilsTest {
     }
 
     @Test
-    public void partitionEven() throws Exception {
+    void partitionEven() {
         final List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
 
         final List<List<Integer>> partitions = CollectionUtils.partition(numbers, 2);

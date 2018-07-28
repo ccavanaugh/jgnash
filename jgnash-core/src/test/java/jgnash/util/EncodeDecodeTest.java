@@ -17,22 +17,24 @@
  */
 package jgnash.util;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit test for Encoding and Decoding arrays of doubles.
  *
  * @author Craig Cavanaugh
  */
-public class EncodeDecodeTest {
+class EncodeDecodeTest {
 
     @Test
-    public void testEncodeDecodeDoubleArrays() {
+    void testEncodeDecodeDoubleArrays() {
         final double[] base = new double[]{10.231, 11.35, 45.34, 2.0, 4.0, 9.0, 0};
         final String result = EncodeDecode.encodeDoubleArray(base);
 
@@ -46,7 +48,7 @@ public class EncodeDecodeTest {
     }
 
     @Test
-    public void testEncodeStringCollection() {
+    void testEncodeStringCollection() {
         List<String> items = Arrays.asList("apple", "pear", "peach", "grapes");
 
         assertEquals("apple,pear,peach,grapes", EncodeDecode.encodeStringCollection(items));

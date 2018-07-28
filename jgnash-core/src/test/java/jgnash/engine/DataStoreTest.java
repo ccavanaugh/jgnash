@@ -17,26 +17,26 @@
  */
 package jgnash.engine;
 
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit test for DataStoreTypes.
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("ConstantConditions")
-public class DataStoreTest {
+class DataStoreTest {
 
-    public DataStoreTest() {
+    DataStoreTest() {
     }
 
     @Test
-    public void instanceTest() {
-        assertTrue(DataStoreType.H2_DATABASE.getDataStore().toString() != null);
+    void instanceTest() {
+        assertNotNull(DataStoreType.H2_DATABASE.getDataStore().toString());
         System.out.println(DataStoreType.H2_DATABASE.getDataStore());
 
-        assertTrue(DataStoreType.XML.getDataStore().toString() != null);
+        assertNotNull(DataStoreType.XML.getDataStore().toString());
         System.out.println(DataStoreType.XML.getDataStore());
     }
 }

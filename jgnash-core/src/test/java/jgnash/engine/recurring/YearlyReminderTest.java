@@ -17,23 +17,23 @@
  */
 package jgnash.engine.recurring;
 
+import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Unit test for Yearly Reminders.
  *
  * @author Craig Cavanaugh
  */
-public class YearlyReminderTest {
+class YearlyReminderTest {
 
     @Test
-    public void yearEndTestOne() {
+    void yearEndTestOne() {
         final YearlyReminder reminder = new YearlyReminder();
 
         final LocalDate startDate = LocalDate.ofYearDay(2011, 365);
@@ -74,7 +74,7 @@ public class YearlyReminderTest {
     }
 
     @Test
-    public void yearEndTestTwo() {
+    void yearEndTestTwo() {
         final YearlyReminder reminder = new YearlyReminder();
 
         final LocalDate startDate = LocalDate.ofYearDay(2012, 366);
@@ -111,7 +111,7 @@ public class YearlyReminderTest {
     }
 
     @Test
-    public void simpleTest() {
+    void simpleTest() {
         final YearlyReminder reminder = new YearlyReminder();
 
         final LocalDate startDate = LocalDate.ofYearDay(2011, 364);

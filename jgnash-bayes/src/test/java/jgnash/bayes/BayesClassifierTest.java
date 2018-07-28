@@ -17,14 +17,14 @@
  */
 package jgnash.bayes;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BayesClassifierTest {
+class BayesClassifierTest {
 
     @Test
-    public void testClassifier() {
+    void testClassifier() {
         BayesClassifier<String> classifier = new BayesClassifier<>("default");
 
         classifier.train("Gasoline oil washer fluid brakes lights transmission auto", "Auto");

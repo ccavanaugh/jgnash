@@ -22,10 +22,9 @@ import io.netty.util.ResourceLeakDetector;
 
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
+import org.junit.jupiter.api.BeforeEach;
 
-import org.junit.Before;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test to validate the Distributed lock manager.
@@ -34,7 +33,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class EncryptedDistributedLockTest extends DistributedLockTest {
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() {
         final char[] password = new char[]{'P', 'a', 's', 's', 'w', 'o', 'r', 'd'};
