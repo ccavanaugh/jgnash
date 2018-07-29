@@ -28,8 +28,9 @@
 Relational databases will need to be saved to a .xml or .bxds file format in the prior release of jGnash.  They may
 be saved back to a relational database format afterwards.
 
-* 07/29/2018 Changes were made to make migration to Java 10+ easier
-* 07/28/2018 Migrated test system to JUnit 5
+* 07/29/2018 Changes were made to make migration to Java 10+ easier.
+* 07/29/2018 Use Stax instead of kxml to make migration to Java 10+ easier.
+* 07/28/2018 Migrated test system to JUnit 5.
 * 07/28/2018 Updated to the latest Netty dependency.
 * 07/06/2018 Reduced memory usage and improved performance for relational database users.
 * 07/01/2018 Removed support for handling old XML file formats from 2017 and detection of 1.x files.

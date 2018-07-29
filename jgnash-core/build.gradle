@@ -18,7 +18,7 @@ dependencies {
         exclude(module: 'xmlpull')
         exclude(module: 'xpp3_min') }
     compile group: 'com.thoughtworks.xstream', name: 'xstream-hibernate', version: xstreamVersion
-    compile group: 'net.sf.kxml', name: 'kxml2', version: kxmlVersion
+    //compile group: 'net.sf.kxml', name: 'kxml2', version: kxmlVersion
 
     compile group: 'io.netty', name: 'netty-codec', version: nettyVersion
 

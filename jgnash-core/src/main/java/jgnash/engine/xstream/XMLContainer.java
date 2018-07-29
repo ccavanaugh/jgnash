@@ -42,8 +42,8 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 
 /**
@@ -100,7 +100,7 @@ class XMLContainer extends AbstractXStreamContainer {
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             writer.write("<?fileFormat " + Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION + "?>\n");
 
-            final XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new KXml2Driver()));
+            final XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new StaxDriver()));
 
             try (final ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
                 out.writeObject(list);
@@ -141,7 +141,7 @@ class XMLContainer extends AbstractXStreamContainer {
             readWriteLock.writeLock().lock();
 
             final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
-                    new KXml2Driver()));
+                    new StaxDriver()));
 
             try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
                 in.readObject();
