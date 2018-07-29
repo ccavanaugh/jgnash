@@ -41,7 +41,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.Stage;
 
-import jgnash.convert.imports.ImportFilter;
+import jgnash.convert.in.ImportFilter;
 import jgnash.uifx.Options;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;

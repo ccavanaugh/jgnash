@@ -16,8 +16,8 @@
  */
 package net.bzzt.swift.mt940;
 
-import jgnash.convert.imports.ImportBank;
-import jgnash.convert.imports.ImportTransaction;
+import jgnash.convert.in.ImportBank;
+import jgnash.convert.in.ImportTransaction;
 import net.bzzt.swift.mt940.exporter.Mt940Exporter;
 import net.bzzt.swift.mt940.parser.Mt940Parser;
 import org.junit.jupiter.api.Test;

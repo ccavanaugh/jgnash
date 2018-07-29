@@ -33,9 +33,9 @@ import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 
-import jgnash.convert.imports.GenericImport;
-import jgnash.convert.imports.ImportBank;
-import jgnash.convert.imports.ImportTransaction;
+import jgnash.convert.in.GenericImport;
+import jgnash.convert.in.ImportBank;
+import jgnash.convert.in.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;

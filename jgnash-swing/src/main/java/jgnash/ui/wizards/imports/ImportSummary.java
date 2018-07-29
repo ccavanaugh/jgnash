@@ -26,8 +26,8 @@ import java.util.ResourceBundle;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import jgnash.convert.imports.ImportState;
-import jgnash.convert.imports.ImportTransaction;
+import jgnash.convert.in.ImportState;
+import jgnash.convert.in.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.util.ResourceUtils;

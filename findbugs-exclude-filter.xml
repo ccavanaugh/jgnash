@@ -80,29 +80,29 @@
     </Match>
 
     <Match>
-        <Class name="jgnash.convert.imports.qif.QifParser"/>
+        <Class name="jgnash.convert.in.qif.QifParser"/>
         <Bug pattern="URF_UNREAD_FIELD"/>
     </Match>
 
     <Match>
-        <Class name="jgnash.convert.imports.qif.QifParser$QifClassItem"/>
+        <Class name="jgnash.convert.in.qif.QifParser$QifClassItem"/>
         <Bug pattern="URF_UNREAD_FIELD"/>
     </Match>
 
     <Match>
-        <Class name="jgnash.convert.imports.qif.QifParser$QifSecurity"/>
+        <Class name="jgnash.convert.in.qif.QifParser$QifSecurity"/>
         <Bug pattern="URF_UNREAD_FIELD"/>
     </Match>
 
     <!-- Super class uses a UUID for hash and equality -->
     <Match>
-        <Class name="jgnash.convert.imports.ofx.ImportTransaction"/>
+        <Class name="jgnash.convert.in.ofx.ImportTransaction"/>
         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     </Match>
 
     <!-- Super class uses a UUID for hash and equality -->
     <Match>
-        <Class name="jgnash.convert.imports.qif.QifTransaction"/>
+        <Class name="jgnash.convert.in.qif.QifTransaction"/>
         <Bug pattern="URF_UNREAD_FIELD, EQ_DOESNT_OVERRIDE_EQUALS"/>
     </Match>
 

@@ -17,10 +17,10 @@
  */
 package jgnash.ui.actions;
 
-import jgnash.convert.imports.DateFormat;
-import jgnash.convert.imports.qif.NoAccountException;
-import jgnash.convert.imports.qif.QifImport;
-import jgnash.convert.imports.qif.QifUtils;
+import jgnash.convert.in.DateFormat;
+import jgnash.convert.in.qif.NoAccountException;
+import jgnash.convert.in.qif.QifImport;
+import jgnash.convert.in.qif.QifUtils;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;

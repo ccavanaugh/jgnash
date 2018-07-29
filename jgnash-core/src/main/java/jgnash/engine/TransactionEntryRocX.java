@@ -69,7 +69,7 @@ public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
         setDebitAccount(incomeAccount);
 
         /* Transaction can be treated as single entry, but double entry is being forced by UI
-         * Single entry support is required for jGnash 1.x imports. */
+         * Single entry support is required for jGnash 1.x in. */
         if (investmentAccount.equals(incomeAccount)) { // transaction against the cash balance
             setCreditAmount(dividend); // treat as a single entry transaction
             setDebitAmount(dividend);

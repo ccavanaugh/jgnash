@@ -30,7 +30,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 
-import jgnash.convert.imports.ImportFilter;
+import jgnash.convert.in.ImportFilter;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;

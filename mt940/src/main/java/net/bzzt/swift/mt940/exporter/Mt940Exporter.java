@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jgnash.convert.imports.ImportBank;
-import jgnash.convert.imports.ImportTransaction;
+import jgnash.convert.in.ImportBank;
+import jgnash.convert.in.ImportTransaction;
 
 import net.bzzt.swift.mt940.Mt940Entry;
 import net.bzzt.swift.mt940.Mt940Entry.SollHabenKennung;

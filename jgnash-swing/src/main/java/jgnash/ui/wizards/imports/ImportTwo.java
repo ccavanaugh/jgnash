@@ -31,11 +31,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledEditorKit;
 
-import jgnash.convert.imports.BayesImportClassifier;
-import jgnash.convert.imports.GenericImport;
-import jgnash.convert.imports.ImportBank;
-import jgnash.convert.imports.ImportState;
-import jgnash.convert.imports.ImportTransaction;
+import jgnash.convert.in.BayesImportClassifier;
+import jgnash.convert.in.GenericImport;
+import jgnash.convert.in.ImportBank;
+import jgnash.convert.in.ImportState;
+import jgnash.convert.in.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.JTableUtils;
