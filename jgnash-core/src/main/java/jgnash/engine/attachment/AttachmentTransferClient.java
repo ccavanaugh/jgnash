@@ -102,6 +102,7 @@ class AttachmentTransferClient {
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to connect to the File Transfer Server", e);
             disconnectFromServer();
+            Thread.currentThread().interrupt();
         }
 
         return result;
@@ -119,6 +120,7 @@ class AttachmentTransferClient {
             channel.writeAndFlush(encrypt(FILE_REQUEST + file) + EOL_DELIMITER).sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -127,6 +129,7 @@ class AttachmentTransferClient {
             channel.writeAndFlush(encrypt(DELETE + Paths.get(attachment).getFileName()) + EOL_DELIMITER).sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -147,6 +150,7 @@ class AttachmentTransferClient {
             channel.close().sync();
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            Thread.currentThread().interrupt();
         }
 
         eventLoopGroup.shutdownGracefully();

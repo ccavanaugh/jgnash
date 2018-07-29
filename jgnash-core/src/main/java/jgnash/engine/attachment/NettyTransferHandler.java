@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,9 +41,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
-import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 /**
  * Handles the details of bi-directional transfer of files between a client and server.
@@ -182,7 +180,8 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
                 while ((bytesRead = inputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
                         channel.write(encrypt(FILE_CHUNK + path.getFileName() + ':' +
-                                printBase64Binary(Arrays.copyOfRange(bytes, 0, bytesRead))) + EOL_DELIMITER);
+                                Base64.getEncoder().encodeToString(Arrays.copyOfRange(bytes, 0, bytesRead)))
+                                + EOL_DELIMITER);
                     }
                 }
                 future = channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + EOL_DELIMITER).sync();
@@ -230,7 +229,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
         if (attachment != null) {
             try {
-                attachment.outputStream.write(parseBase64Binary(msgParts[1]));
+                attachment.outputStream.write(Base64.getDecoder().decode(msgParts[1]));
             } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
