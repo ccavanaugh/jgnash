@@ -15,10 +15,14 @@ dependencies {
     compile group: 'org.hsqldb', name: 'hsqldb', version: hsqldbVersion
 
     compile(group: 'com.thoughtworks.xstream', name: 'xstream', version: xstreamVersion) {
-        exclude(module: 'xmlpull')
-        exclude(module: 'xpp3_min') }
-    compile group: 'com.thoughtworks.xstream', name: 'xstream-hibernate', version: xstreamVersion
-    //compile group: 'net.sf.kxml', name: 'kxml2', version: kxmlVersion
+        exclude group: 'xmlpull', module: 'xmlpull'
+        exclude group: 'xpp3', module: 'xpp3_min'
+    }
+
+    compile(group: 'com.thoughtworks.xstream', name: 'xstream-hibernate', version: xstreamVersion) {
+        exclude group: 'xmlpull', module: 'xmlpull'
+        exclude group: 'xpp3', module: 'xpp3_min'
+    }
 
     compile group: 'io.netty', name: 'netty-codec', version: nettyVersion
 

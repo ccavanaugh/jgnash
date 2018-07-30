@@ -43,7 +43,7 @@ allprojects {
 
         nettyVersion = '4.1.28.Final'
 
-        slf4jVersion = '1.7.21'
+        slf4jVersion = '1.7.25'
         log4jVersion = '1.2.17'
 
         jfreeChartVersion = '1.0.19'
