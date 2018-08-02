@@ -30,7 +30,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import jgnash.convert.in.GenericImport;
+import jgnash.convert.importat.GenericImport;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;

@@ -30,9 +30,9 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import jgnash.convert.in.ofx.OfxBank;
-import jgnash.convert.in.ofx.OfxImport;
-import jgnash.convert.in.ofx.OfxV2Parser;
+import jgnash.convert.importat.ofx.OfxBank;
+import jgnash.convert.importat.ofx.OfxImport;
+import jgnash.convert.importat.ofx.OfxV2Parser;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;

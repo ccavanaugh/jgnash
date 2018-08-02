@@ -26,8 +26,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-import jgnash.convert.in.ImportState;
-import jgnash.convert.in.ImportTransaction;
+import jgnash.convert.importat.ImportState;
+import jgnash.convert.importat.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.ResourceUtils;

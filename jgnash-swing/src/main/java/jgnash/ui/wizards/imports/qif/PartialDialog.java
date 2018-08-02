@@ -18,8 +18,8 @@
 package jgnash.ui.wizards.imports.qif;
 
 import jgnash.engine.Account;
-import jgnash.convert.in.qif.QifAccount;
-import jgnash.convert.in.qif.QifParser;
+import jgnash.convert.importat.qif.QifAccount;
+import jgnash.convert.importat.qif.QifParser;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.wizard.WizardDialog;
 

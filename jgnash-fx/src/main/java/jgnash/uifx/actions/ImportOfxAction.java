@@ -27,10 +27,10 @@ import java.util.prefs.Preferences;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
-import jgnash.convert.in.GenericImport;
-import jgnash.convert.in.ofx.OfxBank;
-import jgnash.convert.in.ofx.OfxImport;
-import jgnash.convert.in.ofx.OfxV2Parser;
+import jgnash.convert.importat.GenericImport;
+import jgnash.convert.importat.ofx.OfxBank;
+import jgnash.convert.importat.ofx.OfxImport;
+import jgnash.convert.importat.ofx.OfxV2Parser;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
