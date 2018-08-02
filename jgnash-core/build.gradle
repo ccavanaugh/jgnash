@@ -30,6 +30,4 @@ dependencies {
         exclude(module: 'stax-api')
         exclude(module: 'xml-apis')
     }
-
-    testCompile group: 'org.apache.commons', name: 'commons-text', version: commons_text
 }
