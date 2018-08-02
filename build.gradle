@@ -47,6 +47,8 @@ allprojects {
         jfreeChartVersion = '1.0.19'
         substanceVersion = '7.3'
         swingxVersion = '1.6.5-1'
+
+        awaitilityVersion = '3.1.1'
     }
 
     tasks.withType(FindBugs) {
@@ -79,6 +81,8 @@ subprojects {
             testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
 
             testCompile group: 'io.github.glytching', name: 'junit-extensions', version: junitextensionsVersion
+
+            testCompile group: 'org.awaitility', name: 'awaitility', version: awaitilityVersion
         }
     }
 
