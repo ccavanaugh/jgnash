@@ -28,9 +28,9 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import jgnash.convert.in.DateFormat;
-import jgnash.convert.in.ImportBank;
-import jgnash.convert.in.qif.QifAccount;
+import jgnash.convert.importat.DateFormat;
+import jgnash.convert.importat.ImportBank;
+import jgnash.convert.importat.qif.QifAccount;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;

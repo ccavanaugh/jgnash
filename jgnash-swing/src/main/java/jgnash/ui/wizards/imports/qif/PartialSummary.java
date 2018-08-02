@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import jgnash.convert.in.qif.QifAccount;
+import jgnash.convert.importat.qif.QifAccount;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.util.ResourceUtils;
 

@@ -25,12 +25,12 @@ import java.util.prefs.Preferences;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
-import jgnash.convert.in.GenericImport;
-import jgnash.convert.in.ImportTransaction;
-import jgnash.convert.in.qif.QifAccount;
-import jgnash.convert.in.qif.QifImport;
-import jgnash.convert.in.qif.QifParser;
-import jgnash.convert.in.qif.QifUtils;
+import jgnash.convert.importat.GenericImport;
+import jgnash.convert.importat.ImportTransaction;
+import jgnash.convert.importat.qif.QifAccount;
+import jgnash.convert.importat.qif.QifImport;
+import jgnash.convert.importat.qif.QifParser;
+import jgnash.convert.importat.qif.QifUtils;
 import jgnash.engine.Account;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
