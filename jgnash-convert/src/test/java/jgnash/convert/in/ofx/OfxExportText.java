@@ -17,7 +17,7 @@
  */
 package jgnash.convert.in.ofx;
 
-import jgnash.convert.out.ofx.OfxExport;
+import jgnash.convert.exportantur.ofx.OfxExport;
 import jgnash.convert.in.ImportTransaction;
 import jgnash.engine.AbstractEngineTest;
 import jgnash.engine.DataStoreType;
