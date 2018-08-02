@@ -20,8 +20,8 @@
 ** flexible start date for the week
 * Reinstate archive capability
 * Disable the portfolio report if there are no investment accounts.
-* Add export function for the account tree balance/table
-* Open zipped backups instead of manually unzipping
+* Add export function for the account tree balance/table.
+* Open zipped backups instead of manually unzipping.
 
 == Release 2.35.0 __(File format change)__
 === Notes:
