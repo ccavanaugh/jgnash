@@ -1,6 +1,6 @@
 :imagesdir: ./images
 
-= jGnash 2.33.x Manual
+= jGnash 2.35.x Manual
 Published {localdate}
 :doctype: book
 :encoding: utf-8
@@ -13,9 +13,9 @@ Published {localdate}
 
 [[_legal]]
 == Legal
-[big]*jGnash 2.33.x Manual*
+[big]*jGnash 2.35.x Manual*
 
-Copyright (C) 2001-{docyear} Craig Cavanaugh
+Copyright (C) 2001-2018 Craig Cavanaugh
 
 jGnash comes with *ABSOLUTELY NO WARRANTY*.
 
