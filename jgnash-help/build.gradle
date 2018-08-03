@@ -4,27 +4,18 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.7'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.8'
         classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
     }
-}
-
-plugins {
-    id 'org.asciidoctor.convert' version '1.5.7'
 }
 
 apply plugin: 'org.asciidoctor.convert'
 
 description = 'jGnash Help'
 
-asciidoctorj {
-    version = '1.5.6'
-}
-
 asciidoctor {
     backends 'pdf'
-    attributes \
-            'build-gradle': file('build.gradle'),
+    attributes 'build-gradle': file('build.gradle'),
             'pdf-stylesdir': 'theme',
             'pdf-style': 'custom',
             'source-highlighter': 'prettify',
