@@ -36,9 +36,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.net.security.YahooEventParser;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * JUnit test for the Yahoo security downloader.
@@ -60,38 +58,56 @@ public class YahooEventParserTest extends AbstractEngineTest {
     @Test
     void testParser() {
 
-        final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
-        ibm.setSymbol("IBM");
-        ibm.setScale((byte) 2);
+        // try 3 times to pass
+        for (int i = 0; i < 3; i++) {
 
-        final SecurityHistoryNode historyNode = new SecurityHistoryNode(LocalDate.of(1962, Month.JANUARY, 1),
-                BigDecimal.TEN, 1000, BigDecimal.TEN, BigDecimal.TEN);
+            final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
+            ibm.setSymbol("IBM");
+            ibm.setScale((byte) 2);
 
-        e.addSecurity(ibm);
-        e.addSecurityHistory(ibm, historyNode);
+            final SecurityHistoryNode historyNode = new SecurityHistoryNode(LocalDate.of(1962, Month.JANUARY, 1),
+                    BigDecimal.TEN, 1000, BigDecimal.TEN, BigDecimal.TEN);
 
-        final Set<SecurityHistoryEvent> events = YahooEventParser.retrieveNew(ibm, LocalDate.of(2015, Month.AUGUST, 22));
+            e.addSecurity(ibm);
+            e.addSecurityHistory(ibm, historyNode);
 
-        assertNotNull(events);
+            final Set<SecurityHistoryEvent> events = YahooEventParser.retrieveNew(ibm, LocalDate.of(2015, Month.AUGUST, 22));
 
-        // size fluctuates
-        assertTrue(220 <= events.size() && events.size() <= 221);
+            assertNotNull(events);
+
+            // size fluctuates
+            if (events.size() <= 221 && events.size() >= 220) {
+                assertTrue(220 <= events.size() && events.size() <= 221);
+                return;
+            }
+        }
+
+        fail("Failed to pass test");
     }
 
     @Test
     void testHistoricalDownload() {
-        final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
-        ibm.setSymbol("IBM");
-        ibm.setScale((byte) 2);
 
-        e.addSecurity(ibm);
+        // try 3 times to pass
+        for (int i = 0; i < 3; i++) {
 
-        YahooCrumbManager.clearAuthorization();     // force re-authorization to prevent failed unit test
+            final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
+            ibm.setSymbol("IBM");
+            ibm.setScale((byte) 2);
 
-        final List<SecurityHistoryNode> events = YahooEventParser.retrieveHistoricalPrice(ibm, LocalDate.of(2016,
-                Month.JANUARY, 1), LocalDate.of(2016, Month.DECEMBER, 30));
+            e.addSecurity(ibm);
 
-        assertEquals(252, events.size());
+            YahooCrumbManager.clearAuthorization();     // force re-authorization to prevent failed unit test
 
+            final List<SecurityHistoryNode> events = YahooEventParser.retrieveHistoricalPrice(ibm, LocalDate.of(2016,
+                    Month.JANUARY, 1), LocalDate.of(2016, Month.DECEMBER, 30));
+
+            if (events.size() == 252) {
+                assertEquals(252, events.size());
+                return;
+            }
+        }
+
+        fail("Failed to pass test");
     }
 }
