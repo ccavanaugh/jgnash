@@ -127,7 +127,7 @@ public final class IndeterminateCheckBox extends JCheckBox {
         int modifiers = 0;
         AWTEvent currentEvent = EventQueue.getCurrentEvent();
         if (currentEvent instanceof InputEvent) {
-            modifiers = ((InputEvent) currentEvent).getModifiers();
+            modifiers = ((InputEvent) currentEvent).getModifiersEx();
         } else if (currentEvent instanceof ActionEvent) {
             modifiers = ((ActionEvent) currentEvent).getModifiers();
         }
@@ -140,7 +140,7 @@ public final class IndeterminateCheckBox extends JCheckBox {
 
         private SelectionState state = SelectionState.DESELECTED;
         private final IndeterminateCheckBox indeterminateCheckBox;
-        private transient final Icon icon;
+        private final transient Icon icon;
         private final boolean original;
 
         ButtonModelEx(final SelectionState initialState, final IndeterminateCheckBox indeterminateCheckBox,
