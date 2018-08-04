@@ -21,6 +21,12 @@ processResources {
     }
 }
 
+jar {
+    manifest {
+        attributes("Automatic-Module-Name": 'jgnash-resources')
+    }
+}
+
 
 
 

@@ -31,3 +31,9 @@ dependencies {
         exclude(module: 'xml-apis')
     }
 }
+
+jar {
+    manifest {
+        attributes("Automatic-Module-Name": 'jgnash-core')
+    }
+}

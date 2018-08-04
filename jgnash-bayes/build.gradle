@@ -1,1 +1,7 @@
 description = 'jGnash Bayes'
+
+jar {
+    manifest {
+        attributes("Automatic-Module-Name": 'jgnash-bayes')
+    }
+}

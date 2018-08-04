@@ -9,3 +9,9 @@ dependencies {
 
     testCompile project(':jgnash-core').sourceSets.test.output
 }
+
+jar {
+    manifest {
+        attributes("Automatic-Module-Name": 'jgnash-convert')
+    }
+}

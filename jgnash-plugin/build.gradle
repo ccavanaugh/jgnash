@@ -3,3 +3,9 @@ description = 'jGnash Plugin'
 dependencies {
     compile project(':jgnash-resources')
 }
+
+jar {
+    manifest {
+        attributes("Automatic-Module-Name": 'jgnash-plugin')
+    }
+}
