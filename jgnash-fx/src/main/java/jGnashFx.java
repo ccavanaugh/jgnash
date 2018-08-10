@@ -90,7 +90,7 @@ public class jGnashFx extends Application {
             return;
         }
 
-        if (OS.getJavaVersion() >= 1.8f && OS.getJavaRelease() < OS.JVM_RELEASE_71) {           
+        if (OS.getJavaVersion() == 1.8f && OS.getJavaRelease() < OS.JVM_RELEASE_71) {
             JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
                     ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             return;           

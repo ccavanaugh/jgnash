@@ -30,17 +30,21 @@ class VersionTest {
     }
 
     @Test
-    void testJavaRelease() {
-        System.out.println("Java Release: " + OS.getJavaRelease());
-
-        assertTrue(OS.getJavaRelease() > 0);
-    }
-
-    @Test
     void testJavaVersion() {
 
         System.out.println("Java Version: " + OS.getJavaVersion());
 
         assertTrue(OS.getJavaVersion() > 0);
+    }
+
+    @Test
+    void testJavaRelease() {
+
+        System.out.println("Java Version: " + OS.getJavaVersion());
+
+        if (OS.getJavaVersion() == 1.8f) {  // don't test if not on Java 8
+            System.out.println("Java Release: " + OS.getJavaRelease());
+            assertTrue(OS.getJavaRelease() > 0);
+        }
     }
 }

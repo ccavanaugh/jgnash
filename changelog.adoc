@@ -28,6 +28,7 @@
 Relational databases will need to be saved to a .xml or .bxds file format in the prior release of jGnash.  They may
 be saved back to a relational database format afterwards.
 
+* 08/10/2018 Reimplemented the detailed gains and loss control to support use in Java 10. (Fx)
 * 07/29/2018 Changes were made to make migration to Java 10+ easier.
 * 07/29/2018 Use Stax instead of kxml to make migration to Java 10+ easier.
 * 07/28/2018 Migrated test system to JUnit 5.
