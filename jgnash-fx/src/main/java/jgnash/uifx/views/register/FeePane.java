@@ -17,22 +17,17 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
 import jgnash.uifx.control.DetailedDecimalTextField;
-import jgnash.util.ResourceUtils;
 
 /**
  * UI Panel for handling investment transaction fees
@@ -44,27 +39,15 @@ import jgnash.util.ResourceUtils;
  */
 @SuppressWarnings("WeakerAccess")
 public class FeePane extends DetailedDecimalTextField {
-    @FXML
-    private ResourceBundle resources;
 
     private final SimpleObjectProperty<Account> account = new SimpleObjectProperty<>(null);
 
     private FeeDialog feeDialog;
 
     public FeePane() {
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FeePane.fxml"),
-                ResourceUtils.getBundle());
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        initialize();
     }
 
-    @FXML
     private void initialize() {
         feeDialog = new FeeDialog();
 
@@ -75,7 +58,7 @@ public class FeePane extends DetailedDecimalTextField {
     @Override
     public void show() {
         feeDialog.show(() -> {
-            setEditable(feeDialog.getTransactionEntries().size() == 0);
+            editableProperty().setValue(feeDialog.getTransactionEntries().size() == 0);
 
             if (feeDialog.getTransactionEntries().size() != 0) {
                 setDecimal(feeDialog.getBalance().abs());
@@ -130,7 +113,7 @@ public class FeePane extends DetailedDecimalTextField {
             setDecimal(sumFees().abs());
         }
 
-        setEditable(feeList.size() < 1);
+        editableProperty().setValue(feeList.isEmpty());
     }
 
     private BigDecimal sumFees() {

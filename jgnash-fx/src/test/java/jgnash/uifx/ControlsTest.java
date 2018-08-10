@@ -48,13 +48,15 @@ import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
+import jgnash.uifx.control.DetailedDecimalTextField;
 import jgnash.uifx.control.PopOverButton;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TextFieldEx;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainView;
+
+import static jgnash.uifx.views.main.MainView.DEFAULT_CSS;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -134,12 +136,16 @@ public class ControlsTest extends Application {
         PopOverButton popOverButton = new PopOverButton(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCHANGE));
         popOverButton.setContentNode(new DecimalTextField());
 
+        DetailedDecimalTextField detailedDecimalTextField2 = new DetailedDecimalTextField();
+
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, new TimePeriodComboBox(), textFieldEx, popOverButton);
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(),
+                numberComboBox, btn, exceptionButton, securityComboBox, new TimePeriodComboBox(), textFieldEx,
+                popOverButton, detailedDecimalTextField2);
 
         primaryStage.setScene(new Scene(vBox, 300, 420));
 
-        primaryStage.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
+        primaryStage.getScene().getStylesheets().add(DEFAULT_CSS);
         primaryStage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         primaryStage.show();
