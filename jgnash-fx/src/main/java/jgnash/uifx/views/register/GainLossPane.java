@@ -17,22 +17,16 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
 import jgnash.uifx.control.DetailedDecimalTextField;
-import jgnash.util.ResourceUtils;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * UI Panel for handling investment transaction fees
@@ -45,27 +39,14 @@ import jgnash.util.ResourceUtils;
 @SuppressWarnings("WeakerAccess")
 public class GainLossPane extends DetailedDecimalTextField {
 
-    @FXML
-    private ResourceBundle resources;
-
     private final SimpleObjectProperty<Account> account = new SimpleObjectProperty<>(null);
 
     private GainLossDialog gainLossDialog;
 
     public GainLossPane() {
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GainLossPane.fxml"),
-                ResourceUtils.getBundle());
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        initialize();
     }
 
-    @FXML
     private void initialize() {
         gainLossDialog = new GainLossDialog();
 
@@ -76,7 +57,7 @@ public class GainLossPane extends DetailedDecimalTextField {
     @Override
     public void show() {
         gainLossDialog.show(() -> {
-            setEditable(gainLossDialog.getTransactionEntries().size() == 0);
+            editableProperty().setValue(gainLossDialog.getTransactionEntries().size() == 0);
 
             if (gainLossDialog.getTransactionEntries().size() != 0) {
                 setDecimal(gainLossDialog.getBalance().abs());
@@ -131,7 +112,7 @@ public class GainLossPane extends DetailedDecimalTextField {
             setDecimal(sumGains().abs());
         }
 
-        setEditable(transactionEntries.size() < 1);
+        editableProperty().setValue(transactionEntries.isEmpty());
     }
 
     private BigDecimal sumGains() {
@@ -150,7 +131,7 @@ public class GainLossPane extends DetailedDecimalTextField {
     void clearForm() {
         gainLossDialog.getTransactionEntries().clear();
         setDecimal(BigDecimal.ZERO);
-        setEditable(true);
+        editableProperty().setValue(true);
     }
 
     public SimpleObjectProperty<Account> accountProperty() {

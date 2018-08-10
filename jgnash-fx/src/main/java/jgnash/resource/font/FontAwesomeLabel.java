@@ -194,6 +194,7 @@ public class FontAwesomeLabel extends Label {
         FOLDER_OPEN("\uf07c"),
         MINUS_CIRCLE("\uf056"),
         MONEY("\uf0d6"),
+        PENCIL("\uf040"),
         PLUS("\uf067"),
         PLUS_CIRCLE("\uf055"),
         POWER_OFF("\uf011"),
