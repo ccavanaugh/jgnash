@@ -17,6 +17,7 @@
 package net.bzzt.swift.mt940;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 public class Mt940Entry {
@@ -59,8 +60,8 @@ public class Mt940Entry {
         sb.append(sollHabenKennung);
         sb.append(": ");
         if (betrag != null) {
-            // Set scale to 2 digits and round if neccesary, then to plain string for nicer output.
-            sb.append(betrag.setScale(2, BigDecimal.ROUND_HALF_EVEN).toPlainString());
+            // Set scale to 2 digits and round if necessary, then to plain string for nicer output.
+            sb.append(betrag.setScale(2, RoundingMode.HALF_EVEN).toPlainString());
         } else {
             sb.append("-");
         }
