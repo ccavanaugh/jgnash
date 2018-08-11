@@ -93,507 +93,510 @@ import jgnash.util.function.TransactionAgePredicate;
  */
 abstract class RegisterTableController {
 
-    private final static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
+	private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
-    /**
-     * Active account for the pane.
-     */
-    final ObjectProperty<Account> account = new SimpleObjectProperty<>();
+	/**
+	 * Active account for the pane.
+	 */
+	final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
-    final private ReadOnlyObjectWrapper<Transaction> selectedTransaction = new ReadOnlyObjectWrapper<>();
+	private final ReadOnlyObjectWrapper<Transaction> selectedTransaction = new ReadOnlyObjectWrapper<>();
 
-    /**
-     * This is the master list of transactions.
-     */
-    private final ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
+	/**
+	 * This is the master list of transactions.
+	 */
+	private final ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
 
-    /**
-     * Filters may be applied to this list.
-     */
-    private final FilteredList<Transaction> filteredTransactionList
-            = new FilteredList<>(observableTransactions, transaction -> true);
+	/**
+	 * Filters may be applied to this list.
+	 */
+	private final FilteredList<Transaction> filteredTransactionList = new FilteredList<>(observableTransactions,
+			transaction -> true);
 
-    /**
-     * Sorted list of transactions.
-     */
-    final SortedList<Transaction> sortedList = new SortedList<>(filteredTransactionList);
+	/**
+	 * Sorted list of transactions.
+	 */
+	final SortedList<Transaction> sortedList = new SortedList<>(filteredTransactionList);
 
-    final private MessageBusHandler messageBusHandler = new MessageBusHandler();
+	private final MessageBusHandler messageBusHandler = new MessageBusHandler();
 
-    final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
+	private final AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
-    // Used for selection summary tooltip
-    final private IntegerProperty selectionSize = new SimpleIntegerProperty(0);
+	// Used for selection summary tooltip
+	private final IntegerProperty selectionSize = new SimpleIntegerProperty(0);
 
-    // Used for selection summary tooltip
-    final private Tooltip selectionSummaryTooltip = new Tooltip();
+	// Used for selection summary tooltip
+	private final Tooltip selectionSummaryTooltip = new Tooltip();
 
-    @FXML
-    protected TableView<Transaction> tableView;
+	@FXML
+	protected TableView<Transaction> tableView;
 
-    @FXML
-    protected Label balanceLabel;
+	@FXML
+	protected Label balanceLabel;
 
-    @FXML
-    protected Label accountNameLabel;
+	@FXML
+	protected Label accountNameLabel;
 
-    @FXML
-    protected ResourceBundle resources;
+	@FXML
+	protected ResourceBundle resources;
 
-    @FXML
-    protected ComboBox<ReconciledStateEnum> reconciledStateFilterComboBox;
+	@FXML
+	protected ComboBox<ReconciledStateEnum> reconciledStateFilterComboBox;
 
-    @FXML
-    protected ComboBox<AgeEnum> transactionAgeFilterComboBox;
+	@FXML
+	protected ComboBox<AgeEnum> transactionAgeFilterComboBox;
 
-    @FXML
-    protected TextField memoFilterTextField;
+	@FXML
+	protected TextField memoFilterTextField;
 
-    @FXML
-    protected TextField payeeFilterTextField;
+	@FXML
+	protected TextField payeeFilterTextField;
 
-    TableViewManager<Transaction> tableViewManager;
+	TableViewManager<Transaction> tableViewManager;
 
-    // Used for formatting of the selection summary tooltip
-    private NumberFormat numberFormat = NumberFormat.getNumberInstance();
+	// Used for formatting of the selection summary tooltip
+	private NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
-    @FXML
-    void initialize() {
+	@FXML
+	void initialize() {
 
-        // table view displays the sorted list of data.  The comparator property must be bound
-        tableView.setItems(sortedList);
-        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+		// table view displays the sorted list of data. The comparator property must be
+		// bound
+		tableView.setItems(sortedList);
+		sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
-        // Bind the account property
-        getAccountPropertyWrapper().accountProperty().bind(account);
+		// Bind the account property
+		getAccountPropertyWrapper().accountProperty().bind(account);
 
-        accountNameLabel.textProperty().bind(getAccountPropertyWrapper().accountNameProperty());
-        balanceLabel.textProperty().bind(getAccountPropertyWrapper().accountBalanceProperty());
+		accountNameLabel.textProperty().bind(getAccountPropertyWrapper().accountNameProperty());
+		balanceLabel.textProperty().bind(getAccountPropertyWrapper().accountBalanceProperty());
 
-        tableView.setTableMenuButtonVisible(true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		tableView.setTableMenuButtonVisible(true);
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // hide the horizontal scrollbar and prevent ghosting
-        tableView.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS);
+		// hide the horizontal scrollbar and prevent ghosting
+		tableView.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS);
 
-        // Load the table on change and set the row factory if the account in not locked
-        accountProperty().addListener((observable, oldValue, newValue) -> {
-            loadAccount();
+		// Load the table on change and set the row factory if the account in not locked
+		accountProperty().addListener((observable, oldValue, newValue) -> {
+			loadAccount();
 
-            if (!newValue.isLocked()) {
-                tableView.setRowFactory(new TransactionRowFactory());
-            }
+			if (!newValue.isLocked()) {
+				tableView.setRowFactory(new TransactionRowFactory());
+			}
 
-            numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
-        });
+			numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
+		});
 
-        selectedTransaction.bind(tableView.getSelectionModel().selectedItemProperty());
+		selectedTransaction.bind(tableView.getSelectionModel().selectedItemProperty());
 
-        // Update the selection size property when the selection list changes
-        tableView.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Transaction>) c ->
-                selectionSize.set(tableView.getSelectionModel().getSelectedIndices().size()));
-
-        selectionSize.addListener((observable, oldValue, newValue) -> {
-            if ((Integer) newValue > 1) {
-                final List<Transaction> transactions = new ArrayList<>(tableView.getSelectionModel().getSelectedItems());
-                BigDecimal total = BigDecimal.ZERO;
-
-                for (final Transaction transaction : transactions) {
-                    if (transaction != null) {
-                        total = total.add(transaction.getAmount(account.get()));
-                    }
-                }
-                selectionSummaryTooltip.setText(numberFormat.format(AccountBalanceDisplayManager.
-                        convertToSelectedBalanceMode(account.get().getAccountType(), total)));
-            } else {
-                selectionSummaryTooltip.setText(null);
-            }
-        });
-
-        // For the table view to refresh itself if the mode changes
-        AccountBalanceDisplayManager.accountBalanceDisplayMode().addListener((observable, oldValue, newValue)
-                -> tableView.refresh());
-
-        reconciledStateFilterComboBox.getItems().addAll(ReconciledStateEnum.values());
-        reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
-
-        transactionAgeFilterComboBox.getItems().addAll(AgeEnum.values());
-        transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
-
-        final ChangeListener<Object> filterChangeListener = (observable, oldValue, newValue) -> handleFilterChange();
-
-        reconciledStateFilterComboBox.valueProperty().addListener(filterChangeListener);
-        transactionAgeFilterComboBox.valueProperty().addListener(filterChangeListener);
-
-        // Rebuild filters when regex properties change
-        Options.regexForFiltersProperty().addListener(filterChangeListener);
-
-        if (memoFilterTextField != null) {  // memo filter may not have been initialized for all register types
-            memoFilterTextField.textProperty().addListener(filterChangeListener);
-        }
-
-        if (payeeFilterTextField != null) { // payee filter may not have been initialized for all register types
-            payeeFilterTextField.textProperty().addListener(filterChangeListener);
-        }
-
-        // Repack the table if the font scale changes
-        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue)
-                -> tableViewManager.packTable());
-
-        // Listen for transaction events
-        MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
-    }
-
-    private void handleFilterChange() {
-        Predicate<Transaction> predicate = new ReconciledPredicate(account.get(),
-                reconciledStateFilterComboBox.valueProperty().get().getReconciledState())
-                .and(new TransactionAgePredicate(transactionAgeFilterComboBox.valueProperty().get().getChronoUnit(),
-                        transactionAgeFilterComboBox.valueProperty().get().getAge()));
-
-        if (memoFilterTextField != null) {
-            predicate = predicate.and(new MemoPredicate(memoFilterTextField.getText(),
-                    Options.regexForFiltersProperty().get()));
-        }
-
-        if (payeeFilterTextField != null) {
-            predicate = predicate.and(new PayeePredicate(payeeFilterTextField.getText(),
-                    Options.regexForFiltersProperty().get()));
-        }
-
-        filteredTransactionList.setPredicate(predicate);
-    }
-
-    private void loadAccount() {
-        tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
-        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid().toString());
-        tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
-        tableViewManager.setDefaultColumnVisibilityFactory(getColumnVisibilityFactory());
-        tableViewManager.manualColumnPackingProperty().bind(Options.autoPackTablesProperty().not());
-
-        buildTable();
-
-        /* push to the end of the application thread to ensure table build is complete before data is loaded
-          this prevents inconsistent and random behavior for column sizing */
-        Platform.runLater(this::loadTable);
-    }
-
-    abstract Callback<Integer, Double> getColumnWeightFactory();
-
-    abstract Callback<Integer, Boolean> getColumnVisibilityFactory();
-
-    ObjectProperty<Account> accountProperty() {
-        return account;
-    }
-
-    ReadOnlyObjectProperty<Transaction> selectedTransactionProperty() {
-        return selectedTransaction.getReadOnlyProperty();
-    }
-
-    void clearTableSelection() {
-        tableView.getSelectionModel().clearSelection();
-    }
-
-    AccountPropertyWrapper getAccountPropertyWrapper() {
-        return accountPropertyWrapper;
-    }
-
-    /**
-     * Scrolls the view to ensure selection visibility.  If possible, the next index is shown for improved
-     * visual appearance.
-     *
-     * @param transaction transaction to show in table
-     */
-    private void scrollToTransaction(final Transaction transaction) {
-        final int index = tableView.getItems().indexOf(transaction);
-
-        if (index > 0) {
-            tableView.scrollTo(index - 1);
-        } else {
-            tableView.scrollTo(transaction);
-        }
-    }
-
-    /**
-     * Ensures the transaction is visible and selects it.
-     *
-     * @param transaction Transaction that needs to be visible in the view
-     */
-    void selectTransaction(final Transaction transaction) {
-        scrollToTransaction(transaction);
-        tableView.getSelectionModel().select(transaction);
-
-        // The table needs to be focused for the row selection to highlight
-        JavaFXUtils.runLater(tableView::requestFocus);
-    }
-
-    abstract protected void buildTable();
-
-    private void loadTable() {
-        observableTransactions.clear();
-
-        if (account.get() != null) {
-            observableTransactions.addAll(account.get().getSortedTransactionList());
-
-            Platform.runLater(() -> {   // table view many not be ready, push to end of the Platform thread
-                tableViewManager.restoreLayout();   // required for table view manager to work
-                tableView.scrollTo(observableTransactions.size());  // scroll to the end of the table
-            });
-        }
-    }
-
-    void manuallyPackTable() {
-        tableViewManager.packTable();
-    }
-
-    List<Transaction> getSelectedTransactions() {
-        return tableView.getSelectionModel().getSelectedItems();
-    }
-
-    void deleteTransactions() {
-        final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
-
-        RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[0]));
-    }
-
-    private void duplicateTransactions() {
-        final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
-
-        RegisterActions.duplicateTransaction(account.get(), transactionList);
-    }
-
-    private void handleCreateNewReminder() {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
-
-        final Reminder reminder = engine.createDefaultReminder(selectedTransaction.get(), account.get());
-
-        final Optional<Reminder> optional = RecurringEntryDialog.showAndWait(reminder);
-
-        optional.ifPresent(engine::addReminder);
-    }
-
-    void handleJumpAction() {
-        Transaction t = selectedTransaction.get();
-
-        if (t != null) {
-            if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
-                final Set<Account> set = t.getAccounts();
-                set.stream().filter(a -> !account.get().equals(a))
-                        .forEach(a -> RegisterStage.getRegisterStage(a).show(t));
-            } else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
-                final Account common = t.getCommonAccount();
-
-                if (!account.get().equals(common)) {
-                    RegisterStage.getRegisterStage(common).show(t);
-                }
-            } else if (t instanceof InvestmentTransaction) {
-                final Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
-
-                if (!account.get().equals(invest)) {
-                    RegisterStage.getRegisterStage(invest).show(t);
-                }
-            }
-        }
-    }
-
-    @FXML
-    protected void handleResetFilters() {
-
-        JavaFXUtils.runLater(() -> {
-            transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
-            reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
-
-            if (memoFilterTextField != null) {
-                memoFilterTextField.setText("");
-            }
-
-            if (payeeFilterTextField != null) {
-                payeeFilterTextField.setText("");
-            }
-        });
-    }
-
-    private enum ReconciledStateEnum {
-        ALL(ResourceUtils.getString("Button.AnyStatus"), null),
-        CLEARED(ResourceUtils.getString("Button.Cleared"), ReconciledState.CLEARED),
-        NOT_RECONCILED(ResourceUtils.getString("Button.NotReconciled"), ReconciledState.NOT_RECONCILED),
-        RECONCILED(ResourceUtils.getString("Button.Reconciled"), ReconciledState.RECONCILED);
-
-        private final String description;
-
-        private final ReconciledState reconciledState;
-
-        ReconciledStateEnum(final String description, final ReconciledState reconciledState) {
-            this.description = description;
-            this.reconciledState = reconciledState;
-        }
-
-        public ReconciledState getReconciledState() {
-            return reconciledState;
-        }
-
-        @Override
-        public String toString() {
-            return description;
-        }
-    }
-
-    private enum AgeEnum {
-        ALL(ResourceUtils.getString("Button.AllDates"), ChronoUnit.FOREVER, 0),
-        Year(ResourceUtils.getString("Button.Last12Months"), ChronoUnit.MONTHS, 12),
-        _120(ResourceUtils.getString("Button.Last120Days"), ChronoUnit.DAYS, 120),
-        _90(ResourceUtils.getString("Button.Last90Days"), ChronoUnit.DAYS, 90),
-        _60(ResourceUtils.getString("Button.Last60Days"), ChronoUnit.DAYS, 60),
-        _30(ResourceUtils.getString("Button.Last30Days"), ChronoUnit.DAYS, 30);
-
-        private final String description;
-
-        private final int age;
-
-        private final ChronoUnit chronoUnit;
-
-        AgeEnum(final String description, final ChronoUnit chronoUnit, final int age) {
-            this.description = description;
-            this.chronoUnit = chronoUnit;
-            this.age = age;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public ChronoUnit getChronoUnit() {
-            return chronoUnit;
-        }
-
-        @Override
-        public String toString() {
-            return description;
-        }
-    }
-
-    private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
-
-        @Override
-        public TableRow<Transaction> call(final TableView<Transaction> param) {
-
-            final TableRow<Transaction> row = new TableRow<>();
-            final ContextMenu rowMenu = new ContextMenu();
-
-            final Menu markedAs = new Menu(resources.getString("Menu.MarkAs.Name"));
-            final MenuItem markAsClearedItem = new MenuItem(resources.getString("Menu.Cleared.Name"));
-            markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
-                    row.getItem(), ReconciledState.CLEARED));
-
-            final MenuItem markAsReconciledItem = new MenuItem(resources.getString("Menu.Reconciled.Name"));
-            markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
-                    row.getItem(), ReconciledState.RECONCILED));
-
-            final MenuItem markAsUnreconciledItem = new MenuItem(resources.getString("Menu.Unreconciled.Name"));
-            markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
-                    row.getItem(), ReconciledState.NOT_RECONCILED));
-
-            markedAs.getItems().addAll(markAsClearedItem, markAsReconciledItem, markAsUnreconciledItem);
-
-            final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
-            duplicateItem.setOnAction(event -> duplicateTransactions());
-
-            final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
-            jumpItem.setOnAction(event -> handleJumpAction());
-
-            final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
-            deleteItem.setOnAction(event -> deleteTransactions());
-
-            final MenuItem reminderItem = new MenuItem(resources.getString("Menu.NewReminder.Name"));
-            reminderItem.setOnAction(event -> handleCreateNewReminder());
-
-            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem,
-                    new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
-
-            // only display context menu for non-null items:
-            row.contextMenuProperty().bind(
-                    Bindings.when(Bindings.isNotNull(row.itemProperty()))
-                            .then(rowMenu)
-                            .otherwise((ContextMenu) null));
-
-            // only display the tooltip if the selection size is greater than one
-            row.tooltipProperty().bind(
-                    Bindings.when(Bindings.greaterThan(selectionSize, 1))
-                            .then(selectionSummaryTooltip)
-                            .otherwise((Tooltip) null));
-
-            return row;
-        }
-    }
-
-    private class MessageBusHandler implements MessageListener {
-
-        /**
-         * Limits number of refresh and packTable calls while ensuring the most recent is executed.
-         */
-        private final ThreadPoolExecutor updateTableExecutor;
-
-        MessageBusHandler() {
-            updateTableExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE,
-                    TimeUnit.DAYS, new ArrayBlockingQueue<>(1));
-
-            updateTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-        }
-
-        private void refreshTable() {
-            updateTableExecutor.execute(() -> {
-                tableView.refresh();
-                tableViewManager.packTable();
-            });
-        }
-
-        @Override
-        public void messagePosted(final Message event) {
-            final Account account = RegisterTableController.this.account.getValue();
-
-            if (account != null) {
-                if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {
-                    switch (event.getEvent()) {
-                        case TRANSACTION_REMOVE:
-                            final Transaction removedTransaction = event.getObject(MessageProperty.TRANSACTION);
-
-                            // clear the selection if the transaction is currently selected
-                            if (tableView.getSelectionModel().getSelectedItems().contains(removedTransaction)) {
-                                JavaFXUtils.runLater(RegisterTableController.this::clearTableSelection);
-                            }
-
-                            /* push removal to the end of the application thread to ensure the table selection is
-                               cleared first to prevent an IndexOfOutBoundsException */
-                            JavaFXUtils.runLater(() -> observableTransactions.remove(removedTransaction));
-
-                            // this will force the running balance to recalculate
-                            refreshTable();
-
-                            break;
-                        case TRANSACTION_ADD:
-                            final Transaction addedTransaction = event.getObject(MessageProperty.TRANSACTION);
-
-                            JavaFXUtils.runLater(() -> {
-
-                                final int index = Collections.binarySearch(observableTransactions, addedTransaction,
-                                        tableView.getComparator());
-
-                                if (index < 0) {
-                                    observableTransactions.add(-index - 1, addedTransaction);
-                                }
-
-                                // scroll to the new transaction
-                                JavaFXUtils.runLater(() -> scrollToTransaction(addedTransaction));
-
-                                // this will force the running balance to recalculate
-                                refreshTable();
-                            });
-
-                            break;
-                        default:
-                    }
-                }
-            }
-        }
-    }
+		// Update the selection size property when the selection list changes
+		tableView.getSelectionModel().getSelectedItems()
+				.addListener((ListChangeListener<Transaction>) c -> selectionSize
+						.set(tableView.getSelectionModel().getSelectedIndices().size()));
+
+		selectionSize.addListener((observable, oldValue, newValue) -> {
+			if ((Integer) newValue > 1) {
+				final List<Transaction> transactions = new ArrayList<>(
+						tableView.getSelectionModel().getSelectedItems());
+				BigDecimal total = BigDecimal.ZERO;
+
+				for (final Transaction transaction : transactions) {
+					if (transaction != null) {
+						total = total.add(transaction.getAmount(account.get()));
+					}
+				}
+				selectionSummaryTooltip.setText(numberFormat.format(AccountBalanceDisplayManager
+						.convertToSelectedBalanceMode(account.get().getAccountType(), total)));
+			} else {
+				selectionSummaryTooltip.setText(null);
+			}
+		});
+
+		// For the table view to refresh itself if the mode changes
+		AccountBalanceDisplayManager.accountBalanceDisplayMode()
+				.addListener((observable, oldValue, newValue) -> tableView.refresh());
+
+		reconciledStateFilterComboBox.getItems().addAll(ReconciledStateEnum.values());
+		reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
+
+		transactionAgeFilterComboBox.getItems().addAll(AgeEnum.values());
+		transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
+
+		final ChangeListener<Object> filterChangeListener = (observable, oldValue, newValue) -> handleFilterChange();
+
+		reconciledStateFilterComboBox.valueProperty().addListener(filterChangeListener);
+		transactionAgeFilterComboBox.valueProperty().addListener(filterChangeListener);
+
+		// Rebuild filters when regex properties change
+		Options.regexForFiltersProperty().addListener(filterChangeListener);
+
+		if (memoFilterTextField != null) { // memo filter may not have been initialized for all register types
+			memoFilterTextField.textProperty().addListener(filterChangeListener);
+		}
+
+		if (payeeFilterTextField != null) { // payee filter may not have been initialized for all register types
+			payeeFilterTextField.textProperty().addListener(filterChangeListener);
+		}
+
+		// Repack the table if the font scale changes
+		ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> tableViewManager.packTable());
+
+		// Listen for transaction events
+		MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
+	}
+
+	private void handleFilterChange() {
+		Predicate<Transaction> predicate = new ReconciledPredicate(account.get(),
+				reconciledStateFilterComboBox.valueProperty().get().getReconciledState()).and(
+						new TransactionAgePredicate(transactionAgeFilterComboBox.valueProperty().get().getChronoUnit(),
+								transactionAgeFilterComboBox.valueProperty().get().getAge()));
+
+		if (memoFilterTextField != null) {
+			predicate = predicate
+					.and(new MemoPredicate(memoFilterTextField.getText(), Options.regexForFiltersProperty().get()));
+		}
+
+		if (payeeFilterTextField != null) {
+			predicate = predicate
+					.and(new PayeePredicate(payeeFilterTextField.getText(), Options.regexForFiltersProperty().get()));
+		}
+
+		filteredTransactionList.setPredicate(predicate);
+	}
+
+	private void loadAccount() {
+		tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
+		tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid().toString());
+		tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
+		tableViewManager.setDefaultColumnVisibilityFactory(getColumnVisibilityFactory());
+		tableViewManager.manualColumnPackingProperty().bind(Options.autoPackTablesProperty().not());
+
+		buildTable();
+
+		/*
+		 * push to the end of the application thread to ensure table build is complete
+		 * before data is loaded this prevents inconsistent and random behavior for
+		 * column sizing
+		 */
+		Platform.runLater(this::loadTable);
+	}
+
+	abstract Callback<Integer, Double> getColumnWeightFactory();
+
+	abstract Callback<Integer, Boolean> getColumnVisibilityFactory();
+
+	ObjectProperty<Account> accountProperty() {
+		return account;
+	}
+
+	ReadOnlyObjectProperty<Transaction> selectedTransactionProperty() {
+		return selectedTransaction.getReadOnlyProperty();
+	}
+
+	void clearTableSelection() {
+		tableView.getSelectionModel().clearSelection();
+	}
+
+	AccountPropertyWrapper getAccountPropertyWrapper() {
+		return accountPropertyWrapper;
+	}
+
+	/**
+	 * Scrolls the view to ensure selection visibility. If possible, the next index
+	 * is shown for improved visual appearance.
+	 *
+	 * @param transaction transaction to show in table
+	 */
+	private void scrollToTransaction(final Transaction transaction) {
+		final int index = tableView.getItems().indexOf(transaction);
+
+		if (index > 0) {
+			tableView.scrollTo(index - 1);
+		} else {
+			tableView.scrollTo(transaction);
+		}
+	}
+
+	/**
+	 * Ensures the transaction is visible and selects it.
+	 *
+	 * @param transaction Transaction that needs to be visible in the view
+	 */
+	void selectTransaction(final Transaction transaction) {
+		scrollToTransaction(transaction);
+		tableView.getSelectionModel().select(transaction);
+
+		// The table needs to be focused for the row selection to highlight
+		JavaFXUtils.runLater(tableView::requestFocus);
+	}
+
+	protected abstract void buildTable();
+
+	private void loadTable() {
+		observableTransactions.clear();
+
+		if (account.get() != null) {
+			observableTransactions.addAll(account.get().getSortedTransactionList());
+
+			Platform.runLater(() -> { // table view many not be ready, push to end of the Platform thread
+				tableViewManager.restoreLayout(); // required for table view manager to work
+				tableView.scrollTo(observableTransactions.size()); // scroll to the end of the table
+			});
+		}
+	}
+
+	void manuallyPackTable() {
+		tableViewManager.packTable();
+	}
+
+	List<Transaction> getSelectedTransactions() {
+		return tableView.getSelectionModel().getSelectedItems();
+	}
+
+	void deleteTransactions() {
+		final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
+
+		RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[0]));
+	}
+
+	private void duplicateTransactions() {
+		final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
+
+		RegisterActions.duplicateTransaction(account.get(), transactionList);
+	}
+
+	private void handleCreateNewReminder() {
+		final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+		Objects.requireNonNull(engine);
+
+		final Reminder reminder = Engine.createDefaultReminder(selectedTransaction.get(), account.get());
+
+		final Optional<Reminder> optional = RecurringEntryDialog.showAndWait(reminder);
+
+		optional.ifPresent(engine::addReminder);
+	}
+
+	void handleJumpAction() {
+		Transaction t = selectedTransaction.get();
+
+		if (t != null) {
+			if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
+				final Set<Account> set = t.getAccounts();
+				set.stream().filter(a -> !account.get().equals(a))
+						.forEach(a -> RegisterStage.getRegisterStage(a).show(t));
+			} else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
+				final Account common = t.getCommonAccount();
+
+				if (!account.get().equals(common)) {
+					RegisterStage.getRegisterStage(common).show(t);
+				}
+			} else if (t instanceof InvestmentTransaction) {
+				final Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
+
+				if (!account.get().equals(invest)) {
+					RegisterStage.getRegisterStage(invest).show(t);
+				}
+			}
+		}
+	}
+
+	@FXML
+	protected void handleResetFilters() {
+
+		JavaFXUtils.runLater(() -> {
+			transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
+			reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
+
+			if (memoFilterTextField != null) {
+				memoFilterTextField.setText("");
+			}
+
+			if (payeeFilterTextField != null) {
+				payeeFilterTextField.setText("");
+			}
+		});
+	}
+
+	private enum ReconciledStateEnum {
+		ALL(ResourceUtils.getString("Button.AnyStatus"), null),
+		CLEARED(ResourceUtils.getString("Button.Cleared"), ReconciledState.CLEARED),
+		NOT_RECONCILED(ResourceUtils.getString("Button.NotReconciled"), ReconciledState.NOT_RECONCILED),
+		RECONCILED(ResourceUtils.getString("Button.Reconciled"), ReconciledState.RECONCILED);
+
+		private final String description;
+
+		private final ReconciledState reconciledState;
+
+		ReconciledStateEnum(final String description, final ReconciledState reconciledState) {
+			this.description = description;
+			this.reconciledState = reconciledState;
+		}
+
+		public ReconciledState getReconciledState() {
+			return reconciledState;
+		}
+
+		@Override
+		public String toString() {
+			return description;
+		}
+	}
+
+	private enum AgeEnum {
+		ALL(ResourceUtils.getString("Button.AllDates"), ChronoUnit.FOREVER, 0),
+		Year(ResourceUtils.getString("Button.Last12Months"), ChronoUnit.MONTHS, 12),
+		_120(ResourceUtils.getString("Button.Last120Days"), ChronoUnit.DAYS, 120),
+		_90(ResourceUtils.getString("Button.Last90Days"), ChronoUnit.DAYS, 90),
+		_60(ResourceUtils.getString("Button.Last60Days"), ChronoUnit.DAYS, 60),
+		_30(ResourceUtils.getString("Button.Last30Days"), ChronoUnit.DAYS, 30);
+
+		private final String description;
+
+		private final int age;
+
+		private final ChronoUnit chronoUnit;
+
+		AgeEnum(final String description, final ChronoUnit chronoUnit, final int age) {
+			this.description = description;
+			this.chronoUnit = chronoUnit;
+			this.age = age;
+		}
+
+		public int getAge() {
+			return age;
+		}
+
+		public ChronoUnit getChronoUnit() {
+			return chronoUnit;
+		}
+
+		@Override
+		public String toString() {
+			return description;
+		}
+	}
+
+	private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
+
+		@Override
+		public TableRow<Transaction> call(final TableView<Transaction> param) {
+
+			final TableRow<Transaction> row = new TableRow<>();
+			final ContextMenu rowMenu = new ContextMenu();
+
+			final Menu markedAs = new Menu(resources.getString("Menu.MarkAs.Name"));
+			final MenuItem markAsClearedItem = new MenuItem(resources.getString("Menu.Cleared.Name"));
+			markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
+					row.getItem(), ReconciledState.CLEARED));
+
+			final MenuItem markAsReconciledItem = new MenuItem(resources.getString("Menu.Reconciled.Name"));
+			markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
+					row.getItem(), ReconciledState.RECONCILED));
+
+			final MenuItem markAsUnreconciledItem = new MenuItem(resources.getString("Menu.Unreconciled.Name"));
+			markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(account.get(),
+					row.getItem(), ReconciledState.NOT_RECONCILED));
+
+			markedAs.getItems().addAll(markAsClearedItem, markAsReconciledItem, markAsUnreconciledItem);
+
+			final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
+			duplicateItem.setOnAction(event -> duplicateTransactions());
+
+			final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
+			jumpItem.setOnAction(event -> handleJumpAction());
+
+			final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
+			deleteItem.setOnAction(event -> deleteTransactions());
+
+			final MenuItem reminderItem = new MenuItem(resources.getString("Menu.NewReminder.Name"));
+			reminderItem.setOnAction(event -> handleCreateNewReminder());
+
+			rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem,
+					new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
+
+			// only display context menu for non-null items:
+			row.contextMenuProperty().bind(
+					Bindings.when(Bindings.isNotNull(row.itemProperty())).then(rowMenu).otherwise((ContextMenu) null));
+
+			// only display the tooltip if the selection size is greater than one
+			row.tooltipProperty().bind(Bindings.when(Bindings.greaterThan(selectionSize, 1))
+					.then(selectionSummaryTooltip).otherwise((Tooltip) null));
+
+			return row;
+		}
+	}
+
+	private class MessageBusHandler implements MessageListener {
+
+		/**
+		 * Limits number of refresh and packTable calls while ensuring the most recent
+		 * is executed.
+		 */
+		private final ThreadPoolExecutor updateTableExecutor;
+
+		MessageBusHandler() {
+			updateTableExecutor = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.DAYS,
+					new ArrayBlockingQueue<>(1));
+
+			updateTableExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+		}
+
+		private void refreshTable() {
+			updateTableExecutor.execute(() -> {
+				tableView.refresh();
+				tableViewManager.packTable();
+			});
+		}
+
+		@Override
+		public void messagePosted(final Message event) {
+			final Account acc = RegisterTableController.this.account.getValue();
+
+			if (acc != null && event.getObject(MessageProperty.ACCOUNT).equals(acc)) {
+				switch (event.getEvent()) {
+				case TRANSACTION_REMOVE:
+					final Transaction removedTransaction = event.getObject(MessageProperty.TRANSACTION);
+
+					// clear the selection if the transaction is currently selected
+					if (tableView.getSelectionModel().getSelectedItems().contains(removedTransaction)) {
+						JavaFXUtils.runLater(RegisterTableController.this::clearTableSelection);
+					}
+
+					/*
+					 * push removal to the end of the application thread to ensure the table
+					 * selection is cleared first to prevent an IndexOfOutBoundsException
+					 */
+					JavaFXUtils.runLater(() -> observableTransactions.remove(removedTransaction));
+
+					// this will force the running balance to recalculate
+					refreshTable();
+
+					break;
+				case TRANSACTION_ADD:
+					final Transaction addedTransaction = event.getObject(MessageProperty.TRANSACTION);
+
+					JavaFXUtils.runLater(() -> {
+
+						final int index = Collections.binarySearch(observableTransactions, addedTransaction,
+								tableView.getComparator());
+
+						if (index < 0) {
+							observableTransactions.add(-index - 1, addedTransaction);
+						}
+
+						// scroll to the new transaction
+						JavaFXUtils.runLater(() -> scrollToTransaction(addedTransaction));
+
+						// this will force the running balance to recalculate
+						refreshTable();
+					});
+
+					break;
+				default:
+				}
+
+			}
+		}
+	}
 }

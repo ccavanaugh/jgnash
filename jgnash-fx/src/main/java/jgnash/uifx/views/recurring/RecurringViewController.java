@@ -87,13 +87,13 @@ public class RecurringViewController implements MessageListener {
 
     private final SortedList<Reminder> sortedReminderList = new SortedList<>(observableReminderList);
 
-    final private ReadOnlyObjectWrapper<Reminder> selectedReminder = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<Reminder> selectedReminder = new ReadOnlyObjectWrapper<>();
 
     private Timer timer = null;
 
     private static final int START_UP_DELAY = 45 * 1000;   // 45 seconds
 
-    final private AtomicBoolean dialogShowing = new AtomicBoolean(false);
+    private final AtomicBoolean dialogShowing = new AtomicBoolean(false);
 
     @FXML
     private void initialize() {
@@ -366,7 +366,7 @@ public class RecurringViewController implements MessageListener {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            final PendingReminder pendingReminder = engine.getPendingReminder(selectedReminder.get());
+            final PendingReminder pendingReminder = Engine.getPendingReminder(selectedReminder.get());
             pendingReminder.setApproved(true);
 
             engine.processPendingReminders(Collections.singletonList(pendingReminder));

@@ -208,7 +208,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
     }
 
     protected void deleteAction() {
-        Transaction trans[] = getSelectedTransactions();
+        Transaction[] trans = getSelectedTransactions();
 
         if (RegisterFactory.isConfirmTransactionDeleteEnabled()) {
             if (!confirmTransactionRemoval(trans.length)) {
@@ -240,7 +240,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
     }
 
     protected void duplicateAction() {
-        Transaction trans[] = getSelectedTransactions();
+        Transaction[] trans = getSelectedTransactions();
 
         // walk through the array and duplicate each transaction
         for (Transaction tran : trans) {
@@ -318,10 +318,10 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
     }
 
     private Transaction[] getSelectedTransactions() {
-        int rows[] = getTable().getSelectedRows();
+        int[] rows = getTable().getSelectedRows();
 
         // create an array of transactions
-        Transaction trans[] = new Transaction[rows.length];
+        Transaction[] trans = new Transaction[rows.length];
         for (int i = 0; i < rows.length; i++) {
             trans[i] = getTableModel().getTransactionAt(rows[i]);
         }
@@ -340,7 +340,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        Reminder reminder = engine.createDefaultReminder(getSelectedTransaction(), getAccount());
+        Reminder reminder = Engine.createDefaultReminder(getSelectedTransaction(), getAccount());
         reminder = RecurringEntryDialog.showDialog(reminder);
 
         if (reminder != null) {
