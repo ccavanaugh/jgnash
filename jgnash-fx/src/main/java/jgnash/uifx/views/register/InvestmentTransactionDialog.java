@@ -130,25 +130,25 @@ class InvestmentTransactionDialog extends Stage {
     public static void show(final Account account, final Transaction transaction,
                             final Consumer<Transaction> consumer) {
 
-        final InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
-        transactionDialog.accountProperty().set(account);
-        transactionDialog.setTransactionConsumer(consumer);
+        final InvestmentTransactionDialog invTransDialog = new InvestmentTransactionDialog();
 
-        transactionDialog.setTransaction(transaction);
+        invTransDialog.accountProperty().set(account);
+        invTransDialog.setTransactionConsumer(consumer);
+
+        invTransDialog.setTransaction(transaction);
 
         Platform.runLater(() -> {
-            transactionDialog.show();
+            invTransDialog.show();
 
-            // Lock the height of the dialog after it has been shown
+            // Size and lock the height of the dialog after it has been shown
             Platform.runLater(() -> {
-                transactionDialog.setMinHeight(transactionDialog.getHeight());
-                transactionDialog.setMaxHeight(transactionDialog.getHeight());
+                invTransDialog.sizeToScene();
+
+                invTransDialog.setMinHeight(invTransDialog.getHeight());
+                invTransDialog.setMaxHeight(invTransDialog.getHeight());
             });
 
-            // TODO: Silly hack to tickle the layout and force it to expand on Windows OS
-            Platform.runLater(() -> transactionDialog.setWidth(transactionDialog.getWidth() + 1));
-
-            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, InvestmentTransactionDialog.class,
+            Platform.runLater(() -> StageUtils.addBoundsListener(invTransDialog, InvestmentTransactionDialog.class,
                     MainView.getPrimaryStage()));
         });
     }
