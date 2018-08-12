@@ -99,7 +99,7 @@ jGnash is designed to operate with Java 8 but will operate correctly under Java 
 
 An additional command line option `--add-modules java.xml.bind` is required if you want to operate under Java 9.
 
-An illegal reflective access Warning will be displayed on the console similar to the following.  It may be ignored and
+An illegal reflective access Warning may be displayed on the console similar to the following.  It can be ignored and
 should improve at a later date as the Java Ecosystem migrates to Java 9.
 
 [source]
