@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class BootEngineTask extends Task<String> {
+public class BootEngineTask extends Task<String> {		
 
     public static final int FORCED_DELAY = 1500;
 
@@ -76,7 +76,8 @@ public class BootEngineTask extends Task<String> {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         }
-
+                
+        final String lockedMessage = resources.getString("Message.FileIsLocked");        
         String message = resources.getString("Message.FileLoadComplete");
 
         if (remote) {
@@ -99,11 +100,11 @@ public class BootEngineTask extends Task<String> {
                         return call();  // recursive call to rerun the task and load the file to keep code simple
                     }
                     
-					Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
+					Platform.runLater(() -> StaticUIMethods.displayError(lockedMessage));
                 } else {
-                    message = resources.getString("Message.FileIsLocked") + ": " + localFile;
+                    message = lockedMessage + ": " + localFile;
                     updateMessage(message);
-                    Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
+                    Platform.runLater(() -> StaticUIMethods.displayError(lockedMessage));
                 }
             } else  {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
