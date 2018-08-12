@@ -30,7 +30,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
+
+import jgnash.engine.xstream.XStreamJVM9;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -66,7 +69,7 @@ class BinaryXStreamTest {
 
         try (final OutputStream fos = Files.newOutputStream(tempFile)) {
             BinaryStreamDriver bsd = new BinaryStreamDriver();
-            XStream xstream = new XStream(bsd);
+            XStream xstream = new XStreamJVM9(new PureJavaReflectionProvider(), bsd);
 
             try (ObjectOutputStream out = xstream.createObjectOutputStream(fos)) {
                 out.writeObject(stringData);
@@ -81,7 +84,7 @@ class BinaryXStreamTest {
 
         try (InputStream fis = Files.newInputStream(tempFile)) {
             BinaryStreamDriver bsd = new BinaryStreamDriver();
-            XStream xstream = new XStream(bsd);
+            XStream xstream = new XStreamJVM9(new PureJavaReflectionProvider(), bsd);
 
             try (ObjectInputStream in = xstream.createObjectInputStream(fis)) {
                 List<?> strings = (List<?>) in.readObject();

@@ -21,12 +21,10 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedMapConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSetConverter;
 import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
 import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
-import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
@@ -56,6 +54,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.xstream.XStreamJVM9;
 import jgnash.util.ClassPathUtils;
 import jgnash.util.ResourceUtils;
 
@@ -71,10 +70,10 @@ public class AccountTreeXMLFactory {
 
     private AccountTreeXMLFactory() {
     }
-
+    
     private static XStream getStream() {
 
-        final XStream xstream = new XStream(new PureJavaReflectionProvider(), new KXml2Driver()) {
+        final XStreamJVM9 xstream = new XStreamJVM9(new PureJavaReflectionProvider(), new StaxDriver()) {
 
             @Override
             protected MapperWrapper wrapMapper(final MapperWrapper next) {
@@ -131,8 +130,10 @@ public class AccountTreeXMLFactory {
         xstream.registerConverter(new HibernateProxyConverter());
         xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
-        xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
-        xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+        
+        
+        //xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+        //xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
 
         return xstream;
     }

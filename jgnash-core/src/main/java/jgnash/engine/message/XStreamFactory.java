@@ -18,7 +18,10 @@
 package jgnash.engine.message;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+
+import jgnash.engine.xstream.XStreamJVM9;
 
 /**
  * Utility class to generate an XStream instance.
@@ -29,7 +32,8 @@ class XStreamFactory {
     private XStreamFactory() {}
 
     static XStream getInstance() {
-        final XStream xstream = new XStream(new StaxDriver());
+    	
+        final XStream xstream = new XStreamJVM9(new PureJavaReflectionProvider(), new StaxDriver());
         xstream.alias("Message", Message.class);
         xstream.alias("MessageProperty", MessageProperty.class);
 

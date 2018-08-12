@@ -18,6 +18,7 @@
 package jgnash.engine.checks;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import jgnash.engine.xstream.XStreamJVM9;
 import jgnash.util.OS;
 
 import static jgnash.util.LogUtil.logSevere;
@@ -66,7 +68,7 @@ public class CheckLayoutSerializationFactory {
     }
 
     private static XStream getStream() {
-        XStream xstream = new XStream(new StaxDriver());
+        XStream xstream = new XStreamJVM9(new PureJavaReflectionProvider(), new StaxDriver());
         xstream.alias("CheckLayout", CheckLayout.class);
         xstream.alias("CheckObject", CheckObject.class);       
         

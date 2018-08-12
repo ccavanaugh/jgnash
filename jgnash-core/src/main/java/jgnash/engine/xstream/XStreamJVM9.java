@@ -58,9 +58,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
  */
 public class XStreamJVM9 extends XStream {
 
-	XStreamJVM9(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
+	public XStreamJVM9(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
 		super(reflectionProvider, hierarchicalStreamDriver);
-	}
+	}	
 
 	@Override
 	protected void setupConverters() {
