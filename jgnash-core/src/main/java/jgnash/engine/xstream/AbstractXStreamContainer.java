@@ -68,8 +68,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedMapConverter;
-import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSetConverter;
 import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
 import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
@@ -85,7 +83,10 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * @author Craig Cavanaugh
  */
 abstract class AbstractXStreamContainer {
-    final List<StoredObject> objects = new ArrayList<>();
+	
+    private static final String DESCRIPTION = "description";
+    
+	final List<StoredObject> objects = new ArrayList<>();
     final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
     final Path path;
 
@@ -134,13 +135,13 @@ abstract class AbstractXStreamContainer {
                 .map(o -> (T) o).collect(Collectors.toList());
     }
 
-    static XStream configureXStream(final XStream xstream) {
+    static XStream configureXStream(final XStreamJVM9 xstream) {
 
         // configure XStream security
         xstream.addPermission(NoTypePermission.NONE);
         xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
         xstream.addPermission(ArrayTypePermission.ARRAYS);
-        xstream.addPermission(new WildcardTypePermission(new String[] {"java.**", "jgnash.engine.**"}));
+        xstream.addPermission(new WildcardTypePermission(new String[] {"java.**", "jgnash.engine.**"}));      
 
         xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
 
@@ -178,16 +179,16 @@ abstract class AbstractXStreamContainer {
         xstream.useAttributeFor(Account.class, "locked");
         xstream.useAttributeFor(Account.class, "visible");
         xstream.useAttributeFor(Account.class, "name");
-        xstream.useAttributeFor(Account.class, "description");
+        xstream.useAttributeFor(Account.class, DESCRIPTION);
 
-        xstream.useAttributeFor(Budget.class, "description");
+        xstream.useAttributeFor(Budget.class, DESCRIPTION);
         xstream.useAttributeFor(Budget.class, "name");
 
         xstream.useAttributeFor(CommodityNode.class, "symbol");
         xstream.useAttributeFor(CommodityNode.class, "scale");
         xstream.useAttributeFor(CommodityNode.class, "prefix");
         xstream.useAttributeFor(CommodityNode.class, "suffix");
-        xstream.useAttributeFor(CommodityNode.class, "description");
+        xstream.useAttributeFor(CommodityNode.class, DESCRIPTION);
 
         xstream.useAttributeFor(SecurityHistoryNode.class, "date");
         xstream.useAttributeFor(SecurityHistoryNode.class, "price");
@@ -217,8 +218,10 @@ abstract class AbstractXStreamContainer {
         xstream.registerConverter(new HibernateProxyConverter());
         xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
-        xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
-        xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+        
+        // These will trigger an illegal reflective access operation 
+        //xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+        //xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
 
         return xstream;
     }
@@ -320,7 +323,7 @@ abstract class AbstractXStreamContainer {
         }
     }
 
-    static class XStreamOut extends XStream {
+    static class XStreamOut extends XStreamJVM9 {
 
         XStreamOut(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
             super(reflectionProvider, hierarchicalStreamDriver);

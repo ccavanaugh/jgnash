@@ -141,7 +141,7 @@ class BinaryContainer extends AbstractXStreamContainer {
         try (final InputStream fis = new BufferedInputStream(Files.newInputStream(path, StandardOpenOption.READ))) {
             readWriteLock.writeLock().lock();
 
-            final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
+            final XStream xstream = configureXStream(new XStreamJVM9(new StoredObjectReflectionProvider(objects),
                     new BinaryStreamDriver()));
 
             try (final ObjectInputStream in = xstream.createObjectInputStream(fis)) {

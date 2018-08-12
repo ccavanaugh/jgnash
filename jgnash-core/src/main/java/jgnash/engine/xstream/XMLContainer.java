@@ -140,7 +140,7 @@ class XMLContainer extends AbstractXStreamContainer {
         try (final Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             readWriteLock.writeLock().lock();
 
-            final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
+            final XStream xstream = configureXStream(new XStreamJVM9(new StoredObjectReflectionProvider(objects),
                     new StaxDriver()));
 
             try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
