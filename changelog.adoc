@@ -40,12 +40,11 @@ be saved back to a relational database format afterwards.
 * 07/28/2018 Updated to the latest Netty dependency.
 * 07/06/2018 Reduced memory usage and improved performance for relational database users.
 * 07/01/2018 Removed support for handling old XML file formats from 2017 and detection of 1.x files.
-* 07/01/2018 Removed Dump Heap button from Console Dialog because API use is restricted in future JVMs. (Swing)
+* 07/01/2018 Removed Dump Heap button from Console Dialog because API use is restricted in Java 8 and newer. (Swing)
 * 06/24/2018 Replaced c3p0 with HikariCP for reduced application size and improved performance.
 * 06/24/2018 Updated to the latest Hibernate dependency.  This breaks schema compatibility with older relational
              database files.
 * 06/24/2018 Dropped support for the old jgnash Hibernate persistence unit / schema.
-
 
 == Release 2.34.1
 * 06/07/18 Updated Russian translation. (Swing, Fx) _[pchurzin]_
