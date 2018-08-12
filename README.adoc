@@ -94,10 +94,10 @@ end try
 
 Save it as an Application called `jGnash.app` in `/Applications/jGnash`
 
-=== Java 9 Requirements
-jGnash is designed to operate with Java 8 but will operate correctly under Java 9 with some tweaks.
+=== Java 9 and 10 Requirements
+jGnash is designed to operate with Java 8 but will work correctly under Java 9 and 10 with some tweaks.
 
-An additional command line option `--add-modules java.xml.bind` is required if you want to operate under Java 9.
+An additional command line option `--add-modules java.xml.bind` is required if you want to operate under Java 9 and 10.
 
 An illegal reflective access Warning may be displayed on the console similar to the following.  It can be ignored and
 should improve at a later date as the Java Ecosystem migrates to Java 9.
