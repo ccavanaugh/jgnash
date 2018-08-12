@@ -66,6 +66,7 @@ allprojects {
 
 subprojects {
     repositories {
+        mavenCentral()
         jcenter()
         mavenLocal()
         // maven { url "http://nexus.fdvs.com.ar/content/groups/public/" }
