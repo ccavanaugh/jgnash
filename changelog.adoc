@@ -28,6 +28,8 @@
 Relational databases will need to be saved to a .xml or .bxds file format in the prior release of jGnash.  They may
 be saved back to a relational database format afterwards.
 
+* 08/12/2018 Fixed a bug that was causing decimal artifacts to occur in empty rows of the reminders table when using
+             Java 10. (Fx)
 * 08/12/2018 Prevent an "illegal reflective access operation" from occurring on Java 9 and newer.
 * 08/10/2018 Reimplemented the detailed gains and loss control to support use in Java 10. (Fx)
 * 07/29/2018 Changes were made to make migration to Java 10+ easier.

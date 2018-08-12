@@ -44,7 +44,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.util.Callback;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -125,39 +124,7 @@ public class RecurringViewController implements MessageListener {
             return null;
         });
 
-        amountColumn.setCellFactory(new Callback<TableColumn<Reminder, BigDecimal>, TableCell<Reminder, BigDecimal>>() {
-            @Override
-            public TableCell<Reminder, BigDecimal> call(TableColumn<Reminder, BigDecimal> param) {
-                return new TableCell<Reminder, BigDecimal>() {
-                    {
-                        setStyle("-fx-alignment: center-right;");
-                    }
-
-                    @Override
-                    protected void updateItem(final BigDecimal amount, final boolean empty) {
-                        super.updateItem(amount, empty);
-
-                        if (!empty && getTableRow() != null && getTableRow().getItem() != null) {
-                            final Reminder reminder = (Reminder) getTableRow().getItem();
-
-                            if (reminder.getTransaction() != null) {
-                                setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
-                                        .format(amount));
-
-                                if (amount != null && amount.signum() < 0) {
-                                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
-                                } else {
-                                    setId(StyleClass.NORMAL_CELL_ID);
-                                }
-                            } else {
-                                setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
-                                        .format(BigDecimal.ZERO));
-                            }
-                        }
-                    }
-                };
-            }
-        });
+        amountColumn.setCellFactory(param -> new ReminderBigDecimalTableCell());
         tableView.getColumns().add(amountColumn);
 
         final TableColumn<Reminder, String> frequencyColumn = new TableColumn<>(resources.getString("Column.Freq"));
@@ -367,9 +334,42 @@ public class RecurringViewController implements MessageListener {
             Objects.requireNonNull(engine);
 
             final PendingReminder pendingReminder = Engine.getPendingReminder(selectedReminder.get());
-            pendingReminder.setApproved(true);
 
-            engine.processPendingReminders(Collections.singletonList(pendingReminder));
+            if (pendingReminder != null) {
+                pendingReminder.setApproved(true);
+                engine.processPendingReminders(Collections.singletonList(pendingReminder));
+            }
+        }
+    }
+
+    private static class ReminderBigDecimalTableCell extends TableCell<Reminder, BigDecimal> {
+        {
+            setStyle("-fx-alignment: center-right;");
+        }
+
+        @Override
+        protected void updateItem(final BigDecimal amount, final boolean empty) {
+            super.updateItem(amount, empty);
+
+            if (!empty && getTableRow() != null && getTableRow().getItem() != null) {
+                final Reminder reminder = (Reminder) getTableRow().getItem();
+
+                if (reminder.getTransaction() != null) {
+                    setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                            .format(amount));
+
+                    if (amount != null && amount.signum() < 0) {
+                        setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                    } else {
+                        setId(StyleClass.NORMAL_CELL_ID);
+                    }
+                } else {
+                    setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                            .format(BigDecimal.ZERO));
+                }
+            } else {
+                setText(null);
+            }
         }
     }
 }
