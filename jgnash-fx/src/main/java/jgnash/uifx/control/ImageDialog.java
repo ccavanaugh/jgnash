@@ -35,7 +35,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;

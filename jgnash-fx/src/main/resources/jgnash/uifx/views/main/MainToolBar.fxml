@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
-<?import jgnash.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <ToolBar
         xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
         fx:controller="jgnash.uifx.views.main.MainToolBarController">

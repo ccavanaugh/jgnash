@@ -4,7 +4,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import jgnash.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.accounts.AccountsViewController">

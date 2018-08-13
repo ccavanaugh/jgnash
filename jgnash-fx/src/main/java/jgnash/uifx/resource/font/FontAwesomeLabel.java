@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.resource.font;
+package jgnash.uifx.resource.font;
 
 import java.util.Locale;
 

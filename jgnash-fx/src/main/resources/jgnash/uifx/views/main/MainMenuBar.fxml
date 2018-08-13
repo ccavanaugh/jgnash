@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import jgnash.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import javafx.scene.input.KeyCodeCombination?>
 
 <MenuBar fx:id="menuBar" id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"

@@ -44,7 +44,7 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.resource.cursor.CustomCursor;
+import jgnash.uifx.resource.cursor.CustomCursor;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;

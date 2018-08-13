@@ -47,7 +47,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
-import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.LockedCommodityListCell;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;

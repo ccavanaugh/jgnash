@@ -45,7 +45,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
-import jgnash.resource.cursor.CustomCursor;
+import jgnash.uifx.resource.cursor.CustomCursor;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;

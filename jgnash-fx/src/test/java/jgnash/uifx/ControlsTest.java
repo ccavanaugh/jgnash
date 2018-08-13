@@ -44,7 +44,7 @@ import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
-import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.PopOverButton?>

@@ -42,7 +42,7 @@ import jgnash.net.security.UpdateFactory;
 import jgnash.plugin.FxPlugin;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
-import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;

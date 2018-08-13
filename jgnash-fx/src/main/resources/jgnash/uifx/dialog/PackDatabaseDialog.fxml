@@ -11,7 +11,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.PasswordField?>
 
-<?import jgnash.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <BorderPane fx:controller="jgnash.uifx.dialog.PackDatabaseDialogController"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog">
     <center>

@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
-import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;

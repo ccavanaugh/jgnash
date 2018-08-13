@@ -35,7 +35,7 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
