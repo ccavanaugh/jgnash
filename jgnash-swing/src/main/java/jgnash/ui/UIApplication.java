@@ -33,7 +33,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.splash.AboutDialog;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * GUI version of the jGnash program. This Class creates and provides access to the MainFrame.

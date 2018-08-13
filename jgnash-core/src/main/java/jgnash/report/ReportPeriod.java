@@ -17,7 +17,7 @@
  */
 package jgnash.report;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Report period Enum.

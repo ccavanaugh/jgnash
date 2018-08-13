@@ -36,7 +36,7 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Static support methods for Account manipulation.

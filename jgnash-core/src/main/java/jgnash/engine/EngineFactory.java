@@ -44,6 +44,8 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
+import jgnash.resource.util.OS;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.util.*;
 import jgnash.util.FileMagic.FileType;
 

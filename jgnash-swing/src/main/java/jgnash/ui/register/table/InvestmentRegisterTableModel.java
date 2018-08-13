@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Table model for investment transactions

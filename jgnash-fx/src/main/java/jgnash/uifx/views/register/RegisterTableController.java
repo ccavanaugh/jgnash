@@ -80,7 +80,7 @@ import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.util.function.MemoPredicate;
 import jgnash.util.function.PayeePredicate;
 import jgnash.util.function.ReconciledPredicate;

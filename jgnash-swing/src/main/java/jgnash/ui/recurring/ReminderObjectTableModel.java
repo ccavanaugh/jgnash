@@ -25,7 +25,7 @@ import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * TableModel for ReminderObjects

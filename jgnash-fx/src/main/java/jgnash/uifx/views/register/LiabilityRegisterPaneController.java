@@ -35,7 +35,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import java.util.Objects;
 

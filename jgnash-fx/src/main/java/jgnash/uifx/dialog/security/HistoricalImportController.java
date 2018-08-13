@@ -54,7 +54,7 @@ import jgnash.time.DateUtils;
 import jgnash.uifx.control.CheckListView;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Historical import controller.

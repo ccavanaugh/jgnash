@@ -34,7 +34,7 @@ import jgnash.net.ConnectionFactory;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.net.NetworkAuthenticator;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

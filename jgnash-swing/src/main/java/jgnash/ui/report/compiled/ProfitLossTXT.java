@@ -32,7 +32,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.report.ProfitLossTextReport;
 import jgnash.ui.components.JDateField;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

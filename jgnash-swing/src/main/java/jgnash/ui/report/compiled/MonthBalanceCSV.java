@@ -32,7 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import jgnash.report.BalanceByMonthCSVReport;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

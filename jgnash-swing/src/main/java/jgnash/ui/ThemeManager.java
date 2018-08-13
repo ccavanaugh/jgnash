@@ -39,7 +39,7 @@ import javax.swing.plaf.metal.MetalTheme;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import jgnash.ui.plaf.NimbusUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;

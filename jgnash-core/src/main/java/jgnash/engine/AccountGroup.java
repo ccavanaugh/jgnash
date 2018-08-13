@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Account Group class. Helps to categorize account types to make reporting easier and consistent.

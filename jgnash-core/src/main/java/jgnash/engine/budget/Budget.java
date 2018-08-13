@@ -36,7 +36,7 @@ import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
 import jgnash.time.Period;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Budget Object.

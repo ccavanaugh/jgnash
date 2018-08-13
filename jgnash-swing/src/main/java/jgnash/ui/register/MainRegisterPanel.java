@@ -56,7 +56,7 @@ import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.report.compiled.AccountRegisterReport;
 import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * The main panel for displaying a tree of accounts and their transaction register This panel is not intended to be

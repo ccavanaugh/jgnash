@@ -46,7 +46,7 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Fetches latest stock prices in the background.

@@ -40,7 +40,7 @@ import jgnash.ui.register.table.SortedInvestmentTableModel;
 import jgnash.ui.register.table.SortedRegisterTable;
 import jgnash.ui.register.table.SortedTableModel;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Factory class for constructing register tables and controlling global options for registers.

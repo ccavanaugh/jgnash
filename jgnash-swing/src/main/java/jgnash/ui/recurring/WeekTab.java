@@ -33,7 +33,7 @@ import javax.swing.SpinnerNumberModel;
 import jgnash.engine.recurring.Reminder;
 import jgnash.engine.recurring.WeeklyReminder;
 import jgnash.ui.components.DatePanel;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;

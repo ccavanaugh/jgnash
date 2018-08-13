@@ -39,7 +39,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.ImportDialog;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Import OFX file action

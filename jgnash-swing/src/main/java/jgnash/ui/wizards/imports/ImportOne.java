@@ -27,8 +27,8 @@ import javax.swing.text.StyledEditorKit;
 import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

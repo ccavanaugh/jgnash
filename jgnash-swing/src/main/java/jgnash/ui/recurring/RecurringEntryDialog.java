@@ -51,7 +51,7 @@ import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.register.TransactionDialog;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;

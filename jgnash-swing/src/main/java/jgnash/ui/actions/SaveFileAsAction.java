@@ -28,7 +28,7 @@ import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to save the current database as a new name and reopen

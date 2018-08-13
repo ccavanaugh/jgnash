@@ -74,7 +74,7 @@ import jgnash.uifx.control.SecurityHistoryEventTypeComboBox;
 import jgnash.uifx.control.SecurityNodeAreaChart;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Security history controller.

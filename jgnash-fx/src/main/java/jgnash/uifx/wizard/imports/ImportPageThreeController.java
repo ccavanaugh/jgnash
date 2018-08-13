@@ -30,7 +30,7 @@ import jgnash.convert.importat.ImportState;
 import jgnash.convert.importat.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Import Wizard, base account selection.

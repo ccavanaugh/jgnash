@@ -37,7 +37,7 @@ import jgnash.engine.budget.BudgetFactory;
 import jgnash.time.Period;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.util.TextResource;
+import jgnash.resource.util.TextResource;
 
 /**
  * A mini wizard for creating a new budget based on historical data.

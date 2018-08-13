@@ -71,7 +71,7 @@ import jgnash.ui.components.SecurityComboBox;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;

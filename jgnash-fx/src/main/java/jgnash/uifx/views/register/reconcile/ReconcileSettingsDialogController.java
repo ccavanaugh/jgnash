@@ -45,7 +45,7 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Account reconcile settings dialog.

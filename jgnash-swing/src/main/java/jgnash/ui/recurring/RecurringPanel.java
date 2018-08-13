@@ -63,7 +63,7 @@ import jgnash.ui.components.RollOverButton;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import static jgnash.util.LogUtil.logSevere;
 

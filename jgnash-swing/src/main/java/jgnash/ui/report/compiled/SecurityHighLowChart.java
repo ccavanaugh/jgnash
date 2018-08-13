@@ -31,7 +31,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SecurityComboBox;
 import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

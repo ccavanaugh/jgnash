@@ -26,7 +26,7 @@ import jgnash.engine.DataStore;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * PackDatabase Task.

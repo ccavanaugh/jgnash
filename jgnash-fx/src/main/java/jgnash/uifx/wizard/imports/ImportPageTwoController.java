@@ -68,8 +68,8 @@ import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 /**
  * Import Wizard, imported transaction wizard.

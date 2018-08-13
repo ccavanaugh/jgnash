@@ -1,10 +1,10 @@
 package jgnash;
 
-import jgnash.util.OS;
-import jgnash.util.Version;
+import jgnash.resource.util.OS;
+import jgnash.resource.util.Version;
 import org.junit.jupiter.api.Test;
 
-import static jgnash.util.Version.getAppVersion;
+import static jgnash.resource.util.Version.getAppVersion;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

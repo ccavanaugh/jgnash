@@ -20,7 +20,7 @@ package jgnash.ui.register.table;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

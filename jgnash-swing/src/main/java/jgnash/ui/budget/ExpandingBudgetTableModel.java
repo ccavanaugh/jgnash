@@ -35,7 +35,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.message.MessageProxy;
 import jgnash.ui.components.expandingtable.AbstractExpandingTableModel;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * TableModel that can expand and contract the displayed rows

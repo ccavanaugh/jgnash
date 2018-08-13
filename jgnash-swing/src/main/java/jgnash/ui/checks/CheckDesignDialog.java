@@ -58,7 +58,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

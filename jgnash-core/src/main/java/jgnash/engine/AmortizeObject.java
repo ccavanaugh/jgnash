@@ -19,7 +19,7 @@ package jgnash.engine;
 
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

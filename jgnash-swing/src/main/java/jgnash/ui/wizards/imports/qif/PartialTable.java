@@ -31,7 +31,7 @@ import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh

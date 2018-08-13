@@ -23,7 +23,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
-import jgnash.util.OS;
+import jgnash.resource.util.OS;
 
 /**
  * JButtons do not respond to look and feel updates correctly.  This

@@ -30,7 +30,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Import a tree of accounts

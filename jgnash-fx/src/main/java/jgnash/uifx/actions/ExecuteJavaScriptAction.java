@@ -34,7 +34,7 @@ import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Utility class to run a javascript file.

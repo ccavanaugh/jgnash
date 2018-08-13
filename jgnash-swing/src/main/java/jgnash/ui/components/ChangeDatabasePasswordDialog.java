@@ -38,7 +38,7 @@ import jgnash.ui.actions.DatabasePathAction;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.FileMagic;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

@@ -35,7 +35,7 @@ import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
 import jgnash.time.DateUtils;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;

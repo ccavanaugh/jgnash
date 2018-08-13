@@ -33,7 +33,7 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.views.main.OpenDatabaseController;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Various static UI support methods.

@@ -34,7 +34,7 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.ui.components.IndeterminateCheckBox;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Abstract transaction entry form class

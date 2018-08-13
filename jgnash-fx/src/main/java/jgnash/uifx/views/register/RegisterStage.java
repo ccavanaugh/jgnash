@@ -20,7 +20,7 @@ import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Stage that displays a single account register. Size and position is preserved

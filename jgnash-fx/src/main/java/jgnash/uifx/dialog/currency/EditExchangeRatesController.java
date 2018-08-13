@@ -66,7 +66,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller for editing currency exchange rates.

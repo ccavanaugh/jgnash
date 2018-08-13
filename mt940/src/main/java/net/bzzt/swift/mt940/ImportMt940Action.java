@@ -43,7 +43,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.AbstractEnabledAction;
 import jgnash.ui.wizards.imports.ImportDialog;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to import an mt940 file.

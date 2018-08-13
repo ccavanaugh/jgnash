@@ -27,7 +27,7 @@ import javax.swing.filechooser.FileFilter;
 
 import jgnash.engine.DataStoreType;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to request database path from the user

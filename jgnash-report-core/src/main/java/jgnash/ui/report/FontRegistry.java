@@ -32,7 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.util.OS;
+import jgnash.resource.util.OS;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;

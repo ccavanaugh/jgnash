@@ -28,7 +28,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import jgnash.net.AbstractAuthenticator;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * An Authenticator that will pop up a dialog and ask for http authentication

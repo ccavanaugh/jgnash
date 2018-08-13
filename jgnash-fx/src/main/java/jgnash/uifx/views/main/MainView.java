@@ -61,8 +61,8 @@ import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
-import jgnash.util.Version;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.Version;
 
 import java.io.File;
 import java.text.MessageFormat;

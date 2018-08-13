@@ -52,7 +52,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.time.DateUtils;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Income and Expense Bar Chart.

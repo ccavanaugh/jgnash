@@ -41,7 +41,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

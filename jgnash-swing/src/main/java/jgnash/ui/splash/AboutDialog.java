@@ -44,8 +44,8 @@ import javax.swing.WindowConstants;
 import javax.swing.text.html.HTMLDocument;
 
 import jgnash.ui.StaticUIMethods;
-import jgnash.util.HTMLResource;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.HTMLResource;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

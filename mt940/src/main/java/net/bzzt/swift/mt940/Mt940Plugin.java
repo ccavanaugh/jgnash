@@ -34,7 +34,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.plugin.FxPlugin;
 import jgnash.plugin.SwingPlugin;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 public class Mt940Plugin implements SwingPlugin, FxPlugin {
 

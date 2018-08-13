@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import jgnash.text.CommodityFormat;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Transaction Factory.

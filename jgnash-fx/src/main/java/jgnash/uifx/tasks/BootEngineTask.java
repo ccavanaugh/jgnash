@@ -5,7 +5,7 @@ import javafx.concurrent.Task;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;

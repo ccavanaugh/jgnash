@@ -29,7 +29,7 @@ import javafx.scene.control.TextField;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * New file wizard pane, shows summary.

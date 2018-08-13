@@ -35,7 +35,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Manager for investment transaction forms.

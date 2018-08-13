@@ -33,7 +33,7 @@ import jgnash.engine.Account;
 import jgnash.ui.UIApplication;
 import jgnash.ui.register.RegisterFactory;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to export transactions to a CSV file

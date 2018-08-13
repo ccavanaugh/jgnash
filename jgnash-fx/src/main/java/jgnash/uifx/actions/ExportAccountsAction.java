@@ -30,7 +30,7 @@ import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to export the current account tree.

@@ -22,7 +22,7 @@ import jgnash.engine.jpa.JpaH2MvDataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;

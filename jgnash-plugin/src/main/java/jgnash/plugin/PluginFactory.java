@@ -36,7 +36,7 @@ import java.util.jar.Attributes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.util.OS;
+import jgnash.resource.util.OS;
 
 /**
  * Plugin Factory methods.

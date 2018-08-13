@@ -43,7 +43,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.components.expandingtable.AbstractExpandingTableModel;
 import jgnash.ui.components.expandingtable.ExpandingTableNode;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * TableModel that can expand and contract the displayed rows

@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * JComboBox intended for selecting predetermined periods of times

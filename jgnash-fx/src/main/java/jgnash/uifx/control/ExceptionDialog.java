@@ -39,7 +39,7 @@ import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Exception dialog.

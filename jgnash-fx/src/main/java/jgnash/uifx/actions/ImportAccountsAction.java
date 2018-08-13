@@ -31,7 +31,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to import a tree of accounts.

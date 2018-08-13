@@ -23,7 +23,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.uifx.Options;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Factory class for constructing register tables and controlling global options for registers.

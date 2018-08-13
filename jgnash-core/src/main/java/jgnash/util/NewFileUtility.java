@@ -31,6 +31,7 @@ import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Utility class for generating new files.

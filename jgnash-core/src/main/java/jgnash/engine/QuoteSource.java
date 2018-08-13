@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Enumeration for quote download source.

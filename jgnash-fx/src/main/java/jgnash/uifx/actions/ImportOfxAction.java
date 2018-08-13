@@ -38,7 +38,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.wizard.imports.ImportWizard;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Utility class to import an OFX file.

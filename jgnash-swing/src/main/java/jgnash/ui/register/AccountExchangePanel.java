@@ -50,7 +50,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;

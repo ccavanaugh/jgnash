@@ -27,7 +27,7 @@ import jgnash.engine.TransactionEntry;
 import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Split Transaction entry dialog.

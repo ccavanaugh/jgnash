@@ -20,7 +20,7 @@ package jgnash;
 
 import java.util.Locale;
 
-import jgnash.util.ClassPathUtils;
+import jgnash.resource.util.ClassPathUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

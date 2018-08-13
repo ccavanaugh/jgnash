@@ -45,7 +45,7 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Register actions utility class.

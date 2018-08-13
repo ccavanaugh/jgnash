@@ -32,8 +32,8 @@ import jgnash.engine.Comparators;
 import jgnash.engine.RootAccount;
 import jgnash.uifx.control.CheckListView;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 /**
  * New file wizard pane, handles selection of account sets.

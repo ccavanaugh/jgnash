@@ -47,7 +47,7 @@ import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.control.QuoteSourceComboBox;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller for creating and modifying securities.

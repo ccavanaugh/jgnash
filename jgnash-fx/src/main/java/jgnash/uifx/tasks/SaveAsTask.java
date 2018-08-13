@@ -28,7 +28,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FileChooserFactory;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Save File As Task.

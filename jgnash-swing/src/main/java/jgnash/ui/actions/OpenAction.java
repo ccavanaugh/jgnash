@@ -42,7 +42,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.OpenDatabaseDialog;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to open a database

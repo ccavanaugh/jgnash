@@ -35,7 +35,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.ui.components.SortedComboBoxModel;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * ComboBox for displaying a list of Budgets. Automatically refreshes itself when necessary

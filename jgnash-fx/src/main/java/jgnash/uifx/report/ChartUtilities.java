@@ -40,7 +40,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * JavaFX Chart utilities.

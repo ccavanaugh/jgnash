@@ -45,7 +45,7 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Dialog for creating and editing new transactions.

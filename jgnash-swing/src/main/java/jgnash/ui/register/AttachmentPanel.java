@@ -50,7 +50,7 @@ import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.IconUtils;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

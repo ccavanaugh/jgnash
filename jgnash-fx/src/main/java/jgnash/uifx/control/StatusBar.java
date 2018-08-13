@@ -31,7 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import jgnash.uifx.skin.ThemeManager;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Status bar.

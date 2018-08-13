@@ -52,7 +52,7 @@ import jgnash.convert.importat.ImportTransaction;
 import jgnash.engine.TransactionType;
 import jgnash.util.FileMagic;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * StAX based parser for 2.x OFX (XML) files.

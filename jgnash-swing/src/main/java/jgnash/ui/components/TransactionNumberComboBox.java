@@ -35,7 +35,7 @@ import javax.swing.text.PlainDocument;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Enhanced JComboBox; provides a UI to the user for entering transaction

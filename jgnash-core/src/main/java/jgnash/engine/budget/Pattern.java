@@ -18,7 +18,7 @@
 
 package jgnash.engine.budget;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Pattern Enum.

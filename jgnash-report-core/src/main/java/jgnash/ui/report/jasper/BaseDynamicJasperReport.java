@@ -57,7 +57,7 @@ import java.util.prefs.Preferences;
 
 import jgnash.text.CommodityFormat;
 import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;

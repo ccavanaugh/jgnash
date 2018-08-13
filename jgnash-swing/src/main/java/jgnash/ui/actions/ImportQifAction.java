@@ -31,8 +31,8 @@ import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.qif.PartialDialog;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;

@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import javax.persistence.Entity;
 
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Reinvest dividend transaction.

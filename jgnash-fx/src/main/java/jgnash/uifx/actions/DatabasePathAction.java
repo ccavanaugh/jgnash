@@ -27,7 +27,7 @@ import javafx.stage.FileChooser;
 
 import jgnash.engine.DataStoreType;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Utility class request database path from the user.

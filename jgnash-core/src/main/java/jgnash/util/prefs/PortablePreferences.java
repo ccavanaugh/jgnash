@@ -31,7 +31,7 @@ import java.util.prefs.Preferences;
 
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Portable preferences utility class.

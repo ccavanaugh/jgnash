@@ -33,7 +33,7 @@ import javax.swing.SwingWorker;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.LocaleObject;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to change the default locale

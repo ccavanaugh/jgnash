@@ -63,7 +63,7 @@ import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;

@@ -51,7 +51,7 @@ import jgnash.engine.Engine;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller for the console dialog.

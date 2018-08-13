@@ -46,7 +46,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.ui.components.autocomplete.DefaultAutoCompleteModel;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.MultiHashMap;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * This factory class generates AutoCompleteTextFields that share a common model

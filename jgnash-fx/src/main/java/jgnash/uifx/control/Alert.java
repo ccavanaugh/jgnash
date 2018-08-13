@@ -38,7 +38,7 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Better behaved Alert class.

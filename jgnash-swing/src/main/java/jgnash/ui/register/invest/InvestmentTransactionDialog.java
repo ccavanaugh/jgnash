@@ -32,7 +32,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterListener;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;

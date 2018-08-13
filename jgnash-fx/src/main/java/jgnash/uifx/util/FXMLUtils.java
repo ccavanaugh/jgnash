@@ -30,7 +30,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

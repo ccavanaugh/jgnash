@@ -31,7 +31,7 @@ import javax.swing.border.LineBorder;
 import jgnash.engine.CurrencyNode;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

@@ -32,8 +32,8 @@ import javafx.scene.input.KeyEvent;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.util.OS;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.OS;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Enhanced ComboBox; provides a UI to the user for entering transaction

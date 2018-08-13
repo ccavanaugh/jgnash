@@ -48,7 +48,7 @@ import jgnash.ui.register.AbstractEntryFormPanel;
 import jgnash.ui.register.PanelType;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterListener;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;

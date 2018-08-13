@@ -29,7 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import jgnash.engine.xstream.XStreamJVM9;
-import jgnash.util.OS;
+import jgnash.resource.util.OS;
 
 import static jgnash.util.LogUtil.logSevere;
 

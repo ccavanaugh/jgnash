@@ -27,7 +27,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Dialog for duplicating a transaction. If the date for the duplicate transaction is the same as the current date

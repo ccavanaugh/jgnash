@@ -48,7 +48,7 @@ import jgnash.ui.util.IconUtils;
 import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh

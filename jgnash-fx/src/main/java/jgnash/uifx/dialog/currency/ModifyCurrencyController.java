@@ -45,7 +45,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller of modifying currencies.

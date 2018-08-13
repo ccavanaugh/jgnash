@@ -9,7 +9,7 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A dialog for displaying recurring event / transactions when they occur.

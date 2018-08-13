@@ -25,7 +25,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import jgnash.ui.recurring.RecurringPanel;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

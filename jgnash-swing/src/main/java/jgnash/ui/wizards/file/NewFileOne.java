@@ -38,8 +38,8 @@ import jgnash.ui.actions.DatabasePathAction;
 import jgnash.ui.components.DataStoreTypeCombo;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

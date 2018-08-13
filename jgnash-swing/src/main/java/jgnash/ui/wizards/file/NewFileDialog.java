@@ -37,7 +37,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.wizard.WizardDialog;
 import jgnash.util.NewFileUtility;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Dialog for creating a new file

@@ -32,8 +32,8 @@ import javafx.scene.control.TextArea;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 /**
  * New file wizard panel.

@@ -33,8 +33,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import jgnash.util.ResourceUtils;
-import jgnash.util.Version;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.Version;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 

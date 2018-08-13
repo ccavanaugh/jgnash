@@ -37,7 +37,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.PopOverButton;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller for handling the exchange of currencies.

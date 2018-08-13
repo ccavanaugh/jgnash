@@ -50,7 +50,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Displays a list of accounts using a table and adds a toolbar for common account methods

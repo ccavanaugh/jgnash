@@ -35,7 +35,7 @@ import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.FileUtils;
 import jgnash.util.NewFileUtility;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Dialog for creating a new file.

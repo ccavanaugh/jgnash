@@ -29,7 +29,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.util.builder.Action;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to open the new file dialog

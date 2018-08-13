@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Enumeration for the reconciled state of a transaction.

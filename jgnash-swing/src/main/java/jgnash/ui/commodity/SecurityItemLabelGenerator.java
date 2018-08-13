@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 
 import jgnash.engine.SecurityNode;
 import jgnash.text.CommodityFormat;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.data.xy.OHLCDataset;

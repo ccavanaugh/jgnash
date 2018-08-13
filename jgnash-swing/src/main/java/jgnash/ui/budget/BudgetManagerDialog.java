@@ -50,7 +50,7 @@ import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;

@@ -57,8 +57,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.OS;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.OS;
+import jgnash.resource.util.ResourceUtils;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

@@ -35,7 +35,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.AccountBalanceDisplayMode;
 import jgnash.ui.register.RegisterFactory;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

@@ -36,8 +36,8 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 /**
  * Import Wizard, base account selection.

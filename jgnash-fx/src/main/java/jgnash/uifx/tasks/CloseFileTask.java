@@ -24,7 +24,7 @@ import javafx.concurrent.Task;
 
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Task to close a file while updating progress.

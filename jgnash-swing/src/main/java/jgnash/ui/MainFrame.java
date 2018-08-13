@@ -43,8 +43,8 @@ import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.builder.ActionParser;
-import jgnash.util.ResourceUtils;
-import jgnash.util.Version;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.Version;
 import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXStatusBar;
 

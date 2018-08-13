@@ -36,7 +36,7 @@ import javax.swing.JPanel;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import org.jdesktop.swingx.util.GraphicsUtilities;
 

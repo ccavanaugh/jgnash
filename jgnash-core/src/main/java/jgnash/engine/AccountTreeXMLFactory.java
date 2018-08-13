@@ -55,8 +55,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.xstream.XStreamJVM9;
-import jgnash.util.ClassPathUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ClassPathUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Import and export a tree of accounts using XML files.

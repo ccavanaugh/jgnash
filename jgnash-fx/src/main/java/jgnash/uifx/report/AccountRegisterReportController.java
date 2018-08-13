@@ -55,7 +55,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.jasper.DynamicJasperReport;
 import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JasperPrint;
 

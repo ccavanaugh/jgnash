@@ -30,7 +30,7 @@ import jgnash.convert.importat.ImportState;
 import jgnash.convert.importat.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

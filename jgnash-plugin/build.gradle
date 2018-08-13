@@ -6,6 +6,6 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash-plugin')
+        attributes("Automatic-Module-Name": 'jgnash.plugin')
     }
 }

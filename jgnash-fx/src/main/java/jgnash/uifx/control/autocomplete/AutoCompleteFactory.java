@@ -42,7 +42,7 @@ import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.MultiHashMap;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * This factory class generates AutoCompleteTextFields that share a common model

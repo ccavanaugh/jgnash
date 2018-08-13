@@ -20,7 +20,7 @@ package jgnash.uifx.util;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.DataStoreType;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Factory class for FileChoosers

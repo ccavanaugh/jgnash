@@ -45,7 +45,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import jgnash.util.NotNull;
-import jgnash.util.OS;
+import jgnash.resource.util.OS;
 
 /**
  * Theme manager.

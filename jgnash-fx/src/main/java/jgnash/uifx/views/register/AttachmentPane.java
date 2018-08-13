@@ -51,7 +51,7 @@ import jgnash.uifx.control.ImageDialog;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller for handling transaction attachments.

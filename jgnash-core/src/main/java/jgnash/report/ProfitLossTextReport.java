@@ -41,7 +41,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.text.CommodityFormat;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Dumps a simple Profit/Loss report to a text file.

@@ -35,8 +35,8 @@ import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 /**
  * New file wizard panel.

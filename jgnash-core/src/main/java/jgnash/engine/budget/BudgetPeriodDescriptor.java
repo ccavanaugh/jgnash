@@ -25,7 +25,7 @@ import java.util.Objects;
 import jgnash.time.Period;
 import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Immutable descriptor for a budget period.

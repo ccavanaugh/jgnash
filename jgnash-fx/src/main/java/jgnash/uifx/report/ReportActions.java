@@ -38,7 +38,7 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Utility class for loading and displaying reports.

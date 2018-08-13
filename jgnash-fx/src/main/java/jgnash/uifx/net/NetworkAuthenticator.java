@@ -35,7 +35,7 @@ import javafx.util.Pair;
 
 import jgnash.net.AbstractAuthenticator;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * An Authenticator that will pop up a dialog and ask for http authentication

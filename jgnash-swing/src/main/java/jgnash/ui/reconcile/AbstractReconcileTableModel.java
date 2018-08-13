@@ -30,7 +30,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.table.PackableTableModel;
 import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.EventQueue;

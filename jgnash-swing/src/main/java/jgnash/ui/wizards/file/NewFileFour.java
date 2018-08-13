@@ -40,8 +40,8 @@ import jgnash.engine.RootAccount;
 import jgnash.ui.components.CheckListCellRenderer;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.ToggleSelectionModel;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

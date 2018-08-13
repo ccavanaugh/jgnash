@@ -24,7 +24,7 @@ import java.util.TimerTask;
 
 import javax.swing.JProgressBar;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Simple memory monitor.

@@ -33,7 +33,7 @@ import javafx.stage.Stage;
 import jgnash.convert.importat.GenericImport;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Import Wizard Dialog.

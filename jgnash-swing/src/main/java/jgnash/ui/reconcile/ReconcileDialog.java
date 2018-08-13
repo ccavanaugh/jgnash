@@ -61,7 +61,7 @@ import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.RegisterFactory;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

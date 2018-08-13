@@ -40,7 +40,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;

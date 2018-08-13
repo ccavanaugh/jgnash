@@ -29,7 +29,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.LocaleObject;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to change the default locale.

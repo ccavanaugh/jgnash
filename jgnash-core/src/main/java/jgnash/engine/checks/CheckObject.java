@@ -19,7 +19,7 @@ package jgnash.engine.checks;
 
 import java.io.Serializable;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Check Object.

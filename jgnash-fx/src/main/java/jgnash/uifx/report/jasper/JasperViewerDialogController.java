@@ -75,7 +75,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;

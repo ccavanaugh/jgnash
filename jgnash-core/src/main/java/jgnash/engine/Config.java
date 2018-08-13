@@ -37,7 +37,7 @@ import javax.persistence.PostLoad;
 
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A general configuration class so that global configuration information may be stored inside the database.

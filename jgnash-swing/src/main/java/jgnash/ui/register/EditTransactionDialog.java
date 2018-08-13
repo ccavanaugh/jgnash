@@ -27,7 +27,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Dialog for editing a newly created transaction.

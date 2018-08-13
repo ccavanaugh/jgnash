@@ -43,9 +43,9 @@ import javafx.stage.Stage;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.FXMLUtils.Pair;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.HTMLResource;
+import jgnash.resource.util.HTMLResource;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * About Dialog.

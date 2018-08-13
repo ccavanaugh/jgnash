@@ -41,7 +41,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller for editing the list of available transaction numbers.

@@ -34,7 +34,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
 import jgnash.text.CommodityFormat;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;

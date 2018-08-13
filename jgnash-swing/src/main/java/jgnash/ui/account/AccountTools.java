@@ -30,7 +30,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.StaticUIMethods;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Static account creation and modification methods

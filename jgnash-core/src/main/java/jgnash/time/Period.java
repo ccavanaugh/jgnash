@@ -17,7 +17,7 @@
  */
 package jgnash.time;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Period Enum.

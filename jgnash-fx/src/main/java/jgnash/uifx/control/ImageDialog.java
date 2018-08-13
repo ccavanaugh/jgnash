@@ -41,7 +41,7 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A dialog for displaying and printing an image.

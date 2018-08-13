@@ -39,7 +39,7 @@ import jgnash.uifx.Options;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Dialog for creating and editing new investment transactions.

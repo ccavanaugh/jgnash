@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Historical event descriptor for securities.

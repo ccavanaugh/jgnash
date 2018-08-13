@@ -31,7 +31,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.JXTitledPanel;
 

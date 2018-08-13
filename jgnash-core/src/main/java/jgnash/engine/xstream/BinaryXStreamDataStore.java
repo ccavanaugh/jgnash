@@ -32,7 +32,7 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * XML specific code for data storage and creating an engine.

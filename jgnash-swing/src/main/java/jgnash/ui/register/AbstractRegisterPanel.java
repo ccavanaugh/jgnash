@@ -62,7 +62,7 @@ import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.register.table.RegisterTable;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.EncodeDecode;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Account register panels should extend this class

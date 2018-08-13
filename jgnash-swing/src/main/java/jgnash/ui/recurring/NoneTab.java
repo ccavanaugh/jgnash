@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 
 import jgnash.engine.recurring.OneTimeReminder;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 

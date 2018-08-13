@@ -56,7 +56,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.LockedCommodityNode;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Dialog for selecting allowed account securities from a list.  If a security is used within the account, selection

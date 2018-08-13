@@ -32,7 +32,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.FileUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to export the current account tree

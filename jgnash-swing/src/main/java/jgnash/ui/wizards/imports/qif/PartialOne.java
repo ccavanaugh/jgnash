@@ -37,8 +37,8 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.ResourceUtils;
-import jgnash.util.TextResource;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

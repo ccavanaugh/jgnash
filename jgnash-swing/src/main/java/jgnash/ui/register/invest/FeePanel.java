@@ -38,7 +38,7 @@ import jgnash.ui.ThemeManager;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.plaf.NimbusUtils;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

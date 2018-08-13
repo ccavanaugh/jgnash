@@ -17,7 +17,7 @@
  */
 package jgnash.engine.recurring;
 
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Reminder type class.

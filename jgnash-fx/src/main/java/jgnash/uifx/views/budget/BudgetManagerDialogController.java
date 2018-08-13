@@ -45,7 +45,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.TextInputDialog;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Controller for budget management.

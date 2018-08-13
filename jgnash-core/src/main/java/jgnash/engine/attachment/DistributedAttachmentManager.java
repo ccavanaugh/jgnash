@@ -38,7 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.util.FileUtils;
-import jgnash.util.OS;
+import jgnash.resource.util.OS;
 
 /**
  * Attachment handler for a remote database.

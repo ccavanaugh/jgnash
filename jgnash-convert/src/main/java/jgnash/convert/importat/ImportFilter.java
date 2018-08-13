@@ -22,7 +22,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.util.EncodeDecode;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
-import jgnash.util.OS;
+import jgnash.resource.util.OS;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;

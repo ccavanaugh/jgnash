@@ -45,7 +45,7 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.time.DateUtils;
-import jgnash.util.ResourceUtils;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * A dialog for displaying recurring event / transactions when they occur.
