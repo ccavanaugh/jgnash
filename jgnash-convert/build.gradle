@@ -12,6 +12,6 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash-convert')
+        attributes("Automatic-Module-Name": 'jgnash.convert')
     }
 }

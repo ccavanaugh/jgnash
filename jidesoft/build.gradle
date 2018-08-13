@@ -2,6 +2,6 @@ description = 'JIDE Software'
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash-jidesoft')
+        attributes("Automatic-Module-Name": 'com.jidesoft.swing')
     }
 }
