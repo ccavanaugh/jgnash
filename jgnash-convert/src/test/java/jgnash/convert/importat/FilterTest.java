@@ -30,7 +30,7 @@ class FilterTest {
     @Test
     void simpleTest() {
 
-        ImportFilter importFilter = new ImportFilter("/jgnash/imports/tidy.js");
+        ImportFilter importFilter = new ImportFilter("/jgnash/convert/scripts/tidy.js");
 
         ImportTransaction importTransaction = new ImportTransaction();
         importTransaction.setMemo("test");
