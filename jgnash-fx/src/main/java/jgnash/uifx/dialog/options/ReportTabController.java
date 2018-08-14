@@ -20,7 +20,7 @@ package jgnash.uifx.dialog.options;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.text.Font;
-import jgnash.ui.report.jasper.ReportFactory;
+import jgnash.report.ui.jasper.ReportFactory;
 
 /**
  * Controller for Report Options.

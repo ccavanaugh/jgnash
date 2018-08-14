@@ -19,7 +19,7 @@ package jgnash.uifx.report.jasper;
 
 import javafx.beans.property.SimpleObjectProperty;
 
-import jgnash.ui.report.jasper.BaseDynamicJasperReport;
+import jgnash.report.ui.jasper.BaseDynamicJasperReport;
 import jgnash.uifx.StaticUIMethods;
 
 /**

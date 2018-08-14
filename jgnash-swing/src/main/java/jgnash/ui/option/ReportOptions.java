@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 import javax.swing.JPanel;
 
 import jgnash.ui.components.FontComboBox;
-import jgnash.ui.report.jasper.ReportFactory;
+import jgnash.report.ui.jasper.ReportFactory;
 import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;

@@ -2,8 +2,8 @@ package jgnash.uifx.report.jasper;
 
 import ar.com.fdvs.dj.domain.Style;
 
-import jgnash.ui.report.jasper.AWTFontUtilities;
-import jgnash.ui.report.jasper.ReportFactory;
+import jgnash.report.ui.jasper.AWTFontUtilities;
+import jgnash.report.ui.jasper.ReportFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

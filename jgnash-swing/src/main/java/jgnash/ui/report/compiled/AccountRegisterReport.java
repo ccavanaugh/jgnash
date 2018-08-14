@@ -39,9 +39,9 @@ import jgnash.ui.register.table.FullCommodityStyle;
 import jgnash.ui.register.table.QuantityStyle;
 import jgnash.ui.register.table.RegisterModel;
 import jgnash.ui.register.table.ShortCommodityStyle;
-import jgnash.ui.report.jasper.AbstractReportTableModel;
-import jgnash.ui.report.jasper.ColumnHeaderStyle;
-import jgnash.ui.report.jasper.ColumnStyle;
+import jgnash.report.ui.jasper.AbstractReportTableModel;
+import jgnash.report.ui.jasper.ColumnHeaderStyle;
+import jgnash.report.ui.jasper.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
 import jgnash.ui.util.IconUtils;
 

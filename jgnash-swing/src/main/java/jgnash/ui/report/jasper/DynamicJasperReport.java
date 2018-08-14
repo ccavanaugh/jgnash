@@ -19,6 +19,7 @@ package jgnash.ui.report.jasper;
 
 import javax.swing.JPanel;
 
+import jgnash.report.ui.jasper.BaseDynamicJasperReport;
 import jgnash.ui.StaticUIMethods;
 
 /**

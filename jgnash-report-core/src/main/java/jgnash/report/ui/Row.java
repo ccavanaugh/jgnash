@@ -15,25 +15,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.ui.report.jasper;
+package jgnash.report.ui;
+
+import jgnash.util.Nullable;
 
 /**
- * Available report column styles
+ * Support interface to wrap a row of table data into one object
  *
  * @author Craig Cavanaugh
  */
-public enum ColumnStyle {
-    AMOUNT_SUM,
-    BALANCE,
-    BALANCE_WITH_SUM,
-    BALANCE_WITH_SUM_AND_GLOBAL,
-    GROUP,
-    GROUP_NO_HEADER,
-    PERCENTAGE,
-    QUANTITY,
-    SHORT_AMOUNT,
-    SHORT_DATE,
-    STRING,
-    CROSSTAB_TOTAL,
-    TIMESTAMP
+public abstract class Row<T> {
+
+    private final T object;
+
+    protected Row(@Nullable T object) {
+        this.object = object;
+    }
+
+    public T getValue() {
+        return object;
+    }
+
+    /**
+     * Returns the value given a column index
+     *
+     * @param columnIndex column index
+     * @return column value
+     */
+    public abstract Object getValueAt(final int columnIndex);
 }

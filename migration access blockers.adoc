@@ -1,0 +1,2 @@
+Illegal reflective access by com.lowagie.text.pdf.MappedRandomAccessFile$1 (file:/home/craig/.m2/repository/com/lowagie/itext/2.1.7.js6/itext-2.1.7.js6.jar) to method java.nio.DirectByteBuffer.cleaner()
+WARNING: Please consider reporting this to the maintainers of com.lowagie.text.pdf.MappedRandomAccessFile$1
