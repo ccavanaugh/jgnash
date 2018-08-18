@@ -205,7 +205,7 @@ public abstract class EngineTest {
     @Test
     void testSecurityNodeStorage() {
 
-        final String SECURITY_SYMBOL ="GOOG";
+        final String SECURITY_SYMBOL = "GOOG";
 
         SecurityNode securityNode = new SecurityNode(e.getDefaultCurrency());
 
@@ -765,12 +765,21 @@ public abstract class EngineTest {
 
         assertEquals(3, e.getTransactions().size());
 
+        a = e.getAccountByName(ACCOUNT_NAME);
+        assertEquals(3, a.getTransactionCount());
+
+        for (int i = 2; i >=0 ; i--) {
+            List<Transaction> transactions = e.getTransactions();
+            assertTrue(e.removeTransaction(transactions.get(0)));
+            assertEquals(i, e.getTransactions().size());
+        }
+
         // close and reopen to force check for persistence
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
         a = e.getAccountByName(ACCOUNT_NAME);
-        assertEquals(3, a.getTransactionCount());
+        assertEquals(0, a.getTransactionCount());
     }
 
     @Test
