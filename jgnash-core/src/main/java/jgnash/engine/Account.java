@@ -1269,7 +1269,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param node SecurityNode to add
      * @return true if successful
      */
-    public boolean addSecurity(final SecurityNode node) {
+    boolean addSecurity(final SecurityNode node) {
         boolean result = false;
 
         if (node != null && memberOf(AccountGroup.INVEST) && !containsSecurity(node)) {

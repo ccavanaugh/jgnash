@@ -185,10 +185,6 @@ public class AccountPropertiesController {
         account.setVisible(!hideAccountCheckBox.isSelected());
         account.setExcludedFromBudget(excludeBudgetCheckBox.isSelected());
 
-        if (account.getAccountType().getAccountGroup().equals(AccountGroup.INVEST)) {
-            securityNodeSet.forEach(account::addSecurity);
-        }
-
         return account;
     }
 

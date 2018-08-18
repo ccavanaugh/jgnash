@@ -97,6 +97,12 @@ public final class StaticAccountsMethods {
             Account account = controller.getTemplate();
 
             engine.addAccount(account.getParent(), account);
+
+            if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+                if (!engine.updateAccountSecurities(account, controller.getSecurityNodes())) {
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityAccountUpdate"));
+                }
+            }
         }
     }
 

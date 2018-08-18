@@ -17,7 +17,6 @@
  */
 package jgnash.ui.account;
 
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -28,7 +27,6 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.SecurityNode;
 import jgnash.ui.StaticUIMethods;
 import jgnash.resource.util.ResourceUtils;
 
@@ -75,12 +73,6 @@ class AccountTools {
 
             Account newAccount = new Account(accType, currency);
 
-            if (accType.getAccountGroup() == AccountGroup.INVEST) {
-                Collection<SecurityNode> collection = dlg.getAccountSecurities();
-
-                collection.forEach(newAccount::addSecurity);
-            }
-
             newAccount.setName(dlg.getAccountName());
             newAccount.setAccountCode(dlg.getAccountCode());
             newAccount.setAccountNumber(dlg.getAccountNumber());
@@ -93,6 +85,11 @@ class AccountTools {
             newAccount.setExcludedFromBudget(dlg.isExcludedFromBudget());
 
             engine.addAccount(dlg.getParentAccount(), newAccount);
+
+            // add the securities is this is an investment account
+            if (accType.getAccountGroup() == AccountGroup.INVEST && !dlg.getAccountSecurities().isEmpty()) {
+                engine.updateAccountSecurities(newAccount, dlg.getAccountSecurities());
+            }
         }
     }
 
