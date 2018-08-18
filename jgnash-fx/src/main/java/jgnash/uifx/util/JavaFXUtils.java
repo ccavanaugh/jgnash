@@ -26,6 +26,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -135,6 +136,7 @@ public class JavaFXUtils {
      *
      * @param runnable the Runnable whose run method will be executed on the JavaFX Application Thread
      */
+    @SuppressWarnings("WeakerAccess")
     public static void runAndWait(@NotNull final Runnable runnable) {
 
         if (Platform.isFxApplicationThread()) { // run synchronously if already on the Application Thread
@@ -156,9 +158,10 @@ public class JavaFXUtils {
             });
 
             try {
-                doneLatch.await();  // TODO, allow use of a timeout value to prevent stalls?
+                doneLatch.await(1, TimeUnit.MINUTES);   // protect against an infinite hang
             } catch (final InterruptedException e) {
                 logSevere(JavaFXUtils.class, e);
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -254,7 +257,6 @@ public class JavaFXUtils {
         return width;
     }
 
-    @SuppressWarnings("unused")
 	private static double _getDisplayedTextWidth(@NotNull final String displayString, @Nullable final String style) {
         final Text text = new Text(displayString);
         
