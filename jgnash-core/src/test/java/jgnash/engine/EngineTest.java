@@ -507,12 +507,6 @@ public abstract class EngineTest {
         assertTrue(!sep.isEmpty());
     }
 
-    @Disabled
-    @Test
-    void testGetAccountList() {
-        fail("Not yet implemented");
-    }
-
     @Test
     void testGetAccountByUuid() {
         UUID rootUUID = e.getRootAccount().getUuid();
@@ -835,5 +829,25 @@ public abstract class EngineTest {
         } catch (final Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    @Test
+    void testTransactionNumberList() {
+        List<String> numbers = e.getTransactionNumberList();
+
+        int size = numbers.size();
+
+        assertTrue(size > 0);
+
+        numbers.add("test 1");
+        numbers.add("test 2");
+
+        e.setTransactionNumberList(numbers);
+
+        List<String> numbers2 = e.getTransactionNumberList();
+
+        assertArrayEquals(numbers.toArray(), numbers2.toArray());
+
+        assertEquals((size + 2), numbers2.size());
     }
 }

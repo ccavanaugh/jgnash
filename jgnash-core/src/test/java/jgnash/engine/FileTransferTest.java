@@ -258,6 +258,10 @@ class FileTransferTest {
             assertTrue(Files.exists(remoteTemp));
             assertNotEquals(remoteTemp.toString(), tempAttachment.toString());
 
+            // test attachment removal
+            assertTrue(e.removeAttachment(moveFile.getFileName().toString()));
+            assertFalse(Files.exists(moveFile));
+
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         } catch (Exception e) {
             Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
