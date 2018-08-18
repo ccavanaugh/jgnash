@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -260,6 +261,19 @@ public abstract class EngineTest {
         assertNotNull(securityNode);
 
         assertEquals(0, securityNode.getHistoryEvents().size());
+
+        Account a = new Account(AccountType.INVEST, e.getDefaultCurrency());
+        a.setName("Invest");
+        assertTrue(e.addAccount(e.getRootAccount(), a));
+
+        // try again
+        assertFalse(e.addAccount(e.getRootAccount(), a));
+
+        assertTrue(e.updateAccountSecurities(a, Collections.singletonList(securityNode)));
+        assertEquals(1, a.getSecurities().size());
+
+        assertTrue(e.updateAccountSecurities(a, Collections.emptyList()));
+        assertEquals(0, a.getSecurities().size());
     }
 
 
@@ -433,23 +447,6 @@ public abstract class EngineTest {
         assertEquals(0, new BigDecimal("1.01").compareTo(rate.getRate(yesterday)));
     }
 
-    @Disabled
-    @Test
-    void testGetSecurities() {
-        fail("Not yet implemented");
-    }
-
-    @Disabled
-    @Test
-    void testRemoveCommodity() {
-        fail("Not yet implemented");
-    }
-
-    @Disabled
-    @Test
-    void testRemoveSecurityHistory() {
-        fail("Not yet implemented");
-    }
 
     @Disabled
     @Test
@@ -744,7 +741,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    void testAddGetTransactions() {
+    void testAddGetRemoveReconcileSingleEntryTransactions() {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -754,12 +751,12 @@ public abstract class EngineTest {
 
         e.addAccount(e.getRootAccount(), a);
 
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo",
-                "payee", "1"));
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo",
-                "payee", "2"));
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo",
-                "payee", "3"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo1",
+                "payee1", "1"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo2",
+                "payee2", "2"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo3",
+                "payee3", "3"));
 
         assertEquals(3, a.getTransactionCount());
 
@@ -767,6 +764,28 @@ public abstract class EngineTest {
 
         a = e.getAccountByName(ACCOUNT_NAME);
         assertEquals(3, a.getTransactionCount());
+
+        // Check for correct reconciliation
+        for (final Transaction transaction : e.getTransactions()) {
+            assertEquals(transaction.getReconciled(a), ReconciledState.NOT_RECONCILED);
+        }
+
+        for (final Transaction transaction : e.getTransactions()) {
+            e.setTransactionReconciled(transaction, a, ReconciledState.CLEARED);
+        }
+
+        for (final Transaction transaction : e.getTransactions()) {
+            assertEquals(transaction.getReconciled(a), ReconciledState.CLEARED);
+        }
+
+        for (final Transaction transaction : e.getTransactions()) {
+            e.setTransactionReconciled(transaction, a, ReconciledState.RECONCILED);
+        }
+
+        for (final Transaction transaction : e.getTransactions()) {
+            assertEquals(transaction.getReconciled(a), ReconciledState.RECONCILED);
+        }
+
 
         for (int i = 2; i >=0 ; i--) {
             List<Transaction> transactions = e.getTransactions();
