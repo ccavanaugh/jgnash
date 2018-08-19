@@ -67,7 +67,7 @@ public class FontAwesomeLabel extends Label {
         this(glyphValue, sizeValue, null);
     }
 
-    public FontAwesomeLabel(final FAIcon glyphValue, final Double sizeValue, Paint paint) {
+    public FontAwesomeLabel(final FAIcon glyphValue, final Double sizeValue, final Paint paint) {
 
         sizeProperty.set(sizeValue);
 
@@ -86,6 +86,8 @@ public class FontAwesomeLabel extends Label {
         }
 
         getStylesheets().addAll(MainView.DEFAULT_CSS);
+
+        setCache(true); // enable caching
     }
 
     /**
@@ -138,7 +140,7 @@ public class FontAwesomeLabel extends Label {
         sizeProperty.set(value);
     }
 
-    private String getUnicode(final String string) {
+    private static String getUnicode(final String string) {
         return FAIcon.valueOf(string).getUnicode();
     }
 
