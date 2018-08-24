@@ -45,6 +45,7 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.WeakListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -81,6 +82,7 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
+import jgnash.uifx.views.AccountBalanceDisplayMode;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
 import jgnash.util.function.MemoPredicate;
 import jgnash.util.function.PayeePredicate;
@@ -164,6 +166,18 @@ abstract class RegisterTableController {
 	// Used for formatting of the selection summary tooltip
 	private NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Object> filterChangeListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Number> selectionSizeListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private ListChangeListener<Transaction> selectedItemsListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<AccountBalanceDisplayMode> accountBalanceDisplayModeChangeListener;
+
 	@FXML
 	void initialize() {
 
@@ -198,31 +212,36 @@ abstract class RegisterTableController {
 		selectedTransaction.bind(tableView.getSelectionModel().selectedItemProperty());
 
 		// Update the selection size property when the selection list changes
-		tableView.getSelectionModel().getSelectedItems()
-				.addListener((ListChangeListener<Transaction>) c -> selectionSize
-						.set(tableView.getSelectionModel().getSelectedIndices().size()));
+        selectedItemsListener = c -> selectionSize.set(tableView.getSelectionModel().getSelectedIndices().size());
 
-		selectionSize.addListener((observable, oldValue, newValue) -> {
-			if ((Integer) newValue > 1) {
-				final List<Transaction> transactions = new ArrayList<>(
-						tableView.getSelectionModel().getSelectedItems());
-				BigDecimal total = BigDecimal.ZERO;
+        tableView.getSelectionModel().getSelectedItems().addListener(new WeakListChangeListener<>(selectedItemsListener));
 
-				for (final Transaction transaction : transactions) {
-					if (transaction != null) {
-						total = total.add(transaction.getAmount(account.get()));
-					}
-				}
-				selectionSummaryTooltip.setText(numberFormat.format(AccountBalanceDisplayManager
-						.convertToSelectedBalanceMode(account.get().getAccountType(), total)));
-			} else {
-				selectionSummaryTooltip.setText(null);
-			}
-		});
+		// updates a tooltip based on current selection
+        selectionSizeListener = (observable, oldValue, newValue) -> {
+            if ((Integer) newValue > 1) {
+                final List<Transaction> transactions = new ArrayList<>(
+                        tableView.getSelectionModel().getSelectedItems());
+                BigDecimal total = BigDecimal.ZERO;
+
+                for (final Transaction transaction : transactions) {
+                    if (transaction != null) {
+                        total = total.add(transaction.getAmount(account.get()));
+                    }
+                }
+                selectionSummaryTooltip.setText(numberFormat.format(AccountBalanceDisplayManager
+                        .convertToSelectedBalanceMode(account.get().getAccountType(), total)));
+            } else {
+                selectionSummaryTooltip.setText(null);
+            }
+        };
+
+		selectionSize.addListener(new WeakChangeListener<>(selectionSizeListener));
+
+        accountBalanceDisplayModeChangeListener = (observable, oldValue, newValue) -> tableView.refresh();
 
 		// For the table view to refresh itself if the mode changes
 		AccountBalanceDisplayManager.accountBalanceDisplayMode()
-				.addListener((observable, oldValue, newValue) -> tableView.refresh());
+                .addListener(new WeakChangeListener<>(accountBalanceDisplayModeChangeListener));
 
 		reconciledStateFilterComboBox.getItems().addAll(ReconciledStateEnum.values());
 		reconciledStateFilterComboBox.setValue(ReconciledStateEnum.ALL);
@@ -230,20 +249,20 @@ abstract class RegisterTableController {
 		transactionAgeFilterComboBox.getItems().addAll(AgeEnum.values());
 		transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
 
-		final ChangeListener<Object> filterChangeListener = (observable, oldValue, newValue) -> handleFilterChange();
+		filterChangeListener = (observable, oldValue, newValue) -> handleFilterChange();
 
-		reconciledStateFilterComboBox.valueProperty().addListener(filterChangeListener);
-		transactionAgeFilterComboBox.valueProperty().addListener(filterChangeListener);
+		reconciledStateFilterComboBox.valueProperty().addListener(new WeakChangeListener<>(filterChangeListener));
+		transactionAgeFilterComboBox.valueProperty().addListener(new WeakChangeListener<>(filterChangeListener));
 
 		// Rebuild filters when regex properties change
-		Options.regexForFiltersProperty().addListener(filterChangeListener);
+		Options.regexForFiltersProperty().addListener(new WeakChangeListener<>(filterChangeListener));
 
 		if (memoFilterTextField != null) { // memo filter may not have been initialized for all register types
-			memoFilterTextField.textProperty().addListener(filterChangeListener);
+			memoFilterTextField.textProperty().addListener(new WeakChangeListener<>(filterChangeListener));
 		}
 
 		if (payeeFilterTextField != null) { // payee filter may not have been initialized for all register types
-			payeeFilterTextField.textProperty().addListener(filterChangeListener);
+			payeeFilterTextField.textProperty().addListener(new WeakChangeListener<>(filterChangeListener));
 		}
 
 		// Repack the table if the font scale changes, must use a weak listener to prevent memory leaks
