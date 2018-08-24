@@ -254,6 +254,10 @@ public class ThemeManager {
         return styleProperty;
     }
 
+    /**
+     * Font scale property.  Always use a weak listener to prevent leaks
+     * @return current scale factor
+     */
     public static DoubleProperty fontScaleProperty() {
         return fontScale;
     }
