@@ -27,6 +27,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -192,6 +193,12 @@ public class BudgetTableController implements MessageListener {
     private ChangeListener<Number> tableWidthChangeListener;
 
     /**
+     * Listens for changes to the font scale
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Number> fontScaleListener;
+
+    /**
      * Rate limiting executor.
      */
     private ScheduledThreadPoolExecutor rateLimitExecutor;
@@ -308,7 +315,9 @@ public class BudgetTableController implements MessageListener {
                 }
         );
 
-        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> updateHeights());
+        // listen for changes in the font scale and update.  Listener needs to be weak to prevent memory leaks
+        fontScaleListener = (observable, oldValue, newValue) -> updateHeights();
+        ThemeManager.fontScaleProperty().addListener(new WeakChangeListener<>(fontScaleListener));
     }
 
     private void rateLimitUpdate(final Runnable runnable) {

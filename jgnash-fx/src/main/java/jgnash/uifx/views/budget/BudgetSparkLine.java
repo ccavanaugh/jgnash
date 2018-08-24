@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
@@ -54,8 +56,16 @@ class BudgetSparkLine extends Canvas {
 
     private double periodGap = DEFAULT_PERIOD_GAP;
 
+    /**
+     * Listens for changes to the font scale
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ChangeListener<Number> fontScaleListener;
+
     BudgetSparkLine(final List<BigDecimal> amounts) {
-        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> draw());
+
+        fontScaleListener = (observable, oldValue, newValue) -> draw();
+        ThemeManager.fontScaleProperty().addListener(new WeakChangeListener<>(fontScaleListener));
 
         setAmounts(amounts);
     }
@@ -68,7 +78,7 @@ class BudgetSparkLine extends Canvas {
     }
 
     private double calculateWidth() {
-        return (amounts.size() * barWidth )+ (amounts.size() * periodGap) + (MARGIN * 2) + barWidth;
+        return (amounts.size() * barWidth) + (amounts.size() * periodGap) + (MARGIN * 2) + barWidth;
     }
 
     private void draw() {
