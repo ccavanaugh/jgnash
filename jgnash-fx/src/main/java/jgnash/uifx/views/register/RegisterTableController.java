@@ -41,6 +41,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -72,6 +73,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.Options;
 import jgnash.uifx.skin.StyleClass;
@@ -80,7 +82,6 @@ import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
-import jgnash.resource.util.ResourceUtils;
 import jgnash.util.function.MemoPredicate;
 import jgnash.util.function.PayeePredicate;
 import jgnash.util.function.ReconciledPredicate;
@@ -127,6 +128,12 @@ abstract class RegisterTableController {
 
 	// Used for selection summary tooltip
 	private final Tooltip selectionSummaryTooltip = new Tooltip();
+
+    /**
+     * Listens for changes to the font scale
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Number> fontScaleListener;
 
 	@FXML
 	protected TableView<Transaction> tableView;
@@ -239,8 +246,9 @@ abstract class RegisterTableController {
 			payeeFilterTextField.textProperty().addListener(filterChangeListener);
 		}
 
-		// Repack the table if the font scale changes
-		ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> tableViewManager.packTable());
+		// Repack the table if the font scale changes, must use a weak listener to prevent memory leaks
+        fontScaleListener = (observable, oldValue, newValue) -> tableViewManager.packTable();
+		ThemeManager.fontScaleProperty().addListener(new WeakChangeListener<>(fontScaleListener));
 
 		// Listen for transaction events
 		MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);

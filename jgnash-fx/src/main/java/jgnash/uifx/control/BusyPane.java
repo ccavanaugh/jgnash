@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.control;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.geometry.Pos;
@@ -45,6 +47,12 @@ public class BusyPane extends StackPane {
 
     private final ProgressIndicator progressIndicator;
 
+    /**
+     * Listens for changes to the font scale
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Number> fontScaleListener;
+
     public BusyPane() {
 
         imageView = new ImageView();
@@ -62,7 +70,8 @@ public class BusyPane extends StackPane {
 
         updateFont();
 
-        ThemeManager.fontScaleProperty().addListener((observable, oldValue, newValue) -> updateFont());
+        fontScaleListener = (observable, oldValue, newValue) -> updateFont();
+        ThemeManager.fontScaleProperty().addListener(new WeakChangeListener<>(fontScaleListener));
 
         getChildren().addAll(gridPane);
 
