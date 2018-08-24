@@ -27,6 +27,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -53,6 +55,7 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
+import jgnash.uifx.views.AccountBalanceDisplayMode;
 import jgnash.uifx.views.register.RegisterActions;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.util.EncodeDecode;
@@ -96,6 +99,9 @@ public class AccountsViewController implements MessageListener {
     @FXML
     private Button zoomButton;
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<AccountBalanceDisplayMode> accountBalanceDisplayModeChangeListener;
+
     @FXML
     private void initialize() {
         deleteButton.setDisable(true);
@@ -115,8 +121,10 @@ public class AccountsViewController implements MessageListener {
 
         modifyButton.disableProperty().bind(selectedAccount.isNull());
 
+        accountBalanceDisplayModeChangeListener = (observable, oldValue, newValue) -> treeTableView.refresh();
+
         AccountBalanceDisplayManager.accountBalanceDisplayMode()
-                .addListener((observable, oldValue, newValue) -> treeTableView.refresh());
+                .addListener(new WeakChangeListener<>(accountBalanceDisplayModeChangeListener));
     }
 
     @SuppressWarnings("unchecked")
