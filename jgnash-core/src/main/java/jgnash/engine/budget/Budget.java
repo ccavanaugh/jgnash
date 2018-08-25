@@ -19,8 +19,10 @@ package jgnash.engine.budget;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,6 +36,7 @@ import javax.persistence.PostLoad;
 
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
+import jgnash.engine.xstream.UUIDConverter;
 import jgnash.time.Period;
 import jgnash.util.NotNull;
 import jgnash.resource.util.ResourceUtils;
@@ -125,7 +128,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Returns and accounts goals. If goals have not yet been specified, then an empty set is automatically assigned and
+     * Returns an accounts goals. If goals have not yet been specified, then an empty set is automatically assigned and
      * returned
      *
      * @param account {@code Account} to retrieve the goals for
@@ -329,5 +332,20 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     @PostLoad
     protected void postLoad() {
         workingYear = LocalDate.now().getYear();
+
+
+        // TODO: The conversion below is to be removed for jGnash 3.x
+        // fix-up and old Account UUID's that may have been converted
+        final Set<String> keys = new HashSet<>(accountGoals.keySet());
+
+        for (final String key : keys) {
+            if (key.length() <= 32) {   // old uuid format
+                final BudgetGoal budgetGoal = accountGoals.get(key);
+
+                // update the map with the correct UUID format
+                accountGoals.remove(key);
+                accountGoals.put(UUIDConverter.fixUUID(key), budgetGoal);
+            }
+        }
     }
 }
