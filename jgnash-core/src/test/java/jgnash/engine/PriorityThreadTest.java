@@ -17,6 +17,9 @@
  */
 package jgnash.engine;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import jgnash.engine.concurrent.Priority;
@@ -37,19 +40,23 @@ class PriorityThreadTest {
 
         final PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor();
 
+        final List<Future> futures = new ArrayList<>();
+
         for (int i = 0; i < 25; i++) {
-            executorService.submit(() -> {
+            Future future = executorService.submit(() -> {
                 final long value = atomicLongSequence.incrementAndGet();
 
                 Thread.sleep(500);
                 System.out.println("Background Callable: " + value);
                 return null;
             }, Priority.BACKGROUND);
+
+            futures.add(future);
         }
 
         Thread.sleep(1999);
 
-        executorService.submit(() -> {
+        final Future priorityFuture = executorService.submit(() -> {
             final long value = atomicLongSequence.incrementAndGet();
 
             Thread.sleep(500);
@@ -59,7 +66,12 @@ class PriorityThreadTest {
             return null;
         });
 
-        Thread.sleep(5000);
+        futures.add(priorityFuture);
+
+        // wait for futures to complete
+        for (Future future : futures) {
+            future.get();
+        }
 
         executorService.shutdown();
 
