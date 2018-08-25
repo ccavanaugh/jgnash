@@ -121,6 +121,7 @@ public class AutoCompleteFactory {
                     return;
                 case FILE_CLOSING:
                     load = false; // prevent loading
+                    purge();
                     return;
                 default:
             }
