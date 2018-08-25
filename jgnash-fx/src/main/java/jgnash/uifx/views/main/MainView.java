@@ -310,7 +310,6 @@ public class MainView implements MessageListener {
         // Push to the background executor so that a load before current load is finished won't trigger a NPE
         backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> {
             tabViewPane.getTabs().clear();
-            tabViewPane.getSelectionModel().selectedIndexProperty().removeListener(tabListener);
             tabListener = null;
         }));
     }
