@@ -34,6 +34,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -93,6 +95,9 @@ public class RecurringViewController implements MessageListener {
     private static final int START_UP_DELAY = 45 * 1000;   // 45 seconds
 
     private final AtomicBoolean dialogShowing = new AtomicBoolean(false);
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Number> snoozePeriodListener;
 
     @FXML
     private void initialize() {
@@ -164,7 +169,7 @@ public class RecurringViewController implements MessageListener {
         startTimer(true);
 
         // Update the period when the snooze value changes
-        Options.reminderSnoozePeriodProperty().addListener((observable, oldValue, newValue) -> {
+        snoozePeriodListener = (observable, oldValue, newValue) -> {
             stopTimer();
 
             // Don't start the timer if the dialog is up, otherwise events may get backed up
@@ -172,7 +177,9 @@ public class RecurringViewController implements MessageListener {
             if (!dialogShowing.get()) {
                 startTimer(false);
             }
-        });
+        };
+
+        Options.reminderSnoozePeriodProperty().addListener(new WeakChangeListener<>(snoozePeriodListener));
     }
 
     private void loadTable() {
