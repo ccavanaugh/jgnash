@@ -55,6 +55,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
                 DataStoreType.BINARY_XSTREAM);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testParser() {
 
@@ -77,7 +78,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
             // size fluctuates
             if (events.size() <= 221 && events.size() >= 220) {
-                assertTrue(220 <= events.size() && events.size() <= 221);
+                assertTrue(events.size() <= 221 && events.size() >= 220);
                 return;
             }
         }
