@@ -41,7 +41,7 @@ import jgnash.util.Nullable;
  */
 public class BusyPane extends StackPane {
 
-    private final ImageView imageView;
+    private ImageView imageView;
 
     private final Label messageLabel;
 
@@ -54,10 +54,6 @@ public class BusyPane extends StackPane {
     private ChangeListener<Number> fontScaleListener;
 
     public BusyPane() {
-
-        imageView = new ImageView();
-        imageView.setFocusTraversable(false);
-        imageView.setEffect(new BoxBlur(4, 4, 2));
 
         progressIndicator = new ProgressIndicator();
         messageLabel = new Label();
@@ -78,6 +74,16 @@ public class BusyPane extends StackPane {
         setVisible(false);
     }
 
+    private ImageView getImageView() {
+        ImageView imageView = new ImageView();
+        imageView.setFocusTraversable(false);
+        imageView.setEffect(new BoxBlur(4, 4, 2));
+
+        imageView.setImage(getScene().getRoot().snapshot(null, null));
+
+        return imageView;
+    }
+
     private void updateFont() {
         messageLabel.fontProperty().set(Font.font(null, FontWeight.BOLD, null,
                 ThemeManager.getBaseTextHeight() * 1.2));
@@ -88,7 +94,15 @@ public class BusyPane extends StackPane {
             setVisible(false);
             progressIndicator.progressProperty().unbind();
             messageLabel.textProperty().unbind();
+            getChildren().remove(imageView);
+
+            imageView.setImage(null);   // don't retain the image, conserve memory
+            imageView = null;
         } else {
+
+            // get the snapshot
+            imageView = getImageView();
+
             messageLabel.textProperty().bind(task.messageProperty());
             progressIndicator.progressProperty().bind(task.progressProperty());
 
@@ -104,12 +118,10 @@ public class BusyPane extends StackPane {
 
     @Override protected void layoutChildren() {
         super.layoutChildren();
+
         if (getParent() != null && isVisible()) {
             setVisible(false);
             getChildren().remove(imageView);
-
-            imageView.setImage(getScene().getRoot().snapshot(null, null));
-
             getChildren().add(imageView);
             imageView.toBack();
             setVisible(true);
