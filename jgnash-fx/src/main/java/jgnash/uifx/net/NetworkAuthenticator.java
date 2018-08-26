@@ -122,6 +122,8 @@ public class NetworkAuthenticator extends AbstractAuthenticator {
             });
         }
 
+        //noinspection ConstantConditions
+        // potential null is okay
         return new PasswordAuthentication(user[0], pass[0]);
     }
 }
