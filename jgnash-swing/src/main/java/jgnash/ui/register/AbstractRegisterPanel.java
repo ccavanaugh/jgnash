@@ -340,11 +340,16 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        Reminder reminder = Engine.createDefaultReminder(getSelectedTransaction(), getAccount());
-        reminder = RecurringEntryDialog.showDialog(reminder);
+        final Transaction transaction = getSelectedTransaction();
 
-        if (reminder != null) {
-            engine.addReminder(reminder);
+        if (transaction != null) {
+
+            Reminder reminder = Engine.createDefaultReminder(transaction, getAccount());
+            reminder = RecurringEntryDialog.showDialog(reminder);
+
+            if (reminder != null) {
+                engine.addReminder(reminder);
+            }
         }
     }
 
