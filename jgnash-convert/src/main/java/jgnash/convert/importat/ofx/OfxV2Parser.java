@@ -945,7 +945,7 @@ public class OfxV2Parser implements OfxTags {
         logger.exiting(OfxV2Parser.class.getName(), "parseBankTransaction");
     }
     
-    private void parseAccountInfo(final ImportTransaction importTransaction, final AccountInfo accountInfo) {
+    private static void parseAccountInfo(final ImportTransaction importTransaction, final AccountInfo accountInfo) {
         importTransaction.setAccountTo(accountInfo.accountId);
     }
 
@@ -955,7 +955,7 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    private AccountInfo parseAccountInfo(final XMLStreamReader reader) throws XMLStreamException {
+    private static AccountInfo parseAccountInfo(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseAccountInfo");
 
         final QName parsingElement = reader.getName();
@@ -1002,7 +1002,7 @@ public class OfxV2Parser implements OfxTags {
         return accountInfo;
     }
 
-    private void parseAccountInfo(final OfxBank ofxBank, final AccountInfo accountInfo) {
+    private static void parseAccountInfo(final OfxBank ofxBank, final AccountInfo accountInfo) {
         ofxBank.bankId = accountInfo.bankId;
         ofxBank.branchId = accountInfo.branchId;
         ofxBank.accountId = accountInfo.accountId;
