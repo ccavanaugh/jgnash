@@ -33,6 +33,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -144,47 +145,33 @@ public class ReconcileDialogController implements MessageListener {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Number> widthListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private ToggleStateChangeListener increaseTableStateChangeListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private ToggleStateChangeListener decreaseTableStateChangeListener;
+
     private static final String PREF_NODE = "/jgnash/uifx/views/register/reconcile";
 
     @FXML
     private void initialize() {
-        // Selection listener that toggles the reconciled state
-        class ToggleStateChangeListener implements ChangeListener<RecTransaction> {
-
-            private final TableView<RecTransaction> tableView;
-
-            private ToggleStateChangeListener(final TableView<RecTransaction> tableView) {
-                this.tableView = tableView;
-            }
-
-            @Override
-            public void changed(final ObservableValue<? extends RecTransaction> observable,
-                                final RecTransaction oldValue, final RecTransaction newValue) {
-                if (newValue != null) {
-                    if (newValue.getReconciledState() == ReconciledState.RECONCILED) {
-                        newValue.setReconciledState(ReconciledState.NOT_RECONCILED);
-                    } else {
-                        newValue.setReconciledState(ReconciledState.RECONCILED);
-                    }
-                    tableView.refresh();
-                    JavaFXUtils.runLater(() -> tableView.getSelectionModel().clearSelection());
-                    updateCalculatedValues();
-                }
-            }
-        }
-
         // toggle the selection state
+        increaseTableStateChangeListener = new ToggleStateChangeListener(increaseTableView);
         increaseTableView.getSelectionModel().selectedItemProperty()
-                .addListener(new ToggleStateChangeListener(increaseTableView));
+                .addListener(new WeakChangeListener<>(increaseTableStateChangeListener));
 
         // toggle the selection state
+        decreaseTableStateChangeListener = new ToggleStateChangeListener(decreaseTableView);
         decreaseTableView.getSelectionModel().selectedItemProperty()
-                .addListener(new ToggleStateChangeListener(decreaseTableView));
+                .addListener(new WeakChangeListener<>(decreaseTableStateChangeListener));
 
         finishButton.disableProperty().bind(reconciled.not());
     }
 
-    private Callback<Integer, Double> getColumnWeightFactory() {
+    private static Callback<Integer, Double> getColumnWeightFactory() {
         return param -> PREF_COLUMN_WEIGHTS[param];
     }
 
@@ -410,20 +397,9 @@ public class ReconcileDialogController implements MessageListener {
             return null;
         });
 
-        final ChangeListener<Number> widthListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        widthListener = new NumberChangeListener(tableViewManager, tableView);
 
-                if (newValue != null && newValue.doubleValue() > 0) {
-                    JavaFXUtils.runLater(tableViewManager::restoreLayout);
-                    JavaFXUtils.runLater(tableViewManager::packTable);
-
-                    tableView.widthProperty().removeListener(this);
-                }
-            }
-        };
-
-        tableView.widthProperty().addListener(widthListener);
+        tableView.widthProperty().addListener(new WeakChangeListener<>(widthListener));
     }
 
     private boolean reconcilable(final Transaction t) {
@@ -481,6 +457,52 @@ public class ReconcileDialogController implements MessageListener {
                     default:
                         break;
                 }
+            }
+        }
+    }
+
+    private static class NumberChangeListener implements ChangeListener<Number> {
+        private final TableViewManager<RecTransaction> tableViewManager;
+        private final TableView<RecTransaction> tableView;
+
+        NumberChangeListener(final TableViewManager<RecTransaction> tableViewManager, final TableView<RecTransaction> tableView) {
+            this.tableViewManager = tableViewManager;
+            this.tableView = tableView;
+        }
+
+        @Override
+        public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
+
+            if (newValue != null && newValue.doubleValue() > 0) {
+                JavaFXUtils.runLater(tableViewManager::restoreLayout);
+                JavaFXUtils.runLater(tableViewManager::packTable);
+
+                tableView.widthProperty().removeListener(this);
+            }
+        }
+    }
+
+    // Selection listener that toggles the reconciled state
+    private class ToggleStateChangeListener implements ChangeListener<RecTransaction> {
+
+        private final TableView<RecTransaction> tableView;
+
+        private ToggleStateChangeListener(final TableView<RecTransaction> tableView) {
+            this.tableView = tableView;
+        }
+
+        @Override
+        public void changed(final ObservableValue<? extends RecTransaction> observable,
+                            final RecTransaction oldValue, final RecTransaction newValue) {
+            if (newValue != null) {
+                if (newValue.getReconciledState() == ReconciledState.RECONCILED) {
+                    newValue.setReconciledState(ReconciledState.NOT_RECONCILED);
+                } else {
+                    newValue.setReconciledState(ReconciledState.RECONCILED);
+                }
+                tableView.refresh();
+                JavaFXUtils.runLater(() -> tableView.getSelectionModel().clearSelection());
+                updateCalculatedValues();
             }
         }
     }
