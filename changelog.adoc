@@ -23,11 +23,14 @@
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 
+== Release 2.35.2
+* 09/06/2018 Drop use of log4j as it is no longer a required dependency.
+
 == Release 2.35.1
 * 08/26/2018 Updated to the latest Netty dependency.
 * 08/25/2018 Fixed a bug when loading files using a very old UUID format. (Swing, Fx)
 * 08/24/2018 Fixed several large memory leaks in the jGnashFx user interface. (Fx)
-* 08/18/2018 Tightened up API for adding and removing securites to accounts to prevent corruption.
+* 08/18/2018 Tightened up API for adding and removing securities to accounts to prevent corruption.
 * 08/17/2018 Updated to the latest Hibernate dependency.
 
 == Release 2.35.0 __(File format change)__

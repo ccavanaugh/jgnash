@@ -3,9 +3,9 @@ description = 'jGnash Core'
 dependencies {
     compile project(':jgnash-resources')
 
+    // required for HikariCP, override with modular version
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion
-    compile group: 'log4j', name: 'log4j', version: log4jVersion
+    compile group: 'org.slf4j', name: 'slf4j-jdk14', version: slf4jVersion
 
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateVersion
     compile(group: 'org.hibernate', name: 'hibernate-hikaricp', version: hibernateVersion)
