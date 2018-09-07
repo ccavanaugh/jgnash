@@ -17,21 +17,21 @@
  */
 package jgnash.util.prefs;
 
+import jgnash.resource.util.ResourceUtils;
+import jgnash.util.FileUtils;
+import jgnash.util.LogUtil;
+import jgnash.util.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
-
-import jgnash.util.FileUtils;
-import jgnash.util.NotNull;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Portable preferences utility class.
@@ -63,7 +63,7 @@ public class PortablePreferences {
                 Preferences.importPreferences(is);
             } catch (final InvalidPreferencesFormatException | IOException e) {
                 System.err.println("Preferences file " + importFile.toString() + " could not be read");
-                Logger.getLogger(PortablePreferences.class.getName()).log(Level.SEVERE, e.toString(), e);
+                LogUtil.logSevere(PortablePreferences.class, e);
             }
         } else {
             System.err.println("Preferences file " + importFile.toString() + " was not found");
@@ -82,7 +82,7 @@ public class PortablePreferences {
                 System.err.println(ResourceUtils.getString("Message.PrefFail"));
             }
         } catch (final BackingStoreException bse) {
-            Logger.getLogger(PortablePreferences.class.getName()).log(Level.SEVERE, bse.toString(), bse);
+            LogUtil.logSevere(PortablePreferences.class, bse);
             System.err.println(ResourceUtils.getString("Message.UninstallBad"));
         }
     }
@@ -121,10 +121,10 @@ public class PortablePreferences {
                     }
                     deleteUserPreferences();
                 } catch (final BackingStoreException e) {
-                    Logger.getLogger(ExportPreferencesThread.class.getName()).log(Level.SEVERE, e.toString(), e);
+                    LogUtil.logSevere(PortablePreferences.class, e);
                 }
             } catch (final IOException e) {
-                Logger.getLogger(ExportPreferencesThread.class.getName()).log(Level.SEVERE, e.toString(), e);
+                LogUtil.logSevere(ExportPreferencesThread.class, e);
             }
         }
     }

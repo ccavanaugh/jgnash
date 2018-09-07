@@ -17,12 +17,11 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import jgnash.util.LogUtil;
+
+import java.io.IOException;
 
 /**
  * Locked Investment Register pane controller.
@@ -42,7 +41,7 @@ public class LockedInvestmentRegisterPaneController extends RegisterPaneControll
             registerTablePane.getChildren().add(fxmlLoader.load());
             registerTableController.set(fxmlLoader.getController());
         } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            LogUtil.logSevere(LockedInvestmentRegisterPaneController.class, e);
         }
     }
 }

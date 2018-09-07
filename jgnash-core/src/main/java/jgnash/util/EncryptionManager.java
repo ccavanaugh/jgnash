@@ -63,7 +63,7 @@ public class EncryptionManager {
 
             builder.delete(0, builder.length() - 1);
         } catch (final NoSuchAlgorithmException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LogUtil.logSevere(EncryptionManager.class, e);
         }
 
         key = new SecretKeySpec(encryptionKey, ENCRYPTION_ALGORITHM);
@@ -86,7 +86,7 @@ public class EncryptionManager {
 
         } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException
                 | IllegalBlockSizeException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LogUtil.logSevere(EncryptionManager.class, e);
         }
 
         return null;

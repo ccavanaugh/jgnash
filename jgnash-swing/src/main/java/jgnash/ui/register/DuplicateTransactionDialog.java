@@ -19,8 +19,6 @@ package jgnash.ui.register;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -28,6 +26,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.util.LogUtil;
 
 /**
  * A Dialog for duplicating a transaction. If the date for the duplicate transaction is the same as the current date
@@ -111,7 +110,7 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
             // clear the reconciled state of the transaction
             clone.setReconciled(ReconciledState.NOT_RECONCILED);
         } catch (final CloneNotSupportedException e) {
-            Logger.getLogger(DuplicateTransactionDialog.class.getName()).log(Level.SEVERE, e.toString(), e);
+            LogUtil.logSevere(DuplicateTransactionDialog.class, e);
         }
 
         if (clone != null) {

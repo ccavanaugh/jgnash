@@ -27,6 +27,7 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.resource.util.OS;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.util.LogUtil;
 import jgnash.util.prefs.PortablePreferences;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -79,6 +80,8 @@ public class jGnashFx extends Application {
     private static String host = null;
 
     public static void main(final String[] args) throws Exception {
+        LogUtil.configureLogging();
+
         if (OS.getJavaVersion() < 1.8f) {
             System.out.println(ResourceUtils.getString("Message.JVM8"));
             System.out.println(ResourceUtils.getString("Message.Version") + " "

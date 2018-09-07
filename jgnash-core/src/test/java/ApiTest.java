@@ -18,6 +18,8 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
+import jgnash.util.LogUtil;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +31,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Craig Cavanaugh
  */
 public class ApiTest extends AbstractEngineTest {
+
+    @BeforeAll
+    static void test() {
+        LogUtil.configureLogging();
+    }
 
     @Override
     protected Engine createEngine() throws IOException {

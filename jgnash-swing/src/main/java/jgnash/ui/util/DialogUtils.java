@@ -17,18 +17,15 @@
  */
 package jgnash.ui.util;
 
-import java.awt.Rectangle;
-import java.awt.Window;
+import jgnash.util.LogUtil;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
 
@@ -136,7 +133,7 @@ public class DialogUtils {
                 rectangle.width = Integer.parseInt(array[2]);
                 rectangle.height = Integer.parseInt(array[3]);
             } catch (final NumberFormatException nfe) {
-                Logger.getLogger(DialogUtils.class.getName()).log(Level.SEVERE, null, nfe);
+                LogUtil.logSevere(DialogUtils.class, nfe);
                 rectangle = null;
             }
         }

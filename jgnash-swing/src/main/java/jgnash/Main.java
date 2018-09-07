@@ -29,6 +29,7 @@ import jgnash.util.FileUtils;
 import jgnash.resource.util.OS;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.resource.util.Version;
+import jgnash.util.LogUtil;
 import jgnash.util.prefs.PortablePreferences;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -158,6 +159,9 @@ public final class Main {
      * @param args command line arguments
      */
     public static void main(final String args[]) {
+
+        LogUtil.configureLogging();
+
         if (checkJVMVersion()) {
             Main main = new Main();
             main.init(args);

@@ -17,28 +17,25 @@
  */
 package jgnash.ui.register.invest;
 
-import java.awt.Insets;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import jgnash.engine.Account;
+import jgnash.engine.TransactionEntry;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.ui.ThemeManager;
+import jgnash.ui.components.JFloatField;
+import jgnash.ui.plaf.NimbusUtils;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.LogUtil;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import jgnash.engine.Account;
-import jgnash.engine.TransactionEntry;
-import jgnash.ui.ThemeManager;
-import jgnash.ui.components.JFloatField;
-import jgnash.ui.plaf.NimbusUtils;
-import jgnash.ui.util.IconUtils;
-import jgnash.resource.util.ResourceUtils;
-
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
+import javax.swing.*;
 
 /**
  * UI Panel for handling investment gains and loss.
@@ -110,11 +107,11 @@ class GainsPanel extends JPanel implements ActionListener {
     void setTransactionEntries(final List<TransactionEntry> gains) {
         gainsList = new ArrayList<>();
 
-        for (TransactionEntry entry : gains) { // clone the provided set's entries
+        for (final TransactionEntry entry : gains) { // clone the provided set's entries
             try {
                 gainsList.add((TransactionEntry) entry.clone());
-            } catch (CloneNotSupportedException e) {               
-                Logger.getLogger(GainsPanel.class.getName()).log(Level.SEVERE, null, e);
+            } catch (final CloneNotSupportedException e) {
+                LogUtil.logSevere(GainsPanel.class, e);
             }
         }
 

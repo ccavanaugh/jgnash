@@ -17,7 +17,10 @@
  */
 package jgnash.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -31,8 +34,23 @@ import java.util.logging.Logger;
  */
 public class LogUtil {
 
+    static {
+
+        try (final InputStream stream = LogUtil.class.getClassLoader()
+                .getResourceAsStream("logging.properties")) {
+            LogManager.getLogManager().readConfiguration(stream);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private LogUtil() {
         // utility class
+    }
+
+    public static void configureLogging() {
+        Logger.getLogger(LogUtil.class.getName()).info("Logging configured");
     }
 
     /**

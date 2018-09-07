@@ -59,6 +59,7 @@ import jgnash.util.EncryptionManager;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
+import jgnash.util.LogUtil;
 
 /**
  * Message bus client for remote connections.
@@ -240,7 +241,7 @@ class MessageBusClient {
                 channel.close().sync();
             }
         } catch (final InterruptedException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            LogUtil.logSevere(MessageBusClient.class, e);
         } finally {
             channelLock.unlock();
         }

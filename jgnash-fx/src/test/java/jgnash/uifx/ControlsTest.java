@@ -24,8 +24,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
@@ -55,6 +53,7 @@ import jgnash.uifx.control.TextFieldEx;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.util.LogUtil;
 
 import static jgnash.uifx.views.main.MainView.DEFAULT_CSS;
 
@@ -167,7 +166,7 @@ public class ControlsTest extends Application {
                     DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;
         } catch (IOException e1) {
-            Logger.getLogger(ControlsTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
+            LogUtil.logSevere(ControlsTest.class, e1);
         }
 
         EngineFactory.deleteDatabase(testFile);

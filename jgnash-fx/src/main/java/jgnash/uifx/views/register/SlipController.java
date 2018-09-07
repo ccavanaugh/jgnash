@@ -17,11 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,7 +25,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -42,7 +36,12 @@ import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
+
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Transaction Entry Controller for Credits and Debits.
@@ -254,7 +253,7 @@ public class SlipController extends AbstractSlipController {
                     try {
                         transactionEntries.add((TransactionEntry) entry.clone());
                     } catch (final CloneNotSupportedException e) {
-                        Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                        LogUtil.logSevere(SlipController.class, e);
                     }
                 }
 
@@ -377,7 +376,7 @@ public class SlipController extends AbstractSlipController {
                 clearForm();
                 focusFirstComponent();
             } catch (CloneNotSupportedException e) {
-                Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                LogUtil.logSevere(SlipController.class, e);
             }
         } else {
             super.handleEnterAction();

@@ -17,19 +17,6 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -46,7 +33,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -61,6 +47,19 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.util.LogUtil;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 /**
  * Controller for recurring events.
@@ -324,7 +323,7 @@ public class RecurringViewController implements MessageListener {
 
             });
         } catch (final CloneNotSupportedException e) {
-            Logger.getLogger(RecurringViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            LogUtil.logSevere(RecurringViewController.class, e);
         }
     }
 

@@ -161,7 +161,7 @@ public class FileMagic {
             } catch (final MalformedInputException e) {
                 throw e;    // rethrow
             } catch (final IOException e) {
-                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
+                LogUtil.logSevere(FileMagic.class, e);
             }
         }
 
@@ -210,8 +210,8 @@ public class FileMagic {
                     }
                     line = reader.readLine();
                 }
-            } catch (IOException e) {
-                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
+            } catch (final IOException e) {
+                LogUtil.logSevere(FileMagic.class, e);
             }
         }
 
@@ -347,9 +347,9 @@ public class FileMagic {
             }
 
             reader.close();
-        } catch (IOException e) {
-            Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
-        } catch (XMLStreamException e) {
+        } catch (final IOException e) {
+            LogUtil.logSevere(FileMagic.class, e);
+        } catch (final XMLStreamException e) {
             Logger.getLogger(FileMagic.class.getName()).log(Level.INFO, "{0} was not a valid jGnash XML_HEADER file",
                     path.toString());
         }
