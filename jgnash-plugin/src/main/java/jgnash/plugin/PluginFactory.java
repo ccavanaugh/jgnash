@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.jar.Attributes;
 import java.util.logging.Level;
@@ -47,12 +48,18 @@ import jgnash.resource.util.OS;
 public final class PluginFactory {
 
     private final static String PLUGIN_DIRECTORY_NAME = "plugins";
+
     private final static BigDecimal INTERFACE_VERSION = new BigDecimal("2.25");
+
+    private static final String PLUGIN_PATH_MESSAGE = "Plugin path: {0}";
+
     private static final Logger logger = Logger.getLogger(PluginFactory.class.getName());
 
     private static final List<Plugin> plugins = new ArrayList<>();
-    private static boolean pluginsStarted = false;
-    private static boolean pluginsLoaded = false;
+
+    private static AtomicBoolean pluginsStarted = new AtomicBoolean(false);
+
+    private static AtomicBoolean pluginsLoaded = new AtomicBoolean(false);
 
     private static final String separator = System.getProperty("file.separator");
 
@@ -80,8 +87,7 @@ public final class PluginFactory {
         pluginDirectory = new File(pluginDirectory).getParentFile().getParent();
         pluginDirectory += separator + PLUGIN_DIRECTORY_NAME + separator;
 
-        logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
-
+        logger.log(Level.INFO, PLUGIN_PATH_MESSAGE, pluginDirectory);
 
         return pluginDirectory;
     }
@@ -104,31 +110,26 @@ public final class PluginFactory {
             pluginDirectory += separator + ".jgnash" + separator + PLUGIN_DIRECTORY_NAME + separator;
         }
 
-        logger.log(Level.INFO, "Plugin path: {0}", pluginDirectory);
-
+        logger.log(Level.INFO, PLUGIN_PATH_MESSAGE, pluginDirectory);
 
         return pluginDirectory;
     }
 
     public static void startPlugins(final Plugin.PluginPlatform pluginPlatform) {
-        if (!pluginsStarted) {
+        if (!pluginsStarted.getAndSet(true)) {
             for (final Plugin plugin : plugins) {
                 logger.log(Level.INFO, "Starting plugin: {0}", plugin.getName());
                 plugin.start(pluginPlatform);
             }
-
-            pluginsStarted = true;
         }
     }
 
     public static void stopPlugins() {
-        if (pluginsStarted) {
+        if (pluginsStarted.getAndSet(false)) {
             for (final Plugin plugin : plugins) {
                 logger.log(Level.INFO, "Stopping plugin: {0}", plugin.getName());
                 plugin.stop();
             }
-
-            pluginsStarted = false;
         }
     }
 
@@ -138,7 +139,7 @@ public final class PluginFactory {
      * @param predicate Predicate allows filtering and control of loading plugins
      */
     public static void loadPlugins(final Predicate<Plugin> predicate) {
-        if (!pluginsLoaded) {
+        if (!pluginsLoaded.getAndSet(true)) {
             final List<String> paths = getPluginPaths();
 
             if (!paths.isEmpty()) {
@@ -158,37 +159,26 @@ public final class PluginFactory {
             } else {
                 logger.info("Did not find any plugins");
             }
-
-            pluginsLoaded = true;
         }
     }
 
     private static List<String> getPluginPaths() {
         final List<String> paths = new ArrayList<>();
 
-        {
-            final String root = getDefaultPluginDirectory();
-            final String[] files = new File(root).list(new PluginFilenameFilter());
-
-            if (files != null) {
-                for (final String file : files) {
-                    paths.add(root + file);
-                }
-            }
-        }
-
-        {
-            final String root = getUserPluginDirectory();
-            final String[] files = new File(root).list(new PluginFilenameFilter());
-
-            if (files != null) {
-                for (final String file : files) {
-                    paths.add(root + file);
-                }
-            }
-        }
+        getPluginPaths(getDefaultPluginDirectory(), paths);
+        getPluginPaths(getUserPluginDirectory(), paths);
 
         return paths;
+    }
+
+    private static void getPluginPaths(final String root, final List<String> paths) {
+        final String[] files = new File(root).list(new PluginFilenameFilter());
+
+        if (files != null) {
+            for (final String file : files) {
+                paths.add(root + file);
+            }
+        }
     }
 
     @SuppressWarnings("resource")
@@ -203,7 +193,7 @@ public final class PluginFactory {
             try {
                 classLoader.close();
             } catch (final IOException e) {
-                logger.log(Level.SEVERE, null, e);
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         }));
 
@@ -233,6 +223,7 @@ public final class PluginFactory {
     private static class JarURLClassLoader extends URLClassLoader {
 
         private static final String PLUGIN_ACTIVATOR = "Plugin-Activator";
+
         private static final String PLUGIN_VERSION = "Plugin-Version";
 
         JarURLClassLoader(final URL url) {
