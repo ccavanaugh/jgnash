@@ -4,3 +4,14 @@ dependencies {
   compile project(':jgnash-core')
   compile project(':jgnash-fx')
 }
+
+jar {
+  // Keep jar clean:
+  exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+
+  // required by the plugin interface
+  manifest {
+    attributes  'Plugin-Activator': 'jgnash.uifx.plugin.TestFxPlugin',
+            'Plugin-Version': '2.25'
+  }
+}

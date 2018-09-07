@@ -15,6 +15,7 @@ import jgnash.uifx.views.main.MainView;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("unused")
 public class TestFxPlugin implements FxPlugin {
 
     @Override
