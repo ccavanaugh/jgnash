@@ -1,11 +1,17 @@
 description = 'jGnash Plugin'
 
+project.ext {
+    moduleName = 'jgnash.plugin'
+}
+
 dependencies {
     compile project(':jgnash-resources')
 }
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash.plugin')
+        attributes(
+                'Automatic-Module-Name': "${moduleName}"
+        )
     }
 }

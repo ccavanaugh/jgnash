@@ -1,5 +1,9 @@
 description = 'jGnash Convert'
 
+project.ext {
+    moduleName = 'jgnash.convert'
+}
+
 dependencies {
     compile project(':jgnash-core')
     compile project(':jgnash-bayes')
@@ -12,6 +16,8 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash.convert')
+        attributes(
+                'Automatic-Module-Name': "${moduleName}"
+        )
     }
 }

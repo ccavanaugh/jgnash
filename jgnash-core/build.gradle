@@ -1,5 +1,9 @@
 description = 'jGnash Core'
 
+project.ext {
+    moduleName = 'jgnash-core'
+}
+
 dependencies {
     compile project(':jgnash-resources')
 
@@ -34,6 +38,8 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash-core')
+        attributes(
+                'Automatic-Module-Name': "${moduleName}"
+        )
     }
 }

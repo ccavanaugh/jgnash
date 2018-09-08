@@ -1,7 +1,13 @@
 description = 'jGnash Bayes'
 
+project.ext {
+    moduleName = 'jgnash.bayes'
+}
+
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash.bayes')
+        attributes(
+                'Automatic-Module-Name': "${moduleName}"
+        )
     }
 }

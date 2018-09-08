@@ -1,5 +1,9 @@
 description = 'jGnash Report Core'
 
+project.ext {
+    moduleName = 'jgnash.report'
+}
+
 dependencies {
     compile project(':jgnash-core')
 
@@ -35,6 +39,8 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash.report')
+        attributes(
+                'Automatic-Module-Name': "${moduleName}"
+        )
     }
 }

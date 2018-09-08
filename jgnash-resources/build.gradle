@@ -3,7 +3,9 @@ import static org.gradle.internal.os.OperatingSystem.*
 
 description = 'jGnash Resources'
 
-ext {
+project.ext {
+    moduleName = 'jgnash.convert'
+
     javaVersion = Jvm.current()
     osName = current()
     timeStamp = new Date()
@@ -23,7 +25,9 @@ processResources {
 
 jar {
     manifest {
-        attributes("Automatic-Module-Name": 'jgnash.resource')
+        attributes(
+                'Automatic-Module-Name': "${moduleName}"
+        )
     }
 }
 
