@@ -1337,6 +1337,19 @@ The disadvantage is troubleshooting syntax and logic errors can be more difficul
 == Command Line Options
 jGnash has several command line options for advanced users.
 
+
+Parameters such as file names that include a space in the path must be
+escaped using double quotes.
+
+==============================================================================
+*Example*
+
+The path to the file "/home/craig/jgnash files/jgnash.h2.db" must be escaped as shown.
+
+java -jar jGnash2.jar --server "/home/craig/jgnash files/jgnash.h2.db" --password fh56dy
+==============================================================================
+
+
 [float]
 === Options
 --enableEDT::
@@ -1415,7 +1428,7 @@ It is possible to start the jGnash client and specify the server, and password s
 
 Start the jGnash server using the default port with a password protected database
 ----
-java -jar jGnash2.jar --server /home/craig/jgnash.jdb --password fh56dy
+java -jar jGnash2.jar --server /home/craig/jgnash.mv.db --password fh56dy
 ----
 
 Start the jGnash client and connect to the local server running a password protected database
