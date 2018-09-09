@@ -25,6 +25,7 @@
 
 == Release 2.35.2
 * 09/09/2018 Fixed a random stability issue with client / server operation discovered during unit testing. (Swing, Fx)
+* 09/09/2018 Updated to the latest Apache POI dependency.
 * 09/09/2018 Updated manual with proper use of escape characters on the command line.
 * 09/06/2018 Drop use of log4j as it is no longer a required dependency.
 

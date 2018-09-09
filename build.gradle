@@ -23,7 +23,7 @@ allprojects {
 
         joptSimpleVerion = '5.0.4'
 
-        apachePoiVersion = '3.17'
+        apachePoiVersion = '4.0.0'
         commons_cvs = '1.5'
         commons_text = '1.1'
 
