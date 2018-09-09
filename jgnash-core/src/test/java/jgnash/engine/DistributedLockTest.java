@@ -112,7 +112,7 @@ public class DistributedLockTest {
 
         final int TIME_BOUND = 3000;
 
-        final int TEST_COUNT = 30;
+        final int TEST_COUNT = 33;
 
         class WriteLockTest extends Thread {
 
@@ -203,7 +203,7 @@ public class DistributedLockTest {
                     readWriteLock.writeLock().lock();
                     logger.info("got write lock");
 
-                    Thread.sleep(3000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                 } finally {
@@ -219,7 +219,7 @@ public class DistributedLockTest {
         Thread readLockThread = new Thread(new ReadLockThread(rwLock));
 
         writeLockThread.start();
-        Thread.sleep(500);
+        Thread.sleep(100);
         readLockThread.start();
 
         writeLockThread.join();
@@ -227,7 +227,7 @@ public class DistributedLockTest {
     }
 
     @Test
-    void reentrantWriteTest() throws InterruptedException {
+    void reentrantWriteTest() {
         int count = 0;
 
         ReadWriteLock lock1 = manager.getLock("reentrant");
@@ -263,12 +263,10 @@ public class DistributedLockTest {
         }
 
         assertEquals(4, count);
-
-        Thread.sleep(1000);
     }
 
     @Test
-    void reentrantReadTest() throws InterruptedException {
+    void reentrantReadTest() {
         int count = 0;
 
         ReadWriteLock lock = manager.getLock("reentrant");
@@ -294,7 +292,5 @@ public class DistributedLockTest {
         }
 
         assertEquals(4, count);
-
-        Thread.sleep(1000);
     }
 }
