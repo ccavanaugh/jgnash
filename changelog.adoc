@@ -24,6 +24,7 @@
 * Open zipped backups instead of manually unzipping.
 
 == Release 2.35.2
+* 09/09/2018 Fixed a random stability issue with client / server operation discovered during unit testing. (Swing, Fx)
 * 09/06/2018 Drop use of log4j as it is no longer a required dependency.
 
 == Release 2.35.1

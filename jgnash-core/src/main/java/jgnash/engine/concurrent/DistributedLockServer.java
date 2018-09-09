@@ -58,7 +58,8 @@ public class DistributedLockServer {
 
     private static final Logger logger = Logger.getLogger(DistributedLockServer.class.getName());
 
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    // this needs to be single threaded to ensure order of operations
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private final ChannelGroup channelGroup = new DefaultChannelGroup("lock-server", GlobalEventExecutor.INSTANCE);
 

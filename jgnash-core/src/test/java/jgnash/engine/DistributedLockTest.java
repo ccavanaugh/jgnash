@@ -21,12 +21,17 @@ import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
 
 import io.netty.util.ResourceLeakDetector;
+import jgnash.util.LogUtil;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,9 +54,17 @@ public class DistributedLockTest {
 
     private static final Logger logger = Logger.getLogger(DistributedLockTest.class.getName());
 
+    private final Random random = new Random();
+
+    @BeforeAll
+    static void beforeAll() {
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
+
+        LogUtil.configureLogging();
+    }
+
     @BeforeEach
     public void setUp() {
-        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         server = new DistributedLockServer(PORT);
         assertTrue(server.startServer(EngineFactory.EMPTY_PASSWORD));
@@ -97,18 +110,24 @@ public class DistributedLockTest {
     @Test
     void multipleReadLocks() {
 
+        final int TIME_BOUND = 3000;
+
+        final int TEST_COUNT = 30;
+
         class WriteLockTest extends Thread {
+
             @Override
             public void run() {
-                ReadWriteLock lock = manager.getLock("lock");
+                final ReentrantReadWriteLock lock = manager.getLock("lockTest");
+                logger.info("fetched lock " + getId());
+
 
                 logger.log(Level.INFO, "locking: {0}", getId());
                 lock.readLock().lock();
 
                 try {
 
-                    Random random = new Random();
-                    int num = random.nextInt(3000);
+                    int num = random.nextInt(TIME_BOUND);
 
                     try {
                         Thread.sleep(num);
@@ -124,21 +143,21 @@ public class DistributedLockTest {
             }
         }
 
-        Thread thread1 = new WriteLockTest();
-        Thread thread2 = new WriteLockTest();
-        Thread thread3 = new WriteLockTest();
-        Thread thread4 = new WriteLockTest();
+        List<WriteLockTest> lockTests = new ArrayList<>();
 
-        thread1.start();
-        thread2.start();
-        thread3.start();
-        thread4.start();
+        for (int i = 0; i < TEST_COUNT; i++) {
+            WriteLockTest thread = new WriteLockTest();
+            lockTests.add(thread);
+        }
+
+        for (final WriteLockTest test : lockTests) {
+            test.start();
+        }
 
         try {
-            thread1.join();
-            thread2.join();
-            thread3.join();
-            thread4.join();
+            for (final WriteLockTest test : lockTests) {
+                test.join(TIME_BOUND);
+            }
         } catch (final InterruptedException e) {
             Logger.getLogger(DistributedLockTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
