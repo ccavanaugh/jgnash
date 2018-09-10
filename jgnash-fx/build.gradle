@@ -15,6 +15,8 @@ dependencies {
     compile project(':jgnash-report-core')
     compile project(':jgnash-plugin')
 
+    compile group: 'info.picocli', name: 'picocli', version: picocliVersion
+
     compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: joptSimpleVerion
 }
 

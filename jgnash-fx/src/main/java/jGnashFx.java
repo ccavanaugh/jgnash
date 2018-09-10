@@ -16,36 +16,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.jpa.JpaNetworkServer;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.net.NetworkAuthenticator;
-import jgnash.uifx.views.main.MainView;
-import jgnash.util.FileUtils;
-import jgnash.resource.util.OS;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.util.LogUtil;
-import jgnash.util.prefs.PortablePreferences;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.Authenticator;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import static java.util.Arrays.asList;
+import javax.swing.*;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.resource.util.OS;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.net.NetworkAuthenticator;
+import jgnash.uifx.views.main.MainView;
+import jgnash.util.FileUtils;
+import jgnash.util.LogUtil;
+import jgnash.util.prefs.PortablePreferences;
+
+import picocli.CommandLine;
+
 import static jgnash.util.LogUtil.logSevere;
+import static picocli.CommandLine.*;
 
 /**
  * Main entry for the application.
@@ -57,30 +57,31 @@ import static jgnash.util.LogUtil.logSevere;
  */
 public class jGnashFx extends Application {
 
-    private static final String FILE_OPTION_SHORT = "f";
-    private static final String FILE_OPTION_LONG = "file";
-    private static final String VERBOSE_OPTION_SHORT = "v";
-    private static final String VERBOSE_OPTION_LONG = "verbose";
-    private static final String PORTABLE_FILE_OPTION = "portableFile";
-    private static final String PORTABLE_OPTION_SHORT = "p";
-    private static final String PORTABLE_OPTION_LONG = "portable";
-    private static final String UNINSTALL_OPTION_SHORT = "u";
-    private static final String UNINSTALL_OPTION_LONG = "uninstall";
-    private static final String HELP_OPTION_SHORT = "h";
-    private static final String HELP_OPTION_LONG = "help";
-    private static final String PORT_OPTION = "port";
-    private static final String HOST_OPTION = "host";
-    private static final String PASSWORD_OPTION = "password";
-    private static final String SERVER_OPTION = "server";
+    private static final String FILE_OPTION_SHORT = "-f";
+    private static final String FILE_OPTION_LONG = "--file";
+    private static final String VERBOSE_OPTION_SHORT = "-v";
+    private static final String VERBOSE_OPTION_LONG = "--verbose";
+    private static final String PORTABLE_FILE_OPTION = "--portableFile";
+    private static final String PORTABLE_OPTION_SHORT = "-p";
+    private static final String PORTABLE_OPTION_LONG = "--portable";
+    private static final String UNINSTALL_OPTION_SHORT = "-u";
+    private static final String UNINSTALL_OPTION_LONG = "--uninstall";
+    private static final String PORT_OPTION = "--port";
+    private static final String HOST_OPTION = "--host";
+    private static final String PASSWORD_OPTION = "--password";
+    private static final String SERVER_OPTION = "--server";
 
     private static File dataFile = null;
+
     private static File serverFile = null;
+
     private static char[] password = EngineFactory.EMPTY_PASSWORD;
+
     private static int port = JpaNetworkServer.DEFAULT_PORT;
+
     private static String host = null;
 
-    public static void main(final String[] args) throws Exception {
-        LogUtil.configureLogging();
+    public static void main(final String[] args) {
 
         if (OS.getJavaVersion() < 1.8f) {
             System.out.println(ResourceUtils.getString("Message.JVM8"));
@@ -102,90 +103,59 @@ public class jGnashFx extends Application {
         // Register the default exception handler
         Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
 
-        configureLogging();
-
-        OptionParser parser = buildParser();
+        final CommandLine commandLine = new CommandLine(new CommandLineOptions());
+        commandLine.setToggleBooleanFlags(false);
+        commandLine.setUsageHelpWidth(80);
 
         try {
-            final OptionSet options = parser.parse(args);
 
-            if (options.has(HELP_OPTION_SHORT)) {
-                parser.printHelpOn(System.err);
+            final ParseResult pr = commandLine.parseArgs(args);
+            final CommandLineOptions options = commandLine.getCommand();
+
+            if (CommandLine.printHelpIfRequested(pr)) {
                 System.exit(0);
             }
 
-            // Does the user want to uninstall and clear their registry settings
-            if (options.has(UNINSTALL_OPTION_SHORT)) {
+            configureLogging();
+
+            if (options.uninstall) {
                 PortablePreferences.deleteUserPreferences();
                 System.exit(0);
             }
 
-            // Needs to be checked for launching
-            if (options.has(VERBOSE_OPTION_SHORT)) {
+            jGnashFx.port = options.port;
+            jGnashFx.host = options.host;
+            jGnashFx.password = options.password;
+
+            if (options.verbose) {
                 System.setProperty("javafx.verbose", "true");
             }
 
-            // Check to see if portable preferences are being used
-            if (options.has(PORTABLE_FILE_OPTION)) {
-                final File file = (File) options.valueOf(PORTABLE_FILE_OPTION);
-                if (file.exists()) {
-                    PortablePreferences.initPortablePreferences(file.getAbsolutePath());
-                }
-            } else if (options.has(PORTABLE_OPTION_SHORT)) {  // simple use of portable preferences
+            if (options.portableFile != null && options.portableFile.exists()) {
+                PortablePreferences.initPortablePreferences(options.portableFile.getAbsolutePath());
+            } else if (options.portable) {
                 PortablePreferences.initPortablePreferences(null);
             }
 
-            if (options.has(PORT_OPTION)) {
-                port = (Integer) options.valueOf(PORT_OPTION);
+            if (options.zeroArgFile != null && options.zeroArgFile.exists()) {
+                jGnashFx.dataFile = options.zeroArgFile;
             }
 
-            if (options.has(PASSWORD_OPTION)) {
-                password = ((String) options.valueOf(PASSWORD_OPTION)).toCharArray();
+            if (options.dataFile != null && options.dataFile.exists()) {
+                jGnashFx.dataFile = options.dataFile;
             }
 
-            if (options.has(FILE_OPTION_SHORT)) {
-                final File file = (File) options.valueOf(FILE_OPTION_SHORT);
-                if (file.exists()) {
-                    dataFile = file;
-                }
-            } else if (!options.nonOptionArguments().isEmpty() && dataFile == null) {
-                // Check for no-option version of a file load
-                for (final Object object : options.nonOptionArguments()) {
-                    if (object instanceof String) {
-                        if (Files.exists(Paths.get((String) object))) {
-                            dataFile = new File((String) object);
-                            break;
-                        }
-                        
-						System.err.println(object + " was not a valid file");
-						System.exit(1); // force an exit with an error
-                    }
-                }
-            }
-
-            if (options.has(HOST_OPTION)) {
-                host = (String) options.valueOf(HOST_OPTION);
-            }
-
-            if (options.has(SERVER_OPTION)) {
-                final File file = (File) options.valueOf(SERVER_OPTION);
-                if (file.exists()) {
-                    serverFile = file;
-                }
-            }         
-
-            if (serverFile != null) {
-                parser = null;  // not needed anymore, trigger GC
+            if (options.serverFile != null && options.serverFile.exists()) {
+                jGnashFx.serverFile = options.serverFile;
                 startServer();
             } else {
-                parser = null;  // not needed anymore, trigger GC
                 setupNetworking();
                 launch(args);
             }
-        } catch (final Exception exception) {
-            if (parser != null) {
-                parser.printHelpOn(System.err);
-            }
+        } catch (final Exception e) {
+            logSevere(jGnashFx.class, e);
+            commandLine.usage(System.err, Help.Ansi.AUTO);
+            System.exit(1);
         }
     }
 
@@ -193,7 +163,10 @@ public class jGnashFx extends Application {
     public void start(final Stage primaryStage) throws Exception {
         final MainView mainView = new MainView();
         mainView.start(primaryStage, dataFile, password, host, port);
-        Arrays.fill(password, (char) 0);    // clear the password to protect against malicious code
+
+        if (password != null) {
+            Arrays.fill(password, (char) 0);    // clear the password to protect against malicious code
+        }
     }
 
     @Override
@@ -237,6 +210,8 @@ public class jGnashFx extends Application {
     }
 
     private static void configureLogging() {
+        LogUtil.configureLogging();
+
         final Handler[] handlers = Logger.getLogger("").getHandlers();
         for (final Handler handler : handlers) {
             handler.setLevel(Level.ALL);
@@ -245,28 +220,38 @@ public class jGnashFx extends Application {
         Engine.getLogger().setLevel(Level.ALL);
     }
 
-    private static OptionParser buildParser() {
-        final OptionParser parser = new OptionParser() {
-            {
-                acceptsAll(asList(HELP_OPTION_SHORT, HELP_OPTION_LONG), "This help").forHelp();
-                acceptsAll(asList(UNINSTALL_OPTION_SHORT, UNINSTALL_OPTION_LONG), "Remove registry settings");
-                acceptsAll(asList(VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG), "Enable verbose application messages");
-                acceptsAll(asList(FILE_OPTION_SHORT, FILE_OPTION_LONG), "File to load at start").withRequiredArg()
-                        .ofType(File.class);
-                accepts(PASSWORD_OPTION, "Password for a local File, server or client").withRequiredArg();
-                acceptsAll(asList(PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG), "Enable portable preferences");
-                accepts(PORTABLE_FILE_OPTION, "Enable portable preferences and specify the file")
-                        .withRequiredArg().ofType(File.class);
-                accepts(PORT_OPTION, "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT
-                        + ")").withRequiredArg().ofType(Integer.class);
-                accepts(HOST_OPTION, "Server host name or address").requiredIf(PORT_OPTION).withRequiredArg();
-                accepts(SERVER_OPTION, "Runs as a server using the specified file")
-                        .withRequiredArg().ofType(File.class);
-            }
-        };
+    @Command(mixinStandardHelpOptions = true, version = "jGnashFx - " + VERSION, name = "jGnashFx", separator = " ", sortOptions = false)
+    private static class CommandLineOptions {
 
-        parser.allowsUnrecognizedOptions();
+        @CommandLine.Parameters(index = "0", arity = "0")
+        private File zeroArgFile = null;
 
-        return parser;
+        @Option(names = {FILE_OPTION_SHORT, FILE_OPTION_LONG}, paramLabel = "<File>", description = "File to load at start")
+        private File dataFile = null;
+
+        @Option(names = {PASSWORD_OPTION}, description = "Password for a local File, server or client")
+        private char[] password = EngineFactory.EMPTY_PASSWORD; // must not be null
+
+        @Option(names = {PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG}, description = "Enable portable preferences")
+        private boolean portable = false;
+
+        @Option(names = {PORTABLE_FILE_OPTION}, paramLabel = "<File>", description = "Enable portable preferences and specify the file")
+        private File portableFile = null;
+
+        @Option(names = {HOST_OPTION}, description = "Server host name or address")
+        private String host = null;
+
+        @Option(names = {PORT_OPTION}, description = "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT + ")")
+        private int port = JpaNetworkServer.DEFAULT_PORT;
+
+        @Option(names = {SERVER_OPTION}, paramLabel = "<File>", description = "Runs as a server using the specified file")
+        private File serverFile = null;
+
+        @Option(names = {UNINSTALL_OPTION_SHORT, UNINSTALL_OPTION_LONG}, description = "Remove registry settings (uninstall)")
+        private boolean uninstall = false;
+
+        @Option(names = {VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG}, description = "Enable verbose application messages")
+        private boolean verbose = false;
+
     }
 }
