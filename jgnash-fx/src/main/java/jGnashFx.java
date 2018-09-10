@@ -131,7 +131,7 @@ public class jGnashFx extends Application {
                 System.setProperty("javafx.verbose", "true");
             }
 
-            if (options.portableFile != null && options.portableFile.exists()) {
+            if (options.portableFile != null) {
                 PortablePreferences.initPortablePreferences(options.portableFile.getAbsolutePath());
             } else if (options.portable) {
                 PortablePreferences.initPortablePreferences(null);
