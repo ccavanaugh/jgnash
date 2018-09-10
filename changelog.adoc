@@ -24,6 +24,7 @@
 * Open zipped backups instead of manually unzipping.
 
 == Release 2.35.2
+* 09/10/2018 Fixed a bug that was preventing initialization of a new user specified portable preference file. (Swing, Fx)
 * 09/09/2018 Fixed a random stability issue with client / server operation discovered during unit testing. (Swing, Fx)
 * 09/09/2018 Updated to the latest Apache POI dependency.
 * 09/09/2018 Updated manual with proper use of escape characters on the command line.

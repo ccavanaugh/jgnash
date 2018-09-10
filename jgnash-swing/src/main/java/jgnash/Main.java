@@ -35,6 +35,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
 import javax.swing.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -190,7 +191,7 @@ public final class Main {
     }
 
     @SuppressWarnings("unused")
-	private void init(final String args[]) {
+    private void init(final String args[]) {
         configureLogging();
 
         final OptionParser parser = buildParser();
@@ -209,11 +210,11 @@ public final class Main {
                 // Check for no-option version of a file load
                 for (final Object object : options.nonOptionArguments()) {
                     if (object instanceof String) {
-                        if (Files.exists(Paths.get((String)object))) {
+                        if (Files.exists(Paths.get((String) object))) {
                             file = new File((String) object);
                             break;
-                        }                        
-						System.err.println(object + " was not a valid file");
+                        }
+                        System.err.println(object + " was not a valid file");
                     }
                 }
             }
@@ -237,15 +238,15 @@ public final class Main {
             }*/
 
             if (options.has(PORT_OPTION)) {
-                port = (Integer)options.valueOf(PORT_OPTION);
+                port = (Integer) options.valueOf(PORT_OPTION);
             }
 
             if (options.has(PASSWORD_OPTION)) {
-                password = ((String)options.valueOf(PASSWORD_OPTION)).toCharArray();
+                password = ((String) options.valueOf(PASSWORD_OPTION)).toCharArray();
             }
 
             if (options.has(HOST_OPTION)) {
-                hostName = (String)options.valueOf(HOST_OPTION);
+                hostName = (String) options.valueOf(HOST_OPTION);
             }
 
             if (options.has(FILE_OPTION_SHORT) && file == null) {
@@ -264,11 +265,9 @@ public final class Main {
 
             // Check to see if portable preferences are being used
             if (options.has(PORTABLE_FILE_OPTION)) {
-                final File pFile = (File) options.valueOf(PORTABLE_FILE_OPTION);
-                if (pFile.exists()) {
-                    portableFile = pFile;
-                    portable = true;
-                }
+                portableFile = (File) options.valueOf(PORTABLE_FILE_OPTION);
+                portable = true;
+
             } else if (options.has(PORTABLE_OPTION_SHORT)) {  // simple use of portable preferences
                 portable = true;
             }

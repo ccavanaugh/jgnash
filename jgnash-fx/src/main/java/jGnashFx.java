@@ -116,6 +116,12 @@ public class jGnashFx extends Application {
                 System.exit(0);
             }
 
+            // check for bad server file and host combination... can't do both
+            if (serverFile != null && host != null) {
+                commandLine.usage(System.err, Help.Ansi.AUTO);
+                System.exit(1);
+            }
+
             configureLogging();
 
             if (options.uninstall) {
