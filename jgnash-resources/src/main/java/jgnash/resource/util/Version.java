@@ -18,6 +18,7 @@
 package jgnash.resource.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -87,6 +88,11 @@ public class Version {
                 }
             }
 
+            return Optional.empty();
+        } catch (IOException ioe) {
+            if (ioe.getLocalizedMessage().contains("403 for URL")) {  // known github error, return the current version
+                return Optional.of(getAppVersion());
+            }
             return Optional.empty();
         } catch (final Exception e) {
             Logger.getLogger(Version.class.getName()).log(Level.WARNING, e.getLocalizedMessage(), e);
