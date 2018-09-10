@@ -95,6 +95,7 @@ public class PortablePreferences {
         } else {
             exportFile = Paths.get(System.getProperty("user.dir") + FileUtils.SEPARATOR + "pref.xml");
         }
+        Logger.getLogger(PortablePreferences.class.getName()).info("Preference file: " + exportFile);
         return exportFile;
     }
 
