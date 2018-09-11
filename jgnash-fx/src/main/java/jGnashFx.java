@@ -42,7 +42,6 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.prefs.PortablePreferences;
-
 import picocli.CommandLine;
 
 import static jgnash.util.LogUtil.logSevere;
@@ -58,21 +57,6 @@ import static picocli.CommandLine.*;
  */
 public class jGnashFx extends Application {
 
-    private static final String FILE_OPTION_SHORT = "-f";
-    private static final String FILE_OPTION_LONG = "--file";
-    private static final String VERBOSE_OPTION_SHORT = "-v";
-    private static final String VERBOSE_OPTION_LONG = "--verbose";
-    private static final String PORTABLE_FILE_OPTION = "--portableFile";
-    private static final String PORTABLE_OPTION_SHORT = "-p";
-    private static final String PORTABLE_OPTION_LONG = "--portable";
-    private static final String UNINSTALL_OPTION_SHORT = "-u";
-    private static final String UNINSTALL_OPTION_LONG = "--uninstall";
-    private static final String PORT_OPTION = "--port";
-    private static final String HOST_OPTION = "--hostName";
-    private static final String PASSWORD_OPTION = "--password";
-    private static final String SERVER_OPTION = "--server";
-    private static final String SHUTDOWN_OPTION = "--shutdown";
-
     private static File dataFile = null;
 
     private static File serverFile = null;
@@ -86,11 +70,11 @@ public class jGnashFx extends Application {
     public static void main(final String[] args) {
 
         if (OS.getJavaVersion() < 1.8f) {
-            System.out.println(ResourceUtils.getString("Message.JVM8"));
-            System.out.println(ResourceUtils.getString("Message.Version") + " "
+            System.err.println(ResourceUtils.getString("Message.JVM8"));
+            System.err.println(ResourceUtils.getString("Message.Version") + " "
                     + System.getProperty("java.version") + "\n");
 
-            // try and show a dialog
+            // show a swing based dialog
             JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM8"),
                     ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             return;
@@ -99,7 +83,7 @@ public class jGnashFx extends Application {
         if (OS.getJavaVersion() == 1.8f && OS.getJavaRelease() < OS.JVM_RELEASE_71) {
             JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
                     ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            return;           
+            return;
         }
 
         // Register the default exception handler
@@ -130,6 +114,10 @@ public class jGnashFx extends Application {
                 PortablePreferences.deleteUserPreferences();
                 System.exit(0);
             }
+
+
+            //System.getProperties().put(EncryptionManager.ENCRYPTION_FLAG, Boolean.toString(options.ssl));
+            //System.getProperties().put("ssl", Boolean.toString(options.ssl));
 
             port = options.port;
             hostName = options.hostName;
@@ -239,6 +227,22 @@ public class jGnashFx extends Application {
     @Command(mixinStandardHelpOptions = true, version = "jGnashFx - " + VERSION, name = "jGnashFx", separator = " ", sortOptions = false)
     private static class CommandLineOptions {
 
+        private static final String FILE_OPTION_SHORT = "-f";
+        private static final String FILE_OPTION_LONG = "--file";
+        private static final String VERBOSE_OPTION_SHORT = "-v";
+        private static final String VERBOSE_OPTION_LONG = "--verbose";
+        private static final String PORTABLE_FILE_OPTION = "--portableFile";
+        private static final String PORTABLE_OPTION_SHORT = "-p";
+        private static final String PORTABLE_OPTION_LONG = "--portable";
+        private static final String UNINSTALL_OPTION_SHORT = "-u";
+        private static final String UNINSTALL_OPTION_LONG = "--uninstall";
+        private static final String PORT_OPTION = "--port";
+        private static final String HOST_OPTION = "--hostName";
+        private static final String PASSWORD_OPTION = "--password";
+        private static final String SERVER_OPTION = "--server";
+        private static final String SHUTDOWN_OPTION = "--shutdown";
+        //private static final String SSL_OPTION = "--ssl";
+
         @CommandLine.Parameters(index = "0", arity = "0")
         private File zeroArgFile = null;
 
@@ -259,6 +263,9 @@ public class jGnashFx extends Application {
 
         @Option(names = {PORT_OPTION}, description = "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT + ")")
         private int port = JpaNetworkServer.DEFAULT_PORT;
+
+        //@Option(names = {SSL_OPTION}, description = "Enable SSL for network communication")
+        //private boolean ssl = false;
 
         @Option(names = {SERVER_OPTION}, paramLabel = "<File>", description = "Runs as a server using the specified file")
         private File serverFile = null;
