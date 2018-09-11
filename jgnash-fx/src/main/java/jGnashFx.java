@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.engine.message.MessageBus;
 import jgnash.resource.util.OS;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
@@ -67,9 +68,10 @@ public class jGnashFx extends Application {
     private static final String UNINSTALL_OPTION_SHORT = "-u";
     private static final String UNINSTALL_OPTION_LONG = "--uninstall";
     private static final String PORT_OPTION = "--port";
-    private static final String HOST_OPTION = "--host";
+    private static final String HOST_OPTION = "--hostName";
     private static final String PASSWORD_OPTION = "--password";
     private static final String SERVER_OPTION = "--server";
+    private static final String SHUTDOWN_OPTION = "--shutdown";
 
     private static File dataFile = null;
 
@@ -79,7 +81,7 @@ public class jGnashFx extends Application {
 
     private static int port = JpaNetworkServer.DEFAULT_PORT;
 
-    private static String host = null;
+    private static String hostName = null;
 
     public static void main(final String[] args) {
 
@@ -116,8 +118,8 @@ public class jGnashFx extends Application {
                 System.exit(0);
             }
 
-            // check for bad server file and host combination... can't do both
-            if (serverFile != null && host != null) {
+            // check for bad server file and hostName combination... can't do both
+            if (serverFile != null && options.hostName != null) {
                 commandLine.usage(System.err, Help.Ansi.AUTO);
                 System.exit(1);
             }
@@ -129,9 +131,17 @@ public class jGnashFx extends Application {
                 System.exit(0);
             }
 
-            jGnashFx.port = options.port;
-            jGnashFx.host = options.host;
-            jGnashFx.password = options.password;
+            port = options.port;
+            hostName = options.hostName;
+            password = options.password;
+
+            if (options.shutdown) {
+                if (hostName == null) {
+                    hostName = EngineFactory.LOCALHOST;
+                }
+                MessageBus.getInstance().shutDownRemoteServer(hostName, port + 1, password);
+                System.exit(0);
+            }
 
             if (options.verbose) {
                 System.setProperty("javafx.verbose", "true");
@@ -168,7 +178,7 @@ public class jGnashFx extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         final MainView mainView = new MainView();
-        mainView.start(primaryStage, dataFile, password, host, port);
+        mainView.start(primaryStage, dataFile, password, hostName, port);
 
         if (password != null) {
             Arrays.fill(password, (char) 0);    // clear the password to protect against malicious code
@@ -245,7 +255,7 @@ public class jGnashFx extends Application {
         private File portableFile = null;
 
         @Option(names = {HOST_OPTION}, description = "Server host name or address")
-        private String host = null;
+        private String hostName = null;
 
         @Option(names = {PORT_OPTION}, description = "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT + ")")
         private int port = JpaNetworkServer.DEFAULT_PORT;
@@ -253,11 +263,13 @@ public class jGnashFx extends Application {
         @Option(names = {SERVER_OPTION}, paramLabel = "<File>", description = "Runs as a server using the specified file")
         private File serverFile = null;
 
+        @Option(names = {SHUTDOWN_OPTION}, description = "Issues a shutdown request to a server")
+        private boolean shutdown = false;
+
         @Option(names = {UNINSTALL_OPTION_SHORT, UNINSTALL_OPTION_LONG}, description = "Remove registry settings (uninstall)")
         private boolean uninstall = false;
 
         @Option(names = {VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG}, description = "Enable verbose application messages")
         private boolean verbose = false;
-
     }
 }
