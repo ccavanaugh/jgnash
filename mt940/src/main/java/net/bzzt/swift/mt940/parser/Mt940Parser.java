@@ -205,6 +205,13 @@ public class Mt940Parser {
 
         String decimal = line.substring(0, endIndex);
         decimal = decimal.replaceAll(",", ".");
+
+        // According to the MT940 Standard the amount (field :61:) could start with the last character of the currency
+        // e.g. R for EUR
+        // See: https://www.kontopruef.de/mt940s.shtml
+        // This code removes any character which is not a decimal or point.
+        decimal = decimal.replaceAll("[^\\d.]", "");
+
         currentEntry.setBetrag(new BigDecimal(decimal));
 
         return line.substring(endIndex);
