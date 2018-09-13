@@ -24,6 +24,7 @@
 * Open zipped backups instead of manually unzipping.
 
 == Release 2.36.0
+* 09/13/2018 Enhanced the MT940 parser to allow for an optional currency designator in decimal values. (Swing, Fx) _[Alex Werz]_
 * 09/13/2018 Reinstated check and correct for data files with multiple root accounts. (Swing, Fx)
 * 09/13/2018 The Fx interface now uses picocli for command line processing. (Fx)
 * 09/13/2018 The old Swing interface no longer supports command line processing. (Swing)
