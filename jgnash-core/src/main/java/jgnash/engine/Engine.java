@@ -73,12 +73,12 @@ import jgnash.engine.recurring.RecurringIterator;
 import jgnash.engine.recurring.Reminder;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.time.DateUtils;
 import jgnash.util.CollectionUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Engine class
@@ -450,6 +450,19 @@ public class Engine {
         dataLock.writeLock().lock();
 
         try {
+            // check and correct multiple root accounts from old files... there are still a few.
+            List<Account> accountList = getAccountList().stream().filter(account -> account.getAccountType()
+                    .equals(AccountType.ROOT)).collect(Collectors.toList());
+
+            if (accountList.size() > 1) {
+                for (Account account : accountList) {
+                    if (account.getChildCount() == 0) {
+                        removeAccount(account);
+                        logWarning("Removed an extra / empty root account");
+                    }
+                }
+            }
+
             // Transaction timestamps were updated for release 2.25
             if (getConfig().getMinorFileFormatVersion() < 25) {
 

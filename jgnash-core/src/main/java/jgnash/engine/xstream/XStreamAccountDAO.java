@@ -51,9 +51,14 @@ class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO {
             root = list.get(0);
         }
 
-        if (list.size() > 1) {
+        if (list.size() > 1) {  // old bug
             logger.severe("More than one RootAccount found");
-            root = list.get(0);
+
+            for (final RootAccount rootAccount : list) {
+                if (rootAccount.getChildCount() > 0) {
+                    root = rootAccount;
+                }
+            }
         }
 
         return root;
