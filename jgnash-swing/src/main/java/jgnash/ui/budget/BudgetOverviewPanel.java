@@ -17,7 +17,7 @@
  */
 package jgnash.ui.budget;
 
-import java.awt.EventQueue;
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,26 +30,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import jgnash.Main;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
-import jgnash.resource.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * Overview panel for the displayed period
@@ -73,12 +67,9 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
     private static final Logger logger = Logger.getLogger(BudgetOverviewPanel.class.getName());
 
-    public BudgetOverviewPanel(final BudgetPanel budgetPanel) {
-        if (Main.enableVerboseLogging()) {
-            logger.setLevel(Level.ALL);
-        } else {
-            logger.setLevel(Level.OFF);
-        }
+    BudgetOverviewPanel(final BudgetPanel budgetPanel) {
+
+        logger.setLevel(Level.OFF);
 
         this.budgetPanel = budgetPanel;
 
@@ -89,7 +80,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
         /* At least 2 updates need to be allowed.  The update in process and any potential updates requested
          * that occur when an update is already in process.  Limited to 1 thread
          *
-         * Excess execution requests will be silently discarded 
+         * Excess execution requests will be silently discarded
          */
         updateIconExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(2));
         updateIconExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());

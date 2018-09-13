@@ -17,28 +17,7 @@
  */
 package jgnash;
 
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.jpa.JpaNetworkServer;
-import jgnash.engine.message.MessageBus;
-import jgnash.ui.MainFrame;
-import jgnash.ui.UIApplication;
-import jgnash.ui.actions.OpenAction;
-import jgnash.ui.net.NetworkAuthenticator;
-import jgnash.util.FileUtils;
-import jgnash.resource.util.OS;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.resource.util.Version;
-import jgnash.util.LogUtil;
-import jgnash.util.prefs.PortablePreferences;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-
-import javax.swing.*;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Handler;
@@ -46,8 +25,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import static java.util.Arrays.asList;
-import static jgnash.util.LogUtil.logSevere;
+import javax.swing.*;
+
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.resource.util.OS;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.Version;
+import jgnash.ui.MainFrame;
+import jgnash.ui.UIApplication;
+import jgnash.ui.actions.OpenAction;
+import jgnash.ui.net.NetworkAuthenticator;
+import jgnash.util.LogUtil;
 
 /**
  * This is the main entry point for the jGnash application.
@@ -56,28 +45,6 @@ import static jgnash.util.LogUtil.logSevere;
  */
 public final class Main {
 
-    private static final String FILE_OPTION_SHORT = "f";
-    private static final String FILE_OPTION_LONG = "file";
-    private static final String VERBOSE_OPTION_SHORT = "v";
-    private static final String VERBOSE_OPTION_LONG = "verbose";
-    private static final String PORTABLE_FILE_OPTION = "portableFile";
-    private static final String PORTABLE_OPTION_SHORT = "p";
-    private static final String PORTABLE_OPTION_LONG = "portable";
-    private static final String UNINSTALL_OPTION_SHORT = "u";
-    private static final String UNINSTALL_OPTION_LONG = "uninstall";
-    private static final String HELP_OPTION_SHORT = "h";
-    private static final String HELP_OPTION_LONG = "help";
-    private static final String PORT_OPTION = "port";
-    private static final String HOST_OPTION = "host";
-    private static final String PASSWORD_OPTION = "password";
-    private static final String SERVER_OPTION = "server";
-    private static final String XRENDER_OPTION = "xrender";
-    private static final String OPEN_GL_OPTION = "opengl";
-    private static final String EDT_OPTION = "enableEDT";
-    private static final String HANG_DETECT_OPTION = "enableHangDetect";
-    private static final String SHUTDOWN_OPTION = "shutdown";
-    private static final String ENCRYPT_OPTION = "encrypt";
-
     public static final String VERSION;
 
     static {
@@ -85,37 +52,7 @@ public final class Main {
         System.setProperty("awt.useSystemAAFontSettings", "lcd"); // force proper antialias setting
     }
 
-    private boolean portable = false;
-
-    private File portableFile = null;
-
-    private int port = JpaNetworkServer.DEFAULT_PORT;
-
-    private String hostName = null;
-
     private File file = null;
-
-    private File serverFile = null;
-
-    private char[] password = EngineFactory.EMPTY_PASSWORD;
-
-    private static boolean enableEDT = false;
-
-    private static boolean verbose = false;
-
-    private static boolean hangDetect = false;
-
-    public static boolean checkEDT() {
-        return enableEDT;
-    }
-
-    public static boolean enableVerboseLogging() {
-        return verbose;
-    }
-
-    public static boolean enableHangDetection() {
-        return hangDetect;
-    }
 
     private static boolean checkJVMVersion() {
         final float version = OS.getJavaVersion();
@@ -194,182 +131,21 @@ public final class Main {
     private void init(final String args[]) {
         configureLogging();
 
-        final OptionParser parser = buildParser();
-
-        try {
-            final OptionSet options = parser.parse(args);
-
-            if (options.has(HELP_OPTION_SHORT)) {
-                parser.printHelpOn(System.err);
-                System.exit(0);
+        if (args.length > 0) {
+            if (Files.exists(Paths.get(args[0]))) {
+                file = new File(args[0]);
             }
-
-            /* handle a file name passed in as an argument without use of the -file argument
-               assumed behavior for windows users */
-            if (!options.nonOptionArguments().isEmpty()) {
-                // Check for no-option version of a file load
-                for (final Object object : options.nonOptionArguments()) {
-                    if (object instanceof String) {
-                        if (Files.exists(Paths.get((String) object))) {
-                            file = new File((String) object);
-                            break;
-                        }
-                        System.err.println(object + " was not a valid file");
-                    }
-                }
-            }
-
-            if (options.has(EDT_OPTION)) {
-                enableEDT = true;
-            }
-
-            if (options.has(VERBOSE_OPTION_SHORT)) {
-                verbose = true;
-            }
-
-            if (options.has(HANG_DETECT_OPTION)) {
-                hangDetect = true;
-            }
-
-            /*if (options.has(ENCRYPT_OPTION)) {
-                // Set encrypt as a system property
-                System.getProperties().put(EncryptionManager.ENCRYPTION_FLAG, Boolean.toString(encrypt));
-                System.getProperties().put("ssl", Boolean.toString(encrypt));
-            }*/
-
-            if (options.has(PORT_OPTION)) {
-                port = (Integer) options.valueOf(PORT_OPTION);
-            }
-
-            if (options.has(PASSWORD_OPTION)) {
-                password = ((String) options.valueOf(PASSWORD_OPTION)).toCharArray();
-            }
-
-            if (options.has(HOST_OPTION)) {
-                hostName = (String) options.valueOf(HOST_OPTION);
-            }
-
-            if (options.has(FILE_OPTION_SHORT) && file == null) {
-                file = (File) options.valueOf(FILE_OPTION_SHORT);
-                if (!file.exists()) {
-                    file = null;
-                }
-            }
-
-            if (options.has(SERVER_OPTION)) {
-                final File sFile = (File) options.valueOf(SERVER_OPTION);
-                if (sFile.exists()) {
-                    serverFile = sFile;
-                }
-            }
-
-            // Check to see if portable preferences are being used
-            if (options.has(PORTABLE_FILE_OPTION)) {
-                portableFile = (File) options.valueOf(PORTABLE_FILE_OPTION);
-                portable = true;
-
-            } else if (options.has(PORTABLE_OPTION_SHORT)) {  // simple use of portable preferences
-                portable = true;
-            }
-
-            /* If a shutdown request is found, it trumps any other command line options */
-            if (options.has(SHUTDOWN_OPTION)) {
-                if (hostName == null) {
-                    hostName = EngineFactory.LOCALHOST;
-                }
-                MessageBus.getInstance().shutDownRemoteServer(hostName, port + 1, password);
-            } else if (options.has(UNINSTALL_OPTION_SHORT)) { /* Dump the registry settings if requested */
-                PortablePreferences.deleteUserPreferences();
-                System.exit(0);
-            } else if (serverFile != null) {
-                try {
-                    if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {
-                        JpaNetworkServer networkServer = new JpaNetworkServer();
-                        networkServer.startServer(serverFile.getAbsolutePath(), port, password);
-                    } else {
-                        System.err.println(ResourceUtils.getString("Message.FileIsLocked"));
-                    }
-                } catch (FileNotFoundException e) {
-                    logSevere(Main.class, e);
-                    System.err.println("File " + serverFile.getAbsolutePath() + " was not found");
-                } catch (Exception e) {
-                    logSevere(Main.class, e);
-                }
-            } else { // start the UI
-
-                if (portable) { // must hook in the preferences implementation first
-                    if (portableFile != null) {
-                        PortablePreferences.initPortablePreferences(portableFile.getAbsolutePath());
-                    } else {
-                        PortablePreferences.initPortablePreferences(null);
-                    }
-                }
-
-                enableAntialiasing();
-
-                if (options.has(OPEN_GL_OPTION)) {
-                    System.setProperty("sun.java2d.opengl", "True");
-                }
-
-                if (options.has(XRENDER_OPTION)) {
-                    System.setProperty("sun.java2d.xrender", "True");
-                }
-
-                if (OS.isSystemOSX()) {
-                    System.setProperty("apple.laf.useScreenMenuBar", "true");
-                }
-
-                setupNetworking();
-
-                if (hostName != null) {
-                    new UIApplication(hostName, port, password);
-                } else if (file != null && file.exists()) {
-                    new UIApplication(file.toPath(), password);
-                } else {
-                    new UIApplication(null, null);
-                }
-            }
-        } catch (final Exception e) {
-            try {
-                parser.printHelpOn(System.err);
-            } catch (final IOException ioe) {
-                logSevere(Main.class, ioe);
-            }
-
+            System.err.println(args[0] + " was not a valid file");
         }
-    }
 
-    private static OptionParser buildParser() {
-        final OptionParser parser = new OptionParser() {
-            {
-                acceptsAll(asList(HELP_OPTION_SHORT, HELP_OPTION_LONG), "This help").forHelp();
-                acceptsAll(asList(UNINSTALL_OPTION_SHORT, UNINSTALL_OPTION_LONG), "Remove registry settings");
-                acceptsAll(asList(VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG), "Enable verbose application messages");
-                acceptsAll(asList(FILE_OPTION_SHORT, FILE_OPTION_LONG), "File to load at start").withRequiredArg()
-                        .ofType(File.class);
-                accepts(PASSWORD_OPTION, "Password for a local File, server or client").withRequiredArg();
+        setupNetworking();
 
-                acceptsAll(asList(PORTABLE_OPTION_SHORT, PORTABLE_OPTION_LONG), "Enable portable preferences");
-                accepts(PORTABLE_FILE_OPTION, "Enable portable preferences and specify the file")
-                        .withRequiredArg().ofType(File.class);
+        enableAntialiasing();
 
-                accepts(PORT_OPTION, "Network port server is running on (default: " + JpaNetworkServer.DEFAULT_PORT
-                        + ")").withRequiredArg().ofType(Integer.class);
-                accepts(HOST_OPTION, "Server host name or address").requiredIf(PORT_OPTION).withRequiredArg();
-                accepts(SERVER_OPTION, "Runs as a server using the specified file")
-                        .withRequiredArg().ofType(File.class);
-
-                accepts(XRENDER_OPTION, "Enable the XRender-based Java 2D rendering pipeline");
-                accepts(OPEN_GL_OPTION, "Enable OpenGL acceleration");
-                accepts(HANG_DETECT_OPTION, "Enable hang detection on the EDT");
-                accepts(SHUTDOWN_OPTION, "Issues a shutdown request to a server");
-                accepts(EDT_OPTION, "Check for EDT violations");
-                accepts(ENCRYPT_OPTION, "Enable encryption for network communication");
-            }
-        };
-
-        parser.allowsUnrecognizedOptions();
-
-        return parser;
+        if (file != null && file.exists()) {
+            new UIApplication(file.toPath(), EngineFactory.EMPTY_PASSWORD);
+        } else {
+            new UIApplication(null, null);
+        }
     }
 }

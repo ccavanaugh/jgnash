@@ -35,7 +35,6 @@ import jgnash.ui.budget.BudgetPanel;
 import jgnash.ui.components.MemoryMonitor;
 import jgnash.ui.components.SubstanceFontSlider;
 import jgnash.ui.components.WaitMessagePanel;
-import jgnash.ui.debug.EDTCheckingRepaintManager;
 import jgnash.ui.recurring.RecurringPanel;
 import jgnash.ui.register.MainRegisterPanel;
 import jgnash.ui.register.RegisterEvent;
@@ -135,11 +134,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         // do nothing by default, let the shutdown adapter do all the work
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-        if (Main.checkEDT()) {
-            logger.info("Installing Event Dispatch Thread Checker into RepaintManager");
-            RepaintManager.setCurrentManager(new EDTCheckingRepaintManager());
-        }
 
         viewMenu.insertSeparator(viewMenu.getComponentCount() + 1);
         viewMenu.add(themeManager.buildLookAndFeelMenu());

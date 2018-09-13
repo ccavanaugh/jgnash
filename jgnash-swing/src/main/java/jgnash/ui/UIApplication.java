@@ -17,23 +17,22 @@
  */
 package jgnash.ui;
 
-import java.awt.EventQueue;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import jgnash.Main;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.splash.AboutDialog;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * GUI version of the jGnash program. This Class creates and provides access to the MainFrame.
@@ -103,13 +102,6 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                 });
             } catch (InterruptedException | InvocationTargetException e) {
                 throw new RuntimeException(e);
-            }
-        }
-
-        if (result) {
-            if (Main.enableHangDetection()) {
-                logger.info("Installing Event Dispatch Thread Hang Monitor");
-                jgnash.ui.debug.EventDispatchThreadHangMonitor.initMonitoring();
             }
         }
 

@@ -17,8 +17,6 @@ dependencies {
     compile project(':jgnash-plugin')
     compile project(':jidesoft')
 
-    compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: joptSimpleVerion
-
     compile(group: 'org.jfree', name: 'jfreechart', version: jfreeChartVersion) {
         exclude(module: 'xml-apis')
         exclude(module: 'bcmail-jdk14')
