@@ -463,6 +463,15 @@ public class Engine {
                 }
             }
 
+            final List<Config> list = eDAO.getStoredObjects(Config.class);
+            if (list.size() > 1) {
+                // Delete all but the first found config object
+                for (int i = 1; i < list.size(); i++) {
+                    logWarning("Removed an extra Config object");
+                    moveObjectToTrash(list.get(i));
+                }
+            }
+
             // Transaction timestamps were updated for release 2.25
             if (getConfig().getMinorFileFormatVersion() < 25) {
 
