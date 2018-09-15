@@ -15,7 +15,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '2.35.2'
+    version = '2.36.0'
 
     project.ext {
         junitVersion = '5.2.0'
@@ -98,7 +98,7 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = '4.10'
+    gradleVersion = '4.10.1'
 }
 
 task distZip {

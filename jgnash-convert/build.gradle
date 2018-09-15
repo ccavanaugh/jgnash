@@ -7,8 +7,7 @@ project.ext {
 dependencies {
     compile project(':jgnash-core')
     compile project(':jgnash-bayes')
-
-    compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: joptSimpleVerion
+    
     compile group: 'org.apache.commons', name: 'commons-csv', version: commons_cvs
 
     testCompile project(':jgnash-core').sourceSets.test.output

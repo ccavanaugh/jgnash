@@ -36,6 +36,7 @@ import jgnash.engine.AccountType;
 import jgnash.engine.RootAccount;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.AccountDAO;
+import jgnash.util.LogUtil;
 
 /**
  * Account Jpa DAO.
@@ -69,9 +70,14 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
                     if (list.size() == 1) {
                         return list.get(0);
                     } else if (list.size() > 1) {
-                        logger.log(Level.SEVERE, "More than one RootAccount was found: " + list.size(),
-                                new Exception());
-                        return list.get(0);
+                        LogUtil.logSevere(JpaAccountDAO.class, new Exception("More than one RootAccount was found: "
+                                + list.size()));
+
+                        for (final RootAccount rootAccount : list) {
+                            if (rootAccount.getChildCount() > 0) {
+                                return rootAccount;
+                            }
+                        }
                     }
 
                     return null;
