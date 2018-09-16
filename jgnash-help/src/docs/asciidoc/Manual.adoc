@@ -1337,6 +1337,9 @@ The disadvantage is troubleshooting syntax and logic errors can be more difficul
 == Command Line Options
 jGnash has several command line options for advanced users.
 
+_These options are only available with the jGnash Fx user
+interface and have been removed from the old Swing interface._
+
 
 Parameters such as file names that include a space in the path must be
 escaped using double quotes.
@@ -1349,24 +1352,15 @@ The path to the file "/home/craig/jgnash files/jgnash.h2.db" must be escaped as 
 java -jar jGnash2.jar --server "/home/craig/jgnash files/jgnash.h2.db" --password fh56dy
 ==============================================================================
 
+Some options have short forms.  A full list of options can be obtained using the *--help* option.
 
 [float]
 === Options
---enableEDT::
-Primarily used for development and debugging the graphical user interface.
-When enabled, this detects and warns of bad UI programing practice.
+--help::
+Detailed display of all command line options.
 
 --file [option]``filename``::
 Specifies a file to load at startup.
-
---opengl::
-Enables OpenGL support for platforms and video drivers that support it.
-Disable use if strange graphics errors occur.
-
---xrender::
-Enables 2D rendering pipeline for modern X11 based desktop environments.
-The performance improvement can be significant for some systems.
-This has no effect on OSX or Windows systems.
 
 --portable::
 If portable is specified on the command line, jGnash preferences will be stored to a file name**pref.xml**instead of
