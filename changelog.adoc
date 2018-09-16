@@ -23,6 +23,10 @@
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 
+== Release 2.36.1
+* 09/16/2018 The new file wizard would not behave correctly if the task list was used instead of stepping sequentially
+             using the Next button. This also impacted the Import Wizard. (Fx)
+
 == Release 2.36.0
 * 09/13/2018 Enhanced the MT940 parser to allow for an optional currency designator in decimal values. (Swing, Fx) _[Alex Werz]_
 * 09/13/2018 Reinstated check and correct for data files with multiple root accounts and config objects. (Swing, Fx)

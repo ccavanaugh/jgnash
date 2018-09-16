@@ -38,11 +38,11 @@ class WizardDescriptor {
         setDescription(description);
     }
 
-    public boolean isValid() {
+    boolean isValid() {
         return valid;
     }
 
-    public void setIsValid(boolean valid) {
+    void setIsValid(boolean valid) {
         this.valid = valid;
     }
 
