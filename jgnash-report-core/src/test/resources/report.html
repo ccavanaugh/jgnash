@@ -21,10 +21,13 @@
 
         table {
             border-collapse: collapse;
+            -fs-table-paginate: paginate;
+            border-spacing: 8px;
         }
 
         table, th, td {
             border: 1px solid black;
+            overflow: hidden;
         }
 
         td {
@@ -74,10 +77,12 @@
     </style>
 </head>
 <body>
-<div style="text-align:center;font-size: .75em;color:black;">
-    Checking Account
+<div style="text-align:center;font-size: .80em;color:black;">
 
-    <table border="1" style="width:100%">
+    <table border="1" style="width:100%" >
+
+        <caption>Checking Account</caption>
+
         <tr>
             <th>Date</th>
             <th>Num</th>
@@ -125,8 +130,8 @@
         <tr>
             <td>09/16/2018</td>
             <td>EBT</td>
-            <td>Pickles</td>
-            <td>Dill</td>
+            <td>Pickles, Beets, Tomatoes, Corn</td>
+            <td>Dill and canning supplies, wax, goo, and some really long text to cause an overflow</td>
             <td>Cash</td>
             <td></td>
             <td>10.00</td>
