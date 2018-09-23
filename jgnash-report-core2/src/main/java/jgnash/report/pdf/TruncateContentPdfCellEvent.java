@@ -18,6 +18,7 @@
 package jgnash.report.pdf;
 
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
 import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
@@ -71,10 +72,11 @@ public class TruncateContentPdfCellEvent implements PdfPCellEvent {
         ellipsis = truncationSuffix;
     }
 
-    // TODO: text alignment needs to occur here?????
-
     @Override
     public void cellLayout(final PdfPCell cell, final Rectangle position, final PdfContentByte[] canvases) {
+
+        float horizontalShift = 0;  // used to right align the cell content
+
         try {
             // available cell width factoring in margins
             final float availableWidth = position.getWidth() - cell.getPaddingLeft() - cell.getPaddingRight();
@@ -96,7 +98,13 @@ public class TruncateContentPdfCellEvent implements PdfPCellEvent {
             final PdfContentByte canvas = canvases[PdfPTable.TEXTCANVAS];
 
             final ColumnText ct = new ColumnText(canvas);
-            ct.setSimpleColumn(position.getLeft() + cell.getPaddingLeft(),
+
+            // calculate the shift if alignment is to the right
+            if (cell.getHorizontalAlignment() == Element.ALIGN_RIGHT) {
+                horizontalShift = availableWidth - bf.getWidthPoint(content, fontSize) - cell.getEffectivePaddingRight();
+            }
+
+            ct.setSimpleColumn(position.getLeft() + cell.getPaddingLeft() + horizontalShift,
                     position.getBottom() + cell.getEffectivePaddingBottom(),
                     position.getRight() - cell.getEffectivePaddingRight(),
                     position.getTop() - cell.getPaddingTop());

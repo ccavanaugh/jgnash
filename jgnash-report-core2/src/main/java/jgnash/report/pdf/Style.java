@@ -14,8 +14,8 @@ public class Style {
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
         // padding
-        cell.setPaddingLeft(4);
-        cell.setPaddingRight(4);
+        cell.setPaddingLeft(2);
+        cell.setPaddingRight(2);
         cell.setPaddingBottom(2);
 
         // background color
@@ -37,8 +37,8 @@ public class Style {
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
         // padding
-        cell.setPaddingLeft(4);
-        cell.setPaddingRight(4);
+        cell.setPaddingLeft(2);
+        cell.setPaddingRight(2);
 
         // border
         cell.setBorder(0);
