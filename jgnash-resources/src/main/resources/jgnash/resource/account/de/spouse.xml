@@ -1,0 +1,72 @@
+<object-stream>
+  <RootAccount id="1" placeHolder="false" locked="false" visible="true" name="Partner" description="Partner">
+    <accountType>ROOT</accountType>
+    <notes></notes>
+    <currencyNode id="3" locale="de_DE" symbol="EUR" scale="2" prefix="" suffix="€" description="de_DE"/>
+    <children id="4">
+      <Account id="5" placeHolder="true" locked="false" visible="true" name="Ausgaben" description="Ausgaben">
+        <accountType>EXPENSE</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <securities id="28"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="29"/>
+      </Account>
+      <Account id="30" placeHolder="true" locked="false" visible="true" name="Einnahmen" description="Einnahmen">
+        <accountType>INCOME</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="32">
+          <Account id="33" placeHolder="true" locked="false" visible="true" name="Einkommen Partner" description="Einkommen Partner">
+            <accountType>INCOME</accountType>
+            <parentAccount reference="30"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="34">
+              <Account id="35" placeHolder="false" locked="false" visible="true" name="Gehalt" description="Gehalt">
+                <accountType>INCOME</accountType>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="36"/>
+                <securities id="37"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="38"/>
+              </Account>
+              <Account id="39" placeHolder="false" locked="false" visible="true" name="Zinsen" description="Zinsen">
+                <accountType>INCOME</accountType>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="40"/>
+                <securities id="41"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="42"/>
+              </Account>
+              <Account id="43" placeHolder="false" locked="false" visible="true" name="Anderes Einkommen" description="Anderes Einkommen">
+                <accountType>INCOME</accountType>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="44"/>
+                <securities id="45"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="46"/>
+              </Account>
+            </children>
+            <securities id="51"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="52"/>
+          </Account>
+        </children>
+        <securities id="53"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="54"/>
+      </Account>
+    </children>
+    <securities id="55"/>
+    <propertyMap id="56"/>
+  </RootAccount>
+</object-stream>

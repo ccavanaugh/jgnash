@@ -1,0 +1,5 @@
+Sie können die importierten Transaktion bearbeiten bevor der Import abgeschlossen wird.
+
+Sie sollten das Zielkonto prüfen um Ihre Ein- und Ausgaben besser zu organisieren.
+
+Neue Transaktionen können gelöscht oder deren Importstatus deaktiviert werden. Falls eine Transaktion erkannt wird, die bereits besteht, kann diese überschrieben werden wenn der Import forciert wird.
