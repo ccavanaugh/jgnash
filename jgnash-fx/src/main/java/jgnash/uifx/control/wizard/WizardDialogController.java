@@ -99,7 +99,7 @@ public class WizardDialogController<K extends Enum<?>> {
 
         // updates the task title
         taskList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
-                -> handleTaskChange(newValue));
+                -> handleTaskChange(oldValue, newValue));
 
         taskList.setCellFactory(param -> new ControllerListCell());
 
@@ -155,11 +155,21 @@ public class WizardDialogController<K extends Enum<?>> {
         updateButtonState();
     }
 
-    private void handleTaskChange(final WizardDescriptor descriptor) {
-        taskTitlePane.textProperty().set(descriptor.getDescription());
+    // handle a task change via the list
+    private void handleTaskChange(final WizardDescriptor oldDescriptor, final WizardDescriptor newDescriptor) {
+
+        // store the settings of the prior controller... the user may be skipping around
+        if (oldDescriptor != null) {
+            getController(oldDescriptor).putSettings(settings);
+        }
+
+        getController(newDescriptor).getSettings(settings);
+
+        taskTitlePane.textProperty().set(newDescriptor.getDescription());
         updateButtonState();
 
-        paneMap.keySet().stream().filter(controller -> controller.descriptorProperty().get().equals(descriptor)).forEach(controller -> {
+        paneMap.keySet().stream().filter(controller -> controller.descriptorProperty().get().equals(newDescriptor))
+                .forEach(controller -> {
             taskPane.getChildren().clear();
             taskPane.getChildren().addAll(paneMap.get(controller));
         });
