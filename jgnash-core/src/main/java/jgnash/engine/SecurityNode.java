@@ -134,7 +134,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     public String getISIN() {
-        return isin;
+        return (isin == null)?"":isin;
     }
 
     public void setISIN(final String isin) {
