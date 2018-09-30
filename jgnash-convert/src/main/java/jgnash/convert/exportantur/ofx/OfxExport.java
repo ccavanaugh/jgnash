@@ -289,7 +289,7 @@ public class OfxExport implements OfxTags {
         // write security information
         indentedWriter.println(wrapOpen(SECID), indentLevel++);
 
-        if (node.getISIN() != null && !node.getISIN().isEmpty()) {
+        if (!node.getISIN().isEmpty()) {
             indentedWriter.println(wrap(UNIQUEID, node.getISIN()), indentLevel);
         } else {
             indentedWriter.println(wrap(UNIQUEID, node.getSymbol()), indentLevel);
