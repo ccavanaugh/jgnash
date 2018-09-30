@@ -39,6 +39,10 @@ allprojects {
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
 
+        openHtmlToPDFVersion = '0.0.1-RC15'
+        PDFBoxVersion = '2.0.11'
+        OpenPDFVersion = '1.2.4'
+
         nettyVersion = '4.1.29.Final'
 
         slf4jVersion = '1.8.0-beta2'

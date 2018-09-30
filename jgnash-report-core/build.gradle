@@ -7,6 +7,9 @@ project.ext {
 dependencies {
     compile project(':jgnash-core')
 
+    compile group: 'com.openhtmltopdf', name: 'openhtmltopdf-core', version: openHtmlToPDFVersion
+    compile group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: openHtmlToPDFVersion
+
     compile(group: 'com.lowagie', name: 'itext', version: itextVersion) {
         exclude(module: 'bcmail-jdk14')
         exclude(module: 'bctsp-jdk14')
