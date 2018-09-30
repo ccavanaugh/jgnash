@@ -5,6 +5,7 @@ include ':jgnash-help'
 include ':jgnash-resources'
 include ':jgnash-core'
 include ':jgnash-report-core'
+include ':jgnash-report-core2'
 include ':jgnash-swing'
 include ':jgnash-convert'
 include ':jgnash-plugin'
@@ -19,6 +20,7 @@ project(':jgnash-help').projectDir = "$rootDir/jgnash-help" as File
 project(':jgnash-resources').projectDir = "$rootDir/jgnash-resources" as File
 project(':jgnash-core').projectDir = "$rootDir/jgnash-core" as File
 project(':jgnash-report-core').projectDir = "$rootDir/jgnash-report-core" as File
+project(':jgnash-report-core2').projectDir = "$rootDir/jgnash-report-core2" as File
 project(':jgnash-swing').projectDir = "$rootDir/jgnash-swing" as File
 project(':jgnash-convert').projectDir = "$rootDir/jgnash-convert" as File
 project(':jgnash-plugin').projectDir = "$rootDir/jgnash-plugin" as File
