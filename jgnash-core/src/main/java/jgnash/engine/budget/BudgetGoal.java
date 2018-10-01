@@ -1,5 +1,5 @@
 /*
- * jGnash, account personal finance application
+ * jGnash, a personal finance application
  * Copyright (C) 2001-2018 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify

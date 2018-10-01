@@ -41,6 +41,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 
 import jgnash.time.DateUtils;
+import jgnash.util.NotNull;
 
 /**
  * Security Node.
@@ -133,8 +134,9 @@ public class SecurityNode extends CommodityNode {
         quoteSource = source;
     }
 
+    @NotNull
     public String getISIN() {
-        return isin;
+        return (isin == null) ? "" : isin;
     }
 
     public void setISIN(final String isin) {

@@ -38,6 +38,8 @@ allprojects {
         dynamicJasperVersion = '5.1.1'
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
+        
+        OpenPDFVersion = '1.2.4'
 
         nettyVersion = '4.1.29.Final'
 
@@ -68,7 +70,6 @@ subprojects {
         mavenCentral()
         jcenter()
         mavenLocal()
-        // maven { url "http://nexus.fdvs.com.ar/content/groups/public/" }
         maven { url "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/" }
     }
 
