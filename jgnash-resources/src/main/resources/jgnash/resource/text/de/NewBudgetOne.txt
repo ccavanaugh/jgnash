@@ -1,0 +1,5 @@
+Erstellt ein neues Budget anhand der Ein- und Ausgaben der vergangenen Jahre.
+
+Wählen Sie die historische Methode der Wahl um das Budget zu erstellen.
+
+Budget-Werte können zu einem späteren Zeitpunkt verfeinert werden.
