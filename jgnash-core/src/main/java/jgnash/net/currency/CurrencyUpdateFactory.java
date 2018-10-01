@@ -61,7 +61,7 @@ public class CurrencyUpdateFactory {
     public static Optional<BigDecimal> getExchangeRate(final CurrencyNode source, final CurrencyNode target) {
         Optional<BigDecimal> optional = Optional.empty();
 
-        final CurrencyParser parser = new YahooParser();
+        final CurrencyParser parser = new CurrencyConverterParser();
 
         if (parser.parse(source.getSymbol(), target.getSymbol())) {
             final BigDecimal exchangeRate = parser.getConversion();
