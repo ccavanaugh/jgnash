@@ -24,6 +24,7 @@
 * Open zipped backups instead of manually unzipping.
 
 == Release 2.36.1
+* 10/01/2018 Updated German translation. (Swing, Fx) _[Alex Werz]_
 * 09/30/2018 Fixed an NPE when an ISIN was not specified for a security. (Swing, Fx) _[Pranay Kumar]_
 * 09/16/2018 The new file wizard would not behave correctly if the task list was used instead of stepping sequentially
              using the Next button. This also impacted the Import Wizard. (Fx)
