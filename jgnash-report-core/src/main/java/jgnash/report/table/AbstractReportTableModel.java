@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.report.ui.jasper;
+package jgnash.report.table;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -23,14 +23,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.text.CommodityFormat;
 import jgnash.time.DateUtils;
+import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
 
 /**
@@ -78,7 +77,7 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
      * @param columnIndex column to check
      * @return String representing the longest value
      */
-    String getColumnPrototypeValueAt(final int columnIndex) {
+    public String getColumnPrototypeValueAt(final int columnIndex) {
 
         final int groupColumn = getGroupColumn();
 
@@ -99,10 +98,10 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
             switch (getColumnStyle(columnIndex)) {
                 case QUANTITY:
-                    nf = ReportFactory.getQuantityFormat();
+                    nf = Formats.getQuantityFormat();
                     break;
                 case PERCENTAGE:
-                    nf = ReportFactory.getPercentageFormat();
+                    nf = Formats.getPercentageFormat();
                     break;
                 default:
                     nf = CommodityFormat.getFullNumberFormat(getCurrency());
@@ -169,8 +168,8 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
                             longest = val;
                         }
                     }
-                } catch (IllegalArgumentException e) {
-                    Logger.getLogger(AbstractReportTableModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
+                } catch (final IllegalArgumentException e) {
+                    LogUtil.logSevere(AbstractReportTableModel.class, e);
                 }
             }
         } else if (getColumnStyle(columnIndex) == ColumnStyle.TIMESTAMP) {
@@ -186,8 +185,8 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
                             longest = val;
                         }
                     }
-                } catch (IllegalArgumentException e) {
-                    Logger.getLogger(AbstractReportTableModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
+                } catch (final IllegalArgumentException e) {
+                    LogUtil.logSevere(AbstractReportTableModel.class, e);
                 }
             }
         }

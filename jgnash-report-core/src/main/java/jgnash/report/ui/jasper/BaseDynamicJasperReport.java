@@ -55,6 +55,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.ColumnHeaderStyle;
+import jgnash.report.table.ColumnStyle;
+import jgnash.report.table.Formats;
 import jgnash.text.CommodityFormat;
 import jgnash.time.DateUtils;
 import jgnash.resource.util.ResourceUtils;
@@ -363,10 +367,10 @@ public abstract class BaseDynamicJasperReport {
                             builder.setPattern(CommodityFormat.getFullNumberPattern(model.getCurrency()));
                             break;
                         case PERCENTAGE:
-                            builder.setPattern(((DecimalFormat)ReportFactory.getPercentageFormat()).toPattern());
+                            builder.setPattern(((DecimalFormat) Formats.getPercentageFormat()).toPattern());
                             break;
                         case QUANTITY:
-                            final NumberFormat nf = ReportFactory.getQuantityFormat();
+                            final NumberFormat nf = Formats.getQuantityFormat();
                             final String pattern = ((DecimalFormat) nf).toPattern();
                             builder.setPattern(pattern);
                             break;

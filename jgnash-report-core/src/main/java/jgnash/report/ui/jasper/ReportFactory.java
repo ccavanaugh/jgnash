@@ -19,7 +19,6 @@ package jgnash.report.ui.jasper;
 
 import ar.com.fdvs.dj.domain.constants.Font;
 
-import java.text.NumberFormat;
 import java.util.prefs.Preferences;
 
 import jgnash.report.ui.FontRegistry;
@@ -155,19 +154,4 @@ public class ReportFactory {
         return buildFont(size, getMonoFont(), bold, false, false);
     }
 
-    public static NumberFormat getQuantityFormat() {
-        NumberFormat nf = NumberFormat.getNumberInstance();
-        nf.setMaximumFractionDigits(4);
-        nf.setMinimumFractionDigits(4);
-
-        return nf;
-    }
-
-    public static NumberFormat getPercentageFormat() {
-        NumberFormat nf = NumberFormat.getPercentInstance();
-        nf.setMaximumFractionDigits(2);
-        nf.setMinimumFractionDigits(2);
-
-        return nf;
-    }
 }

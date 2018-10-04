@@ -15,14 +15,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.report.ui.jasper;
+package jgnash.report.table;
+
+import java.text.NumberFormat;
 
 /**
+ * Standard Numeric Format generators
+ *
  * @author Craig Cavanaugh
  */
-public enum ColumnHeaderStyle {
-    LEFT,
-    CENTER,
-    RIGHT,
-    NONE
+public class Formats {
+
+    private Formats() {
+        // utility class
+    }
+
+    public static NumberFormat getQuantityFormat() {
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        nf.setMaximumFractionDigits(4);
+        nf.setMinimumFractionDigits(4);
+
+        return nf;
+    }
+
+    public static NumberFormat getPercentageFormat() {
+        NumberFormat nf = NumberFormat.getPercentInstance();
+        nf.setMaximumFractionDigits(2);
+        nf.setMinimumFractionDigits(2);
+
+        return nf;
+    }
 }

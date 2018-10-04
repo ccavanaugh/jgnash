@@ -28,7 +28,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.report.ui.Row;
+import jgnash.report.table.Row;
 import jgnash.uifx.report.jasper.AbstractSumByTypeReport;
 
 /**

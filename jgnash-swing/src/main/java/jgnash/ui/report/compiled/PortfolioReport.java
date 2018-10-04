@@ -35,9 +35,9 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.InvestmentPerformanceSummary;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.AccountListComboBox;
-import jgnash.report.ui.jasper.AbstractReportTableModel;
-import jgnash.report.ui.jasper.ColumnHeaderStyle;
-import jgnash.report.ui.jasper.ColumnStyle;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.ColumnHeaderStyle;
+import jgnash.report.table.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
 import jgnash.ui.util.IconUtils;
 
