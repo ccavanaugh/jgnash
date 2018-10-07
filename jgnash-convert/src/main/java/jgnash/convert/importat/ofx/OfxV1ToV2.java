@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import jgnash.util.FileMagic;
 
 import static jgnash.util.LogUtil.logSevere;
+import static jgnash.convert.importat.ofx.Sanitize.sanitize;
 
 /**
  * Utility class to convert OFX version 1 (SGML) to OFX version 2 (XML)
@@ -101,22 +102,6 @@ class OfxV1ToV2 {
         }
 
         return sanitize(xml.toString());
-    }
-
-    /**
-     * Replaces illegal XML characters with escaped characters
-     *
-     * @param xml String to process
-     * @return valid string
-     */
-    private static String sanitize(final String xml) {
-        String ugly = xml;
-
-        ugly = ugly.replaceAll("&(?!(?:amp);)", "&amp;");
-        ugly = ugly.replaceAll("\"", "&quot;");
-        ugly = ugly.replaceAll("'", "&apos;");
-
-        return ugly;
     }
 
     private static String concat(final Collection<String> strings) {

@@ -18,9 +18,11 @@
 package jgnash.convert.importat.ofx;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -50,9 +52,11 @@ import jgnash.convert.common.OfxTags;
 import jgnash.convert.importat.ImportSecurity;
 import jgnash.convert.importat.ImportTransaction;
 import jgnash.engine.TransactionType;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.util.FileMagic;
 import jgnash.util.NotNull;
-import jgnash.resource.util.ResourceUtils;
+
+import static jgnash.convert.importat.ofx.Sanitize.sanitize;
 
 /**
  * StAX based parser for 2.x OFX (XML) files.
@@ -218,10 +222,25 @@ public class OfxV2Parser implements OfxTags {
     /**
      * Parses an InputStream and assumes UTF-8 encoding
      *
+     * Illegal characters are corrected automatically if found
+     *
      * @param stream InputStream to parse
      */
     public void parse(final InputStream stream) {
-        parse(stream, ENCODING);
+
+        final StringBuilder stringBuilder = new StringBuilder();
+
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, ENCODING))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+
+            parse(sanitize(stringBuilder.toString()), ENCODING);
+        } catch (final IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
     }
 
     /**
@@ -269,31 +288,29 @@ public class OfxV2Parser implements OfxTags {
 
             final int event = reader.next();
 
-            switch (event) {
-                case XMLStreamConstants.START_ELEMENT:
-                    switch (reader.getLocalName()) {
-                        case OFX:   // consume the OFX header here
-                            break;
-                        case SIGNONMSGSRSV1:
-                            parseSignOnMessageSet(reader);
-                            break;
-                        case BANKMSGSRSV1:
-                            parseBankMessageSet(reader);
-                            break;
-                        case CREDITCARDMSGSRSV1:
-                            parseCreditCardMessageSet(reader);
-                            break;
-                        case INVSTMTMSGSRSV1:
-                            parseInvestmentAccountMessageSet(reader);
-                            break;
-                        case SECLISTMSGSRSV1:
-                            parseSecuritesMessageSet(reader);
-                            break;
-                        default:
-                            logger.log(Level.WARNING, "Unknown message set {0}", reader.getLocalName());
-                            break;
-                    }
-                default:
+            if (event == XMLStreamConstants.START_ELEMENT) {
+                switch (reader.getLocalName()) {
+                    case OFX:   // consume the OFX header here
+                        break;
+                    case SIGNONMSGSRSV1:
+                        parseSignOnMessageSet(reader);
+                        break;
+                    case BANKMSGSRSV1:
+                        parseBankMessageSet(reader);
+                        break;
+                    case CREDITCARDMSGSRSV1:
+                        parseCreditCardMessageSet(reader);
+                        break;
+                    case INVSTMTMSGSRSV1:
+                        parseInvestmentAccountMessageSet(reader);
+                        break;
+                    case SECLISTMSGSRSV1:
+                        parseSecuritesMessageSet(reader);
+                        break;
+                    default:
+                        logger.log(Level.WARNING, "Unknown message set {0}", reader.getLocalName());
+                        break;
+                }
             }
         }
 
@@ -481,13 +498,10 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    switch (reader.getLocalName()) {
-                        case SECLIST:
-                            parseSecuritiesList(reader);
-                            break;
-                        default:
-                            logger.log(Level.WARNING, "Unknown SECLISTMSGSRSV1 element: {0}", reader.getLocalName());
-                            break;
+                    if (SECLIST.equals(reader.getLocalName())) {
+                        parseSecuritiesList(reader);
+                    } else {
+                        logger.log(Level.WARNING, "Unknown SECLISTMSGSRSV1 element: {0}", reader.getLocalName());
                     }
 
                     break;
@@ -944,7 +958,7 @@ public class OfxV2Parser implements OfxTags {
 
         logger.exiting(OfxV2Parser.class.getName(), "parseBankTransaction");
     }
-    
+
     private static void parseAccountInfo(final ImportTransaction importTransaction, final AccountInfo accountInfo) {
         importTransaction.setAccountTo(accountInfo.accountId);
     }
@@ -1253,10 +1267,7 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    switch (reader.getLocalName()) {
-                        default:
-                            break;
-                    }
+                    reader.getLocalName();
 
                     break;
                 case XMLStreamConstants.END_ELEMENT:

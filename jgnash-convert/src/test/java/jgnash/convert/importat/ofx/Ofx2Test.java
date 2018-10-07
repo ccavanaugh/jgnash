@@ -571,4 +571,42 @@ class Ofx2Test {
         }
     }
 
+    @Test
+    void parseUglyFile2() throws Exception {
+        final String testFile = "/test_fails.ofx";
+
+        final Path path = Paths.get(Ofx2Test.class.getResource(testFile).toURI());
+
+        assertTrue(Files.exists(path));
+
+        assertTrue(FileMagic.isOfxV2(path));
+
+        try {
+
+            try (final InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
+                parser.parse(stream);
+
+                OfxBank ofxBank = parser.getBank();
+
+                assertNotNull(ofxBank);
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals(0, parser.getStatusCode());
+                assertEquals("INFO", parser.getStatusSeverity());
+
+                assertNull(ofxBank.statusMessage);
+
+                assertEquals(2, ofxBank.getTransactions().size());
+
+                assertFalse(ofxBank.isInvestmentAccount());
+            } catch (final IOException e) {
+                logSevere(Ofx2Test.class, e);
+                fail();
+            }
+        } catch (final Exception e) {
+            logSevere(Ofx2Test.class, e);
+            fail();
+        }
+    }
+
 }
