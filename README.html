@@ -446,12 +446,77 @@ of the same features as commercially-available software. It was created in order
 easy, but also provides the functionality needed by advanced users. jGnash is cross-platform and will run on
 any operating system that has a current Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>jGnash 2.x requires <strong>Java 8</strong> (It can run on later versions. <em>See the <a href="#Requirements">Requirements section.</a></em>)</p>
+</li>
+<li>
+<p>jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Platform.</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>jGnash 2.x requires that Java 8 or newer be installed.
-jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Platform.</p>
+<p>See the <a href="#Requirements">Requirements</a> section below for more details, including notes on using Java versions 9, 10, or later.</p>
 </div>
 <div class="sect2">
-<h3 id="_features">Features</h3>
+<h3 id="_contents">Contents:</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#About">About jGnash</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#Features">jGnash Features</a></p>
+</li>
+<li>
+<p><a href="#Current">Current version: jGnash-FX</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="#Donations">Donations</a></p>
+</li>
+<li>
+<p><a href="#Support">Support</a></p>
+</li>
+<li>
+<p><a href="#Requirements">Requirements</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#Reqs-Java">Java</a></p>
+</li>
+<li>
+<p><a href="#Reqs-OS">Supported Operating System versions</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="#Download">Download jGnash</a></p>
+</li>
+<li>
+<p><a href="#Install">Installation</a></p>
+</li>
+<li>
+<p><a href="#Running">Running jGnash</a></p>
+</li>
+<li>
+<p><a href="#Development">Building and Development</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="About">About jGnash</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="Features">jGnash Features</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -486,9 +551,49 @@ jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Plat
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>To learn more about the features of jGnash, visit the <a href="https://sourceforge.net/projects/jgnash/">jGnash Website</a>.</p>
+</div>
+<div class="paragraph">
+<p>The jGnash download includes a user manual to help get you started with the basics if you are new to tracking finances.
+It also covers some of the more subtle features, command line options, and shortcuts that are not immediately obvious.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_donations">Donations</h3>
+<h3 id="jGnashFx-version">The Current Version: <em>jGnashFX</em></h3>
+<div class="paragraph">
+<p>The current version of jGnash uses <strong>JavaFX</strong> for the user interface. This replaces the old versions that used Java Swing for the user interface.
+This version is called "<strong>jGnashFX</strong>" to distinguish it from the older versions.  Experienced jGnash users will notice interface improvements.
+For example, try using the vertical and horizontal scroll wheels in a date picker and the
+collapsible transaction forms.</p>
+</div>
+<div class="paragraph">
+<p>The core/engine of jGnash remains the same and is shared by both the Swing and JavaFx versions. This means stability
+and protection of your valuable data remains the same. This also allows you to switch between versions without issue.</p>
+</div>
+<div class="paragraph">
+<p>The advantages of JavaFX over Swing are an improved appearance with better utilization of the systems graphics hardware
+ including Hi-DPI systems. It also means a smaller code base for the user interface, access to better components such as improved
+table support, HTML pages, functional animations, modern controls, etc.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+<strong>Linux users</strong> see must use either an Oracle Java or OpenJFX <code>8u71</code> or later.  See <a href="#openJDK-linux">the requirements on OpenJDK for specifics.</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Donations">Donations</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Donations are always welcome and appreciated.  This helps to defer the cost of computer hardware and internet access.</p>
 </div>
@@ -496,115 +601,193 @@ jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Plat
 <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=TYN4QECUL5C44"><span class="image"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg" alt="PayPal"></span></a></p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="Support">Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <strong><a href="https://groups.google.com/forum/#!forum/jgnash-user">jGnash Help Group</a></strong> is always a good source if you need help and
+<strong>is the prefered method of contact.</strong>  Your first post to the group will be moderated to filter spam.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Requirements">Requirements</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_learn_about_jgnash_support">Learn about jGnash / Support</h3>
-<div class="paragraph">
-<p>To learn about the features of jGnash, visit the <a href="https://sourceforge.net/projects/jgnash/">jGnash Website</a>.</p>
+<h3 id="Reqs-Java">1. Java 8 ( or 9 or 10): OpenJDK or Oracle JDK</h3>
+<div class="sect3">
+<h4 id="_java_8">Java 8</h4>
+<div id="JDK-8" class="paragraph">
+<p><strong>Java 8 <a href="https://jdk8.java.net/download.html">JDK 8u71</a></strong> or later is required to run jGnash using the jGnashFx interface.
+  The 8u71 release
+fixed several JavaFX bugs and jGnashFx is dependent on several recent API changes.
+(See the <a href="#jGnashFx-version">The Current Version: <em>jGnashFX</em></a> section for information on jGnashFx vs. the legacy Java Swing version.)</p>
 </div>
+<div class="sect4">
+<h5 id="JDK-9-10">Java 9 or 10</h5>
 <div class="paragraph">
-<p>The jGnash download includes a user manual to help get you started with the basics if you are new to tracking finances.
-It also covers some of the more subtle features, command line options, and shortcuts that are not immediately obvious.</p>
+<p>jGnash is designed to operate with <strong>Java 8.</strong>  Starting with Java 9, Oracle has removed some modules required by jGnash.
+It <em>is</em> possible to run jGnash with Java 9 or 10: be sure to read the <a href="#Install">Install section below</a> to ensure that jGnash has all modules available.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="JDK-11">Java 11</h5>
 <div class="paragraph">
-<p>The <a href="https://groups.google.com/forum/#!forum/jgnash-user">jGnash Help Group</a> is always a good source if you need help and
-is the prefered method of contact.  Your first post to the group will be moderated to filter spam.</p>
+<p>jGnash does not yet work with <em>Java 11</em>, but integration work has started with the 3.0-dev branch.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_openjdk_or_oracle_jdk">OpenJDK or Oracle JDK</h4>
+<div class="paragraph">
+<p>jGnash will work with either OpenJDK or Oracle JDK.  jGnashFx has been heavily tested against OpenJFX. There are no noticeable differences in performance or
+stability with the Oracle release or OpenJDK with OpenJFX.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_download_jgnash">Download jGnash</h3>
+<h3 id="Reqs-OS">2. Supported Operating Systems: Windows, Linux, or Mac OS X</h3>
+<div class="sect3">
+<h4 id="_microsoft_windows">Microsoft Windows</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>any version that can run the required version(s) of Java 8 <code>8u71</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_linux">Linux</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>any version that can run the required version(s) of Java 8 <code>8u71</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note: jGnash is <em>not compatible</em> with the GCJ Java installation pre-installed on older Linux distributions.
+You will need to install the <strong>OpenJDK</strong> or <strong>Oracle Java</strong> Platform and set the default for jGnash
+to operate correctly.</p>
+</div>
+<div id="openJDK-linux" class="paragraph">
+<p><strong>Linux and OpenJDK:</strong>
+Some Linux distributions separate the installation of the Open JavaFx libraries from the base JVM package.
+The jGnashFx interface requires <code>OpenJFX 8u71</code> or later. OpenJFX <code>8u40</code> and <code>u45</code> packages are generally available for most
+mainstream Linux distributions, but <em>will not work.</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mac_os_x">Mac OS X</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Mac OS X 10.8.3 or later</p>
+</li>
+<li>
+<p>can run the required version(s) of Java 8 <code>8u71</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>Be sure to read <a href="#Install-MacOSX">the section about installing on Mac OS X</a> to create the startup script.</em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Download">Download jGnash</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>You can download jGnash from the <a href="https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/">jGnash Download Page</a>.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_to_install_jgnash">To Install jGnash:</h3>
+</div>
+<div class="sect1">
+<h2 id="Install">To Install jGnash</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Install Java 8 or newer.  Most users of jGnash will want to use the latest version of <a href="http://www.java.com/en/download/">Oracle Java Runtime Environment</a>.
-Developers will want the Java Development Kit (see build instructions below.)</p>
+<p>Install the latest version of <strong>Java 8</strong>  if you don&#8217;t already have it installed.
+Most users of jGnash will want to use the latest version of <a href="http://www.java.com/en/download/">Oracle Java Runtime Environment, version 8</a>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If you use Java 9 or 10 you will need to do additional installation steps as specified in the <a href="#JDK-9-10">Java 9 or 10 section.</a></p>
+</li>
+<li>
+<p>Developers will want the Java Development Kit (see build instructions below.)</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Unzip all files into a directory of your choice leaving the directory structure unchanged.</p>
 </li>
 </ol>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_to_run">To Run:</h3>
-<div class="paragraph">
-<p>Executable files are provided for Windows and UN*X users at the root of the installation directory.
-The jGnashFx executables will launch jGnash with the latest interface and the jGnash2 files with launch jGnash with
-the old legacy Java Swing interface.</p>
-</div>
-<div class="paragraph">
-<p>Simply double click on the *.exe file of choice in Windows.</p>
-</div>
-<div class="paragraph">
-<p>UN*X users can start jGnash with the provided Bash scripts.  If they fail to launch, check your file permissions and
-make sure they are set to be executable or use a unzip tool that preserves file permissions.</p>
-</div>
-<div class="paragraph">
-<p>An example for UN*X users is show below assuming you have changed to the installation directory.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>./jGnashFx</code></pre>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_linux_tips">Linux Tips:</h4>
-<div class="paragraph">
-<p>jGnash is not compatible with the GCJ Java installation pre-installed on older Linux distributions.
-You will need to install the OpenJDK or Oracle Java Platform and correctly set the default for jGnash
-to operate correctly.</p>
-</div>
-<div class="paragraph">
-<p>Some Linux distributions separate the installation of the Open JavaFx libraries from the base JVM package.
-If the Fx version of the UI does not work, verify the required openjfx package is installed.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_mac_os_x_installation">Mac OS X Installation:</h4>
-<div class="paragraph">
-<p>For Mac OS X users, a minimum of Mac OS X 10.8.3 is required</p>
-</div>
+<h3 id="Install-MacOSX">Mac OS X Installation:</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>Copy the jGnash folder to <code>/Applications</code> and remove the version so the final path looks like <code>/Applications/jGnash</code>.</p>
 </li>
 <li>
+<p>Create an AppleScript that will run the application:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
 <p>Open the AppleScript Editor.</p>
+</li>
+<li>
+<p>Create the following script:</p>
+<div class="literalblock">
+<div class="content">
+<pre>try
+    do shell script "/Applications/jGnash/jGnashFx"
+end try</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Save it as an Application called <code>jGnash.app</code> in <code>/Applications/jGnash</code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Instead of step 2,
+you can set the <code>/Applications/jGnash/jGnashFx</code> file to <em>Open with&#8230;&#8203;</em> <code>Terminal.app</code> (the Terminal application).</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Install-JDK-9-10">Installing with Java 9 or 10</h3>
+<div class="paragraph">
+<p>You must have the <code>jaxb-api.jar</code> file available <em>and</em> manually tell jGnash to use it.  Here are the steps to do that:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that you have a <code>jaxb-api.jar</code> file and that it is in the jGnash/lib directory.  (You can google/search for
+<code>jaxb-api.jar</code> to find a download that works for you.)</p>
+</li>
+<li>
+<p>Add the additional command line option <code>--add-modules java.xml.bind</code> to the command or shell file you use to run
+  jGnash.  You will need to modify the appropriate command or shell file for your operating system in the <code>[jGnash]/bin</code> directory.
+   Adding this command-line option ensures that the <code>jaxb-api.jar</code> file is
+used.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Create the following script:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>try
-    do shell script "/Applications/jGnash/jGnashFx"
-end try</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Save it as an Application called <code>jGnash.app</code> in <code>/Applications/jGnash</code></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_java_9_and_10_requirements">Java 9 and 10 Requirements</h3>
-<div class="paragraph">
-<p>jGnash is designed to operate with Java 8 but will work correctly under Java 9 and 10 with some tweaks.</p>
-</div>
-<div class="paragraph">
-<p>An additional command line option <code>--add-modules java.xml.bind</code> is required if you want to operate under Java 9 and 10.</p>
-</div>
-<div class="paragraph">
-<p>An illegal reflective access Warning may be displayed on the console similar to the following.  It can be ignored and
-should improve at a later date as the Java Ecosystem migrates to Java 9.</p>
+<p>If jGnash cannot find the <code>jaxb-api.jar,</code> you may see "An illegal reflective access has occurred" warning similar to the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -615,11 +798,64 @@ WARNING: Use --illegal-access=warn to enable warnings of further illegal reflect
 WARNING: All illegal access operations will be denied in a future release</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>To fix this: double-check that the <code>jaxb-api.jar</code> file is in the <code>\lib</code> directory and that the command-line option is correct.</p>
+</div>
+<div class="paragraph">
+<p>This warning should improve at a later date as the Java Ecosystem migrates to Java 9.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Running">To Run:</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are <code>.bat</code> and <code>bash shell</code> files, respectively.)
+Mac OS X users will have created application launch files per the <a href="#Install-MacOSX">Mac installation instructions.</a>
+The <code>jGnashFx</code> executables will launch jGnash with the latest interface (jGnashFX). The <code>jGnash2</code> files will launch jGnash with
+the old legacy Java Swing interface.</p>
+</div>
+<div class="paragraph">
+<p><strong>Windows:</strong>
+Simply double click on the *.exe file of choice. (<code>jGnashFx.bat</code> is the current and preferred one.)</p>
+</div>
+<div class="paragraph">
+<p><strong>UN*X:</strong>  Start jGnash with one of the provided Bash scripts. (<code>jGnashFx</code> is the current and preferred one.)  If jGnash fails to launch, check your file permissions and
+make sure they are set to be executable or use a unzip tool that preserves file permissions.</p>
+</div>
+<div class="paragraph">
+<p>An example for UN*X users is shown below assuming you have changed to the installation directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>./jGnashFx</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Mac OS X:</strong>  Run the application file you created per the <a href="#Install-MacOSX">Mac installation instructions.</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Development">Building and Development</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Travis-CI Build Status <span class="image"><a class="image" href="https://travis-ci.org/ccavanaugh/jgnash"><img src="https://travis-ci.org/ccavanaugh/jgnash.svg?branch=master" alt="Build Status"></a></span></p>
+</div>
+<div class="sect2">
+<h3 id="_development_tools">Development Tools</h3>
+<div class="paragraph">
+<p>The IDE used for the development of jGnash is:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><a class="image" href="https://www.jetbrains.com/idea/"><img src="https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJIDEA.png" alt="IntelliJIDEA Logo" height="90"></a></span></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_building_jgnash">Building jGnash:</h3>
 <div class="paragraph">
-<p>Gradle is used as the primary build system for jGnash.  The Gradle Wrapper is included so that you do not need to
+<p><strong>Gradle</strong> is used as the primary build system for jGnash.  The Gradle Wrapper is included (<code>gradlew</code> shell and .bat files) so that you do not need to
 install Gradle.  The Wrapper will automatically download the necessary dependencies.</p>
 </div>
 <div class="admonitionblock note">
@@ -648,14 +884,17 @@ communication and unit tests are performed to prevent regressions.
 </ol>
 </div>
 <div class="paragraph">
+<p>If you are using JDK 9 or 10, you&#8217;ll need to do <a href="#Install-JDK-9-10">additional installation steps.</a></p>
+</div>
+<div class="paragraph">
 <p><em>If you are building with a recent 64 bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
 Otherwise, the Gradle build may fail when building the windows executables.</em></p>
 </div>
 <div class="paragraph">
-<p>To create the distribution zip file, start at the main directory and run:</p>
+<p>To create the distribution zip file, start at the main directory and run the gradle task to clean and create the distribution:</p>
 </div>
 <div class="paragraph">
-<p>Building on Windows</p>
+<p><strong>Building on Windows:</strong></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -663,7 +902,7 @@ Otherwise, the Gradle build may fail when building the windows executables.</em>
 </div>
 </div>
 <div class="paragraph">
-<p>Building on UN*X</p>
+<p><strong>Building on UN*X or Mac OS X:</strong></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -671,71 +910,15 @@ Otherwise, the Gradle build may fail when building the windows executables.</em>
 </div>
 </div>
 <div class="paragraph">
-<p>A distributable zip file will be produced at the root of the build directory called jGnash-<em>version</em>-bin.zip.</p>
+<p>This will run the gradle tasks necessary to run core tests and create the distribution file.  The distributable zip file will be produced at the root of the build directory called jGnash-<em>version</em>-bin.zip.</p>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_jgnashfx_version">jGnashFx Version</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The distribution now contains a version of jGnash that utilizes JavaFX for the user interface. Long term this version
-will replace the Java Swing based version that jGnash was first based on. The advantages of JavaFX over Swing are an
-improved appearance with better utilization of the systems graphics hardware including Hi-DPI systems.</p>
-</div>
-<div class="paragraph">
-<p>The core/engine of jGnash remains the same and is shared by both the Swing and JavaFx versions. This means stability
-and protection of your valuable data remains the same. This also allows you to switch between versions without issue.</p>
-</div>
-<div class="paragraph">
-<p>The advantages for jGnash is a smaller code base for the user interface, access to better components such as improved
-table support, HTML pages, functional animations, modern controls, etc. Experienced jGnash users will notice
-interface improvements. For example, try using the vertical and horizontal scroll wheels in a date picker and the
-collapsible transaction forms.</p>
-</div>
-<div class="sect2">
-<h3 id="_java_8_requirements">Java 8 Requirements</h3>
-<div class="paragraph">
-<p><a href="https://jdk8.java.net/download.html">JDK 8u71</a> or later is required for the jGnashFx interface. The 8u71 release
-fixed several JavaFX bugs and jGnashFx is dependent on several recent API changes.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_linux_users">Linux Users</h3>
-<div class="paragraph">
-<p>Linux users may use the jGnashFx interface if you have the Oracle release of Java installed or if you are
-using OpenJDK with OpenJFX 8u71 or later installed. OpenJFX 8u40 and u45 packages are generally available for most
-mainstream distributions, but will not work.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_openjfx">OpenJFX</h3>
-<div class="paragraph">
-<p>jGnashFx has been heavily tested against OpenJFX. There are no noticeable differences in performance or
-stability with the Oracle release or OpenJDK with OpenJFX.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_development_tools">Development Tools</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The IDE used for the development of jGnash is:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><a class="image" href="https://www.jetbrains.com/idea/"><img src="https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJIDEA.png" alt="IntelliJIDEA Logo" height="90"></a></span></p>
-</div>
-<div class="paragraph">
-<p>Travis-CI Build Status <span class="image"><a class="image" href="https://travis-ci.org/ccavanaugh/jgnash"><img src="https://travis-ci.org/ccavanaugh/jgnash.svg?branch=master" alt="Build Status"></a></span></p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-08-12 15:07:12 EDT
+Last updated 2018-10-05 13:42:22 PDT
 </div>
 </div>
 </body>
