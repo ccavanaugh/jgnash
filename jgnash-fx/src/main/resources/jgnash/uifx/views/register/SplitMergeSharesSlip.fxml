@@ -18,7 +18,7 @@
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="95"/>
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="NEVER" minWidth="105" maxWidth="105"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" fx:id="dateColumnConstraint"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>

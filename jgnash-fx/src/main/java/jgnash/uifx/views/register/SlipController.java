@@ -54,14 +54,19 @@ public class SlipController extends AbstractSlipController {
             new SimpleListProperty<>(FXCollections.observableArrayList());
     private final SimpleObjectProperty<TransactionEntry> modEntry = new SimpleObjectProperty<>();
     private final BooleanProperty concatenated = new SimpleBooleanProperty();
+
     @FXML
     protected Button cancelButton;
+
     @FXML
     protected Button enterButton;
+
     @FXML
     private Button splitsButton;
+
     @FXML
     private AccountExchangePane accountExchangePane;
+
     private SlipType slipType;
 
     @FXML

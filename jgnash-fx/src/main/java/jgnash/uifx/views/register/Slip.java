@@ -17,7 +17,17 @@
  */
 package jgnash.uifx.views.register;
 
+import java.time.LocalDate;
+import java.time.Month;
+
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+
 import jgnash.engine.Transaction;
+import jgnash.time.DateUtils;
+import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -26,6 +36,13 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh.
  */
 interface Slip extends BaseSlip {
+
+    /**
+     * Manages the date column width to compensate for date format and font scale
+     */
+    DoubleProperty dateColumnWidth = new SimpleDoubleProperty();
+
+    int ICON_BORDER_WIDTH = 43;
 
     /**
      * Loads a {@code Transaction} into the form and sets it up for modification.
@@ -41,5 +58,14 @@ interface Slip extends BaseSlip {
      */
     @NotNull
     Transaction buildTransaction();
+
+    default DoubleBinding getDateColumnWidth(final String style) {
+
+        double textWidth = Math.ceil(JavaFXUtils.getDisplayedTextWidth(DateUtils.getShortDateManualEntryFormatter()
+                .format(LocalDate.of(2028, Month.DECEMBER, 28)), style)
+                / ThemeManager.fontScaleProperty().get());
+
+        return ThemeManager.fontScaleProperty().multiply(textWidth).add(ICON_BORDER_WIDTH);
+    }
 
 }

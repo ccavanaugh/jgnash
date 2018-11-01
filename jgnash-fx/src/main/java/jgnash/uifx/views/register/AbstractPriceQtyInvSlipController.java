@@ -27,7 +27,6 @@ import jgnash.engine.MathConstants;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AutoCompleteTextField;
-import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
@@ -38,9 +37,6 @@ import jgnash.uifx.control.TransactionNumberComboBox;
  * @author Craig Cavanaugh
  */
 abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipController {
-
-    @FXML
-    DatePickerEx datePicker;
 
     @FXML
     AutoCompleteTextField<Transaction> memoTextField;

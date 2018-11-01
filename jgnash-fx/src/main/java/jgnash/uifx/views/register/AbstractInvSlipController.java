@@ -27,6 +27,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.layout.ColumnConstraints;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -34,6 +35,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
 import jgnash.engine.Transaction;
+import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
 
@@ -52,6 +54,12 @@ abstract class AbstractInvSlipController implements Slip {
 
     @FXML
     private CheckBox reconciledButton;
+
+    @FXML
+    DatePickerEx datePicker;
+
+    @FXML
+    protected ColumnConstraints dateColumnConstraint;
 
     /**
      * Holds a reference to a transaction being modified.
@@ -80,6 +88,13 @@ abstract class AbstractInvSlipController implements Slip {
 
         // Install an event handler when the parent has been set via injection
         parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
+
+        if (dateColumnWidth.get() == 0) {
+            dateColumnWidth.bind(getDateColumnWidth(datePicker.getStyle()));
+        }
+
+        dateColumnConstraint.minWidthProperty().bindBidirectional(dateColumnWidth);
+        dateColumnConstraint.maxWidthProperty().bindBidirectional(dateColumnWidth);
     }
 
     @Override

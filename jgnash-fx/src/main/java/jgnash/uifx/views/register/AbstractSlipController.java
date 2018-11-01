@@ -19,6 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +29,10 @@ import java.util.logging.Logger;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
@@ -37,6 +40,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
+import javafx.scene.layout.ColumnConstraints;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -51,7 +55,9 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -87,6 +93,9 @@ abstract class AbstractSlipController implements Slip {
 
     @FXML
     private ButtonBar buttonBar;
+
+    @FXML
+    protected ColumnConstraints dateColumnConstraint;
 
     final ObjectProperty<Account> account = new SimpleObjectProperty<>();
 
@@ -148,6 +157,13 @@ abstract class AbstractSlipController implements Slip {
         parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
 
         validFormProperty.bind(Bindings.notEqual(0, amountField.lengthProperty()));
+
+        if (dateColumnWidth.get() == 0) {
+            dateColumnWidth.bind(getDateColumnWidth(datePicker.getStyle()));
+        }
+
+        dateColumnConstraint.minWidthProperty().bindBidirectional(dateColumnWidth);
+        dateColumnConstraint.maxWidthProperty().bindBidirectional(dateColumnWidth);
     }
 
     @Override
