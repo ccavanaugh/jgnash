@@ -633,7 +633,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     Icon getSparkLineIcon(final AccountGroup group) {
-        List<BigDecimal> remaining = resultsModel.getDescriptorList().parallelStream().map(descriptor ->
+        List<BigDecimal> remaining = resultsModel.getDescriptorList().stream().map(descriptor ->
                 resultsModel.getResults(descriptor, group).getRemaining()).collect(Collectors.toList());
 
         return BudgetSparkline.getSparklineImage(remaining);

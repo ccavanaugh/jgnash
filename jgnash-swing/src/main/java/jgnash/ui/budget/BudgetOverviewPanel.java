@@ -180,7 +180,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
             final List<AccountGroup> groups = new ArrayList<>(budgetPanel.getAccountGroups());
 
-            final List<Icon> icons = groups.parallelStream().map(budgetPanel::getSparkLineIcon).collect(Collectors.toList());
+            final List<Icon> icons = groups.stream().map(budgetPanel::getSparkLineIcon).collect(Collectors.toList());
 
             EventQueue.invokeLater(() -> {
                 FormLayout layout = (FormLayout) sparkLinePanel.getLayout();

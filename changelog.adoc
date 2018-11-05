@@ -24,6 +24,7 @@
 * Open zipped backups instead of manually unzipping.
 
 == Release 2.36.1
+* 11/05/2018 Potential fix for a ConcurrentModificationException when changing budget properties (Swing, Bug #64)
 * 11/04/2018 Updated to the latest Hibernate, Netty, XStream, and JUnit dependencies.
 * 11/01/2018 Adjust width of the date column to match entry format and font scale. (Fx, GitHub Issue #63)
 * 10/07/2018 Improved handling of OFXv2 files with incorrectly escaped XML characters. (Swing, Fx, GitHub Issue #61)
