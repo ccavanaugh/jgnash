@@ -15,7 +15,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '2.36.0'
+    version = '2.36.1'
 
     project.ext {
         junitVersion = '5.3.1'
@@ -24,8 +24,8 @@ allprojects {
         picocliVersion = '3.5.2'
 
         apachePoiVersion = '4.0.0'
-        commons_cvs = '1.5'
-        commons_text = '1.1'
+        commonsCsvVersion = '1.6'
+        commonsTextVersion = '1.6'
 
         h2Version = '1.4.197'
         hsqldbVersion = '2.4.1'
@@ -38,8 +38,6 @@ allprojects {
         dynamicJasperVersion = '5.1.1'
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
-        
-        OpenPDFVersion = '1.2.4'
 
         nettyVersion = '4.1.31.Final'
 
@@ -83,7 +81,7 @@ subprojects {
 
             testCompile group: 'io.github.glytching', name: 'junit-extensions', version: junitextensionsVersion
             testCompile group: 'org.awaitility', name: 'awaitility', version: awaitilityVersion
-            testCompile group: 'org.apache.commons', name: 'commons-text', version: commons_text
+            testCompile group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
         }
     }
 

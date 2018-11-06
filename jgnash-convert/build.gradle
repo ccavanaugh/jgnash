@@ -8,7 +8,7 @@ dependencies {
     compile project(':jgnash-core')
     compile project(':jgnash-bayes')
     
-    compile group: 'org.apache.commons', name: 'commons-csv', version: commons_cvs
+    compile group: 'org.apache.commons', name: 'commons-csv', version: commonsCsvVersion
 
     testCompile project(':jgnash-core').sourceSets.test.output
 }
