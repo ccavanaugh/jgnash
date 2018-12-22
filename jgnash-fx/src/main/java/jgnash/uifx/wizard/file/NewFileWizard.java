@@ -90,7 +90,7 @@ public class NewFileWizard {
             wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
         } catch (final IOException e) {
-            StaticUIMethods.displayError(e.getLocalizedMessage());
+            StaticUIMethods.displayException(e);
         }
 
         pair.getStage().setResizable(false);
