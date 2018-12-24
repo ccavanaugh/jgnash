@@ -69,17 +69,17 @@
 
     <ButtonBar GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
         <buttons>
-            <Button mnemonicParsing="false" onAction="#handleNewAction" text="New" ButtonBar.buttonData="LEFT"/>
-            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="Delete"
+            <Button mnemonicParsing="false" onAction="#handleNewAction" text="%Button.New" ButtonBar.buttonData="LEFT"/>
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete"
                     ButtonBar.buttonData="LEFT"/>
-            <Button mnemonicParsing="false" onAction="#handleCancelAction" text="Cancel" ButtonBar.buttonData="LEFT"/>
+            <Button mnemonicParsing="false" onAction="#handleCancelAction" text="%Button.Cancel" ButtonBar.buttonData="LEFT"/>
             <Button ButtonBar.buttonData="SMALL_GAP" visible="false"/>
-            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#handleApplyAction" text="Apply" ButtonBar.buttonData="RIGHT"/>
+            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#handleApplyAction" text="%Button.Apply" ButtonBar.buttonData="RIGHT"/>
         </buttons>
     </ButtonBar>
     <ButtonBar GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
         <buttons>
-            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="Close" ButtonBar.buttonData="OK_DONE"/>
+            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close" ButtonBar.buttonData="OK_DONE"/>
         </buttons>
     </ButtonBar>
 

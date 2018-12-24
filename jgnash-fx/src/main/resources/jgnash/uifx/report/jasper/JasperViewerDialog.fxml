@@ -33,7 +33,7 @@
                             </graphic>
                         </Button>
 
-                        <Button fx:id="saveButton" onAction="#handleSaveAction" text="Save"
+                        <Button fx:id="saveButton" onAction="#handleSaveAction" text="%Button.Save"
                                 disable="true">
                             <graphic>
                                 <FontAwesomeLabel glyphName="SAVE"/>
@@ -41,7 +41,7 @@
                         </Button>
 
                         <Separator/>
-                        <Button fx:id="reportFormatButton" onAction="#handleFormatAction" text="Options"
+                        <Button fx:id="reportFormatButton" onAction="#handleFormatAction" text="%Button.Options"
                                 disable="true">
                             <graphic>
                                 <FontAwesomeLabel glyphName="PRINT"/>

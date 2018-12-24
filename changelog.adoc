@@ -23,7 +23,12 @@
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 
+== TODO
+* Choice dialog is not localized for some locales.  Replace with an equivalent or submit upstream patch
+
 == Release 2.36.2
+* 12/24/2018 Updated Polish translation (Swing, Fx) _[Sławomir Szarkowicz]_
+* 12/24/2018 Fixed several localization issues reported by Sławomir Szarkowicz.
 * 12/24/2018 Corrected a Runtime exception when trying to create a new file for locales without a country specified (JavaFx, Bug #65) _[valnaumov]_
 
 == Release 2.36.1
