@@ -18,9 +18,8 @@
 package jgnash.uifx.wizard.file;
 
 import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -30,9 +29,9 @@ import javafx.scene.control.TextArea;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.DefaultCurrencies;
-import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.resource.util.TextResource;
+import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 
 /**
  * New file wizard panel.
@@ -47,9 +46,6 @@ public class NewFileTwoController extends AbstractWizardPaneController<NewFileWi
 
     @FXML
     private TextArea textArea;
-
-    @FXML
-    private ResourceBundle resources;
 
     @FXML
     private void initialize() {
@@ -70,16 +66,15 @@ public class NewFileTwoController extends AbstractWizardPaneController<NewFileWi
         defaultCurrencyComboBox.setItems(new SortedList<>(items));
         items.addAll(currencyNodes);
 
-        try {
-            final String symbol = DefaultCurrencies.getDefault().getSymbol();
+        final String symbol = DefaultCurrencies.getDefault().getSymbol();
 
-            // set the default currency by matching the default locale
-            currencyNodes.stream()
-                    .filter(node -> symbol.equals(node.getSymbol()))
-                    .forEach(defaultCurrencyComboBox::setValue);
-        } catch (final IllegalArgumentException e) {
-            Logger.getLogger(NewFileTwoController.class.getName()).warning("Unable to construct the default currency from the default system Locale");
-        }
+        // set the default currency by matching the default locale
+        Optional<CurrencyNode> matchingCurrency = currencyNodes.stream()
+            .filter(node -> symbol.equals(node.getSymbol()))
+            .findAny();
+
+        defaultCurrencyComboBox.setValue(matchingCurrency.orElseThrow(() ->
+            new RuntimeException("Could not match currency")));
 
         updateDescriptor();
     }
@@ -92,10 +87,5 @@ public class NewFileTwoController extends AbstractWizardPaneController<NewFileWi
     @Override
     public String toString() {
         return "2. " + ResourceUtils.getString("Title.DefDefCurr");
-    }
-
-    @FXML
-    private void handleDefaultCurrencyAction() {
-        updateDescriptor();
     }
 }
