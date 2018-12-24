@@ -23,6 +23,9 @@
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 
+== Release 2.36.2
+* 12/24/2018 Corrected a Runtime exception when trying to create a new file for locales without a country specified (JavaFx, Bug #65) _[valnaumov]_
+
 == Release 2.36.1
 * 11/06/2018 Updated to the latest Commons CSV dependency.
 * 11/05/2018 Potential fix for a ConcurrentModificationException when changing budget properties (Swing, Bug #64)
