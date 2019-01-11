@@ -180,6 +180,12 @@ public class DatePickerEx extends DatePicker {
                 default:
             }
         });
+
+        valueProperty().addListener(new WeakChangeListener<>((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                setValue(oldValue);
+            }
+        }));
     }
 
     private LocalDate _getValue() {
