@@ -27,6 +27,7 @@
 * Choice dialog is not localized for some locales.  Replace with an equivalent or submit upstream patch
 
 == Release 2.36.2
+* 01/11/2019 Corrected an exception when the date picker was cleared and focus was lost (Fx, GitHub PR #70) _[pchurzin]_
 * 12/24/2018 Updated Polish translation (Swing, Fx) _[Sławomir Szarkowicz]_
 * 12/24/2018 Fixed several localization issues reported by Sławomir Szarkowicz.
 * 12/24/2018 Corrected a Runtime exception when trying to create a new file for locales without a country specified (JavaFx, Bug #65) _[valnaumov]_
