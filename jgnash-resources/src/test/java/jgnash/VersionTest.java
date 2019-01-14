@@ -4,9 +4,9 @@ import jgnash.resource.util.OS;
 import jgnash.resource.util.Version;
 import org.junit.jupiter.api.Test;
 
+import static jgnash.resource.util.OS.JAVA_VERSION;
 import static jgnash.resource.util.Version.getAppVersion;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test methods
@@ -45,6 +45,10 @@ class VersionTest {
         if (OS.getJavaVersion() == 1.8f) {  // don't test if not on Java 8
             System.out.println("Java Release: " + OS.getJavaRelease());
             assertTrue(OS.getJavaRelease() > 0);
+
+            // test for early access versions
+            System.setProperty(JAVA_VERSION, "1.8.0_202-ea");
+            assertEquals(202, OS.getJavaRelease());
         }
     }
 }

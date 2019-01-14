@@ -28,7 +28,7 @@ public final class OS {
 
     private static final boolean IS_WINDOWS;
 
-    private static final String JAVA_VERSION = "java.version";
+    public static final String JAVA_VERSION = "java.version";
 
     private static final String JAVA_SPEC_VERSION = "java.specification.version";
 
@@ -78,9 +78,13 @@ public final class OS {
     /**
      * Returns the release of the JVM.
      *
-     * @return returns 60 given 1.8.0_60
+     * @return returns 60 given 1.8.0_60-ea
      */
     public static int getJavaRelease() {
-        return Integer.parseInt(System.getProperty(JAVA_VERSION).substring(6));
+        String release = System.getProperty(JAVA_VERSION).substring(6);
+
+        release = release.replaceAll("[^\\d.]", "").trim();
+
+        return Integer.parseInt(release);
     }
 }
