@@ -15,7 +15,7 @@ Published {localdate}
 == Legal
 [big]*jGnash 2.35.x Manual*
 
-Copyright (C) 2001-2018 Craig Cavanaugh
+Copyright (C) 2001-2019 Craig Cavanaugh
 
 jGnash comes with *ABSOLUTELY NO WARRANTY*.
 
