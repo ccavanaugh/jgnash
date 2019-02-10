@@ -32,14 +32,14 @@ allprojects {
 
         xstreamVersion = '1.4.11.1'
 
-        hibernateVersion = '5.3.7.Final'
-        hikariVersion = '3.2.0'
+        hibernateVersion = '5.4.1.Final'
+        hikariVersion = '3.3.1'
 
         dynamicJasperVersion = '5.1.1'
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
 
-        nettyVersion = '4.1.31.Final'
+        nettyVersion = '4.1.33.Final'
 
         slf4jVersion = '1.8.0-beta2'
 
@@ -97,7 +97,7 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = '4.10.2'
+    gradleVersion = '5.2.1'
 }
 
 task distZip {

@@ -27,6 +27,7 @@
 * Choice dialog is not localized for some locales.  Replace with an equivalent or submit upstream patch
 
 == Release 2.36.2
+* 02/10/2019 Update to the latest Hibernate, Netty, and HikariCP dependencies
 * 01/14/2019 jGnash would not start on a early access version of Java 8 (Swing, Fx, GitHub Issue #71)
 * 01/11/2019 Corrected an exception when the date picker was cleared and focus was lost (Fx, GitHub PR #70) _[pchurzin]_
 * 12/24/2018 Updated Polish translation (Swing, Fx) _[Sławomir Szarkowicz]_
