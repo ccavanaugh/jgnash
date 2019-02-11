@@ -478,6 +478,43 @@ class Ofx2Test {
     }
 
     @Test
+    void parse401kWithHeader() {
+        final String testFile = "/401k-header.xml";
+
+        final URL url = Ofx2Test.class.getResource(testFile);
+
+        try {
+            assertTrue(FileMagic.isOfxV2(Paths.get(url.toURI())));
+
+            try (final InputStream stream = Ofx2Test.class.getResourceAsStream(testFile)) {
+                parser.parse(stream);
+
+                OfxBank ofxBank = parser.getBank();
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
+                assertEquals(0, ofxBank.statusCode);
+                assertEquals("INFO", ofxBank.statusSeverity);
+                assertNull(ofxBank.statusMessage);
+
+                assertEquals(3, ofxBank.getTransactions().size());
+                assertEquals(3, ofxBank.getSecurityList().size());
+
+
+                assertTrue(ofxBank.isInvestmentAccount());
+            } catch (final IOException e) {
+                logSevere(Ofx2Test.class, e);
+                fail();
+            }
+        } catch (final URISyntaxException e) {
+            logSevere(Ofx2Test.class, e);
+            fail();
+        }
+    }
+
+    @Test
     void parseInvest2() {
         final String testFile = "/invest2.xml";
 

@@ -19,6 +19,8 @@ package jgnash.convert.importat.ofx;
 
 /**
  * Utility class for handling OFX files with invalid characters
+ *
+ * @author Craig Cavanaugh
  */
 class Sanitize {
 
@@ -35,6 +37,9 @@ class Sanitize {
      */
     static String sanitize(final String xml) {
         String ugly = xml;
+
+        // remove all XML declarations as they are not needed
+        ugly = ugly.replaceAll("<\\?xml.*\\?>", "");
 
         ugly = ugly.replaceAll("&(?!(?:amp);)", "&amp;");
         ugly = ugly.replaceAll("\"", "&quot;");

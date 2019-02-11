@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<OFX>   <!-- Example Investment Account taken from the 2.2 Public Draft 3 OFX specification -->
+    <SIGNONMSGSRSV1>
+        <SONRS>                                                         <!-- Begin signon -->
+            <STATUS>                                                    <!-- Begin status aggregate -->
+                <CODE>0</CODE>                                          <!-- OK -->
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <DTSERVER>20060131172532</DTSERVER>
+            <LANGUAGE>ENG</LANGUAGE>                                    <!-- Language used in response -->
+            <DTPROFUP>20060131172532</DTPROFUP>                         <!-- Last update to profile-->
+            <DTACCTUP>20060131172532</DTACCTUP>                         <!-- Last account update -->
+            <FI>                                                        <!-- ID of receiving institution -->
+                <ORG>NCH</ORG>                                          <!-- Name of ID owner -->
+                <FID>1001</FID>                                         <!-- Actual ID -->
+            </FI>
+        </SONRS>
+    </SIGNONMSGSRSV1>
+    <INVSTMTMSGSRSV1>
+        <INVSTMTTRNRS>                                                  <!--First request in file-->
+            <TRNUID>1002</TRNUID>                                       <!--Client ID for this request-->
+            <STATUS>
+                <CODE>0</CODE>                                           <!--0 = accepted, good data follows-->
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <INVSTMTRS>                                                 <!--Beginning of statement download-->
+                <DTASOF>20060131172605.000[-4:EST]</DTASOF>            <!--Statement as of Jan 31, 2006 5:26pm-->
+                <CURDEF>USD</CURDEF>                                    <!--Default currency is US Dollar-->
+                <INVACCTFROM>                                           <!--Beginning of account information-->
+                    <BROKERID>121099999</BROKERID>                      <!--FI ID-->
+                    <ACCTID>999988</ACCTID>                             <!--Account number-->
+                </INVACCTFROM>                                          <!--End of account information-->
+                <INVTRANLIST>
+                    <DTSTART>20060105172532.000[-5:EST]</DTSTART>
+                    <DTEND>20060131172532.000[-4:EST]</DTEND>
+                    <BUYMF>
+                        <INVBUY>
+                            <INVTRAN>
+                                <FITID>212839062820295310723</FITID>
+                                <DTTRADE>20060119000000.000[-5:EST]</DTTRADE>
+                            </INVTRAN>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <UNITS>14.6860</UNITS>
+                            <UNITPRICE>18.9000</UNITPRICE>
+                            <TOTAL>-277.5700</TOTAL>
+                            <CURRENCY>
+                                <CURRATE>1.0000</CURRATE>
+                                <CURSYM>USD</CURSYM>
+                            </CURRENCY>
+                            <SUBACCTSEC>OTHER</SUBACCTSEC>
+                            <SUBACCTFUND>OTHER</SUBACCTFUND>
+                            <LOANID>2</LOANID>
+                            <LOANPRINCIPAL>277.5700</LOANPRINCIPAL>
+                            <LOANINTEREST>0.0000</LOANINTEREST>
+                            <INV401KSOURCE>ROLLOVER</INV401KSOURCE>
+                            <DTPAYROLL>20060114000000.000[-5:EST]</DTPAYROLL>
+                            <PRIORYEARCONTRIB>N</PRIORYEARCONTRIB>
+                        </INVBUY>
+                        <BUYTYPE>BUY</BUYTYPE>
+                    </BUYMF>
+                    <BUYMF>
+                        <INVBUY>
+                            <INVTRAN>
+                                <FITID>212839062820510822977</FITID>
+                                <DTTRADE>20060119000000.000[-5:EST]</DTTRADE>
+                            </INVTRAN>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <UNITS>2.0220</UNITS>
+                            <UNITPRICE>18.9000</UNITPRICE>
+                            <TOTAL>-38.2200</TOTAL>
+                            <CURRENCY>
+                                <CURRATE>1.0000</CURRATE>
+                                <CURSYM>USD</CURSYM>
+                            </CURRENCY>
+                            <SUBACCTSEC>OTHER</SUBACCTSEC>
+                            <SUBACCTFUND>OTHER</SUBACCTFUND>
+                            <LOANID>2</LOANID>
+                            <LOANPRINCIPAL>0.0000</LOANPRINCIPAL>
+                            <LOANINTEREST>38.2200</LOANINTEREST>
+                            <INV401KSOURCE>ROLLOVER</INV401KSOURCE>
+                            <DTPAYROLL>20060114000000.000[-5:EST]</DTPAYROLL>
+                            <PRIORYEARCONTRIB>N</PRIORYEARCONTRIB>
+                        </INVBUY>
+                        <BUYTYPE>BUY</BUYTYPE>
+                    </BUYMF>
+                    <BUYMF>
+                        <INVBUY>
+                            <INVTRAN>
+                                <FITID>212849815151950488609</FITID>
+                                <DTTRADE>20060106000000.000[-5:EST]</DTTRADE>
+                            </INVTRAN>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <UNITS>4.9010</UNITS>
+                            <UNITPRICE>18.7900</UNITPRICE>
+                            <TOTAL>-92.0900</TOTAL>
+                            <CURRENCY>
+                                <CURRATE>1.0000</CURRATE>
+                                <CURSYM>USD</CURSYM>
+                            </CURRENCY>
+                            <SUBACCTSEC>OTHER</SUBACCTSEC>
+                            <SUBACCTFUND>OTHER</SUBACCTFUND>
+                            <INV401KSOURCE>PRETAX</INV401KSOURCE>
+                            <DTPAYROLL>20051231000000.000[-5:EST]</DTPAYROLL>
+                            <PRIORYEARCONTRIB>Y</PRIORYEARCONTRIB>
+                        </INVBUY>
+                        <BUYTYPE>BUY</BUYTYPE>
+                    </BUYMF>
+                </INVTRANLIST>
+                <INV401KBAL>
+                    <PRETAX>31690.340000</PRETAX>
+                    <PROFITSHARING>10725.640000</PROFITSHARING>
+                    <ROLLOVER>15945.750000</ROLLOVER>
+                    <OTHERVEST>108.800000</OTHERVEST>
+                    <TOTAL>58470.530000</TOTAL>
+                </INV401KBAL>
+                <INV401K>
+                    <EMPLOYERNAME>ELGIN NATIONAL INDUSTRIES INC</EMPLOYERNAME>
+                    <PLANID>4343</PLANID>
+                    <PLANJOINDATE>19940101000000.000[-5:EST]</PLANJOINDATE>
+                    <MATCHINFO>
+                        <MATCHPCT>0.00</MATCHPCT>
+                    </MATCHINFO>
+                    <CONTRIBINFO>
+                        <CONTRIBSECURITY>
+                            <SECID>
+                                <UNIQUEID>744316100</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <PRETAXCONTRIBPCT>50.0000</PRETAXCONTRIBPCT>
+                            <PROFITSHARINGCONTRIBPCT>100.0000
+                            </PROFITSHARINGCONTRIBPCT>
+                            <ROLLOVERCONTRIBPCT>100.0000</ROLLOVERCONTRIBPCT>
+                            <OTHERVESTPCT>100.0000</OTHERVESTPCT>
+                        </CONTRIBSECURITY>
+                        <CONTRIBSECURITY>
+                            <SECID>
+                                <UNIQUEID>74431M105</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <PRETAXCONTRIBPCT>25.0000</PRETAXCONTRIBPCT>
+                            <PROFITSHARINGCONTRIBPCT>0.0000
+                            </PROFITSHARINGCONTRIBPCT>
+                            <ROLLOVERCONTRIBPCT>0.0000</ROLLOVERCONTRIBPCT>
+                            <OTHERVESTPCT>0.0000</OTHERVESTPCT>
+                        </CONTRIBSECURITY>
+                        <CONTRIBSECURITY>
+                            <SECID>
+                                <UNIQUEID>743969107</UNIQUEID>
+                                <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                            </SECID>
+                            <PRETAXCONTRIBPCT>25.0000</PRETAXCONTRIBPCT>
+                            <PROFITSHARINGCONTRIBPCT>0.0000
+                            </PROFITSHARINGCONTRIBPCT>
+                            <ROLLOVERCONTRIBPCT>0.0000</ROLLOVERCONTRIBPCT>
+                            <OTHERVESTPCT>0.0000</OTHERVESTPCT>
+                        </CONTRIBSECURITY>
+                    </CONTRIBINFO>
+                    <INV401KSUMMARY>
+                        <YEARTODATE>
+                            <DTSTART>20060101000000</DTSTART>
+                            <DTEND>20060131000000</DTEND>
+                            <CONTRIBUTIONS>
+                                <PRETAX>843.2500</PRETAX>
+                                <AFTERTAX>43.4200</AFTERTAX>
+                                <MATCH>421.6200</MATCH>
+                                <TOTAL>1308.2900</TOTAL>
+                            </CONTRIBUTIONS>
+                        </YEARTODATE>
+                    </INV401KSUMMARY>
+                </INV401K>
+            </INVSTMTRS>
+        </INVSTMTTRNRS>
+    </INVSTMTMSGSRSV1>
+    <SECLISTMSGSRSV1>
+        <SECLIST>                                                       <!--Beginning of securities list-->
+            <STOCKINFO>                                                 <!--Beginning of 1st security ID-->
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>123456789</UNIQUEID>                  <!--CUSIP for the stock -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>
+                    <SECNAME>Acme Development, Inc.</SECNAME>
+                    <TICKER>ACME</TICKER>                               <!--Ticker symbol-->
+                    <FIID>1024</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <YIELD>10</YIELD>                                       <!--10% yield-->
+                <ASSETCLASS>SMALLSTOCK</ASSETCLASS>                     <!--Small Capital Stock asset class-->
+            </STOCKINFO>                                                <!--End of security ID-->
+            <STOCKINFO>
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>666678578</UNIQUEID>                  <!--CUSIP for the stock -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>
+                    <SECNAME>Hackson Unlimited, Inc.</SECNAME>
+                    <TICKER>HACK</TICKER>                               <!--Ticker symbol-->
+                    <FIID>1027</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <YIELD>17</YIELD>                                       <!--17% yield-->
+                <ASSETCLASS>SMALLSTOCK</ASSETCLASS>                     <!--Small Capital Stock asset class-->
+            </STOCKINFO>
+            <OPTINFO>
+                <SECINFO>
+                    <SECID>                                             <!--Security ID-->
+                        <UNIQUEID>000342222</UNIQUEID>                  <!--CUSIP for the option -->
+                        <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                    </SECID>                                            <!--End of security ID-->
+                    <SECNAME>Lucky Airlines Jan 97 Put</SECNAME>
+                    <TICKER>LUAXX</TICKER>                              <!--Ticker symbol-->
+                    <FIID>0013</FIID>                                   <!--FI internal security identifier-->
+                </SECINFO>
+                <OPTTYPE>PUT</OPTTYPE>
+                <STRIKEPRICE>35.00</STRIKEPRICE>                        <!--Strike price $35/share-->
+                <DTEXPIRE>20050121</DTEXPIRE>                           <!--Option expires Jan 21, 2005-->
+                <SHPERCTRCT>100</SHPERCTRCT>                            <!--100 shares per contract-->
+                <SECID>                                                 <!--Security ID-->
+                    <UNIQUEID>000342200</UNIQUEID>                      <!--CUSIP for the underlying stock -->
+                    <UNIQUEIDTYPE>CUSIP</UNIQUEIDTYPE>
+                </SECID>
+                <ASSETCLASS>LARGESTOCK</ASSETCLASS>                     <!--Large Capital Stock asset class-->
+            </OPTINFO>                                                  <!--End of option information-->
+        </SECLIST>                                                      <!--End of securities list-->
+    </SECLISTMSGSRSV1>
+</OFX>
