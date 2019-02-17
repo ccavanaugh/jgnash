@@ -38,6 +38,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import jgnash.resource.util.OS;
 import jgnash.ui.plaf.NimbusUtils;
 import jgnash.resource.util.ResourceUtils;
 
@@ -67,10 +68,20 @@ public class ThemeManager {
     private static final long animationDuration;
     private static final String LF = "lookandfeel3";
     private static final String THEME = "theme3";
+
     private static final String[] KNOWN = { "com.jgoodies.looks.plastic.PlasticLookAndFeel",
+            "com.jgoodies.looks.plastic.Plastic3DLookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel",
+            "com.nilo.plaf.nimrod.NimRODLookAndFeel", "de.muntjak.tinylookandfeel.TinyLookAndFeel" };
+
+    private static final String[] KNOWN_WIN = { "com.jgoodies.looks.plastic.PlasticLookAndFeel",
             "com.jgoodies.looks.plastic.Plastic3DLookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel",
             "com.jgoodies.looks.windows.WindowsLookAndFeel", "com.sun.java.swing.plaf.mac.MacLookAndFeel",
             "com.nilo.plaf.nimrod.NimRODLookAndFeel", "de.muntjak.tinylookandfeel.TinyLookAndFeel" };
+
+    private static final String[] KNOWN_MAC = { "com.jgoodies.looks.plastic.PlasticLookAndFeel",
+            "com.jgoodies.looks.plastic.Plastic3DLookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel",
+            "com.sun.java.swing.plaf.mac.MacLookAndFeel", "com.nilo.plaf.nimrod.NimRODLookAndFeel",
+            "de.muntjak.tinylookandfeel.TinyLookAndFeel" };
 
     static {
         animationDuration = AnimationConfigurationManager.getInstance().getTimelineDuration();
@@ -183,7 +194,17 @@ public class ThemeManager {
             }
         }
 
-        for (String lookAndFeel : KNOWN) {
+        final String[] lfs;
+
+        if (OS.isSystemWindows()) {
+            lfs = KNOWN_WIN;
+        } else if (OS.isSystemOSX()) {
+            lfs = KNOWN_MAC;
+        } else {
+            lfs = KNOWN;
+        }
+
+        for (final String lookAndFeel : lfs) {
             if (isLookAndFeelAvailable(lookAndFeel)) {
                 lookAndFeels.add(lookAndFeel);
             }
@@ -367,7 +388,7 @@ public class ThemeManager {
             LookAndFeel newLAF = (LookAndFeel) lnfClass.getDeclaredConstructor().newInstance();
 
             return newLAF.isSupportedLookAndFeel();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) { // If ANYTHING bad happens, return false
+        } catch (final Exception e) { // If ANYTHING bad happens, return false
             Logger.getLogger(ThemeManager.class.getName()).log(Level.FINEST, e.getLocalizedMessage(), e);
             return false;
         }

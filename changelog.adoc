@@ -27,6 +27,7 @@
 * Choice dialog is not localized for some locales.  Replace with an equivalent or submit upstream patch
 
 == Release 2.36.2
+* 02/17/2019 Fixed an issue preventing the old Swing UI from running with Java 11 (Swing).
 * 02/10/2019 Prevent an exception when importing odd OFX files using an XML declaration. (GitHub Issue #72)
 * 02/10/2019 Update to the latest Hibernate, Netty, and HikariCP dependencies.  This improves compatibility with Java 9+.
 * 01/14/2019 jGnash would not start on a early access version of Java 8 (Swing, Fx, GitHub Issue #71)
