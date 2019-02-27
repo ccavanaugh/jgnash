@@ -262,7 +262,7 @@ public class InvestmentPerformanceSummary {
             }
         }
 
-        data.setSharesHeld(data.getSharesHeld().add(shares));
+        data.setSharesHeld(data.getSharesHeld().add(shares).setScale(MathConstants.SECURITY_QUANTITY_ACCURACY, MathConstants.roundingMode));
     }
 
     private void calculatePercentPortfolio() {

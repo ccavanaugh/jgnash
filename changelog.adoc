@@ -18,13 +18,15 @@
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
+** Add option to round to whole numbers
 * Reinstate archive capability
 * Disable the portfolio report if there are no investment accounts.
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 
 == TODO
-* Choice dialog is not localized for some locales.  Replace with an equivalent or submit upstream patch
+* ChoiceDialog (JavaFx) is not localized for some locales.  Replace with an equivalent or submit upstream patch
+* Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 2.36.2
 * 02/17/2019 Fixed an issue preventing the old Swing UI from running with Java 11 (Swing).

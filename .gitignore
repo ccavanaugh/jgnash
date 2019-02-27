@@ -16,3 +16,4 @@ nb-configuration.xml
 /*.zip
 .gradle/
 /bin/
+lib/

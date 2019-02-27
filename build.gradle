@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.ben-manes.versions' version '0.17.0'
+    id 'com.github.ben-manes.versions' version '0.20.0'
 }
 
 allprojects {
@@ -8,24 +8,24 @@ allprojects {
     if (!it.name.startsWith('jgnash-help')) {
         apply plugin: 'java'
     }
-
-    apply plugin: 'findbugs'
-
+    
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '2.36.2'
+    version = '3.0.0-dev'
 
     project.ext {
-        junitVersion = '5.3.1'
+        junitVersion = '5.4.0'
         junitextensionsVersion = '2.3.0'
+        awaitilityVersion = '3.1.6'
 
         picocliVersion = '3.5.2'
 
         apachePoiVersion = '4.0.0'
         commonsCsvVersion = '1.6'
         commonsTextVersion = '1.6'
+        commonsLangVersion = '3.8.1'
 
         h2Version = '1.4.197'
         hsqldbVersion = '2.4.1'
@@ -38,6 +38,8 @@ allprojects {
         dynamicJasperVersion = '5.1.1'
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
+        
+        pdfBoxVersion = '2.0.13'
 
         nettyVersion = '4.1.33.Final'
 
@@ -46,20 +48,6 @@ allprojects {
         jfreeChartVersion = '1.0.19'
         substanceVersion = '7.3'
         swingxVersion = '1.6.5-1'
-
-        awaitilityVersion = '3.1.2'
-    }
-
-    tasks.withType(FindBugs) {
-        reports {
-            xml.enabled = false
-            html.enabled = true
-        }
-    }
-
-    findbugs {
-        ignoreFailures = true
-        excludeFilter = file("$rootProject.projectDir/findbugs-exclude-filter.xml")
     }
 }
 
