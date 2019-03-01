@@ -96,8 +96,10 @@ public class BusyPane extends StackPane {
             messageLabel.textProperty().unbind();
             getChildren().remove(imageView);
 
-            imageView.setImage(null);   // don't retain the image, conserve memory
-            imageView = null;
+            if (imageView != null) {    // protect against a race condition
+                imageView.setImage(null);   // don't retain the image, conserve memory
+                imageView = null;
+            }
         } else {
 
             // get the snapshot
