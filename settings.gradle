@@ -5,13 +5,11 @@ include ':jgnash-help'
 include ':jgnash-resources'
 include ':jgnash-core'
 include ':jgnash-report-core'
-include ':jgnash-swing'
 include ':jgnash-convert'
 include ':jgnash-plugin'
 include ':jgnash-fx'
 include ':jgnash-fx-test-plugin'
 
-include ':jidesoft'
 include ':mt940'
 
 project(':jgnash-bayes').projectDir = "$rootDir/jgnash-bayes" as File
@@ -19,11 +17,9 @@ project(':jgnash-help').projectDir = "$rootDir/jgnash-help" as File
 project(':jgnash-resources').projectDir = "$rootDir/jgnash-resources" as File
 project(':jgnash-core').projectDir = "$rootDir/jgnash-core" as File
 project(':jgnash-report-core').projectDir = "$rootDir/jgnash-report-core" as File
-project(':jgnash-swing').projectDir = "$rootDir/jgnash-swing" as File
 project(':jgnash-convert').projectDir = "$rootDir/jgnash-convert" as File
 project(':jgnash-plugin').projectDir = "$rootDir/jgnash-plugin" as File
 project(':jgnash-fx').projectDir = "$rootDir/jgnash-fx" as File
 project(':jgnash-fx-test-plugin').projectDir = "$rootDir/jgnash-fx-test-plugin" as File
 
-project(':jidesoft').projectDir = "$rootDir/jidesoft" as File
 project(':mt940').projectDir = "$rootDir/mt940" as File

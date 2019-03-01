@@ -62,7 +62,7 @@ class ImportMt940FxAction {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine == null || engine.getRootAccount().getChildCount() == 0) {
-            jgnash.ui.StaticUIMethods.displayError(resources.getString("Message.Error.CreateBasicAccounts"));
+            StaticUIMethods.displayError(resources.getString("Message.Error.CreateBasicAccounts"));
             return;
         }
 

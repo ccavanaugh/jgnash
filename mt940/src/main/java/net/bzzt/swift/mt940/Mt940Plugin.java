@@ -17,11 +17,6 @@
 
 package net.bzzt.swift.mt940;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JMenuItem;
-
 import javafx.application.Platform;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -32,32 +27,12 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.plugin.FxPlugin;
-import jgnash.plugin.SwingPlugin;
-import jgnash.uifx.views.main.MainView;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.views.main.MainView;
 
-public class Mt940Plugin implements SwingPlugin, FxPlugin {
+public class Mt940Plugin implements FxPlugin {
 
     private static final int MENU_INDEX = 2;
-
-    @Override
-    public JMenuItem[] getMenuItems() {
-
-        final JMenuItem menuItem = new JMenuItem();
-
-        menuItem.putClientProperty(SwingPlugin.PRECEDING_MENU_IDREF, "ofximport-command");
-
-        Logger.getLogger(Mt940Plugin.class.getName()).info("Loading mt940 plugin");
-
-        try {
-            menuItem.setAction(new ImportMt940Action());
-
-            return new JMenuItem[]{menuItem};
-        } catch (NoClassDefFoundError e) {
-            Logger.getLogger(Mt940Plugin.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            return null;
-        }
-    }
 
     @Override
     public String getName() {

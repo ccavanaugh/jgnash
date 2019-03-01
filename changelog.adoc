@@ -28,6 +28,11 @@
 * ChoiceDialog (JavaFx) is not localized for some locales.  Replace with an equivalent or submit upstream patch
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
+== Release 3.0.0-b1
+* 02/27/2019 jGnash is designed to operate with Java 11 and newer.
+* 02/27/2019 Removed support for old Swing UI.
+* 02/27/2019 Jasper is not longer used for report generation.  jGnash now uses it's own internal reporting API.
+
 == Release 2.36.2
 * 02/17/2019 Fixed an issue preventing the old Swing UI from running with Java 11 (Swing).
 * 02/10/2019 Prevent an exception when importing odd OFX files using an XML declaration. (GitHub Issue #72)

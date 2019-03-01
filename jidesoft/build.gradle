@@ -1,7 +1,0 @@
-description = 'JIDE Software'
-
-jar {
-    manifest {
-        attributes("Automatic-Module-Name": 'com.jidesoft.swing')
-    }
-}

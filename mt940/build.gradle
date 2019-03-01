@@ -4,7 +4,6 @@ dependencies {
     compile project(':jgnash-plugin')
     compile project(':jgnash-core')
     compile project(':jgnash-convert')
-    compile project(':jgnash-swing')
     compile project(':jgnash-fx')
 }
 

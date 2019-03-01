@@ -13,7 +13,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'jgnash'
-    version = '3.0.0-dev'
+    version = '3.0.0-b1'
 
     project.ext {
         junitVersion = '5.4.0'
@@ -45,9 +45,7 @@ allprojects {
 
         slf4jVersion = '1.8.0-beta2'
 
-        jfreeChartVersion = '1.0.19'
-        substanceVersion = '7.3'
-        swingxVersion = '1.6.5-1'
+        //jfreeChartVersion = '1.0.19'
     }
 }
 
@@ -91,11 +89,9 @@ wrapper {
 task distZip {
     doLast {
         ant.zip(destfile: 'jgnash-' + version + '-bin.zip', duplicate: 'preserve', update: 'false') {
-            zipgroupfileset(dir: '.', includes: 'jgnash-swing/build/distributions/jGnashSwing-' + version + '.zip')
             zipgroupfileset(dir: '.', includes: 'jgnash-fx/build/distributions/jGnashFx-' + version + '.zip')
         }
     }
 }
 
 distZip.dependsOn(":jgnash-fx:distZip")
-distZip.dependsOn(":jgnash-swing:distZip")
