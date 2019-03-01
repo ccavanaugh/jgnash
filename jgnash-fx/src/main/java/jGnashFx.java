@@ -69,19 +69,13 @@ public class jGnashFx extends Application {
 
     public static void main(final String[] args) {
 
-        if (OS.getJavaVersion() < 1.8f) {
-            System.err.println(ResourceUtils.getString("Message.JVM8"));
+        if (OS.getJavaVersion() < 11f) {
+            System.err.println(ResourceUtils.getString("Message.JVM11"));
             System.err.println(ResourceUtils.getString("Message.Version") + " "
                     + System.getProperty("java.version") + "\n");
 
             // show a swing based dialog
-            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM8"),
-                    ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (OS.getJavaVersion() == 1.8f && OS.getJavaRelease() < OS.JVM_RELEASE_71) {
-            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
+            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM11"),
                     ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
