@@ -150,10 +150,6 @@ public class ThemeManager {
                 focusColor.set(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_CASPIAN_FOCUS_COLOR)));
                 break;
             case Application.STYLESHEET_MODENA:
-                accentColor.set(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
-                baseColor.set(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
-                focusColor.set(Color.web(preferences.get(FOCUS_COLOR, DEFAULT_MODENA_FOCUS_COLOR)));
-                break;
             default:
                 accentColor.set(Color.web(preferences.get(ACCENT_COLOR, DEFAULT_MODENA_ACCENT_COLOR)));
                 baseColor.set(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
@@ -210,7 +206,6 @@ public class ThemeManager {
             case Application.STYLESHEET_CASPIAN:
                 return CASPIAN;
             case Application.STYLESHEET_MODENA:
-                return MODENA;
             default:
                 return MODENA;
         }
