@@ -169,8 +169,7 @@ public class StageUtils {
     }
 
     private static String encodeRectangle(final double x, final double y, final double width, final double height) {
-        return Double.toString(x) + COMMA_DELIMITER + Double.toString(y) + COMMA_DELIMITER + Double.toString(width)
-                + COMMA_DELIMITER + Double.toString(height);
+        return Double.toString(x) + COMMA_DELIMITER + y + COMMA_DELIMITER + width + COMMA_DELIMITER + height;
     }
 
     private static Rectangle2D decodeRectangle(final String bounds) {
