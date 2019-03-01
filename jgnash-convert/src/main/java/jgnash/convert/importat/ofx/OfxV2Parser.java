@@ -924,8 +924,6 @@ public class OfxV2Parser implements OfxTags {
                             tran.setPayeeId(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
                             break;
                         case CURRENCY:
-                            tran.setCurrency(reader.getElementText());
-                            break;
                         case ORIGCURRENCY:
                             tran.setCurrency(reader.getElementText());
                             break;
