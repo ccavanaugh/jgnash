@@ -9,8 +9,8 @@ allprojects {
         apply plugin: 'java'
     }
     
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 11
+    targetCompatibility = 11
 
     group = 'jgnash'
     version = '3.0.0-b1'
@@ -34,10 +34,6 @@ allprojects {
 
         hibernateVersion = '5.4.1.Final'
         hikariVersion = '3.3.1'
-
-        dynamicJasperVersion = '5.1.1'
-        jasperReportsVersion = '6.4.3'
-        itextVersion = '2.1.7.js6'
         
         pdfBoxVersion = '2.0.14'
 

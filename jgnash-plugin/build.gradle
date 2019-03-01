@@ -1,7 +1,15 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+
 description = 'jGnash Plugin'
 
 project.ext {
     moduleName = 'jgnash.plugin'
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 dependencies {

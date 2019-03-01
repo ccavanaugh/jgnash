@@ -1,3 +1,7 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+
 description = 'mt940 Plugin'
 
 dependencies {
@@ -5,6 +9,10 @@ dependencies {
     compile project(':jgnash-core')
     compile project(':jgnash-convert')
     compile project(':jgnash-fx')
+}
+
+javafx {
+    modules = [ 'javafx.controls']
 }
 
 jar {

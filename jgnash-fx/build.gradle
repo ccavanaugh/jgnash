@@ -1,5 +1,6 @@
 plugins {
     id 'edu.sc.seis.launch4j' version '2.4.4'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
 }
 
 apply plugin: 'distribution'
@@ -16,6 +17,10 @@ dependencies {
     compile project(':jgnash-plugin')
 
     compile group: 'info.picocli', name: 'picocli', version: picocliVersion
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
 }
 
 launch4j {
@@ -66,6 +71,9 @@ distributions {
             from { '../README.html' }
             from { '../README.adoc' }
             from { '../jGnashFx' }
+            exclude('**/*-linux*')  // excludes linux specific JavaFx modules from cross platform zip
+            exclude('**/*-win*')    // excludes windows specific JavaFx modules from cross platform zip
+            exclude('**/*-mac*')    // excludes mac specific JavaFx modules from cross platform zip
         }
     }
 }
