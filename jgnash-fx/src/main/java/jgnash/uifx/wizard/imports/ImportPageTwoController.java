@@ -344,14 +344,11 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                             t.setFeesAccount(baseAccount);
                             break;
                         case SELLSHARE:
+                        case REINVESTDIV:
                             t.setFeesAccount(baseAccount);
                             t.setGainsAccount(baseAccount);
                             break;
                         case DIVIDEND:
-                            t.setGainsAccount(baseAccount);
-                            break;
-                        case REINVESTDIV:
-                            t.setFeesAccount(baseAccount);
                             t.setGainsAccount(baseAccount);
                             break;
                         default:
