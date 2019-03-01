@@ -127,9 +127,9 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         assertTrue(e.addTransaction(it));
 
         // Evaluating the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), investAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), investAccount.getBalance(),
                 investAccount.getMarketValue(), investAccount.getCashBalance()};
-        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), new BigDecimal("250.00"),
+        Object[] expected = {new BigDecimal("220.00"), new BigDecimal("30.00"), new BigDecimal("250.00"),
                 new BigDecimal("250.00"), new BigDecimal("0.00")};
         assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
@@ -207,9 +207,9 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
-        Object expected[] = {new BigDecimal("280.00"), new BigDecimal("60.00"), new BigDecimal("-30.00"),
+        Object[] expected = {new BigDecimal("280.00"), new BigDecimal("60.00"), new BigDecimal("-30.00"),
                 new BigDecimal("285.00"), new BigDecimal("285.00"), new BigDecimal("0.00")};
         assertArrayEquals(expected, actual, "Account balances are not as expected!");
     }
@@ -227,10 +227,10 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(TransactionFactory.generateDoubleEntryTransaction(investAccount, usdBankAccount, new BigDecimal("250.00"), transactionDate1, "Cash in transaction", "", ""));
 
         // Checking the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue().setScale(2, RoundingMode.DOWN), investAccount.getCashBalance()};
 
-        Object expected[] = {new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
+        Object[] expected = {new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
                 BigDecimal.ZERO.setScale(2, RoundingMode.DOWN), new BigDecimal("250.00")};
 
         assertArrayEquals(expected, actual, "Account balances are not as expected!");
@@ -295,11 +295,11 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Checking the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue().setScale(2, RoundingMode.DOWN),
                 investAccount.getCashBalance()};
 
-        Object expected[] = {new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
+        Object[] expected = {new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
                 new BigDecimal("125.00"), BigDecimal.ZERO.setScale(2, RoundingMode.DOWN), new BigDecimal("125.00")};
 
         assertArrayEquals(expected, actual, "Account balances are not as expected!");
@@ -356,9 +356,9 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
-        Object expected[] = {new BigDecimal("270.00"), new BigDecimal("30.00"), new BigDecimal("-50.00"),
+        Object[] expected = {new BigDecimal("270.00"), new BigDecimal("30.00"), new BigDecimal("-50.00"),
                 new BigDecimal("250.00"), new BigDecimal("250.00"), new BigDecimal("0.00")};
 
         assertArrayEquals(expected, actual, "Account balances are not as expected!");
@@ -428,10 +428,10 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
 
-        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("50.00"), new BigDecimal("-50.00"),
+        Object[] expected = {new BigDecimal("220.00"), new BigDecimal("50.00"), new BigDecimal("-50.00"),
                 new BigDecimal("280.00"), new BigDecimal("280.00"), new BigDecimal("0.00")};
 
         assertArrayEquals(expected, actual, "Account balances are not as expected!");
@@ -485,10 +485,10 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
 
-        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
+        Object[] expected = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
                 new BigDecimal("500.00"), new BigDecimal("500.00"), new BigDecimal("0.00")};
 
         assertArrayEquals(expected, actual, "Account balances are not as expected!");
@@ -542,10 +542,10 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object[] actual = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
 
-        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
+        Object[] expected = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
                 new BigDecimal("200.00"), new BigDecimal("200.00"), new BigDecimal("0.00")};
 
         assertArrayEquals(expected, actual, "Account balances are not as expected!");

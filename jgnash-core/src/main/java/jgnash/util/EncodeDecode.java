@@ -92,7 +92,7 @@ public class EncodeDecode {
         if (array != null) {
             int len = array.length();
             if (len > 0) {
-                boolean b[] = new boolean[len];
+                boolean[] b = new boolean[len];
                 for (int i = 0; i < len; i++) {
                     if (array.charAt(i) == '1') {
                         b[i] = true;
