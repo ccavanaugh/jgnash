@@ -430,13 +430,11 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                         setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.MINUS_CIRCLE)));
                         break;
                     case NEW:
+                    case NOT_EQUAL:
                         setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PLUS_CIRCLE)));
                         break;
                     case EQUAL:
                         setGraphic(new StackPane(new Label("=")));
-                        break;
-                    case NOT_EQUAL:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PLUS_CIRCLE)));
                         break;
                 }
             }
