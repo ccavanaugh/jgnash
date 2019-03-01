@@ -130,7 +130,7 @@ public class ConsoleDialogController {
         System.setOut(outStream);
         System.setErr(errStream);
 
-        timeline = new Timeline(new KeyFrame(Duration.millis(REFRESH_PERIOD), new EventHandler<ActionEvent>() {
+        timeline = new Timeline(new KeyFrame(Duration.millis(REFRESH_PERIOD), new EventHandler<>() {
             private long total;
 
             private long used;
@@ -145,7 +145,7 @@ public class ConsoleDialogController {
                 used = total - runtime.freeMemory() / BYTES_PER_MB;
                 if (used < oldUsed - diff || used > oldUsed + diff) {
                     JavaFXUtils.runLater(() -> {
-                        memoryUsageProgressBar.setProgress((double)used / (double)total);
+                        memoryUsageProgressBar.setProgress((double) used / (double) total);
                         memoryUsageText.setText(used + "/" + total + " MB");
                     });
                     oldUsed = used;

@@ -42,7 +42,7 @@ class TransactionStringTableCell extends TableCell<Transaction, String> {
 
             if (getTableRow() != null) { // null can occur if UI is very busy... JavaFX bug?
                 if (getTableRow().getItem() != null) {
-                    final boolean future = ((Transaction) getTableRow().getItem()).getLocalDate()
+                    final boolean future = getTableRow().getItem().getLocalDate()
                             .isAfter(LocalDate.now());
 
                     if (future) {

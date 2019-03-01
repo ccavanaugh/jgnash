@@ -209,9 +209,7 @@ public class ProfitLossTextReport {
 
         // right align amount to pre-defined maximum length
         if (formattedBalance.length() < MAX_LENGTH) {
-            for (int i = formattedBalance.length(); i < MAX_LENGTH; i++) {
-                stringBuilder.append(' ');
-            }
+            stringBuilder.append(" ".repeat(MAX_LENGTH - formattedBalance.length()));
         }
 
         stringBuilder.append(formattedBalance);
@@ -231,9 +229,7 @@ public class ProfitLossTextReport {
         stringBuilder.append(name);
 
         // set name to pre-defined maximum length
-        for (int i = name.length(); i < MAX_NAME_LEN; i++) {
-            stringBuilder.append(' ');
-        }
+        stringBuilder.append(" ".repeat(Math.max(0, MAX_NAME_LEN - name.length())));
 
         stringBuilder.setLength(MAX_NAME_LEN);
 

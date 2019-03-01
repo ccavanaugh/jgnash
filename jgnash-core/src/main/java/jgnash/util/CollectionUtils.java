@@ -32,17 +32,6 @@ import java.util.Map;
 public class CollectionUtils {
     
     private CollectionUtils() {}
-    
-    /**
-     * Converts a List of Integers to an integer array.
-     * 
-     * @param integerList List of Integers
-     * @return integer array
-     */
-    public static int[] intListToArray(final List<Integer> integerList)
-    {
-        return integerList.stream().mapToInt(value -> value).toArray();
-    }
 
     /**
      * Sorts a map by it's value.
@@ -55,7 +44,7 @@ public class CollectionUtils {
     public static <K, V extends Comparable<? super V>> Map<K, V> sortMapByValue(final Map<K, V> map) {
         final List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
 
-        list.sort(Comparator.comparing(e -> (e.getValue())));
+        list.sort(Comparator.comparing(Map.Entry::getValue));
 
         final Map<K, V> sortedMap = new LinkedHashMap<>();
 

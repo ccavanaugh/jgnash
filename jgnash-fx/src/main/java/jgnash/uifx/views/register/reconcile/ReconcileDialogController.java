@@ -257,7 +257,7 @@ public class ReconcileDialogController implements MessageListener {
 
     @FXML
     private void handleFinishLaterAction() {
-        final Task<Void> commitTask = new Task<Void>() {
+        final Task<Void> commitTask = new Task<>() {
             @Override
             protected Void call() {
                 updateMessage(resources.getString("Message.PleaseWait"));
@@ -278,7 +278,7 @@ public class ReconcileDialogController implements MessageListener {
     @FXML
     private void handleFinishAction() {
 
-        final Task<Void> commitTask = new Task<Void>() {
+        final Task<Void> commitTask = new Task<>() {
             @Override
             protected Void call() {
                 updateMessage(resources.getString("Message.PleaseWait"));

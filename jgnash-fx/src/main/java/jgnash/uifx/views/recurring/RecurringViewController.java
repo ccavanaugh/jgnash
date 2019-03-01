@@ -358,7 +358,7 @@ public class RecurringViewController implements MessageListener {
             super.updateItem(amount, empty);
 
             if (!empty && getTableRow() != null && getTableRow().getItem() != null) {
-                final Reminder reminder = (Reminder) getTableRow().getItem();
+                final Reminder reminder = getTableRow().getItem();
 
                 if (reminder.getTransaction() != null) {
                     setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())

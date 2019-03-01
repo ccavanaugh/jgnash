@@ -19,7 +19,6 @@ package jgnash.uifx.views.register;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.ColumnConstraints;
 
 import jgnash.engine.TransactionEntry;
 

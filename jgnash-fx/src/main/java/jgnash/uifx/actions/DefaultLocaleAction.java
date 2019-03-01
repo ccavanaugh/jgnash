@@ -40,7 +40,7 @@ public class DefaultLocaleAction {
 
     public static void showAndWait() {
 
-        final Task<LocaleObject[]> task = new Task<LocaleObject[]>() {
+        final Task<LocaleObject[]> task = new Task<>() {
             final ResourceBundle resources = ResourceUtils.getBundle();
 
             private LocaleObject[] localeObjects;

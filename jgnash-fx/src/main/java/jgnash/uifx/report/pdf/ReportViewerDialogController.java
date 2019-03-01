@@ -403,7 +403,7 @@ public class ReportViewerDialogController {
         reportExecutor.schedule(() -> {
             if (reportExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
 
-                final Task<Void> task = new Task<Void>() {
+                final Task<Void> task = new Task<>() {
                     @Override
                     protected Void call() {
                         updateMessage(resources.getString("Message.CompilingReport"));
@@ -517,7 +517,7 @@ public class ReportViewerDialogController {
     // TODO page format modifications within the print dialog are ignored
     @FXML
     private void handlePrintAction() {
-        final Task<Void> task = new Task<Void>() {
+        final Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
                 try {

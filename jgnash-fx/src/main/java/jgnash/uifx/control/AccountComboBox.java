@@ -75,7 +75,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         setOnKeyTyped(new KeyHandler());
 
-        final StringConverter<Account> accountStringConverter = new StringConverter<Account>() {
+        final StringConverter<Account> accountStringConverter = new StringConverter<>() {
             @Override
             public String toString(final Account account) {
                 return account == null ? null : account.getPathName();

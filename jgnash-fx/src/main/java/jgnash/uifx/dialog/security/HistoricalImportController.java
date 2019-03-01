@@ -153,7 +153,7 @@ public class HistoricalImportController {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        updateTask = new Task<Void>() {
+        updateTask = new Task<>() {
             @Override
             protected Void call() {
                 final LocalDate startDate = startDatePicker.getValue();

@@ -43,7 +43,7 @@ public class DefaultCurrencyAction {
 
     public static void showAndWait() {
 
-        final Task<List<CurrencyNode>> task = new Task<List<CurrencyNode>>() {
+        final Task<List<CurrencyNode>> task = new Task<>() {
             final ResourceBundle resources = ResourceUtils.getBundle();
 
             private List<CurrencyNode> currencyNodeList;

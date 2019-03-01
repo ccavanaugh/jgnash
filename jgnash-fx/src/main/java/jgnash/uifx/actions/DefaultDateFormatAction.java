@@ -40,7 +40,7 @@ public class DefaultDateFormatAction {
 
     public static void showAndWait() {
 
-        final Task<Set<String>> task = new Task<Set<String>>() {
+        final Task<Set<String>> task = new Task<>() {
             final ResourceBundle resources = ResourceUtils.getBundle();
 
             private Set<String> dateFormats;

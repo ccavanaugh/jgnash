@@ -37,7 +37,7 @@ class InvestmentTransactionQuantityTableCell extends AbstractTransactionTableCel
 
         if (!empty && amount != null && getTableRow() != null) {
 
-            final Transaction transaction = (Transaction) getTableRow().getItem();
+            final Transaction transaction = getTableRow().getItem();
 
             if (transaction instanceof InvestmentTransaction) {
 

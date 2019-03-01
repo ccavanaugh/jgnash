@@ -272,7 +272,7 @@ public class EditExchangeRatesController implements MessageListener {
 
         updateOnlineButton.disableProperty().set(true);
 
-        updateTask = new Task<Void>() {
+        updateTask = new Task<>() {
             @Override
             protected Void call() {
 

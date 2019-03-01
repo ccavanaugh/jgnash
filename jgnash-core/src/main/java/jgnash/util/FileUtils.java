@@ -90,7 +90,7 @@ public final class FileUtils {
     public static void deletePathAndContents(final Path path) throws IOException {
         if (Files.exists(path)) {   // only try if it exists
 
-            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(path, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(final Path file, final BasicFileAttributes attributes) throws IOException {
                     Files.delete(file);

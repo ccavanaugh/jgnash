@@ -143,7 +143,7 @@ public class BudgetViewController implements MessageListener {
         if (file != null) {
             pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());
 
-            final Task<Void> exportTask = new Task<Void>() {
+            final Task<Void> exportTask = new Task<>() {
                 @Override
                 protected Void call() {
                     updateMessage(resources.getString("Message.PleaseWait"));

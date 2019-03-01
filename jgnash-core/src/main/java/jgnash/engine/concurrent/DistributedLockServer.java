@@ -40,6 +40,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -427,11 +428,8 @@ public class DistributedLockServer {
         private synchronized int getReadHoldCount(final String remoteThread) {
             final Integer accessCount = readingThreads.get(remoteThread);
 
-            if (accessCount == null) {
-                return 0;
-            }
+            return Objects.requireNonNullElse(accessCount, 0);
 
-            return accessCount;
         }
 
         private synchronized boolean isReadLockedByCurrentThread(final String remoteThread) {

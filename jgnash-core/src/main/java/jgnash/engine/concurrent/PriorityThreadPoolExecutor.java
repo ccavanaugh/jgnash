@@ -60,7 +60,7 @@ public class PriorityThreadPoolExecutor {
     }
 
     private  <T> Future<T> submit(final Callable<T> callable, final Priority priority) {
-        return threadPoolExecutor.submit(new PriorityCallable<T>() {
+        return threadPoolExecutor.submit(new PriorityCallable<>() {
             @Override
             public Priority getPriority() {
                 return priority;
