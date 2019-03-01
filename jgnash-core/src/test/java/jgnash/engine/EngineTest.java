@@ -173,7 +173,7 @@ public abstract class EngineTest {
 
     @Test
     void testGetStoredObjects() {
-        assertTrue(!e.getStoredObjects().isEmpty());
+        assertFalse(e.getStoredObjects().isEmpty());
     }
 
     @Test
@@ -188,7 +188,6 @@ public abstract class EngineTest {
         assertNotNull(e.getCurrency("CAD"));
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testPreferences() {
         e.setPreference("myKey", "myValue");
@@ -382,9 +381,9 @@ public abstract class EngineTest {
         assertNotNull(nodes);
 
         if (!e.getTransactions().isEmpty()) {
-            assertTrue(!nodes.isEmpty());
+            assertFalse(nodes.isEmpty());
         } else {
-            assertTrue(!nodes.isEmpty());
+            assertFalse(nodes.isEmpty());
         }
 
         System.out.println("Node count is " + nodes.size());
@@ -501,7 +500,7 @@ public abstract class EngineTest {
         String sep = e.getAccountSeparator();
 
         assertNotNull(sep);
-        assertTrue(!sep.isEmpty());
+        assertFalse(sep.isEmpty());
     }
 
     @Test
@@ -537,7 +536,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
-        assertTrue(!e.getIncomeAccountList().isEmpty());
+        assertFalse(e.getIncomeAccountList().isEmpty());
     }
 
     @Test
@@ -552,7 +551,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
-        assertTrue(!e.getExpenseAccountList().isEmpty());
+        assertFalse(e.getExpenseAccountList().isEmpty());
     }
 
     @Test
@@ -582,7 +581,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
 
-        assertTrue(!e.getInvestmentAccountList().isEmpty());
+        assertFalse(e.getInvestmentAccountList().isEmpty());
     }
 
     @Test
@@ -598,7 +597,7 @@ public abstract class EngineTest {
 
         for (int i = 0; i < 50; i++) {
             Account child = new Account(AccountType.BANK, node);
-            child.setName("Account" + Integer.toString(i + 1));
+            child.setName("Account" + (i + 1));
             child.setAccountNumber(Integer.toString(i + 1));
 
             if (i % 2 == 0) {
@@ -625,7 +624,7 @@ public abstract class EngineTest {
             if (parent.getChildCount() == 1) {
                 Account child = parent.getChildren().get(0);
 
-                assertEquals("Account" + Integer.toString(i + 1), child.getName());
+                assertEquals("Account" + (i + 1), child.getName());
                 assertEquals(Integer.toString(i + 1), child.getAccountNumber());
 
                 if (i % 2 == 0) {
@@ -835,7 +834,7 @@ public abstract class EngineTest {
     @Test
     void testGetUuid() {
         assertNotNull(e.getUuid());
-        assertTrue(!e.getUuid().isEmpty());
+        assertFalse(e.getUuid().isEmpty());
     }
 
     @Test
