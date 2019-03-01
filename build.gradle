@@ -39,13 +39,11 @@ allprojects {
         jasperReportsVersion = '6.4.3'
         itextVersion = '2.1.7.js6'
         
-        pdfBoxVersion = '2.0.13'
+        pdfBoxVersion = '2.0.14'
 
         nettyVersion = '4.1.33.Final'
 
         slf4jVersion = '1.8.0-beta2'
-
-        //jfreeChartVersion = '1.0.19'
     }
 }
 

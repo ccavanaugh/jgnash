@@ -70,6 +70,6 @@ public interface Plugin {
      * Plugin platform identifier.
      */
     enum PluginPlatform {
-        Fx, Swing
+        Fx
     }
 }

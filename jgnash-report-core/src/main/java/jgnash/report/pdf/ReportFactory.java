@@ -15,13 +15,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.report.ui.jasper;
+package jgnash.report.pdf;
 
-import ar.com.fdvs.dj.domain.constants.Font;
-
+import java.util.List;
 import java.util.prefs.Preferences;
-
-import jgnash.report.ui.FontRegistry;
 
 /**
  * Factory methods to help with report configuration and generation
@@ -31,49 +28,77 @@ import jgnash.report.ui.FontRegistry;
 public class ReportFactory {
 
     /**
-     * Preferences key for mono spaced font
+     * Preferences key for mono spaced report
      */
     private final static String MONOSPACE = "monospace";
 
     /**
-     * Preferences key for proportional spaced font
+     * Preferences key for proportional spaced report
      */
     private final static String PROPORTIONAL = "proportional";
 
-    private final static String[] DEFAULT_MONO_FONTS = { "Courier New", "Andale Mono", "Bitstream Vera Sans Mono",
-                    "Luxi Mono", "Liberation Mono" };
+    /**
+     * Preferences key for headers / footers / titles
+     */
+    private final static String HEADER = "header";
 
-    private final static String[] DEFAULT_PROPORTIONAL_FONTS = { "Times New Roman", "Bitstream Vera Serif", "Luxi Serif",
+    private final static String[] DEFAULT_MONO_FONTS = { "Courier New", "Andale Mono", "Noto Sans Mono Regular",
+                    "Luxi Mono", "Liberation Mono", "Comic Sans MS" };
+
+    private final static String[] DEFAULT_PROPORTIONAL_FONTS = { "Times New Roman", "Noto Sans Mono Regular", "Luxi Serif",
                     "Liberation Serif" };
+
+    private final static String[] DEFAULT_HEADER_FONTS = { "Arial Bold", "Noto Sans Bold", "Luxi Serif",
+            "Liberation Serif" };
 
     private ReportFactory() {
     }
 
     /**
-     * Returns a font name for a mono spaced, PDF embeddable font
+     * Returns a report name for a mono spaced, PDF embeddable report
      * 
-     * @return The font name for a mono spaced font
+     * @return The report name for a mono spaced report
      */
     private static String getDefaultMonoFont() {
+
+        final List<String> fonts = FontRegistry.getFontList();
+
         for (String knownFont : DEFAULT_MONO_FONTS) {
-            java.awt.Font f = new java.awt.Font(knownFont, java.awt.Font.PLAIN, 1);
-            if (f.getFamily().equalsIgnoreCase(knownFont)) {
+            if (fonts.contains(knownFont)) {
                 return knownFont; // it found it!
             }
         }
-
         return "Monospaced"; // fail safe
     }
 
     /**
-     * Returns a font name for a proportional, PDF embeddable font
+     * Returns a report name for a proportional, PDF embeddable report
      * 
-     * @return The font name for a proportional spaced font
+     * @return The report name for a proportional spaced report
      */
     private static String getDefaultProportionalFont() {
+
+        final List<String> fonts = FontRegistry.getFontList();
+
         for (String knownFont : DEFAULT_PROPORTIONAL_FONTS) {
-            java.awt.Font f = new java.awt.Font(knownFont, java.awt.Font.PLAIN, 1);
-            if (f.getFamily().equalsIgnoreCase(knownFont)) {
+            if (fonts.contains(knownFont)) {
+                return knownFont; // it found it!
+            }
+        }
+        return "SansSerif"; // fail safe
+    }
+
+    /**
+     * Returns a font name for a proportional, PDF embeddable report
+     *
+     * @return The font name for headers
+     */
+    private static String getDefaultHeaderFont() {
+
+        final List<String> fonts = FontRegistry.getFontList();
+
+        for (String knownFont : DEFAULT_HEADER_FONTS) {
+            if (fonts.contains(knownFont)) {
                 return knownFont; // it found it!
             }
         }
@@ -101,9 +126,19 @@ public class ReportFactory {
     }
 
     /**
+     * Returns the name of the proportional spaced font to use
+     *
+     * @return name of the proportional spaced font to use
+     */
+    public static String getHeaderFont() {
+        Preferences p = Preferences.userNodeForPackage(ReportFactory.class);
+        return p.get(HEADER, getDefaultHeaderFont());
+    }
+
+    /**
      * Sets the name of the mono spaced font to use
      * 
-     * @param font font name to use
+     * @param font report name to use
      */
     public static void setMonoFont(final String font) {
         Preferences p = Preferences.userNodeForPackage(ReportFactory.class);
@@ -120,38 +155,13 @@ public class ReportFactory {
         p.put(PROPORTIONAL, font);
     }
 
-    private static Font buildFont(final int size, final String font, final boolean bold, final boolean italic, final boolean underline) {
-        Font f = new Font(size, font, bold, italic, underline);
-        f.setFontName(font);
-
-        String fontPath = FontRegistry.getRegisteredFontPath(font);
-        if (fontPath != null) {
-            f.setPdfFontEmbedded(true);
-            f.setPdfFontName(fontPath);
-            f.setPdfFontEncoding(Font.PDF_ENCODING_Identity_H_Unicode_with_horizontal_writing);
-        }
-
-        return f;
+    /**
+     * Sets the name of the header font to use
+     *
+     * @param font font name to use
+     */
+    public static void setHeaderFont(final String font) {
+        Preferences p = Preferences.userNodeForPackage(ReportFactory.class);
+        p.put(HEADER, font);
     }
-
-    public static Font getDefaultProportionalFont(final int size) {
-        return buildFont(size, getProportionalFont(), false, false, false);
-    }
-
-    public static Font getDefaultProportionalFont(final int size, final boolean bold) {
-        return buildFont(size, getProportionalFont(), bold, false, false);
-    }
-
-    public static Font getDefaultProportionalFont(final int size, final boolean bold, final boolean italic) {
-        return buildFont(size, getProportionalFont(), bold, italic, false);
-    }
-
-    public static Font getDefaultMonoFont(final int size) {
-        return buildFont(size, getMonoFont(), false, false, false);
-    }
-
-    public static Font getDefaultMonoFont(final int size, final boolean bold) {
-        return buildFont(size, getMonoFont(), bold, false, false);
-    }
-
 }

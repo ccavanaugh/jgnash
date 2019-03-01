@@ -20,6 +20,7 @@
             <rowConstraints>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
             <Label text="%Label.Monospace" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
@@ -27,6 +28,9 @@
 
             <Label text="%Label.Proportional" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
             <ComboBox fx:id="proportionalFontComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="%Label.HeaderTitle" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="headerFontComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
         </GridPane>
     </TitledPane>

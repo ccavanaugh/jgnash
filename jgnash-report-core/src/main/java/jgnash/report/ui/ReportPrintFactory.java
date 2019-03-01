@@ -15,24 +15,26 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.report.ui.jasper;
+package jgnash.report.ui;
+
+import javax.print.PrintService;
+import javax.print.attribute.standard.MediaPrintableArea;
+import javax.print.attribute.standard.MediaSize;
 
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterJob;
+
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.prefs.Preferences;
-
-import javax.print.PrintService;
-import javax.print.attribute.standard.MediaSize;
 
 /**
  * Factory class for handling printing preferences
  * 
  * @author Craig Cavanaugh
  */
-class ReportPrintFactory {
+public class ReportPrintFactory {
     private static final String HEIGHT = "height";
     private static final String WIDTH = "width";
     private static final String ORIENTATION = "orientation";
@@ -43,6 +45,8 @@ class ReportPrintFactory {
 
     private static final int DEFAULT_MARGIN = 43; // ~.60" margin
 
+    private static final float DPI = 72.0f;
+
     private ReportPrintFactory() {
     }
 
@@ -51,7 +55,7 @@ class ReportPrintFactory {
      * 
      * @return page format
      */
-    private static PageFormat getDefaultPage() {
+    public static PageFormat getDefaultPage() {
 
         /* A4 is the assumed default */
         MediaSize defaultMediaSize = MediaSize.ISO.A4;
@@ -65,8 +69,8 @@ class ReportPrintFactory {
         /* Create the default paper size with a default margin */
         Paper paper = new Paper();
 
-        int width = (int) (defaultMediaSize.getX(MediaSize.INCH) / (1f / 72f));
-        int height = (int) (defaultMediaSize.getY(MediaSize.INCH) / (1f / 72f));       
+        int width = (int) (defaultMediaSize.getX(MediaSize.INCH) / (1f / DPI));
+        int height = (int) (defaultMediaSize.getY(MediaSize.INCH) / (1f / DPI));
 
         paper.setSize(width, height);
         paper.setImageableArea(DEFAULT_MARGIN, DEFAULT_MARGIN, width - (2 * DEFAULT_MARGIN),
@@ -93,15 +97,13 @@ class ReportPrintFactory {
     /**
      * Save a {@code PageFormat} to preferences
      * 
-     * @param report report
+     * @param p the specific report {@code Preferences}
      * @param format {@code PageFormat} to save
      */
-    static void savePageFormat(final BaseDynamicJasperReport report, final PageFormat format) {
-        Preferences p = report.getPreferences();
-
+    public static void savePageFormat(final Preferences p, final PageFormat format) {
         p.putInt(ORIENTATION, format.getOrientation());
 
-        Paper paper = format.getPaper();
+        final Paper paper = format.getPaper();
 
         p.putDouble(HEIGHT, paper.getHeight());
         p.putDouble(WIDTH, paper.getWidth());
@@ -112,9 +114,12 @@ class ReportPrintFactory {
         p.putDouble(IMAGEABLE_Y, paper.getImageableY());
     }
 
-    static PageFormat getPageFormat(final BaseDynamicJasperReport report) {
-        Preferences p = report.getPreferences();
-
+    /**
+     * Generates a {@code PageFormat} given a {@code Preferences} node
+     * @param p {@code Preferences} node
+     * @return restored {@code PageFormat} or the default if it has not been saved before
+     */
+    public static PageFormat getPageFormat(final Preferences p) {
         double height = p.getDouble(HEIGHT, 0);
         double width = p.getDouble(WIDTH, 0);
         int orientation = p.getInt(ORIENTATION, 0);
@@ -127,9 +132,9 @@ class ReportPrintFactory {
             return getDefaultPage();
         }
 
-        PrinterJob job = PrinterJob.getPrinterJob();
+        final PrinterJob job = PrinterJob.getPrinterJob();
 
-        PageFormat pf = job.defaultPage();
+        final PageFormat pf = job.defaultPage();
 
         pf.setOrientation(orientation);
 
@@ -140,5 +145,12 @@ class ReportPrintFactory {
         pf.setPaper(paper);
 
         return pf;
+    }
+
+    public static MediaPrintableArea pageFormatToMediaPrintableArea(final PageFormat pageFormat) {
+
+        return new MediaPrintableArea((float)pageFormat.getImageableX() / DPI, (float)pageFormat.getImageableY() / DPI,
+                (float)pageFormat.getImageableWidth() / DPI, (float)pageFormat.getImageableHeight() / DPI, MediaPrintableArea.INCH);
+
     }
 }

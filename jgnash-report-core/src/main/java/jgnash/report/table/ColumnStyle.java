@@ -34,6 +34,6 @@ public enum ColumnStyle {
     SHORT_AMOUNT,
     SHORT_DATE,
     STRING,
-    CROSSTAB_TOTAL,
+    CROSS_TAB_TOTAL,
     TIMESTAMP
 }

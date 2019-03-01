@@ -236,7 +236,7 @@ public class RegisterViewController {
 
     @FXML
     private void handleAccountReport() {
-        ReportActions.displayAccountRegisterReport(registerPaneController.accountProperty().get());
+        ReportActions.displayAccountRegisterReport2(registerPaneController.accountProperty().get());
     }
 
     @FXML

@@ -17,53 +17,119 @@
  */
 package jgnash.uifx.report;
 
-import java.util.ArrayList;
-import java.util.List;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.report.pdf.ReportController;
+import jgnash.uifx.util.JavaFXUtils;
 
-import jgnash.engine.AccountGroup;
-import jgnash.uifx.report.jasper.AbstractSumByTypeReport;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.function.Consumer;
+import java.util.prefs.Preferences;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 
 /**
- * Net Worth Report Controller.
+ * Net Worth Report Controller
  *
  * @author Craig Cavanaugh
  */
-public class NetWorthReportController extends AbstractSumByTypeReport {
+public class NetWorthReportController implements ReportController {
 
-    @Override
-    protected List<AccountGroup> getAccountGroups() {
-        List<AccountGroup> groups = new ArrayList<>();
+    @FXML
+    private DatePickerEx startDatePicker;
 
-        groups.add(AccountGroup.ASSET);
-        groups.add(AccountGroup.INVEST);
-        groups.add(AccountGroup.SIMPLEINVEST);
-        groups.add(AccountGroup.LIABILITY);
+    @FXML
+    private DatePickerEx endDatePicker;
 
-        return groups;
+    @FXML
+    private CheckBox hideZeroBalanceAccounts;
+
+    private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
+
+    private static final String MONTHS = "months";
+
+    private NetWorthReport report = new NetWorthReport();
+
+    private Runnable refreshRunnable = null;
+
+    public NetWorthReportController() {
+        super();
     }
 
-    /*
-    * Returns the name of the report
-    *
-    * @return report name
-    */
-    @Override
-    public String getReportName() {
-        return rb.getString("Word.NetWorth");
+    @FXML
+    private void initialize() {
+        final Preferences preferences = getPreferences();
+
+        hideZeroBalanceAccounts.setSelected(preferences.getBoolean(HIDE_ZERO_BALANCE, true));
+
+        startDatePicker.setValue(LocalDate.now().minusMonths(preferences.getInt(MONTHS, 4) - 1));
+
+        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
+
+        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
+
+        hideZeroBalanceAccounts.onActionProperty().setValue(event -> handleReportRefresh());
+
+        // boot the report generation
+        JavaFXUtils.runLater(this::refreshReport);
     }
 
-    /**
-     * Returns the legend for the grand total.
-     *
-     * @return report name
-     */
     @Override
-    public String getGrandTotalLegend() {
-        return getReportName();
+    public void setRefreshRunnable(final Runnable runnable) {
+        refreshRunnable = runnable;
     }
 
     @Override
-    public String getGroupFooterLabel() {
-        return rb.getString("Word.Subtotal");
+    public void getReport(final Consumer<Report> reportConsumer) {
+        reportConsumer.accept(report);
+    }
+
+    @Override
+    public void refreshReport() {
+        handleReportRefresh();
+    }
+
+    @Override
+    public void closeReport() throws IOException {
+        report.close();
+    }
+
+    private void handleReportRefresh() {
+
+        final Preferences preferences = getPreferences();
+
+        preferences.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
+        preferences.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDatePicker.getValue(),
+                endDatePicker.getValue()).size());
+
+        addTable();
+
+        // send notification the report has been updated
+        if (refreshRunnable != null) {
+            refreshRunnable.run();
+        }
+    }
+
+    private void addTable() {
+        AbstractReportTableModel model = createReportModel();
+
+        report.clearReport();
+
+        try {
+            report.addTable(model, ResourceUtils.getString("Word.NetWorth"));
+            report.addFooter();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private AbstractReportTableModel createReportModel() {
+        return report.createReportModel(startDatePicker.getValue(), endDatePicker.getValue(),
+                hideZeroBalanceAccounts.isSelected());
     }
 }

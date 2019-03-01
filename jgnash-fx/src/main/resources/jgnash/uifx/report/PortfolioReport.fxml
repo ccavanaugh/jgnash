@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.AccountComboBox?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.report.PortfolioReportController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
@@ -27,7 +27,7 @@
         </rowConstraints>
 
         <Label text="%Label.Account"/>
-        <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" maxWidth="Infinity" onAction="#handleRefresh"/>
+        <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" maxWidth="Infinity"/>
     </GridPane>
 
     <GridPane styleClass="form" GridPane.rowIndex="1">
@@ -39,7 +39,7 @@
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
-        <CheckBox fx:id="subAccountCheckBox" text="%Button.IncludeSubAccounts" onAction="#handleRefresh"/>
-        <CheckBox fx:id="longNameCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="1" onAction="#handleRefresh"/>
+        <CheckBox fx:id="subAccountCheckBox" text="%Button.IncludeSubAccounts"/>
+        <CheckBox fx:id="longNameCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="1"/>
     </GridPane>
 </GridPane>

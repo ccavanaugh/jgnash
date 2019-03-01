@@ -17,138 +17,119 @@
  */
 package jgnash.uifx.report;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.report.pdf.ReportController;
+import jgnash.uifx.util.JavaFXUtils;
 
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.report.table.Row;
-import jgnash.uifx.report.jasper.AbstractSumByTypeReport;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.function.Consumer;
+import java.util.prefs.Preferences;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 
 /**
- * Balance Sheet Report.
- * 
+ * Net Worth Report Controller
+ *
  * @author Craig Cavanaugh
  */
-public class BalanceSheetReportController extends AbstractSumByTypeReport {
+public class BalanceSheetReportController implements ReportController {
+
+    @FXML
+    private DatePickerEx startDatePicker;
+
+    @FXML
+    private DatePickerEx endDatePicker;
+
+    @FXML
+    private CheckBox hideZeroBalanceAccounts;
+
+    private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
+
+    private static final String MONTHS = "months";
+
+    private BalanceSheetReport report = new BalanceSheetReport();
+
+    private Runnable refreshRunnable = null;
 
     public BalanceSheetReportController() {
-        runningTotal = false;
+        super();
     }
 
-    protected ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
-        ReportModel model = super.createReportModel(startDate, endDate);
+    @FXML
+    private void initialize() {
+        final Preferences preferences = getPreferences();
 
-        // load retained profit and loss row        
-        model.addRow(new RetainedEarningsRow());
+        hideZeroBalanceAccounts.setSelected(preferences.getBoolean(HIDE_ZERO_BALANCE, true));
 
-        return model;
-    }
+        startDatePicker.setValue(LocalDate.now().minusMonths(preferences.getInt(MONTHS, 4) - 1));
 
-    @Override
-    protected List<AccountGroup> getAccountGroups() {
-        List<AccountGroup> groups = new ArrayList<>();
+        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
 
-        groups.add(AccountGroup.ASSET);
-        groups.add(AccountGroup.INVEST);
-        groups.add(AccountGroup.SIMPLEINVEST);
-        groups.add(AccountGroup.LIABILITY);
-        groups.add(AccountGroup.EQUITY);
+        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
 
-        return groups;
-    }
+        hideZeroBalanceAccounts.onActionProperty().setValue(event -> handleReportRefresh());
 
-    /**
-     * Returns the name of the report.
-     * 
-     * @return report name
-     */
-    @Override
-    public String getReportName() {
-        return rb.getString("Title.BalanceSheet");
-    }
-
-    /**
-     * Returns the legend for the grand total.
-     * 
-     * @return report name
-     */
-    @Override
-    public String getGrandTotalLegend() {
-        return rb.getString("Word.Difference");
+        // boot the report generation
+        JavaFXUtils.runLater(this::refreshReport);
     }
 
     @Override
-    public String getGroupFooterLabel() {
-        return rb.getString("Word.Subtotal");
+    public void setRefreshRunnable(final Runnable runnable) {
+        refreshRunnable = runnable;
     }
 
-    /**
-     * Internal class to return a row the calculates the retained earnings for an account.
-     */
-    private class RetainedEarningsRow extends Row<Void> {
+    @Override
+    public void getReport(final Consumer<Report> reportConsumer) {
+        reportConsumer.accept(report);
+    }
 
-        RetainedEarningsRow() {
-            super(null);
+    @Override
+    public void refreshReport() {
+        handleReportRefresh();
+    }
+
+    @Override
+    public void closeReport() throws IOException {
+        report.close();
+    }
+
+    private void handleReportRefresh() {
+
+        final Preferences preferences = getPreferences();
+
+        preferences.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
+        preferences.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDatePicker.getValue(),
+                endDatePicker.getValue()).size());
+
+        addTable();
+
+        // send notification the report has been updated
+        if (refreshRunnable != null) {
+            refreshRunnable.run();
         }
+    }
 
-        /**
-         * Returns values for retained earnings.
-         */
-        @Override
-        public Object getValueAt(final int columnIndex) {
+    private void addTable() {
+        AbstractReportTableModel model = createReportModel();
 
-            if (columnIndex == 0) { // account column
-                return rb.getString("Title.RetainedEarnings");
-            } else if (columnIndex == getColumnCount() - 1) { // group column              
-                return AccountGroup.EQUITY.toString();
-            } else if (columnIndex > 0 && columnIndex <= dates.size()) {
-                final LocalDate startDate = dates.get(columnIndex - 1);
-                final LocalDate endDate = dates.get(columnIndex).minusDays(1);
+        report.clearReport();
 
-                return getRetainedProfitLoss(startDate, endDate);
-            }
-            return null;
+        try {
+            report.addTable(model, ResourceUtils.getString("Title.BalanceSheet"));
+            report.addFooter();
+        } catch (final IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        private int getColumnCount() {
-            if (runningTotal) {
-                return dates.size() + 2;
-            }
-            
-			return dates.size() - 1 + 2;
-        }
-
-        /**
-         * Returns the retained profit or loss for the given period.
-         * 
-         * @param startDate Start date for the period
-         * @param endDate End date for the period
-         * @return the profit or loss for the period
-         */
-        private BigDecimal getRetainedProfitLoss(final LocalDate startDate, final LocalDate endDate) {
-            BigDecimal profitLoss = BigDecimal.ZERO;
-
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
-
-            final CurrencyNode baseCurrency = engine.getDefaultCurrency();
-
-            for (final Account account : engine.getExpenseAccountList()) {
-                profitLoss = profitLoss.add(account.getBalance(startDate, endDate, baseCurrency));
-            }
-
-            for (final Account account : engine.getIncomeAccountList()) {
-                profitLoss = profitLoss.add(account.getBalance(startDate, endDate, baseCurrency));
-            }
-
-            return profitLoss.negate();
-        }
+    private AbstractReportTableModel createReportModel() {
+        return report.createReportModel(startDatePicker.getValue(), endDatePicker.getValue(),
+                hideZeroBalanceAccounts.isSelected());
     }
 }

@@ -455,7 +455,7 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleDisplayAccountRegisterReport() {
-        ReportActions.displayAccountRegisterReport(null);
+        ReportActions.displayAccountRegisterReport2(null);
     }
 
     @FXML

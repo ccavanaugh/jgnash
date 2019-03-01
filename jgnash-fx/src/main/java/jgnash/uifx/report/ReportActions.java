@@ -32,7 +32,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.report.BalanceByMonthCSVReport;
 import jgnash.report.ProfitLossTextReport;
 import jgnash.uifx.control.DateRangeDialogController;
-import jgnash.uifx.report.jasper.JasperViewerDialogController;
+import jgnash.uifx.report.pdf.ReportViewerDialogController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
@@ -58,9 +58,9 @@ public class ReportActions {
         pair.getStage().show();
     }
 
-    public static void displayAccountRegisterReport(@Nullable final Account account) {
-        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
-                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+    public static void displayAccountRegisterReport2(@Nullable final Account account) {
+        final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
+                FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),
                         ResourceUtils.getString("Title.AccountRegister"));
 
         final AccountRegisterReportController controller
@@ -101,8 +101,8 @@ public class ReportActions {
     }
 
     public static void displayPortfolioReport() {
-        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
-                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+        final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
+                FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),
                         ResourceUtils.getString("Title.PortfolioReport"));
 
         reportPair.getController().loadReportController("PortfolioReport.fxml");
@@ -114,8 +114,8 @@ public class ReportActions {
     }
 
     public static void displayProfitLossReport() {
-        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
-                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+        final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
+                FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),
                         ResourceUtils.getString("Title.ProfitLoss"));
 
         reportPair.getController().loadReportController("ProfitLossReport.fxml");
@@ -127,8 +127,8 @@ public class ReportActions {
     }
 
     public static void displayBalanceSheetReport() {
-        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
-                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+        final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
+                FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),
                         ResourceUtils.getString("Title.BalanceSheet"));
 
         reportPair.getController().loadReportController("BalanceSheetReport.fxml");
@@ -140,8 +140,8 @@ public class ReportActions {
     }
 
     public static void displayNetWorthReport() {
-        final FXMLUtils.Pair<JasperViewerDialogController> reportPair =
-                FXMLUtils.load(JasperViewerDialogController.class.getResource("JasperViewerDialog.fxml"),
+        final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
+                FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),
                         ResourceUtils.getString("Word.NetWorth"));
 
         reportPair.getController().loadReportController("NetWorthReport.fxml");

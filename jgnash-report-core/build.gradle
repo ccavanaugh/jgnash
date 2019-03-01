@@ -7,34 +7,9 @@ project.ext {
 dependencies {
     compile project(':jgnash-core')
 
-    compile(group: 'com.lowagie', name: 'itext', version: itextVersion) {
-        exclude(module: 'bcmail-jdk14')
-        exclude(module: 'bctsp-jdk14')
-        exclude(module: 'bcprov-jdk14')
-        exclude(module: 'jfreechart')
-    }
-
-    compile(group: 'net.sf.jasperreports', name: 'jasperreports', version: jasperReportsVersion) {
-        exclude(module: 'core')
-        exclude(module: 'lucene-core')
-        exclude(module: 'lucene-analyzers-common')
-        exclude(module: 'lucene-queryparser')
-        exclude(module: 'castor-xml')
-        exclude(module: 'jfreechart')
-        exclude(module: 'jcommon')
-        exclude(module: 'jackson-core')
-        exclude(module: 'jackson-databind')
-        exclude(module: 'jackson-annotations')
-        exclude(module: 'olap4j')
-        exclude(module: 'xml-apis')
-    }
-
-    compile(group: 'ar.com.fdvs', name: 'DynamicJasper', version: dynamicJasperVersion) {
-        exclude(module: 'jasperreports')
-        exclude(module: 'jcommon')
-        exclude(module: 'jfreechart')
-        exclude(module: 'xml-apis')
-    }
+    compile group: 'org.apache.pdfbox', name: 'pdfbox', version: pdfBoxVersion
+    compile group: 'org.apache.pdfbox', name: 'pdfbox-tools', version: pdfBoxVersion
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
 }
 
 jar {

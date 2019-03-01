@@ -6,10 +6,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.DatePickerEx?>
-<?import javafx.scene.control.ComboBox?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import javafx.scene.control.ComboBox?>
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.report.ProfitLossReportController" styleClass="form, dialog">
+
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
@@ -45,6 +46,7 @@
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
@@ -52,9 +54,9 @@
 
         <Label text="%Label.SortOrder"/>
         <ComboBox fx:id="sortOrderComboBox" GridPane.columnIndex="1" onAction="#handleRefresh"/>
-        <CheckBox fx:id="showLongNamesCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="2"
-                  onAction="#handleRefresh"/>
-        <CheckBox fx:id="hideZeroBalanceAccounts" text="%Button.HideZeroBalance" GridPane.columnIndex="3"
-                  onAction="#handleRefresh"/>
+        <CheckBox fx:id="showLongNamesCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="2"/>
+        <CheckBox fx:id="hideZeroBalanceAccounts" text="%Button.HideZeroBalance" GridPane.columnIndex="3"/>
+        <CheckBox fx:id="showAccountPercentages" text="%Button.ShowPercentValues" GridPane.columnIndex="4"/>
     </GridPane>
+
 </GridPane>

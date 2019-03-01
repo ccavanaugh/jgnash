@@ -17,41 +17,175 @@
  */
 package jgnash.uifx.report;
 
-import java.util.ArrayList;
-import java.util.List;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.SortOrder;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
+import jgnash.time.Period;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.report.pdf.ReportController;
+import jgnash.uifx.util.JavaFXUtils;
 
-import jgnash.engine.AccountGroup;
-import jgnash.uifx.report.jasper.AbstractCrosstabReport;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.function.Consumer;
+import java.util.prefs.Preferences;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 
 /**
- * Profit and Loss Report.
+ * Profit Loss Report Controller
  *
  * @author Craig Cavanaugh
  */
-public class ProfitLossReportController extends AbstractCrosstabReport {
+public class ProfitLossReportController implements ReportController {
 
-    @Override
-    protected List<AccountGroup> getAccountGroups() {
-        final List<AccountGroup> groups = new ArrayList<>();
+    @FXML
+    private ComboBox<Period> resolutionComboBox;
 
-        groups.add(AccountGroup.INCOME);
-        groups.add(AccountGroup.EXPENSE);
+    @FXML
+    private ComboBox<SortOrder> sortOrderComboBox;
 
-        return groups;
+    @FXML
+    private CheckBox showLongNamesCheckBox;
+
+    @FXML
+    private CheckBox showAccountPercentages;
+
+    @FXML
+    private DatePickerEx startDatePicker;
+
+    @FXML
+    private DatePickerEx endDatePicker;
+
+    @FXML
+    private CheckBox hideZeroBalanceAccounts;
+
+    private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
+
+    private static final String PERIOD = "period";
+
+    private static final String MONTHS = "months";
+
+    private static final String SHOW_FULL_ACCOUNT_PATH = "showFullAccountPath";
+
+    private static final String SHOW_PERCENTAGES = "showPercentages";
+
+    private static final String SORT_ORDER = "sortOrder";
+
+    private ProfitLossReport report = new ProfitLossReport();
+
+    private Runnable refreshRunnable = null;
+
+    public ProfitLossReportController() {
+        super();
+    }
+
+    @FXML
+    private void initialize() {
+        final Preferences preferences = getPreferences();
+
+        hideZeroBalanceAccounts.setSelected(preferences.getBoolean(HIDE_ZERO_BALANCE, true));
+        startDatePicker.setValue(LocalDate.now().minusMonths(preferences.getInt(MONTHS, 4) - 1));
+
+        showLongNamesCheckBox.setSelected(preferences.getBoolean(SHOW_FULL_ACCOUNT_PATH, false));
+        showAccountPercentages.setSelected(preferences.getBoolean(SHOW_PERCENTAGES, false));
+
+        resolutionComboBox.getItems().add(Period.MONTHLY);
+        resolutionComboBox.getItems().add(Period.QUARTERLY);
+        resolutionComboBox.getItems().add(Period.YEARLY);
+        resolutionComboBox.setValue(Period.values()[preferences.getInt(PERIOD, Period.QUARTERLY.ordinal())]);
+
+        sortOrderComboBox.getItems().setAll(SortOrder.values());
+        sortOrderComboBox.setValue(SortOrder.values()[preferences.getInt(SORT_ORDER, SortOrder.BY_NAME.ordinal())]);
+
+        // change listener is assigned after controls have been set to prevent multiple report refreshes
+        final ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
+
+        startDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));
+        endDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));
+        resolutionComboBox.valueProperty().addListener(new WeakChangeListener<>(changeListener));
+        hideZeroBalanceAccounts.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
+        showLongNamesCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
+        showAccountPercentages.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
+
+        // boot the report generation
+        JavaFXUtils.runLater(this::refreshReport);
     }
 
     @Override
-    public String getReportName() {
-        return rb.getString("Title.ProfitLoss");
+    public void setRefreshRunnable(final Runnable runnable) {
+        refreshRunnable = runnable;
     }
 
     @Override
-    protected String getGrandTotalLegend() {
-        return rb.getString("Word.NetIncome");
+    public void getReport(final Consumer<Report> reportConsumer) {
+        reportConsumer.accept(report);
     }
 
     @Override
-    protected String getGroupFooterLabel() {
-        return rb.getString("Word.Subtotal");
+    public void refreshReport() {
+        handleReportRefresh();
+    }
+
+    @Override
+    public void closeReport() throws IOException {
+        report.close();
+    }
+
+    private void handleReportRefresh() {
+
+        final Preferences preferences = getPreferences();
+
+        preferences.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
+        preferences.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDatePicker.getValue(),
+                endDatePicker.getValue()).size());
+        preferences.putInt(PERIOD, resolutionComboBox.getValue().ordinal());
+        preferences.putInt(SORT_ORDER, sortOrderComboBox.getValue().ordinal());
+        preferences.putBoolean(SHOW_FULL_ACCOUNT_PATH, showLongNamesCheckBox.isSelected());
+        preferences.getBoolean(SHOW_PERCENTAGES, showAccountPercentages.isSelected());
+
+        addTable();
+
+        // send notification the report has been updated
+        if (refreshRunnable != null) {
+            refreshRunnable.run();
+        }
+    }
+
+    private void addTable() {
+        AbstractReportTableModel model = createReportModel();
+
+        report.clearReport();
+
+
+        try {
+            report.addTable(model, ResourceUtils.getString("Title.ProfitLoss"));
+            report.addFooter();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private AbstractReportTableModel createReportModel() {
+        report.setAddPercentileColumn(showAccountPercentages.isSelected());
+
+        report.setSortOrder(sortOrderComboBox.getValue());
+        report.setReportPeriod(resolutionComboBox.getValue());
+
+        report.setShowFullAccountPath(showLongNamesCheckBox.isSelected());
+
+        return report.createReportModel(startDatePicker.getValue(), endDatePicker.getValue(),
+                hideZeroBalanceAccounts.isSelected());
+    }
+
+    @FXML
+    public void handleRefresh() {
+        JavaFXUtils.runLater(this::refreshReport);
     }
 }

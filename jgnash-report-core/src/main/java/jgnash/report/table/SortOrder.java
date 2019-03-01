@@ -15,28 +15,27 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.report.jasper;
+package jgnash.report.table;
 
-import javafx.beans.property.SimpleObjectProperty;
-
-import jgnash.report.ui.jasper.BaseDynamicJasperReport;
-import jgnash.uifx.StaticUIMethods;
+import jgnash.resource.util.ResourceUtils;
 
 /**
- * Abstract report controller base class that may be extended to create a report.
- * 
+ * Sort order enumeration
+ *
  * @author Craig Cavanaugh
  */
-public abstract class DynamicJasperReport extends BaseDynamicJasperReport{
+public enum SortOrder {
+    BY_NAME(ResourceUtils.getString("SortOrder.AccountName")),
+    BY_BALANCE(ResourceUtils.getString("SortOrder.AccountBalanceDesc"));
 
-    private final SimpleObjectProperty<Runnable> refreshCallBack = new SimpleObjectProperty<>();
+    private final transient String description;
 
-    protected SimpleObjectProperty<Runnable> refreshCallBackProperty() {
-        return refreshCallBack;
+    SortOrder(final String description) {
+        this.description = description;
     }
 
     @Override
-    protected void displayError(final String message) {
-        StaticUIMethods.displayError(message);
+    public String toString() {
+        return description;
     }
 }
