@@ -76,8 +76,6 @@ public class EngineFactory {
 
     private static final String LAST_REMOTE = "LastRemote";
 
-    private static final String OPEN_LAST = "OpenLast";
-
     /**
      * Default directory for jGnash data. To be located in the default user
      * directory
@@ -109,10 +107,6 @@ public class EngineFactory {
         }
 
         return Files.isReadable(Paths.get(database + type.getDataStore().getFileExt()));
-    }
-
-    public static boolean doesDatabaseExist(final String database) {
-        return Files.isReadable(Paths.get(database));
     }
 
     public static boolean deleteDatabase(final String database) {
@@ -477,18 +471,6 @@ public class EngineFactory {
         final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getBoolean(USED_PASSWORD, false);
-    }
-
-    public static synchronized void setOpenLastOnStartup(final boolean last) {
-        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        pref.putBoolean(OPEN_LAST, last);
-    }
-
-    public static synchronized boolean openLastOnStartup() {
-        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        return pref.getBoolean(OPEN_LAST, true);
     }
 
     /**

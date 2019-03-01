@@ -666,7 +666,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param index the balance of this account at the specified index.
      * @return the balance of this account at the specified index.
      */
-    public BigDecimal getBalanceAt(final int index) {
+    private BigDecimal getBalanceAt(final int index) {
         transactionLock.readLock().lock();
 
         try {
@@ -934,34 +934,6 @@ public class Account extends StoredObject implements Comparable<Account> {
             return adjustForExchangeRate(getBalance(startDate, endDate), node);
         } finally {
             transactionLock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Returns the the balance of the account plus any child accounts inclusive
-     * of the start and end dates.
-     *
-     * @param start Start date inclusive
-     * @param end   End date inclusive
-     * @return recursive account balance
-     */
-    public BigDecimal getTreeBalance(final LocalDate start, final LocalDate end) {
-        Objects.requireNonNull(start);
-        Objects.requireNonNull(end);
-
-        transactionLock.readLock().lock();
-        childLock.readLock().lock();
-
-        try {
-            BigDecimal balance = getBalance(start, end);
-
-            for (final Account child : cachedSortedChildren) {
-                balance = balance.add(child.getTreeBalance(start, end, getCurrencyNode()));
-            }
-            return balance;
-        } finally {
-            transactionLock.readLock().unlock();
-            childLock.readLock().unlock();
         }
     }
 
