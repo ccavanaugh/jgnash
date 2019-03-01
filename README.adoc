@@ -82,14 +82,12 @@ The *https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group]* is 
 [[Reqs-Java]]
 === 1. Java 11 or newer: OpenJDK is recommended over use of Oracle JDK
 
-==== Java 8
+==== Java 11
 
-[[JDK-8]]
-*Java 8 https://jdk8.java.net/download.html[JDK 8u71]* or later is required to run jGnash using the jGnashFx interface.
-  The 8u71 release
-fixed several JavaFX bugs and jGnashFx is dependent on several recent API changes.
-(See the <<jGnashFx-version>> section for information on jGnashFx vs. the legacy Java Swing version.)
+[[JDK-11]]
+*Java 11 https://jdk.java.net/11/[JDK 11]* or later is required to run jGnash.
 
+https://www.azul.com/downloads/zulu/[Azul OpenJDK 11] is a branded release that may be easier to install for some users.
 
 ==== OpenJDK or Oracle JDK
 
