@@ -7,11 +7,11 @@ of the same features as commercially-available software. It was created in order
 easy, but also provides the functionality needed by advanced users. jGnash is cross-platform and will run on
 any operating system that has a current Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
 
-* jGnash 2.x requires *Java 8* (It can run on later versions. _See the <<Requirements, Requirements section.>>_)
+* jGnash requires *Java 11* (It can run on later versions. _See the <<Requirements, Requirements section.>>_)
 
 * jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Platform.
 
-See the <<Requirements>> section below for more details, including notes on using Java versions 9, 10, or later.
+See the <<Requirements>> section below for more details.
 
 === Contents:
 * <<About, About jGnash>>
@@ -34,7 +34,7 @@ See the <<Requirements>> section below for more details, including notes on usin
 [[Features]]
 === jGnash Features
 
-- Operates on any operating system with Java 8 or newer installed
+- Operates on any operating system with Java 11 or newer installed
 - Double Entry Accounting with reconciliation tools
 - OFX, QFX, mt940, and QIF import capabilities
 - Investment Accounts and automatic import of Stocks, Bond, and Funds price history
@@ -54,19 +54,13 @@ It also covers some of the more subtle features, command line options, and short
 [[jGnashFx-version]]
 === The Current Version: _jGnashFX_
 
-The current version of jGnash uses *JavaFX* for the user interface. This replaces the old versions that used Java Swing for the user interface.
+The latest version of jGnash uses *JavaFX* for the user interface. This replaces the old versions that used Java Swing for the user interface.
 This version is called "*jGnashFX*" to distinguish it from the older versions.  Experienced jGnash users will notice interface improvements.
-For example, try using the vertical and horizontal scroll wheels in a date picker and the
-collapsible transaction forms.
-
-The core/engine of jGnash remains the same and is shared by both the Swing and JavaFx versions. This means stability
-and protection of your valuable data remains the same. This also allows you to switch between versions without issue.
+For example, try using the vertical and horizontal scroll wheels in a date picker and the collapsible transaction forms.
 
 The advantages of JavaFX over Swing are an improved appearance with better utilization of the systems graphics hardware
  including Hi-DPI systems. It also means a smaller code base for the user interface, access to better components such as improved
 table support, HTML pages, functional animations, modern controls, etc.
-
-IMPORTANT: *Linux users* see must use either an Oracle Java or OpenJFX `8u71` or later.  See <<openJDK-linux, the requirements on OpenJDK for specifics.>>
 
 [[Donations]]
 == Donations
@@ -86,7 +80,7 @@ The *https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group]* is 
 == Requirements
 
 [[Reqs-Java]]
-=== 1. Java 8 ( or 9 or 10): OpenJDK or Oracle JDK
+=== 1. Java 11 or newer: OpenJDK is recommended over use of Oracle JDK
 
 ==== Java 8
 
@@ -96,51 +90,32 @@ The *https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group]* is 
 fixed several JavaFX bugs and jGnashFx is dependent on several recent API changes.
 (See the <<jGnashFx-version>> section for information on jGnashFx vs. the legacy Java Swing version.)
 
-[[JDK-9-10]]
-===== Java 9 or 10
-
-jGnash is designed to operate with *Java 8.*  Starting with Java 9, Oracle has removed some modules required by jGnash.
-It _is_ possible to run jGnash with Java 9 or 10: be sure to read the <<Install, Install section below>> to ensure that jGnash has all modules available.
-
-[[JDK-11]]
-===== Java 11
-
-jGnash does not yet work with _Java 11_, but integration work has started with the 3.0-dev branch.
-
 
 ==== OpenJDK or Oracle JDK
 
-jGnash will work with either OpenJDK or Oracle JDK.  jGnashFx has been heavily tested against OpenJFX. There are no noticeable differences in performance or
-stability with the Oracle release or OpenJDK with OpenJFX.
+jGnash will work with either OpenJDK or Oracle JDK.  jGnashFx is tested using OpenJDK.  There are no noticeable differences in performance or
+stability with the Oracle release or OpenJDK.
 
 [[Reqs-OS]]
 === 2. Supported Operating Systems: Windows, Linux, or Mac OS X
 
 ==== Microsoft Windows
 
-*  any version that can run the required version(s) of Java 8 `8u71`
+*  any version that can run the required version(s) of Java 11
 
 
 ==== Linux
 
-* any version that can run the required version(s) of Java 8 `8u71`
+* any version that can run the required version(s) of Java 11
 
 Note: jGnash is _not compatible_ with the GCJ Java installation pre-installed on older Linux distributions.
 You will need to install the *OpenJDK* or *Oracle Java* Platform and set the default for jGnash
 to operate correctly.
 
-[[openJDK-linux]]
-*Linux and OpenJDK:*
-Some Linux distributions separate the installation of the Open JavaFx libraries from the base JVM package.
-The jGnashFx interface requires `OpenJFX 8u71` or later. OpenJFX `8u40` and `u45` packages are generally available for most
-mainstream Linux distributions, but _will not work._
-
-
-
 ==== Mac OS X
 
 * Mac OS X 10.8.3 or later
-* can run the required version(s) of Java 8 `8u71`
+* can run the required version(s) of Java 11
 
 _Be sure to read <<Install-MacOSX, the section about installing on Mac OS X>> to create the startup script._
 
@@ -181,35 +156,6 @@ Most users of jGnash will want to use the latest version of http://www.java.com/
 
 . Instead of step 2,
  you can set the `/Applications/jGnash/jGnashFx` file to _Open with..._ `Terminal.app` (the Terminal application).
-
-[[Install-JDK-9-10]]
-=== Installing with Java 9 or 10
-
-You must have the `jaxb-api.jar` file available _and_ manually tell jGnash to use it.  Here are the steps to do that:
-
-
- . Ensure that you have a `jaxb-api.jar` file and that it is in the jGnash/lib directory.  (You can google/search for
-  `jaxb-api.jar` to find a download that works for you.)
-
- . Add the additional command line option `--add-modules java.xml.bind` to the command or shell file you use to run
-  jGnash.  You will need to modify the appropriate command or shell file for your operating system in the `[jGnash]/bin` directory.
-   Adding this command-line option ensures that the `jaxb-api.jar` file is
-used.
-
-If jGnash cannot find the `jaxb-api.jar,` you may see "An illegal reflective access has occurred" warning similar to the following:
-
-[source]
-----
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by javassist.util.proxy.SecurityActions (file:/home/craig/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/a9cbcdfb7e9f86fbc74d3afae65f2248bfbf82a0/javassist-3.20.0-GA.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of javassist.util.proxy.SecurityActions
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-----
-
-To fix this: double-check that the `jaxb-api.jar` file is in the `\lib` directory and that the command-line option is correct.
-
-This warning should improve at a later date as the Java Ecosystem migrates to Java 9.
 
 
 [[Running]]
