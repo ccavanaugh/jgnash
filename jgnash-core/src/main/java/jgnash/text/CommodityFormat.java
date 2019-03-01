@@ -22,7 +22,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.message.Message;
@@ -44,13 +43,6 @@ public class CommodityFormat {
 
     private static final Map<Integer, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
 
-    private static final String[] ESCAPE_CHARS = new String[]{",", ".", "0", "#", "-", ";", "%"};
-
-    /**
-     * Pre-compiled currency sign pattern.
-     */
-    private static final Pattern CURRENCY_SIGN_PATTERN = Pattern.compile("¤");
-
     static {
         /*
          * Need to clear any references to CommodityNodes to prevent memory leaks when
@@ -59,43 +51,6 @@ public class CommodityFormat {
         listener = new CommodityListener();
 
         MessageBus.getInstance().registerListener(listener, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
-    }
-
-    public static String getShortNumberPattern(final CommodityNode node) {
-        DecimalFormat format = (DecimalFormat) getShortNumberFormat(node);
-        String pattern = format.toPattern();
-
-        return CURRENCY_SIGN_PATTERN.matcher(pattern).replaceAll("");
-    }
-
-    public static String getFullNumberPattern(final CommodityNode node) {
-
-        DecimalFormat format = (DecimalFormat) getFullNumberFormat(node);
-        String pattern = format.toPattern();
-
-        if (pattern.charAt(0) == '\u00A4') {
-            String prefix = node.getPrefix();
-
-            // escape any special characters
-            for (String escapeChar : ESCAPE_CHARS) {
-                if (prefix.contains(escapeChar)) {
-                    prefix = prefix.replace(escapeChar, "'" + escapeChar + "'");
-                }
-            }
-
-            return pattern.replace("\u00A4", prefix);
-        }
-
-        String suffix = node.getSuffix();
-
-        // escape any special characters
-        for (String escapeChar : ESCAPE_CHARS) {
-            if (suffix.contains(escapeChar)) {
-                suffix = suffix.replace(escapeChar, "'" + escapeChar + "'");
-            }
-        }
-
-        return pattern.replace("\u00A4", suffix);
     }
 
     /**
@@ -181,18 +136,13 @@ public class CommodityFormat {
             final int negSufLen = df.getNegativeSuffix().length();
             final int posSufLen = df.getPositiveSuffix().length();
 
+            // pad the prefix and suffix as necessary so that they are the same length
             if (negSufLen > posSufLen) {
-                StringBuilder buf = new StringBuilder(df.getPositiveSuffix());
-                for (int i = negSufLen - posSufLen; i <= negSufLen; i++) {
-                    buf.append(' ');
-                }
-                df.setPositiveSuffix(buf.toString());
+                df.setPositiveSuffix(df.getPositiveSuffix()
+                        + " ".repeat(Math.max(0, negSufLen - (negSufLen - posSufLen) + 1)));
             } else if (posSufLen > negSufLen) {
-                StringBuilder buf = new StringBuilder(df.getNegativeSuffix());
-                for (int i = posSufLen - negSufLen; i <= posSufLen; i++) {
-                    buf.append(' ');
-                }
-                df.setNegativeSuffix(buf.toString());
+                df.setNegativeSuffix(df.getNegativeSuffix()
+                        + " ".repeat(Math.max(0, posSufLen - (posSufLen - negSufLen) + 1)));
             }
 
             return df;
