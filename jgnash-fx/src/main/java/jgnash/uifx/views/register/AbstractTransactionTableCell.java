@@ -44,7 +44,7 @@ abstract class AbstractTransactionTableCell extends TableCell<Transaction, BigDe
 
         // Not empty and amount is not null, but tableRow can be null... JavaFx Bug?
         if (getTableRow() != null && getTableRow().getItem() != null) {
-            final boolean future = ((Transaction) getTableRow().getItem()).getLocalDate().isAfter(LocalDate.now());
+            final boolean future = getTableRow().getItem().getLocalDate().isAfter(LocalDate.now());
             final boolean negative = amount.signum() < 0;
 
             // Set font style
