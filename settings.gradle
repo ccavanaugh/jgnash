@@ -1,5 +1,6 @@
 rootProject.name = 'jgnash2'
 
+include ':jgnash'
 include ':jgnash-bayes'
 include ':jgnash-help'
 include ':jgnash-resources'
@@ -12,6 +13,7 @@ include ':jgnash-fx-test-plugin'
 
 include ':mt940'
 
+project(':jgnash').projectDir = "$rootDir/jgnash" as File
 project(':jgnash-bayes').projectDir = "$rootDir/jgnash-bayes" as File
 project(':jgnash-help').projectDir = "$rootDir/jgnash-help" as File
 project(':jgnash-resources').projectDir = "$rootDir/jgnash-resources" as File
