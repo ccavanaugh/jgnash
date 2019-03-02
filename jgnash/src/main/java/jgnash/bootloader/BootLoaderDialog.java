@@ -59,12 +59,10 @@ public class BootLoaderDialog extends JFrame {
         this.percentCompleteConsumer = value -> EventQueue.invokeLater(() -> {
             progressBar.setValue(value);
 
-            System.out.println(value);
-
             if (value >= 100) {
                 final Thread thread = new Thread(() -> {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(3000);
                         System.exit(BootLoader.REBOOT_EXIT);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -93,6 +91,9 @@ public class BootLoaderDialog extends JFrame {
         JTextArea messageArea = new JTextArea();
 
         progressBar = new JProgressBar();
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(100);
+        progressBar.setStringPainted(true);
 
         JButton cancelButton = new JButton(ResourceUtils.getString("Button.Cancel"));
         cancelButton.addActionListener(evt -> cancelButtonActionPerformed());
