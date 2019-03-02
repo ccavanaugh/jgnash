@@ -1,4 +1,4 @@
-rootProject.name = "jgnash2"
+rootProject.name = "jgnash"
 
 include ":jgnash"
 include ":jgnash-bayes"
