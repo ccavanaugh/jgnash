@@ -1,27 +1,27 @@
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id "org.openjfx.javafxplugin" version "0.0.7"
 }
 
-description = 'mt940 Plugin'
+description = "mt940 Plugin"
 
 dependencies {
-    compile project(':jgnash-plugin')
-    compile project(':jgnash-core')
-    compile project(':jgnash-convert')
-    compile project(':jgnash-fx')
+    compile project(":jgnash-plugin")
+    compile project(":jgnash-core")
+    compile project(":jgnash-convert")
+    compile project(":jgnash-fx")
 }
 
 javafx {
-    modules = [ 'javafx.controls']
+    modules = [ "javafx.controls"]
 }
 
 jar {
     // Keep jar clean:
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    exclude "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.MF"
 
     // required by the plugin interface
     manifest {
-        attributes  'Plugin-Activator': 'net.bzzt.swift.mt940.Mt940Plugin',
-                    'Plugin-Version': '2.25'
+        attributes  "Plugin-Activator": "net.bzzt.swift.mt940.Mt940Plugin",
+                    "Plugin-Version": "2.25"
     }
 }

@@ -1,32 +1,32 @@
 plugins {
-    id 'edu.sc.seis.launch4j' version '2.4.4'
-    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id "edu.sc.seis.launch4j" version "2.4.4"
+    id "org.openjfx.javafxplugin" version "0.0.7"
 }
 
-apply plugin: 'distribution'
-apply plugin: 'application' // creates a task to run the full application
+apply plugin: "distribution"
+apply plugin: "application" // creates a task to run the full application
 
-description = 'jGnashFx Boot Loader'
+description = "jGnashFx BootLoader"
 mainClassName = "jGnash"
 
 javafx {
-    modules = [ 'javafx.controls']
+    modules = [ "javafx.controls"]
 }
 
 dependencies {
-    compile project(':jgnash-fx')
+    compile project(":jgnash-fx")
 }
 
 launch4j {
-    copyright = 'Copyright (C) 2001-2019 Craig Cavanaugh'
-    mainClassName = 'jGnash'
-    outfile = 'jGnash.exe'
+    copyright = "Copyright (C) 2001-2019 Craig Cavanaugh"
+    mainClassName = "jGnash"
+    outfile = "jGnash.exe"
     dontWrapJar = true
-    icon = '../../../jgnash-fx/gnome-money.ico'
+    icon = "../../../jgnash-fx/gnome-money.ico"
 }
 
 task createStartScripts(type: CreateStartScripts) {
-    outputDir = file('../../')
+    outputDir = file("../../")
 }
 
 // call launch4j prior to creating the zip file
@@ -34,33 +34,33 @@ distZip.dependsOn(createExe)
 
 distZip {
     doLast {
-        file("$destinationDir/$archiveName").renameTo("$destinationDir/"+'jGnash-'+version+'.zip')
+        file("$destinationDir/$archiveName").renameTo("$destinationDir/"+"jGnash-"+version+".zip")
     }
 }
 
 distributions {
     main {
-        baseName = 'jGnash'
+        baseName = "jGnash"
         contents {
-            from { '../jgnash-help/build/asciidoc/pdf/Manual.pdf' }
-            from { '../changelog.adoc' }
-            from { 'build/launch4j/jGnash.exe' }
-            from { '../README.html' }
-            from { '../README.adoc' }
-            from { '../jGnash' }
-            exclude('**/*-linux*')  // excludes linux specific JavaFx modules from cross platform zip
-            exclude('**/*-win*')    // excludes windows specific JavaFx modules from cross platform zip
-            exclude('**/*-mac*')    // excludes mac specific JavaFx modules from cross platform zip
+            from { "../jgnash-help/build/asciidoc/pdf/Manual.pdf" }
+            from { "../changelog.adoc" }
+            from { "build/launch4j/jGnash.exe" }
+            from { "../README.html" }
+            from { "../README.adoc" }
+            from { "../jGnash" }
+            exclude("**/*-linux*")  // excludes linux specific JavaFx modules from cross platform zip
+            exclude("**/*-win*")    // excludes windows specific JavaFx modules from cross platform zip
+            exclude("**/*-mac*")    // excludes mac specific JavaFx modules from cross platform zip
         }
     }
 }
 
 jar {
     // Keep jar clean:
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    exclude "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.MF"
 
     manifest {
-        attributes  'Main-Class': 'jGnash',
-                'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+        attributes  "Main-Class": "jGnash",
+                "Class-Path": configurations.runtimeClasspath.files.collect { "lib/$it.name" }.join(" ")
     }
 }

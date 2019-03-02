@@ -1,22 +1,22 @@
-description = 'jGnash Convert'
+description = "jGnash Convert"
 
 project.ext {
-    moduleName = 'jgnash.convert'
+    moduleName = "jgnash.convert"
 }
 
 dependencies {
-    compile project(':jgnash-core')
-    compile project(':jgnash-bayes')
+    compile project(":jgnash-core")
+    compile project(":jgnash-bayes")
     
-    compile group: 'org.apache.commons', name: 'commons-csv', version: commonsCsvVersion
+    compile group: "org.apache.commons", name: "commons-csv", version: commonsCsvVersion
 
-    testCompile project(':jgnash-core').sourceSets.test.output
+    testCompile project(":jgnash-core").sourceSets.test.output
 }
 
 jar {
     manifest {
         attributes(
-                'Automatic-Module-Name': "${moduleName}"
+                "Automatic-Module-Name": "${moduleName}"
         )
     }
 }

@@ -1,10 +1,10 @@
 import org.gradle.internal.jvm.Jvm
 import static org.gradle.internal.os.OperatingSystem.*
 
-description = 'jGnash Resources'
+description = "jGnash Resources"
 
 project.ext {
-    moduleName = 'jgnash.convert'
+    moduleName = "jgnash.convert"
 
     javaVersion = Jvm.current()
     osName = current()
@@ -14,11 +14,11 @@ project.ext {
 
 processResources {
 
-    filesMatching('**/constants.properties') {
+    filesMatching("**/constants.properties") {
         expand(version: version, javaVersion: javaVersion, timeStamp: timeStamp, osName: osName)
     }
 
-    filesMatching('**/notice.html') {
+    filesMatching("**/notice.html") {
         expand(version: version, javaVersion: javaVersion, timeStamp: timeStamp, osName: osName)
     }
 }
@@ -26,7 +26,7 @@ processResources {
 jar {
     manifest {
         attributes(
-                'Automatic-Module-Name': "${moduleName}"
+                "Automatic-Module-Name": "${moduleName}"
         )
     }
 }

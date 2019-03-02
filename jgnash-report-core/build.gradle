@@ -1,21 +1,21 @@
-description = 'jGnash Report Core'
+description = "jGnash Report Core"
 
 project.ext {
-    moduleName = 'jgnash.report'
+    moduleName = "jgnash.report"
 }
 
 dependencies {
-    compile project(':jgnash-core')
+    compile project(":jgnash-core")
 
-    compile group: 'org.apache.pdfbox', name: 'pdfbox', version: pdfBoxVersion
-    compile group: 'org.apache.pdfbox', name: 'pdfbox-tools', version: pdfBoxVersion
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
+    compile group: "org.apache.pdfbox", name: "pdfbox", version: pdfBoxVersion
+    compile group: "org.apache.pdfbox", name: "pdfbox-tools", version: pdfBoxVersion
+    compile group: "org.apache.commons", name: "commons-lang3", version: commonsLangVersion
 }
 
 jar {
     manifest {
         attributes(
-                'Automatic-Module-Name': "${moduleName}"
+                "Automatic-Module-Name": "${moduleName}"
         )
     }
 }

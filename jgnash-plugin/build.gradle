@@ -1,25 +1,25 @@
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id "org.openjfx.javafxplugin" version "0.0.7"
 }
 
-description = 'jGnash Plugin'
+description = "jGnash Plugin"
 
 project.ext {
-    moduleName = 'jgnash.plugin'
+    moduleName = "jgnash.plugin"
 }
 
 javafx {
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = [ "javafx.controls", "javafx.fxml" ]
 }
 
 dependencies {
-    compile project(':jgnash-resources')
+    compile project(":jgnash-resources")
 }
 
 jar {
     manifest {
         attributes(
-                'Automatic-Module-Name': "${moduleName}"
+                "Automatic-Module-Name": "${moduleName}"
         )
     }
 }

@@ -1,45 +1,45 @@
 plugins {
-    id 'com.github.ben-manes.versions' version '0.20.0'
+    id "com.github.ben-manes.versions" version "0.20.0"
 }
 
 allprojects {
 
     // jgnash-help is not a compiled sub-project
-    if (!it.name.startsWith('jgnash-help')) {
-        apply plugin: 'java'
+    if (!it.name.startsWith("jgnash-help")) {
+        apply plugin: "java"
     }
     
     sourceCompatibility = 11
     targetCompatibility = 11
 
-    group = 'jgnash'
-    version = '3.0.0-b1'
+    group = "jgnash"
+    version = "3.0.0-b1"
 
     project.ext {
-        junitVersion = '5.4.0'
-        junitextensionsVersion = '2.3.0'
-        awaitilityVersion = '3.1.6'
+        junitVersion = "5.4.0"
+        junitextensionsVersion = "2.3.0"
+        awaitilityVersion = "3.1.6"
 
-        picocliVersion = '3.5.2'
+        picocliVersion = "3.5.2"
 
-        apachePoiVersion = '4.0.0'
-        commonsCsvVersion = '1.6'
-        commonsTextVersion = '1.6'
-        commonsLangVersion = '3.8.1'
+        apachePoiVersion = "4.0.0"
+        commonsCsvVersion = "1.6"
+        commonsTextVersion = "1.6"
+        commonsLangVersion = "3.8.1"
 
-        h2Version = '1.4.197'
-        hsqldbVersion = '2.4.1'
+        h2Version = "1.4.197"
+        hsqldbVersion = "2.4.1"
 
-        xstreamVersion = '1.4.11.1'
+        xstreamVersion = "1.4.11.1"
 
-        hibernateVersion = '5.4.1.Final'
-        hikariVersion = '3.3.1'
+        hibernateVersion = "5.4.1.Final"
+        hikariVersion = "3.3.1"
         
-        pdfBoxVersion = '2.0.14'
+        pdfBoxVersion = "2.0.14"
 
-        nettyVersion = '4.1.33.Final'
+        nettyVersion = "4.1.33.Final"
 
-        slf4jVersion = '1.8.0-beta2'
+        slf4jVersion = "1.8.0-beta2"
     }
 }
 
@@ -52,16 +52,16 @@ subprojects {
     }
 
     // jgnash-help is not a compiled sub-project
-    if (!it.name.startsWith('jgnash-help')) {
+    if (!it.name.startsWith("jgnash-help")) {
         dependencies {
 
-            testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
-            testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
-            testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+            testCompile group: "org.junit.jupiter", name: "junit-jupiter-api", version: junitVersion
+            testCompile group: "org.junit.jupiter", name: "junit-jupiter-params", version: junitVersion
+            testRuntime group: "org.junit.jupiter", name: "junit-jupiter-engine", version: junitVersion
 
-            testCompile group: 'io.github.glytching', name: 'junit-extensions', version: junitextensionsVersion
-            testCompile group: 'org.awaitility', name: 'awaitility', version: awaitilityVersion
-            testCompile group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
+            testCompile group: "io.github.glytching", name: "junit-extensions", version: junitextensionsVersion
+            testCompile group: "org.awaitility", name: "awaitility", version: awaitilityVersion
+            testCompile group: "org.apache.commons", name: "commons-text", version: commonsTextVersion
         }
     }
 
@@ -77,14 +77,14 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = '5.2.1'
+    gradleVersion = "5.2.1"
 }
 
 task distZip {
     doLast {
-        ant.zip(destfile: 'jgnash-' + version + '-bin.zip', duplicate: 'preserve', update: 'false') {
-            zipgroupfileset(dir: '.', includes: 'jgnash-fx/build/distributions/jGnashFx-' + version + '.zip')
-            zipgroupfileset(dir: '.', includes: 'jgnash/build/distributions/jGnash-' + version + '.zip')
+        ant.zip(destfile: "jgnash-" + version + "-bin.zip", duplicate: "preserve", update: "false") {
+            zipgroupfileset(dir: ".", includes: "jgnash-fx/build/distributions/jGnashFx-" + version + ".zip")
+            zipgroupfileset(dir: ".", includes: "jgnash/build/distributions/jGnash-" + version + ".zip")
         }
     }
 }

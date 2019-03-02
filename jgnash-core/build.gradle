@@ -1,45 +1,45 @@
-description = 'jGnash Core'
+description = "jGnash Core"
 
 project.ext {
-    moduleName = 'jgnash-core'
+    moduleName = "jgnash-core"
 }
 
 dependencies {
-    compile project(':jgnash-resources')
+    compile project(":jgnash-resources")
 
     // required for HikariCP, override with modular version
-    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    compile group: 'org.slf4j', name: 'slf4j-jdk14', version: slf4jVersion
+    compile group: "org.slf4j", name: "slf4j-api", version: slf4jVersion
+    compile group: "org.slf4j", name: "slf4j-jdk14", version: slf4jVersion
 
-    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateVersion
-    compile(group: 'org.hibernate', name: 'hibernate-hikaricp', version: hibernateVersion)
-    compile group: 'com.zaxxer', name: 'HikariCP', version: hikariVersion
+    compile group: "org.hibernate", name: "hibernate-entitymanager", version: hibernateVersion
+    compile(group: "org.hibernate", name: "hibernate-hikaricp", version: hibernateVersion)
+    compile group: "com.zaxxer", name: "HikariCP", version: hikariVersion
 
-    compile group: 'com.h2database', name: 'h2', version: h2Version
-    compile group: 'org.hsqldb', name: 'hsqldb', version: hsqldbVersion
+    compile group: "com.h2database", name: "h2", version: h2Version
+    compile group: "org.hsqldb", name: "hsqldb", version: hsqldbVersion
 
-    compile(group: 'com.thoughtworks.xstream', name: 'xstream', version: xstreamVersion) {
-        exclude group: 'xmlpull', module: 'xmlpull'
-        exclude group: 'xpp3', module: 'xpp3_min'
+    compile(group: "com.thoughtworks.xstream", name: "xstream", version: xstreamVersion) {
+        exclude group: "xmlpull", module: "xmlpull"
+        exclude group: "xpp3", module: "xpp3_min"
     }
 
-    compile(group: 'com.thoughtworks.xstream', name: 'xstream-hibernate', version: xstreamVersion) {
-        exclude group: 'xmlpull', module: 'xmlpull'
-        exclude group: 'xpp3', module: 'xpp3_min'
+    compile(group: "com.thoughtworks.xstream", name: "xstream-hibernate", version: xstreamVersion) {
+        exclude group: "xmlpull", module: "xmlpull"
+        exclude group: "xpp3", module: "xpp3_min"
     }
 
-    compile group: 'io.netty', name: 'netty-codec', version: nettyVersion
+    compile group: "io.netty", name: "netty-codec", version: nettyVersion
 
-    compile(group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion) {
-        exclude(module: 'stax-api')
-        exclude(module: 'xml-apis')
+    compile(group: "org.apache.poi", name: "poi-ooxml", version: apachePoiVersion) {
+        exclude(module: "stax-api")
+        exclude(module: "xml-apis")
     }
 }
 
 jar {
     manifest {
         attributes(
-                'Automatic-Module-Name': "${moduleName}"
+                "Automatic-Module-Name": "${moduleName}"
         )
     }
 }
