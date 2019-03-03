@@ -20,6 +20,6 @@ jar {
   // required by the plugin interface
   manifest {
     attributes  "Plugin-Activator": "jgnash.uifx.plugin.TestFxPlugin",
-            "Plugin-Version": "2.25"
+                "Plugin-Version": "2.25"
   }
 }

@@ -17,10 +17,45 @@ dependencies {
     compile project(":jgnash-plugin")
 
     compile group: "info.picocli", name: "picocli", version: picocliVersion
+
+    // Hack to include all javafx platforms in the classpath
+    // The platform specific libraries are excluded when distributions is executed
+    compile 'org.openjfx:javafx-base:11.0.2'
+    compile 'org.openjfx:javafx-controls:11.0.2'
+    compile 'org.openjfx:javafx-fxml:11.0.2'
+    compile 'org.openjfx:javafx-graphics:11.0.2'
+    compile 'org.openjfx:javafx-media:11.0.2'
+    compile 'org.openjfx:javafx-swing:11.0.2'
+    compile 'org.openjfx:javafx-web:11.0.2'
+
+    compile 'org.openjfx:javafx-base:11.0.2:linux'
+    compile 'org.openjfx:javafx-controls:11.0.2:linux'
+    compile 'org.openjfx:javafx-fxml:11.0.2:linux'
+    compile 'org.openjfx:javafx-graphics:11.0.2:linux'
+    compile 'org.openjfx:javafx-media:11.0.2:linux'
+    compile 'org.openjfx:javafx-swing:11.0.2:linux'
+    compile 'org.openjfx:javafx-web:11.0.2:linux'
+
+    compile 'org.openjfx:javafx-base:11.0.2:win'
+    compile 'org.openjfx:javafx-controls:11.0.2:win'
+    compile 'org.openjfx:javafx-fxml:11.0.2:win'
+    compile 'org.openjfx:javafx-graphics:11.0.2:win'
+    compile 'org.openjfx:javafx-media:11.0.2:win'
+    compile 'org.openjfx:javafx-swing:11.0.2:win'
+    compile 'org.openjfx:javafx-web:11.0.2:win'
+
+    compile 'org.openjfx:javafx-base:11.0.2:mac'
+    compile 'org.openjfx:javafx-controls:11.0.2:mac'
+    compile 'org.openjfx:javafx-fxml:11.0.2:mac'
+    compile 'org.openjfx:javafx-graphics:11.0.2:mac'
+    compile 'org.openjfx:javafx-media:11.0.2:mac'
+    compile 'org.openjfx:javafx-swing:11.0.2:mac'
+    compile 'org.openjfx:javafx-web:11.0.2:mac'
+    // end hack
 }
 
 javafx {
-    modules = [ "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing"]
+    modules = [ "javafx.base", "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing", "javafx.graphics", "javafx.media"]
 }
 
 launch4j {
