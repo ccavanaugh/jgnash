@@ -32,11 +32,11 @@ task createStartScripts(type: CreateStartScripts) {
 // call launch4j prior to creating the zip file
 distZip.dependsOn(createExe)
 
-distZip {
+/*distZip {
     doLast {
         file("$destinationDir/$archiveName").renameTo("$destinationDir/"+"jGnash-"+version+".zip")
     }
-}
+}*/
 
 distributions {
     main {

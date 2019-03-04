@@ -1,5 +1,4 @@
 plugins {
-    id "edu.sc.seis.launch4j" version "2.4.4"
     id "org.openjfx.javafxplugin" version "0.0.7"
 }
 
@@ -58,20 +57,9 @@ javafx {
     modules = [ "javafx.base", "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing", "javafx.graphics", "javafx.media"]
 }
 
-launch4j {
-    copyright = "Copyright (C) 2001-2019 Craig Cavanaugh"
-    mainClassName = "jGnashFx"
-    outfile = "jGnashFx.exe"
-    dontWrapJar = true
-    icon = "../../gnome-money.ico"
-}
-
 task createStartScripts(type: CreateStartScripts) {
     outputDir = file("../../")
 }
-
-// call launch4j prior to creating the zip file
-distZip.dependsOn(createExe)
 
 // build the mt940 plugin prior to creating the zip file without creating a circular loop
 distZip.dependsOn(":mt940:build")
@@ -100,12 +88,6 @@ distributions {
     main {
         baseName = "jGnash"
         contents {
-            from { "../jgnash-help/build/asciidoc/pdf/Manual.pdf" }
-            from { "../changelog.adoc" }
-            from { "build/launch4j/jGnashFx.exe" }
-            from { "../README.html" }
-            from { "../README.adoc" }
-            from { "../jGnashFx" }
             exclude("**/*-linux*")  // excludes linux specific JavaFx modules from cross platform zip
             exclude("**/*-win*")    // excludes windows specific JavaFx modules from cross platform zip
             exclude("**/*-mac*")    // excludes mac specific JavaFx modules from cross platform zip
