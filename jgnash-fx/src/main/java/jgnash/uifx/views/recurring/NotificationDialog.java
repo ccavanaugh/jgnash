@@ -36,6 +36,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.Stage;
 
+import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -173,11 +174,8 @@ class NotificationDialog extends Stage implements MessageListener {
 
     @Override
     public void messagePosted(final Message message) {
-        switch (message.getEvent()) {
-            case FILE_CLOSING:  // close the dialog automatically
-                close();
-                break;
-            default:
+        if (message.getEvent() == ChannelEvent.FILE_CLOSING) {  // close the dialog automatically
+            close();
         }
     }
 

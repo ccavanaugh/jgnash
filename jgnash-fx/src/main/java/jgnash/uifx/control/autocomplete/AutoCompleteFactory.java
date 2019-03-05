@@ -32,6 +32,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
+import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -279,11 +280,8 @@ public class AutoCompleteFactory {
         public void messagePosted(final Message event) {
             super.messagePosted(event);
 
-            switch (event.getEvent()) {
-                case TRANSACTION_REMOVE:
-                    removeExtraInfo(event.getObject(MessageProperty.TRANSACTION));
-                    return;
-                default:
+            if (event.getEvent() == ChannelEvent.TRANSACTION_REMOVE) {
+                removeExtraInfo(event.getObject(MessageProperty.TRANSACTION));
             }
         }
     }

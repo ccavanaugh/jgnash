@@ -190,9 +190,7 @@ public class FileMagic {
         if (Files.exists(path)) {
 
             final String encoding = getOfxV1Encoding(path);
-            final Charset charset = Charset.forName(encoding);
-
-            Objects.requireNonNull(charset);
+            final Charset charset = Objects.requireNonNull(Charset.forName(encoding));
 
             try (final BufferedReader reader = Files.newBufferedReader(path, charset)) {
                 String line = reader.readLine();
@@ -327,22 +325,17 @@ public class FileMagic {
 
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
 
-            parse:
             while (reader.hasNext()) {
                 int event = reader.next();
 
-                switch (event) {
-                    case XMLStreamConstants.PROCESSING_INSTRUCTION:
-                        String name = reader.getPITarget();
-                        String data = reader.getPIData();
+                if (event == XMLStreamConstants.PROCESSING_INSTRUCTION) {
+                    String name = reader.getPITarget();
+                    String data = reader.getPIData();
 
-                        if (name.equals("fileFormat")) {
-                            version = data;
-                            break parse;
-                        }
+                    if (name.equals("fileFormat")) {
+                        version = data;
                         break;
-                    default:
-                        break;
+                    }
                 }
             }
 
