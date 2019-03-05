@@ -73,6 +73,9 @@ public class AccountRegisterReportController implements ReportController {
 
     private Runnable refreshRunnable = null;
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Object> changeListener;  // need to hold a reference to prevent premature collection
+
     public AccountRegisterReportController() {
         super();
     }
@@ -91,7 +94,7 @@ public class AccountRegisterReportController implements ReportController {
             }
         });
 
-        final ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
+        changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
 
         showSplitsCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
         startDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));

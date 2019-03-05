@@ -82,6 +82,9 @@ public class ProfitLossReportController implements ReportController {
 
     private Runnable refreshRunnable = null;
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Object> changeListener;  // need to hold a reference to prevent premature collection
+
     public ProfitLossReportController() {
         super();
     }
@@ -105,7 +108,7 @@ public class ProfitLossReportController implements ReportController {
         sortOrderComboBox.setValue(SortOrder.values()[preferences.getInt(SORT_ORDER, SortOrder.BY_NAME.ordinal())]);
 
         // change listener is assigned after controls have been set to prevent multiple report refreshes
-        final ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
+        changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
 
         startDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));
         endDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));

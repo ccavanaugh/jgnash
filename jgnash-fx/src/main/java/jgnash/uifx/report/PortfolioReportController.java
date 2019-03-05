@@ -61,6 +61,9 @@ public class PortfolioReportController implements ReportController {
 
     private final Report report = new PortfolioReport();
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Object> changeListener;  // need to hold a reference to prevent premature collection
+
     @FXML
     private void initialize() {
         // Only show visible investment accounts
@@ -71,7 +74,7 @@ public class PortfolioReportController implements ReportController {
         subAccountCheckBox.setSelected(preferences.getBoolean(RECURSIVE, true));
         longNameCheckBox.setSelected(preferences.getBoolean(VERBOSE, false));
 
-        final ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
+        changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
 
         subAccountCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
         longNameCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
