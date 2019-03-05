@@ -25,9 +25,11 @@
 * Open zipped backups instead of manually unzipping.
 
 == TODO
-* ChoiceDialog (JavaFx) is not localized for some locales.  Replace with an equivalent or submit upstream patch
+* ChoiceDialog (JavaFx) is not localized for some locales.  Replace with an equivalent or submit upstream patch.
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
-* Correct formatting of negative numbers (does not follow locale rules after change to Java 11)
+* Correct formatting of negative numbers (does not follow locale rules after change to Java 11).
+* Enhance tabular reports to allow period selection.
+* Replace js based numeric input interpreter.
 
 == Release 3.0.0-b1
 * 02/27/2019 jGnash is designed to operate with Java 11 and newer.
