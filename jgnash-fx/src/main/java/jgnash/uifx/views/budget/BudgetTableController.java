@@ -393,7 +393,7 @@ public class BudgetTableController implements MessageListener {
         final Optional<ScrollBar> vDataScrollBar = JavaFXUtils.findVerticalScrollBar(periodTable);
         final Optional<ScrollBar> accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
 
-        if (!vDataScrollBar.isPresent() || !accountScrollBar.isPresent() || !accountSumScrollBar.isPresent()) {
+        if (vDataScrollBar.isEmpty() || accountScrollBar.isEmpty() || accountSumScrollBar.isEmpty()) {
             Platform.runLater(BudgetTableController.this::bindScrollBars);  //re-spawn on the application thread
         } else {    // all here, lets bind then now
             verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.get().minProperty());
