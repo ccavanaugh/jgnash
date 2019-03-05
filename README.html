@@ -470,9 +470,6 @@ any operating system that has a current Java Runtime Environment (e.g., Linux, M
 <li>
 <p><a href="#Features">jGnash Features</a></p>
 </li>
-<li>
-<p><a href="#Version">Current version</a></p>
-</li>
 </ul>
 </div>
 </li>
@@ -544,7 +541,7 @@ any operating system that has a current Java Runtime Environment (e.g., Linux, M
 <p>Printable reports with PDF and spreadsheet export capability</p>
 </li>
 <li>
-<p>XML and relational database file formats</p>
+<p>XML, Binary, and multiple relational database file formats</p>
 </li>
 <li>
 <p>Supports concurrent multiple users over a network</p>
@@ -558,9 +555,6 @@ any operating system that has a current Java Runtime Environment (e.g., Linux, M
 <p>The jGnash download includes a user manual to help get you started with the basics if you are new to tracking finances.
 It also covers some of the more subtle features, command line options, and shortcuts that are not immediately obvious.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="Version">The Current Version</h3>
 <div class="paragraph">
 <p>The latest version of jGnash uses <strong>OpenJFX</strong> for the user interface. This replaces the old version that used Java Swing for the user interface.
 Experienced jGnash users will notice interface improvements.
@@ -588,6 +582,12 @@ For example, try using the vertical and horizontal scroll wheels in a date picke
 always a good source if you need help and <strong>is the prefered method of contact.</strong>
 Your first post to the group will be moderated to filter spam.</p>
 </div>
+<div class="paragraph">
+<p>Please use the search tool to check for similar questions.</p>
+</div>
+<div class="paragraph">
+<p>The preferred method of reporting bugs is to use the <a href="https://github.com/ccavanaugh/jgnash/issues">Github Issue tracker</a>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -605,7 +605,7 @@ for a newer version, Java 11 is currently recommended.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://www.azul.com/downloads/zulu/">Azul OpenJDK 11</a> is a branded release that may be easier to install for some users and is free to use.</p>
+<p><a href="https://www.azul.com/downloads/zulu/">Azul OpenJDK 11</a> is a branded release that will be easiest to install for most users and is free to use.</p>
 </li>
 <li>
 <p><a href="https://adoptopenjdk.net/index.html?variant=openjdk11&amp;jvmVariant=hotspot">AdoptOpenJDK</a> will require manual installation but allows more flexibility and is free to use.</p>
@@ -617,9 +617,6 @@ for a newer version, Java 11 is currently recommended.</p>
 <p><a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SE 11</a> will require manual installation and licensing is required.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p><strong><em>Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements</em></strong></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -634,14 +631,17 @@ Variable must be set and the Java bin directory must be in the execution path.
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p><strong><em>Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements</em></strong></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_2_openjfx">2. OpenJFX</h3>
 <div class="paragraph">
 <p>jGnash uses OpenJFX for the user interface, but will automatically download
 and place the needed components within the lib directly of the jGnash installation.
-Portions of OpenJFX components are OS specific and cannot be shared between
-different systems.</p>
+Portions of the OpenJFX components are OS specific and cannot be shared between
+different operating systems.</p>
 </div>
 </div>
 <div class="sect2">
@@ -651,7 +651,7 @@ different systems.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>any version that can run the required version(s) of Java 11</p>
+<p>any Windows release that can run the required version of Java</p>
 </li>
 </ul>
 </div>
@@ -661,7 +661,7 @@ different systems.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>any version that can run the required version(s) of Java 11</p>
+<p>any Linux distribution that can run the required version of Java</p>
 </li>
 </ul>
 </div>
@@ -687,7 +687,7 @@ You will need to install <strong>OpenJDK 11</strong> for jGnash to operate corre
 <p>Mac OS X 10.8.3 or later</p>
 </li>
 <li>
-<p>can run the required version(s) of Java 11</p>
+<p>can run the required version of Java</p>
 </li>
 </ul>
 </div>
@@ -769,15 +769,29 @@ you can set the <code>/Applications/jGnash/jGnash</code> file to <em>Open with&#
 <h2 id="Running">To Run:</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are <code>.bat</code> and <code>bash shell</code> files, respectively.)
+<p>Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are <code>.exe</code> and <code>bash shell</code> files, respectively.)
 Mac OS X users will have created application launch files per the <a href="#Install-MacOSX">Mac installation instructions.</a></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+jGnash will need to be restarted after the first launch of a new version.
+Operating System specific files are download and a restart is required for
+correct operation.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>Windows:</strong>
-Simply double click on the *.exe file of choice. (<code>jGnashFx.bat</code> is the current and preferred one.)</p>
+Simply double click on the jGnash.exe file.</p>
 </div>
 <div class="paragraph">
-<p><strong>UN*X:</strong>  Start jGnash with the provided Bash scripts.  If jGnash fails to launch, check your file permissions and
+<p><strong>UN*X:</strong>  Start jGnash with the provided Bash script.  If jGnash fails to launch, check your file permissions and
 make sure they are set to be executable or use a unzip tool that preserves file permissions.</p>
 </div>
 <div class="paragraph">
@@ -866,7 +880,7 @@ Otherwise, the Gradle build may fail when building the windows executables.</em>
 </div>
 </div>
 <div class="paragraph">
-<p>This will run the gradle tasks necessary to run core tests and create the distribution file.  The distributable zip file will be produced at the root of the build directory called jGnash-<em>version</em>-bin.zip.</p>
+<p>This will run the Gradle tasks necessary to execute core tests and create the distribution file.  The distributable zip file will be produced at the root of the build directory called jGnash-<em>version</em>-bin.zip.</p>
 </div>
 </div>
 </div>
@@ -874,7 +888,7 @@ Otherwise, the Gradle build may fail when building the windows executables.</em>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-04 19:24:57 -0500
+Last updated 2019-03-05 05:05:33 -0500
 </div>
 </div>
 </body>

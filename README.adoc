@@ -16,7 +16,6 @@ See the <<Requirements>> section below for more details.
 === Contents:
 * <<About, About jGnash>>
    - <<Features>>
-   - <<Version, Current version>>
 * <<Donations>>
 * <<Support, Support>>
 * <<Requirements>>
@@ -41,17 +40,13 @@ See the <<Requirements>> section below for more details.
 - Reminders with automatic transaction entry
 - Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates
 - Printable reports with PDF and spreadsheet export capability
-- XML and relational database file formats
+- XML, Binary, and multiple relational database file formats
 - Supports concurrent multiple users over a network
 
 To learn more about the features of jGnash, visit the https://sourceforge.net/projects/jgnash/[jGnash Website].
 
 The jGnash download includes a user manual to help get you started with the basics if you are new to tracking finances.
 It also covers some of the more subtle features, command line options, and shortcuts that are not immediately obvious.
-
-
-[[Version]]
-=== The Current Version
 
 The latest version of jGnash uses *OpenJFX* for the user interface. This replaces the old version that used Java Swing for the user interface.
 Experienced jGnash users will notice interface improvements.
@@ -70,6 +65,9 @@ The *https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group]* is
 always a good source if you need help and *is the prefered method of contact.*
 Your first post to the group will be moderated to filter spam.
 
+Please use the search tool to check for similar questions.
+
+The preferred method of reporting bugs is to use the https://github.com/ccavanaugh/jgnash/issues[Github Issue tracker].
 
 [[Requirements]]
 == Requirements
@@ -82,22 +80,22 @@ for a newer version, Java 11 is currently recommended.
 
 Use of a prebuilt installer is recommended.
 
-  - https://www.azul.com/downloads/zulu/[Azul OpenJDK 11] is a branded release that may be easier to install for some users and is free to use.
+  - https://www.azul.com/downloads/zulu/[Azul OpenJDK 11] is a branded release that will be easiest to install for most users and is free to use.
   - https://adoptopenjdk.net/index.html?variant=openjdk11&jvmVariant=hotspot[AdoptOpenJDK] will require manual installation but allows more flexibility and is free to use.
   - https://jdk.java.net/11/[https://jdk.java.net/11 (OpenJDK)/] will require manual installation and is free to use.
   - https://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle Java SE 11] will require manual installation and licensing is required.
-
-*_Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements_*
 
 [NOTE]
 When performing a manual installation of Java, The *JAVA_HOME* Environment
 Variable must be set and the Java bin directory must be in the execution path.
 
+*_Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements_*
+
 === 2. OpenJFX
 jGnash uses OpenJFX for the user interface, but will automatically download
 and place the needed components within the lib directly of the jGnash installation.
-Portions of OpenJFX components are OS specific and cannot be shared between
-different systems.
+Portions of the OpenJFX components are OS specific and cannot be shared between
+different operating systems.
 
 
 [[Reqs-OS]]
@@ -105,11 +103,11 @@ different systems.
 
 ==== Microsoft Windows
 
-*  any version that can run the required version(s) of Java 11
+*  any Windows release that can run the required version of Java
 
 ==== Linux
 
-* any version that can run the required version(s) of Java 11
+* any Linux distribution that can run the required version of Java
 
 [NOTE]
 jGnash is _not compatible_ with GCJ pre-installed on older Linux distributions.
@@ -118,7 +116,7 @@ You will need to install *OpenJDK 11* for jGnash to operate correctly.
 ==== Mac OS X
 
 * Mac OS X 10.8.3 or later
-* can run the required version(s) of Java 11
+* can run the required version of Java
 
 _Be sure to read <<Install-MacOSX, the section about installing on Mac OS X>> to create the startup script._
 
@@ -160,13 +158,18 @@ You can download jGnash from the https://sourceforge.net/projects/jgnash/files/A
 [[Running]]
 == To Run:
 
-Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are `.bat` and `bash shell` files, respectively.)
+Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are `.exe` and `bash shell` files, respectively.)
 Mac OS X users will have created application launch files per the <<Install-MacOSX, Mac installation instructions.>>
 
-*Windows:*
-Simply double click on the *.exe file of choice. (`jGnashFx.bat` is the current and preferred one.)
+[NOTE]
+jGnash will need to be restarted after the first launch of a new version.
+Operating System specific files are download and a restart is required for
+correct operation.
 
-*UN*X:*  Start jGnash with the provided Bash scripts.  If jGnash fails to launch, check your file permissions and
+*Windows:*
+Simply double click on the jGnash.exe file.
+
+*UN*X:*  Start jGnash with the provided Bash script.  If jGnash fails to launch, check your file permissions and
 make sure they are set to be executable or use a unzip tool that preserves file permissions.
 
 An example for UN*X users is shown below assuming you have changed to the installation directory:
@@ -231,4 +234,4 @@ gradlew clean distZip
 ----
 
 
-This will run the gradle tasks necessary to run core tests and create the distribution file.  The distributable zip file will be produced at the root of the build directory called jGnash-_version_-bin.zip.
+This will run the Gradle tasks necessary to execute core tests and create the distribution file.  The distributable zip file will be produced at the root of the build directory called jGnash-_version_-bin.zip.
