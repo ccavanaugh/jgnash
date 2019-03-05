@@ -7,7 +7,7 @@ of the same features as commercially-available software. It was created in order
 easy, but also provides the functionality needed by advanced users. jGnash is cross-platform and will run on
 any operating system that has a current Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
 
-* jGnash requires *Java 11* (It can run on later versions. _See the <<Requirements, Requirements section.>>_)
+* jGnash requires *Java 11* or newer.
 
 * jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Platform.
 
@@ -16,7 +16,7 @@ See the <<Requirements>> section below for more details.
 === Contents:
 * <<About, About jGnash>>
    - <<Features>>
-   - <<Current, Current version: jGnash-FX>>
+   - <<Version, Current version>>
 * <<Donations>>
 * <<Support, Support>>
 * <<Requirements>>
@@ -26,7 +26,6 @@ See the <<Requirements>> section below for more details.
 * <<Install, Installation>>
 * <<Running, Running jGnash>>
 * <<Development, Building and Development>>
-
 
 [[About]]
 == About jGnash
@@ -51,16 +50,12 @@ The jGnash download includes a user manual to help get you started with the basi
 It also covers some of the more subtle features, command line options, and shortcuts that are not immediately obvious.
 
 
-[[jGnashFx-version]]
-=== The Current Version: _jGnashFX_
+[[Version]]
+=== The Current Version
 
-The latest version of jGnash uses *JavaFX* for the user interface. This replaces the old versions that used Java Swing for the user interface.
-This version is called "*jGnashFX*" to distinguish it from the older versions.  Experienced jGnash users will notice interface improvements.
+The latest version of jGnash uses *OpenJFX* for the user interface. This replaces the old version that used Java Swing for the user interface.
+Experienced jGnash users will notice interface improvements.
 For example, try using the vertical and horizontal scroll wheels in a date picker and the collapsible transaction forms.
-
-The advantages of JavaFX over Swing are an improved appearance with better utilization of the systems graphics hardware
- including Hi-DPI systems. It also means a smaller code base for the user interface, access to better components such as improved
-table support, HTML pages, functional animations, modern controls, etc.
 
 [[Donations]]
 == Donations
@@ -71,44 +66,54 @@ https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TYN4QECUL5C
 
 [[Support]]
 == Support
-The *https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group]* is always a good source if you need help and
-*is the prefered method of contact.*  Your first post to the group will be moderated to filter spam.
-
+The *https://groups.google.com/forum/#!forum/jgnash-user[jGnash Help Group]* is
+always a good source if you need help and *is the prefered method of contact.*
+Your first post to the group will be moderated to filter spam.
 
 
 [[Requirements]]
 == Requirements
 
 [[Reqs-Java]]
-=== 1. Java 11 or newer: OpenJDK is recommended over use of Oracle JDK
+=== 1. Java
 
-==== Java 11
+Java 11 or newer is required to run jGnash.  Unless you have a specific need
+for a newer version, Java 11 is currently recommended.
 
-[[JDK-11]]
-*Java 11 https://jdk.java.net/11/[JDK 11]* or later is required to run jGnash.
+Use of a prebuilt installer is recommended.
 
-https://www.azul.com/downloads/zulu/[Azul OpenJDK 11] is a branded release that may be easier to install for some users.
+  - https://www.azul.com/downloads/zulu/[Azul OpenJDK 11] is a branded release that may be easier to install for some users and is free to use.
+  - https://adoptopenjdk.net/index.html?variant=openjdk11&jvmVariant=hotspot[AdoptOpenJDK] will require manual installation but allows more flexibility and is free to use.
+  - https://jdk.java.net/11/[https://jdk.java.net/11 (OpenJDK)/] will require manual installation and is free to use.
+  - https://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle Java SE 11] will require manual installation and licensing is required.
 
-==== OpenJDK or Oracle JDK
+*_Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements_*
 
-jGnash will work with either OpenJDK or Oracle JDK.  jGnashFx is tested using OpenJDK.  There are no noticeable differences in performance or
-stability with the Oracle release or OpenJDK.
+[NOTE]
+When performing a manual installation of Java, The *JAVA_HOME* Environment
+Variable must be set and the Java bin directory must be in the execution path.
+
+=== 2. OpenJFX
+jGnash uses OpenJFX for the user interface, but will automatically download
+and place the needed components within the lib directly of the jGnash installation.
+Portions of OpenJFX components are OS specific and cannot be shared between
+different systems.
+
 
 [[Reqs-OS]]
-=== 2. Supported Operating Systems: Windows, Linux, or Mac OS X
+=== 3. Supported Operating Systems: Windows, Linux, or Mac OS X
 
 ==== Microsoft Windows
 
 *  any version that can run the required version(s) of Java 11
 
-
 ==== Linux
 
 * any version that can run the required version(s) of Java 11
 
-Note: jGnash is _not compatible_ with the GCJ Java installation pre-installed on older Linux distributions.
-You will need to install the *OpenJDK* or *Oracle Java* Platform and set the default for jGnash
-to operate correctly.
+[NOTE]
+jGnash is _not compatible_ with GCJ pre-installed on older Linux distributions.
+You will need to install *OpenJDK 11* for jGnash to operate correctly.
 
 ==== Mac OS X
 
@@ -123,17 +128,13 @@ _Be sure to read <<Install-MacOSX, the section about installing on Mac OS X>> to
 
 You can download jGnash from the https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/[jGnash Download Page].
 
-
 [[Install]]
 == To Install jGnash
 
-. Install the latest version of *Java 8*  if you don't already have it installed.
-Most users of jGnash will want to use the latest version of http://www.java.com/en/download/[Oracle Java Runtime Environment, version 8].
-** If you use Java 9 or 10 you will need to do additional installation steps as specified in the <<JDK-9-10, Java 9 or 10 section.>>
+. Install the latest version of *Java 11*  if you don't already have it installed.
 
-** Developers will want the Java Development Kit (see build instructions below.)
+** Developers will want the complete Java Development Kit (see build instructions below.)
 . Unzip all files into a directory of your choice leaving the directory structure unchanged.
-
 
 [[Install-MacOSX]]
 === Mac OS X Installation:
@@ -146,14 +147,14 @@ Most users of jGnash will want to use the latest version of http://www.java.com/
 
 
     try
-        do shell script "/Applications/jGnash/jGnashFx"
+        do shell script "/Applications/jGnash/jGnash"
     end try
 
 
 .. Save it as an Application called `jGnash.app` in `/Applications/jGnash`
 
 . Instead of step 2,
- you can set the `/Applications/jGnash/jGnashFx` file to _Open with..._ `Terminal.app` (the Terminal application).
+ you can set the `/Applications/jGnash/jGnash` file to _Open with..._ `Terminal.app` (the Terminal application).
 
 
 [[Running]]
@@ -161,20 +162,18 @@ Most users of jGnash will want to use the latest version of http://www.java.com/
 
 Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are `.bat` and `bash shell` files, respectively.)
 Mac OS X users will have created application launch files per the <<Install-MacOSX, Mac installation instructions.>>
-The `jGnashFx` executables will launch jGnash with the latest interface (jGnashFX). The `jGnash2` files will launch jGnash with
-the old legacy Java Swing interface.
 
 *Windows:*
 Simply double click on the *.exe file of choice. (`jGnashFx.bat` is the current and preferred one.)
 
-*UN*X:*  Start jGnash with one of the provided Bash scripts. (`jGnashFx` is the current and preferred one.)  If jGnash fails to launch, check your file permissions and
+*UN*X:*  Start jGnash with the provided Bash scripts.  If jGnash fails to launch, check your file permissions and
 make sure they are set to be executable or use a unzip tool that preserves file permissions.
 
 An example for UN*X users is shown below assuming you have changed to the installation directory:
 
 [source]
 ----
-./jGnashFx
+./jGnash
 ----
 
 *Mac OS X:*  Run the application file you created per the <<Install-MacOSX, Mac installation instructions.>>
@@ -185,10 +184,14 @@ An example for UN*X users is shown below assuming you have changed to the instal
 
 Travis-CI Build Status image:https://travis-ci.org/ccavanaugh/jgnash.svg?branch=master["Build Status", link="https://travis-ci.org/ccavanaugh/jgnash"]
 
+=== Development List
+
+The https://groups.google.com/forum/#!forum/jgnash-devel[Google Groups jGnash Developer list] is the best
+place to start if you have questions or ideas.  Initial posts will are moderated to prevent spam.
 
 === Development Tools
 
-The IDE used for the development of jGnash is:
+The IDE used for the development of jGnash is IntelliJ IDEA, but any IDE that supports a Gradle build environment should work.
 
 image:https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJIDEA.png["IntelliJIDEA Logo", height=90, link="https://www.jetbrains.com/idea/"]
 
@@ -199,16 +202,14 @@ image:https://github.com/jGnash/jgnash.github.io/blob/master/img/logo_IntelliJID
 install Gradle.  The Wrapper will automatically download the necessary dependencies.
 
 [NOTE]
-Depending on your OS (almost always Windows and OSX) the JCE Unlimited Strength Jurisdiction Policy Files for Java 8
+Depending on your OS (almost always Windows and OSX) the JCE Unlimited Strength Jurisdiction Policy Files for Java
 are needed for the unit tests to complete correctly.  If you do not want to install these files or are
 restricted by your locale, modify the test build or disable tests.  jGnash uses encryption for client / server
 communication and unit tests are performed to prevent regressions.
 
 To build jGnash you'll need the following software installed and correctly configured on your system:
 
-. http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 8u71] or later.
-
-If you are using JDK 9 or 10, you'll need to do <<Install-JDK-9-10, additional installation steps.>>
+OpenJDK 11 or later.
 
 _If you are building with a recent 64 bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
 Otherwise, the Gradle build may fail when building the windows executables._
