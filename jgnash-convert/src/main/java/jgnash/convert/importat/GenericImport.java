@@ -171,7 +171,7 @@ public class GenericImport {
         Objects.requireNonNull(engine);
 
         for (final ImportSecurity importSecurity : importSecurities) {
-            if (!ImportUtils.matchSecurity(importSecurity).isPresent()) {   // Import only if a match is not found
+            if (ImportUtils.matchSecurity(importSecurity).isEmpty()) {   // Import only if a match is not found
                 final SecurityNode securityNode = ImportUtils.createSecurityNode(importSecurity, currencyNode);
 
                 // link the security node
