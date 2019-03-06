@@ -31,6 +31,10 @@
 * Enhance tabular reports to allow period selection.
 * Replace js based numeric input interpreter.
 
+== Release 3.0.0-b2
+* 03/05/2019 Updated to latest h2, Apache Poi, and sl4j dependencies.
+* 03/05/2019 Minor internal changes to take advantage of Java 11 APIs.
+
 == Release 3.0.0-b1
 * 02/27/2019 jGnash is designed to operate with Java 11 and newer.
 * 02/27/2019 Removed support for old Swing UI.
