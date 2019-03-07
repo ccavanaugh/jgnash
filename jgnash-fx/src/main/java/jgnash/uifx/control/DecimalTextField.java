@@ -22,10 +22,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Objects;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -39,6 +35,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.MathConstants;
+import jgnash.util.MathEval;
 import jgnash.util.NotNull;
 
 /**
@@ -74,7 +71,7 @@ public class DecimalTextField extends TextFieldEx {
      */
     private volatile boolean forceFraction = false;
 
-    private static final ScriptEngine jsEngine;
+    //private static final ScriptEngine jsEngine;
 
     // the property value may be null
     private final ObjectProperty<BigDecimal> decimal = new SimpleObjectProperty<>();
@@ -102,7 +99,7 @@ public class DecimalTextField extends TextFieldEx {
 
     static {
         FLOAT = getAllowedChars();
-        jsEngine = new ScriptEngineManager().getEngineByName("nashorn");
+        //jsEngine = new ScriptEngineManager().getEngineByName("nashorn");
     }
 
     public DecimalTextField() {
@@ -199,7 +196,8 @@ public class DecimalTextField extends TextFieldEx {
         this.decimal.set(decimal.setScale(scale.get(), MathConstants.roundingMode));
     }
 
-    public @NotNull BigDecimal getDecimal() {
+    public @NotNull
+    BigDecimal getDecimal() {
         if (!isEmpty()) {
             try {
                 return new BigDecimal(evaluateInput());
@@ -328,19 +326,17 @@ public class DecimalTextField extends TextFieldEx {
             return new BigDecimal(text).toString();
         } catch (final NumberFormatException nfe) {
             try {
-                final Object o = jsEngine.eval(text);
+                final double val = MathEval.eval(text);
 
-                if (o instanceof Number) { // scale the number
-                    final BigDecimal value = new BigDecimal(o.toString()).setScale(scale.get(), MathConstants.roundingMode);
+                final BigDecimal value = new BigDecimal(val).setScale(scale.get(), MathConstants.roundingMode);
 
-                    decimal.set(value);
-                    return value.toString();
-                }
-            } catch (final ScriptException ex) {
+                decimal.set(value);
+                return value.toString();
+
+            } catch (final ArithmeticException ex) {
                 return "";
             }
         }
-        return "";
     }
 
     public BooleanProperty emptyWhenZeroProperty() {

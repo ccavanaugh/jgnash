@@ -29,9 +29,9 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 * Correct formatting of negative numbers (does not follow locale rules after change to Java 11).
 * Enhance tabular reports to allow period selection.
-* Replace js based numeric input interpreter.
 
 == Release 3.0.0-b2
+* 03/07/2019 Decimal fields now use an internal math interpreter instead of the Javascript interpreter.
 * 03/05/2019 Updated to latest h2, Apache Poi, and sl4j dependencies.
 * 03/05/2019 Minor internal changes to take advantage of Java 11 APIs.
 
