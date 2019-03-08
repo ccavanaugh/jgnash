@@ -18,7 +18,7 @@ dependencies {
     compile group: "info.picocli", name: "picocli", version: picocliVersion
 
     // Hack to include all javafx platforms in the classpath
-    // The platform specific libraries are excluded when distributions is executed
+    // The platform specific libraries are excluded when distributions is assembled
     compile 'org.openjfx:javafx-base:11.0.2'
     compile 'org.openjfx:javafx-controls:11.0.2'
     compile 'org.openjfx:javafx-fxml:11.0.2'
@@ -57,9 +57,7 @@ javafx {
     modules = [ "javafx.base", "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing", "javafx.graphics", "javafx.media"]
 }
 
-task createStartScripts(type: CreateStartScripts) {
-    outputDir = file("../../")
-}
+startScripts.enabled = false
 
 // build the mt940 plugin prior to creating the zip file without creating a circular loop
 distZip.dependsOn(":mt940:build")
