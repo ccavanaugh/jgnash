@@ -79,6 +79,8 @@ public class StartupShutdownTabController {
             backupCountSpinner.setDisable(true);
             createBackupsCheckBox.setDisable(true);
             removeOldBackupsCheckBox.setDisable(true);
+            updateCurrencies.setDisable(true);
+            updateSecurities.setDisable(true);
         }
 
         updateSecurities.setSelected(UpdateFactory.getUpdateOnStartup());

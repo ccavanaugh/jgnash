@@ -159,7 +159,6 @@ public class MenuBarController implements MessageListener {
         currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
         configureTranImportFiltersMenuItem.disableProperty().bind(disabled);
-        optionsMenuItem.disableProperty().bind(disabled);
         reportMenu.disableProperty().bind(disabled);
         transNumberListMenuItem.disableProperty().bind(disabled);
         importOfxMenuItem.disableProperty().bind(disabled);
