@@ -30,7 +30,6 @@ import java.util.function.Consumer;
 import java.util.prefs.Preferences;
 
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 
@@ -61,9 +60,6 @@ public class PortfolioReportController implements ReportController {
 
     private final Report report = new PortfolioReport();
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private ChangeListener<Object> changeListener;  // need to hold a reference to prevent premature collection
-
     @FXML
     private void initialize() {
         // Only show visible investment accounts
@@ -74,11 +70,11 @@ public class PortfolioReportController implements ReportController {
         subAccountCheckBox.setSelected(preferences.getBoolean(RECURSIVE, true));
         longNameCheckBox.setSelected(preferences.getBoolean(VERBOSE, false));
 
-        changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
+        ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
 
-        subAccountCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
-        longNameCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
-        accountComboBox.valueProperty().addListener(new WeakChangeListener<>(changeListener));
+        subAccountCheckBox.selectedProperty().addListener(changeListener);
+        longNameCheckBox.selectedProperty().addListener(changeListener);
+        accountComboBox.valueProperty().addListener(changeListener);
 
         // boot the report generation
         JavaFXUtils.runLater(this::refreshReport);
