@@ -56,7 +56,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
@@ -277,7 +277,7 @@ public class IncomeExpensePayeePieChartDialogController {
             creditPieChart.setData(chartData[CREDIT]);
             debitPieChart.setData(chartData[DEBIT]);
 
-            final NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+            final NumberFormat numberFormat = NumericFormats.getFullCommodityFormat(account.getCurrencyNode());
 
             // Calculate the totals for percentage value
             final double creditTotal = chartData[CREDIT].parallelStream().mapToDouble(PieChart.Data::getPieValue).sum();

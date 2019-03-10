@@ -45,7 +45,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.resource.cursor.CustomCursor;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
@@ -154,7 +154,7 @@ public class IncomeExpensePieChartDialogController {
         if (a != null) {
             final CurrencyNode defaultCurrency = a.getCurrencyNode();
 
-            final NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
+            final NumberFormat numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
             final ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 

@@ -18,7 +18,8 @@
 package jgnash.report.table;
 
 import jgnash.engine.CurrencyNode;
-import jgnash.text.CommodityFormat;
+import jgnash.engine.MathConstants;
+import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
@@ -188,13 +189,13 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
             switch (getColumnStyle(columnIndex)) {
                 case QUANTITY:
-                    nf = Formats.getQuantityFormat();
+                    nf = NumericFormats.getFixedPrecisionFormat(MathConstants.SECURITY_QUANTITY_ACCURACY);
                     break;
                 case PERCENTAGE:
-                    nf = Formats.getPercentageFormat();
+                    nf = NumericFormats.getPercentageFormat();
                     break;
                 default:
-                    nf = CommodityFormat.getFullNumberFormat(getCurrency());
+                    nf = NumericFormats.getFullCommodityFormat(getCurrency());
                     break;
             }
 

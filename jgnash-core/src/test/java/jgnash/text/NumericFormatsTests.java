@@ -26,7 +26,7 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class CommodityFormatTests {
+class NumericFormatsTests {
 
     @Test
     void localeTest() {
@@ -38,11 +38,25 @@ class CommodityFormatTests {
         currencyNode.setScale((byte) 2);
         currencyNode.setPrefix("€");
 
-        final NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(currencyNode);
+        final NumberFormat numberFormat = NumericFormats.getFullCommodityFormat(currencyNode);
 
         assertEquals("EUR", numberFormat.getCurrency().getCurrencyCode());
 
-        assertThrows(NullPointerException.class, () -> CommodityFormat.getFullNumberFormat(null));
+        assertThrows(NullPointerException.class, () -> NumericFormats.getFullCommodityFormat(null));
 
+    }
+
+    @Test
+    void knowCurrencyFormats() {
+        System.out.println("Full formats");
+        for (String pattern: NumericFormats.getKnownFullPatterns()) {
+            System.out.println(pattern);
+        }
+
+
+        System.out.println("Short formats");
+        for (String pattern: NumericFormats.getKnownShortPatterns()) {
+            System.out.println(pattern);
+        }
     }
 }

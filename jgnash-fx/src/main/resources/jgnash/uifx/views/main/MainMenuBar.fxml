@@ -7,8 +7,8 @@
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import javafx.scene.input.KeyCodeCombination?>
 
-<MenuBar fx:id="menuBar" id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="jgnash.uifx.views.main.MenuBarController">
+<MenuBar fx:id="menuBar" id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" fx:controller="jgnash.uifx.views.main.MenuBarController">
 
     <Menu text="%Menu.File.Name" id="fileMenu">
         <MenuItem onAction="#handleNewAction" text="%Menu.New.Name">
@@ -165,11 +165,6 @@
         <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale">
             <graphic>
                 <FontAwesomeLabel glyphName="LANGUAGE"/>
-            </graphic>
-        </MenuItem>
-        <MenuItem text="%Menu.DateFormat.Name" onAction="#handleChangeDateFormat">
-            <graphic>
-                <FontAwesomeLabel glyphName="CALENDAR"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>

@@ -17,12 +17,12 @@
  */
 package jgnash.report.pdf;
 
+import jgnash.engine.MathConstants;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.ColumnStyle;
-import jgnash.report.table.Formats;
 import jgnash.report.ui.ReportPrintFactory;
 import jgnash.resource.util.ResourceUtils;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
@@ -717,19 +717,19 @@ public abstract class Report implements AutoCloseable {
                 final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
                 return dateFormatter.format((LocalDate) value);
             case SHORT_AMOUNT:
-                final NumberFormat shortNumberFormat = CommodityFormat.getShortNumberFormat(reportModel.getCurrency());
+                final NumberFormat shortNumberFormat = NumericFormats.getShortCommodityFormat(reportModel.getCurrency());
                 return shortNumberFormat.format(value);
             case BALANCE:
             case BALANCE_WITH_SUM:
             case BALANCE_WITH_SUM_AND_GLOBAL:
             case AMOUNT_SUM:
-                final NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(reportModel.getCurrency());
+                final NumberFormat numberFormat = NumericFormats.getFullCommodityFormat(reportModel.getCurrency());
                 return numberFormat.format(value);
             case PERCENTAGE:
-                final NumberFormat percentageFormat = Formats.getPercentageFormat();
+                final NumberFormat percentageFormat = NumericFormats.getPercentageFormat();
                 return percentageFormat.format(value);
             case QUANTITY:
-                final NumberFormat qtyFormat = Formats.getQuantityFormat();
+                final NumberFormat qtyFormat = NumericFormats.getFixedPrecisionFormat(MathConstants.SECURITY_QUANTITY_ACCURACY);
                 return qtyFormat.format(value);
             default:
                 return value.toString();

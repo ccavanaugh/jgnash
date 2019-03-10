@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.util.FileUtils;
 import jgnash.resource.util.ResourceUtils;
 
@@ -167,7 +167,7 @@ public class BudgetResultsExport {
 
                 final DataFormat df = wb.createDataFormat();
 
-                final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+                final DecimalFormat format = (DecimalFormat) NumericFormats.getFullCommodityFormat(account.getCurrencyNode());
                 final String pattern = format.toLocalizedPattern().replace("¤", account.getCurrencyNode().getPrefix());
                 final CellStyle amountStyle = wb.createCellStyle();
 
@@ -244,7 +244,7 @@ public class BudgetResultsExport {
                 amountStyle.setBorderLeft(BorderStyle.THIN);
                 amountStyle.setBorderRight(BorderStyle.THIN);
 
-                final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(model.getBaseCurrency());
+                final DecimalFormat format = (DecimalFormat) NumericFormats.getFullCommodityFormat(model.getBaseCurrency());
                 final String pattern = format.toLocalizedPattern().replace("¤", model.getBaseCurrency().getPrefix());
                 amountStyle.setDataFormat(df.getFormat(pattern));
 

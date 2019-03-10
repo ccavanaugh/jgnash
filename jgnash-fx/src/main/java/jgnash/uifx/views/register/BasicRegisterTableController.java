@@ -33,7 +33,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.time.DateUtils;
 
@@ -113,15 +113,15 @@ public class BasicRegisterTableController extends RegisterTableController {
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(columnNames[7]);
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue()
                 .getAmount(accountProperty().getValue())));
-        increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
-                .getShortNumberFormat(account.get().getCurrencyNode())));
+        increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats
+                .getShortCommodityFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(increaseColumn);
 
         final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[8]);
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue()
                 .getAmount(accountProperty().getValue())));
-        decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
-                .getShortNumberFormat(account.get().getCurrencyNode())));
+        decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats
+                .getShortCommodityFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(decreaseColumn);
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(columnNames[9]);
@@ -132,8 +132,8 @@ public class BasicRegisterTableController extends RegisterTableController {
                     convertToSelectedBalanceMode(accountType, getBalanceAt(param.getValue())));
         });
 
-        balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat
-                .getFullNumberFormat(account.get().getCurrencyNode())));
+        balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats
+                .getFullCommodityFormat(account.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
         tableView.getColumns().add(balanceColumn);
 
@@ -141,9 +141,9 @@ public class BasicRegisterTableController extends RegisterTableController {
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == balanceColumn) {
-                return CommodityFormat.getFullNumberFormat(accountProperty().getValue().getCurrencyNode());
+                return NumericFormats.getFullCommodityFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == increaseColumn || param == decreaseColumn) {
-                return CommodityFormat.getShortNumberFormat(accountProperty().getValue().getCurrencyNode());
+                return NumericFormats.getShortCommodityFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
                 return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {

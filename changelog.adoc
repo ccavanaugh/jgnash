@@ -24,13 +24,20 @@
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 
+== Known JDK Related Bugs
+* Java 11 formatting of accounting values is not consistent with older versions and wrong in some cases
+** https://bugs.openjdk.java.net/browse/JDK-8218770
+** https://bugs.openjdk.java.net/browse/JDK-8215181
+
 == TODO
 * ChoiceDialog (JavaFx) is not localized for some locales.  Replace with an equivalent or submit upstream patch.
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
-* Correct formatting of negative numbers (does not follow locale rules after change to Java 11).
 * Enhance tabular reports to allow period selection.
 
 == Release 3.0.0-b2
+* 03/10/2019 Number formats can now be chosen using the Options dialog and are more consistent.  This allows full
+             control of the display of register values and provides a work around for a known JDK 11 bug.
+* 03/10/2019 Date format selection was moved to the Formats Tab in the Options dialog for UI consistency.
 * 03/08/2019 Disabled generation of the faulty -fx.bat file in the distribution.
 * 03/07/2019 Decimal fields now use an internal math interpreter instead of the Javascript interpreter.
 * 03/05/2019 Updated to latest h2, Apache Poi, and sl4j dependencies.

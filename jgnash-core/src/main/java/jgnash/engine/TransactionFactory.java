@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.resource.util.ResourceUtils;
 
 /**
@@ -170,7 +170,7 @@ public class TransactionFactory {
                 dividend, incomeExchangedAmount);
         entry.setMemo(memo);
 
-        final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
+        final NumberFormat format = NumericFormats.getFullCommodityFormat(incomeAccount.getCurrencyNode());
 
         transaction.setPayee(ResourceUtils.getString("Word.Dividend") + " : " + node.getSymbol() + " @ "
                 + format.format(dividend));
@@ -228,7 +228,7 @@ public class TransactionFactory {
 
         final ResourceBundle rb = ResourceUtils.getBundle();
 
-        final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
+        final NumberFormat format = NumericFormats.getFullCommodityFormat(incomeAccount.getCurrencyNode());
 
         transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ "
                 + format.format(dividend));
@@ -611,7 +611,7 @@ public class TransactionFactory {
     private static String buildPayee(final String wordProperty, final SecurityNode node, final BigDecimal price,
                                      final BigDecimal quantity) {
 
-        final NumberFormat format = CommodityFormat.getFullNumberFormat(node);
+        final NumberFormat format = NumericFormats.getFullCommodityFormat(node);
 
         return ResourceUtils.getString(wordProperty) + " : " + node.getSymbol() + ' ' + quantity.toString() + " @ "
                 + format.format(price);

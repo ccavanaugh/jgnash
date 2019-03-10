@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 
 /**
  * {@code TableCell} for rendering investment transaction quantities.
@@ -42,7 +42,7 @@ class InvestmentTransactionQuantityTableCell extends AbstractTransactionTableCel
             if (transaction instanceof InvestmentTransaction) {
 
                 final NumberFormat format
-                        = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) transaction).getSecurityNode());
+                        = NumericFormats.getShortCommodityFormat(((InvestmentTransaction) transaction).getSecurityNode());
 
                 applyFormat(amount, format);
             } else {

@@ -41,7 +41,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ShortDateTableCell;
@@ -361,7 +361,7 @@ public class RecurringViewController implements MessageListener {
                 final Reminder reminder = getTableRow().getItem();
 
                 if (reminder.getTransaction() != null) {
-                    setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                    setText(NumericFormats.getFullCommodityFormat(reminder.getAccount().getCurrencyNode())
                             .format(amount));
 
                     if (amount != null && amount.signum() < 0) {
@@ -370,7 +370,7 @@ public class RecurringViewController implements MessageListener {
                         setId(StyleClass.NORMAL_CELL_ID);
                     }
                 } else {
-                    setText(CommodityFormat.getFullNumberFormat(reminder.getAccount().getCurrencyNode())
+                    setText(NumericFormats.getFullCommodityFormat(reminder.getAccount().getCurrencyNode())
                             .format(BigDecimal.ZERO));
                 }
             } else {

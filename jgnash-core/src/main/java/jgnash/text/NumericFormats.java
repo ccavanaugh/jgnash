@@ -21,7 +21,12 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.prefs.Preferences;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.message.Message;
@@ -31,17 +36,23 @@ import jgnash.engine.message.MessageListener;
 import jgnash.util.NotNull;
 
 /**
- * Formats commodities for display.
+ * Utility class to provide Numeric formats
  *
  * @author Craig Cavanaugh
  */
-public class CommodityFormat {
+public final class NumericFormats {
+
+    private static final String FULL_FORMAT = "fullFormat";
+
+    private static final String SHORT_FORMAT = "shortFormat";
 
     private static final CommodityListener listener;
 
     private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> fullInstanceMap = new HashMap<>();
 
-    private static final Map<Integer, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
+    private static final Map<Byte, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
+
+    private static final String CURRENCY_SYMBOL = "¤";
 
     static {
         /*
@@ -53,36 +64,114 @@ public class CommodityFormat {
         MessageBus.getInstance().registerListener(listener, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }
 
+    private NumericFormats() {
+        // factory class
+    }
+
+    public static Set<String> getKnownFullPatterns() {
+
+        Set<String> patternSet = new TreeSet<>();
+
+        for (final Locale locale : Locale.getAvailableLocales()) {
+            DecimalFormat df = (DecimalFormat)NumberFormat.getCurrencyInstance(locale);
+            patternSet.add(df.toPattern());
+        }
+
+        // TODO: add missing US locale format, JDK 11 Bug
+        patternSet.add("¤#,##0.00;(¤#,##0.00)");
+        patternSet.add("¤ #,##0.00;(¤ #,##0.00)");
+
+        patternSet.add(getFullFormatPattern()); // add the users own format
+
+        return patternSet;
+    }
+
+    public static Set<String> getKnownShortPatterns() {
+
+        Set<String> patternSet = new TreeSet<>();
+
+        for (final Locale locale : Locale.getAvailableLocales()) {
+            final DecimalFormat df = (DecimalFormat)NumberFormat.getCurrencyInstance(locale);
+            final String pattern = df.toPattern();
+
+            patternSet.add(pattern.replaceAll(CURRENCY_SYMBOL, "").stripLeading());
+        }
+
+        // TODO: add missing US locale format, JDK 11 Bug
+        patternSet.add("#,##0.00;(#,##0.00)");
+
+        patternSet.add(getShortFormatPattern()); // add the users own format
+
+        return patternSet;
+    }
+
+    public static String getFullFormatPattern() {
+        return getFormatPattern(FULL_FORMAT, ((DecimalFormat)NumberFormat.getCurrencyInstance()).toPattern());
+    }
+
+    public static String getShortFormatPattern() {
+
+        DecimalFormat df = (DecimalFormat)NumberFormat.getCurrencyInstance();
+
+        // create the default short format
+        final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+        dfs.setCurrencySymbol("");
+        df.setDecimalFormatSymbols(dfs);
+
+
+        return getFormatPattern(SHORT_FORMAT, df.toPattern());
+    }
+
+    private static String getFormatPattern(@NotNull final String key, final String defaultPattern) {
+        Objects.requireNonNull(key);
+
+        final Preferences preferences = Preferences.userNodeForPackage(NumericFormats.class);
+        return preferences.get(key, defaultPattern);
+    }
+
+    public static void setFullFormatPattern(@NotNull final String pattern) {
+        if (!getFullFormatPattern().equals(pattern)) {
+            setFormatPattern(FULL_FORMAT, pattern);
+
+            fullInstanceMap.clear();    // flush the cached instance map
+        }
+    }
+
+    public static void setShortFormatPattern(@NotNull final String pattern) {
+        if (!getShortFormatPattern().equals(pattern)) {
+            setFormatPattern(SHORT_FORMAT, pattern);
+
+            simpleInstanceMap.clear();  // flush the cached instance map
+        }
+    }
+
+    private static void setFormatPattern(@NotNull final String key, @NotNull final String pattern) {
+        Objects.requireNonNull(pattern);
+
+        if (!pattern.isBlank()) {
+            final Preferences preferences = Preferences.userNodeForPackage(NumericFormats.class);
+            preferences.put(key, pattern);
+        }
+    }
+
     /**
      * Returns a thread safe simplified {@code NumberFormat} for a given {@code CommodityNode}.
      *
      * @param node CommodityNode to format to
      * @return thread safe {@code NumberFormat}
      */
-    public static NumberFormat getShortNumberFormat(@NotNull final CommodityNode node) {
-        return getShortNumberFormat(node.getScale());
-    }
-
-    /**
-     *
-     * @param scale scale of the simple number
-     * @return thread safe {@code NumberFormat}
-     */
-    public static NumberFormat getShortNumberFormat(final int scale) {
-        final ThreadLocal<DecimalFormat> o = simpleInstanceMap.get(scale);
+    public static NumberFormat getShortCommodityFormat(@NotNull final CommodityNode node) {
+        final ThreadLocal<DecimalFormat> o = simpleInstanceMap.get(node.getScale());
 
         if (o != null) {
             return o.get();
         }
 
         final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> {
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
-            final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-            dfs.setCurrencySymbol("");
-            df.setDecimalFormatSymbols(dfs);
-            df.setMaximumFractionDigits(scale);
+            final DecimalFormat df = new DecimalFormat(getShortFormatPattern());
 
-            // required for some locale
+            // required for some locales
+            df.setMaximumFractionDigits(node.getScale());
             df.setMinimumFractionDigits(df.getMaximumFractionDigits());
 
             // for positive suffix padding for fraction alignment
@@ -98,7 +187,7 @@ public class CommodityFormat {
             return df;
         });
 
-        simpleInstanceMap.put(scale, threadLocal);
+        simpleInstanceMap.put(node.getScale(), threadLocal);
 
         return threadLocal.get();
     }
@@ -109,7 +198,7 @@ public class CommodityFormat {
      * @param node CommodityNode to format to
      * @return thread safe {@code NumberFormat}
      */
-    public static NumberFormat getFullNumberFormat(@NotNull final CommodityNode node) {
+    public static NumberFormat getFullCommodityFormat(@NotNull final CommodityNode node) {
         final ThreadLocal<DecimalFormat> o = fullInstanceMap.get(node);
 
         if (o != null) {
@@ -117,7 +206,7 @@ public class CommodityFormat {
         }
 
         final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> {
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
+            final DecimalFormat df = new DecimalFormat(getFullFormatPattern());
 
             final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
             dfs.setCurrencySymbol(node.getPrefix());
@@ -160,6 +249,22 @@ public class CommodityFormat {
 
     public static String getConversion(final CommodityNode cur1, final CommodityNode cur2) {
         return getConversion(cur1.getSymbol(), cur2.getSymbol());
+    }
+
+    public static NumberFormat getFixedPrecisionFormat(final int scale) {
+        final NumberFormat nf = NumberFormat.getNumberInstance();
+        nf.setMaximumFractionDigits(scale);
+        nf.setMinimumFractionDigits(scale);
+
+        return nf;
+    }
+
+    public static NumberFormat getPercentageFormat() {
+        final NumberFormat nf = NumberFormat.getPercentInstance();
+        nf.setMaximumFractionDigits(2);
+        nf.setMinimumFractionDigits(2);
+
+        return nf;
     }
 
     private static class CommodityListener implements MessageListener {

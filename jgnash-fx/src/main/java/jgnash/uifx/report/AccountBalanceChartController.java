@@ -52,7 +52,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
@@ -164,7 +164,7 @@ public class AccountBalanceChartController {
                 ReportPeriod.MONTHLY.ordinal())]);
 
         defaultCurrency = engine.getDefaultCurrency();
-        numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
+        numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
         barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
@@ -190,7 +190,7 @@ public class AccountBalanceChartController {
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 defaultCurrency = newValue.getCurrencyNode();
-                numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
+                numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
                 Platform.runLater(AccountBalanceChartController.this::updateChart);
                 Platform.runLater(AccountBalanceChartController.this::saveSelectedAccounts);

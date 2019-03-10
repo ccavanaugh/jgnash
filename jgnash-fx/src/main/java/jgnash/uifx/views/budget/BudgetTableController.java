@@ -61,7 +61,7 @@ import jgnash.engine.budget.BudgetResultsModel;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.control.NullTableViewSelectionModel;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
@@ -935,9 +935,9 @@ public class BudgetTableController implements MessageListener {
         min = Math.min(min, budgetPeriodResults.getRemaining().doubleValue());
 
         return Math.max(JavaFXUtils.getDisplayedTextWidth(
-                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
+                NumericFormats.getFullCommodityFormat(budgetResultsModel.getBaseCurrency()).format(max) +
                         BORDER_MARGIN, null), JavaFXUtils.getDisplayedTextWidth(
-                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
+                NumericFormats.getFullCommodityFormat(budgetResultsModel.getBaseCurrency()).format(min) +
                         BORDER_MARGIN, null));
     }
 
@@ -965,10 +965,10 @@ public class BudgetTableController implements MessageListener {
         }
 
         return Math.max(JavaFXUtils.getDisplayedTextWidth(
-                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
+                NumericFormats.getFullCommodityFormat(budgetResultsModel.getBaseCurrency()).format(max) +
                         BORDER_MARGIN, null),
                 JavaFXUtils.getDisplayedTextWidth(
-                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
+                        NumericFormats.getFullCommodityFormat(budgetResultsModel.getBaseCurrency()).format(min) +
                                 BORDER_MARGIN, null));
     }
 
@@ -1121,7 +1121,7 @@ public class BudgetTableController implements MessageListener {
 
             if (!empty && amount != null && getTableRow() != null) {
                 final Account account = expandedAccountList.get(getTableRow().getIndex());
-                final NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+                final NumberFormat format = NumericFormats.getFullCommodityFormat(account.getCurrencyNode());
 
                 setText(format.format(amount));
 
@@ -1150,7 +1150,7 @@ public class BudgetTableController implements MessageListener {
 
         AccountGroupTableCell() {
             setStyle("-fx-alignment: center-right;");  // Right align
-            format = CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency());
+            format = NumericFormats.getFullCommodityFormat(budgetResultsModel.getBaseCurrency());
         }
 
         @Override

@@ -46,7 +46,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
 import jgnash.uifx.resource.cursor.CustomCursor;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
@@ -107,7 +107,7 @@ public class IncomeExpenseBarChartDialogController {
         periodComboBox.setValue(ReportPeriod.values()[preferences.getInt(REPORT_PERIOD, ReportPeriod.MONTHLY.ordinal())]);
 
         defaultCurrency = engine.getDefaultCurrency();
-        numberFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
+        numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
         barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());

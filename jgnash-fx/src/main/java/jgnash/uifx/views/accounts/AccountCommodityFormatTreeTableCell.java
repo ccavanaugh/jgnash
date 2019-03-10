@@ -23,7 +23,7 @@ import java.text.NumberFormat;
 import javafx.scene.control.TreeTableCell;
 
 import jgnash.engine.Account;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.skin.StyleClass;
 
 /**
@@ -44,7 +44,7 @@ class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDeci
         if (!empty && amount != null && getTreeTableRow().getTreeItem() != null) {
             final Account account = getTreeTableRow().getTreeItem().getValue();
 
-            final NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+            final NumberFormat format = NumericFormats.getFullCommodityFormat(account.getCurrencyNode());
 
             setText(format.format(amount));
 

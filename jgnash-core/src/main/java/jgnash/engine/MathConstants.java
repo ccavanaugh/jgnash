@@ -57,6 +57,8 @@ public final class MathConstants {
      */
     public static final int SECURITY_QUANTITY_ACCURACY = 6;
 
+    public static final int DEFAULT_COMMODITY_PRECISION = 4;
+
     private MathConstants() {
         // restrict instantiation
     }

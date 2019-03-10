@@ -38,10 +38,10 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.plugin.PluginFactory;
+import jgnash.report.pdf.FontRegistry;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialogController;
 import jgnash.uifx.actions.DefaultCurrencyAction;
-import jgnash.uifx.actions.DefaultDateFormatAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.actions.ExecuteJavaScriptAction;
 import jgnash.uifx.actions.ExportAccountsAction;
@@ -379,6 +379,9 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleShowOptionDialog() {
+
+        FontRegistry.getFontList(); // tickle the font registry to load the dialog faster
+
         final FXMLUtils.Pair<OptionDialogController> pair = FXMLUtils.load(OptionDialogController.class.getResource("OptionDialog.fxml"),
                 resources.getString("Title.Options"));
 
@@ -411,11 +414,6 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleImportQIFAction() {
         ImportQifAction.showAndWait();
-    }
-
-    @FXML
-    private void handleChangeDateFormat() {
-        DefaultDateFormatAction.showAndWait();
     }
 
     @FXML

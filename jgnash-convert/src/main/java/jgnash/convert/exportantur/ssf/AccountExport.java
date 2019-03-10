@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.util.FileUtils;
 import jgnash.resource.util.ResourceUtils;
@@ -120,7 +120,7 @@ public class AccountExport {
             amountStyle.setFont(defaultFont);
             amountStyle.setAlignment(HorizontalAlignment.RIGHT);
 
-            final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+            final DecimalFormat format = (DecimalFormat) NumericFormats.getFullCommodityFormat(account.getCurrencyNode());
             final String pattern = format.toLocalizedPattern().replace("¤", account.getCurrencyNode().getPrefix());
             final DataFormat df = wb.createDataFormat();
             amountStyle.setDataFormat(df.getFormat(pattern));

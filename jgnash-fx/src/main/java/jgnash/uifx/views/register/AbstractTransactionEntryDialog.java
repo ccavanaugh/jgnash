@@ -37,7 +37,7 @@ import javafx.util.Callback;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.util.TableViewManager;
@@ -189,19 +189,19 @@ abstract class AbstractTransactionEntryDialog extends Stage {
         final TableColumn<TransactionEntry, BigDecimal> increaseColumn = new TableColumn<>(columnNames[3]);
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().
                 getAmount(accountProperty().getValue())));
-        increaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.
-                getShortNumberFormat(account.get().getCurrencyNode())));
+        increaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(NumericFormats.
+                getShortCommodityFormat(account.get().getCurrencyNode())));
 
         final TableColumn<TransactionEntry, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[4]);
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().
                 getAmount(accountProperty().getValue())));
-        decreaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.
-                getShortNumberFormat(account.get().getCurrencyNode())));
+        decreaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(NumericFormats.
+                getShortCommodityFormat(account.get().getCurrencyNode())));
 
         final TableColumn<TransactionEntry, BigDecimal> balanceColumn = new TableColumn<>(columnNames[5]);
         balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(getBalanceAt(param.getValue())));
-        balanceColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.
-                getFullNumberFormat(account.get().getCurrencyNode())));
+        balanceColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(NumericFormats.
+                getFullCommodityFormat(account.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
 
         tableView.getColumns().addAll(memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn,
@@ -209,9 +209,9 @@ abstract class AbstractTransactionEntryDialog extends Stage {
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == balanceColumn) {
-                return CommodityFormat.getFullNumberFormat(accountProperty().getValue().getCurrencyNode());
+                return NumericFormats.getFullCommodityFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == increaseColumn || param == decreaseColumn) {
-                return CommodityFormat.getShortNumberFormat(accountProperty().getValue().getCurrencyNode());
+                return NumericFormats.getShortCommodityFormat(accountProperty().getValue().getCurrencyNode());
             }
 
             return null;

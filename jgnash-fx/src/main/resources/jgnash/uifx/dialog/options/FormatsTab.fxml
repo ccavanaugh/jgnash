@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:controller="jgnash.uifx.dialog.options.FormatsTabController" minHeight="-Infinity"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="dialog, form">
+
+    <TitledPane text="%Title.NumericFormats" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <Label text="%Label.FullNumFormat" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="fullNumberFormatComboBox" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="%Label.ShortNumFormat" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="shortNumberFormatComboBox" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane text="%Title.DateFormats" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <Label text="%Label.DateFormat" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="dateFormatComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        </GridPane>
+    </TitledPane>
+</VBox>

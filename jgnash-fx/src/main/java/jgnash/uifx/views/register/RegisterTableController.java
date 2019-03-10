@@ -75,7 +75,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
 import jgnash.resource.util.ResourceUtils;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.Options;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
@@ -206,7 +206,7 @@ abstract class RegisterTableController {
 				tableView.setRowFactory(new TransactionRowFactory());
 			}
 
-			numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
+			numberFormat = NumericFormats.getFullCommodityFormat(newValue.getCurrencyNode());
 		});
 
 		selectedTransaction.bind(tableView.getSelectionModel().selectedItemProperty());

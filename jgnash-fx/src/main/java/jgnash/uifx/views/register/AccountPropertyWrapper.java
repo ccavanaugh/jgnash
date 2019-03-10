@@ -35,7 +35,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.util.DefaultDaemonThreadFactory;
@@ -73,7 +73,7 @@ class AccountPropertyWrapper implements MessageListener {
 
                 // Account changed, update the number format
                 synchronized (numberFormatLock) {
-                    numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
+                    numberFormat = NumericFormats.getFullCommodityFormat(newValue.getCurrencyNode());
                 }
 
                 // Update account properties

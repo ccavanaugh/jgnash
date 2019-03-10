@@ -63,7 +63,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.net.security.UpdateFactory;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DatePickerEx;
@@ -168,7 +168,7 @@ public class SecurityHistoryController implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        numberFormat.set(CommodityFormat.getShortNumberFormat(engine.getDefaultCurrency()));
+        numberFormat.set(NumericFormats.getShortCommodityFormat(engine.getDefaultCurrency()));
 
         selectedSecurityHistoryNode.bind(priceTableView.getSelectionModel().selectedItemProperty());
         selectedSecurityNode.bind(securityComboBox.getSelectionModel().selectedItemProperty());
@@ -266,7 +266,7 @@ public class SecurityHistoryController implements MessageListener {
 
         securityComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                numberFormat.set(CommodityFormat.getShortNumberFormat(newValue.getReportedCurrencyNode()));
+                numberFormat.set(NumericFormats.getShortCommodityFormat(newValue.getReportedCurrencyNode()));
 
                 closeTextField.scaleProperty().set(newValue.getScale());
                 lowTextField.scaleProperty().set(newValue.getScale());

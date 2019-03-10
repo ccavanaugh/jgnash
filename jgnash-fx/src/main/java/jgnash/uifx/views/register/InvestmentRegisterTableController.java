@@ -33,8 +33,9 @@ import javafx.util.Callback;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.MathConstants;
 import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 
 /**
@@ -43,8 +44,6 @@ import jgnash.time.DateUtils;
  * @author Craig Cavanaugh
  */
 public class InvestmentRegisterTableController extends RegisterTableController {
-
-    private static final int DEFAULT_COMMODITY_PRECISION = 4;
 
     @FXML
     private Label cashBalanceLabel;
@@ -120,23 +119,23 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
         final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[7]);
         priceColumn.setCellValueFactory(param -> new PriceProperty(param.getValue()));
-        priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(account.get().getCurrencyNode())));
+        priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats.getShortCommodityFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(priceColumn);
 
         final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[8]);
         netColumn.setCellValueFactory(param -> new AmountProperty(param.getValue()));
-        netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(account.get().getCurrencyNode())));
+        netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats.getShortCommodityFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(netColumn);
 
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == netColumn) {
-                return CommodityFormat.getFullNumberFormat(accountProperty().getValue().getCurrencyNode());
+                return NumericFormats.getFullCommodityFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == quantityColumn) {
                 return getQuantityColumnFormat();
             } else if (param == priceColumn) {
-                return CommodityFormat.getShortNumberFormat(accountProperty().getValue().getCurrencyNode());
+                return NumericFormats.getShortCommodityFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
                 return DateUtils.getShortDateFormatter().toFormat();
             } else if (param == dateTimeColumn) {
@@ -151,13 +150,13 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         if (quantityNumberFormat == null) {
             if (account.get() != null) {
                 final int max = account.get().getUsedSecurities().parallelStream().mapToInt(CommodityNode::getScale)
-                        .max().orElse(4);
+                        .max().orElse(MathConstants.DEFAULT_COMMODITY_PRECISION);
 
-                quantityNumberFormat =  CommodityFormat.getShortNumberFormat(max);
+                quantityNumberFormat = NumericFormats.getFixedPrecisionFormat(max);
             }
 
             // Just return a default for now
-            return CommodityFormat.getShortNumberFormat(DEFAULT_COMMODITY_PRECISION);
+            return NumericFormats.getFixedPrecisionFormat(MathConstants.DEFAULT_COMMODITY_PRECISION);
         }
         return quantityNumberFormat;
     }

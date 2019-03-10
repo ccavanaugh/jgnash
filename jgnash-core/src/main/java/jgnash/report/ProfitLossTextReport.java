@@ -40,7 +40,7 @@ import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.resource.util.ResourceUtils;
 
 /**
@@ -111,7 +111,7 @@ public class ProfitLossTextReport {
 
         final Account root = engine.getRootAccount();
 
-        numberFormat = CommodityFormat.getFullNumberFormat(baseCommodity);
+        numberFormat = NumericFormats.getFullCommodityFormat(baseCommodity);
 
         final DateTimeFormatter df = DateTimeFormatter.ISO_DATE;
 

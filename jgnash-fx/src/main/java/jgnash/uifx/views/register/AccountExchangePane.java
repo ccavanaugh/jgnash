@@ -33,7 +33,7 @@ import javafx.scene.layout.GridPane;
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.MathConstants;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.PopOverButton;
@@ -153,7 +153,7 @@ public class AccountExchangePane extends GridPane {
 
         // update the exchange label text
         expandButton.focusedProperty().addListener((observable, oldValue, newValue)
-                -> exchangeLabel.setText(CommodityFormat.getConversion(baseCurrency.get(),
+                -> exchangeLabel.setText(NumericFormats.getConversion(baseCurrency.get(),
                 accountCombo.getValue().getCurrencyNode())));
 
         exchangeAmount.bindBidirectional(exchangeAmountField.decimalProperty());

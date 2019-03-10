@@ -59,7 +59,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.text.CommodityFormat;
+import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
@@ -187,7 +187,7 @@ public class ReconcileDialogController implements MessageListener {
         this.endingBalance = endingBalance;
         this.openingBalance = openingBalance;
 
-        numberFormat = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+        numberFormat = NumericFormats.getShortCommodityFormat(account.getCurrencyNode());
 
         final String[] columnNames = RegisterFactory.getCreditDebitTabNames(account.getAccountType());
 
@@ -383,7 +383,7 @@ public class ReconcileDialogController implements MessageListener {
         amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(AccountBalanceDisplayManager.
                 convertToSelectedBalanceMode(account.getAccountType(), param.getValue().getAmount(account))));
         amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(
-                CommodityFormat.getShortNumberFormat(account.getCurrencyNode())));
+                NumericFormats.getShortCommodityFormat(account.getCurrencyNode())));
 
         tableView.getColumns().add(amountColumn);
 
@@ -392,7 +392,7 @@ public class ReconcileDialogController implements MessageListener {
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == amountColumn && account != null) {
-                return CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+                return NumericFormats.getShortCommodityFormat(account.getCurrencyNode());
             }
             return null;
         });
