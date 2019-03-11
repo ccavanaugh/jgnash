@@ -379,7 +379,8 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleShowOptionDialog() {
 
-        FontRegistry.getFontList(); // tickle the font registry to load the dialog faster
+        // tickle the font registry to load the dialog faster
+        new Thread(FontRegistry::getFontList).start();
 
         final FXMLUtils.Pair<OptionDialogController> pair = FXMLUtils.load(OptionDialogController.class.getResource("OptionDialog.fxml"),
                 resources.getString("Title.Options"));

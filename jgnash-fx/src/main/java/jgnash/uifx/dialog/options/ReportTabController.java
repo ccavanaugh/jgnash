@@ -22,6 +22,9 @@ import javafx.scene.control.ComboBox;
 
 import jgnash.report.pdf.FontRegistry;
 import jgnash.report.pdf.ReportFactory;
+import jgnash.uifx.util.JavaFXUtils;
+
+import java.util.List;
 
 /**
  * Controller for Report Options.
@@ -41,19 +44,32 @@ public class ReportTabController {
 
     @FXML
     private void initialize() {
-        monoFontComboBox.getItems().setAll(FontRegistry.getFontList());
-        proportionalFontComboBox.getItems().setAll(FontRegistry.getFontList());
-        headerFontComboBox.getItems().setAll(FontRegistry.getFontList());
 
-        monoFontComboBox.setValue(ReportFactory.getMonoFont());
-        proportionalFontComboBox.setValue(ReportFactory.getProportionalFont());
-        headerFontComboBox.setValue(ReportFactory.getHeaderFont());
+        new Thread(() -> {
 
-        monoFontComboBox.setOnAction(event -> ReportFactory.setMonoFont(monoFontComboBox.getValue()));
+            final List<String> fonts = FontRegistry.getFontList();
 
-        proportionalFontComboBox.setOnAction(event ->
-                ReportFactory.setProportionalFont(proportionalFontComboBox.getValue()));
+            JavaFXUtils.runLater(() -> {
 
-        headerFontComboBox.setOnAction(event -> ReportFactory.setHeaderFont(headerFontComboBox.getValue()));
+                monoFontComboBox.getItems().setAll(fonts);
+                monoFontComboBox.setValue(ReportFactory.getMonoFont());
+
+
+                proportionalFontComboBox.getItems().setAll(fonts);
+                proportionalFontComboBox.setValue(ReportFactory.getProportionalFont());
+
+                headerFontComboBox.getItems().setAll(fonts);
+                headerFontComboBox.setValue(ReportFactory.getHeaderFont());
+
+                monoFontComboBox.setOnAction(event -> ReportFactory.setMonoFont(monoFontComboBox.getValue()));
+
+                proportionalFontComboBox.setOnAction(event ->
+                        ReportFactory.setProportionalFont(proportionalFontComboBox.getValue()));
+
+                headerFontComboBox.setOnAction(event -> ReportFactory.setHeaderFont(headerFontComboBox.getValue()));
+
+            });
+        }).start();
+
     }
 }
