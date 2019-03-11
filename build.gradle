@@ -84,10 +84,10 @@ task distZip {
     doLast {
         ant.zip(destfile: "jgnash-" + version + "-bin.zip", duplicate: "preserve", update: "false") {
             zipgroupfileset(dir: ".", includes: "jgnash-fx/build/distributions/jGnashFx-" + version + ".zip")
-            zipgroupfileset(dir: ".", includes: "jgnash/build/distributions/jGnash-" + version + ".zip")
+            zipgroupfileset(dir: ".", includes: "bootloader/build/distributions/jGnash-" + version + ".zip")
         }
     }
 }
 
 distZip.dependsOn(":jgnash-fx:distZip")
-distZip.dependsOn(":jgnash:distZip")
+distZip.dependsOn(":bootloader:distZip")
