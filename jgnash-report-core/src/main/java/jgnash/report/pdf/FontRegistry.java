@@ -64,7 +64,7 @@ public class FontRegistry {
     public static List<String> getFontList() {
         blockForFontRegistration();
 
-        ArrayList<String> fontList = new ArrayList<>(registeredFontMap.keySet());
+        final ArrayList<String> fontList = new ArrayList<>(registeredFontMap.keySet());
 
         Collections.sort(fontList);
 
@@ -84,7 +84,7 @@ public class FontRegistry {
                 while (!registrationComplete.get()) {
                     isComplete.await();
                 }
-            } catch (InterruptedException ex) {
+            } catch (final InterruptedException ex) {
                 Logger.getLogger(FontRegistry.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 lock.unlock();
@@ -103,7 +103,7 @@ public class FontRegistry {
         if (!registrationStarted.get()) {
             registrationStarted.set(true);
 
-            Thread thread = new Thread(() -> {
+            final Thread thread = new Thread(() -> {
                 lock.lock();
 
                 try {
@@ -129,13 +129,13 @@ public class FontRegistry {
             if (path.toLowerCase(Locale.ROOT).endsWith(".ttf") || path.toLowerCase(Locale.ROOT).endsWith(".otf")
                     || path.toLowerCase(Locale.ROOT).indexOf(".ttc,") > 0) {
 
-                try (FileInputStream fileInputStream = new FileInputStream(path)) {
-                    Font font = Font.createFont(Font.TRUETYPE_FONT, fileInputStream);
+                try (final FileInputStream fileInputStream = new FileInputStream(path)) {
+                    final Font font = Font.createFont(Font.TRUETYPE_FONT, fileInputStream);
                     registeredFontMap.put(font.getName(), path);
                 }
             } else if (path.toLowerCase(Locale.ROOT).endsWith(".afm") || path.toLowerCase(Locale.ROOT).endsWith(".pfm")) {
-                try (FileInputStream fileInputStream = new FileInputStream(path)) {
-                    Font font = Font.createFont(Font.TYPE1_FONT, fileInputStream);
+                try (final FileInputStream fileInputStream = new FileInputStream(path)) {
+                    final Font font = Font.createFont(Font.TYPE1_FONT, fileInputStream);
                     registeredFontMap.put(font.getName(), path);
                 }
             }
@@ -148,7 +148,7 @@ public class FontRegistry {
      * Register fonts in known directories.
      */
     private void registerFontDirectories() {
-        new FontFileFinder().find().parallelStream().map(uri
+        new FontFileFinder().find().stream().map(uri
                 -> new File(uri).getAbsolutePath()).forEach(this::registerFont);
     }
 }
