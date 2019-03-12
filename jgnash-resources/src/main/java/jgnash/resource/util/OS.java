@@ -48,6 +48,7 @@ public final class OS {
      * 
      * @return true if running on OSX
      */
+    @SuppressWarnings("unused")
     public static boolean isSystemOSX() {
         return IS_OSX;
     }

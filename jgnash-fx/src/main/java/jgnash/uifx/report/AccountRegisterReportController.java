@@ -119,11 +119,6 @@ public class AccountRegisterReportController implements ReportController {
         handleReportRefresh();
     }
 
-    @Override
-    public void closeReport() throws IOException {
-        report.close();
-    }
-
     public void setAccount(@Nullable final Account account) {
         if (account != null) {
             accountComboBox.setValue(account);

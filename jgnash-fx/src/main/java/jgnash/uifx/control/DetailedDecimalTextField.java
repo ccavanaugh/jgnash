@@ -58,7 +58,7 @@ public class DetailedDecimalTextField extends GridPane {
      *
      * @return the editable property
      */
-    public final BooleanProperty editableProperty() {
+    protected final BooleanProperty editableProperty() {
         return editable;
     }
 

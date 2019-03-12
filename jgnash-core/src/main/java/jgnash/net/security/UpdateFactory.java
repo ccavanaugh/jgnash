@@ -44,7 +44,6 @@ import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
-import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.resource.util.ResourceUtils;
 
@@ -152,10 +151,6 @@ public class UpdateFactory {
         return waitForCallable(new UpdateSecurityNodeCallable(node));
     }
 
-    public static boolean importHistory(final SecurityNode securityNode, final LocalDate startDate, final LocalDate endDate) {
-        return waitForCallable(new HistoricalImportCallable(securityNode, startDate, endDate));
-    }
-
     private static boolean waitForCallable(final Callable<Boolean> callable) {
         boolean result = false;
 
@@ -186,49 +181,6 @@ public class UpdateFactory {
         }
 
         return newSecurityNodes;
-    }
-
-    private static class HistoricalImportCallable implements Callable<Boolean> {
-
-        private final LocalDate startDate;
-
-        private final LocalDate endDate;
-
-        private final SecurityNode securityNode;
-
-        HistoricalImportCallable(@NotNull final SecurityNode securityNode, @NotNull final LocalDate startDate,
-                                 @NotNull final LocalDate endDate) {
-            this.securityNode = securityNode;
-
-            if (DateUtils.before(startDate, endDate)) {
-                this.startDate = startDate;
-                this.endDate = endDate;
-            } else {
-                this.startDate = endDate;
-                this.endDate = startDate;
-            }
-        }
-
-        @Override
-        public Boolean call() {
-            boolean result = true;
-
-            try {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                Objects.requireNonNull(engine);
-
-                final List<SecurityHistoryNode> newSecurityNodes = downloadHistory(securityNode, startDate, endDate);
-
-                for (final SecurityHistoryNode historyNode : newSecurityNodes) {
-                    engine.addSecurityHistory(securityNode, historyNode);
-                }
-            } catch (NullPointerException | NumberFormatException ex) {
-                logger.log(Level.SEVERE, null, ex);
-                result = false;
-            }
-
-            return result;
-        }
     }
 
     /**
