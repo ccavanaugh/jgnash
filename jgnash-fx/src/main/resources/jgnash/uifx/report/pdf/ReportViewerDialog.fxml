@@ -16,12 +16,12 @@
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 
 <StackPane fx:id="stackPane" fx:controller="jgnash.uifx.report.pdf.ReportViewerDialogController"
-           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <fx:define>
         <DropShadow fx:id="dropShadow" color="grey" offsetX="2" offsetY="2" blurType="ONE_PASS_BOX"/>
         <ToggleGroup fx:id="toggleGroup"/>
     </fx:define>
-    <BorderPane>
+    <BorderPane prefWidth="850" prefHeight="600">
         <top>
             <BorderPane>
                 <top>
@@ -116,7 +116,7 @@
         </top>
 
         <center>
-            <ScrollPane fx:id="scrollPane" prefHeight="500.0" prefWidth="480.0" BorderPane.alignment="CENTER"
+            <ScrollPane fx:id="scrollPane" BorderPane.alignment="CENTER"
                         vbarPolicy="ALWAYS" styleClass="dialog">
                 <VBox fx:id="pagePane"/>
             </ScrollPane>
