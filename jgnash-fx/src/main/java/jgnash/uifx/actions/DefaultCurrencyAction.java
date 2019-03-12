@@ -17,6 +17,13 @@
  */
 package jgnash.uifx.actions;
 
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.ChoiceDialog;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,15 +31,6 @@ import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.control.ChoiceDialog;
-
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainView;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to change the default currency.
@@ -70,11 +68,7 @@ public class DefaultCurrencyAction {
 
                     final ChoiceDialog<CurrencyNode> dialog = new ChoiceDialog<>(engine.getDefaultCurrency(), currencyNodeList);
                     dialog.setTitle(resources.getString("Title.SelDefCurr"));
-
-                    dialog.getDialogPane().getStylesheets().addAll(MainView.DEFAULT_CSS);
-                    dialog.getDialogPane().getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
-                    dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
-                    dialog.setHeaderText(resources.getString("Title.SelDefCurr"));
+                    dialog.setContentText(resources.getString("Title.SelDefCurr"));
 
                     final Optional<CurrencyNode> optional = dialog.showAndWait();
 

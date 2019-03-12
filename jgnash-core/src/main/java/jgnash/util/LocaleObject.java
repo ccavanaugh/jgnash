@@ -18,8 +18,10 @@
 package jgnash.util;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Utility Class for display and ordering of {@code Locale} objects in a nice readable and sorted order.
@@ -71,13 +73,12 @@ public class LocaleObject implements Comparable<LocaleObject> {
         return obj.locale.equals(locale);
     }
 
-    public static LocaleObject[] getLocaleObjects() {
+    public static Collection<LocaleObject> getLocaleObjects() {
         return Arrays.stream(Locale.getAvailableLocales())
             .filter(l -> l.getDisplayName() != null
                 && !l.getDisplayName().isEmpty()
                 && !l.getCountry().isEmpty())
             .map(LocaleObject::new)
-            .sorted()
-            .toArray(LocaleObject[]::new);
+            .sorted().collect(Collectors.toList());
     }
 }

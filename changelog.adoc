@@ -30,11 +30,11 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
 == TODO
-* ChoiceDialog (JavaFx) is not localized for some locales.  Replace with an equivalent or submit upstream patch.
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 * Enhance tabular reports to allow period selection.
 
 == Release 3.0.0-b2
+* 03/12/2019 Corrected localization issues with the Default Currency and Locale selection dialogs.
 * 03/12/2019 Updated to JavaFX 12 (Java 11 Compatible).
 * 03/10/2019 Made the Options dialog accessible without a file loaded.
 * 03/10/2019 Number formats can now be chosen using the Options dialog and are more consistent.  This allows full

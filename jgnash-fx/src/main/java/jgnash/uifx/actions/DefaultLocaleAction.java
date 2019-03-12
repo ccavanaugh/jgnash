@@ -17,17 +17,17 @@
  */
 package jgnash.uifx.actions;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.control.ChoiceDialog;
 
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainView;
+import jgnash.uifx.control.ChoiceDialog;
 import jgnash.util.LocaleObject;
 import jgnash.resource.util.ResourceUtils;
 
@@ -40,14 +40,14 @@ public class DefaultLocaleAction {
 
     public static void showAndWait() {
 
-        final Task<LocaleObject[]> task = new Task<>() {
+        final Task<Collection<LocaleObject>> task = new Task<>() {
             final ResourceBundle resources = ResourceUtils.getBundle();
 
-            private LocaleObject[] localeObjects;
+            private Collection<LocaleObject> localeObjects;
 
             @Override
-            protected LocaleObject[] call() {
-                localeObjects = LocaleObject.getLocaleObjects();
+            protected Collection<LocaleObject> call() {
+                localeObjects = new ArrayList<>(LocaleObject.getLocaleObjects());
                 return localeObjects;
             }
 
@@ -58,11 +58,7 @@ public class DefaultLocaleAction {
                 Platform.runLater(() -> {
                     final ChoiceDialog<LocaleObject> dialog = new ChoiceDialog<>(new LocaleObject(Locale.getDefault()), localeObjects);
                     dialog.setTitle(resources.getString("Title.SelDefLocale"));
-
-                    dialog.getDialogPane().getStylesheets().addAll(MainView.DEFAULT_CSS);
-                    dialog.getDialogPane().getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
-                    dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
-                    dialog.setHeaderText(resources.getString("Title.SelDefLocale"));
+                    dialog.setContentText(resources.getString("Title.SelDefLocale"));
 
                     final Optional<LocaleObject> optional = dialog.showAndWait();
 
