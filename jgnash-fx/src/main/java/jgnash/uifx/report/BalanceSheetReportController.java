@@ -53,7 +53,7 @@ public class BalanceSheetReportController implements ReportController {
 
     private static final String MONTHS = "months";
 
-    private BalanceSheetReport report = new BalanceSheetReport();
+    private final BalanceSheetReport report = new BalanceSheetReport();
 
     private Runnable refreshRunnable = null;
 

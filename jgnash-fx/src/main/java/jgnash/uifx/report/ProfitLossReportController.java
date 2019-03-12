@@ -78,7 +78,7 @@ public class ProfitLossReportController implements ReportController {
 
     private static final String SORT_ORDER = "sortOrder";
 
-    private ProfitLossReport report = new ProfitLossReport();
+    private final ProfitLossReport report = new ProfitLossReport();
 
     private Runnable refreshRunnable = null;
 

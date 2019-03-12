@@ -51,7 +51,7 @@ public class BusyPane extends StackPane {
      * Listens for changes to the font scale
      */
     @SuppressWarnings("FieldCanBeLocal")
-    private ChangeListener<Number> fontScaleListener;
+    private final ChangeListener<Number> fontScaleListener;
 
     public BusyPane() {
 

@@ -45,9 +45,9 @@ public class BootLoaderDialog extends JFrame {
     private JLabel activeDownloadLabel;
     private JProgressBar progressBar;
 
-    private Consumer<String> activeFileConsumer;
+    private final Consumer<String> activeFileConsumer;
 
-    private IntConsumer percentCompleteConsumer;
+    private final IntConsumer percentCompleteConsumer;
 
     public BootLoaderDialog() {
 

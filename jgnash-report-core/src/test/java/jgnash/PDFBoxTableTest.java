@@ -217,7 +217,7 @@ class PDFBoxTableTest {
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM};
 
-        private String[] columnNames = {rb.getString(COLUMN_DATE), rb.getString(COLUMN_TIMESTAMP),
+        private final String[] columnNames = {rb.getString(COLUMN_DATE), rb.getString(COLUMN_TIMESTAMP),
                 rb.getString(COLUMN_NUM), rb.getString(COLUMN_PAYEE), rb.getString(COLUMN_MEMO),
                 rb.getString(COLUMN_ACCOUNT), rb.getString(COLUMN_CLR), rb.getString(COLUMN_DEPOSIT),
                 rb.getString(COLUMN_WITHDRAWAL), rb.getString(COLUMN_BALANCE)};
@@ -352,7 +352,7 @@ class PDFBoxTableTest {
                 ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING, ColumnStyle.STRING,
                 ColumnStyle.SHORT_AMOUNT, ColumnStyle.SHORT_AMOUNT, ColumnStyle.AMOUNT_SUM, ColumnStyle.GROUP};
 
-        private String[] columnNames = {rb.getString(COLUMN_DATE), rb.getString(COLUMN_TIMESTAMP),
+        private final String[] columnNames = {rb.getString(COLUMN_DATE), rb.getString(COLUMN_TIMESTAMP),
                 rb.getString(COLUMN_NUM), rb.getString(COLUMN_PAYEE), rb.getString(COLUMN_MEMO),
                 rb.getString(COLUMN_ACCOUNT), rb.getString(COLUMN_CLR), rb.getString(COLUMN_DEPOSIT),
                 rb.getString(COLUMN_WITHDRAWAL), rb.getString(COLUMN_BALANCE), "group"};

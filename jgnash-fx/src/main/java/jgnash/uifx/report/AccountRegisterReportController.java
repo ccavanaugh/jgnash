@@ -69,7 +69,7 @@ public class AccountRegisterReportController implements ReportController {
 
     private static final String SHOW_TIMESTAMP = "showTimestamp";
 
-    private Report report = new AccountRegisterReport();
+    private final Report report = new AccountRegisterReport();
 
     private Runnable refreshRunnable = null;
 

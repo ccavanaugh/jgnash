@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class EncryptionManagerTest {
 
-    private static RandomStringGenerator generator = new RandomStringGenerator.Builder().build();
+    private static final RandomStringGenerator generator = new RandomStringGenerator.Builder().build();
 
     private static final String PASSWORD = generator.generate(20);
 

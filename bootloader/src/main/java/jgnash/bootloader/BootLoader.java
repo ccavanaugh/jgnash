@@ -71,7 +71,7 @@ public class BootLoader {
     private static final int BUFFER_SIZE = 4096;
 
     // download them all
-    private static String[] JARS = new String[]{"base", "controls", "fxml", "graphics", "media", "swing", "web"};
+    private static final String[] JARS = new String[]{"base", "controls", "fxml", "graphics", "media", "swing", "web"};
 
     public static boolean doFilesExist() {
         String libPath = getLibPath();

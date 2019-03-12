@@ -57,9 +57,9 @@ public final class PluginFactory {
 
     private static final List<Plugin> plugins = new ArrayList<>();
 
-    private static AtomicBoolean pluginsStarted = new AtomicBoolean(false);
+    private static final AtomicBoolean pluginsStarted = new AtomicBoolean(false);
 
-    private static AtomicBoolean pluginsLoaded = new AtomicBoolean(false);
+    private static final AtomicBoolean pluginsLoaded = new AtomicBoolean(false);
 
     private static final String separator = System.getProperty("file.separator");
 

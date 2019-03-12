@@ -51,7 +51,7 @@ public class DetailedDecimalTextField extends GridPane {
         return value;
     }
 
-    private ObjectProperty<BigDecimal> value = new SimpleObjectProperty<>(this, "value");
+    private final ObjectProperty<BigDecimal> value = new SimpleObjectProperty<>(this, "value");
 
     /**
      * Specifies whether the numeric field allows for user input.
@@ -66,7 +66,7 @@ public class DetailedDecimalTextField extends GridPane {
         return editableProperty().get();
     }
 
-    private BooleanProperty editable = new SimpleBooleanProperty(this, "editable", true) {
+    private final BooleanProperty editable = new SimpleBooleanProperty(this, "editable", true) {
         @Override
         protected void invalidated() {
             pseudoClassStateChanged(PSEUDO_CLASS_EDITABLE, get());

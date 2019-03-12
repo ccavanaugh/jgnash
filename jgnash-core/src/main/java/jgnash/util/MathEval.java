@@ -7,7 +7,7 @@ package jgnash.util;
  */
 public class MathEval {
 
-    private String str;
+    private final String str;
 
     private int pos = -1;
     private int ch;

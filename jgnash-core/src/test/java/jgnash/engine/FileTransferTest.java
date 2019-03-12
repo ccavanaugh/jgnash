@@ -277,7 +277,7 @@ class FileTransferTest {
         private final int port;
         private final char[] password;
 
-        AtomicBoolean running = new AtomicBoolean(false);
+        final AtomicBoolean running = new AtomicBoolean(false);
 
         StartServerThread(JpaNetworkServer networkServer, String serverFile, int port, char[] password) {
             this.networkServer = networkServer;

@@ -53,7 +53,7 @@ public class NetWorthReportController implements ReportController {
 
     private static final String MONTHS = "months";
 
-    private NetWorthReport report = new NetWorthReport();
+    private final NetWorthReport report = new NetWorthReport();
 
     private Runnable refreshRunnable = null;
 
