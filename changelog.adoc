@@ -35,6 +35,7 @@
 * Enhance tabular reports to allow period selection.
 
 == Release 3.0.0-b2
+* 03/12/2019 Updated to JavaFX 12 (Java 11 Compatible).
 * 03/10/2019 Made the Options dialog accessible without a file loaded.
 * 03/10/2019 Number formats can now be chosen using the Options dialog and are more consistent.  This allows full
              control of the display of register values and provides a work around for a known JDK 11 bug.
