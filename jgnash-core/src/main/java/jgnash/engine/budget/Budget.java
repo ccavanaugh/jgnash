@@ -17,7 +17,6 @@
  */
 package jgnash.engine.budget;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -80,11 +79,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     private boolean expenseAccountsIncluded = true;
 
     private boolean liabilityAccountsIncluded = false;
-
-    /**
-     * Transient property for the working budget year.
-     */
-    private transient int workingYear = LocalDate.now().getYear();
 
     public String getName() {
         return name;
@@ -218,26 +212,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     }
 
     /**
-     * Returns the working year for the budget.
-     *
-     * @return the activeYear
-     */
-    public int getWorkingYear() {
-        return workingYear;
-    }
-
-    /**
-     * Sets the working year for the budget.
-     * <p>
-     * This is a transient property primarily used to help UI component communicate the working year.
-     *
-     * @param workingYear the working year to set
-     */
-    public void setWorkingYear(int workingYear) {
-        this.workingYear = workingYear;
-    }
-
-    /**
      * Returns true if asset accounts are included in the budget.
      *
      * @return the assetAccountsIncluded
@@ -331,8 +305,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
 
     @PostLoad
     protected void postLoad() {
-        workingYear = LocalDate.now().getYear();
-
 
         // TODO: The conversion below is to be removed for jGnash 3.x
         // fix-up and old Account UUID's that may have been converted
