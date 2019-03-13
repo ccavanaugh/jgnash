@@ -23,17 +23,16 @@
 * Disable the portfolio report if there are no investment accounts.
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
+* Spreadsheet export for all tabular reports
+* Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Known JDK Related Bugs
 * Java 11 formatting of accounting values is not consistent with older versions and wrong in some cases
 ** https://bugs.openjdk.java.net/browse/JDK-8218770
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
-== TODO
-* Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
-* Enhance tabular reports to allow period selection.
-
 == Release 3.0.0-b2
+* 03/13/2019 Control of report resolution was added to the Balance Sheet and Net Worth reports.
 * 03/12/2019 Corrected localization issues with the Default Currency and Locale selection dialogs.
 * 03/12/2019 Updated to JavaFX 12 (Java 11 Compatible).
 * 03/10/2019 Made the Options dialog accessible without a file loaded.

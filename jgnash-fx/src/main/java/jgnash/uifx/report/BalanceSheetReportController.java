@@ -21,6 +21,7 @@ import jgnash.report.pdf.Report;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.time.DateUtils;
+import jgnash.time.Period;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.pdf.ReportController;
 import jgnash.uifx.util.JavaFXUtils;
@@ -32,13 +33,17 @@ import java.util.prefs.Preferences;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 
 /**
- * Net Worth Report Controller
+ * Balance Sheet Report Controller
  *
  * @author Craig Cavanaugh
  */
 public class BalanceSheetReportController implements ReportController {
+
+    @FXML
+    private ComboBox<Period> resolutionComboBox;
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -50,6 +55,8 @@ public class BalanceSheetReportController implements ReportController {
     private CheckBox hideZeroBalanceAccounts;
 
     private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
+
+    private static final String PERIOD = "period";
 
     private static final String MONTHS = "months";
 
@@ -66,14 +73,15 @@ public class BalanceSheetReportController implements ReportController {
         final Preferences preferences = getPreferences();
 
         hideZeroBalanceAccounts.setSelected(preferences.getBoolean(HIDE_ZERO_BALANCE, true));
-
         startDatePicker.setValue(LocalDate.now().minusMonths(preferences.getInt(MONTHS, 4) - 1));
 
+        resolutionComboBox.getItems().setAll(Period.MONTHLY, Period.QUARTERLY, Period.YEARLY);
+        resolutionComboBox.setValue(Period.values()[preferences.getInt(PERIOD, Period.MONTHLY.ordinal())]);
+
         startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
-
         endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
-
         hideZeroBalanceAccounts.onActionProperty().setValue(event -> handleReportRefresh());
+        resolutionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
 
         // boot the report generation
         JavaFXUtils.runLater(this::refreshReport);
@@ -101,6 +109,7 @@ public class BalanceSheetReportController implements ReportController {
         preferences.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
         preferences.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDatePicker.getValue(),
                 endDatePicker.getValue()).size());
+        preferences.putInt(PERIOD, resolutionComboBox.getValue().ordinal());
 
         addTable();
 
@@ -124,6 +133,8 @@ public class BalanceSheetReportController implements ReportController {
     }
 
     private AbstractReportTableModel createReportModel() {
+        report.setReportPeriod(resolutionComboBox.getValue());
+
         return report.createReportModel(startDatePicker.getValue(), endDatePicker.getValue(),
                 hideZeroBalanceAccounts.isSelected());
     }
