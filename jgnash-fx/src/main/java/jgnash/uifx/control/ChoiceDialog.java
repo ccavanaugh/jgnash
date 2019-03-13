@@ -30,7 +30,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -127,14 +126,6 @@ public class ChoiceDialog<T> {
      */
     private T getSelectedItem() {
         return comboBox.getSelectionModel().getSelectedItem();
-    }
-
-    /**
-     * Returns the property representing the currently selected item in the dialog.
-     * @return the currently selected item property
-     */
-    public final ReadOnlyObjectProperty<T> selectedItemProperty() {
-        return comboBox.getSelectionModel().selectedItemProperty();
     }
 
     /**
