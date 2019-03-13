@@ -62,10 +62,6 @@ public class DetailedDecimalTextField extends GridPane {
         return editable;
     }
 
-    public final boolean isEditable() {
-        return editableProperty().get();
-    }
-
     private final BooleanProperty editable = new SimpleBooleanProperty(this, "editable", true) {
         @Override
         protected void invalidated() {
