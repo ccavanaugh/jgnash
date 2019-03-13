@@ -84,6 +84,8 @@ public abstract class AbstractSumByTypeReport extends Report {
 
     private SortOrder sortOrder = SortOrder.BY_NAME;
 
+    private Period reportPeriod = Period.MONTHLY;
+
     /**
      * Returns a list of AccountGroup that will be reported on
      *
@@ -97,8 +99,12 @@ public abstract class AbstractSumByTypeReport extends Report {
      *
      * @return returns a Monthly period unless overridden
      */
-    Period getReportPeriod() {
-        return Period.MONTHLY;
+    private Period getReportPeriod() {
+        return reportPeriod;
+    }
+
+    void setReportPeriod(final Period reportPeriod) {
+        this.reportPeriod = reportPeriod;
     }
 
     void setSortOrder(@NotNull final SortOrder sortOrder) {
