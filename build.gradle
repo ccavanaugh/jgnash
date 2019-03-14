@@ -27,7 +27,7 @@ allprojects {
         commonsTextVersion = "1.6"
         commonsLangVersion = "3.8.1"
 
-        h2Version = "1.4.198"
+        h2Version = "1.4.199"
         hsqldbVersion = "2.4.1"
 
         xstreamVersion = "1.4.11.1"
@@ -37,7 +37,7 @@ allprojects {
         
         pdfBoxVersion = "2.0.14"
 
-        nettyVersion = "4.1.33.Final"
+        nettyVersion = "4.1.34.Final"
 
         slf4jVersion = "1.8.0-beta4"
     }

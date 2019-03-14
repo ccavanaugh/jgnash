@@ -32,6 +32,7 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
 == Release 3.0.0
+* 03/14/2019 Updated to the latest H2 and Netty dependencies.
 * 03/13/2019 Control of report resolution was added to the Balance Sheet and Net Worth reports.
 * 03/12/2019 Corrected localization issues with the Default Currency and Locale selection dialogs.
 * 03/12/2019 Updated to JavaFX 12 (Java 11 Compatible).
