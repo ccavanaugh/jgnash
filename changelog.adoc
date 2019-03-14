@@ -48,7 +48,7 @@
 == Release 3.0.0-b1
 * 02/27/2019 jGnash is designed to operate with Java 11 and newer.
 * 02/27/2019 Removed support for old Swing UI.
-* 02/27/2019 Jasper is not longer used for report generation.  jGnash now uses it's own internal reporting API.
+* 02/27/2019 Jasper is no longer used for report generation.  jGnash now uses it's own internal reporting API.
 
 == Release 2.36.2
 * 02/17/2019 Fixed an issue preventing the old Swing UI from running with Java 11 (Swing).
