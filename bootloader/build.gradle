@@ -1,5 +1,5 @@
 plugins {
-    id "edu.sc.seis.launch4j" version "2.4.4"
+    id "edu.sc.seis.launch4j" version "2.4.5"
     id "org.openjfx.javafxplugin" version "0.0.7"
 }
 
@@ -23,6 +23,8 @@ launch4j {
     outfile = "jGnash.exe"
     dontWrapJar = true
     icon = "../../../jgnash-fx/gnome-money.ico"
+    downloadUrl = "https://www.azul.com/downloads/zulu/"
+    jreMinVersion = "12"
 }
 
 task createStartScripts(type: CreateStartScripts) {

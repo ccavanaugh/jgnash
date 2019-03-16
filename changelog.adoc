@@ -31,6 +31,9 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8218770
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
+== Release 3.0.1
+* 03/16/2019 Changed the download link in the Windows launcher to use a correct JDK.
+
 == Release 3.0.0
 * 03/14/2019 Updated to the latest H2 and Netty dependencies.
 * 03/13/2019 Control of report resolution was added to the Balance Sheet and Net Worth reports.
