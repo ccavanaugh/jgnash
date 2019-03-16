@@ -24,7 +24,7 @@ launch4j {
     dontWrapJar = true
     icon = "../../../jgnash-fx/gnome-money.ico"
     downloadUrl = "https://www.azul.com/downloads/zulu/"
-    jreMinVersion = "12"
+    jreMinVersion = "11"
 }
 
 task createStartScripts(type: CreateStartScripts) {
