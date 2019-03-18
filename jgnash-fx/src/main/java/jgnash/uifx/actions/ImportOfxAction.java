@@ -18,6 +18,7 @@
 package jgnash.uifx.actions;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -73,7 +74,11 @@ public class ImportOfxAction {
         final Preferences pref = Preferences.userNodeForPackage(ImportOfxAction.class);
         final FileChooser fileChooser = new FileChooser();
 
-        fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
+        final File lastDirectory = new File(pref.get(LAST_DIR, System.getProperty("user.home")));
+
+        if (lastDirectory.isDirectory()) {
+            fileChooser.setInitialDirectory(lastDirectory);
+        }
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("OFX Files (*.ofx,*.qfx)", "*.ofx", "*.qfx", "*.OFX", "*.QFX"),
