@@ -61,9 +61,6 @@
         </MenuItem>
         <SeparatorMenuItem/>
         <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">
-            <accelerator>
-                <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
-            </accelerator>
             <graphic>
                 <FontAwesomeLabel glyphName="CLOSE"/>
             </graphic>
