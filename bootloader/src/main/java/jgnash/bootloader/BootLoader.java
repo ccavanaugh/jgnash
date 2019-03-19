@@ -19,6 +19,7 @@ package jgnash.bootloader;
 
 import jgnash.util.NotNull;
 
+import javax.swing.JOptionPane;
 import javax.xml.bind.DatatypeConverter;
 
 import java.io.BufferedInputStream;
@@ -36,8 +37,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
@@ -139,11 +140,17 @@ public class BootLoader {
 
                 if (!Files.exists(path)) {
                     fileNameConsumer.accept(url.toExternalForm());
-                    boolean downloadResult = downloadFile(url, path, countConsumer);
 
-                    if (!downloadResult) {
-                        result = false;
-                        break;
+                    try {
+                        boolean downloadResult = downloadFile(url, path, countConsumer);
+
+                        if (!downloadResult) {
+                            result = false;
+                            break;
+                        }
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                        showException(e);
                     }
                 }
             }
@@ -183,6 +190,13 @@ public class BootLoader {
         return length;
     }
 
+    private static void showException(final Exception exception) {
+        final String message = exception.getMessage() + "\nStackTrace: " + Arrays.toString(exception.getStackTrace());
+        final String title = exception.getClass().getName();
+
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+
     private static boolean downloadFile(final URL source, final Path dest, final LongConsumer countConsumer) throws IOException {
         final Logger logger = Logger.getLogger(BootLoader.class.getName());
         boolean result = true;
@@ -193,7 +207,7 @@ public class BootLoader {
 
         HttpURLConnection httpConnection = (HttpURLConnection) (source.openConnection());
 
-        try (BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
+        try (final BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
              final BufferedOutputStream bout = new BufferedOutputStream(new CountingFileOutputStream(dest.toString(),
                      countConsumer), BUFFER_SIZE)) {
 
@@ -210,8 +224,9 @@ public class BootLoader {
             md.update(Files.readAllBytes(dest));
 
             md5 = DatatypeConverter.printHexBinary(md.digest()).toLowerCase();
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (final Exception e) {
             e.printStackTrace();
+            showException(e);
             result = false;
         }
 
@@ -221,6 +236,9 @@ public class BootLoader {
         try (final ReadableByteChannel readableByteChannel = Channels.newChannel(md5Source.openStream());
              final FileOutputStream fileOutputStream = new FileOutputStream(md5Dest.toString())) {
             fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            showException(e);
         }
 
         try (final BufferedReader reader = Files.newBufferedReader(md5Dest)) {
@@ -233,6 +251,9 @@ public class BootLoader {
             }
 
             Files.delete(md5Dest);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            showException(e);
         }
 
         return result;
