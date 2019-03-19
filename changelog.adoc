@@ -28,7 +28,6 @@
 
 == TODO
 * Column sizing
-* Capturing network errors in the bootloader.
 * Save As behavior
 
 == Known JDK Related Bugs
