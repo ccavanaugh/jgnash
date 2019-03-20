@@ -159,7 +159,12 @@ public class RegisterActions {
         final Preferences pref = Preferences.userNodeForPackage(RegisterActions.class);
         final FileChooser fileChooser = new FileChooser();
 
-        fileChooser.setInitialDirectory(new File(pref.get(EXPORT_DIR, System.getProperty("user.home"))));
+        final File initialDirectory = new File(pref.get(EXPORT_DIR, System.getProperty("user.home")));
+
+        // Protect against an IllegalArgumentException
+        if (initialDirectory.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(resources.getString("Label.CsvFiles") + " (*.csv)", "*.csv"),

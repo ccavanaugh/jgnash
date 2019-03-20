@@ -75,7 +75,12 @@ public class ExecuteJavaScriptAction {
         final Preferences pref = Preferences.userNodeForPackage(ExecuteJavaScriptAction.class);
         final FileChooser fileChooser = new FileChooser();
 
-        fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
+        final File initialDirectory = new File(pref.get(LAST_DIR, System.getProperty("user.home")));
+
+        // Protect against an IllegalArgumentException
+        if (initialDirectory.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JavaScript Files", "*.js")

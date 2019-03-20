@@ -459,15 +459,16 @@ public class ReportViewerDialogController {
 
     @FXML
     private void handleSaveAction() {
-        Preferences preferences = Preferences.userNodeForPackage(ReportViewerDialogController.class);
-
-        final String lastDir = preferences.get(LAST_DIR, null);
+        final Preferences pref = Preferences.userNodeForPackage(ReportViewerDialogController.class);
 
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(ResourceUtils.getString("Title.SaveFile"));
 
-        if (lastDir != null) {
-            fileChooser.setInitialDirectory(new File(lastDir));
+        final File initialDirectory = new File(pref.get(LAST_DIR, System.getProperty("user.home")));
+
+        // Protect against an IllegalArgumentException
+        if (initialDirectory.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDirectory);
         }
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Document", "*.pdf", "*.PDF"));
@@ -475,7 +476,7 @@ public class ReportViewerDialogController {
         final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
-            preferences.put(LAST_DIR, file.getParent());
+            pref.put(LAST_DIR, file.getParent());
 
             if ("pdf".equals(FileUtils.getFileExtension(file.getAbsolutePath()).toLowerCase(Locale.ROOT))) {
                 try {

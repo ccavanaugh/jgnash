@@ -83,7 +83,12 @@ class ImportMt940FxAction {
         final Preferences pref = Preferences.userNodeForPackage(ImportMt940FxAction.class);
         final FileChooser fileChooser = new FileChooser();
 
-        fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
+        final File initialDirectory = new File(pref.get(LAST_DIR, System.getProperty("user.home")));
+
+        // Protect against an IllegalArgumentException
+        if (initialDirectory.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files (*.*)", "*.*")

@@ -26,12 +26,19 @@
 * Spreadsheet export for all tabular reports
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
+== TODO
+* Column sizing
+* Save As behavior
+
 == Known JDK Related Bugs
 * Java 11 formatting of accounting values is not consistent with older versions and wrong in some cases
 ** https://bugs.openjdk.java.net/browse/JDK-8218770
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
 == Release 3.0.1
+* 03/19/2019 Do a better job of reporting bootloader network errors.
+* 03/19/2019 Disabled Ctl-C shortcut for closing a file.
+* 03/18/2019 Prevent an exception from occurring if a default directory does not exist.
 * 03/16/2019 Changed the download link in the Windows launcher to use a correct JDK.
 
 == Release 3.0.0
