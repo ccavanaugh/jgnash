@@ -17,6 +17,13 @@
  */
 package jgnash.text;
 
+import jgnash.engine.CommodityNode;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.util.NotNull;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -27,13 +34,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
-
-import jgnash.engine.CommodityNode;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageListener;
-import jgnash.util.NotNull;
 
 /**
  * Utility class to provide Numeric formats
@@ -50,7 +50,7 @@ public final class NumericFormats {
 
     private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> fullInstanceMap = new HashMap<>();
 
-    private static final Map<Byte, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
+    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
 
     private static final String CURRENCY_SYMBOL = "¤";
 
@@ -97,7 +97,6 @@ public final class NumericFormats {
             patternSet.add(pattern.replaceAll(CURRENCY_SYMBOL, "").stripLeading());
         }
 
-        // TODO: add missing US locale format, JDK 11 Bug
         patternSet.add("#,##0.00;(#,##0.00)");
 
         patternSet.add(getShortFormatPattern()); // add the users own format
@@ -161,13 +160,21 @@ public final class NumericFormats {
      * @return thread safe {@code NumberFormat}
      */
     public static NumberFormat getShortCommodityFormat(@NotNull final CommodityNode node) {
-        final ThreadLocal<DecimalFormat> o = simpleInstanceMap.get(node.getScale());
+        final ThreadLocal<DecimalFormat> o = simpleInstanceMap.get(node);
 
         if (o != null) {
             return o.get();
         }
 
         final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> {
+
+            final String pattern = getShortFormatPattern();
+
+            // generate a full currency format
+            if (pattern.contains(CURRENCY_SYMBOL)) {
+                return generateFullFormat(node);
+            }
+
             final DecimalFormat df = new DecimalFormat(getShortFormatPattern());
 
             // required for some locales
@@ -187,7 +194,7 @@ public final class NumericFormats {
             return df;
         });
 
-        simpleInstanceMap.put(node.getScale(), threadLocal);
+        simpleInstanceMap.put(node, threadLocal);
 
         return threadLocal.get();
     }
@@ -205,41 +212,43 @@ public final class NumericFormats {
             return o.get();
         }
 
-        final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> {
-            final DecimalFormat df = new DecimalFormat(getFullFormatPattern());
-
-            final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-            dfs.setCurrencySymbol(node.getPrefix());
-            df.setDecimalFormatSymbols(dfs);
-            df.setMaximumFractionDigits(node.getScale());
-
-            // required for some locale
-            df.setMinimumFractionDigits(df.getMaximumFractionDigits());
-
-            if (node.getSuffix() != null && !node.getSuffix().isEmpty()) {
-                df.setPositiveSuffix(node.getSuffix() + df.getPositiveSuffix());
-                df.setNegativeSuffix(node.getSuffix() + df.getNegativeSuffix());
-            }
-
-            // for positive suffix padding for fraction alignment
-            final int negSufLen = df.getNegativeSuffix().length();
-            final int posSufLen = df.getPositiveSuffix().length();
-
-            // pad the prefix and suffix as necessary so that they are the same length
-            if (negSufLen > posSufLen) {
-                df.setPositiveSuffix(df.getPositiveSuffix()
-                        + " ".repeat(Math.max(0, negSufLen - (negSufLen - posSufLen) + 1)));
-            } else if (posSufLen > negSufLen) {
-                df.setNegativeSuffix(df.getNegativeSuffix()
-                        + " ".repeat(Math.max(0, posSufLen - (posSufLen - negSufLen) + 1)));
-            }
-
-            return df;
-        });
+        final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> generateFullFormat(node));
 
         fullInstanceMap.put(node, threadLocal);
 
         return threadLocal.get();
+    }
+
+    private static DecimalFormat generateFullFormat(final CommodityNode node) {
+        final DecimalFormat df = new DecimalFormat(getFullFormatPattern());
+
+        final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+        dfs.setCurrencySymbol(node.getPrefix());
+        df.setDecimalFormatSymbols(dfs);
+        df.setMaximumFractionDigits(node.getScale());
+
+        // required for some locale
+        df.setMinimumFractionDigits(df.getMaximumFractionDigits());
+
+        if (node.getSuffix() != null && !node.getSuffix().isEmpty()) {
+            df.setPositiveSuffix(node.getSuffix() + df.getPositiveSuffix());
+            df.setNegativeSuffix(node.getSuffix() + df.getNegativeSuffix());
+        }
+
+        // for positive suffix padding for fraction alignment
+        final int negSufLen = df.getNegativeSuffix().length();
+        final int posSufLen = df.getPositiveSuffix().length();
+
+        // pad the prefix and suffix as necessary so that they are the same length
+        if (negSufLen > posSufLen) {
+            df.setPositiveSuffix(df.getPositiveSuffix()
+                    + " ".repeat(Math.max(0, negSufLen - (negSufLen - posSufLen) + 1)));
+        } else if (posSufLen > negSufLen) {
+            df.setNegativeSuffix(df.getNegativeSuffix()
+                    + " ".repeat(Math.max(0, posSufLen - (posSufLen - negSufLen) + 1)));
+        }
+
+        return df;
     }
 
 
