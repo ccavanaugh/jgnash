@@ -36,8 +36,9 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
 == Release 3.0.1
+* 03/21/2019 Fixed wrong currency symbol in Debit/Credit Columns if using a full format. (GitHub Issue #75)
 * 03/19/2019 Do a better job of reporting bootloader network errors.
-* 03/19/2019 Disabled Ctl-C shortcut for closing a file.
+* 03/19/2019 Disabled Ctl-C shortcut for closing a file (Conflicts with a paste command).
 * 03/18/2019 Prevent an exception from occurring if a default directory does not exist.
 * 03/16/2019 Changed the download link in the Windows launcher to use a correct JDK.
 
