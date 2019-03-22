@@ -27,12 +27,12 @@ import jgnash.util.NotNull;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.WeakHashMap;
 import java.util.prefs.Preferences;
 
 /**
@@ -48,9 +48,9 @@ public final class NumericFormats {
 
     private static final CommodityListener listener;
 
-    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> fullInstanceMap = new HashMap<>();
+    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> fullInstanceMap = new WeakHashMap<>();
 
-    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
+    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> simpleInstanceMap = new WeakHashMap<>();
 
     private static final String CURRENCY_SYMBOL = "¤";
 
