@@ -17,12 +17,15 @@
  */
 package jgnash.report.pdf;
 
+import jgnash.util.LogUtil;
 import org.apache.fontbox.util.autodetect.FontFileFinder;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -85,7 +87,7 @@ public class FontRegistry {
                     isComplete.await();
                 }
             } catch (final InterruptedException ex) {
-                Logger.getLogger(FontRegistry.class.getName()).log(Level.SEVERE, null, ex);
+                LogUtil.logSevere(FontRegistry.class, ex);
             } finally {
                 lock.unlock();
             }
@@ -139,8 +141,11 @@ public class FontRegistry {
                     registeredFontMap.put(font.getName(), path);
                 }
             }
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
+        } catch (final IOException e) {
+            LogUtil.logSevere(FontRegistry.class, e);
+        } catch (final FontFormatException ffe) {
+            Logger.getLogger(FontRegistry.class.getName()).info("Could not register font: " + path);
+            LogUtil.logSevere(FontRegistry.class, ffe);
         }
     }
 
