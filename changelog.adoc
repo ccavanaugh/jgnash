@@ -36,6 +36,7 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
 == Release 3.0.1
+* 03/22/2019 Updated Russian translation. _[pchurzin]_
 * 03/22/2019 Reporting would fail if Java encountered a font file it did not like.
 * 03/21/2019 Fixed wrong currency symbol in Debit/Credit Columns if using a full format. (GitHub Issue #75)
 * 03/19/2019 Do a better job of reporting bootloader network errors.
