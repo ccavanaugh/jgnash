@@ -101,7 +101,6 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      * @see jgnash.engine.CommodityDAOInterface#getCurrencies()
      */
     @Override
-    @SuppressWarnings("unchecked")
     public List<CurrencyNode> getCurrencies() {
         List<CurrencyNode> currencyNodeList = Collections.emptyList();
 
