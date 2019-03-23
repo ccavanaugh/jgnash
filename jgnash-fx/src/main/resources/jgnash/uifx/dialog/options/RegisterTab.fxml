@@ -8,8 +8,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Tooltip?>
 <VBox fx:controller="jgnash.uifx.dialog.options.RegisterTabController" minHeight="-Infinity"
-      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="dialog, form">
 
     <fx:define>
         <ToggleGroup fx:id="toggleGroup"/>
@@ -48,7 +50,11 @@
             <CheckBox text="%Button.MatchCaseSensitive" fx:id="caseSensitiveCheckBox" GridPane.rowIndex="1"
                       GridPane.columnIndex="1"/>
             <CheckBox text="%Button.UseFuzzyMatch" fx:id="fuzzyMatchCheckBox" GridPane.rowIndex="2"
-                      GridPane.columnIndex="1"/>
+                      GridPane.columnIndex="1">
+                <tooltip>
+                    <Tooltip text="%ToolTip.FuzzyMatch"/>
+                </tooltip>
+            </CheckBox>
         </GridPane>
     </TitledPane>
 
