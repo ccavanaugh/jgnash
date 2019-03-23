@@ -18,8 +18,11 @@
 package jgnash.text;
 
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -58,5 +61,41 @@ class NumericFormatsTests {
         for (String pattern: NumericFormats.getKnownShortPatterns()) {
             System.out.println(pattern);
         }
+    }
+
+    @Test
+    void testFormats() {
+        Locale.setDefault(Locale.US);
+
+        final CurrencyNode node = new CurrencyNode();
+        node.setSymbol("USD");
+        node.setScale((byte) 2);
+        node.setPrefix("$");
+
+        // preserve the configured format
+        final String oldShortPattern = NumericFormats.getShortFormatPattern();
+        final String oldFullPattern = NumericFormats.getFullFormatPattern();
+
+        NumericFormats.setFullFormatPattern("¤#,##0.00;(¤#,##0.00)");
+        NumericFormats.setShortFormatPattern("¤#,##0.00;-¤#,##0.00");
+
+        NumberFormat shortFormat = NumericFormats.getShortCommodityFormat(node);
+        NumberFormat fullFormat = NumericFormats.getFullCommodityFormat(node);
+
+        assertEquals("$10.00", shortFormat.format(BigDecimal.TEN));
+        assertEquals("$10.00 ", fullFormat.format(BigDecimal.TEN));
+
+        assertEquals("-$10.00", shortFormat.format(BigDecimal.TEN.negate()));
+        assertEquals("($10.00)", fullFormat.format(BigDecimal.TEN.negate()));
+
+        NumericFormats.setShortFormatPattern("#,##0.00;-#,##0.00");
+        shortFormat = NumericFormats.getShortCommodityFormat(node);
+
+        assertEquals("10.00", shortFormat.format(BigDecimal.TEN));
+        assertEquals("-10.00", shortFormat.format(BigDecimal.TEN.negate()));
+
+        // restore the old patterns
+        NumericFormats.setShortFormatPattern(oldShortPattern);
+        NumericFormats.setFullFormatPattern(oldFullPattern);
     }
 }

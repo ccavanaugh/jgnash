@@ -172,7 +172,7 @@ public final class NumericFormats {
 
             // generate a full currency format
             if (pattern.contains(CURRENCY_SYMBOL)) {
-                return generateFullFormat(node);
+                return generateFullFormat(node, pattern);
             }
 
             final DecimalFormat df = new DecimalFormat(getShortFormatPattern());
@@ -212,15 +212,16 @@ public final class NumericFormats {
             return o.get();
         }
 
-        final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(() -> generateFullFormat(node));
+        final ThreadLocal<DecimalFormat> threadLocal = ThreadLocal.withInitial(()
+                -> generateFullFormat(node, getFullFormatPattern()));
 
         fullInstanceMap.put(node, threadLocal);
 
         return threadLocal.get();
     }
 
-    private static DecimalFormat generateFullFormat(final CommodityNode node) {
-        final DecimalFormat df = new DecimalFormat(getFullFormatPattern());
+    private static DecimalFormat generateFullFormat(final CommodityNode node, final String pattern) {
+        final DecimalFormat df = new DecimalFormat(pattern);
 
         final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
         dfs.setCurrencySymbol(node.getPrefix());
