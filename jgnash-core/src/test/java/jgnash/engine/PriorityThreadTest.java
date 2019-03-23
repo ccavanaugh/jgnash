@@ -40,10 +40,10 @@ class PriorityThreadTest {
 
         final PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor();
 
-        final List<Future> futures = new ArrayList<>();
+        final List<Future<Void>> futures = new ArrayList<>();
 
         for (int i = 0; i < 25; i++) {
-            Future future = executorService.submit(() -> {
+            Future<Void> future = executorService.submit(() -> {
                 final long value = atomicLongSequence.incrementAndGet();
 
                 Thread.sleep(500);
@@ -56,7 +56,7 @@ class PriorityThreadTest {
 
         Thread.sleep(1999);
 
-        final Future priorityFuture = executorService.submit(() -> {
+        final Future<Void> priorityFuture = executorService.submit(() -> {
             final long value = atomicLongSequence.incrementAndGet();
 
             Thread.sleep(500);
@@ -69,7 +69,7 @@ class PriorityThreadTest {
         futures.add(priorityFuture);
 
         // wait for futures to complete
-        for (Future future : futures) {
+        for (Future<Void> future : futures) {
             future.get();
         }
 
