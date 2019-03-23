@@ -18,7 +18,6 @@
 package jgnash.uifx.actions;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;

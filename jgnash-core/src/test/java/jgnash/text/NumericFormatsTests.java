@@ -18,8 +18,6 @@
 package jgnash.text;
 
 import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
