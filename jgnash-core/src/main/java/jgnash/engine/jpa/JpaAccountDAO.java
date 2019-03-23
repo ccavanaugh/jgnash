@@ -226,7 +226,8 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
                     Account.class);
 
-            return q.getResultList().parallelStream().filter(a -> a.memberOf(AccountGroup.INVEST))
+            // do not use a parallel stream, result list is not thread safe
+            return q.getResultList().stream().filter(a -> a.memberOf(AccountGroup.INVEST))
                     .collect(Collectors.toList());
         } finally {
             emLock.unlock();
