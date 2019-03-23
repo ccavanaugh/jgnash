@@ -71,8 +71,7 @@ public class AddRemoveCurrencyController {
 
     private final BooleanProperty validProperty = new SimpleBooleanProperty(true);
 
-    @FXML
-    @SuppressWarnings("unchecked")
+    @FXML   
     void initialize() {
         availableList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

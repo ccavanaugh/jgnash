@@ -24,10 +24,13 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 /**
  * Expanded UUID converter for old file formats
+ * 
+ * TODO: Remove after release 3.1
  */
 public class UUIDConverter extends AbstractSingleValueConverter {
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public boolean canConvert(final Class type) {
         return type == UUID.class;
     }

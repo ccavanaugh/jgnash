@@ -64,8 +64,7 @@ public class NewFileThreeController extends AbstractWizardPaneController<NewFile
         updateDescriptor();
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
+    @Override   
     public void putSettings(final Map<NewFileWizard.Settings, Object> map) {
         map.put(NewFileWizard.Settings.CURRENCIES, new TreeSet<>(selectedList.getItems()));
     }

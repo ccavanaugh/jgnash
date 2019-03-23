@@ -39,7 +39,6 @@ public class Mt940Exporter {
     private Mt940Exporter() {
     }
 
-    @SuppressWarnings("unchecked")
     public static ImportBank<ImportTransaction> convert(Mt940File file) {
         final ImportBank<ImportTransaction> importBank = new ImportBank<>();
 

@@ -65,7 +65,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings({"restriction", "WeakerAccess"})
+@SuppressWarnings({"WeakerAccess"})
 public class ControlsTest extends Application {
 
     private String testFile;
