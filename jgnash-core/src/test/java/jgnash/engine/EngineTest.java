@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -417,10 +418,66 @@ public abstract class EngineTest {
         assertTrue(nodes.size() > 1);
     }
 
-    @Disabled
+
     @Test
-    void testGetSecurityHistory() {
-        fail("Not yet implemented");
+    void testSecurityHistory() {
+        BigDecimal securityPrice1 = new BigDecimal("2.00");
+
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
+
+        SecurityNode securityNode1 = new SecurityNode(e.getDefaultCurrency());
+        securityNode1.setSymbol("GOOGLE");
+        assertTrue(e.addSecurity(securityNode1));
+
+        SecurityHistoryNode history = new SecurityHistoryNode();
+        history.setDate(transactionDate1);
+        history.setPrice(securityPrice1);
+
+        assertTrue(e.addSecurityHistory(securityNode1, history));
+
+        assertEquals(1, securityNode1.getHistoryNodes().size());
+
+        // Same date and price, new instance
+        history = new SecurityHistoryNode();
+        history.setDate(transactionDate1);
+        history.setPrice(securityPrice1);
+
+        assertTrue(e.addSecurityHistory(securityNode1, history));   // should replace
+        assertEquals(1, securityNode1.getHistoryNodes().size());
+
+        // Same date, new instance and updated price
+        history = new SecurityHistoryNode();
+        history.setDate(transactionDate1);
+        history.setPrice(new BigDecimal("2.01"));
+
+        assertTrue(e.addSecurityHistory(securityNode1, history));  // should replace
+        assertEquals(1, securityNode1.getHistoryNodes().size());
+
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
+
+        history = new SecurityHistoryNode();
+        history.setDate(transactionDate2);
+        history.setPrice(new BigDecimal("2.02"));
+        assertTrue(e.addSecurityHistory(securityNode1, history));  // should be okay
+        assertEquals(2, securityNode1.getHistoryNodes().size());
+
+        final SecurityHistoryEvent dividendEvent = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, LocalDate.now(), BigDecimal.ONE);
+        securityNode1.addSecurityHistoryEvent(dividendEvent);
+
+
+        final SecurityHistoryEvent splitEvent = new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, LocalDate.now(), BigDecimal.TEN);
+        securityNode1.addSecurityHistoryEvent(splitEvent);
+
+        assertTrue(securityNode1.getHistoryEvents().contains(dividendEvent));
+        assertTrue(securityNode1.getHistoryEvents().contains(splitEvent));
+
+        assertEquals(2, securityNode1.getHistoryEvents().size());
+
+        securityNode1.removeSecurityHistoryEvent(dividendEvent);
+        assertEquals(1, securityNode1.getHistoryEvents().size());
+
+        securityNode1.removeSecurityHistoryEvent(splitEvent);
+        assertEquals(0, securityNode1.getHistoryEvents().size());
     }
 
     @Test
@@ -446,12 +503,6 @@ public abstract class EngineTest {
         assertEquals(0, new BigDecimal("1.01").compareTo(rate.getRate(yesterday)));
     }
 
-
-    @Disabled
-    @Test
-    void testSetDefaultCurrency() {
-        fail("Not yet implemented");
-    }
 
     @Test
     void testGetDefaultCurrency() {
