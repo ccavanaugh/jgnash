@@ -36,6 +36,7 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
 == Release 3.0.1
+* 03/22/2019 Corrected a very rare concurrency exception when retrieving investment accounts using a relational database.
 * 03/23/2019 Updated to the latest Hibernate dependency.
 * 03/22/2019 Updated Russian translation. _[pchurzin]_
 * 03/22/2019 Reporting would fail if Java encountered a font file it did not like.
