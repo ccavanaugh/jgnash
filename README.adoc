@@ -89,6 +89,11 @@ Use of a prebuilt installer is recommended.
 When performing a manual installation of Java, The *JAVA_HOME* Environment
 Variable must be set and the Java bin directory must be in the execution path.
 
+[NOTE]
+If you have multiple versions of Java installed on your system, The *JAVA_HOME* Environment
+Variable must be set to Java 11 or newer and the related Java bin directory must be the only version
+in the execution path. Mixing JVM and JDK versions will confuse the bootloader.
+
 *_Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements_*
 
 === 2. OpenJFX

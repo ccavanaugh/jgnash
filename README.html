@@ -631,6 +631,20 @@ Variable must be set and the Java bin directory must be in the execution path.
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+If you have multiple versions of Java installed on your system, The <strong>JAVA_HOME</strong> Environment
+Variable must be set to Java 11 or newer and the related Java bin directory must be the only version
+in the execution path. Mixing JVM and JDK versions will confuse the bootloader.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p><strong><em>Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements</em></strong></p>
 </div>
@@ -888,7 +902,7 @@ Otherwise, the Gradle build may fail when building the windows executables.</em>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-05 05:05:33 -0500
+Last updated 2019-03-23 05:47:09 -0400
 </div>
 </div>
 </body>
