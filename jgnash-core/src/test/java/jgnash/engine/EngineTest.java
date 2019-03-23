@@ -17,8 +17,20 @@
  */
 package jgnash.engine;
 
+import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetGoal;
+import jgnash.engine.recurring.DailyReminder;
+import jgnash.engine.recurring.Reminder;
+import jgnash.time.Period;
+import jgnash.util.FileUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,18 +42,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
-
-import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetGoal;
-import jgnash.time.Period;
-import jgnash.engine.recurring.DailyReminder;
-import jgnash.engine.recurring.Reminder;
-import jgnash.util.FileUtils;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -276,13 +276,6 @@ public abstract class EngineTest {
         assertEquals(0, a.getSecurities().size());
     }
 
-
-    @Disabled
-    @Test
-    void testGetInvestmentAccountListSecurityNode() {
-        fail("Not yet implemented");
-    }
-
     @Disabled
     @Test
     void testGetMarketPrice() {
@@ -291,14 +284,101 @@ public abstract class EngineTest {
 
     @Disabled
     @Test
-    void testBuildExchangeRateId() {
+    void testGetBaseCurrencies() {
         fail("Not yet implemented");
     }
 
-    @Disabled
     @Test
-    void testGetBaseCurrencies() {
-        fail("Not yet implemented");
+    void exchangeRateTest1() {
+
+        CurrencyNode usdNode = new CurrencyNode();
+        usdNode.setSymbol("USD");
+        usdNode.setPrefix("$");
+        usdNode.setDescription("US Dollar");
+        e.addCurrency(usdNode);
+
+        CurrencyNode cadNode = new CurrencyNode();
+        cadNode.setSymbol("CAD");
+        cadNode.setPrefix("$");
+        cadNode.setDescription("CAD Dollar");
+        e.addCurrency(cadNode);
+
+        assertNotNull(usdNode.getSymbol());
+        assertNotNull(cadNode.getSymbol());
+
+        e.setExchangeRate(usdNode, cadNode, new BigDecimal("1.100"));
+
+        assertEquals(new BigDecimal("1.100"), usdNode.getExchangeRate(cadNode));
+        assertEquals(new BigDecimal("0.909"), cadNode.getExchangeRate(usdNode).setScale(3, RoundingMode.DOWN));
+
+        assertEquals(BigDecimal.ONE, usdNode.getExchangeRate(usdNode));
+        assertEquals(BigDecimal.ONE, cadNode.getExchangeRate(cadNode));
+
+        assertTrue(e.removeCommodity(cadNode));
+    }
+
+    @Test
+    void exchangeRateTest2() {
+
+        CurrencyNode usdNode = new CurrencyNode();
+        usdNode.setSymbol("USD");
+        usdNode.setPrefix("$");
+        usdNode.setDescription("US Dollar");
+        e.addCurrency(usdNode);
+
+        CurrencyNode cadNode = new CurrencyNode();
+        cadNode.setSymbol("CAD");
+        cadNode.setPrefix("$");
+        cadNode.setDescription("CAD Dollar");
+        e.addCurrency(cadNode);
+
+        assertNotNull(usdNode.getSymbol());
+        assertNotNull(cadNode.getSymbol());
+
+        // rate is inverted when added
+        e.setExchangeRate(cadNode, usdNode, new BigDecimal("0.909"));
+
+        assertEquals(new BigDecimal("1.100"), usdNode.getExchangeRate(cadNode).setScale(3, RoundingMode.DOWN));
+        assertEquals(new BigDecimal("0.909"), cadNode.getExchangeRate(usdNode).setScale(3, RoundingMode.DOWN));
+
+
+        assertTrue(e.removeCommodity(cadNode));
+
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+    }
+
+    @Test
+    void commodityNodeStoreTest() {
+        CurrencyNode node = new CurrencyNode();
+
+        node.setSymbol("USD");
+        node.setPrefix("$");
+        node.setDescription("US Dollar");
+
+        e.addCurrency(node);
+
+        node = e.getCurrency("USD");
+
+        Account account = new Account(AccountType.BANK, node);
+        account.setName("Bank Account");
+
+        e.addAccount(e.getRootAccount(), account);
+
+        Object cNode = e.getCurrency("USD");
+
+        //noinspection ConstantConditions
+        assertTrue(cNode instanceof CurrencyNode, "Returned object extends CurrencyNode");
+
+        //noinspection ConstantConditions
+        assertTrue(cNode instanceof StoredObject, "Returned object extends StoredObject");
+
+        Set<CurrencyNode> nodes = DefaultCurrencies.generateCurrencies();
+
+        for (final CurrencyNode n : nodes) {
+            e.addCurrency(n);
+        }
+
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 
     @Test
@@ -837,7 +917,7 @@ public abstract class EngineTest {
         }
 
 
-        for (int i = 2; i >=0 ; i--) {
+        for (int i = 2; i >= 0; i--) {
             List<Transaction> transactions = e.getTransactions();
             assertTrue(e.removeTransaction(transactions.get(0)));
             assertEquals(i, e.getTransactions().size());
