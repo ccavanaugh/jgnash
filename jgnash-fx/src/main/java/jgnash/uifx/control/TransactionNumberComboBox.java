@@ -59,7 +59,7 @@ public class TransactionNumberComboBox extends ComboBox<String> {
         ResourceBundle rb = ResourceUtils.getBundle();
 
         nextNumberItem = rb.getString("Item.NextNum");
-        String[] defaultItems = new String[]{"", nextNumberItem, rb.getString("Item.Print")};
+        String[] defaultItems = new String[]{"", nextNumberItem};
 
         getItems().addAll(defaultItems);
 
