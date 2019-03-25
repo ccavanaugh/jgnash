@@ -35,6 +35,9 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8218770
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
+== Release 3.0.2
+* 03/24/2019 Cleanup of language files to make translation and updates easier.
+
 == Release 3.0.1
 * 03/22/2019 Corrected a very rare concurrency exception when retrieving investment accounts using a relational database.
 * 03/23/2019 Updated to the latest Hibernate dependency.
