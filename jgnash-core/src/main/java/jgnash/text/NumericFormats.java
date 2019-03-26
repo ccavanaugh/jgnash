@@ -17,13 +17,6 @@
  */
 package jgnash.text;
 
-import jgnash.engine.CommodityNode;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageListener;
-import jgnash.util.NotNull;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -34,6 +27,13 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.prefs.Preferences;
+
+import jgnash.engine.CommodityNode;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.util.NotNull;
 
 /**
  * Utility class to provide Numeric formats
