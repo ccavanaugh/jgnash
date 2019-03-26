@@ -257,23 +257,6 @@ public class MenuBarController implements MessageListener {
         AboutDialogController.showAndWait();
     }
 
-    @Override
-    public void messagePosted(final Message event) {
-        switch (event.getEvent()) {
-            case FILE_LOAD_SUCCESS:
-                JavaFXUtils.runLater(() -> disabled.set(false));
-                break;
-            case FILE_CLOSING:
-                JavaFXUtils.runLater(() -> {
-                    closeAllWindows();
-                    disabled.set(true);
-                });
-                break;
-            default:
-                break;
-        }
-    }
-
     @FXML
     private void changeDefaultLocale() {
         DefaultLocaleAction.showAndWait();
@@ -539,5 +522,22 @@ public class MenuBarController implements MessageListener {
         pair.getStage().show();
 
         StageUtils.addBoundsListener(pair.getStage(), ImportScriptsDialogController.class, MainView.getPrimaryStage());
+    }
+
+    @Override
+    public void messagePosted(final Message event) {
+        switch (event.getEvent()) {
+            case FILE_LOAD_SUCCESS:
+                JavaFXUtils.runLater(() -> disabled.set(false));
+                break;
+            case FILE_CLOSING:
+                JavaFXUtils.runLater(() -> {
+                    closeAllWindows();
+                    disabled.set(true);
+                });
+                break;
+            default:
+                break;
+        }
     }
 }
