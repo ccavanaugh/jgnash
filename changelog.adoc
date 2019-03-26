@@ -27,7 +27,6 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == TODO
-* Copy / Paste
 * Column sizing
 
 == Known JDK Related Bugs
