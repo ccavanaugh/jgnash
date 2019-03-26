@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.DoubleConsumer;
 import java.util.logging.Logger;
 
 import jgnash.engine.Config;
@@ -144,8 +145,8 @@ public class XMLDataStore implements DataStore {
     }
 
     @Override
-    public void saveAs(final Path path, final Collection<StoredObject> objects) {
-        XMLContainer.writeXML(objects, path);
+    public void saveAs(final Path path, final Collection<StoredObject> objects, final DoubleConsumer percentComplete) {
+        XMLContainer.writeXML(objects, path, percentComplete);
     }
 
     /**

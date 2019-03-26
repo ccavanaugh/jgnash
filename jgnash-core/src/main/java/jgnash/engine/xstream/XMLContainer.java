@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.DoubleConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +46,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import jgnash.util.NotNull;
 
 /**
  * Simple object container for StoredObjects that reads and writes an XML file.
@@ -65,7 +67,9 @@ class XMLContainer extends AbstractXStreamContainer {
      * @param objects Collection of StoredObjects to write
      * @param path    file to write
      */
-    static synchronized void writeXML(final Collection<StoredObject> objects, final Path path) {
+    static synchronized void writeXML(@NotNull final Collection<StoredObject> objects, @NotNull final Path path,
+                                      @NotNull final DoubleConsumer percentCompleteConsumer) {
+
         Logger logger = Logger.getLogger(XMLContainer.class.getName());
 
         if (!Files.exists(path.getParent())) {
@@ -76,6 +80,8 @@ class XMLContainer extends AbstractXStreamContainer {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         }
+
+        percentCompleteConsumer.accept(0);
 
         createBackup(path);
 
@@ -88,11 +94,15 @@ class XMLContainer extends AbstractXStreamContainer {
         list.addAll(query(objects, RootAccount.class));
         list.addAll(query(objects, Reminder.class));
 
+        percentCompleteConsumer.accept(0.25);
+
         // remove any objects marked for removal
         list.removeIf(StoredObject::isMarkedForRemoval);
 
         // sort the list
         list.sort(new StoredObjectComparator());
+
+        percentCompleteConsumer.accept(0.5);
 
         logger.info("Writing XML file");
 
@@ -113,6 +123,8 @@ class XMLContainer extends AbstractXStreamContainer {
         }
 
         logger.info("Writing XML file complete");
+
+        percentCompleteConsumer.accept(1);
     }
 
     @Override
@@ -125,7 +137,7 @@ class XMLContainer extends AbstractXStreamContainer {
 
         try {
             releaseFileLock();
-            writeXML(objects, path);
+            writeXML(objects, path, ignored -> { });
         } finally {
             if (!acquireFileLock()) { // lock the file on open
                 Logger.getLogger(XMLContainer.class.getName()).severe("Could not acquire the file lock");

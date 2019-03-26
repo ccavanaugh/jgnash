@@ -25,8 +25,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
+import java.util.function.DoubleConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +45,7 @@ import jgnash.engine.attachment.DistributedAttachmentManager;
 import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.LocalLockManager;
+import jgnash.util.CollectionUtils;
 import jgnash.util.FileUtils;
 
 /**
@@ -52,6 +56,8 @@ import jgnash.util.FileUtils;
 abstract class AbstractJpaDataStore implements DataStore {
 
     private static final String SHUTDOWN = "SHUTDOWN";
+
+    private static final int PARTITION_SIZE = 200;
 
     private EntityManager em;
 
@@ -200,7 +206,9 @@ abstract class AbstractJpaDataStore implements DataStore {
     }
 
     @Override
-    public void saveAs(final Path path, final Collection<StoredObject> objects) {
+    public void saveAs(final Path path, final Collection<StoredObject> objects, final DoubleConsumer percentComplete) {
+
+        final int collectionSize = objects.size();
 
         // Remove the existing files so we don't mix entities and cause corruption
         if (Files.exists(path)) {
@@ -219,14 +227,23 @@ abstract class AbstractJpaDataStore implements DataStore {
                 emFactory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
                 entityManager = emFactory.createEntityManager();
 
-                entityManager.getTransaction().begin();
+                final List<List<StoredObject>> partitions = CollectionUtils.partition(new ArrayList<>(objects), PARTITION_SIZE);
 
-                for (StoredObject o: objects) {
-                    entityManager.persist(o);
+                int writeCount = 0;
+
+                for (final List<StoredObject> partition : partitions) {
+                    entityManager.getTransaction().begin();
+
+                    for (final StoredObject o : partition) {
+                        entityManager.persist(o);
+                        writeCount++;
+
+                        percentComplete.accept((double) writeCount / (double) collectionSize);
+                    }
+
+                    entityManager.getTransaction().commit();
                 }
-
-                entityManager.getTransaction().commit();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             } finally {
                 if (entityManager != null) {
@@ -278,7 +295,7 @@ abstract class AbstractJpaDataStore implements DataStore {
             }
 
             result = true;
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 

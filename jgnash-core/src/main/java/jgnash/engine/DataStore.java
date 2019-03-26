@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.function.DoubleConsumer;
 
 import jgnash.util.NotNull;
 
@@ -91,11 +92,11 @@ public interface DataStore {
      * Saves a Collection of StoredObjects to a file other than what is currently open.
      * <p> 
      * The currently open file will not be closed.
-     * 
-     * @param path full path to the file to save the database to
+     *  @param path full path to the file to save the database to
      * @param objects Collection of StoredObjects to save
+     * @param percentComplete callback to report the percent complete
      */
-    void saveAs(Path path, Collection<StoredObject> objects);
+    void saveAs(Path path, Collection<StoredObject> objects, DoubleConsumer percentComplete);
 
     /**
      * Renames a datastore.

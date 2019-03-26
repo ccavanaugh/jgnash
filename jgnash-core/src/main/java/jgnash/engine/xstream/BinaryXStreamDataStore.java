@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.DoubleConsumer;
 import java.util.logging.Logger;
 
 import jgnash.engine.Config;
@@ -146,8 +147,8 @@ public class BinaryXStreamDataStore implements DataStore {
      * @see jgnash.engine.DataStore#saveAs(java.util.Collection)
      */
     @Override
-    public void saveAs(final Path path, final Collection<StoredObject> objects) {
-        BinaryContainer.writeBinary(objects, path);
+    public void saveAs(final Path path, final Collection<StoredObject> objects, final DoubleConsumer percentComplete) {
+        BinaryContainer.writeBinary(objects, path, percentComplete);
     }
 
     /**

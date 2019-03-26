@@ -116,6 +116,11 @@ public class Engine {
      */
     private static final int SCHEDULED_DELAY = 30;
 
+    /**
+     * Time is seconds for a forced shutdown of background services
+     */
+    private static final int FORCED_SHUTDOWN_TIMEOUT = 15;
+
     private static final String MESSAGE_ACCOUNT_MODIFY = "Message.AccountModify";
 
     private static final String COMMODITY = "Commodity ";
@@ -334,10 +339,10 @@ public class Engine {
         executorService.shutdown();
 
         try {
-            if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+            if (!executorService.awaitTermination(FORCED_SHUTDOWN_TIMEOUT, TimeUnit.SECONDS)) {
                 executorService.shutdownNow();
 
-                if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+                if (!executorService.awaitTermination(FORCED_SHUTDOWN_TIMEOUT, TimeUnit.SECONDS)) {
                     logSevere("Unable to shutdown background service");
                 }
             }

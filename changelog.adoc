@@ -29,7 +29,6 @@
 == TODO
 * Copy / Paste
 * Column sizing
-* Save As behavior
 
 == Known JDK Related Bugs
 * Java 11 formatting of accounting values is not consistent with older versions and wrong in some cases
@@ -37,6 +36,8 @@
 ** https://bugs.openjdk.java.net/browse/JDK-8215181
 
 == Release 3.0.2
+* 03/26/2019 Improved the update behavior when performing a Save As and when packing databases.
+* 03/26/2019 The pack database action was not listing .mv.db files.
 * 03/24/2019 Cleanup of language files to make translation and updates easier.
 
 == Release 3.0.1

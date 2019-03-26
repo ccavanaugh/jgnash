@@ -17,16 +17,18 @@
  */
 package jgnash.uifx.tasks;
 
+import jgnash.engine.DataStore;
+import jgnash.engine.EngineFactory;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.text.NumericFormats;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.util.FileUtils;
+
+import java.text.NumberFormat;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-
-import jgnash.engine.DataStore;
-import jgnash.engine.EngineFactory;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.util.FileUtils;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * PackDatabase Task.
@@ -92,7 +94,12 @@ public class PackDatabaseTask extends Task<Void> {
 
             final String oldFile = FileUtils.stripFileExtension(file) + "-old" + dataStore.getFileExt();
 
-            EngineFactory.saveAs(file, newFile, password);
+            final NumberFormat percentFormat = NumericFormats.getPercentageFormat();
+
+            EngineFactory.saveAs(file, newFile, password, value
+                    -> updateMessage(resources.getString(MESSAGE_PLEASE_WAIT) + "\n"
+                    + resources.getString("Message.PackingFile") + "\n"
+                    + percentFormat.format(value)));
 
             dataStore.rename(file, oldFile);    // rename the old
             dataStore.rename(newFile, file);    // rename the new to the original

@@ -18,6 +18,7 @@
 package jgnash.uifx.tasks;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -25,6 +26,7 @@ import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.EngineFactory;
+import jgnash.text.NumericFormats;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FileChooserFactory;
 import jgnash.uifx.views.main.MainView;
@@ -68,11 +70,14 @@ public class SaveAsTask extends Task<Void> {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 
+        final NumberFormat percentFormat = NumericFormats.getPercentageFormat();
+
         try {
             updateMessage(resources.getString("Message.PleaseWait"));
             updateProgress(INDETERMINATE, Long.MAX_VALUE);
 
-            EngineFactory.saveAs(file.getAbsolutePath());
+            EngineFactory.saveAs(file.getAbsolutePath(), value ->
+                    updateMessage(resources.getString("Message.PleaseWait") + "\n" + percentFormat.format(value)));
 
             updateProgress(1, 1);
             updateMessage(resources.getString("Message.FileSaveComplete"));

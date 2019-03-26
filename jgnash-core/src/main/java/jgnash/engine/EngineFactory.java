@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.DoubleConsumer;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,7 +149,7 @@ public class EngineFactory {
         xmlFile = Paths.get(System.getProperty("java.io.tmpdir") + xmlFile.getFileSystem().getSeparator()
                 + xmlFile.getFileName().toString());
 
-        xmlDataStore.saveAs(xmlFile, objects);
+        xmlDataStore.saveAs(xmlFile, objects, ignored -> { });
 
         Path zipFile = Paths.get(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
                 + ".zip");
@@ -479,7 +480,7 @@ public class EngineFactory {
      * @param destination new file
      * @throws IOException IO error
      */
-    public static void saveAs(final String destination) throws IOException {
+    public static void saveAs(final String destination, final DoubleConsumer percentCompleteConsumer) throws IOException {
 
         final String fileExtension = "." + FileUtils.getFileExtension(destination);
         DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
@@ -502,8 +503,9 @@ public class EngineFactory {
         if (!current.equals(newFile)) {
             final DataStoreType currentType = dataStoreMap.get(EngineFactory.DEFAULT).getType();
 
-            if (currentType.supportsRemote && newFileType.supportsRemote) { // Relational database
-                final Path tempFile = Files.createTempFile("jgnash", BinaryXStreamDataStore.FILE_EXT);
+            // Need to create an interim copy when converting a relational database
+            if (currentType.supportsRemote && newFileType.supportsRemote) {
+                final Path tempFile = Files.createTempFile("jgnash-tmp", BinaryXStreamDataStore.FILE_EXT);
 
                 Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -512,10 +514,14 @@ public class EngineFactory {
                     Collection<StoredObject> objects = engine.getStoredObjects();
 
                     // Write everything to a temporary file
-                    DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
+                    DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects, value -> {
+                        percentCompleteConsumer.accept(value * 0.5);   // doing it twice
+                    });
+
+                    // Close the current file
                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                    // Boot the engine with the temporary file
+                    // Boot the engine using the temporary file
                     EngineFactory.bootLocalEngine(tempFile.toString(), EngineFactory.DEFAULT,
                             EngineFactory.EMPTY_PASSWORD);
 
@@ -526,13 +532,16 @@ public class EngineFactory {
                         // Get collection of object to persist
                         objects = engine.getStoredObjects();
 
-                        // Write everything to the new file
-                        newFileType.getDataStore().saveAs(newFile, objects);
+                        // Write everything to the new file and close
+                        newFileType.getDataStore().saveAs(newFile, objects,
+                                value -> percentCompleteConsumer.accept(0.5 + value * 0.5));
                         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
+                        percentCompleteConsumer.accept(1);
+
                         // Boot the engine with the new file
-                        EngineFactory.bootLocalEngine(newFile.toString(),
-                                EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+                        EngineFactory.bootLocalEngine(newFile.toString(), EngineFactory.DEFAULT,
+                                EngineFactory.EMPTY_PASSWORD);
                     }
 
                     try {
@@ -547,7 +556,7 @@ public class EngineFactory {
 
                 if (engine != null) {
                     final Collection<StoredObject> objects = engine.getStoredObjects();
-                    newFileType.getDataStore().saveAs(newFile, objects);
+                    newFileType.getDataStore().saveAs(newFile, objects, percentCompleteConsumer);
                     EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                     EngineFactory.bootLocalEngine(newFile.toString(), EngineFactory.DEFAULT,
@@ -563,7 +572,8 @@ public class EngineFactory {
      * @param newFileName new file
      * @throws IOException IO error
      */
-    public static void saveAs(final String fileName, final String newFileName, final char[] password) throws IOException {
+    public static void saveAs(final String fileName, final String newFileName, final char[] password,
+                              final DoubleConsumer percentCompleteConsumer) throws IOException {
 
         Objects.requireNonNull(fileName);
         Objects.requireNonNull(newFileName);
@@ -593,7 +603,7 @@ public class EngineFactory {
         // don't perform the save if the destination is going to overwrite the current database
         if (!current.equals(newFile)) {
 
-            // Need to know the datastore type for correct behavior
+            // Need to know the data store type for correct behavior
             final DataStoreType currentType = EngineFactory.getDataStoreByType(fileName);
 
             Objects.requireNonNull(currentType);    // fail if type is null
@@ -609,7 +619,9 @@ public class EngineFactory {
                     Collection<StoredObject> objects = engine.getStoredObjects();
 
                     // Write everything to a temporary file
-                    DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
+                    DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects,  value -> {
+                        percentCompleteConsumer.accept(value * 0.5);   // doing it twice
+                    });
                     EngineFactory.closeEngine(ENGINE);
 
                     // Boot the engine with the temporary file
@@ -621,11 +633,13 @@ public class EngineFactory {
                         objects = engine.getStoredObjects();
 
                         // Write everything to the new file
-                        newFileType.getDataStore().saveAs(newFile, objects);
+                        newFileType.getDataStore().saveAs(newFile, objects,
+                                value -> percentCompleteConsumer.accept(0.5 + value * 0.5));
                         EngineFactory.closeEngine(ENGINE);
 
                         // reset the password
                         SqlUtils.changePassword(newFileName, EngineFactory.EMPTY_PASSWORD, password);
+                        percentCompleteConsumer.accept(1);
                     }
 
                     try {
@@ -638,7 +652,7 @@ public class EngineFactory {
             } else {    // Simple
                 if (engine != null) {
                     final Collection<StoredObject> objects = engine.getStoredObjects();
-                    newFileType.getDataStore().saveAs(newFile, objects);
+                    newFileType.getDataStore().saveAs(newFile, objects, percentCompleteConsumer);
                     EngineFactory.closeEngine(ENGINE);
                 }
             }
