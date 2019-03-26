@@ -80,7 +80,7 @@ public class PackDatabaseDialogController {
     @FXML
     private void handleDatabaseButtonAction() {
         final FileChooser fileChooser = FileChooserFactory.getDataStoreChooser(DataStoreType.H2_DATABASE,
-                DataStoreType.HSQL_DATABASE);
+                DataStoreType.H2MV_DATABASE, DataStoreType.HSQL_DATABASE);
 
         fileChooser.setTitle(resources.getString("Title.SelFile"));
 
