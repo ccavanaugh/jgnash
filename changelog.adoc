@@ -30,6 +30,7 @@
 * Column sizing
 
 == Release 3.0.2
+* 03/27/2019 Prevent an NPE from occurring when closing after a report has been shown and GC is slow.
 * 03/26/2019 Improved the update behavior when performing a Save As and when packing databases.
 * 03/26/2019 The pack database action was not listing .mv.db files.
 * 03/24/2019 Cleanup of language files to make translation and updates easier.

@@ -17,21 +17,23 @@
  */
 package jgnash.uifx.report;
 
-import jgnash.engine.AccountType;
-import jgnash.report.pdf.Report;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.uifx.control.AccountComboBox;
-import jgnash.uifx.report.pdf.ReportController;
-import jgnash.uifx.util.JavaFXUtils;
-
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.prefs.Preferences;
 
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+
+import jgnash.engine.AccountType;
+import jgnash.engine.EngineFactory;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.uifx.control.AccountComboBox;
+import jgnash.uifx.report.pdf.ReportController;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Portfolio report controller.
@@ -60,6 +62,9 @@ public class PortfolioReportController implements ReportController {
 
     private final Report report = new PortfolioReport();
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Object> changeListener;
+
     @FXML
     private void initialize() {
         // Only show visible investment accounts
@@ -70,11 +75,15 @@ public class PortfolioReportController implements ReportController {
         subAccountCheckBox.setSelected(preferences.getBoolean(RECURSIVE, true));
         longNameCheckBox.setSelected(preferences.getBoolean(VERBOSE, false));
 
-        ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> handleReportRefresh();
+        changeListener = (observable, oldValue, newValue) -> {
+            if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {   // could be null if GC is slow
+                handleReportRefresh();
+            }
+        };
 
-        subAccountCheckBox.selectedProperty().addListener(changeListener);
-        longNameCheckBox.selectedProperty().addListener(changeListener);
-        accountComboBox.valueProperty().addListener(changeListener);
+        subAccountCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
+        longNameCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
+        accountComboBox.valueProperty().addListener(new WeakChangeListener<>(changeListener));
 
         // boot the report generation
         JavaFXUtils.runLater(this::refreshReport);
