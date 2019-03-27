@@ -35,6 +35,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -197,10 +198,15 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     @Override
     public void messagePosted(final Message event) {
+
+        // unregister immediately
+        if (event.getEvent() == ChannelEvent.FILE_CLOSING) {
+            MessageBus.getInstance().unregisterListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
+        }
+
         JavaFXUtils.runLater(() -> {
             switch (event.getEvent()) {
                 case FILE_CLOSING:
-                    MessageBus.getInstance().unregisterListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
                     items.clear();
                     break;
                 case ACCOUNT_REMOVE:
