@@ -71,8 +71,6 @@ public class DecimalTextField extends TextFieldEx {
      */
     private volatile boolean forceFraction = false;
 
-    //private static final ScriptEngine jsEngine;
-
     // the property value may be null
     private final ObjectProperty<BigDecimal> decimal = new SimpleObjectProperty<>();
 
@@ -99,7 +97,6 @@ public class DecimalTextField extends TextFieldEx {
 
     static {
         FLOAT = getAllowedChars();
-        //jsEngine = new ScriptEngineManager().getEngineByName("nashorn");
     }
 
     public DecimalTextField() {
@@ -317,7 +314,7 @@ public class DecimalTextField extends TextFieldEx {
 
         text = temp.toString();
 
-        // replace any ',' with periods so that it javascript parses it correctly
+        // replace any ',' with periods so that it can be parsed correctly
         if (fraction == ',') {
             text = text.replace(',', '.');
         }
