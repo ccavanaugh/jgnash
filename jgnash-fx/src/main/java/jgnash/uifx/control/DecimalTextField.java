@@ -324,10 +324,9 @@ public class DecimalTextField extends TextFieldEx {
         } catch (final NumberFormatException nfe) {
             try {
                 final double val = MathEval.eval(text);
+                final BigDecimal value = new BigDecimal(val);
 
-                final BigDecimal value = new BigDecimal(val).setScale(scale.get(), MathConstants.roundingMode);
-
-                decimal.set(value);
+                setDecimal(value);
                 return value.toString();
 
             } catch (final ArithmeticException ex) {
