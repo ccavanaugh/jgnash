@@ -26,7 +26,9 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -73,6 +75,8 @@ public class DecimalTextField extends TextFieldEx {
 
     // the property value may be null
     private final ObjectProperty<BigDecimal> decimal = new SimpleObjectProperty<>();
+
+    private final SimpleDoubleProperty doubleValue = new SimpleDoubleProperty();
 
     /**
      * Controls the maximum number of displayed decimal places.
@@ -164,6 +168,15 @@ public class DecimalTextField extends TextFieldEx {
         return decimal;
     }
 
+    /**
+     * {@code ReadOnlyDoubleProperty} representation of the {@code BigDecimal} property to make bindings and error checking easier
+     *
+     * @return ReadOnlyDoubleProperty
+     */
+    public ReadOnlyDoubleProperty doubleProperty() {
+        return ReadOnlyDoubleProperty.readOnlyDoubleProperty(doubleValue);
+    }
+
     public IntegerProperty scaleProperty() {
         return scale;
     }
@@ -191,6 +204,7 @@ public class DecimalTextField extends TextFieldEx {
         Objects.requireNonNull(decimal);
 
         this.decimal.set(decimal.setScale(scale.get(), MathConstants.roundingMode));
+        doubleValue.setValue(this.decimal.getValue().doubleValue());    // set the double property
     }
 
     public @NotNull
@@ -320,6 +334,7 @@ public class DecimalTextField extends TextFieldEx {
         }
 
         try {
+            doubleValue.setValue(new BigDecimal(text).doubleValue());   // try to set the double property
             return new BigDecimal(text).toString();
         } catch (final NumberFormatException nfe) {
             try {
