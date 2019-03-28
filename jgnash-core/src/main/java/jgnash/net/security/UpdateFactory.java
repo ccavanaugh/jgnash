@@ -25,7 +25,6 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -200,20 +199,20 @@ public class UpdateFactory {
 
             final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            Objects.requireNonNull(e);
+            if (e != null) {    // protect against a call in process during a shutdown
+                // check for thread interruption
+                if (securityNode.getQuoteSource() != QuoteSource.NONE && !Thread.currentThread().isInterrupted()) {
 
-            // check for thread interruption
-            if (securityNode.getQuoteSource() != QuoteSource.NONE && !Thread.currentThread().isInterrupted()) {
+                    final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+                            LocalDate.now().minusDays(1), LocalDate.now());
 
-                final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
-                        LocalDate.now().minusDays(1), LocalDate.now());
+                    for (final SecurityHistoryNode node : nodes) {
+                        if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
+                            result = e.addSecurityHistory(securityNode, node);
 
-                for (final SecurityHistoryNode node : nodes) {
-                    if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
-                        result = e.addSecurityHistory(securityNode, node);
-
-                        if (result) {
-                            logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
+                            if (result) {
+                                logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
+                            }
                         }
                     }
                 }
