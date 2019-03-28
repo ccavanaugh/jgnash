@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.DecimalTextField?>
+<?import javafx.scene.control.Separator?>
+
+<BorderPane prefWidth="450" prefHeight="250" fx:controller="jgnash.uifx.report.pdf.PageFormatDialogController"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="dialog">
+
+    <fx:define>
+        <ToggleGroup fx:id="toggleGroup"/>
+    </fx:define>
+
+    <center>
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="ALWAYS"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <TitledPane text="Media" collapsible="false" GridPane.rowIndex="0">
+                <GridPane styleClass="form">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER"/>
+                        <ColumnConstraints hgrow="ALWAYS" prefWidth="70" minWidth="50"/>
+                        <ColumnConstraints hgrow="NEVER"/>
+                        <ColumnConstraints hgrow="ALWAYS" prefWidth="70" minWidth="50"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                    </rowConstraints>
+
+                    <Label text="Size:"/>
+                    <ComboBox fx:id="pageSizeComboBox" GridPane.columnIndex="1" GridPane.columnSpan="3"
+                              maxWidth="Infinity"/>
+
+                    <Label text="Units:" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="unitsComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                              GridPane.columnSpan="3" maxWidth="Infinity"/>
+
+                    <Separator GridPane.rowIndex="2" GridPane.columnSpan="4"/>
+
+                    <Label text="Width:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <DecimalTextField fx:id="widthField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <Label text="Height:" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+                    <DecimalTextField fx:id="heightField" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+                </GridPane>
+            </TitledPane>
+
+            <HBox GridPane.rowIndex="1" styleClass="form">
+                <TitledPane text="Orientation" collapsible="false" maxHeight="Infinity">
+                    <GridPane styleClass="form">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="120"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="NEVER"/>
+                            <RowConstraints vgrow="NEVER"/>
+                        </rowConstraints>
+                        <RadioButton fx:id="portraitRadioButton" text="Portrait" toggleGroup="$toggleGroup" GridPane.rowIndex="0"/>
+                        <RadioButton fx:id="landscapeRadioButton" text="Landscape" toggleGroup="$toggleGroup" GridPane.rowIndex="1"/>
+                    </GridPane>
+                </TitledPane>
+
+                <TitledPane text="Margins" collapsible="false" maxHeight="Infinity" HBox.hgrow="ALWAYS">
+                    <GridPane styleClass="form">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="NEVER"/>
+                            <ColumnConstraints hgrow="ALWAYS" prefWidth="70" minWidth="50"/>
+                            <ColumnConstraints hgrow="NEVER"/>
+                            <ColumnConstraints hgrow="ALWAYS" prefWidth="70" minWidth="50"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="NEVER"/>
+                            <RowConstraints vgrow="NEVER"/>
+                        </rowConstraints>
+                        <Label text="Left:" GridPane.columnIndex="0"/>
+                        <DecimalTextField fx:id="leftMarginField" GridPane.columnIndex="1"/>
+                        <Label text="Right:" GridPane.columnIndex="2"/>
+                        <DecimalTextField fx:id="rightMarginField" GridPane.columnIndex="3"/>
+                        <Label text="Top:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <DecimalTextField fx:id="topMarginField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Bottom:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <DecimalTextField fx:id="bottomMarginField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    </GridPane>
+                </TitledPane>
+            </HBox>
+
+            <ButtonBar GridPane.rowIndex="2">
+                <buttons>
+                    <Button fx:id="okayButton" onAction="#handleOkAction" text="%Button.Ok"
+                            ButtonBar.buttonData="OK_DONE"/>
+                    <Button onAction="#handleCancelAction" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </center>
+</BorderPane>
+
+

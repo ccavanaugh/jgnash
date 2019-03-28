@@ -30,6 +30,7 @@
 * Column sizing
 
 == Release 3.0.2
+* 03/28/2019 Reimplemented the page format dialog for reports to address OSX issues and to allow custom paper sizes.
 * 03/28/2019 Prevent an NPE from a race condition between a background security price update and an application shutdown.
 * 03/27/2019 Prevent an NPE from occurring when closing after a report has been shown and GC is slow.
 * 03/26/2019 Improved the update behavior when performing a Save As and when packing databases.

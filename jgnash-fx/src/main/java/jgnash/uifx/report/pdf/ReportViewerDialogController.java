@@ -22,8 +22,10 @@ import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.report.ReportActions;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
@@ -87,6 +89,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import static jgnash.report.ui.ReportPrintFactory.pageFormatToMediaPrintableArea;
 
@@ -560,13 +563,25 @@ public class ReportViewerDialogController {
 
     @FXML
     private void handleFormatAction() {
+
         final PageFormat oldFormat = report.get().getPageFormat();
-        final PrinterJob job = PrinterJob.getPrinterJob();
 
-        final PageFormat format = job.pageDialog(oldFormat);
+        final FXMLUtils.Pair<PageFormatDialogController> pair = FXMLUtils.load(PageFormatDialogController.class.getResource("PageFormatDialog.fxml"),
+                "Page Format");
 
-        if (format != oldFormat) {
-            report.get().setPageFormat(format);
+        final PageFormatDialogController controller = pair.getController();
+        final Stage stage = pair.getStage();
+
+        StageUtils.addBoundsListener(stage, PageFormatDialogController.class);
+
+        stage.setResizable(false);
+        controller.setPageFormat(oldFormat);
+        stage.showAndWait();
+
+        final PageFormat newFormat = controller.getPageFormat();
+
+        if (newFormat != null) {
+            report.get().setPageFormat(newFormat);
             reportController.refreshReport();
         }
     }
