@@ -19,12 +19,11 @@ package jgnash.report.ui;
 
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.awt.print.PrinterJob;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.prefs.Preferences;
 
-import javax.print.attribute.standard.MediaSize;
+import jgnash.report.pdf.PageSize;
 
 /**
  * Factory class for handling printing preferences
@@ -42,8 +41,6 @@ public class ReportPrintFactory {
 
     private static final int DEFAULT_MARGIN = 43; // ~.60" margin
 
-    private static final float DPI = 72.0f;
-
     private ReportPrintFactory() {
     }
 
@@ -55,25 +52,25 @@ public class ReportPrintFactory {
     public static PageFormat getDefaultPage() {
 
         /* A4 is the assumed default */
-        MediaSize defaultMediaSize = MediaSize.ISO.A4;
+        PageSize defaultPageSize = PageSize.A4;
 
         /* US and Canada use letter size as the default */
-        Locale[] letterLocales = new Locale[] { Locale.US, Locale.CANADA, Locale.CANADA_FRENCH };
+        final Locale[] letterLocales = new Locale[] { Locale.US, Locale.CANADA, Locale.CANADA_FRENCH };
         if (Arrays.asList(letterLocales).contains(Locale.getDefault())) {
-            defaultMediaSize = MediaSize.NA.LETTER;
+            defaultPageSize = PageSize.LETTER;
         }
 
         /* Create the default paper size with a default margin */
-        Paper paper = new Paper();
+        final Paper paper = new Paper();
 
-        int width = (int) (defaultMediaSize.getX(MediaSize.INCH) / (1f / DPI));
-        int height = (int) (defaultMediaSize.getY(MediaSize.INCH) / (1f / DPI));
+        double width = defaultPageSize.width;
+        double height = defaultPageSize.height;
 
         paper.setSize(width, height);
         paper.setImageableArea(DEFAULT_MARGIN, DEFAULT_MARGIN, width - (2 * DEFAULT_MARGIN),
                 height - (2 * DEFAULT_MARGIN));
 
-        PageFormat format = new PageFormat();
+        final PageFormat format = new PageFormat();
         format.setPaper(paper);
 
         return format;
@@ -117,9 +114,7 @@ public class ReportPrintFactory {
             return getDefaultPage();
         }
 
-        final PrinterJob job = PrinterJob.getPrinterJob();
-
-        final PageFormat pf = job.defaultPage();
+        final PageFormat pf = new PageFormat();
 
         pf.setOrientation(orientation);
 
