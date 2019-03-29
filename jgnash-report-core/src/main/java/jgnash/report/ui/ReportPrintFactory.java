@@ -17,17 +17,14 @@
  */
 package jgnash.report.ui;
 
-import javax.print.PrintService;
-import javax.print.attribute.standard.MediaPrintableArea;
-import javax.print.attribute.standard.MediaSize;
-
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterJob;
-
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.prefs.Preferences;
+
+import javax.print.attribute.standard.MediaSize;
 
 /**
  * Factory class for handling printing preferences
@@ -78,18 +75,6 @@ public class ReportPrintFactory {
 
         PageFormat format = new PageFormat();
         format.setPaper(paper);
-
-        /* if a default printer is found, validate the page */
-        try {
-
-            PrintService[] services = PrinterJob.lookupPrintServices();
-            if (services.length != 0) { // no printers found on the system.
-                format = PrinterJob.getPrinterJob().validatePage(format);
-            }
-        } catch (final Exception ignored) {
-            // NPE can be triggered if the underlying system has a poor printer setup or configuration.
-            System.err.println("Poor printer configuration at the OS level.");
-        }
 
         return format;
     }
@@ -145,12 +130,5 @@ public class ReportPrintFactory {
         pf.setPaper(paper);
 
         return pf;
-    }
-
-    public static MediaPrintableArea pageFormatToMediaPrintableArea(final PageFormat pageFormat) {
-
-        return new MediaPrintableArea((float)pageFormat.getImageableX() / DPI, (float)pageFormat.getImageableY() / DPI,
-                (float)pageFormat.getImageableWidth() / DPI, (float)pageFormat.getImageableHeight() / DPI, MediaPrintableArea.INCH);
-
     }
 }

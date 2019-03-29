@@ -26,13 +26,6 @@
             <BorderPane>
                 <top>
                     <ToolBar>
-                        <Button fx:id="printButton" onAction="#handlePrintAction" text="%Button.Print"
-                                disable="true">
-                            <graphic>
-                                <FontAwesomeLabel glyphName="PRINT"/>
-                            </graphic>
-                        </Button>
-
                         <Button fx:id="saveButton" onAction="#handleSaveAction" text="%Button.Save"
                                 disable="true">
                             <graphic>
@@ -41,7 +34,7 @@
                         </Button>
 
                         <Separator/>
-                        <Button fx:id="reportFormatButton" onAction="#handleFormatAction" text="%Button.Options"
+                        <Button fx:id="reportFormatButton" onAction="#handleFormatAction" text="%Button.PageSetup"
                                 disable="true">
                             <graphic>
                                 <FontAwesomeLabel glyphName="PRINT"/>
