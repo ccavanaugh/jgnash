@@ -1,6 +1,7 @@
 **/target/
 **/build/
 **/out/
+**/bin/
 .svn/
 *.directory
 .settings/
@@ -15,5 +16,4 @@ nb-configuration.xml
 /gradle-app.setting
 /*.zip
 .gradle/
-/bin/
 lib/
