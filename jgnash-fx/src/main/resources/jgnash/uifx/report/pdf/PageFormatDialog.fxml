@@ -33,7 +33,7 @@
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
-            <TitledPane text="Media" collapsible="false" GridPane.rowIndex="0">
+            <TitledPane text="%Title.ReportSize" collapsible="false" GridPane.rowIndex="0">
                 <GridPane styleClass="form">
                     <columnConstraints>
                         <ColumnConstraints hgrow="NEVER"/>
@@ -48,25 +48,25 @@
                         <RowConstraints vgrow="NEVER"/>
                     </rowConstraints>
 
-                    <Label text="Size:"/>
+                    <Label text="%Label.Format"/>
                     <ComboBox fx:id="pageSizeComboBox" GridPane.columnIndex="1" GridPane.columnSpan="3"
                               maxWidth="Infinity"/>
 
-                    <Label text="Units:" GridPane.rowIndex="1"/>
+                    <Label text="%Label.Units" GridPane.rowIndex="1"/>
                     <ComboBox fx:id="unitsComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1"
                               GridPane.columnSpan="3" maxWidth="Infinity"/>
 
                     <Separator GridPane.rowIndex="2" GridPane.columnSpan="4"/>
 
-                    <Label text="Width:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <Label text="%Label.Width" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                     <DecimalTextField fx:id="widthField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                    <Label text="Height:" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+                    <Label text="%Label.Height" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
                     <DecimalTextField fx:id="heightField" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
                 </GridPane>
             </TitledPane>
 
             <HBox GridPane.rowIndex="1" styleClass="form">
-                <TitledPane text="Orientation" collapsible="false" maxHeight="Infinity">
+                <TitledPane text="%Title.Orientation" collapsible="false" maxHeight="Infinity">
                     <GridPane styleClass="form">
                         <columnConstraints>
                             <ColumnConstraints hgrow="ALWAYS" minWidth="120"/>
@@ -75,12 +75,12 @@
                             <RowConstraints vgrow="NEVER"/>
                             <RowConstraints vgrow="NEVER"/>
                         </rowConstraints>
-                        <RadioButton fx:id="portraitRadioButton" text="Portrait" toggleGroup="$toggleGroup" GridPane.rowIndex="0"/>
-                        <RadioButton fx:id="landscapeRadioButton" text="Landscape" toggleGroup="$toggleGroup" GridPane.rowIndex="1"/>
+                        <RadioButton fx:id="portraitRadioButton" text="%Button.Portrait" toggleGroup="$toggleGroup" GridPane.rowIndex="0"/>
+                        <RadioButton fx:id="landscapeRadioButton" text="%Button.Landscape" toggleGroup="$toggleGroup" GridPane.rowIndex="1"/>
                     </GridPane>
                 </TitledPane>
 
-                <TitledPane text="Margins" collapsible="false" maxHeight="Infinity" HBox.hgrow="ALWAYS">
+                <TitledPane text="%Title.Margins" collapsible="false" maxHeight="Infinity" HBox.hgrow="ALWAYS">
                     <GridPane styleClass="form">
                         <columnConstraints>
                             <ColumnConstraints hgrow="NEVER"/>
@@ -92,13 +92,13 @@
                             <RowConstraints vgrow="NEVER"/>
                             <RowConstraints vgrow="NEVER"/>
                         </rowConstraints>
-                        <Label text="Left:" GridPane.columnIndex="0"/>
+                        <Label text="%Label.Left" GridPane.columnIndex="0"/>
                         <DecimalTextField fx:id="leftMarginField" GridPane.columnIndex="1"/>
-                        <Label text="Right:" GridPane.columnIndex="2"/>
+                        <Label text="%Label.Right" GridPane.columnIndex="2"/>
                         <DecimalTextField fx:id="rightMarginField" GridPane.columnIndex="3"/>
-                        <Label text="Top:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label text="%Label.Top" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                         <DecimalTextField fx:id="topMarginField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <Label text="Bottom:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <Label text="%Label.Bottom" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                         <DecimalTextField fx:id="bottomMarginField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
                     </GridPane>
                 </TitledPane>
