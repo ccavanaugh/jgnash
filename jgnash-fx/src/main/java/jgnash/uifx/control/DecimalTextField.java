@@ -26,6 +26,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -93,11 +94,16 @@ public class DecimalTextField extends TextFieldEx {
      */
     private final BooleanProperty emptyWhenZero = new SimpleBooleanProperty(true);
 
+    private final BooleanProperty isValid = new SimpleBooleanProperty(false);
+
     /**
      * Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final ChangeListener<Boolean> focusChangeListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ChangeListener<String> validValueListener;
 
     static {
         FLOAT = getAllowedChars();
@@ -119,7 +125,19 @@ public class DecimalTextField extends TextFieldEx {
             }
         };
 
+        // Listen to any text changes to determine if it
+        validValueListener = (observable, oldValue, newValue) -> {
+            try {
+                Double.parseDouble(newValue);
+                isValid.setValue(true);
+            } catch (Exception e) {
+                isValid.setValue(false);
+            }
+        };
+
         focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
+
+        textProperty().addListener(new WeakChangeListener<>(validValueListener));
 
         addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             //Raise a flag the Decimal key has been pressed so it can be
@@ -175,6 +193,15 @@ public class DecimalTextField extends TextFieldEx {
      */
     public ReadOnlyDoubleProperty doubleProperty() {
         return ReadOnlyDoubleProperty.readOnlyDoubleProperty(doubleValue);
+    }
+
+    /**
+     * Property indicating if the field contains a valid numeric value
+     *
+     * @return ReadOnlyBooleanProperty
+     */
+    public ReadOnlyBooleanProperty validDecimalProperty() {
+        return ReadOnlyBooleanProperty.readOnlyBooleanProperty(isValid);
     }
 
     public IntegerProperty scaleProperty() {
@@ -339,11 +366,15 @@ public class DecimalTextField extends TextFieldEx {
         } catch (final NumberFormatException nfe) {
             try {
                 final double val = MathEval.eval(text);
-                final BigDecimal value = new BigDecimal(val);
 
-                setDecimal(value);
-                return value.toString();
+                if (!Double.isNaN(val)) {
+                    final BigDecimal value = new BigDecimal(val);
 
+                    setDecimal(value);
+                    return value.toString();
+                }
+                doubleValue.set(Double.NaN);
+                return "";
             } catch (final ArithmeticException ex) {
                 return "";
             }

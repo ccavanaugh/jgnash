@@ -74,8 +74,9 @@ public class SlipController extends AbstractSlipController {
     public void initialize() {
         super.initialize();
 
-        validFormProperty.bind(amountField.textProperty().isNotEmpty()
-                .and(Bindings.isNotNull(accountExchangePane.selectedAccountProperty())));
+        validFormProperty.bind(amountField.validDecimalProperty()
+                .and(Bindings.isNotNull(accountExchangePane.selectedAccountProperty()))
+        );
 
         // Bind necessary properties to the exchange panel
         accountExchangePane.baseAccountProperty().bind(accountProperty());

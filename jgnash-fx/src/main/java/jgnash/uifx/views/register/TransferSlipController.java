@@ -44,7 +44,7 @@ public class TransferSlipController extends AbstractSlipController {
     public void initialize() {
         super.initialize();
 
-        validFormProperty.bind(amountField.textProperty().isNotEmpty()
+        validFormProperty.bind(amountField.validDecimalProperty()
                 .and(Bindings.isNotNull(accountExchangePane.selectedAccountProperty())));
 
         // Bind necessary properties to the exchange panel

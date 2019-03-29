@@ -102,7 +102,11 @@ public class MathEval {
             while ((ch >= '0' && ch <= '9') || ch == '.') {
                 nextChar();
             }
-            x = Double.parseDouble(str.substring(startPos, this.pos));
+            try {
+                x = Double.parseDouble(str.substring(startPos, this.pos));
+            } catch (final NumberFormatException nfe) {
+                return Double.NaN;  // return NaN if the parser failed
+            }
         } else {
             throw new ArithmeticException("Unexpected: " + (char) ch);
         }

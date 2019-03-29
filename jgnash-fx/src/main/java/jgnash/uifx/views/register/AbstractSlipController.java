@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -151,7 +150,7 @@ abstract class AbstractSlipController implements Slip {
         // Install an event handler when the parent has been set via injection
         parent.addListener((observable, oldValue, newValue) -> installKeyPressedHandler(newValue));
 
-        validFormProperty.bind(Bindings.notEqual(0, amountField.lengthProperty()));
+        validFormProperty.bind(amountField.validDecimalProperty());
 
         if (dateColumnWidth.get() == 0) {
             dateColumnWidth.bind(getDateColumnWidth(datePicker.getStyle()));
