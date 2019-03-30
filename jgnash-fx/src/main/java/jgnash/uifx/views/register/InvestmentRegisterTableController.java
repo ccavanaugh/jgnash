@@ -119,12 +119,14 @@ public class InvestmentRegisterTableController extends RegisterTableController {
 
         final TableColumn<Transaction, BigDecimal> priceColumn = new TableColumn<>(columnNames[7]);
         priceColumn.setCellValueFactory(param -> new PriceProperty(param.getValue()));
-        priceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats.getShortCommodityFormat(account.get().getCurrencyNode())));
+        priceColumn.setCellFactory(cell
+                -> new TransactionCommodityFormatTableCell(NumericFormats.getShortCommodityFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(priceColumn);
 
         final TableColumn<Transaction, BigDecimal> netColumn = new TableColumn<>(columnNames[8]);
         netColumn.setCellValueFactory(param -> new AmountProperty(param.getValue()));
-        netColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats.getShortCommodityFormat(account.get().getCurrencyNode())));
+        netColumn.setCellFactory(cell
+                -> new TransactionCommodityFormatTableCell(NumericFormats.getFullCommodityFormat(account.get().getCurrencyNode())));
         tableView.getColumns().add(netColumn);
 
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
