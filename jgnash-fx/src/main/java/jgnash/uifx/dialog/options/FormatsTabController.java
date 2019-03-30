@@ -19,6 +19,7 @@ package jgnash.uifx.dialog.options;
 
 import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
+import jgnash.uifx.Options;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -42,29 +43,29 @@ public class FormatsTabController {
     @FXML
     private void initialize() {
         dateFormatComboBox.getItems().setAll(DateUtils.getAvailableDateFormats());
-        dateFormatComboBox.setValue(DateUtils.getShortDatePattern());
+        dateFormatComboBox.setValue(Options.shortDateFormatProperty().getValue());
 
         fullNumberFormatComboBox.getItems().setAll(NumericFormats.getKnownFullPatterns());
-        fullNumberFormatComboBox.setValue(NumericFormats.getFullFormatPattern());
+        fullNumberFormatComboBox.setValue(Options.fullNumericFormatProperty().getValue());
 
         shortNumberFormatComboBox.getItems().setAll(NumericFormats.getKnownShortPatterns());
-        shortNumberFormatComboBox.setValue(NumericFormats.getShortFormatPattern());
+        shortNumberFormatComboBox.setValue(Options.shortNumericFormatProperty().getValue());
 
         dateFormatComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isBlank()) {
-                DateUtils.setDateFormatPattern(newValue);
+                Options.shortDateFormatProperty().setValue(newValue);
             }
         });
 
         fullNumberFormatComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isBlank()) {
-                NumericFormats.setFullFormatPattern(newValue);
+                Options.fullNumericFormatProperty().setValue(newValue);
             }
         });
 
         shortNumberFormatComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isBlank()) {
-                NumericFormats.setShortFormatPattern(newValue);
+                Options.shortNumericFormatProperty().setValue(newValue);
             }
         });
     }

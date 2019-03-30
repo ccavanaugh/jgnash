@@ -30,6 +30,7 @@
 * Column sizing
 
 == Release 3.0.2
+* 03/30/2019 Changes to preferred date and numeric formats will now trigger an immediate update of the registers.
 * 03/29/2019 Improved detection and handling of invalid decimal input.
 * 03/29/2019 Removed direct print support from the report dialog.  The user can use save the PDF and print it.
 * 03/28/2019 Reimplemented the page format dialog for reports to address OSX issues and to allow custom paper sizes.

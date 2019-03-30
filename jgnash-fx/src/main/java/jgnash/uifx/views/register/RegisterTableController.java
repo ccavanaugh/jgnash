@@ -178,6 +178,9 @@ abstract class RegisterTableController {
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<AccountBalanceDisplayMode> accountBalanceDisplayModeChangeListener;
 
+	@SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<String> formatListener;
+
 	@FXML
 	void initialize() {
 
@@ -268,6 +271,16 @@ abstract class RegisterTableController {
 		// Repack the table if the font scale changes, must use a weak listener to prevent memory leaks
         fontScaleListener = (observable, oldValue, newValue) -> tableViewManager.packTable();
 		ThemeManager.fontScaleProperty().addListener(new WeakChangeListener<>(fontScaleListener));
+
+		// Listen for changes to formatting preferences and force and update
+		formatListener = (observable, oldValue, newValue) -> {
+			tableView.refresh();
+			JavaFXUtils.runLater(tableViewManager::packTable);
+		};
+
+		Options.fullNumericFormatProperty().addListener(new WeakChangeListener<>(formatListener));
+		Options.shortNumericFormatProperty().addListener(new WeakChangeListener<>(formatListener));
+		Options.shortDateFormatProperty().addListener(new WeakChangeListener<>(formatListener));
 
 		// Listen for transaction events
 		MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);

@@ -17,6 +17,7 @@
  */
 package jgnash.uifx;
 
+import java.util.function.Consumer;
 import java.util.prefs.Preferences;
 
 import javafx.beans.property.BooleanProperty;
@@ -27,6 +28,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ButtonBar;
+
+import jgnash.text.NumericFormats;
+import jgnash.time.DateUtils;
 import jgnash.uifx.control.TimePeriodComboBox;
 
 /**
@@ -112,11 +116,15 @@ public class Options {
 
     private static final SimpleStringProperty buttonOrder;
 
+    private static final SimpleStringProperty fullNumericFormat;
+
+    private static final SimpleStringProperty shortNumericFormat;
+
+    private static final SimpleStringProperty shortDateFormat;
+
     private static final ChangeListener<Boolean> booleanChangeListener;
 
     private static final ChangeListener<Number> integerChangeListener;
-
-    private static final ChangeListener<String> stringChangeListener;
 
     static {
         booleanChangeListener = (observable, oldValue, newValue) ->
@@ -124,9 +132,6 @@ public class Options {
 
         integerChangeListener = (observable, oldValue, newValue) ->
                 p.putInt(((SimpleIntegerProperty) observable).getName(), (Integer) newValue);
-
-        stringChangeListener = (observable, oldValue, newValue) ->
-                p.put(((SimpleStringProperty) observable).getName(), newValue);
 
         useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
         checkForUpdates = createBooleanProperty(CHECK_UPDATES, true);
@@ -147,12 +152,16 @@ public class Options {
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
 
-        buttonOrder = createStringProperty(BUTTON_ORDER, new ButtonBar().getButtonOrder());
-
         /* Zero value caused by a prior bug */
         if (Options.reminderSnoozePeriodProperty().get() <= 0) {
             Options.reminderSnoozePeriodProperty().setValue(DEFAULT_SNOOZE);
         }
+
+        shortNumericFormat = createStringProperty(NumericFormats.getShortFormatPattern(), NumericFormats::setShortFormatPattern);
+        fullNumericFormat = createStringProperty(NumericFormats.getFullFormatPattern(), NumericFormats::setFullFormatPattern);
+        shortDateFormat = createStringProperty(DateUtils.getShortDatePattern(), DateUtils::setDateFormatPattern);
+
+        buttonOrder = createStringProperty(new ButtonBar().getButtonOrder(), s -> p.put(BUTTON_ORDER, s));
     }
 
     private Options() {
@@ -173,11 +182,22 @@ public class Options {
         return property;
     }
 
-    private static SimpleStringProperty createStringProperty(final String name, final String defaultValue) {
-        final SimpleStringProperty property = new SimpleStringProperty(null, name, p.get(name, defaultValue));
-        property.addListener(stringChangeListener);
-
+    private static SimpleStringProperty createStringProperty(final String defaultValue, final Consumer<String> stringConsumer) {
+        final SimpleStringProperty property = new SimpleStringProperty(defaultValue);
+        property.addListener((observable, oldValue, newValue) -> stringConsumer.accept(newValue));
         return property;
+    }
+
+    public static StringProperty fullNumericFormatProperty() {
+        return fullNumericFormat;
+    }
+
+    public static StringProperty shortNumericFormatProperty() {
+        return shortNumericFormat;
+    }
+
+    public static StringProperty shortDateFormatProperty() {
+        return shortDateFormat;
     }
 
     /**
