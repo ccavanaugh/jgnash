@@ -11,7 +11,7 @@ class DateFormatTest {
 
     @Test
     void dateFormatTest() {
-        final Set<String> dateFormats = DateUtils.getAvailableDateFormats();
+        final Set<String> dateFormats = DateUtils.getAvailableShortDateFormats();
 
         assertNotEquals(0, dateFormats.size());
 

@@ -48,7 +48,6 @@ import jgnash.util.NotNull;
  * @author Vincent Frison
  */
 
-@SuppressWarnings("MagicConstant")
 public class DateUtils {
 
     /**
@@ -85,7 +84,7 @@ public class DateUtils {
     private DateUtils() {
     }
 
-    public static void setDateFormatPattern(@NotNull final String pattern) throws IllegalArgumentException {
+    public static void setShortDateFormatPattern(@NotNull final String pattern) throws IllegalArgumentException {
         Objects.requireNonNull(pattern);
         final Preferences preferences = Preferences.userNodeForPackage(DateUtils.class);
 
@@ -97,7 +96,7 @@ public class DateUtils {
                 .withResolverStyle(ResolverStyle.SMART);
     }
 
-    public static Set<String> getAvailableDateFormats() {
+    public static Set<String> getAvailableShortDateFormats() {
         final Set<String> dateFormats = new TreeSet<>();
 
         for (final Locale locale : Locale.getAvailableLocales()) {

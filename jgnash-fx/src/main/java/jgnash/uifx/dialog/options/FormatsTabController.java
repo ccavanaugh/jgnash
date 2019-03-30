@@ -42,7 +42,7 @@ public class FormatsTabController {
 
     @FXML
     private void initialize() {
-        dateFormatComboBox.getItems().setAll(DateUtils.getAvailableDateFormats());
+        dateFormatComboBox.getItems().setAll(DateUtils.getAvailableShortDateFormats());
         dateFormatComboBox.setValue(Options.shortDateFormatProperty().getValue());
 
         fullNumberFormatComboBox.getItems().setAll(NumericFormats.getKnownFullPatterns());

@@ -159,7 +159,7 @@ public class Options {
 
         shortNumericFormat = createStringProperty(NumericFormats.getShortFormatPattern(), NumericFormats::setShortFormatPattern);
         fullNumericFormat = createStringProperty(NumericFormats.getFullFormatPattern(), NumericFormats::setFullFormatPattern);
-        shortDateFormat = createStringProperty(DateUtils.getShortDatePattern(), DateUtils::setDateFormatPattern);
+        shortDateFormat = createStringProperty(DateUtils.getShortDatePattern(), DateUtils::setShortDateFormatPattern);
 
         buttonOrder = createStringProperty(new ButtonBar().getButtonOrder(), s -> p.put(BUTTON_ORDER, s));
     }
