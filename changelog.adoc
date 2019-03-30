@@ -26,10 +26,8 @@
 * Spreadsheet export for all tabular reports
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
-== TODO
-* Column sizing
-
 == Release 3.0.2
+* 03/30/2019 Automatic column widths will now update correctly if numeric or date formats change.
 * 03/30/2019 Use a full commodity format for the Total column in the investment register.
 * 03/30/2019 Changes to preferred date and numeric formats will now trigger an immediate update of the registers.
 * 03/29/2019 Improved detection and handling of invalid decimal input.

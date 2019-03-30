@@ -379,9 +379,14 @@ abstract class RegisterTableController {
 		if (account.get() != null) {
 			observableTransactions.addAll(account.get().getSortedTransactionList());
 
-			Platform.runLater(() -> { // table view many not be ready, push to end of the Platform thread
+			JavaFXUtils.runLater(() -> { // table view many not be ready, push to end of the Platform thread
 				tableViewManager.restoreLayout(); // required for table view manager to work
 				tableView.scrollTo(observableTransactions.size()); // scroll to the end of the table
+
+				// formats have changed, force a full recalculation
+				if (Options.getLastFormatChange() >= tableViewManager.getTimeStamp()) {
+					tableViewManager.packTable();
+				}
 			});
 		}
 	}

@@ -78,6 +78,8 @@ public class Options {
 
     private static final String GLOBAL_BAYES_ENABLED = "globalBayesEnabled";
 
+    private static final String LAST_FORMAT_CHANGE = "lastFormatChange";
+
     private static final int DEFAULT_SNOOZE = TimePeriodComboBox.getPeriods()[0];
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -157,11 +159,27 @@ public class Options {
             Options.reminderSnoozePeriodProperty().setValue(DEFAULT_SNOOZE);
         }
 
-        shortNumericFormat = createStringProperty(NumericFormats.getShortFormatPattern(), NumericFormats::setShortFormatPattern);
-        fullNumericFormat = createStringProperty(NumericFormats.getFullFormatPattern(), NumericFormats::setFullFormatPattern);
-        shortDateFormat = createStringProperty(DateUtils.getShortDatePattern(), DateUtils::setShortDateFormatPattern);
+        shortNumericFormat = createStringProperty(NumericFormats.getShortFormatPattern(), pattern -> {
+            NumericFormats.setShortFormatPattern(pattern);
+            updateLastFormatChange();
+        });
+
+        fullNumericFormat = createStringProperty(NumericFormats.getFullFormatPattern(), pattern -> {
+            NumericFormats.setFullFormatPattern(pattern);
+            updateLastFormatChange();
+        });
+
+        shortDateFormat = createStringProperty(DateUtils.getShortDatePattern(), pattern -> {
+            DateUtils.setShortDateFormatPattern(pattern);
+            updateLastFormatChange();
+        });
 
         buttonOrder = createStringProperty(new ButtonBar().getButtonOrder(), s -> p.put(BUTTON_ORDER, s));
+
+        // Initialize with the current value if it's not been set before
+        if (getLastFormatChange() == 0) {
+            updateLastFormatChange();
+        }
     }
 
     private Options() {
@@ -198,6 +216,14 @@ public class Options {
 
     public static StringProperty shortDateFormatProperty() {
         return shortDateFormat;
+    }
+
+    public static long getLastFormatChange() {
+        return p.getLong(LAST_FORMAT_CHANGE, 0);   // default should trigger an update
+    }
+
+    private static void updateLastFormatChange() {
+        p.putLong(LAST_FORMAT_CHANGE, System.currentTimeMillis());
     }
 
     /**

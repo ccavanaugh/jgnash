@@ -56,6 +56,8 @@ public class TableViewManager<S> {
 
     //private static final String PREF_NODE_REG_POS = "/positions";
 
+    private static final String LAST_RECALCULATION = "/recalculation";
+
     private static final String PREF_NODE_REG_VIS = "/visibility";
 
     private static final String PREF_NODE_REG_WIDTH = "/width";
@@ -128,7 +130,7 @@ public class TableViewManager<S> {
         setColumnFormatFactory(param -> null);
         setMinimumColumnWidthFactory(param -> 0.0);
 
-         /* At least 2 updates need to be allowed.  The update in process and any potential updates requested
+        /* At least 2 updates need to be allowed.  The update in process and any potential updates requested
          * that occur when an update is already in process.  Limited to 1 thread
          *
          * Excess execution requests will be silently discarded
@@ -242,6 +244,28 @@ public class TableViewManager<S> {
 
             preferences.put(uuid, EncodeDecode.encodeBooleanArray(columnVisibility));
         }
+    }
+
+    private void clearTimeStamp() {
+        if (preferenceKeyFactory.get() != null) {
+            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + LAST_RECALCULATION);
+            preferences.putLong(preferenceKeyFactory.get().get(), 0);
+        }
+    }
+
+    private void saveTimeStamp() {
+        if (preferenceKeyFactory.get() != null) {
+            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + LAST_RECALCULATION);
+            preferences.putLong(preferenceKeyFactory.get().get(), System.currentTimeMillis());
+        }
+    }
+
+    public long getTimeStamp() {
+        if (preferenceKeyFactory.get() != null) {
+            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + LAST_RECALCULATION);
+            return preferences.getLong(preferenceKeyFactory.get().get(), 0);
+        }
+        return 0;
     }
 
     private void restoreColumnVisibility() {
@@ -377,7 +401,9 @@ public class TableViewManager<S> {
 
                         /* expensive operation, don't calculate if we are reusing older values */
                         if (doExpensiveCalculations) {
+                            clearTimeStamp();
                             calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+                            saveTimeStamp();    // indicate recalculation is complete
                         }
                         sumFixedColumns += calculatedWidths[i];
                     }
