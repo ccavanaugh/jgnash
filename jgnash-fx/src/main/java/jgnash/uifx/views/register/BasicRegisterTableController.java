@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
@@ -110,18 +111,20 @@ public class BasicRegisterTableController extends RegisterTableController {
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
         tableView.getColumns().add(reconciledColumn);
 
+        final Callback<TableColumn<Transaction, BigDecimal>, TableCell<Transaction, BigDecimal>> shortDecimalCellFactory =
+                cell -> new TransactionCommodityFormatTableCell(NumericFormats
+                        .getShortCommodityFormat(account.get().getCurrencyNode()));
+
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(columnNames[7]);
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue()
                 .getAmount(accountProperty().getValue())));
-        increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats
-                .getShortCommodityFormat(account.get().getCurrencyNode())));
+        increaseColumn.setCellFactory(shortDecimalCellFactory);
         tableView.getColumns().add(increaseColumn);
 
         final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[8]);
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue()
                 .getAmount(accountProperty().getValue())));
-        decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(NumericFormats
-                .getShortCommodityFormat(account.get().getCurrencyNode())));
+        decreaseColumn.setCellFactory(shortDecimalCellFactory);
         tableView.getColumns().add(decreaseColumn);
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(columnNames[9]);
