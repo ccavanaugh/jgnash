@@ -21,6 +21,7 @@ package jgnash.uifx.report.pdf;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.math.BigDecimal;
+import java.util.prefs.Preferences;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -49,6 +50,8 @@ import jgnash.util.Nullable;
  * @author Craig Cavanaugh
  */
 public class PageFormatDialogController {
+
+    private static final String LAST_UNIT = "lastUnit";
 
     @InjectFXML
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
@@ -99,6 +102,8 @@ public class PageFormatDialogController {
     // anything less than 2 inches is considered bad
     private final DoubleProperty minWidthPoints = new SimpleDoubleProperty(Constants.POINTS_PER_INCH * 2);
 
+    private final Preferences preferences = Preferences.userNodeForPackage(PageFormatDialogController.class);
+
     @FXML
     void initialize() {
 
@@ -131,6 +136,9 @@ public class PageFormatDialogController {
         // install the listeners
         pageSizeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> handlePageSizeChange());
         unitsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> handleUnitChange());
+
+        // restore the defaults
+        unitsComboBox.setValue(Unit.values()[preferences.getInt(LAST_UNIT, Unit.INCHES.ordinal())]);
 
         // bindings to prevent math mischief from occurring
         minWidth.bind(minWidthPoints.divide(unitScaleProperty));
@@ -230,6 +238,8 @@ public class PageFormatDialogController {
      */
     private void handleUnitChange() {
         final Unit newUnit = unitsComboBox.getValue();
+
+        preferences.putInt(LAST_UNIT, newUnit.ordinal());
 
         unitScaleProperty.set(newUnit.scale);   // update binding
 
