@@ -24,6 +24,8 @@ import static jgnash.report.pdf.Constants.POINTS_PER_MM;
  * Enumeration of standard page sizes.
  * <p>
  * Page sizes are in Points
+ *
+ * @author Craig Cavanaugh
  */
 public enum PageSize {
 
@@ -34,8 +36,8 @@ public enum PageSize {
     LEGAL("US Legal", 8.5f * POINTS_PER_INCH, 14f * POINTS_PER_INCH),
     TABLOID("US Tabloid", 11f * POINTS_PER_INCH, 17f * POINTS_PER_INCH);
 
-    public transient float width;
-    public transient float height;
+    public final transient float width;
+    public final transient float height;
 
     private final transient String description;
 
