@@ -16,11 +16,11 @@ allprojects {
     version = "3.0.2"
 
     project.ext {
-        junitVersion = "5.4.0"
-        junitextensionsVersion = "2.3.0"
-        awaitilityVersion = "3.1.6"
+        junitVersion = "5.4.1"
+        junitextensionsVersion = "2.3.0"    // https://github.com/glytching/junit-extensions
+        awaitilityVersion = "3.1.6"         // https://github.com/awaitility/awaitility
 
-        picocliVersion = "3.5.2"
+        picocliVersion = "3.9.5"
 
         apachePoiVersion = "4.0.1"
         commonsCsvVersion = "1.6"
@@ -33,7 +33,7 @@ allprojects {
         xstreamVersion = "1.4.11.1"
 
         hibernateVersion = "5.4.2.Final"
-        hikariVersion = "3.3.1"
+        hikariVersion = "3.3.1"             // https://github.com/brettwooldridge/HikariCP
         
         pdfBoxVersion = "2.0.14"
 
@@ -77,7 +77,7 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = "5.3"
+    gradleVersion = "5.3.1"
 }
 
 task distZip {
