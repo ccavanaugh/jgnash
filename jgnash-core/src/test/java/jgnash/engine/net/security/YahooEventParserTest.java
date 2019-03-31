@@ -17,8 +17,6 @@
  */
 package jgnash.engine.net.security;
 
-import jgnash.net.YahooCrumbManager;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,8 +31,11 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.net.YahooCrumbManager;
 import jgnash.net.security.YahooEventParser;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,6 +58,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
     void testParser() {
 
         // try 3 times to pass
@@ -87,6 +89,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
     }
 
     @Test
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
     void testHistoricalDownload() {
 
         // try 3 times to pass
