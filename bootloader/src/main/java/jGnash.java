@@ -23,8 +23,12 @@ import javax.swing.JOptionPane;
 
 import java.awt.EventQueue;
 
+import picocli.CommandLine;
+
+import static jgnash.util.LogUtil.logSevere;
+
 /**
- * Bootstrap a modular jGnashFx by downloading platform specific OpenJFX libraries and then launching the application
+ * Bootstraps a modular jGnashFx by downloading platform specific OpenJFX libraries and then launching the application
  *
  * @author Craig Cavanaugh
  */
@@ -32,8 +36,29 @@ public class jGnash {
 
     public static void main(final String[] args) {
 
+        boolean bypassBootLoader = false;
+
+        final CommandLine commandLine = new CommandLine(new jGnashFx.CommandLineOptions());
+        commandLine.setToggleBooleanFlags(false);
+        commandLine.setUsageHelpWidth(80);
+
+        try {
+            final CommandLine.ParseResult pr = commandLine.parseArgs(args);
+            final jGnashFx.CommandLineOptions options = commandLine.getCommand();
+
+            if (CommandLine.printHelpIfRequested(pr)) {
+                System.exit(0);
+            }
+
+            bypassBootLoader = options.bypassBootloader;
+        } catch (final Exception e) {
+            logSevere(jGnash.class, e);
+            commandLine.usage(System.err, CommandLine.Help.Ansi.AUTO);
+            System.exit(1);
+        }
+
         if (BootLoader.getOS() != null) {
-            if (BootLoader.doFilesExist()) {
+            if (bypassBootLoader || BootLoader.doFilesExist()) {
                 launch(args);
             } else {
 

@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -36,19 +36,26 @@ import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.message.MessageBus;
 import jgnash.resource.util.OS;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.Version;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.net.NetworkAuthenticator;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.FileUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.prefs.PortablePreferences;
+
 import picocli.CommandLine;
 
+import static picocli.CommandLine.Command;
+import static picocli.CommandLine.Help;
+import static picocli.CommandLine.IVersionProvider;
+import static picocli.CommandLine.Option;
+import static picocli.CommandLine.ParseResult;
+
 import static jgnash.util.LogUtil.logSevere;
-import static picocli.CommandLine.*;
 
 /**
- * Main entry for the application.
+ * Main entry point for the application.
  * <p>
  * This bootstraps the JavaFX application and lives in the default class as a workaround for
  * Gnome and OSX menu naming issues.
@@ -218,8 +225,8 @@ public class jGnashFx extends Application {
         Engine.getLogger().setLevel(Level.ALL);
     }
 
-    @Command(mixinStandardHelpOptions = true, version = "jGnashFx - " + VERSION, name = "jGnashFx", separator = " ", sortOptions = false)
-    private static class CommandLineOptions {
+    @Command(mixinStandardHelpOptions = true, versionProvider = CommandLineOptions.VersionProvider.class, name = "jGnash", separator = " ", sortOptions = false)
+    public static class CommandLineOptions {
 
         private static final String FILE_OPTION_SHORT = "-f";
         private static final String FILE_OPTION_LONG = "--file";
@@ -235,6 +242,7 @@ public class jGnashFx extends Application {
         private static final String PASSWORD_OPTION = "--password";
         private static final String SERVER_OPTION = "--server";
         private static final String SHUTDOWN_OPTION = "--shutdown";
+        private static final String BYPASS_BOOTLOADER = "--bypassBootloader";
         //private static final String SSL_OPTION = "--ssl";
 
         @CommandLine.Parameters(index = "0", arity = "0")
@@ -272,5 +280,15 @@ public class jGnashFx extends Application {
 
         @Option(names = {VERBOSE_OPTION_SHORT, VERBOSE_OPTION_LONG}, description = "Enable verbose application messages")
         private boolean verbose = false;
+
+        @CommandLine.Option(names = {BYPASS_BOOTLOADER}, description = "Bypasses the bootloader and requires manual installation of OS specific files")
+        public boolean bypassBootloader = false;
+
+        static class  VersionProvider implements IVersionProvider {
+            @Override
+            public String[] getVersion() {
+                return new String[] {Version.getAppName() + " " + Version.getAppVersion()};
+            }
+        }
     }
 }

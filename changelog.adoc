@@ -27,6 +27,8 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.0.2
+* 03/31/2019 Added a commandline option to bypass the bootloader.
+* 03/31/2019 The wrong version information ws being reported on the console when requested.
 * 03/30/2019 Automatic column widths will now update correctly if numeric or date formats change.
 * 03/30/2019 Use a full commodity format for the Total column in the investment register.
 * 03/30/2019 Changes to preferred date and numeric formats will now trigger an immediate update of the active register.
