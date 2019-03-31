@@ -13,7 +13,7 @@ Published {localdate}
 
 [[_legal]]
 == Legal
-[big]*jGnash 2.35.x Manual*
+[big]*jGnash 3.0.x Manual*
 
 Copyright (C) 2001-2019 Craig Cavanaugh
 
@@ -64,26 +64,34 @@ A brief list of features is below:
 * Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates.
 * Printable reports with PDF and spreadsheet export capability.
 * XML and relational database file formats
-* Operates on most all modern PC operating system __(Java(TM) 8 is required)__.
+* Operates on most all modern PC operating system __(Java(TM) 11 is required)__.
 
 
 [[_installation]]
 === Installation
 jGnash is not currently distributed with an automatic installation tool.
 You will be required to perform a couple of manual operations that are easily performed for those with a basic
-understanding of how to use a zip file.  Also, you must have Java(TM) 8 or newer installed on your computer.
+understanding of how to use a zip file.  Also, Java(TM) 11 or newer must be installed on your computer.
 
-Java can be downloaded and installed from http://java.com.
+*_Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements_*
+
+OpenJDK is a free and open-source implementation of the Java Platform that is downloadable from various sources.
 Java installation is a simple matter of downloading the correct version for your operating system and using the
 automated installer.
 
-****
-If you are using a Linux(R) based operating system, OpenJDK(TM) or IcedTea may have been pre-installed. jGnash will
-run on the latest version of OpenJDK or IcedTea, but you may experience some minor glitches with the appearance of
-jGnash depending on the version installed and fonts available.
+  - https://www.azul.com/downloads/zulu/[Azul OpenJDK 11] is a branded release that will be easiest to install for most users and is free to use.
+  - https://adoptopenjdk.net/index.html?variant=openjdk11&jvmVariant=hotspot[AdoptOpenJDK] will require manual installation but allows more flexibility and is free to use.
+  - https://jdk.java.net/11/[https://jdk.java.net/11 (OpenJDK)/] will require manual installation and is free to use.
+  - https://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle Java SE 11] will require manual installation and licensing is required.
 
-If in doubt, install Java(TM) 8 or newer and configure your system accordingly.
-****
+[NOTE]
+If performing a manual installation of Java, The *JAVA_HOME* Environment
+Variable must be set and the Java bin directory must be in the execution path.
+
+[NOTE]
+If you have multiple versions of Java installed on your computer, The *JAVA_HOME* Environment
+Variable must be set to Java 11 or newer and the related Java bin directory must be the only version
+in the execution path. Mixing JVM and JDK versions will confuse the bootloader.
 
 After Java is installed, you are ready to install jGnash.
 Simply open the zip file and extract the [path]_jGnash_ directory and it's complete contents to a directory of your
@@ -96,17 +104,17 @@ Use a new location or delete the existing files first.
 === Starting jGnash
 
 After the [path]_jGnash_ directory has been extracted from the zip file, you should see several files in the directory.
-Of interest at this point are the jar and exe files.
+Of interest at this point are the Bash script and exe files.
 
-If you are running on a Windows(TM) based computer, you can simply double click on the [path]_jGnashFx.exe_ file to
-start jGnash. Alternatively, you can also double click on the [path]_bin/jgnash-fx.bat_ file as an alternate means for
+If you are running on a Windows(TM) based computer, you can simply double click on the [path]_jGnash.exe_ file to
+start jGnash. Alternatively, you can also double click on the [path]_bin/bootloader.bat_ file as an alternate means for
 starting the application in a console so that logging messages are visible.
 
-If you are running on a Un*x or BSD based system you can start jGnash from a terminal as shown below using the included
+If you are running on a Un*x or BSD (macOS) based system you can start jGnash from a terminal as shown below using the included
 Bash script. You can also create your own application launcher using the Bash script in your desktop environment of choice.
 
 ----
-./jGnashFx
+./jGnash
 ----
 jGnash has several advanced features such as running as a portable application or using jGnash as a multi-user home
 networked application. These advanced features are accessible via the command line.
@@ -1076,7 +1084,7 @@ You have three options for making a JavaScript file available for use:
   in the *Script* column of the table.
 . Place the JavaScript file into a [path]_importScripts_ sub directory where
   your jGnash data file is installed.
-. Place the JAR file into your home directly where jGnash will find it.
+. Place the _.js_ file into your home directly where jGnash will find it.
 .. $HOME/.jgnash/importScripts for UNIX and BSD based operating systems.
 .. USER_HOME\AppData\Local\jgnash\importScripts for Windows operating systems.
 
@@ -1221,7 +1229,7 @@ Correct file extensions are shown below.
 
 [[_fileFormats]]
 .File Formats
-[cols="1,1"]
+[cols="40%,60%"]
 |===
 
 |XML File
@@ -1234,11 +1242,10 @@ Correct file extensions are shown below.
 |.h2.db
 
 |H2 Relational Database (MVStore)
-|.mv.db
+|.mv.db _(newest H2 format and is more compact)_
 
 |HyperSql (hslqb) Relational Database
-|.script (.lobs, .log, .properties are used as support
-                files)
+|.script _(.lobs, .log, .properties are used as support files)_
 
 |===
 
@@ -1287,7 +1294,7 @@ Running a JavaScript program is as simple as using menu:Tools[Run JavaScript] co
 
 Below is an example JavaScript program that displays the accounts in the currently loaded file and demonstrates how to
 display a simple dialog.  To try the program, create a text file using your favorite editor with a name of your choice
-that ends with a .js extension.  After creating the file, simply using the menu:Tools[Run JavaScript] command to select
+that ends with a _.js_ extension.  After creating the file, simply using the menu:Tools[Run JavaScript] command to select
 the program and run it.
 
 [[app-listTwo]]
@@ -1337,10 +1344,6 @@ The disadvantage is troubleshooting syntax and logic errors can be more difficul
 == Command Line Options
 jGnash has several command line options for advanced users.
 
-_These options are only available with the jGnash Fx user
-interface and have been removed from the old Swing interface._
-
-
 Parameters such as file names that include a space in the path must be
 escaped using double quotes.
 
@@ -1349,7 +1352,7 @@ escaped using double quotes.
 
 The path to the file "/home/craig/jgnash files/jgnash.h2.db" must be escaped as shown.
 
-java -jar jGnash2.jar --server "/home/craig/jgnash files/jgnash.h2.db" --password fh56dy
+jGnash --server "/home/craig/jgnash files/jgnash.h2.db" --password fh56dy
 ==============================================================================
 
 Some options have short forms.  A full list of options can be obtained using the *--help* option.
@@ -1410,6 +1413,9 @@ An empty port for network communications.
 The specified port and port + 1 may not be used by any other application at the same time.
 The default port is 5300.
 
+--bypassBootloader::
+Bypasses the bootloader and requires manual installation of any OS specific files.
+
 .Open Dialog
 [TIP]
 ====
@@ -1422,22 +1428,22 @@ It is possible to start the jGnash client and specify the server, and password s
 
 Start the jGnash server using the default port with a password protected database
 ----
-java -jar jGnash2.jar --server /home/craig/jgnash.mv.db --password fh56dy
+jGnash --server /home/craig/jgnash.mv.db --password fh56dy
 ----
 
 Start the jGnash client and connect to the local server running a password protected database
 ----
-java -jar jGnash2.jar --host localhost --password fh56dy
+jGnash --host localhost --password fh56dy
 ----
 
 Issue a shutdown request to a remote server that is password protected
 ----
-java -jar jGnash2.jar --shutdown --host localhost --password fh56dy
+jGnash --shutdown --host localhost --password fh56dy
 ----
 
 Issue a shutdown request to a local server that is not password protected
 ----
-java -jar jGnash2.jar --shutdown
+jGnash --shutdown
 ----
 
 [[_faq]]
@@ -1487,8 +1493,8 @@ Depending on your operating system and how you have it configured, other shortcu
 |Closes the active register window if you have one open
 
 
-|kbd:[F1]
-|Displays the Help dialog
+|kbd:[CTRL-A]
+|Displays the About dialog
 |===
 
 .Editing Keys
@@ -1506,6 +1512,7 @@ Depending on your operating system and how you have it configured, other shortcu
 |kbd:[CTRL-V]
 |Paste
 |===
+_Editing Keys may be different and are platform specific_
 
 include::_gpl-3.0.adoc[]
 
