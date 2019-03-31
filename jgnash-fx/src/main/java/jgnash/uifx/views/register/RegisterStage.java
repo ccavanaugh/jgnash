@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -15,12 +16,13 @@ import javafx.stage.StageStyle;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Transaction;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.Version;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Stage that displays a single account register. Size and position is preserved
@@ -66,6 +68,13 @@ public class RegisterStage extends Stage {
                 ResourceUtils.getBundle());
 
         getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
+
+        // handle CTRL-F4
+        getScene().setOnKeyPressed(event -> {
+            if (event.isControlDown() && event.getCode() == KeyCode.F4) {
+                close();
+            }
+        });
 
         double minWidth = Double.MAX_VALUE;
         double minHeight = Double.MAX_VALUE;
@@ -117,6 +126,6 @@ public class RegisterStage extends Stage {
     }
 
     private void updateTitle(final Account account) {
-        setTitle("jGnash - " + account.getPathName());
+        setTitle(Version.getAppName() + " - " + account.getPathName());
     }
 }
