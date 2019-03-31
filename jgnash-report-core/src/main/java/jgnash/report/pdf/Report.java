@@ -157,10 +157,6 @@ public abstract class Report implements AutoCloseable {
         return PDType1Font.COURIER;
     }
 
-    public PDDocument getPdfDocument() {
-        return pdfDocument;
-    }
-
     public int getPageCount() {
         return pdfDocument.getNumberOfPages();
     }
