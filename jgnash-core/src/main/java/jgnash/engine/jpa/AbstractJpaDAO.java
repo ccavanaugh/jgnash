@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
@@ -111,6 +112,9 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                     em.getTransaction().commit();
 
                     return mergedObject;
+                } catch (final PersistenceException | IllegalStateException  e1) {
+                    logSevere(AbstractJpaDAO.class, e1);
+                    return null;
                 } finally {
                     emLock.unlock();
                 }
@@ -128,6 +132,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
      * Persists an object.
      *
      * @param objects {@link Object} to persist
+     * @return {@code true} if successful, {@code false} otherwise
      */
     boolean persist(final Object... objects) {
         boolean result = false;
@@ -146,6 +151,9 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                     em.getTransaction().commit();
 
                     return true;
+                } catch (final PersistenceException | IllegalStateException  e1) {
+                    logSevere(AbstractJpaDAO.class, e1);
+                    return false;
                 } finally {
                     emLock.unlock();
                 }
@@ -153,8 +161,8 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
 
             result = future.get();  // block and return
 
-        } catch (final InterruptedException | ExecutionException e) {
-            logSevere(AbstractJpaDAO.class, e);
+        } catch (final InterruptedException | ExecutionException e2) {
+            logSevere(AbstractJpaDAO.class, e2);
             Thread.currentThread().interrupt();
         }
 
