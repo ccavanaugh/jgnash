@@ -26,6 +26,9 @@
 * Spreadsheet export for all tabular reports
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
+== Release 3.0.3
+* 04/01/2019 Correct validation of numeric input when using a comma as a decimal separator (GitHub Issue #77)
+
 == Release 3.0.2
 * 03/31/2019 Closing a register window with CTRL-F4 was not working.
 * 03/31/2019 Added a command line option to bypass the bootloader.

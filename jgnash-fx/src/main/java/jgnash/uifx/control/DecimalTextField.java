@@ -128,7 +128,8 @@ public class DecimalTextField extends TextFieldEx {
         // Listen to any text changes to determine if it
         validValueListener = (observable, oldValue, newValue) -> {
             try {
-                Double.parseDouble(newValue);
+                // Replace any commas with decimals before trying to parse the string
+                Double.parseDouble(newValue.replace(',', '.'));
                 isValid.setValue(true);
             } catch (Exception e) {
                 isValid.setValue(false);
