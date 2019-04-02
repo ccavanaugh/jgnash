@@ -129,7 +129,7 @@ _Be sure to read <<Install-MacOSX, the section about installing on Mac OS X>> to
 [[Download]]
 == Download jGnash
 
-You can download jGnash from the https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/[jGnash Download Page].
+You can download jGnash from the https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/[jGnash Download Page].   image:https://img.shields.io/sourceforge/dt/jgnash.svg["Download button", link="https://sourceforge.net/projects/jgnash/files/latest/download"]
 
 [[Install]]
 == To Install jGnash
