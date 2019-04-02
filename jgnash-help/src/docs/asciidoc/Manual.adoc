@@ -1,6 +1,6 @@
 :imagesdir: ./images
 
-= jGnash 2.35.x Manual
+= jGnash 3.0.x Manual
 Published {localdate}
 :doctype: book
 :encoding: utf-8
@@ -232,7 +232,7 @@ image:basic-decimal-entry.png[] image:advanced-decimal-entry.png[]
 
 You may also enter arithmetic operators and calculate values within the entry field.
 
-The arithmetic operators that may be used are () + − ∗ /.
+The arithmetic operators that may be used are () + − ∗ /.,
 
 Traditional arithmetic operator precedence is followed for all calculations.
 
