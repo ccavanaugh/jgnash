@@ -196,6 +196,9 @@ few shortcuts to speed up entry of transactions.
 jGnash knows and understands just about any known locale and country setting.
 Depending on your settings, the decimal symbol will change accordingly as well as the displayed format of dates.
 
+Error checking of _required_ form fields is performed realtime.  As information is entered you will notice buttons
+such as kbd:[Enter] enable and disabled based on validaity of what has been entered.
+
 [[dateFields]]
 ==== Date Fields
 
@@ -304,15 +307,12 @@ jGnash embeds the database server so that no additional configuration or install
 The relational database may be used for a single user.
 If startup and shutdown performance is important to you, then the binary file format described below is a better choice.
 
-The advantage of the relational database outside the requirement for client / server capability is the ability to use several available tools to browse and query your jGnash data.
-Also, a relational database will be more fault tolerant of system crashes or power outages vs.
-use of an XML or Binary file.
+The advantage of the relational database outside the requirement for client / server capability is the ability to use several available tools to browse and query your jGnash data. Also, a relational database is more tolerant of system crashes or power outages vs. use of an XML or Binary file.
 
-The disadvantage of the relational database is a bit slower operation and more memory consumption.
+The disadvantages of the relational database is a bit slower operation, larger file sizes, and increased memory consumption.
 
 If using the H2 Database and operating over a network using Client/Server mode, you have the option of enabling encryption for network communication.
-This will not encrypt your database file.
-See the Command line options for specifics.
+This will not encrypt your database file.  See the Command line options for specifics.
 
 .Database Administrator
 [NOTE]
@@ -330,7 +330,7 @@ If you have a large amount of data, jGnash will use less system memory when usin
 .Backups
 [NOTE]
 ====
-The XML format is also used for saving automatic backups of jGnash files if enabled.
+The XML format is also used for creating automatic backups of jGnash files if enabled.
 ====
 
 ==== Binary File
