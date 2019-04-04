@@ -175,7 +175,7 @@ class NotificationDialog extends Stage implements MessageListener {
     @Override
     public void messagePosted(final Message message) {
         if (message.getEvent() == ChannelEvent.FILE_CLOSING) {  // close the dialog automatically
-            close();
+            handleCancelAction();   // cancel and pending changes because close was forced
         }
     }
 

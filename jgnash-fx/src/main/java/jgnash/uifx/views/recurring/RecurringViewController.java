@@ -225,25 +225,27 @@ public class RecurringViewController implements MessageListener {
 
         if (dialogShowing.compareAndSet(false, true)) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
 
-            final Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
+            if (engine != null) {   // make sure were not in process of a shutdown
+                final Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
 
-            if (!pendingReminders.isEmpty()) {
-                final NotificationDialog notificationDialog = new NotificationDialog();
+                if (!pendingReminders.isEmpty()) {
 
-                // Stop the timer so events don't back up if the dialog is up too long.
-                stopTimer();
+                    // Stop the timer so events don't back up if the dialog is up too long.
+                    stopTimer();
 
-                notificationDialog.setReminders(pendingReminders);
-                notificationDialog.showAndWait();
+                    final NotificationDialog notificationDialog = new NotificationDialog();
 
-                engine.processPendingReminders(notificationDialog.getApprovedReminders());
+                    notificationDialog.setReminders(pendingReminders);
+                    notificationDialog.showAndWait();
 
-                startTimer(false);
+                    engine.processPendingReminders(notificationDialog.getApprovedReminders());
+
+                    startTimer(false);
+                }
+
+                dialogShowing.getAndSet(false);
             }
-
-            dialogShowing.getAndSet(false);
         }
     }
 

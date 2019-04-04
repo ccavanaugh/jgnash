@@ -26,9 +26,13 @@
 * Spreadsheet export for all tabular reports
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
+== Release 3.0.4
+* 04/04/2019 Prevent an NPE caused by a race condition between a recurring transactions being processed and an
+             application shutdown in process. (GitHub Issue #78)
+
 == Release 3.0.3
 * 04/01/2019 Enhanced error handling for relational database to make identification of errors easier.
-* 04/01/2019 Correct validation of numeric input when using a comma as a decimal separator (GitHub Issue #77)
+* 04/01/2019 Correct validation of numeric input when using a comma as a decimal separator. (GitHub Issue #77)
 
 == Release 3.0.2
 * 03/31/2019 Closing a register window with CTRL-F4 was not working.
