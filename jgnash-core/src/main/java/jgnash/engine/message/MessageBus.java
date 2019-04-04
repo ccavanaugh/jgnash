@@ -21,6 +21,7 @@ import java.lang.ref.WeakReference;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,14 +38,12 @@ import jgnash.util.DefaultDaemonThreadFactory;
 /**
  * Thread safe Message Bus.
  *
- * @author Craig Cavanaugh
- */
-
-/*
  * Listeners are stored in a CopyOnWriteArraySet to prevent duplicate listeners
  * and to ease the burden of synchronizing against multiple threads.  The iterator
  * must be used for access, but removal of weak references must be done through the
  * set, not the iterator.
+ *
+ * @author Craig Cavanaugh
  */
 public class MessageBus {
 
@@ -233,13 +232,22 @@ public class MessageBus {
             // Look for and post to local listeners
             final Set<WeakReference<MessageListener>> set = map.get(message.getChannel());
 
+            final Set<WeakReference<MessageListener>> staleListener = new HashSet<>();
+
             if (set != null) {
                 for (WeakReference<MessageListener> ref : set) {
                     MessageListener l = ref.get();
                     if (l != null) {
                         l.messagePosted(message);
+                    } else {
+                        staleListener.add(ref);
                     }
                 }
+            }
+
+            // purge stale references to prevent a slowdown and wasted memory during a long application session
+            for (final WeakReference<MessageListener> staleReference : staleListener) {
+                set.remove(staleReference);
             }
 
             /* Post a remote message if configured to do so and filter system events.
