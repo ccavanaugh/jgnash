@@ -47,8 +47,10 @@ import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.resource.util.OS;
 import jgnash.resource.util.ResourceUtils;
-import jgnash.util.*;
+import jgnash.util.FileMagic;
 import jgnash.util.FileMagic.FileType;
+import jgnash.util.FileUtils;
+import jgnash.util.Nullable;
 
 /**
  * Factory class for obtaining an engine instance.
@@ -198,8 +200,8 @@ public class EngineFactory {
             oldEngine.stopBackgroundServices();
 
             // Post a message so the GUI knows what is going on
-            Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_CLOSING, oldEngine);
-            MessageBus.getInstance(engineName).fireEvent(message);
+            final Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_CLOSING, oldEngine);
+            MessageBus.getInstance(engineName).fireBlockingEvent(message);  // block until event has been completely processed
 
             // Dump an XML backup
             if (oldEngine.createBackups() && !oldDataStore.isRemote()) {

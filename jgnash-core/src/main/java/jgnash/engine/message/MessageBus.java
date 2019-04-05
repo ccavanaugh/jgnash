@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -226,16 +227,36 @@ public class MessageBus {
         return false;
     }
 
-    public void fireEvent(final Message message) {
+    /**
+     * Fires an event and blocks until all listeners have processed it.
+     *
+     * @param message {@code Message} to send
+     */
+    public void fireBlockingEvent(final Message message) {
+        final Future<Void> future = fireEvent(message);
 
-        pool.execute(() -> {
+        // spin until everyone has consumed the event
+        while(!future.isDone()) {
+            Thread.onSpinWait();
+        }
+    }
+
+    /**
+     * Fires and event to all listeners and return immediately with a {@code Future}
+     * @param message {@code Message} to send
+     *
+     * @return {@code Future} indicating when all listeners have processed the event
+     */
+    public Future<Void> fireEvent(final Message message) {
+
+        return pool.submit(() -> {
+            final Set<WeakReference<MessageListener>> staleListener = new HashSet<>();
+
             // Look for and post to local listeners
             final Set<WeakReference<MessageListener>> set = map.get(message.getChannel());
 
-            final Set<WeakReference<MessageListener>> staleListener = new HashSet<>();
-
             if (set != null) {
-                for (WeakReference<MessageListener> ref : set) {
+                for (final WeakReference<MessageListener> ref : set) {
                     MessageListener l = ref.get();
                     if (l != null) {
                         l.messagePosted(message);
@@ -258,6 +279,8 @@ public class MessageBus {
             if (!message.isRemote() && messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {
                 messageBusClient.sendRemoteMessage(message);
             }
+
+            return null;
         });
     }
 }
