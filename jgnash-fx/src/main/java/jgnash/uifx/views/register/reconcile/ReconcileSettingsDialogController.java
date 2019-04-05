@@ -37,6 +37,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
@@ -45,7 +46,6 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Account reconcile settings dialog.
@@ -169,7 +169,7 @@ public class ReconcileSettingsDialogController {
             closingBalanceTextField.setDecimal(closingBalance);
 
             // Balance at the 1st unreconciled transaction
-            BigDecimal openingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+            final BigDecimal openingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
                     account.getOpeningBalanceForReconcile());
             openingBalanceTextField.setDecimal(openingBalance);
         }
