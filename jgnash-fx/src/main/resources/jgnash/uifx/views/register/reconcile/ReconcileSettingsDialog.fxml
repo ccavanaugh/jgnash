@@ -32,7 +32,7 @@
     <DecimalTextField fx:id="openingBalanceTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
     <Label text="%Label.EndingBalance" GridPane.rowIndex="2"/>
     <DecimalTextField fx:id="closingBalanceTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    <CheckBox fx:id="autoFillClosingBalanceCheckBox" text="%Button.CalcEndBal" onAction="#handleUpdateBalance" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
+    <CheckBox fx:id="autoFillBalanceCheckBox" text="%Button.CalcBal" onAction="#handleUpdateBalance" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
     <ButtonBar fx:id="buttonBar" GridPane.columnSpan="2" GridPane.rowIndex="4">
         <buttons>
             <Button text="%Button.Ok" onAction="#handleOkayAction"/>
