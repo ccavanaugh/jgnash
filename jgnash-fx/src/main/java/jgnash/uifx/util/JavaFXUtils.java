@@ -99,7 +99,7 @@ public class JavaFXUtils {
 
         // don't flood the JavaFX Application with too many Runnables at once.  Allow other processes to run by yielding
         if (!platformRunnables.isEmpty()) {
-            Thread.yield();
+            Thread.onSpinWait();
         }
 
         Platform.runLater(() -> {
