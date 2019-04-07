@@ -204,7 +204,6 @@ public class Engine {
             }
         }, 45, 5L * 60L, TimeUnit.SECONDS);
 
-        // Engine needs to be registered before the update factories can find it.  Push the check to the background executor
         backgroundExecutorService.schedule(() -> {
             if (UpdateFactory.getUpdateOnStartup()) {
                 // don't update on weekends unless needed
@@ -212,7 +211,9 @@ public class Engine {
                     startSecuritiesUpdate(SCHEDULED_DELAY);
                 }
             }
+        }, 30, TimeUnit.SECONDS);
 
+        backgroundExecutorService.schedule(() -> {
             if (CurrencyUpdateFactory.getUpdateOnStartup()) {
                 startExchangeRateUpdate(SCHEDULED_DELAY);
             }
@@ -359,10 +360,9 @@ public class Engine {
      * Initiates a background exchange rate update with a given start delay.
      *
      * @param delay delay in seconds
-     * @return {@code Future} for background task
      */
-    public Future<Void> startExchangeRateUpdate(final int delay) {
-        return backgroundExecutorService.schedule(new BackgroundCallable<>(new CurrencyUpdateFactory.UpdateExchangeRatesCallable()), delay,
+    public void startExchangeRateUpdate(final int delay) {
+        backgroundExecutorService.schedule(new BackgroundCallable<>(new CurrencyUpdateFactory.UpdateExchangeRatesCallable()), delay,
                 TimeUnit.SECONDS);
     }
 
