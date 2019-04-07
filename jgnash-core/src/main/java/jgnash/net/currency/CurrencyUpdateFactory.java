@@ -74,10 +74,13 @@ public class CurrencyUpdateFactory {
         return optional;
     }
 
-    public static class UpdateExchangeRatesCallable implements Callable<Void> {
+    public static class UpdateExchangeRatesCallable implements Callable<Boolean> {
 
         @Override
-        public Void call() {
+        public Boolean call() {
+
+            boolean result = false;
+
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
             if (engine != null) {
@@ -92,9 +95,10 @@ public class CurrencyUpdateFactory {
                         rate.ifPresent(value -> engine.setExchangeRate(source, target, value));
                     });
                 }
+                result = true;
             }
 
-            return null;
+            return result;
         }
     }
 }

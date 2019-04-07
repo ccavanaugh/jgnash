@@ -59,7 +59,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
-    void testParser() {
+    void testParser() throws IOException {
 
         // try 3 times to pass
         for (int i = 0; i < 3; i++) {
@@ -90,7 +90,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
     @Test
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
-    void testHistoricalDownload() {
+    void testHistoricalDownload() throws IOException {
 
         // try 3 times to pass
         for (int i = 0; i < 3; i++) {

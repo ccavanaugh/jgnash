@@ -69,12 +69,8 @@ public class YahooEventParser {
         // Utility class
     }
 
-    static Set<SecurityHistoryEvent> retrieveNew(final SecurityNode securityNode) {
-        return retrieveNew(securityNode, LocalDate.now());
-    }
-
     public static Set<SecurityHistoryEvent> retrieveNew(@NotNull final SecurityNode securityNode,
-                                                        final LocalDate endDate) {
+                                                        final LocalDate endDate) throws IOException {
 
         final Set<SecurityHistoryEvent> events = new HashSet<>();
 
@@ -98,7 +94,7 @@ public class YahooEventParser {
     }
 
     private static List<SecurityHistoryEvent> retrieveNewDividends(@NotNull final SecurityNode securityNode,
-                                                                   final LocalDate startDate, final LocalDate endDate) {
+                                                                   final LocalDate startDate, final LocalDate endDate) throws IOException {
 
         /*
         Date,Dividends
@@ -128,7 +124,7 @@ public class YahooEventParser {
     }
 
     public static List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
-                                                                    final LocalDate startDate, final LocalDate endDate) {
+                                                                    final LocalDate startDate, final LocalDate endDate) throws IOException {
 
         /*
          Date,Open,High,Low,Close,Adj Close,Volume
@@ -168,7 +164,7 @@ public class YahooEventParser {
 
 
     private static List<SecurityHistoryEvent> retrieveNewSplits(@NotNull final SecurityNode securityNode,
-                                                                final LocalDate startDate, final LocalDate endDate) {
+                                                                final LocalDate startDate, final LocalDate endDate) throws IOException {
 
          /*
         Date,Stock Splits
@@ -205,7 +201,7 @@ public class YahooEventParser {
     private static <T> List<T> parseStream(@NotNull final SecurityNode securityNode, final LocalDate startDate,
                                            final LocalDate endDate, final SecurityHistoryEventType type,
                                            final Function<String, Boolean> acceptHeaderFunction,
-                                           final Function<String, T> processLineFunction) {
+                                           final Function<String, T> processLineFunction) throws IOException, NullPointerException {
 
         final List<T> events = new ArrayList<>();
 
@@ -257,6 +253,7 @@ public class YahooEventParser {
         } catch (final NullPointerException | IOException ex) {
             LogUtil.logSevere(YahooEventParser.class, ex);
             YahooCrumbManager.clearAuthorization();
+            throw new IOException(ex);
         } finally {
             if (connection instanceof HttpURLConnection) {
                 ((HttpURLConnection) connection).disconnect();

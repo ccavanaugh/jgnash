@@ -35,14 +35,12 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Handler;
@@ -337,11 +335,10 @@ public class Engine {
     }
 
     private static void shutDownAndWait(final ExecutorService executorService) {
-        executorService.shutdown();
+        executorService.shutdownNow();
 
         try {
             if (!executorService.awaitTermination(FORCED_SHUTDOWN_TIMEOUT, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
 
                 if (!executorService.awaitTermination(FORCED_SHUTDOWN_TIMEOUT, TimeUnit.SECONDS)) {
                     logSevere("Unable to shutdown background service");
@@ -362,7 +359,7 @@ public class Engine {
      * @param delay delay in seconds
      */
     public void startExchangeRateUpdate(final int delay) {
-        backgroundExecutorService.schedule(new BackgroundCallable<>(new CurrencyUpdateFactory.UpdateExchangeRatesCallable()), delay,
+        backgroundExecutorService.schedule(new BackgroundCallable(new CurrencyUpdateFactory.UpdateExchangeRatesCallable()), delay,
                 TimeUnit.SECONDS);
     }
 
@@ -372,21 +369,17 @@ public class Engine {
      * @param delay delay in seconds
      */
     public void startSecuritiesUpdate(final int delay) {
-        final List<ScheduledFuture<Boolean>> futures = new ArrayList<>();
+        final List<BackgroundCallable> callables = new ArrayList<>();
 
-        // Load of the scheduler with the tasks and save the futures
-        // failure will occur if source is not defined
         getSecurities().stream().filter(securityNode ->
                 securityNode.getQuoteSource() != QuoteSource.NONE).forEach(securityNode -> { // failure will occur if source is not defined
-            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
-                    new UpdateFactory.UpdateSecurityNodeCallable(securityNode)), delay, TimeUnit.SECONDS));
 
-            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
-                    new UpdateFactory.UpdateSecurityNodeEventsCallable(securityNode)), delay, TimeUnit.SECONDS));
+            callables.add(new BackgroundCallable(new UpdateFactory.UpdateSecurityNodeCallable(securityNode)));
+            callables.add(new BackgroundCallable(new UpdateFactory.UpdateSecurityNodeEventsCallable(securityNode)));
         });
 
         // Cleanup thread that monitors for excess network connection failures
-        new SecuritiesUpdateThread(futures).start();
+        new SecuritiesUpdateRunnable(callables, delay).start();
 
         // Save the last update
         config.setLastSecuritiesUpdateTimestamp(LocalDateTime.now());
@@ -2478,7 +2471,7 @@ public class Engine {
         }
 
         if (transaction instanceof InvestmentTransaction) {
-            final InvestmentTransaction investmentTransaction = (InvestmentTransaction)transaction;
+            final InvestmentTransaction investmentTransaction = (InvestmentTransaction) transaction;
 
             if (!investmentTransaction.getInvestmentAccount().containsSecurity(investmentTransaction.getSecurityNode())) {
                 logger.log(Level.WARNING, "Investment Account is missing the security");
@@ -2824,9 +2817,9 @@ public class Engine {
                 for (final DayOfWeek dayOfWeek : daysOfWeek) {
                     if (historyNode.getLocalDate().getDayOfWeek() == dayOfWeek) {
 
-                        backgroundExecutorService.schedule(new BackgroundCallable<>((Callable<Void>) () -> {
+                        backgroundExecutorService.schedule(new BackgroundCallable(() -> {
                             removeSecurityHistory(securityNode, historyNode.getLocalDate());
-                            return null;
+                            return true;
                         }), delay, TimeUnit.MILLISECONDS);
 
                         delay += 750;
@@ -2841,43 +2834,57 @@ public class Engine {
     }
 
     /**
-     * Handles background update of securities.
+     * Thread to monitor background update of securities and terminate is network errors are occurring
      */
-    private static class SecuritiesUpdateThread extends Thread {
+    private class SecuritiesUpdateRunnable extends Thread {
 
-        private final List<ScheduledFuture<Boolean>> futures;
+        private final List<BackgroundCallable> backgroundCallables;
+        private final int delay;
 
-        SecuritiesUpdateThread(List<ScheduledFuture<Boolean>> futures) {
-            this.futures = futures;
+        SecuritiesUpdateRunnable(final List<BackgroundCallable> callables, final int delay) {
+            this.backgroundCallables = callables;
+            this.delay = delay;
         }
 
         @Override
         public void run() {
-            short errorCount = 0;
 
-            // Wait for completion of each task and if too many errors occur, cancel all of them
-            for (final ScheduledFuture<Boolean> future : futures) {
+            try {
+                TimeUnit.SECONDS.sleep(delay);  // for controlled delay at startup
+            } catch (final InterruptedException ignored) {
+                return;
+            }
+
+            int errors = 0;
+
+            final CompletionService<Boolean> completionService = new ExecutorCompletionService<>(backgroundExecutorService);
+
+            // submit the callables
+            for (final BackgroundCallable backgroundCallable : backgroundCallables) {
+                completionService.submit(backgroundCallable);
+            }
+
+            // poll until complete or there have been too many errors
+            while (errors < MAX_ERRORS && !Thread.currentThread().isInterrupted()) {
                 try {
-                    if (!future.get(1, TimeUnit.MINUTES)) {
-                        errorCount++;
-                    }
-                } catch (final InterruptedException | ExecutionException | TimeoutException e) {
-                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-                    errorCount++;
-                    Thread.currentThread().interrupt();
-                } catch (final CancellationException e) {
-                    errorCount = Short.MAX_VALUE;   // force a failure
-                    break; // futures are being canceled externally, exit the thread
-                }
+                    final Future<Boolean> future = completionService.poll(1, TimeUnit.MINUTES);
 
-                if (errorCount > MAX_ERRORS) {
-                    break;
+                    if (future == null) {   // all done, no issues
+                        break;
+                    }
+
+                    errors += future.get() ? 0 : 1;
+
+                } catch (final Exception e) {
+                    errors = Integer.MAX_VALUE;
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
             }
 
-            if (errorCount > MAX_ERRORS) {
-                for (final ScheduledFuture<Boolean> future : futures) {
-                    future.cancel(false);
+            // if there are too many errors, force cancellation
+            if (errors > MAX_ERRORS || Thread.currentThread().isInterrupted()) {
+                for (final BackgroundCallable backgroundCallable : backgroundCallables) {
+                    backgroundCallable.cancel = true;   // stop all other callables
                 }
             }
         }
@@ -2885,32 +2892,36 @@ public class Engine {
 
     /**
      * Decorates a Callable to indicate background engine activity is occurring.
-     *
-     * @param <E> return type for the decorated callable
      */
-    private class BackgroundCallable<E> implements Callable<E> {
+    private class BackgroundCallable implements Callable<Boolean> {
 
-        private final Callable<E> callable;
+        private final Callable<Boolean> callable;
 
-        BackgroundCallable(@NotNull final Callable<E> callable) {
+        volatile boolean cancel = false;    // may be set to true to interrupt operation
+
+        BackgroundCallable(@NotNull final Callable<Boolean> callable) {
             this.callable = callable;
         }
 
         @Override
-        public E call() throws Exception {
-            if (backGroundCounter.incrementAndGet() == 1) {
-                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED,
-                        Engine.this));
-            }
+        public Boolean call() throws Exception {
 
-            try {
-                return callable.call();
-            } finally {
-                if (backGroundCounter.decrementAndGet() == 0) {
-                    messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED,
+            if (!cancel) {
+                if (backGroundCounter.incrementAndGet() == 1) {
+                    messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED,
                             Engine.this));
                 }
+
+                try {
+                    return callable.call();
+                } finally {
+                    if (backGroundCounter.decrementAndGet() == 0) {
+                        messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED,
+                                Engine.this));
+                    }
+                }
             }
+            return false;
         }
     }
 }

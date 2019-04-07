@@ -17,11 +17,13 @@
  */
 package jgnash.net.security;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +45,7 @@ import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
 import jgnash.resource.util.ResourceUtils;
 
@@ -172,11 +175,19 @@ public class UpdateFactory {
     public static List<SecurityHistoryNode> downloadHistory(final SecurityNode securityNode, final LocalDate startDate,
                                                             final LocalDate endDate) {
 
-        final List<SecurityHistoryNode> newSecurityNodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
-                startDate, endDate);
+        List<SecurityHistoryNode> newSecurityNodes;
 
-        if (!newSecurityNodes.isEmpty()) {
-            logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
+        try {
+            newSecurityNodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+                    startDate, endDate);
+
+            if (!newSecurityNodes.isEmpty()) {
+                logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
+            }
+
+        } catch (final IOException ex) {
+            newSecurityNodes = Collections.emptyList();
+            LogUtil.logSevere(UpdateFactory.class, ex);
         }
 
         return newSecurityNodes;
@@ -195,7 +206,7 @@ public class UpdateFactory {
 
         @Override
         public Boolean call() {
-            boolean result = false;
+            boolean result = true;
 
             final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -203,17 +214,20 @@ public class UpdateFactory {
                 // check for thread interruption
                 if (securityNode.getQuoteSource() != QuoteSource.NONE && !Thread.currentThread().isInterrupted()) {
 
-                    final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
-                            LocalDate.now().minusDays(1), LocalDate.now());
+                    try {
+                        final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+                                LocalDate.now().minusDays(1), LocalDate.now());
 
-                    for (final SecurityHistoryNode node : nodes) {
-                        if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
-                            result = e.addSecurityHistory(securityNode, node);
-
-                            if (result) {
-                                logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
+                        for (final SecurityHistoryNode node : nodes) {
+                            if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
+                                if (e.addSecurityHistory(securityNode, node)) {
+                                    logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
+                                }
                             }
                         }
+                    } catch (final IOException ex) {
+                        result = false;
+                        LogUtil.logSevere(UpdateFactory.class, ex);
                     }
                 }
             }
@@ -240,21 +254,25 @@ public class UpdateFactory {
             final LocalDate oldest = securityNode.getHistoryNodes().get(0).getLocalDate();
 
             if (e != null && securityNode.getQuoteSource() != QuoteSource.NONE) {
+                try {
+                    final Set<SecurityHistoryEvent> oldHistoryEvents = new HashSet<>(securityNode.getHistoryEvents());
 
-                final Set<SecurityHistoryEvent> oldHistoryEvents = new HashSet<>(securityNode.getHistoryEvents());
+                    for (final SecurityHistoryEvent securityHistoryEvent : YahooEventParser.retrieveNew(securityNode, LocalDate.now())) {
+                        if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
+                            if (securityHistoryEvent.getDate().isAfter(oldest) || securityHistoryEvent.getDate().isEqual(oldest)) {
+                                if (!oldHistoryEvents.contains(securityHistoryEvent)) {
+                                    result = e.addSecurityHistoryEvent(securityNode, securityHistoryEvent);
 
-                for (final SecurityHistoryEvent securityHistoryEvent : YahooEventParser.retrieveNew(securityNode)) {
-                    if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
-                        if (securityHistoryEvent.getDate().isAfter(oldest) || securityHistoryEvent.getDate().isEqual(oldest)) {
-                            if (!oldHistoryEvents.contains(securityHistoryEvent)) {
-                                result = e.addSecurityHistoryEvent(securityNode, securityHistoryEvent);
-
-                                if (result) {
-                                    logger.info(ResourceUtils.getString("Message.UpdatedSecurityEvent", securityNode.getSymbol()));
+                                    if (result) {
+                                        logger.info(ResourceUtils.getString("Message.UpdatedSecurityEvent", securityNode.getSymbol()));
+                                    }
                                 }
                             }
                         }
                     }
+                } catch (final IOException ex) {
+                    result = false;
+                    LogUtil.logSevere(UpdateFactory.class, ex);
                 }
             }
 
