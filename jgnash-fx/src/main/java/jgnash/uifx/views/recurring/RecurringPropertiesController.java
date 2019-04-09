@@ -107,6 +107,8 @@ public class RecurringPropertiesController {
 
         daysBeforeTextField.disableProperty().bind(autoEnterCheckBox.selectedProperty().not());
 
+        enabledCheckBox.setSelected(true);  // enable by default
+
         loadTab("NoneTab.fxml", "Tab.None");
         loadTab("DayTab.fxml", "Tab.Day");
         loadTab("WeekTab.fxml", "Tab.Week");
