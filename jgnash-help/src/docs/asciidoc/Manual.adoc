@@ -664,11 +664,86 @@ If go back to edit the Transaction, the edits will be performed within the Depos
 Investment Accounts need to be populated correctly if the Portfolio report is to work correctly.
 
 * Accounts with prior history should purchase securities from the "Opening Balance" Equity account.  Ensure the quantity of
-securites is correct and use the current price.
+securities is correct and use the current price.
 
 * Cash balances should be transfers from the "Opening Balance" Equity account.
 
 * Dividends, sells, etc. should occur after opening securities and cash balances are established.
+
+[[_reminders]]
+== Reminders
+If you find yourself recreating the same transaction on a regular basis, reminders may be created to automate the process.
+
+image::reminders.png[width="640"]
+
+The table shown above displays all the Reminders you have created with some basic information.
+
+The *Last Posted* column show the last date the Reminder was processed and the *Due* column shows the next due date.
+The *Last Posted* column will be empty for a new Reminder.
+
+An existing Reminder can be modified by selecting it and clicking the btn:[Modify] button.
+The btn:[Execute Now] button will process the selected Reminder if it is due.
+The btn:[Check Reminders] button looks for any pending Reminders and displays the dialog shown below.  If there are not
+any pending Reminders, the dialog will not be displayed.
+
+When jGnash is stated, pending Reminders will be shown automatically after a short period of time.
+
+image::remindersPopupDialog.png[width="640"]
+
+The Reminder dialog allows you to snooze for a selectable period of time by clicking the btn:[Remind Me Later] button
+if you do not want to process the transactions at that time.  The btn:[Acknowledge Selected] button processes _only_
+the transactions marked in the *Approve* column.
+
+Below the *Approve* column are buttons to make it easier to mark a large number of transactions for approval.
+
+=== Creating New Reminders
+
+Creating new Reminders is a process of filling in some basic information, creating your transaction, and configuring the
+frequency of the Reminder.
+
+An Account must be selected for the Reminder and fields exist to provide a description and additional notes.  A transaction
+is optional.  A Reminder without a transaction will simply be a Reminder to do something.
+
+The typical approach for assigning the Account is to use a bank or cash account of some sort.  When you create the
+transaction, it wil be against an expense or income account unless it is a periodic transfer between accounts.
+
+However, if you prefer to organize Reminders by expense type or account, you can pick an expense or income account and
+create the transaction against a bank account.  Regardless of approach, be consistent to avoid confusion later.
+
+image::remindersNewDialog.png[width="450"]
+
+Configuring the Frequency of a Reminder is easy despite there being a lot of options.  The *Date of first payment*
+field establishes the first date the Reminder process starts as well as the day of the month it occurs on.
+
+The *Enabled* check box will be selected by default.  Unselecting it will pause the Reminder should you want
+to disable it for a period of time instead of deleting it.
+
+The *Month* frequency tab provides an option of *Month By Day* or *Month by Date*.  As an example, selecting
+*Month By Day* indicates you may want a Reminder to occur every 2nd Tuesday of the month.  Selecting *Month by Date*
+would indicate you want a Reminder to occur of the 15th of every month.
+
+****
+Be careful when creating Reminders near the end of the month with a Month frequency.  For example, what happens if you
+select February 29th (Leap Day)?  Do you receive a paycheck every two weeks (26 pay periods) or twice a month (24 pay periods)?
+
+jGnash makes the best attempt to ensure correctness of dates, but minor date shifts can occur should you select leap days,
+the 1st day of a 5 week month, etc.
+****
+
+image::remindersNewTransaction.png[width="450"]
+
+
+[TIP]
+====
+New reminders may be created from an existing transaction.
+
+Within the Register, right click on a transaction to display the context menu.  From the context menu, the btn:[Create new reminder]
+command will generate a new reminder using the existing transaction as a template and display the New Reminder Dialog.
+You will need to ensure the Frequency parameters are correct and simply click the btn:[OK] to save it.
+====
+
+image::remindersQuickTransaction.png[width="450"]
+
 
 [[_budgets]]
 == Budgets
