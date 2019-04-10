@@ -672,27 +672,35 @@ securities is correct and use the current price.
 
 [[_reminders]]
 == Reminders
-If you find yourself recreating the same transaction on a regular basis, reminders may be created to automate the process.
+If you find yourself recreating the same transaction on a regular basis, Reminders can be created to automate the process.
 
 image::reminders.png[width="640"]
 
 The table shown above displays all the Reminders you have created with some basic information.
 
-The *Last Posted* column show the last date the Reminder was processed and the *Due* column shows the next due date.
-The *Last Posted* column will be empty for a new Reminder.
+* The *Last Posted* column shows the last date the Reminder was processed. It will be empty for a new Reminder.
 
-An existing Reminder can be modified by selecting it and clicking the btn:[Modify] button.
-The btn:[Execute Now] button will process the selected Reminder if it is due.
-The btn:[Check Reminders] button looks for any pending Reminders and displays the dialog shown below.  If there are not
+* The *Due* column shows the next due date if a configured end date has not been reached.
+
+* The btn:[Modify] button is for editing the selected Reminder.
+
+* The btn:[Execute Now] button will process the selected Reminder if it is due.
+
+* The btn:[Check Reminders] button looks for any pending Reminders and displays them.  If there are not
 any pending Reminders, the dialog will not be displayed.
 
-When jGnash is stated, pending Reminders will be shown automatically after a short period of time.
+<<<
+=== Notification of Reminders
+
+The pending Reminders dialog will be shown shortly after jGnash has been started or when manually checked
+as described earlier.
 
 image::remindersPopupDialog.png[width="640"]
 
-The Reminder dialog allows you to snooze for a selectable period of time by clicking the btn:[Remind Me Later] button
-if you do not want to process the transactions at that time.  The btn:[Acknowledge Selected] button processes _only_
-the transactions marked in the *Approve* column.
+* The btn:[Remind Me Later] button lets you to snooze the dialog for a selectable period of time if you do not want to
+process the transactions at that time.
+
+* The btn:[Acknowledge Selected] button processes _only_ the transactions marked in the *Approve* column.
 
 Below the *Approve* column are buttons to make it easier to mark a large number of transactions for approval.
 
@@ -722,28 +730,36 @@ The *Month* frequency tab provides an option of *Month By Day* or *Month by Date
 *Month By Day* indicates you may want a Reminder to occur every 2nd Tuesday of the month.  Selecting *Month by Date*
 would indicate you want a Reminder to occur of the 15th of every month.
 
-****
-Be careful when creating Reminders near the end of the month with a Month frequency.  For example, what happens if you
-select February 29th (Leap Day)?  Do you receive a paycheck every two weeks (26 pay periods) or twice a month (24 pay periods)?
-
-jGnash makes the best attempt to ensure correctness of dates, but minor date shifts can occur should you select leap days,
-the 1st day of a 5 week month, etc.
-****
+<<<
+Creating a transaction for a Reminder is identical to creating a transaction in the register.  The Date field will be
+ignored and replaced by the recurrence date of the transaction defined in the Frequency section.
 
 image::remindersNewTransaction.png[width="450"]
 
+The *Entry* section of the New Reminder form gives you option to automatically enter a new transaction a defined number
+of days prior to the date defined by the Frequency section.  When enabled, you will not see the Notification dialog.
+Typical use is for automatic withdrawals or deposits into an account.
 
-[TIP]
-====
+=== Tips
+
+==== Quick Generation of new Reminders
 New reminders may be created from an existing transaction.
 
 Within the Register, right click on a transaction to display the context menu.  From the context menu, the btn:[Create new reminder]
 command will generate a new reminder using the existing transaction as a template and display the New Reminder Dialog.
 You will need to ensure the Frequency parameters are correct and simply click the btn:[OK] to save it.
-====
 
 image::remindersQuickTransaction.png[width="450"]
 
+==== Special Dates
+Be careful when creating Reminders near the end of the month with a Month frequency.
+
+* What happens if you select February 29th (Leap Day)?
+
+* Do you receive a paycheck every two weeks (26 pay periods) or twice a month (24 pay periods)?
+
+jGnash makes the best attempt to ensure correctness of dates, but minor date shifts can occur should you select leap days,
+the 1st day of a 5 week month, etc.
 
 [[_budgets]]
 == Budgets
