@@ -27,6 +27,8 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.0.4
+* 04/13/2019 Eliminated zero width spaces from the export of a register to a xls/xlsx file.
+* 04/13/2019 Updated to latest POI dependency.
 * 04/07/2019 A Reminders chapter was added to the manual.
 * 04/09/2019 Made the Enabled check box of the New Reminder dialog enabled by default.
 * 04/07/2019 Improved shutdown speed if background events are occurring.

@@ -58,6 +58,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class AccountExport {
 
+    private static final String ZERO_WIDTH_SPACE = "\u200B";
+
     private AccountExport() {
         // Utility class
     }
@@ -141,68 +143,58 @@ public class AccountExport {
                 int col = 0;
 
                 // date
-                Cell c = r.createCell(col);
-                c.setCellType(CellType.STRING);
+                Cell c = r.createCell(col, CellType.STRING);
                 c.setCellValue(DateUtils.asDate(transaction.getLocalDate()));
                 c.setCellStyle(dateStyle);
 
                 // timestamp
-                c = r.createCell(++col);
-                c.setCellType(CellType.STRING);
+                c = r.createCell(++col, CellType.STRING);
                 c.setCellValue(DateUtils.asDate(transaction.getTimestamp()));
                 c.setCellStyle(timestampStyle);
 
                 // number
-                c = r.createCell(++col);
-                c.setCellType(CellType.STRING);
+                c = r.createCell(++col, CellType.STRING);
                 c.setCellValue(transaction.getNumber());
                 c.setCellStyle(textStyle);
 
                 // payee
-                c = r.createCell(++col);
-                c.setCellType(CellType.STRING);
+                c = r.createCell(++col, CellType.STRING);
                 c.setCellValue(transaction.getPayee());
                 c.setCellStyle(textStyle);
 
                 // memo
-                c = r.createCell(++col);
-                c.setCellType(CellType.STRING);
+                c = r.createCell(++col, CellType.STRING);
                 c.setCellValue(transaction.getMemo());
                 c.setCellStyle(textStyle);
 
                 // account
-                c = r.createCell(++col);
-                c.setCellType(CellType.STRING);
+                c = r.createCell(++col, CellType.STRING);
                 c.setCellValue(getAccountColumnValue(transaction, account));
                 c.setCellStyle(textStyle);
 
-                // clr
-                c = r.createCell(++col);
-                c.setCellType(CellType.STRING);
-                c.setCellValue(transaction.getReconciled(account).toString());
+                // clr, strip any zero width spaces
+                c = r.createCell(++col, CellType.STRING);
+                c.setCellValue(transaction.getReconciled(account).toString().replaceAll(ZERO_WIDTH_SPACE, ""));
                 c.setCellStyle(textStyle);
 
                 final BigDecimal amount = transaction.getAmount(account);
 
                 // increase
-                c = r.createCell(++col);
-                c.setCellType(CellType.NUMERIC);
+                c = r.createCell(++col, CellType.NUMERIC);
                 if (amount.signum() >= 0) {
                     c.setCellValue(amount.doubleValue());
                 }
                 c.setCellStyle(amountStyle);
 
                 // decrease
-                c = r.createCell(++col);
-                c.setCellType(CellType.NUMERIC);
+                c = r.createCell(++col, CellType.NUMERIC);
                 if (amount.signum() < 0) {
                     c.setCellValue(amount.abs().doubleValue());
                 }
                 c.setCellStyle(amountStyle);
 
                 // balance
-                c = r.createCell(++col);
-                c.setCellType(CellType.NUMERIC);
+                c = r.createCell(++col, CellType.NUMERIC);
                 c.setCellValue(account.getBalanceAt(transaction).doubleValue());
                 c.setCellStyle(amountStyle);
             }

@@ -200,24 +200,21 @@ public class BudgetResultsExport {
 
                     BudgetPeriodResults results = model.getResults(model.getDescriptorList().get(i), account);
 
-                    c = r.createCell(++col);
-                    c.setCellType(CellType.NUMERIC);
+                    c = r.createCell(++col, CellType.NUMERIC);
                     c.setCellValue(results.getBudgeted().doubleValue());
                     c.setCellStyle(amountStyle);
 
                     CellReference budgetedRef = new CellReference(row, col);
                     budgetedRefList.add(budgetedRef);
 
-                    c = r.createCell(++col);
-                    c.setCellType(CellType.NUMERIC);
+                    c = r.createCell(++col, CellType.NUMERIC);
                     c.setCellValue(results.getChange().doubleValue());
                     c.setCellStyle(amountStyle);
 
                     CellReference changeRef = new CellReference(row, col);
                     changeRefList.add(changeRef);
 
-                    c = r.createCell(++col);
-                    c.setCellType(CellType.FORMULA);
+                    c = r.createCell(++col, CellType.FORMULA);
                     c.setCellStyle(amountStyle);
                     c.setCellFormula(budgetedRef.formatAsString() + "-" + changeRef.formatAsString());
 
@@ -270,24 +267,21 @@ public class BudgetResultsExport {
 
                     BudgetPeriodResults results = model.getResults(model.getDescriptorList().get(i), group);
 
-                    c = r.createCell(++col);
-                    c.setCellType(CellType.NUMERIC);
+                    c = r.createCell(++col, CellType.NUMERIC);
                     c.setCellValue(results.getBudgeted().doubleValue());
                     c.setCellStyle(amountStyle);
 
                     CellReference budgetedRef = new CellReference(row, col);
                     budgetedRefList.add(budgetedRef);
 
-                    c = r.createCell(++col);
-                    c.setCellType(CellType.NUMERIC);
+                    c = r.createCell(++col, CellType.NUMERIC);
                     c.setCellValue(results.getChange().doubleValue());
                     c.setCellStyle(amountStyle);
 
                     CellReference changeRef = new CellReference(row, col);
                     changeRefList.add(changeRef);
 
-                    c = r.createCell(++col);
-                    c.setCellType(CellType.FORMULA);
+                    c = r.createCell(++col, CellType.FORMULA);
                     c.setCellStyle(amountStyle);
                     c.setCellFormula(budgetedRef.formatAsString() + "-" + changeRef.formatAsString());
 
@@ -338,8 +332,7 @@ public class BudgetResultsExport {
     }
 
     private static void addSummaryCell(final Row row, final int col, final List<CellReference> cellReferenceList, final CellStyle style) {
-        final Cell c = row.createCell(col);
-        c.setCellType(CellType.FORMULA);
+        final Cell c = row.createCell(col, CellType.FORMULA);
         c.setCellStyle(style);
         c.setCellFormula(buildAddFormula(cellReferenceList));
     }
