@@ -69,11 +69,17 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     @Override
     public synchronized void shutdown() {
 
-        // Stop the trash executor service
-        ((JpaTrashDAO)getTrashDAO()).stopTrashExecutor();
+        emLock.lock();
 
-        // Stop the shared executor service, wait for all tasks to complete and reset
-        shutDownExecutor();
+        try {
+            // Stop the trash executor service
+            ((JpaTrashDAO) getTrashDAO()).stopTrashExecutor();
+
+            // Stop the shared executor service, wait for all tasks to complete and reset
+            shutDownExecutor();
+        } finally {
+            emLock.unlock();
+        }
     }
 
     @Override

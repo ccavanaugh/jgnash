@@ -159,9 +159,14 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                 }
             });
 
-            result = future.get();  // block and return
+            try {
+                result = future.get();  // block and return
+            } catch (final InterruptedException ie) {
+                Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.INFO, "Interrupted while waiting for result");
+                result = false;
+            }
 
-        } catch (final InterruptedException | ExecutionException e2) {
+        } catch (final ExecutionException e2) {
             logSevere(AbstractJpaDAO.class, e2);
             Thread.currentThread().interrupt();
         }
