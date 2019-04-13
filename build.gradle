@@ -16,30 +16,30 @@ allprojects {
     version = "3.0.4"
 
     project.ext {
-        junitVersion = "5.4.1"
+        junitVersion = "5.4.2"              // https://junit.org/junit5/
         junitextensionsVersion = "2.3.0"    // https://github.com/glytching/junit-extensions
         awaitilityVersion = "3.1.6"         // https://github.com/awaitility/awaitility
 
         picocliVersion = "3.9.5"            // https://github.com/remkop/picocli
 
         apachePoiVersion = "4.1.0"          // https://poi.apache.org/
-        commonsCsvVersion = "1.6"
-        commonsTextVersion = "1.6"
-        commonsLangVersion = "3.8.1"
+        commonsCsvVersion = "1.6"           // https://commons.apache.org/proper/commons-csv/
+        commonsTextVersion = "1.6"          // https://commons.apache.org/proper/commons-text/
+        commonsLangVersion = "3.8.1"        // https://commons.apache.org/proper/commons-lang/
 
-        h2Version = "1.4.199"
-        hsqldbVersion = "2.4.1"
+        h2Version = "1.4.199"               // http://www.h2database.com/html/main.html
+        hsqldbVersion = "2.4.1"             // http://hsqldb.org/
 
-        xstreamVersion = "1.4.11.1"
+        xstreamVersion = "1.4.11.1"         // https://github.com/x-stream/xstream
 
-        hibernateVersion = "5.4.2.Final"
+        hibernateVersion = "5.4.2.Final"    // http://hibernate.org/orm/
         hikariVersion = "3.3.1"             // https://github.com/brettwooldridge/HikariCP
         
-        pdfBoxVersion = "2.0.14"
+        pdfBoxVersion = "2.0.15"            // https://pdfbox.apache.org/
 
-        nettyVersion = "4.1.34.Final"
+        nettyVersion = "4.1.34.Final"       // https://netty.io/index.html
 
-        slf4jVersion = "1.8.0-beta4"
+        slf4jVersion = "1.8.0-beta4"        // https://www.slf4j.org/news.html
     }
 }
 
