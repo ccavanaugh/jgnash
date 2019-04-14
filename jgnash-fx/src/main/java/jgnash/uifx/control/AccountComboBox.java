@@ -22,6 +22,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
@@ -46,16 +48,21 @@ import jgnash.util.NotNull;
 
 /**
  * ComboBox of available accounts.  A Predicate for allowed accounts may be specified.
+ * <p>
+ * The combo will disable itself if it is empty after filtering.
+ *
+ * <a href="https://bugs.openjdk.java.net/browse/JDK-8129123">Bug JDK-8129123</a>
  *
  * @author Craig Cavanaugh
- *         <p>
- *         <a href="https://bugs.openjdk.java.net/browse/JDK-8129123">Bug JDK-8129123</a>
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
 
-    final private FilteredList<Account> filteredList;
+    private final FilteredList<Account> filteredList;
 
-    final private ObservableList<Account> items;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final SimpleListProperty<Account> listProperty;
+
+    private final ObservableList<Account> items;
 
     private ListView<Account> listView;
 
@@ -65,6 +72,8 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         // By default only visible accounts that are not locked or placeholders are shown
         filteredList = new FilteredList<>(items, getDefaultPredicate());
+
+        listProperty = new SimpleListProperty<>(filteredList);
 
         setItems(filteredList);
 
@@ -110,6 +119,9 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         // display the full account path instead of the name
         setConverter(accountStringConverter);
+
+        // disable if empty
+        disableProperty().bind(Bindings.equal(listProperty.sizeProperty(), 0));
     }
 
     /**
