@@ -112,11 +112,13 @@ public class PortfolioReportController implements ReportController {
         preferences.putBoolean(RECURSIVE, subAccountCheckBox.isSelected());
         preferences.putBoolean(VERBOSE, longNameCheckBox.isSelected());
 
-        addTable();
+        if (!accountComboBox.isDisabled()) {   // make sure an account is available
+            addTable();
 
-        // send notification the report has been updated
-        if (refreshRunnable != null) {
-            refreshRunnable.run();
+            // send notification the report has been updated
+            if (refreshRunnable != null) {
+                refreshRunnable.run();
+            }
         }
     }
 
