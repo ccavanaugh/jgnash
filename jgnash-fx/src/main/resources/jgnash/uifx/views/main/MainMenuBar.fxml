@@ -93,7 +93,7 @@
             <MenuItem text="%Menu.NetWorth.Name" onAction="#handleDisplayNetWorthReport"/>
             <MenuItem text="%Menu.BalanceSheet.Name" onAction="#handleDisplayBalanceSheetReport"/>
             <MenuItem text="%Menu.ProfitLoss.Name" onAction="#handleDisplayProfitLossReport"/>
-            <MenuItem text="%Menu.Portfolio.Name" onAction="#handleDisplayPortfolioReport"/>
+            <MenuItem text="%Menu.Portfolio.Name" fx:id="portfolioReportMenuItem" onAction="#handleDisplayPortfolioReport"/>
         </Menu>
     </Menu>
 

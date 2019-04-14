@@ -81,6 +81,8 @@ import jgnash.uifx.wizard.file.NewFileWizard;
 public class MenuBarController implements MessageListener {
 
     private final BooleanProperty disabled = new SimpleBooleanProperty(true);
+    
+    private final BooleanProperty investDisabled = new SimpleBooleanProperty(false);
 
     @FXML
     private MenuItem configureTranImportFiltersMenuItem;
@@ -123,6 +125,9 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private MenuItem optionsMenuItem;
+
+    @FXML
+    private MenuItem portfolioReportMenuItem;
 
     @FXML
     private Menu themesMenu;
@@ -169,6 +174,7 @@ public class MenuBarController implements MessageListener {
         saveAsMenuItem.disableProperty().bind(disabled);
         shutdownServerMenuItem.disableProperty().bind(disabled.not());
         packDatabaseMenuItem.disableProperty().bind(disabled.not());
+        portfolioReportMenuItem.disableProperty().bind(Bindings.or(disabled, investDisabled));
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageList().emptyProperty()));
 
@@ -185,6 +191,7 @@ public class MenuBarController implements MessageListener {
         ThemeManager.addKnownThemes(themesMenu);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
+        MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT);
     }
 
     private void addWindowMenuItem(final RegisterStage registerStage) {
@@ -524,17 +531,32 @@ public class MenuBarController implements MessageListener {
         StageUtils.addBoundsListener(pair.getStage(), ImportScriptsDialogController.class, MainView.getPrimaryStage());
     }
 
+    private void checkAccountTypes() {
+        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            investDisabled.setValue(engine.getInvestmentAccountList().isEmpty());
+        }
+    }
+
     @Override
     public void messagePosted(final Message event) {
         switch (event.getEvent()) {
             case FILE_LOAD_SUCCESS:
-                JavaFXUtils.runLater(() -> disabled.set(false));
+                JavaFXUtils.runLater(() -> {
+                    disabled.set(false);
+                    checkAccountTypes();
+                });
                 break;
             case FILE_CLOSING:
                 JavaFXUtils.runLater(() -> {
                     closeAllWindows();
                     disabled.set(true);
                 });
+                break;
+            case ACCOUNT_ADD:
+            case ACCOUNT_REMOVE:
+                JavaFXUtils.runLater(this::checkAccountTypes);
                 break;
             default:
                 break;
