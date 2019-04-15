@@ -171,10 +171,10 @@ jGnash will need to be restarted after the first launch of a new version.
 Operating System specific files are download and a restart is required for
 correct operation.
 
-*Windows:*
+* Windows
 Simply double click on the jGnash.exe file.
 
-*UN*X:*  Start jGnash with the provided Bash script.  If jGnash fails to launch, check your file permissions and
+* UN*X / MacOS  Start jGnash with the provided *jGnash* Bash script.  If jGnash fails to launch, check your file permissions and
 make sure they are set to be executable or use a unzip tool that preserves file permissions.
 
 An example for UN*X users is shown below assuming you have changed to the installation directory:
