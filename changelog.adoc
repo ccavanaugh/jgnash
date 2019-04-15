@@ -18,7 +18,7 @@
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
-** Add option to round to whole numbers
+** Add option to round to whole numbers (adding rounding option property, file format change.. target 3.1.0)
 * Reinstate archive capability
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
@@ -26,6 +26,7 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.0.4
+* 04/15/2019 The jGnash launch script now works correctly when double clicked in MacOS. GitHub Pull Request #80) _[Pranay Kumar]_
 * 04/14/2019 Disable the Portfolio report if there are not any investment accounts.
 * 04/14/2019 A NPE could occur if the last investment account was deleted after showing the Portfolio report.
 * 04/13/2019 Eliminated zero width spaces from the export of a register to a xls/xlsx file.
@@ -34,7 +35,7 @@
 * 04/09/2019 Made the Enabled check box of the New Reminder dialog enabled by default.
 * 04/07/2019 Improved shutdown speed if background events are occurring.
 * 04/05/2019 Made internal changes to prevent race conditions during a shutdown.
-* 04/05/2019 Calculate opening balance if user changes reconcile date (GitHub Pull Request #79) _[Pranay Kumar]_
+* 04/05/2019 Calculate opening balance if user changes reconcile date. (GitHub Pull Request #79) _[Pranay Kumar]_
 * 04/04/2019 Prevent an NPE caused by a race condition between recurring transactions being processed and an
              application shutdown in process. (GitHub Issue #78)
 * 04/04/2019 Prevent accumulation of stale internal listeners that would result in wasted system memory and a slowdown
