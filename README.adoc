@@ -48,9 +48,9 @@ To learn more about the features of jGnash, visit the https://sourceforge.net/pr
 The jGnash download includes a user manual to help get you started with the basics if you are new to tracking finances.
 It also covers some of the more subtle features, command line options, and shortcuts that are not immediately obvious.
 
-The latest version of jGnash uses *OpenJFX* for the user interface. This replaces the old version that used Java Swing for the user interface.
-Experienced jGnash users will notice interface improvements.
-For example, try using the vertical and horizontal scroll wheels in a date picker and the collapsible transaction forms.
+The latest version of jGnash uses *OpenJFX* for the user interface. This replaces the old version that used Java Swing
+for the user interface.  Experienced jGnash users will notice interface improvements.  For example, try using the
+vertical and horizontal scroll wheels in a date picker and the collapsible transaction forms.
 
 [[Donations]]
 == Donations
@@ -163,19 +163,19 @@ You can download jGnash from the https://sourceforge.net/projects/jgnash/files/A
 [[Running]]
 == To Run:
 
-Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are `.exe` and `bash shell` files, respectively.)
-Mac OS X users will have created application launch files per the <<Install-MacOSX, Mac installation instructions.>>
+Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are `.exe`
+and `bash shell` files, respectively.) Mac OS X users will have created application launch files per
+the <<Install-MacOSX, Mac installation instructions.>>
 
 [NOTE]
 jGnash will need to be restarted after the first launch of a new version.
 Operating System specific files are download and a restart is required for
 correct operation.
 
-* Windows
-Simply double click on the jGnash.exe file.
+* Windows: Simply double click on the jGnash.exe file.
 
-* UN*X / MacOS  Start jGnash with the provided *jGnash* Bash script.  If jGnash fails to launch, check your file permissions and
-make sure they are set to be executable or use a unzip tool that preserves file permissions.
+* UN*X / MacOS:  Start jGnash with the provided *jGnash* Bash script.  If jGnash fails to launch, check your file
+permissions and make sure they are set to be executable or use a unzip tool that preserves file permissions.
 
 An example for UN*X users is shown below assuming you have changed to the installation directory:
 
@@ -239,4 +239,5 @@ gradlew clean distZip
 ----
 
 
-This will run the Gradle tasks necessary to execute core tests and create the distribution file.  The distributable zip file will be produced at the root of the build directory called jGnash-_version_-bin.zip.
+This will run the Gradle tasks necessary to execute core tests and create the distribution file.  The distributable zip
+file will be produced at the root of the build directory called jGnash-_version_-bin.zip.
