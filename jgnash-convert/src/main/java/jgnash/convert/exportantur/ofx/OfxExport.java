@@ -39,6 +39,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
 import jgnash.util.FileUtils;
+import jgnash.util.NotNull;
 
 /**
  * Primary class for OFX export. The SGML format is used instead of the newer
@@ -275,7 +276,7 @@ public class OfxExport implements OfxTags {
         indentedWriter.println(wrapClose(STMTTRN), --indentLevel);
     }
 
-    private void writeFitID(final Transaction transaction) {
+    private void writeFitID(@NotNull final Transaction transaction) {
         // write out the banks transaction id if previously imported
         if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
             indentedWriter.println(wrap(FITID, transaction.getFitid()), indentLevel);

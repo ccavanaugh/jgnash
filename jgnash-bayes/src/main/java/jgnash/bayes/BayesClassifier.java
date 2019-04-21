@@ -24,6 +24,8 @@ import java.util.Map.Entry;
  * Naive Bayes BayesClassifier.
  * Modeled after classifier presented in "Programming Collective Intelligence" by Toby Segaran
  *
+ * @param <E> the type of mapped value
+ * 
  * @author Craig Cavanaugh
  */
 public class BayesClassifier<E> {
@@ -42,6 +44,11 @@ public class BayesClassifier<E> {
     private final Map<String, Map<E, Integer>> featureCounter = new HashMap<>();
     private final Map<E, Integer> classCounter = new HashMap<>();
 
+    /**
+     * Constructor
+     * 
+     * @param defaultClass the mapped type
+     */
     public BayesClassifier(final E defaultClass) {
         this.defaultClass = defaultClass;
     }
@@ -139,10 +146,22 @@ public class BayesClassifier<E> {
         incrementClass(classification);
     }
 
+    /**
+     * Trains the classifier
+     * 
+     * @param item training string
+     * @param classification object being classified
+     */
     public void train(final String item, final E classification) {
         train(Arrays.asList(item.toLowerCase(Locale.getDefault()).split(WHITE_SPACE_REGEX)), classification);               
     }
 
+    /**
+     * Returns the best probabilistic match 
+     * 
+     * @param item String data to match
+     * @return best possible match
+     */
     public E classify(final String item) {
         E bestClass = defaultClass;
         double classProb;
@@ -152,7 +171,7 @@ public class BayesClassifier<E> {
         Map<E, Double> probabilities = new HashMap<>();
 
         // find the category with the highest probability
-        for (E classification : classCounter.keySet()) {
+        for (final E classification : classCounter.keySet()) {
             classProb = getClassProbability(item.toLowerCase(Locale.getDefault()), classification);
             probabilities.put(classification, classProb);
             if (classProb > max) {
@@ -162,7 +181,7 @@ public class BayesClassifier<E> {
         }
                        
         // make sure the probability exceeds
-        for (Entry<E, Double> entry : probabilities.entrySet()) {
+        for (final Entry<E, Double> entry : probabilities.entrySet()) {
             if (!entry.getKey().equals(bestClass)) {
                 classProb = entry.getValue();
                 bestProbability = probabilities.get(bestClass);

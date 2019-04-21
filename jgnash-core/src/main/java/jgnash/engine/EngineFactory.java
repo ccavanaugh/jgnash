@@ -183,7 +183,7 @@ public class EngineFactory {
             for (int i = 0; i < fileList.size() - limit; i++) {
                 try {
                     Files.delete(fileList.get(i));
-                } catch (final Exception e) {
+                } catch (final IOException e) {
                     logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i));
                 }
             }
@@ -480,6 +480,7 @@ public class EngineFactory {
      * Saves the active database as a new file/format
      *
      * @param destination new file
+     * @param percentCompleteConsumer progress consumer
      * @throws IOException IO error
      */
     public static void saveAs(final String destination, final DoubleConsumer percentCompleteConsumer) throws IOException {
@@ -571,7 +572,11 @@ public class EngineFactory {
     /**
      * Saves a closed database as a new file/format
      *
+     * @param fileName file to save a copy of
      * @param newFileName new file
+     * @param password password
+     * @param percentCompleteConsumer progress consumer
+     * 
      * @throws IOException IO error
      */
     public static void saveAs(final String fileName, final String newFileName, final char[] password,

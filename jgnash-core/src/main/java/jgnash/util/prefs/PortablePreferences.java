@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
@@ -95,7 +96,7 @@ public class PortablePreferences {
         } else {
             exportFile = Paths.get(System.getProperty("user.dir") + FileUtils.SEPARATOR + "pref.xml");
         }
-        Logger.getLogger(PortablePreferences.class.getName()).info("Preference file: " + exportFile);
+        Logger.getLogger(PortablePreferences.class.getName()).log(Level.INFO, "Preference file: {0}", exportFile);
         return exportFile;
     }
 

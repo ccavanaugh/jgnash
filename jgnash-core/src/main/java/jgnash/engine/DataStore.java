@@ -102,6 +102,8 @@ public interface DataStore {
      * Renames a datastore.
      *
      * @param fileName name of the datastore to rename
+     * @param newFileName the new filename
+     * @throws java.io.IOException
      */
     default void rename(final String fileName, final String newFileName) throws IOException {
         final Path path = Paths.get(fileName);

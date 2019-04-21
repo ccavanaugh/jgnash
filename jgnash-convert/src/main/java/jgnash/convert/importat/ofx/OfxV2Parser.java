@@ -1270,7 +1270,7 @@ public class OfxV2Parser implements OfxTags {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     if (reader.getName().equals(parsingElement)) {
-                        logger.finest("Found the end of consumed element " + reader.getName());
+                        logger.log(Level.FINEST, "Found the end of consumed element {0}", reader.getName());
                         break parse;
                     }
                 default:
@@ -1281,9 +1281,9 @@ public class OfxV2Parser implements OfxTags {
     }
 
     public OfxBank getBank() {
-        logger.info("OFX Status was: " + statusCode);
-        logger.info("Status Level was: " + statusSeverity);
-        logger.info("File language was: " + language);
+        logger.log(Level.INFO, "OFX Status was: {0}", statusCode);
+        logger.log(Level.INFO, "Status Level was: {0}", statusSeverity);
+        logger.log(Level.INFO, "File language was: {0}", language);
 
         return bank;
     }

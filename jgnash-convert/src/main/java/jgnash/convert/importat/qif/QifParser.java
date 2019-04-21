@@ -373,7 +373,7 @@ public final class QifParser {
                 } else if (line.startsWith("M")) {
                     tran.setMemo(line.substring(1));
                 } else if (line.startsWith("A")) {
-                    logger.info("Ignored address line: " + line.substring(1));
+                    logger.log(Level.INFO, "Ignored address line: {0}", line.substring(1));
                 } else if (line.startsWith("I")) {
                     tran.price = line.substring(1);
                 } else if (line.startsWith("^")) {
@@ -449,7 +449,7 @@ public final class QifParser {
                 } else if (line.startsWith("M")) {
                     tran.setMemo(line.substring(1));
                 } else if (line.startsWith("A")) {
-                    logger.info("Ignored address line: " + line.substring(1));
+                    logger.log(Level.INFO, "Ignored address line: {0}", line.substring(1));
                 } else if (line.startsWith("Y")) {
                     tran.security = line.substring(1);
                 } else if (line.startsWith("I")) {

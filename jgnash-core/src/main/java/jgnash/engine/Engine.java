@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -158,14 +159,17 @@ public class Engine {
      * All engine instances will share the same message bus.
      */
     private MessageBus messageBus;
+    
     /**
      * Cached for performance.
      */
     private Config config;
+    
     /**
      * Cached for performance.
      */
     private RootAccount rootAccount;
+    
     private ExchangeRateDAO exchangeRateDAO;
     /**
      * Cached for performance.
@@ -2016,6 +2020,7 @@ public class Engine {
     /**
      * Returns an {@code Account} attribute.
      *
+     * @param account account to extract attribute from
      * @param key the attribute key
      * @return the attribute if found
      * @see #setAccountAttribute
@@ -2875,7 +2880,7 @@ public class Engine {
 
                     errors += future.get() ? 0 : 1;
 
-                } catch (final Exception e) {
+                } catch (final InterruptedException | ExecutionException e) {
                     errors = Integer.MAX_VALUE;
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
