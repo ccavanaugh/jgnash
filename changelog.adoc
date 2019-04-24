@@ -26,7 +26,7 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.1.0
-*
+* 04/24/2019 A JavaFX exception was being thrown during underlying changes to a budget.
 
 == Release 3.0.4
 * 04/15/2019 The jGnash launch script now works correctly when double clicked in MacOS. GitHub Pull Request #80) _[Pranay Kumar]_

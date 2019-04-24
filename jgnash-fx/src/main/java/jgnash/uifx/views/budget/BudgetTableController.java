@@ -268,7 +268,9 @@ public class BudgetTableController implements MessageListener {
         accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue)
                 -> JavaFXUtils.runLater(this::updateExpandedAccountList));
 
-        final ChangeListener<Object> budgetChangeListener = (observable, oldValue, newValue) -> handleBudgetChange();
+        // Calling handleBudgetChange which works for most changes, but can trigger an exception.
+        // handleBudgetUpdate rate limits and prevents an exception.
+        final ChangeListener<Object> budgetChangeListener = (observable, oldValue, newValue) -> handleBudgetUpdate();
 
         budget.addListener(budgetChangeListener);
         yearSpinner.valueProperty().addListener(budgetChangeListener);
