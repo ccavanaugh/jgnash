@@ -205,6 +205,11 @@ public class BudgetTableController implements MessageListener {
 
     private static final int UPDATE_PERIOD = 350; // update period in milliseconds
 
+    /**
+     * Used to alter timing for rate limiting the first boot for a better visual effect
+     */
+    private volatile boolean booted = false;
+
     @FXML
     private void initialize() {
 
@@ -327,7 +332,9 @@ public class BudgetTableController implements MessageListener {
             if (rateLimitExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
                 JavaFXUtils.runLater(runnable);    // update is assumed to be on the platform thread
             }
-        }, UPDATE_PERIOD, TimeUnit.MILLISECONDS);
+
+            booted = true;
+        }, booted ? UPDATE_PERIOD : 0, TimeUnit.MILLISECONDS);
     }
 
     @FXML
