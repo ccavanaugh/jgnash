@@ -18,14 +18,14 @@
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 ** flexible start / end period for different fiscal years
 ** flexible start date for the week
-** Add option to round to whole numbers (adding rounding option property, file format change.. target 3.1.0)
 * Reinstate archive capability
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 * Spreadsheet export for all tabular reports
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
-== Release 3.1.0
+== Release 3.1.0 __(File format change)__
+* 04/27/2019 The rounding mode and scale for Budgets is now configurable.
 * 04/24/2019 A JavaFX exception was being thrown during underlying changes to a budget.
 
 == Release 3.0.4

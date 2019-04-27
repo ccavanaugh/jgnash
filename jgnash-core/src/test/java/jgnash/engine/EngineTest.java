@@ -979,11 +979,10 @@ public abstract class EngineTest {
             // close and reopen to force check for persistence
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-            float version = EngineFactory.getFileVersion(Paths.get(testFile), EngineFactory.EMPTY_PASSWORD);
+            final float version = EngineFactory.getFileVersion(Paths.get(testFile), EngineFactory.EMPTY_PASSWORD);
+            final float engineVersion = Float.valueOf(Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION);
 
-            System.out.println(version);
-
-            assertEquals(version, Engine.CURRENT_VERSION, DELTA);
+            assertEquals(version, engineVersion, DELTA);
         } catch (final Exception e) {
             fail(e.getMessage());
         }

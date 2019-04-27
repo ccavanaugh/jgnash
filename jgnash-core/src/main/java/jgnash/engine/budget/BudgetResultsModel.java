@@ -38,7 +38,6 @@ import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.MathConstants;
 import jgnash.engine.RootAccount;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
@@ -462,9 +461,9 @@ public class BudgetResultsModel implements MessageListener {
         }
 
         // rescale the results
-        results.setChange(results.getChange().setScale(account.getCurrencyNode().getScale(), MathConstants.roundingMode));
-        results.setBudgeted(results.getBudgeted().setScale(account.getCurrencyNode().getScale(), MathConstants.roundingMode));
-        results.setRemaining(results.getRemaining().setScale(account.getCurrencyNode().getScale(), MathConstants.roundingMode));
+        results.setChange(results.getChange().setScale(budget.getRoundingScale(), budget.getRoundingMode()));
+        results.setBudgeted(results.getBudgeted().setScale(budget.getRoundingScale(), budget.getRoundingMode()));
+        results.setRemaining(results.getRemaining().setScale(budget.getRoundingScale(), budget.getRoundingMode()));
 
         return results;
     }
@@ -513,9 +512,9 @@ public class BudgetResultsModel implements MessageListener {
         }
 
         // rescale the results
-        results.setBudgeted(totalBudgeted.setScale(baseCurrency.getScale(), MathConstants.roundingMode));
-        results.setRemaining(remainingTotal.setScale(baseCurrency.getScale(), MathConstants.roundingMode));
-        results.setChange(totalChange.setScale(baseCurrency.getScale(), MathConstants.roundingMode));
+        results.setBudgeted(totalBudgeted.setScale(budget.getRoundingScale(), budget.getRoundingMode()));
+        results.setRemaining(remainingTotal.setScale(budget.getRoundingScale(), budget.getRoundingMode()));
+        results.setChange(totalChange.setScale(budget.getRoundingScale(), budget.getRoundingMode()));
 
         return results;
     }

@@ -17,6 +17,7 @@
  */
 package jgnash.engine.budget;
 
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,6 +46,7 @@ import jgnash.resource.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 public class Budget extends StoredObject implements Comparable<Budget>, Cloneable {
 
@@ -64,6 +66,21 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     @Enumerated(EnumType.STRING)
     @Column(name = "BUDGETPERIOD")
     private Period budgetPeriod = Period.MONTHLY;
+
+    /**
+     * Rounding mode for display of budget values.
+     * @since 3.1
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROUNDINGMODE", length = 12, nullable = false, columnDefinition = "varchar(12) default 'FLOOR'")
+    private RoundingMode roundingMode = RoundingMode.FLOOR;
+
+    /**
+     * Controls the number of decimals displayed for budgeting
+     * @since 3.1
+     */
+    @Column(name = "ROUNDINGSCALE", nullable = false, columnDefinition = "tinyint default 2")
+    private byte roundingScale = 2;
 
     /**
      * Account goals are stored internally by the account UUID.
@@ -191,6 +208,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
      * Returns a clone of this {@code Budget}.
      *
      * @return clone
+     * @throws java.lang.CloneNotSupportedException thrown if cloning error occurs
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
@@ -319,5 +337,49 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
                 accountGoals.put(UUIDConverter.fixUUID(key), budgetGoal);
             }
         }
+    }
+
+    /**
+     * Scale at which reported values are rounded to
+     *
+     * @return reporting scale for budget values
+     */
+    public byte getRoundingScale() {
+        return roundingScale;
+    }
+
+    /**
+     * Sets the reporting scale of budget values
+     *
+     * @param scale new scale value
+     */
+    public void setRoundingScale(final byte scale) {
+
+        if (scale < 0) {
+            throw new IllegalArgumentException("scale must not be negative");
+        }
+
+        this.roundingScale = scale;
+    }
+
+    /**
+     * Configured rounding mode for the budget
+     *
+     * @return returns the rounding mode
+     */
+    @NotNull
+    public RoundingMode getRoundingMode() {
+        return roundingMode;
+    }
+
+    /**
+     * Sets the rounding mode
+     *
+     * @param roundingMethod new rounding mode
+     */
+    public void setRoundingMode(@NotNull final RoundingMode roundingMethod) {
+        Objects.requireNonNull(roundingMethod);
+
+        this.roundingMode = roundingMethod;
     }
 }
