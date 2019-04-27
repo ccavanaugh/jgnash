@@ -39,6 +39,8 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import jgnash.engine.Engine;
+
 import static java.nio.file.StandardOpenOption.READ;
 
 /**
@@ -292,6 +294,14 @@ public class FileMagic {
         return result;
     }
 
+    /**
+     * Determines if this is a valid jGnash XML file.
+     *
+     * This will fail if the file was created by a future version of the file with a greater major version.
+     *
+     * @param path path to verify*
+     * @return {@code true} if valid.
+     */
     private static boolean isValidVersion2File(final Path path) {
 
         if (!Files.exists(path) || !Files.isReadable(path) || !Files.isRegularFile(path)) {
@@ -301,7 +311,11 @@ public class FileMagic {
         boolean result = false;
 
         if (isFile(path, XML_HEADER)) {
-            result = getXMLVersion(path).startsWith("2");
+            try {
+                result = (int)Math.floor(Float.valueOf(getXMLVersion(path))) <= Engine.CURRENT_MAJOR_VERSION;
+            } catch (final NumberFormatException nfe) {
+               Logger.getLogger(FileMagic.class.getName()).info("Invalid version string");
+            }
         }
 
         return result;
