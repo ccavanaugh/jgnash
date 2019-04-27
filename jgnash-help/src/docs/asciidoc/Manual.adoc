@@ -786,7 +786,8 @@ The reported period of the budget is independent of the per account budget goal 
 Example: Your salary is paid in bi-weekly intervals, but you want to see your budget reported by month.
 You can change the period for the income account to weekly or daily and enter your salary.
 
-When reported by month, jGnash automatically handles the difference in the periods 1and distributes your bi-weekly salary income across monthly boundaries.
+When reported by month, jGnash automatically handles the difference in the periods and distributes your bi-weekly
+salary income across monthly boundaries.
 ====
 
 === Graphical Overview
@@ -803,16 +804,38 @@ budgets, and export the active budget to a spreadsheet.
 The budget drop down list lets you quickly select between different budgets you have created.
 The btn:[Budget Manager] button displays a dialog that let you create, duplicate, and delete budgets.
 
-The btn:[Properties]
- button will display the dialog shown below with various options for the active budget.
+The year spinner allows you to bump the selected budget up against the selected year's transaction data.
+The selected year also effects the calendar periods when editing period amounts.
 
-image:budget-properties.png[]
+==== Properties
+The btn:[Properties] button will display the dialog shown below with various options for the active budget.
 
 The period used for the budget display can be changed in this dialog as well as the budget description.
 You may also select the account groups that are visible for the selected budget.
 
-The year spinner allows you to bump the selected budget up against the selected year's transaction data.
-The selected year also effects the calendar periods when editing period amounts.
+image:budget-properties.png[]
+
+The rounding method and number of decimals used to report budget results may be changed.
+The default Rounding Mode is _Floor_ which will round up expenses and round down income values which is a conservative
+view of current income and expenses.
+
+.Rounding Modes
+[cols="2,10", options="header"]
+|=============================
+|Mode       |Description
+|Ceiling    |Rounds towards positive infinity (_Optimistic View_)
+|Down       |Rounds towards zero
+|Half Down  |Rounds towards nearest neighbor or down if equal distance
+|Half Even  |Rounds towards nearest neighbor or towards even if equal distance
+|Half Up    |Rounds towards nearest neighbor or up if equal distance (_Banking_)
+|Floor      |Rounds towards negative infinity (_Conservative View_)
+|Up         |Rounds away from zero
+|=============================
+
+Reported values will be rounded to integers if you select a _Scale_ of 0.  The upper limit of the _Scale_ option
+is limited by the largest _Scale_ value of the Currencies you have configured.
+
+==== Budget Management
 
 Double clicking on an account name to the left of the panel will display a dialog that allows you to change the account
 specific budget period and period amounts.
@@ -1575,7 +1598,7 @@ This Appendix contains application keyboard shortcuts that are available to you 
 Depending on your operating system and how you have it configured, other shortcuts may be available that perform the same function.
 
 .Shortcut Keys
-[cols="1,1", options="header"]
+[cols="1,3", options="header"]
 |===
 | Keys
 | Function
@@ -1589,7 +1612,7 @@ Depending on your operating system and how you have it configured, other shortcu
 |===
 
 .Editing Keys
-[cols="1,1", options="header"]
+[cols="1,3", options="header"]
 |===
 | Keys
 | Function
