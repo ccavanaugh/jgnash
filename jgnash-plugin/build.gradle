@@ -10,6 +10,7 @@ project.ext {
 
 javafx {
     modules = [ "javafx.controls", "javafx.fxml" ]
+    version = "12.0.1"
 }
 
 dependencies {
