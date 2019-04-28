@@ -84,6 +84,8 @@ public class BudgetTableController implements MessageListener {
 
     private static final String RUNNING_TOTALS = "runningTotals";
 
+    private static final String ACCOUNT_COLUMN_WIDTH = "accountColumnWidth";
+
     private static final int ROW_HEIGHT_MULTIPLIER = 2;
 
     //TODO: Magic number that needs to be fixed or controlled with css
@@ -94,6 +96,8 @@ public class BudgetTableController implements MessageListener {
 
     // Initial column width
     private static final double INITIAL_WIDTH = 55;
+
+    private final Preferences preferences = Preferences.userNodeForPackage(BudgetTableController.class);
 
     @FXML
     private CheckBox runningTotalsButton;
@@ -224,8 +228,6 @@ public class BudgetTableController implements MessageListener {
 
     @FXML
     private void initialize() {
-
-        final Preferences preferences = Preferences.userNodeForPackage(BudgetTableController.class);
         runningTotalsButton.selectedProperty().setValue(preferences.getBoolean(RUNNING_TOTALS, false));
 
         rateLimitExecutor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
@@ -349,6 +351,8 @@ public class BudgetTableController implements MessageListener {
         accountTypeTable.setOnMouseMoved(this::handleMouseMove);         // cursor handler
         accountTypeTable.setOnMouseDragged(this::handleDividerDrag);     // drag handler
         accountTypeTable.setOnMousePressed(this::handleMouseClicked);    // drag handler
+
+        JavaFXUtils.runLater(() -> accountTreeView.setPrefWidth(preferences.getDouble(ACCOUNT_COLUMN_WIDTH, INITIAL_WIDTH * 2)));
     }
 
     /**
@@ -365,7 +369,8 @@ public class BudgetTableController implements MessageListener {
     }
 
     private void handleDividerDrag(final MouseEvent event) {
-        accountTreeView.setPrefWidth(startDragWidth + event.getSceneX() - startDragX);
+        accountTreeView.setPrefWidth(Math.max(startDragWidth + event.getSceneX() - startDragX, INITIAL_WIDTH * 2));
+        preferences.putDouble(ACCOUNT_COLUMN_WIDTH, accountTreeView.getWidth());
         event.consume();
     }
 
