@@ -252,13 +252,13 @@ public class BudgetTableController implements MessageListener {
         accountTreeView.fixedCellSizeProperty().bind(rowHeight);
 
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountSummaryTable.getStylesheets().addAll(StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_HORIZONTAL_CSS);
+        accountSummaryTable.getStylesheets().addAll(StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_TABLE_FOCUS);
         accountSummaryTable.setItems(expandedAccountList);
         accountSummaryTable.fixedCellSizeProperty().bind(rowHeight);
         accountSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(accountSummaryTable));
 
         accountTypeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountTypeTable.getStylesheets().addAll(StyleClass.HIDE_HEADER_CSS, StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS);
+        accountTypeTable.getStylesheets().addAll(StyleClass.HIDE_HEADER_CSS, StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_TABLE_FOCUS);
         accountTypeTable.setItems(accountGroupList);
         accountTypeTable.fixedCellSizeProperty().bind(rowHeight);
         accountTypeTable.prefHeightProperty()
@@ -270,7 +270,7 @@ public class BudgetTableController implements MessageListener {
         accountTypeTable.prefWidthProperty().bind(accountTreeView.prefWidthProperty());
 
         accountGroupPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountGroupPeriodSummaryTable.getStylesheets().addAll(StyleClass.HIDE_HEADER_CSS, StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS);
+        accountGroupPeriodSummaryTable.getStylesheets().addAll(StyleClass.HIDE_HEADER_CSS, StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_TABLE_FOCUS);
         accountGroupPeriodSummaryTable.setItems(accountGroupList);
         accountGroupPeriodSummaryTable.fixedCellSizeProperty().bind(rowHeight);
         accountGroupPeriodSummaryTable.prefHeightProperty()
@@ -830,9 +830,11 @@ public class BudgetTableController implements MessageListener {
         gridPane.getChildren().add(periodTable);
 
         periodTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        periodTable.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS);
+        periodTable.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_TABLE_FOCUS);
         periodTable.fixedCellSizeProperty().bind(rowHeight);
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
+
+        // TODO: disable reordering...
 
         // index exceeds allowed value because the user reduced the period count, reset to the maximum allowed value
         if (index > budgetResultsModel.getDescriptorList().size() - visibleColumnCount.get()) {
@@ -925,11 +927,12 @@ public class BudgetTableController implements MessageListener {
 
         gridPane.getChildren().remove(periodSummaryTable);
         periodSummaryTable = new TableView<>();
+
         GridPane.setConstraints(periodSummaryTable, column, row);
         gridPane.getChildren().add(periodSummaryTable);
 
         periodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        periodSummaryTable.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_HEADER_CSS);
+        periodSummaryTable.getStylesheets().addAll(StyleClass.HIDE_HORIZONTAL_CSS, StyleClass.HIDE_VERTICAL_CSS, StyleClass.HIDE_HEADER_CSS, StyleClass.HIDE_TABLE_FOCUS);
         periodSummaryTable.fixedCellSizeProperty().bind(rowHeight);
         periodSummaryTable.prefHeightProperty()
                 .bind(rowHeight.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));

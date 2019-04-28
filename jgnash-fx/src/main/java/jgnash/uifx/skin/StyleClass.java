@@ -48,6 +48,7 @@ public class StyleClass {
 
     public static final String ITALIC_NEGATIVE_CELL_ID = "italic-negative-label";
 
+    public static final String HIDE_TABLE_FOCUS = "jgnash/skin/tableHideRowFocus.css";
 
     public static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
 
