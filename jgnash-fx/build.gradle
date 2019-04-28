@@ -19,43 +19,43 @@ dependencies {
 
     // Hack to include all javafx platforms in the classpath
     // The platform specific libraries are excluded when distributions is assembled
-    compile 'org.openjfx:javafx-base:12'
-    compile 'org.openjfx:javafx-controls:12'
-    compile 'org.openjfx:javafx-fxml:12'
-    compile 'org.openjfx:javafx-graphics:12'
-    compile 'org.openjfx:javafx-media:12'
-    compile 'org.openjfx:javafx-swing:12'
-    compile 'org.openjfx:javafx-web:12'
+    compile 'org.openjfx:javafx-base:12.0.1'
+    compile 'org.openjfx:javafx-controls:12.0.1'
+    compile 'org.openjfx:javafx-fxml:12.0.1'
+    compile 'org.openjfx:javafx-graphics:12.0.1'
+    compile 'org.openjfx:javafx-media:12.0.1'
+    compile 'org.openjfx:javafx-swing:12.0.1'
+    compile 'org.openjfx:javafx-web:12.0.1'
 
-    compile 'org.openjfx:javafx-base:12:linux'
-    compile 'org.openjfx:javafx-controls:12:linux'
-    compile 'org.openjfx:javafx-fxml:12:linux'
-    compile 'org.openjfx:javafx-graphics:12:linux'
-    compile 'org.openjfx:javafx-media:12:linux'
-    compile 'org.openjfx:javafx-swing:12:linux'
-    compile 'org.openjfx:javafx-web:12:linux'
+    compile 'org.openjfx:javafx-base:12.0.1:linux'
+    compile 'org.openjfx:javafx-controls:12.0.1:linux'
+    compile 'org.openjfx:javafx-fxml:12.0.1:linux'
+    compile 'org.openjfx:javafx-graphics:12.0.1:linux'
+    compile 'org.openjfx:javafx-media:12.0.1:linux'
+    compile 'org.openjfx:javafx-swing:12.0.1:linux'
+    compile 'org.openjfx:javafx-web:12.0.1:linux'
 
-    compile 'org.openjfx:javafx-base:12:win'
-    compile 'org.openjfx:javafx-controls:12:win'
-    compile 'org.openjfx:javafx-fxml:12:win'
-    compile 'org.openjfx:javafx-graphics:12:win'
-    compile 'org.openjfx:javafx-media:12:win'
-    compile 'org.openjfx:javafx-swing:12:win'
-    compile 'org.openjfx:javafx-web:12:win'
+    compile 'org.openjfx:javafx-base:12.0.1:win'
+    compile 'org.openjfx:javafx-controls:12.0.1:win'
+    compile 'org.openjfx:javafx-fxml:12.0.1:win'
+    compile 'org.openjfx:javafx-graphics:12.0.1:win'
+    compile 'org.openjfx:javafx-media:12.0.1:win'
+    compile 'org.openjfx:javafx-swing:12.0.1:win'
+    compile 'org.openjfx:javafx-web:12.0.1:win'
 
-    compile 'org.openjfx:javafx-base:12:mac'
-    compile 'org.openjfx:javafx-controls:12:mac'
-    compile 'org.openjfx:javafx-fxml:12:mac'
-    compile 'org.openjfx:javafx-graphics:12:mac'
-    compile 'org.openjfx:javafx-media:12:mac'
-    compile 'org.openjfx:javafx-swing:12:mac'
-    compile 'org.openjfx:javafx-web:12:mac'
+    compile 'org.openjfx:javafx-base:12.0.1:mac'
+    compile 'org.openjfx:javafx-controls:12.0.1:mac'
+    compile 'org.openjfx:javafx-fxml:12.0.1:mac'
+    compile 'org.openjfx:javafx-graphics:12.0.1:mac'
+    compile 'org.openjfx:javafx-media:12.0.1:mac'
+    compile 'org.openjfx:javafx-swing:12.0.1:mac'
+    compile 'org.openjfx:javafx-web:12.0.1:mac'
     // end hack
 }
 
 javafx {
     modules = [ "javafx.base", "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing", "javafx.graphics", "javafx.media"]
-    version = "12"
+    version = "12.0.1"
 }
 
 startScripts.enabled = false
