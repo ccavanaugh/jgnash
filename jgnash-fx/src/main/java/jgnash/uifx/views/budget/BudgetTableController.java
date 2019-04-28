@@ -46,6 +46,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -853,6 +854,12 @@ public class BudgetTableController implements MessageListener {
         periodTable.setOnMouseMoved(this::handleMouseMove);         // cursor
         periodTable.setOnMouseDragged(this::handleDividerDrag);     // drag
         periodTable.setOnMousePressed(this::handleMouseClicked);    // drag
+
+        // hack to disable reordering of the table columns
+        periodTable.widthProperty().addListener((source, oldWidth, newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) periodTable.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((observable, oldValue, newValue) -> header.setReordering(false));
+        });
     }
 
     private TableColumn<AccountGroup, BigDecimal> buildAccountPeriodSummaryColumn(final int index) {
