@@ -37,7 +37,7 @@ allprojects {
         
         pdfBoxVersion = "2.0.15"            // https://pdfbox.apache.org/
 
-        nettyVersion = "4.1.34.Final"       // https://netty.io/index.html
+        nettyVersion = "4.1.36.Final"       // https://netty.io/index.html
 
         slf4jVersion = "1.8.0-beta4"        // https://www.slf4j.org/news.html
     }
