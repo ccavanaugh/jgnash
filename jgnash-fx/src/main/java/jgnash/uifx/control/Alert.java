@@ -17,9 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -32,13 +29,15 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
-import jgnash.resource.util.ResourceUtils;
+
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * A Better behaved Alert class.
@@ -48,6 +47,8 @@ import jgnash.resource.util.ResourceUtils;
 public class Alert {
 
     static final int HEIGHT_MULTIPLIER = 3;
+
+    private static final int MIN_WIDTH = 350;
 
     @InjectFXML
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
@@ -138,7 +139,14 @@ public class Alert {
     }
 
     public Optional<ButtonType> showAndWait() {
-        dialog.setResizable(false);
+        dialog.setMinWidth(MIN_WIDTH);  // enforce a minimum width
+
+        dialog.setOnShown(event -> {
+            dialog.sizeToScene();
+            dialog.setMinHeight(dialog.getHeight());
+            //dialog.setResizable(false);   // TODO: This shrinks the window to zero height on linux
+        });
+
         dialog.showAndWait();
         return getButtonType();
     }
