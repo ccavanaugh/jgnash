@@ -25,7 +25,9 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.1.0 __(File format change)__
-* 05/03/2019 Improved size behavior for Alert dialogs (GitHub Issue #82)
+* 05/04/2019 Correction for reports with running totals between periods incorrectly hiding accounts when the
+             'hide zero balance accounts' box is selected.
+* 05/03/2019 Improved the size behavior for Alert dialogs on 4K displays (GitHub Issue #82)
 * 05/02/2019 Updated to the latest Netty dependency.
 * 04/28/2019 Cleaned up selection focus visual issues in the Budget view caused by poor JavaFX behavior.
 * 04/28/2019 Protect against unwanted Budget column reordering.

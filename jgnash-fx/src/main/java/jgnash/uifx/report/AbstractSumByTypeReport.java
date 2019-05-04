@@ -132,19 +132,28 @@ public abstract class AbstractSumByTypeReport extends Report {
 
         // remove any account that will report a zero balance for all periods
         if (hideZeroBalanceAccounts) {
-            Iterator<Account> i = accounts.iterator();
+            final Iterator<Account> i = accounts.iterator();
 
             while (i.hasNext()) {
-                Account account = i.next();
+                final Account account = i.next();
                 boolean remove = true;
 
                 if (runningTotal) {
-                    for (LocalDate date : startDates) {
+                    for (final LocalDate date : startDates) {
                         if (account.getBalance(date).compareTo(BigDecimal.ZERO) != 0) {
                             remove = false;
                             break;
                         }
                     }
+
+                    for (final LocalDate date : endDates) {
+                        if (account.getBalance(date).compareTo(BigDecimal.ZERO) != 0) {
+                            remove = false;
+                            break;
+                        }
+                    }
+
+
                 } else {
                     for (int j = 0; j < startDates.size(); j++) {
                         if (account.getBalance(startDates.get(j), endDates.get(j)).compareTo(BigDecimal.ZERO) != 0) {
