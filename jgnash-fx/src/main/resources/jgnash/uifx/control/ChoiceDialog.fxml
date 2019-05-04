@@ -17,14 +17,12 @@
         <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
-    <Label fx:id="message" text="No Content" wrapText="true" minWidth="150" maxWidth="400" graphicTextGap="15"/>
+    <Label fx:id="message" text="No Content" wrapText="true" minWidth="300" maxWidth="400" graphicTextGap="15"/>
     <ComboBox fx:id="comboBox" GridPane.rowIndex="1"  minWidth="350" maxWidth="Infinity"/>
     <ButtonBar fx:id="buttonBar" GridPane.rowIndex="2" >
         <buttons>
-            <Button fx:id="okButton" text="%Button.Ok"
-                    ButtonBar.buttonData="OK_DONE"/>
-            <Button fx:id="cancelButton" text="%Button.Cancel"
-                    ButtonBar.buttonData="CANCEL_CLOSE"/>
+            <Button fx:id="okButton" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+            <Button fx:id="cancelButton" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>

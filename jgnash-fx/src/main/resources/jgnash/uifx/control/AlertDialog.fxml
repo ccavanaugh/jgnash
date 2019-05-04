@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" styleClass="form, dialog" minHeight="-Infinity">
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" styleClass="form, dialog">
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS"/>
   </columnConstraints>
@@ -14,6 +14,6 @@
     <RowConstraints vgrow="ALWAYS" valignment="TOP"/>
     <RowConstraints vgrow="NEVER"/>
   </rowConstraints>
-  <Label fx:id="message" text="No Content" wrapText="true" minWidth="280" GridPane.fillHeight="true" graphicTextGap="15"/>
+  <Label fx:id="message" text="No Content" wrapText="true" minWidth="300" GridPane.fillHeight="true" graphicTextGap="15"/>
   <ButtonBar fx:id="buttonBar" GridPane.rowIndex="1"/>
 </GridPane>

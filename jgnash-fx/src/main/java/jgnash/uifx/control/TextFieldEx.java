@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,6 +24,7 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.TextField;
 
 import jgnash.uifx.Options;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * TextField with expanded capabilities.
@@ -50,7 +50,7 @@ public class TextFieldEx extends TextField {
         // If the select on focus property is enabled, select the text when focus is received
         focusChangeListener = (observable, oldValue, newValue) -> {
             if (selectOnFocus.get()) {
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     if (getText() != null && isFocused() && isEditable() && !getText().isEmpty()) {
                         selectAll();
                     }

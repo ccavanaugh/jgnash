@@ -136,6 +136,7 @@ public class ChoiceDialog<T> {
         comboBox.getSelectionModel().select(item);   }
 
     public Optional<T> showAndWait() {
+        dialog.sizeToScene();
         dialog.setResizable(false);
         dialog.showAndWait();
         return Optional.ofNullable(getSelectedItem());

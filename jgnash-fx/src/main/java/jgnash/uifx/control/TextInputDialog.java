@@ -20,7 +20,6 @@ package jgnash.uifx.control;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,15 +29,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.Options;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * A better behaved TextInputDialog.
@@ -60,7 +59,7 @@ public class TextInputDialog {
     private Button cancelButton;
 
     @FXML
-    private TextField textField;
+    private TextFieldEx textField;
 
     @FXML
     private Label message;
@@ -72,7 +71,7 @@ public class TextInputDialog {
 
         dialog = FXMLUtils.loadFXML(this, "TextInputDialog.fxml", resources);
 
-        Platform.runLater(() -> textField.setText(defaultValue));
+        JavaFXUtils.runLater(() -> textField.setText(defaultValue));
 
         setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.QUESTION_CIRCLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER));
@@ -100,6 +99,7 @@ public class TextInputDialog {
     }
 
     public Optional<String> showAndWait() {
+        dialog.sizeToScene();
         dialog.setResizable(false);
         dialog.showAndWait();
         return Optional.ofNullable(textField.getText());
