@@ -36,6 +36,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
+import jgnash.resource.util.MonthName;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.time.Period;
 import jgnash.uifx.Options;
@@ -75,11 +76,15 @@ public class BudgetPropertiesDialogController {
     @FXML
     private Spinner<Integer> scaleSpinner;
 
+    @FXML
+    private ComboBox<MonthName> startMonthComboBox;
+
     private Budget budget;
 
     @FXML
     private void initialize() {
         periodComboBox.getItems().setAll(Period.values());
+        startMonthComboBox.getItems().setAll(MonthName.values());
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -111,6 +116,8 @@ public class BudgetPropertiesDialogController {
 
         roundingMethodComboBox.getItems().setAll(RoundMode.values());
         roundingMethodComboBox.setValue(RoundMode.FLOOR);
+
+        startMonthComboBox.setValue(MonthName.JANUARY);
     }
 
     @FXML
@@ -160,6 +167,11 @@ public class BudgetPropertiesDialogController {
             budget.setRoundingMode(roundingMethodComboBox.getValue().roundingMode);
         }
 
+        if (startMonthComboBox.getValue().getMonth() != budget.getStartMonth()) {
+            modified = true;
+            budget.setStartMonth(startMonthComboBox.getValue().getMonth());
+        }
+
         if (modified) {
             final Thread thread = new Thread(() -> {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -195,6 +207,7 @@ public class BudgetPropertiesDialogController {
             liabilityCheckBox.setSelected(budget.areLiabilityAccountsIncluded());
             scaleSpinner.getValueFactory().setValue((int) budget.getRoundingScale());
             roundingMethodComboBox.setValue(RoundMode.valueOf(budget.getRoundingMode()));
+            startMonthComboBox.setValue(MonthName.valueOf(budget.getStartMonth()));
         });
     }
 

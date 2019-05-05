@@ -80,10 +80,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     @Column(name = "ROUNDINGSCALE", nullable = false, columnDefinition = "tinyint default 2")
     private byte roundingScale = 2;
 
-    /**
-     * Controls the starting month of the budget
-     * @since 3.1
-     */
     @Enumerated(EnumType.STRING)
     @Column(name = "STARTMONTH", length = 10, nullable = false, columnDefinition = "varchar(10) default 'JANUARY'")
     private Month startMonth = Month.JANUARY;
@@ -367,5 +363,21 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
         Objects.requireNonNull(roundingMethod);
 
         this.roundingMode = roundingMethod;
+    }
+
+    /**
+     * Returns the starting month of the budget
+     * @since 3.1
+     */
+    public Month getStartMonth() {
+        return startMonth;
+    }
+
+    /**
+     * Sets the starting month of the budget
+     * @since 3.1
+     */
+    public void setStartMonth(Month startMonth) {
+        this.startMonth = startMonth;
     }
 }

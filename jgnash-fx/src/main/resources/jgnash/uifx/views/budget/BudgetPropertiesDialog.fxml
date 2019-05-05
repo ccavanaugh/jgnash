@@ -22,6 +22,7 @@
         <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="ALWAYS"/>
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
@@ -32,7 +33,10 @@
     <Label text="%Label.Period" labelFor="$periodComboBox" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <ComboBox fx:id="periodComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="Infinity"/>
 
-    <TitledPane text="%Title.Rounding" collapsible="false" GridPane.rowIndex="2" GridPane.columnSpan="2">
+    <Label text="%Label.StartMonth" labelFor="$periodComboBox" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="startMonthComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+    <TitledPane text="%Title.Rounding" collapsible="false" GridPane.rowIndex="3" GridPane.columnSpan="2">
         <GridPane styleClass="form">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER"/>
@@ -53,7 +57,7 @@
 
     </TitledPane>
 
-    <TitledPane text="%Title.AccountGroups" collapsible="false" GridPane.rowIndex="3" GridPane.columnSpan="2">
+    <TitledPane text="%Title.AccountGroups" collapsible="false" GridPane.rowIndex="4" GridPane.columnSpan="2">
         <GridPane styleClass="form">
             <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS"/>
@@ -72,7 +76,7 @@
         </GridPane>
     </TitledPane>
 
-    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="4" GridPane.columnSpan="2">
+    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="5" GridPane.columnSpan="2">
         <buttons>
             <Button onAction="#handleOkayAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
             <Button onAction="#handleCloseAction" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
