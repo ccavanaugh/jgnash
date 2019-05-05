@@ -18,11 +18,11 @@
 package jgnash.engine.budget;
 
 import java.math.RoundingMode;
+import java.time.DayOfWeek;
+import java.time.Month;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,14 +32,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
-import jgnash.engine.xstream.UUIDConverter;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.time.Period;
 import jgnash.util.NotNull;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Budget Object.
@@ -81,6 +79,22 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
      */
     @Column(name = "ROUNDINGSCALE", nullable = false, columnDefinition = "tinyint default 2")
     private byte roundingScale = 2;
+
+    /**
+     * Controls the starting month of the budget
+     * @since 3.1
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STARTMONTH", length = 10, nullable = false, columnDefinition = "varchar(10) default 'JANUARY'")
+    private Month startMonth = Month.JANUARY;
+
+    /**
+     * Controls the starting day of the week for a budget
+     * @since 3.1
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STARTDAY", length = 10, nullable = false, columnDefinition = "varchar(10) default 'SUNDAY'")
+    private DayOfWeek startDay = DayOfWeek.SUNDAY;
 
     /**
      * Account goals are stored internally by the account UUID.
@@ -309,34 +323,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     @Override
     public String toString() {
         return getName();
-    }
-
-    /**
-     * Required by XStream for proper serialization.
-     *
-     * @return Properly initialized Budget
-     */
-    protected Object readResolve() {
-        postLoad();
-        return this;
-    }
-
-    @PostLoad
-    protected void postLoad() {
-
-        // TODO: The conversion below is to be removed for jGnash 3.x
-        // fix-up and old Account UUID's that may have been converted
-        final Set<String> keys = new HashSet<>(accountGoals.keySet());
-
-        for (final String key : keys) {
-            if (key.length() <= 32) {   // old uuid format
-                final BudgetGoal budgetGoal = accountGoals.get(key);
-
-                // update the map with the correct UUID format
-                accountGoals.remove(key);
-                accountGoals.put(UUIDConverter.fixUUID(key), budgetGoal);
-            }
-        }
     }
 
     /**
