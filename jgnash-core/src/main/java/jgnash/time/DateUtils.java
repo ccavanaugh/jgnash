@@ -290,9 +290,35 @@ public class DateUtils {
      * @return The array of dates
      */
     public static LocalDate[] getFirstDayMonthly(final int year) {
-        LocalDate[] list = new LocalDate[12];
-        for (int i = 1; i <= 12; i++) {
-            list[i - 1] = getFirstDayOfTheMonth(i, year);
+        return getFirstDayMonthly(Month.JANUARY, year, 12);
+    }
+
+    /**
+     * Generates an array of dates starting on the first day of every month in
+     * the specified year.  The year will roll over if needed
+     *
+     * @param month That month to start with
+     * @param year The year to generate the array for
+     * @param  months The number of months
+     * @return The array of dates
+     */
+    public static LocalDate[] getFirstDayMonthly(final Month month, final int year, final int months) {
+        LocalDate[] list = new LocalDate[months];
+
+        int index = 0;
+        int _month = month.getValue();
+        int _year = year;
+
+        while (index < months) {
+            list[index] = getFirstDayOfTheMonth(_month, _year);
+            _month++;
+
+            if (_month > 12) {
+                _year++;
+                _month = 1;
+            }
+
+            index++;
         }
         return list;
     }
