@@ -55,13 +55,10 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
 
     final private Period budgetPeriod;
 
-    final private int budgetYear;
-
     BudgetPeriodDescriptor(final LocalDate budgetDate, final int budgetYear, final Period budgetPeriod) {
         Objects.requireNonNull(budgetPeriod);
         Objects.requireNonNull(budgetDate);
 
-        this.budgetYear = budgetYear;
         this.budgetPeriod = budgetPeriod;
         this.startPeriod = budgetDate.getDayOfYear() - 1;   // zero based index vs. 1 based day of year
 
@@ -103,11 +100,13 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
                         DateUtils.asDate(endDate));
                 break;
             case MONTHLY:
+                System.out.println(startDate.toString());
                 final int days = startDate.lengthOfMonth();
                 endDate = DateUtils.getLastDayOfTheMonth(startDate);
                 endPeriod = startPeriod + days - 1;
 
                 periodDescription = ResourceUtils.getString("Pattern.MonthOfYear", DateUtils.asDate(startDate));
+                System.out.println(periodDescription);
                 break;
             case QUARTERLY:
                 endDate = DateUtils.getLastDayOfTheQuarter(startDate);
@@ -155,7 +154,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
         return periodDescription;
     }
 
-    public Period getBudgetPeriod() {
+    Period getBudgetPeriod() {
         return budgetPeriod;
     }
 
@@ -189,7 +188,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
 
             h = 1;
             h = prime * h + budgetPeriod.hashCode();
-            h = prime * h + budgetYear;
+            //h = prime * h + budgetYear;
             h = prime * h + startPeriod;
             hash = h;
         }
@@ -212,7 +211,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
 
         BudgetPeriodDescriptor other = (BudgetPeriodDescriptor) obj;
 
-        return budgetPeriod == other.budgetPeriod && budgetYear == other.budgetYear && startPeriod == other.startPeriod;
+        return budgetPeriod == other.budgetPeriod && startPeriod == other.startPeriod;
     }
 
     /**
