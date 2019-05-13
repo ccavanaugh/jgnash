@@ -18,8 +18,8 @@
 package jgnash.time;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,6 +54,10 @@ public class DateUtils {
      * Maximum number of weeks that can occur in a year.
      */
     public static final int LEAP_WEEK = 53;
+
+    private static final int MONTHS_PER_YEAR = 12;
+
+    private static final int DAYS_PER_WEEK = 7;
 
     private static final String DATE_FORMAT = "dateFormat";
 
@@ -260,7 +264,7 @@ public class DateUtils {
      * @param year calendar year
      * @return the number of days in the year
      */
-    private static int getDaysInYear(final int year) {
+    public static int getDaysInYear(final int year) {
         return LocalDate.ofYearDay(year, 1).lengthOfYear();
     }
 
@@ -271,15 +275,20 @@ public class DateUtils {
      * @return The array of dates
      */
     public static LocalDate[] getFirstDayBiWeekly(final int year) {
-        List<LocalDate> dates = new ArrayList<>();
+        return getFirstDayWeekly(Month.JANUARY, year,
+                (int) Math.ceil((float) DateUtils.getNumberOfWeeksInYear(year) / 2.0), 2);
+    }
 
-        LocalDate[] allWeeks = getFirstDayWeekly(year);
-
-        for (int i = 0; i < allWeeks.length; i += 2) {
-            dates.add(allWeeks[i]);
-        }
-
-        return dates.toArray(new LocalDate[0]);
+    /**
+     * Returns an array of the first days bi-weekly given a stating month, year, and the number of weeks
+     *
+     * @param statingMonth The Month to begin with
+     * @param year         The year to generate the array for
+     * @param weeks        The number of dates to return
+     * @see #getFirstDayWeekly(Month, int, int)
+     */
+    public static LocalDate[] getFirstDayBiWeekly(final Month statingMonth, final int year, final int weeks) {
+        return getFirstDayWeekly(statingMonth, year, weeks, 2);
     }
 
     /**
@@ -290,19 +299,33 @@ public class DateUtils {
      * @return The array of dates
      */
     public static LocalDate[] getFirstDayMonthly(final int year) {
-        return getFirstDayMonthly(Month.JANUARY, year, 12);
+        return getFirstDayMonthly(Month.JANUARY, year, MONTHS_PER_YEAR);
     }
 
     /**
      * Generates an array of dates starting on the first day of every month in
-     * the specified year.  The year will roll over if needed
+     * the specified year.
      *
-     * @param month That month to start with
-     * @param year The year to generate the array for
-     * @param  months The number of months
+     * @param month  That month to start with
+     * @param year   The year to generate the array for
+     * @param months The number of months
      * @return The array of dates
      */
     public static LocalDate[] getFirstDayMonthly(final Month month, final int year, final int months) {
+        return getFirstDayMonthly(month, year, months, 1);
+    }
+
+    /**
+     * Generates an array of dates starting on the first day of every month in
+     * the specified year.
+     *
+     * @param month  That month to start with
+     * @param year   The year to generate the array for
+     * @param months The number of months
+     * @param step   increment
+     * @return The array of dates
+     */
+    private static LocalDate[] getFirstDayMonthly(final Month month, final int year, final int months, final int step) {
         LocalDate[] list = new LocalDate[months];
 
         int index = 0;
@@ -311,11 +334,11 @@ public class DateUtils {
 
         while (index < months) {
             list[index] = getFirstDayOfTheMonth(_month, _year);
-            _month++;
+            _month += step;
 
-            if (_month > 12) {
+            if (_month > MONTHS_PER_YEAR) {
                 _year++;
-                _month = 1;
+                _month = _month - MONTHS_PER_YEAR;
             }
 
             index++;
@@ -352,14 +375,17 @@ public class DateUtils {
      * @return The array of quarter bound dates
      */
     public static LocalDate[] getFirstDayQuarterly(final int year) {
-        LocalDate[] bounds = new LocalDate[4];
+        return getFirstDayMonthly(Month.JANUARY, year, 4, 3);
+    }
 
-        bounds[0] = LocalDate.of(year, Month.JANUARY, 1);
-        bounds[1] = LocalDate.of(year, Month.APRIL, 1);
-        bounds[2] = LocalDate.of(year, Month.JULY, 1);
-        bounds[3] = LocalDate.of(year, Month.OCTOBER, 1);
-
-        return bounds;
+    /**
+     * Returns an array of the starting date of each quarter in a year.
+     *
+     * @param year The year to generate the array for
+     * @return The array of quarter bound dates
+     */
+    public static LocalDate[] getFirstDayQuarterly(final Month statingMonth, final int year, final int weeks) {
+        return getFirstDayMonthly(statingMonth, year, weeks, 3);
     }
 
     /**
@@ -371,19 +397,58 @@ public class DateUtils {
      * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
      */
     public static LocalDate[] getFirstDayWeekly(final int year) {
+        return getFirstDayWeekly(Month.JANUARY, year, getNumberOfWeeksInYear(year), 1);
+    }
 
-        //Use the ISO date formatter to perform the heavy lifting
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE;
+    /**
+     * Returns an array of weekly Dates per ISO 8601.
+     *
+     * @param statingMonth The Month to begin with
+     * @param year         The year to generate the array for
+     * @param weeks        The number of dates to return
+     * @return The array of dates
+     * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
+     */
+    public static LocalDate[] getFirstDayWeekly(final Month statingMonth, final int year, final int weeks) {
+        return getFirstDayWeekly(statingMonth, year, weeks, 1);
+    }
 
-        // a preceding 0 is required for single digit values
-        final DecimalFormat decimalFormat = new DecimalFormat("00");
+    /**
+     * Returns an array of weekly Dates per ISO 8601.
+     *
+     * @param statingMonth The Month to begin with
+     * @param year         The year to generate the array for
+     * @param weeks        The number of dates to return
+     * @param step         The week increment
+     * @return The array of dates
+     * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
+     */
+    private static LocalDate[] getFirstDayWeekly(final Month statingMonth, final int year, final int weeks, final int step) {
+
+        LocalDate date = LocalDate.of(year, statingMonth, 1);
+
+        // Weeks begin on Monday per ISO_8601
+        date = date.with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY));
+
+        // shift the stating date per ISO_8601 rules
+        switch (LocalDate.of(year, Month.JANUARY, 1).getDayOfWeek()) {
+            case FRIDAY:
+            case SATURDAY:
+            case SUNDAY:
+                break;
+            default:
+                date = date.minusDays(DAYS_PER_WEEK);
+
+                break;
+        }
 
         final List<LocalDate> dates = new ArrayList<>();
 
-        for (int i = 1; i <= getNumberOfWeeksInYear(year); i++) {
-            final String date = year + "-W" + decimalFormat.format(i) + "-1";
-            final LocalDate localeDate = LocalDate.parse(date, dateTimeFormatter);
-            dates.add(localeDate);
+        dates.add(date);
+
+        for (int i = 1; i < weeks; i++) {
+            date = date.plusDays(DAYS_PER_WEEK * step);
+            dates.add(date);
         }
 
         return dates.toArray(new LocalDate[0]);
@@ -408,11 +473,19 @@ public class DateUtils {
      * @return The array of dates
      */
     public static LocalDate[] getAllDays(final int year) {
+        return getAllDays(Month.JANUARY, year, getDaysInYear(year));
+    }
 
+    public static LocalDate[] getAllDays(final Month statingMonth, final int year, final int days) {
         final List<LocalDate> dates = new ArrayList<>();
 
-        for (int i = 1; i <= getDaysInYear(year); i++) {
-            dates.add(LocalDate.ofYearDay(year, i));
+        LocalDate start = LocalDate.of(year, statingMonth, 1);
+
+        dates.add(start);
+
+        for (int i = 1; i < days; i++) {
+            start = start.plusDays(1);
+            dates.add(start);
         }
 
         return dates.toArray(new LocalDate[0]);
@@ -503,7 +576,7 @@ public class DateUtils {
         } else if (date.compareTo(bounds[6]) < 0) {
             result = bounds[5];
         } else {
-            result = bounds[7];
+            result = bounds[DAYS_PER_WEEK];
         }
 
         return result;
@@ -541,7 +614,7 @@ public class DateUtils {
         bounds[4] = date.withMonth(Month.JULY.getValue()).with(TemporalAdjusters.firstDayOfMonth());
         bounds[5] = date.withMonth(Month.SEPTEMBER.getValue()).with(TemporalAdjusters.lastDayOfMonth());
         bounds[6] = date.withMonth(Month.OCTOBER.getValue()).with(TemporalAdjusters.firstDayOfMonth());
-        bounds[7] = date.with(TemporalAdjusters.lastDayOfYear());
+        bounds[DAYS_PER_WEEK] = date.with(TemporalAdjusters.lastDayOfYear());
 
         return bounds;
     }
