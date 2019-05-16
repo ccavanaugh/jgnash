@@ -76,7 +76,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     public final BigDecimal[] getGoals() {
-        return budgetGoals.toArray(new BigDecimal[0]);
+        return budgetGoals.toArray(BigDecimal[]::new);
     }
 
     public final void setGoals(final BigDecimal[] goals) {
@@ -116,21 +116,45 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     public void setGoal(final int startPeriod, final int endPeriod, final BigDecimal amount) {
-        BigDecimal divisor = new BigDecimal(endPeriod - startPeriod + 1);
+        if (startPeriod <= endPeriod) {
 
-        final BigDecimal portion = amount.divide(divisor, MathConstants.budgetMathContext);
+            final BigDecimal divisor = new BigDecimal(endPeriod - startPeriod + 1);
+            final BigDecimal portion = amount.divide(divisor, MathConstants.budgetMathContext);
 
-        for (int i = startPeriod; i <= endPeriod; i++) {
-            budgetGoals.set(i, portion);
+            for (int i = startPeriod; i <= endPeriod && i < BudgetGoal.PERIODS; i++) {
+                budgetGoals.set(i, portion);
+            }
+        } else {    // wrap around the array
+            final BigDecimal divisor = new BigDecimal(BudgetGoal.PERIODS - startPeriod + endPeriod + 1);
+            final BigDecimal portion = amount.divide(divisor, MathConstants.budgetMathContext);
+
+            for (int i = startPeriod; i < BudgetGoal.PERIODS; i++) {
+                budgetGoals.set(i, portion);
+            }
+
+            for (int i = 0; i <= endPeriod && i < BudgetGoal.PERIODS; i++) {
+                budgetGoals.set(i, portion);
+            }
         }
     }
 
     public BigDecimal getGoal(final int startPeriod, final int endPeriod) {
         BigDecimal amount = BigDecimal.ZERO;
 
-        // clip to the max number of periods... some locale calendars behave differently
-        for (int i = startPeriod; i <= endPeriod && i <= BudgetGoal.PERIODS - 1; i++) {
-            amount = amount.add(budgetGoals.get(i));
+
+        if (startPeriod <= endPeriod) {
+            // clip to the max number of periods... some locale calendars behave differently
+            for (int i = startPeriod; i <= endPeriod && i < BudgetGoal.PERIODS; i++) {
+                amount = amount.add(budgetGoals.get(i));
+            }
+        } else {    // wrap around the array
+            for (int i = startPeriod; i < BudgetGoal.PERIODS; i++) {
+                amount = amount.add(budgetGoals.get(i));
+            }
+
+            for (int i = 0; i <= endPeriod && i < BudgetGoal.PERIODS; i++) {
+                amount = amount.add(budgetGoals.get(i));
+            }
         }
 
         return amount;

@@ -50,11 +50,6 @@ import jgnash.util.NotNull;
 
 public class DateUtils {
 
-    /**
-     * Maximum number of weeks that can occur in a year.
-     */
-    public static final int LEAP_WEEK = 53;
-
     private static final int MONTHS_PER_YEAR = 12;
 
     private static final int DAYS_PER_WEEK = 7;
@@ -325,7 +320,7 @@ public class DateUtils {
      * @param step   increment
      * @return The array of dates
      */
-    private static LocalDate[] getFirstDayMonthly(final Month month, final int year, final int months, final int step) {
+    public static LocalDate[] getFirstDayMonthly(final Month month, final int year, final int months, final int step) {
         LocalDate[] list = new LocalDate[months];
 
         int index = 0;

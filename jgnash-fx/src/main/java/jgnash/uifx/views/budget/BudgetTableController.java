@@ -1165,6 +1165,7 @@ public class BudgetTableController implements MessageListener {
                 FXMLUtils.load(BudgetGoalsDialogController.class.getResource("BudgetGoalsDialog.fxml"),
                         resources.getString("Title.BudgetGoal") + " - " + account.getName());
 
+        pair.getController().startMonthProperty().set(budget.get().getStartMonth());
         pair.getController().accountProperty().set(account);
         pair.getController().workingYearProperty().set(yearSpinner.getValue());
 

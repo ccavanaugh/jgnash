@@ -85,7 +85,8 @@ public class BudgetResultsModel implements MessageListener {
 
     public BudgetResultsModel(final Budget budget, final int year, final CurrencyNode baseCurrency, final boolean useRunningTotals) {
         this.budget = budget;
-        this.descriptorList = BudgetPeriodDescriptorFactory.getDescriptors(year, this.budget.getBudgetPeriod());
+        this.descriptorList = BudgetPeriodDescriptorFactory.getDescriptors(year, budget.getStartMonth(), budget.getBudgetPeriod());
+
         this.baseCurrency = baseCurrency;
         this.useRunningTotals = useRunningTotals;
 

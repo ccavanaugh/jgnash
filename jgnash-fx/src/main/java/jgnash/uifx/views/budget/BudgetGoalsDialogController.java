@@ -20,6 +20,7 @@ package jgnash.uifx.views.budget;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -54,6 +55,8 @@ import jgnash.uifx.control.DecimalTextField;
 
 /**
  * Controller for budget goals.
+ *
+ * The startMonth property must be set before account and working year property are assigned.
  *
  * @author Craig Cavanaugh
  */
@@ -100,6 +103,8 @@ public class BudgetGoalsDialogController {
     private final IntegerProperty descriptorSize = new SimpleIntegerProperty();
 
     private final ObjectProperty<NumberFormat> numberFormat = new SimpleObjectProperty<>(NumberFormat.getInstance());
+
+    private final SimpleObjectProperty<Month> startMonth = new SimpleObjectProperty<>();
 
     @FXML
     private void initialize() {
@@ -153,7 +158,6 @@ public class BudgetGoalsDialogController {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         amountColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormat));
-        /// fTextFieldTableCell.forTableColumn()
 
         amountColumn.setOnEditCommit(event -> {
             final BudgetPeriodDescriptor descriptor = event.getTableView().getItems()
@@ -234,12 +238,16 @@ public class BudgetGoalsDialogController {
         return workingYear;
     }
 
+    SimpleObjectProperty<Month> startMonthProperty() {
+        return startMonth;
+    }
+
     public Optional<BudgetGoal> getResult() {
         return Optional.ofNullable(result);
     }
 
     private List<BudgetPeriodDescriptor> getDescriptors() {
-        return BudgetPeriodDescriptorFactory.getDescriptors(workingYear.get(),
+        return BudgetPeriodDescriptorFactory.getDescriptors(workingYear.get(), startMonth.get(),
                 budgetGoal.get().getBudgetPeriod());
     }
 
