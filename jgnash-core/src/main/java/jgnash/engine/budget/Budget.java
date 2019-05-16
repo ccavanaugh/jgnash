@@ -336,11 +336,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
      * @param scale new scale value
      */
     public void setRoundingScale(final byte scale) {
-
-        if (scale < 0) {
-            throw new IllegalArgumentException("scale must not be negative");
-        }
-
         this.roundingScale = scale;
     }
 

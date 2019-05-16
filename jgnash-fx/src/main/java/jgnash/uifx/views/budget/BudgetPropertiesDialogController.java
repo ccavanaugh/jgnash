@@ -112,7 +112,7 @@ public class BudgetPropertiesDialogController {
             }
         });
 
-        scaleSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maxScale, maxScale, 1));
+        scaleSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, maxScale, maxScale, 1));
 
         roundingMethodComboBox.getItems().setAll(RoundMode.values());
         roundingMethodComboBox.setValue(RoundMode.FLOOR);
