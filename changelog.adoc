@@ -16,7 +16,6 @@
 * Formal Trial Balance report
 * Budgeting
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
-** flexible start / end period for different fiscal years
 ** flexible start date for the week
 * Reinstate archive capability
 * Add export function for the account tree balance/table.
@@ -25,6 +24,7 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.1.0 __(File format change)__
+* 05/18/2019 The starting month for Budgets is now configurable.
 * 05/04/2019 Correction for reports with running totals between periods incorrectly hiding accounts when the
              'hide zero balance accounts' box is selected.
 * 05/03/2019 Improved the size behavior for Alert dialogs on 4K displays (GitHub Issue #82)

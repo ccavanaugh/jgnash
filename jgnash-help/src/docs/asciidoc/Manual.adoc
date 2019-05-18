@@ -768,6 +768,10 @@ A compact graphical overview of each budgeting period is provided to highlight h
 
 Tracking how well you follow your budget can be an eye opening experience and can lead to better financial health.
 
+[NOTE]
+jGnash budget periods follow rules established by ISO 8601.  Weeks begin on Monday and the first week of the year may begin
+with the last few days of the prior year.
+
 [float]
 === Budget Features
 
@@ -813,6 +817,15 @@ The btn:[Properties] button will display the dialog shown below with various opt
 The period used for the budget display can be changed in this dialog as well as the budget description.
 You may also select the account groups that are visible for the selected budget.
 
+The _Start Month_ property sets the month you begin a new budget.  For most, it's the beginning of the year, but
+others may prefer a month such as April which is tax season for some.  If you are new to jGnash and you've started
+mid-year, then the month you being is a good start.  The _Start Month_ may be changed at any time without negatively
+impacting your budget goals.
+
+<<<
+Regardless of the _Start Month_ selected, jGnash will use a rolling 12 month period based upon the _Start Month_ you
+have selected.
+
 image:budget-properties.png[]
 
 The rounding method and number of decimals used to report budget results may be changed.
@@ -832,8 +845,11 @@ view of current income and expenses.
 |Up         |Rounds away from zero
 |=============================
 
-Reported values will be rounded to integers if you select a _Scale_ of 0.  The upper limit of the _Scale_ option
-is limited by the largest _Scale_ value of the Currencies you have configured.
+<<<
+Reported values are rounded based on the selected value for _Scale_.  Negative values for Scale will round to the
+left of the decimal point while positive values round to the right of the decimal point.
+
+The upper limit of the _Scale_ option is limited by the largest _Scale_ value of the Currencies you have configured.
 
 ==== Budget Management
 
@@ -878,9 +894,11 @@ Averaging of periods has an impact on how exact the tracking of your budget is.
 If you choose to enter a monthly average for income, but are paid on certain days on the month, your budget will show
 slight variations through the year.
 
-If you want the budgeted vs.
-Remaining amounts to be exact for a particular account, then you will want to set the account period to be Daily and
-take the effort to enter your daily amount goals.
+If you want the budgeted vs. Remaining amounts to be exact for a particular account, then you will want to set the
+account period to be Daily and take the effort to enter your daily amount goals.
+
+Minor discrepancies can occur during leap years due to the extra day.  Budgets are typically dynamic due to continuous
+changes in income and expenses which means you will naturally address these small discrepancies as you maintain your budget
 
 You will not be able to export a spreadsheet when the report period is daily due to memory requirements and limitations
 of some spreadsheet applications.
