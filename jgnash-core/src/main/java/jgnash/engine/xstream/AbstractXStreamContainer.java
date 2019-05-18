@@ -186,7 +186,6 @@ abstract class AbstractXStreamContainer {
         xstream.useAttributeFor(Budget.class, "roundingScale");
         xstream.useAttributeFor(Budget.class, "roundingMode");
         xstream.useAttributeFor(Budget.class, "startMonth");
-        xstream.useAttributeFor(Budget.class, "startDay");
 
         xstream.useAttributeFor(CommodityNode.class, "symbol");
         xstream.useAttributeFor(CommodityNode.class, "scale");

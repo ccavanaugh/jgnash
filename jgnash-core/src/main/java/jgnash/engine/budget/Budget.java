@@ -18,7 +18,6 @@
 package jgnash.engine.budget;
 
 import java.math.RoundingMode;
-import java.time.DayOfWeek;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,14 +82,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     @Enumerated(EnumType.STRING)
     @Column(name = "STARTMONTH", length = 10, nullable = false, columnDefinition = "varchar(10) default 'JANUARY'")
     private Month startMonth = Month.JANUARY;
-
-    /**
-     * Controls the starting day of the week for a budget
-     * @since 3.1
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "STARTDAY", length = 10, nullable = false, columnDefinition = "varchar(10) default 'SUNDAY'")
-    private DayOfWeek startDay = DayOfWeek.SUNDAY;
 
     /**
      * Account goals are stored internally by the account UUID.
