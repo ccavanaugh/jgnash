@@ -150,7 +150,8 @@ public class BudgetGoalsDialogController {
             if (param != null) {
                 final BudgetPeriodDescriptor descriptor = param.getValue();
                 final BigDecimal goal
-                        = budgetGoal.get().getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod());
+                        = budgetGoal.get().getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(),
+                        descriptor.getStartDate().isLeapYear());
 
                 return new SimpleObjectProperty<>(goal.setScale(accountProperty().get().getCurrencyNode().getScale(),
                         MathConstants.roundingMode));
@@ -164,7 +165,7 @@ public class BudgetGoalsDialogController {
                     .get(event.getTablePosition().getRow());
 
             budgetGoalProperty().get().setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(),
-                    event.getNewValue());
+                    event.getNewValue(), descriptor.getStartDate().isLeapYear());
         });
 
         goalTable.getColumns().add(amountColumn);
@@ -261,7 +262,8 @@ public class BudgetGoalsDialogController {
         final BigDecimal fillAmount = fillAllDecimalTextField.getDecimal();
 
         for (final BudgetPeriodDescriptor descriptor : getDescriptors()) {
-            budgetGoal.get().setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), fillAmount);
+            budgetGoal.get().setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), fillAmount,
+                    descriptor.getStartDate().isLeapYear());
         }
 
         goalTable.refresh();

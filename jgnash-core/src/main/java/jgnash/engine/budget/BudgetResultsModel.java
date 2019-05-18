@@ -418,7 +418,8 @@ public class BudgetResultsModel implements MessageListener {
             if (accounts.contains(account)) {
                 final BudgetGoal goal = budget.getBudgetGoal(account);
 
-                results.setBudgeted(goal.getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod()));
+                results.setBudgeted(goal.getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(),
+                        descriptor.getStartDate().isLeapYear()));
 
                 // calculate the change and remaining amount for the budget
                 if (account.getAccountType() == AccountType.INCOME) {

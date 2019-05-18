@@ -76,7 +76,7 @@ public class BudgetFactory {
 
         goal.setBudgetPeriod(descriptors.get(0).getBudgetPeriod());
 
-        for (BudgetPeriodDescriptor descriptor : descriptors) {
+        for (final BudgetPeriodDescriptor descriptor : descriptors) {
             BigDecimal amount = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
 
             if (account.getAccountType() == AccountType.INCOME) {
@@ -91,7 +91,7 @@ public class BudgetFactory {
                 }
             }
 
-            goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount);
+            goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount, descriptor.getStartDate().isLeapYear());
         }
 
         return goal;
@@ -132,7 +132,7 @@ public class BudgetFactory {
             final BudgetPeriodDescriptor descriptor = descriptors.get(i);
 
             goal.setBudgetPeriod(descriptor.getBudgetPeriod());
-            goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount);
+            goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount, descriptor.getStartDate().isLeapYear());
         }
 
         return goal;

@@ -74,7 +74,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
             int startYearDays = periodStartDate.lengthOfYear();
             int endYearDays = periodEndDate.lengthOfYear();
 
-            startPeriod += startYearDays - endYearDays; // shift for a leap year/day
+            startPeriod += startYearDays - endYearDays + 1; // shift for a leap year/day
         }
 
         switch (budgetPeriod) {

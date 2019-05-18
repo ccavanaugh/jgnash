@@ -115,7 +115,7 @@ public class BudgetGoal implements Cloneable, Serializable {
         this.budgetPeriod = Objects.requireNonNull(budgetPeriod);
     }
 
-    public void setGoal(final int startPeriod, final int endPeriod, final BigDecimal amount) {
+    public void setGoal(final int startPeriod, final int endPeriod, final BigDecimal amount, final boolean leapYear) {
         if (startPeriod <= endPeriod) {
 
             final BigDecimal divisor = new BigDecimal(endPeriod - startPeriod + 1);
@@ -124,11 +124,13 @@ public class BudgetGoal implements Cloneable, Serializable {
             for (int i = startPeriod; i <= endPeriod && i < BudgetGoal.PERIODS; i++) {
                 budgetGoals.set(i, portion);
             }
-        } else {    // wrap around the array
-            final BigDecimal divisor = new BigDecimal(BudgetGoal.PERIODS - startPeriod + endPeriod + 1);
+        } else {    // wrap around the array, need to handle a leap year
+            final BigDecimal divisor = new BigDecimal(BudgetGoal.PERIODS - startPeriod + endPeriod - (leapYear ? 1 : 0));
             final BigDecimal portion = amount.divide(divisor, MathConstants.budgetMathContext);
 
-            for (int i = startPeriod; i < BudgetGoal.PERIODS; i++) {
+            //System.out.println("divisor: " + divisor+ ", start: " + startPeriod + ", end: " + endPeriod + ", leapYear: " + leapYear);
+
+            for (int i = startPeriod; i < BudgetGoal.PERIODS - (leapYear ? 0 : 1); i++) {
                 budgetGoals.set(i, portion);
             }
 
@@ -138,7 +140,7 @@ public class BudgetGoal implements Cloneable, Serializable {
         }
     }
 
-    public BigDecimal getGoal(final int startPeriod, final int endPeriod) {
+    public BigDecimal getGoal(final int startPeriod, final int endPeriod, final boolean leapYear) {
         BigDecimal amount = BigDecimal.ZERO;
 
 
@@ -147,14 +149,21 @@ public class BudgetGoal implements Cloneable, Serializable {
             for (int i = startPeriod; i <= endPeriod && i < BudgetGoal.PERIODS; i++) {
                 amount = amount.add(budgetGoals.get(i));
             }
-        } else {    // wrap around the array
-            for (int i = startPeriod; i < BudgetGoal.PERIODS; i++) {
+        } else {    // wrap around the array, need to handle a leap year
+            //int days = 0;
+
+            for (int i = startPeriod; i < BudgetGoal.PERIODS - (leapYear ? 0 : 1); i++) {
+                //days++;
                 amount = amount.add(budgetGoals.get(i));
             }
 
             for (int i = 0; i <= endPeriod && i < BudgetGoal.PERIODS; i++) {
+                //days++;
                 amount = amount.add(budgetGoals.get(i));
             }
+
+            //System.out.println("days: " + days+ ", start: " + startPeriod + ", end: " + endPeriod + ", leapYear: " + leapYear);
+
         }
 
         return amount;

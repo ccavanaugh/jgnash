@@ -66,15 +66,10 @@ public final class BudgetPeriodDescriptorFactory {
             descriptors.add(new BudgetPeriodDescriptor(dates[i], dates[i + 1].minusDays(1), budgetPeriod));
         }
 
-
         // Debugging info
-        System.out.println("Descriptor list length: " + descriptors.size());
+        /*System.out.println("Descriptor list length: " + descriptors.size());
         for (final BudgetPeriodDescriptor descriptor : descriptors) {
             System.out.println(descriptor.toString());
-        }
-
-        /*for (final LocalDate date : dates) {
-            descriptors.add(new BudgetPeriodDescriptor(date, budgetYear, budgetPeriod));
         }*/
 
         return descriptors;
