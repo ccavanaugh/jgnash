@@ -75,10 +75,11 @@ import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.time.DateUtils;
-import jgnash.util.CollectionUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
+
+import org.apache.commons.collections4.ListUtils;
 
 /**
  * Engine class
@@ -474,10 +475,9 @@ public class Engine {
             }
 
             // Transaction timestamps were updated for release 2.25
-            if (getConfig().getMinorFileFormatVersion() < 25) {
-
+            if (getConfig().getMinorFileFormatVersion() < 25 && getConfig().getMajorFileFormatVersion() < 3) {
                 // Update transactions in chunks of 200
-                CollectionUtils.partition(getTransactions(), 200).forEach(eDAO::bulkUpdate);
+                ListUtils.partition(getTransactions(), 200).forEach(eDAO::bulkUpdate);
             }
 
             // update the file version if it is not current
