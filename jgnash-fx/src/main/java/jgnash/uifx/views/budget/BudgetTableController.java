@@ -623,7 +623,7 @@ public class BudgetTableController implements MessageListener {
         }
     }
 
-    private void focusCurrentPeriod() {
+    void focusCurrentPeriod() {
         final LocalDate now = LocalDate.now();
 
         final List<BudgetPeriodDescriptor> budgetPeriodDescriptorList = budgetResultsModel.getDescriptorList();

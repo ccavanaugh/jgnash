@@ -24,6 +24,7 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.1.0 __(File format change)__
+* 05/19/2019 Add a Today button to the Budget toolbar for easy refocus of the current period.
 * 05/18/2019 The starting month for Budgets is now configurable.
 * 05/04/2019 Correction for reports with running totals between periods incorrectly hiding accounts when the
              'hide zero balance accounts' box is selected.

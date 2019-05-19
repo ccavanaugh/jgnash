@@ -6,7 +6,7 @@
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import javafx.scene.control.ComboBox?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="jgnash.uifx.views.budget.BudgetViewController">
     <top>
         <ToolBar>
@@ -24,6 +24,11 @@
             <Button fx:id="exportButton" text="%Button.ExportSpreadsheet" onAction="#handleExportAction">
                 <graphic>
                     <FontAwesomeLabel glyphName="FILE_EXCEL_O"/>
+                </graphic>
+            </Button>
+            <Button text="%Button.Today" onAction="#handleTodayAction">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CALENDAR"/>
                 </graphic>
             </Button>
         </ToolBar>

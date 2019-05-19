@@ -182,6 +182,11 @@ public class BudgetViewController implements MessageListener {
         pair.getStage().setResizable(false);
     }
 
+    @FXML
+    private void handleTodayAction() {
+        JavaFXUtils.runLater(budgetTableController::focusCurrentPeriod);
+    }
+
     @Override
     public void messagePosted(final Message message) {
         switch (message.getEvent()) {
