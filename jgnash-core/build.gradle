@@ -34,6 +34,8 @@ dependencies {
         exclude(module: "stax-api")
         exclude(module: "xml-apis")
     }
+
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: commonsCollectionsVersion
 }
 
 jar {
