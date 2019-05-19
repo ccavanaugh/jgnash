@@ -320,7 +320,7 @@ public class DateUtils {
      * @param step   increment
      * @return The array of dates
      */
-    public static LocalDate[] getFirstDayMonthly(final Month month, final int year, final int months, final int step) {
+   private static LocalDate[] getFirstDayMonthly(final Month month, final int year, final int months, final int step) {
         LocalDate[] list = new LocalDate[months];
 
         int index = 0;
@@ -418,7 +418,7 @@ public class DateUtils {
      * @return The array of dates
      * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
      */
-    private static LocalDate[] getFirstDayWeekly(final Month statingMonth, final int year, final int weeks, final int step) {
+    public static LocalDate[] getFirstDayWeekly(final Month statingMonth, final int year, final int weeks, final int step) {
 
         LocalDate date = LocalDate.of(year, statingMonth, 1);
 

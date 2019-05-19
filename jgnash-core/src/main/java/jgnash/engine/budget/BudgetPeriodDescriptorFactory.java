@@ -79,7 +79,7 @@ public final class BudgetPeriodDescriptorFactory {
                     dates = DateUtils.getFirstDayQuarterly(startingMonth, budgetYear, 4 + 1);
                     break;
                 case YEARLY:
-                    dates = DateUtils.getFirstDayMonthly(startingMonth, budgetYear, 1 + 1, 12);
+                    dates = DateUtils.getFirstDayWeekly(startingMonth, budgetYear, 2, 52);
                     break;
             }
 
