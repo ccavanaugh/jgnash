@@ -24,6 +24,7 @@ allprojects {
 
         apachePoiVersion = "4.1.0"          // https://poi.apache.org/
         commonsCsvVersion = "1.6"           // https://commons.apache.org/proper/commons-csv/
+        commonsCollectionsVersion = "4.3"   // https://commons.apache.org/proper/commons-csv/
         commonsTextVersion = "1.6"          // https://commons.apache.org/proper/commons-text/
         commonsLangVersion = "3.8.1"        // https://commons.apache.org/proper/commons-lang/
 
