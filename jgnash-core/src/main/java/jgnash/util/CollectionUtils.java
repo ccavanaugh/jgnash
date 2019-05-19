@@ -54,21 +54,4 @@ public class CollectionUtils {
 
         return sortedMap;
     }
-
-    /**
-     * Partitions a list of objects into smaller lists
-     * @param list list to partition
-     * @param length length of each partition
-     * @param <T> list type
-     * @return list of lists
-     */
-    public static <T> List<List<T>> partition(final List<T> list, final int length) {
-
-        final List<List<T>> parts = new ArrayList<>();
-
-        for (int i = 0; i < list.size(); i += length) {
-            parts.add(new ArrayList<>(list.subList(i, Math.min(list.size(), i + length))));
-        }
-        return parts;
-    }
 }

@@ -40,8 +40,9 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.TrashObject;
 import jgnash.engine.concurrent.Priority;
 import jgnash.engine.dao.TrashDAO;
-import jgnash.util.CollectionUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
+
+import org.apache.commons.collections4.ListUtils;
 
 /**
  * JPA Trash DAO.
@@ -210,8 +211,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
                     /* Partition the results into small chunks so other higher priority work can be performed without
                        stalling the application */
-                    final List<List<JpaTrashEntity>> listList
-                            = CollectionUtils.partition(q.getResultList(), MAX_ENTITY_LUMP);
+                    final List<List<JpaTrashEntity>> listList = ListUtils.partition(q.getResultList(), MAX_ENTITY_LUMP);
 
                     for (final List<JpaTrashEntity> entityList : listList) {
 

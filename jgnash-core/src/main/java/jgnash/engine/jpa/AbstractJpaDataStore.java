@@ -45,8 +45,9 @@ import jgnash.engine.attachment.DistributedAttachmentManager;
 import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.LocalLockManager;
-import jgnash.util.CollectionUtils;
 import jgnash.util.FileUtils;
+
+import org.apache.commons.collections4.ListUtils;
 
 /**
  * Abstract JPA DataStore.
@@ -227,7 +228,7 @@ abstract class AbstractJpaDataStore implements DataStore {
                 emFactory = Persistence.createEntityManagerFactory(JpaConfiguration.UNIT_NAME, properties);
                 entityManager = emFactory.createEntityManager();
 
-                final List<List<StoredObject>> partitions = CollectionUtils.partition(new ArrayList<>(objects), PARTITION_SIZE);
+                final List<List<StoredObject>> partitions = ListUtils.partition(new ArrayList<>(objects), PARTITION_SIZE);
 
                 int writeCount = 0;
 
