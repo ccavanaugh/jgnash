@@ -548,6 +548,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         this.fitid = fitid;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setReconciled(@NotNull final Account account, @NotNull final ReconciledState state) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(state);
