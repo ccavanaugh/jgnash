@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.ResolverStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
@@ -40,6 +41,13 @@ import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 
 import jgnash.util.NotNull;
+
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
+import static java.time.temporal.ChronoField.HOUR_OF_DAY;
+import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
+import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
+import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
+import static java.time.temporal.ChronoField.YEAR;
 
 /**
  * Static methods to make working with dates a bit easier.
@@ -157,6 +165,29 @@ public class DateUtils {
         }
 
         return pattern;
+    }
+
+    /**
+     * Returns a {@code LocalDate} compatible {@code DateTimeFormatter} that Excel understands
+     * @return Excel compatible {@code DateTimeFormatter}
+     */
+    public static DateTimeFormatter getExcelDateFormatter() {
+        return new DateTimeFormatterBuilder().appendValue(YEAR, 4).appendValue(MONTH_OF_YEAR, 2)
+                .appendValue(DAY_OF_MONTH, 2)
+                .toFormatter();
+    }
+
+    /**
+     * Returns a {@code LocalDateTime} compatible {@code DateTimeFormatter} that Excel understands
+     * @return Excel compatible {@code DateTimeFormatter}
+     */
+    public static DateTimeFormatter getExcelTimestampFormatter() {
+        return new DateTimeFormatterBuilder()
+                .appendValue(YEAR, 4).appendLiteral('-').appendValue(MONTH_OF_YEAR, 2)
+                .appendLiteral('-').appendValue(DAY_OF_MONTH, 2).appendLiteral(' ')
+                .appendValue(HOUR_OF_DAY, 2).appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2)
+                .appendLiteral(':').appendValue(SECOND_OF_MINUTE, 2)
+                .toFormatter();
     }
 
     /**

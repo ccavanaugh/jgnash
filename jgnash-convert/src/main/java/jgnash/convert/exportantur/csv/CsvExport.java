@@ -27,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -36,13 +35,12 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.time.DateUtils;
 import jgnash.util.FileUtils;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
-
-import static java.time.temporal.ChronoField.*;
 
 /**
  * Primary class for CSV export
@@ -77,18 +75,9 @@ public class CsvExport {
             // write the transactions
             final List<Transaction> transactions = account.getTransactions(startDate, endDate);
 
-            final DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
-                    .appendValue(YEAR, 4)
-                    .appendValue(MONTH_OF_YEAR, 2)
-                    .appendValue(DAY_OF_MONTH, 2)
-                    .toFormatter();
+            final DateTimeFormatter dateTimeFormatter = DateUtils.getExcelDateFormatter();
 
-            final DateTimeFormatter timestampFormatter = new DateTimeFormatterBuilder()
-                    .appendValue(YEAR, 4).appendLiteral('-').appendValue(MONTH_OF_YEAR, 2)
-                    .appendLiteral('-').appendValue(DAY_OF_MONTH, 2).appendLiteral(' ')
-                    .appendValue(HOUR_OF_DAY, 2).appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2)
-                    .appendLiteral(':').appendValue(SECOND_OF_MINUTE, 2)
-                    .toFormatter();
+            final DateTimeFormatter timestampFormatter = DateUtils.getExcelTimestampFormatter();
 
             for (final Transaction transaction : transactions) {
                 final String date = dateTimeFormatter.format(transaction.getLocalDate());
