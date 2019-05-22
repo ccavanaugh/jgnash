@@ -23,6 +23,9 @@
 * Spreadsheet export for all tabular reports
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
+== Release 3.x.x
+* 05/22/2019 Added a context menu to copy selected transactions to the clipboard.
+
 == Release 3.1.0 __(File format change)__
 * 05/19/2019 Added a Today button to the Budget toolbar for easy refocus of the current period.
 * 05/18/2019 The starting month for Budgets is now configurable.

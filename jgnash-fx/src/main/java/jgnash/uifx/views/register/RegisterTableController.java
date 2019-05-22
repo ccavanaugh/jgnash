@@ -19,6 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,6 +60,8 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
@@ -76,6 +79,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
+import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
@@ -446,6 +450,64 @@ abstract class RegisterTableController {
 		}
 	}
 
+	private void handleCopyToClipboard() {
+		final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
+
+		if (transactionList.size() > 0) {
+			final Clipboard clipboard = Clipboard.getSystemClipboard();
+			final ClipboardContent content = new ClipboardContent();
+			final StringBuilder builder = new StringBuilder();
+
+			for (final Transaction transaction : transactionList) {
+			    builder.append(transactionToExcel(transaction));
+				builder.append('\n');
+			}
+
+            content.putString(builder.toString());
+			clipboard.setContent(content);
+		}
+	}
+
+	private String transactionToExcel(final Transaction transaction) {
+		final StringBuilder builder = new StringBuilder();
+        final DateTimeFormatter dateFormatter = DateUtils.getExcelDateFormatter();
+
+        String account;
+
+        if (transaction instanceof InvestmentTransaction) {
+            account = (((InvestmentTransaction) transaction).getInvestmentAccount().getName());
+        } else {
+            int count = transaction.size();
+            if (count > 1) {
+                account = "[ " + count + " " + resources.getString("Button.Splits") + " ]";
+            } else {
+                Account creditAccount = transaction.getTransactionEntries().get(0).getCreditAccount();
+                if (creditAccount != accountProperty().get()) {
+                    account = creditAccount.getName();
+                } else {
+                    account = transaction.getTransactionEntries().get(0).getDebitAccount().getName();
+                }
+            }
+        }
+
+		// date, number, payee, memo, account, clr, amount, timestamp
+		builder.append(dateFormatter.format(transaction.getLocalDate()));
+		builder.append('\t');
+		builder.append(transaction.getNumber());
+        builder.append('\t');
+        builder.append(transaction.getPayee());
+        builder.append('\t');
+        builder.append(transaction.getMemo());
+        builder.append('\t');
+        builder.append(account);
+        builder.append('\t');
+        builder.append(transaction.getReconciled(transaction.getCommonAccount()).toString());
+        builder.append('\t');
+        builder.append(transaction.getAmount(transaction.getCommonAccount()).toPlainString());
+
+		return builder.toString();
+	}
+
 	@FXML
 	protected void handleResetFilters() {
 
@@ -557,8 +619,12 @@ abstract class RegisterTableController {
 			final MenuItem reminderItem = new MenuItem(resources.getString("Menu.NewReminder.Name"));
 			reminderItem.setOnAction(event -> handleCreateNewReminder());
 
+			final MenuItem copyClipBoardItem = new MenuItem(resources.getString("Menu.CopyToClipboard.Name"));
+			copyClipBoardItem.setOnAction(event -> handleCopyToClipboard());
+
 			rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem,
-					new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
+					new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem, new SeparatorMenuItem(),
+					copyClipBoardItem);
 
 			// only display context menu for non-null items:
 			row.contextMenuProperty().bind(
