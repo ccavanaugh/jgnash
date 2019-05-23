@@ -472,10 +472,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                 if (!importTransaction.isInvestmentTransaction()) {
                     editableProperty().setValue(true);
-                } else {
-                    editableProperty().setValue(!(!importTransaction.isInvestmentTransaction()
-                            || (importTransaction.isInvestmentTransaction()
-                            && importTransaction.getTransactionType() == TransactionType.REINVESTDIV)));
+                } else {    // reinvested dividends do not have a cash account
+                    editableProperty().setValue(importTransaction.getTransactionType() != TransactionType.REINVESTDIV);
                 }
             }
 
