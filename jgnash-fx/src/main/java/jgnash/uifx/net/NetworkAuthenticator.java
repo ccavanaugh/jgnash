@@ -121,9 +121,7 @@ public class NetworkAuthenticator extends AbstractAuthenticator {
                 pass[0] = usernamePassword.getValue().toCharArray();
             });
         }
-
-        //noinspection ConstantConditions
-        // potential null is okay
-        return new PasswordAuthentication(user[0], pass[0]);
+        
+        return new PasswordAuthentication(user[0], pass[0] != null ? pass[0] : new char[0]);
     }
 }
