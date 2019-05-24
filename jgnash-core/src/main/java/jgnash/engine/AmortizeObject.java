@@ -361,7 +361,7 @@ public class AmortizeObject implements Serializable {
             return originalBalance.doubleValue() / ((length / 12.0) * numPayments);
         }
 
-        if (length > 0 && numPayments > 0 && numCompPeriods > 0 && originalBalance != null && interestRate != null) {
+        if (length > 0 && numPayments > 0 && numCompPeriods > 0 && originalBalance != null) {
             double i = getEffectiveInterestRate();
             double p = originalBalance.doubleValue();
 
