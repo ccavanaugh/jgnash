@@ -77,7 +77,7 @@ public class BootEngineTask extends Task<String> {
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         }
                 
-        final String lockedMessage = resources.getString("Message.FileIsLocked");        
+        final String lockedMessage = resources.getString("Message.FileIsLocked") + ": " + localFile;
         String message = resources.getString("Message.FileLoadComplete");
 
         if (remote) {
@@ -88,9 +88,10 @@ public class BootEngineTask extends Task<String> {
             }
         } else {
             if (!Files.exists(Paths.get(localFile))) {
-                updateMessage(message);
                 message = resources.getString("Message.Error.FileNotFound") + ": " + localFile;
+                updateMessage(message);
             } else if (FileUtils.isFileLocked(localFile)) {
+                final Runnable UIRunnable = () -> StaticUIMethods.displayError(lockedMessage);
 
                 if (FileUtils.isLockFileStale(localFile)) {
                     // try to remove the lock file first
@@ -100,11 +101,11 @@ public class BootEngineTask extends Task<String> {
                         return call();  // recursive call to rerun the task and load the file to keep code simple
                     }
                     
-					Platform.runLater(() -> StaticUIMethods.displayError(lockedMessage));
+					Platform.runLater(UIRunnable);
                 } else {
-                    message = lockedMessage + ": " + localFile;
+                    message = lockedMessage;
                     updateMessage(message);
-                    Platform.runLater(() -> StaticUIMethods.displayError(lockedMessage));
+                    Platform.runLater(UIRunnable);
                 }
             } else  {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
