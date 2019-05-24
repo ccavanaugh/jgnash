@@ -88,11 +88,11 @@ public class XMLDataStore implements DataStore {
     /**
      * {@code XMLDataStore} will always return false.
      *
-     * @see DataStore#isRemote()
+     * @see DataStore#isLocal()
      */
     @Override
-    public boolean isRemote() {
-        return false;
+    public boolean isLocal() {
+        return true;
     }
 
     /**

@@ -204,12 +204,12 @@ public class EngineFactory {
             MessageBus.getInstance(engineName).fireBlockingEvent(message);  // block until event has been completely processed
 
             // Dump an XML backup
-            if (oldEngine.createBackups() && !oldDataStore.isRemote()) {
+            if (oldEngine.createBackups() && oldDataStore.isLocal()) {
                 exportCompressedXML(engineName);
             }
 
             // Purge old backups
-            if (oldEngine.removeOldBackups() && !oldDataStore.isRemote()) {
+            if (oldEngine.removeOldBackups() && oldDataStore.isLocal()) {
                 removeOldCompressedXML(oldDataStore.getFileName(), oldEngine.getRetainedBackupLimit());
             }
 

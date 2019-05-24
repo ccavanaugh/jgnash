@@ -82,11 +82,11 @@ public interface DataStore {
     DataStoreType getType();
 
     /**
-     * Remote connection indicator.
+     * Local / Remote connection indicator.
      * 
-     * @return true if connected to a remote server
+     * @return false if connected to a remote server
      */
-    boolean isRemote();
+    boolean isLocal();
 
     /**
      * Saves a Collection of StoredObjects to a file other than what is currently open.

@@ -68,7 +68,7 @@ abstract class AbstractJpaDataStore implements DataStore {
 
     private DistributedAttachmentManager distributedAttachmentManager;
 
-    private boolean remote;
+    private boolean local = true;
 
     private String fileName;
 
@@ -95,11 +95,11 @@ abstract class AbstractJpaDataStore implements DataStore {
             logger.severe("The EntityManger was already null!");
         }
 
-        if (remote) {
+        if (local) {
+            waitForLockFileRelease(fileName, password);
+        } else {
             distributedLockManager.disconnectFromServer();
             distributedAttachmentManager.disconnectFromServer();
-        } else {
-            waitForLockFileRelease(fileName, password);
         }
     }
 
@@ -133,7 +133,7 @@ abstract class AbstractJpaDataStore implements DataStore {
 
                         logger.info("Created local JPA container and engine");
                         fileName = null;
-                        remote = true;
+                        local = false;
                     } else {
                         distributedLockManager.disconnectFromServer();
                         distributedAttachmentManager.disconnectFromServer();
@@ -182,7 +182,7 @@ abstract class AbstractJpaDataStore implements DataStore {
                     this.fileName = fileName;
                     this.password = password.clone();   // clone to protect against side effects
 
-                    remote = false;
+                    local = true;
                 } catch (final Exception e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
@@ -202,8 +202,8 @@ abstract class AbstractJpaDataStore implements DataStore {
 
 
     @Override
-    public boolean isRemote() {
-        return remote;
+    public boolean isLocal() {
+        return local;
     }
 
     @Override

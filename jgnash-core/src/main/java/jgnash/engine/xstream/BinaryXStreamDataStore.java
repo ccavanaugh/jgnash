@@ -88,11 +88,11 @@ public class BinaryXStreamDataStore implements DataStore {
     /**
      * {@code XMLDataStore} will always return false.
      *
-     * @see jgnash.engine.DataStore#isRemote()
+     * @see jgnash.engine.DataStore#isLocal()
      */
     @Override
-    public boolean isRemote() {
-        return false;
+    public boolean isLocal() {
+        return true;
     }
 
     /**
