@@ -29,6 +29,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
@@ -186,17 +187,19 @@ abstract class AbstractTransactionEntryDialog extends Stage {
         final TableColumn<TransactionEntry, String> memoColumn = new TableColumn<>(columnNames[2]);
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
 
+        final Callback<TableColumn<TransactionEntry, BigDecimal>, TableCell<TransactionEntry, BigDecimal>> cellFactory =
+                cell -> new TransactionEntryCommodityFormatTableCell(NumericFormats.getShortCommodityFormat(account.get().getCurrencyNode()));
+
         final TableColumn<TransactionEntry, BigDecimal> increaseColumn = new TableColumn<>(columnNames[3]);
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().
                 getAmount(accountProperty().getValue())));
-        increaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(NumericFormats.
-                getShortCommodityFormat(account.get().getCurrencyNode())));
+
+        increaseColumn.setCellFactory(cellFactory);
 
         final TableColumn<TransactionEntry, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[4]);
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().
                 getAmount(accountProperty().getValue())));
-        decreaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(NumericFormats.
-                getShortCommodityFormat(account.get().getCurrencyNode())));
+        decreaseColumn.setCellFactory(cellFactory);
 
         final TableColumn<TransactionEntry, BigDecimal> balanceColumn = new TableColumn<>(columnNames[5]);
         balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(getBalanceAt(param.getValue())));
