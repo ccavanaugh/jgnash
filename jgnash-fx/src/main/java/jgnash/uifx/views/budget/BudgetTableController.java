@@ -83,6 +83,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.NumericFormats;
+import jgnash.time.Period;
 import jgnash.uifx.control.NullTableViewSelectionModel;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
@@ -92,6 +93,15 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
+
+import static jgnash.uifx.skin.StyleClass.BOLD_LABEL_ID;
+import static jgnash.uifx.skin.StyleClass.BOLD_NEGATIVE_LABEL_ID;
+import static jgnash.uifx.skin.StyleClass.NORMAL_CELL_ID;
+import static jgnash.uifx.skin.StyleClass.NORMAL_NEGATIVE_CELL_ID;
+import static jgnash.uifx.skin.StyleClass.TODAY_BOLD_LABEL_ID;
+import static jgnash.uifx.skin.StyleClass.TODAY_BOLD_NEGATIVE_LABEL_ID;
+import static jgnash.uifx.skin.StyleClass.TODAY_NORMAL_CELL_ID;
+import static jgnash.uifx.skin.StyleClass.TODAY_NORMAL_NEGATIVE_CELL_ID;
 
 /**
  * Controller for budget tables.
@@ -114,6 +124,8 @@ public class BudgetTableController implements MessageListener {
 
     // Initial column width
     private static final double INITIAL_WIDTH = 55;
+
+    private static final String NOW = "now";
 
     private final Preferences preferences = Preferences.userNodeForPackage(BudgetTableController.class);
 
@@ -770,11 +782,16 @@ public class BudgetTableController implements MessageListener {
 
         final BudgetPeriodDescriptor descriptor = budgetResultsModel.getDescriptorList().get(index);
 
+        // determine if the column is to be highlighted if the period is not yearly
+        final Boolean highlight = (descriptor.isBetween(LocalDate.now()) ? Boolean.TRUE : Boolean.FALSE)
+                && budget.get().getBudgetPeriod() != Period.YEARLY;
+
         final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
 
         final TableColumn<Account, BigDecimal> budgetedColumn
                 = new TableColumn<>(resources.getString("Column.Budgeted"));
 
+        budgetedColumn.getProperties().put(NOW, highlight);
         budgetedColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
@@ -791,6 +808,8 @@ public class BudgetTableController implements MessageListener {
         headerColumn.getColumns().add(budgetedColumn);
 
         final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+
+        actualColumn.getProperties().put(NOW, highlight);
         actualColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
@@ -809,6 +828,7 @@ public class BudgetTableController implements MessageListener {
         final TableColumn<Account, BigDecimal> remainingColumn
                 = new TableColumn<>(resources.getString("Column.Remaining"));
 
+        remainingColumn.getProperties().put(NOW, highlight);
         remainingColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
@@ -882,10 +902,16 @@ public class BudgetTableController implements MessageListener {
     private TableColumn<AccountGroup, BigDecimal> buildAccountPeriodSummaryColumn(final int index) {
         final BudgetPeriodDescriptor descriptor = budgetResultsModel.getDescriptorList().get(index);
 
+        // determine if the column is to be highlighted if the period is not yearly
+        final Boolean highlight = (descriptor.isBetween(LocalDate.now()) ? Boolean.TRUE : Boolean.FALSE)
+                && budget.get().getBudgetPeriod() != Period.YEARLY;
+
         final TableColumn<AccountGroup, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
 
         final TableColumn<AccountGroup, BigDecimal> budgetedColumn
                 = new TableColumn<>(resources.getString("Column.Budgeted"));
+
+        budgetedColumn.getProperties().put(NOW, highlight);
         budgetedColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
@@ -904,6 +930,7 @@ public class BudgetTableController implements MessageListener {
         final TableColumn<AccountGroup, BigDecimal> actualColumn
                 = new TableColumn<>(resources.getString("Column.Actual"));
 
+        actualColumn.getProperties().put(NOW, highlight);
         actualColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
@@ -921,6 +948,7 @@ public class BudgetTableController implements MessageListener {
         final TableColumn<AccountGroup, BigDecimal> remainingColumn
                 = new TableColumn<>(resources.getString("Column.Remaining"));
 
+        remainingColumn.getProperties().put(NOW, highlight);
         remainingColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
@@ -1231,6 +1259,10 @@ public class BudgetTableController implements MessageListener {
         protected void updateItem(final BigDecimal amount, final boolean empty) {
             super.updateItem(amount, empty);  // required
 
+            setId(NORMAL_CELL_ID);   // reset, cell is reused
+
+            final boolean now = Boolean.TRUE == getTableColumn().getProperties().getOrDefault(NOW, Boolean.FALSE);
+
             if (!empty && amount != null && getTableRow() != null) {
                 final Account account = expandedAccountList.get(getTableRow().getIndex());
                 final NumberFormat format = NumericFormats.getFullCommodityFormat(account.getCurrencyNode());
@@ -1239,15 +1271,15 @@ public class BudgetTableController implements MessageListener {
 
                 if (account.isPlaceHolder()) {
                     if (amount.signum() < 0) {
-                        setId(StyleClass.BOLD_NEGATIVE_LABEL_ID);
+                        setId(now ? TODAY_BOLD_NEGATIVE_LABEL_ID : BOLD_NEGATIVE_LABEL_ID);
                     } else {
-                        setId(StyleClass.BOLD_LABEL_ID);
+                        setId(now ? TODAY_BOLD_LABEL_ID : BOLD_LABEL_ID);
                     }
                 } else {
                     if (amount.signum() < 0) {
-                        setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                        setId(now ? TODAY_NORMAL_NEGATIVE_CELL_ID : NORMAL_NEGATIVE_CELL_ID);
                     } else {
-                        setId(StyleClass.NORMAL_CELL_ID);
+                        setId(now ? TODAY_NORMAL_CELL_ID : NORMAL_CELL_ID);
                     }
                 }
             } else {
@@ -1269,13 +1301,17 @@ public class BudgetTableController implements MessageListener {
         protected void updateItem(final BigDecimal amount, final boolean empty) {
             super.updateItem(amount, empty);  // required
 
+            setId(NORMAL_CELL_ID);   // reset, cell is reused
+
+            final boolean now = Boolean.TRUE == getTableColumn().getProperties().getOrDefault(NOW, Boolean.FALSE);
+
             if (!empty && amount != null && getTableRow() != null) {
                 setText(format.format(amount));
 
                 if (amount.signum() < 0) {
-                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                    setId(now ? TODAY_NORMAL_NEGATIVE_CELL_ID : NORMAL_NEGATIVE_CELL_ID);
                 } else {
-                    setId(StyleClass.NORMAL_CELL_ID);
+                    setId(now ? TODAY_NORMAL_CELL_ID : NORMAL_CELL_ID);
                 }
             } else {
                 setText(null);
@@ -1289,13 +1325,15 @@ public class BudgetTableController implements MessageListener {
         protected void updateItem(final Account account, final boolean empty) {
             super.updateItem(account, empty);  // required
 
+            setId(NORMAL_CELL_ID);   // reset, cell is reused
+
             if (!empty && account != null && getTreeTableRow() != null) {
                 setText(account.getName());
 
                 if (account.isPlaceHolder()) {
-                    setId(StyleClass.BOLD_LABEL_ID);
+                    setId(BOLD_LABEL_ID);
                 } else {
-                    setId(StyleClass.NORMAL_CELL_ID);
+                    setId(NORMAL_CELL_ID);
                 }
             } else {
                 setText(null);

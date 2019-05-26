@@ -18,13 +18,13 @@
 
       -fx-control-inner-background-alt is not defined for caspian
  */
-.root{
+.root {
     /* Hushes up Caspian without effecting Modena, the default is 2% */
     /*noinspection CssInvalidFunction*/
-    -fx-control-inner-background-alt: derive(-fx-control-inner-background,-6%);
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, -6%);
 }
 
-.text{
+.text {
     -fx-font-smoothing-type: gray;
 }
 
@@ -64,10 +64,10 @@
 
 /*noinspection CssUnusedSymbol*/
 .status-bar {
-	-fx-padding: 4px;
-	-fx-pref-height: 30px;
-	-fx-background-color: lightgray, -fx-body-color;
-	-fx-background-insets: 0, 1
+    -fx-padding: 4px;
+    -fx-pref-height: 30px;
+    -fx-background-color: lightgray, -fx-body-color;
+    -fx-background-insets: 0, 1
 }
 
 .view-title {
@@ -94,7 +94,7 @@
 }
 
 .border {
-    -fx-border-color:-fx-box-border;
+    -fx-border-color: -fx-box-border;
     -fx-border-width: 1;
     -fx-border-style: solid;
 }
@@ -102,7 +102,7 @@
 .info-bar {
     -fx-hgap: 0.5em;
     -fx-spacing: 0.5em;
-	-fx-padding: 0.3333em;
+    -fx-padding: 0.3333em;
     -fx-font-weight: bold;
 }
 
@@ -138,9 +138,20 @@
     -fx-font-style: normal;
 }
 
+#today-normal-label {
+    -fx-font-style: normal;
+    -fx-background-color: -fx-selection-bar;
+}
+
 #normal-negative-label {
     -fx-font-style: normal;
     -fx-text-fill: darkred;
+}
+
+#today-normal-negative-label {
+    -fx-font-style: normal;
+    -fx-text-fill: darkred;
+    -fx-background-color: -fx-selection-bar;
 }
 
 #bold-label {
@@ -148,9 +159,21 @@
     -fx-font-weight: bold;
 }
 
+#today-bold-label {
+    -fx-font-style: normal;
+    -fx-font-weight: bold;
+    -fx-background-color: -fx-selection-bar;
+}
+
 #bold-negative-label {
     -fx-font-style: normal;
     -fx-text-fill: darkred;
-    -fx-opacity: 0.6;
     -fx-font-weight: bold;
+}
+
+#today-bold-negative-label {
+    -fx-font-style: normal;
+    -fx-text-fill: darkred;
+    -fx-font-weight: bold;
+    -fx-background-color: -fx-selection-bar;
 }

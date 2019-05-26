@@ -16,7 +16,6 @@
 * Formal Trial Balance report
 * Budgeting
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
-** flexible start date for the week
 * Reinstate archive capability
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
@@ -24,6 +23,8 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.x.x
+* 05/26/2019 The current budget period is now highlighted for easier identification.
+* 05/26/2019 Selected table rows were not using the user configured focus color.
 * 05/22/2019 Added a context menu to copy selected transactions to the clipboard.
 
 == Release 3.1.0 __(File format change)__
