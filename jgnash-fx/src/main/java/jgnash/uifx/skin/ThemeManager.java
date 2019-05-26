@@ -101,7 +101,7 @@ public class ThemeManager {
 
     private static final String[][] DEFAULT_COLORS = {
             {DEFAULT_CASPIAN_ACCENT_COLOR, DEFAULT_CASPIAN_BASE_COLOR, DEFAULT_CASPIAN_FOCUS_COLOR},
-            {DEFAULT_MODENA_ACCENT_COLOR,  DEFAULT_MODENA_BASE_COLOR,  DEFAULT_MODENA_FOCUS_COLOR}
+            {DEFAULT_MODENA_ACCENT_COLOR, DEFAULT_MODENA_BASE_COLOR, DEFAULT_MODENA_FOCUS_COLOR}
     };
 
     private static final DoubleProperty fontScale = new SimpleDoubleProperty(1);
@@ -159,7 +159,7 @@ public class ThemeManager {
         _accentColor.set(colorToHex(accentColor.getValue()));
         _baseColor.set(colorToHex(baseColor.getValue()));
         _focusColor.set(colorToHex(focusColor.getValue()));
-        _faintFocusColor.set(colorToHex(Color.web(colorToHex(focusColor.getValue()), OPACITY_FACTOR )));
+        _faintFocusColor.set(colorToHex(Color.web(colorToHex(focusColor.getValue()), OPACITY_FACTOR)));
 
         accentColor.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -182,13 +182,13 @@ public class ThemeManager {
             if (newValue != null) {
                 preferences.put(FOCUS_COLOR, colorToHex(newValue));
                 _focusColor.set(colorToHex(newValue));
-                _faintFocusColor.set(colorToHex(Color.web(colorToHex(focusColor.getValue()), OPACITY_FACTOR )));
+                _faintFocusColor.set(colorToHex(Color.web(colorToHex(focusColor.getValue()), OPACITY_FACTOR)));
             }
         });
 
         // Create the binding format for the style / font size
         styleProperty = Bindings.format(Locale.US, "-fx-font-size: %1$.6fem; -fx-base: %2$s; -fx-focus-color: %3$s; " +
-                        "-fx-faint-focus-color: %4$s; -fx-accent: %5$s",
+                        "-fx-faint-focus-color: %4$s; -fx-accent: %5$s; -fx-selection-bar: %3$s",
                 fontScale, _baseColor, _focusColor, _faintFocusColor,
                 _accentColor);
     }
@@ -251,6 +251,7 @@ public class ThemeManager {
 
     /**
      * Font scale property.  Always use a weak listener to prevent leaks
+     *
      * @return current scale factor
      */
     public static DoubleProperty fontScaleProperty() {
