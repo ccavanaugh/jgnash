@@ -23,6 +23,7 @@ import jgnash.report.pdf.Report;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.ColumnHeaderStyle;
 import jgnash.report.table.ColumnStyle;
+import jgnash.report.table.GroupInfo;
 import jgnash.report.ui.ReportPrintFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.util.NotNull;
@@ -110,8 +111,8 @@ class PDFBoxTableTest {
             report.setFooterFont(PDType1Font.TIMES_ITALIC);
             report.setEllipsis("…");
 
-            assertEquals(1, Report.getGroups(new BasicTestReport()).size());
-            assertEquals(80, ((Report.GroupInfo) Report.getGroups(new BasicTestReport()).toArray()[0]).rows);
+            assertEquals(1, GroupInfo.getGroups(new BasicTestReport()).size());
+            //assertEquals(80, ((GroupInfo) GroupInfo.getGroups(new BasicTestReport()).toArray()[0]).rows);
 
             report.addTable(new BasicTestReport(), "Test Report");
             report.addFooter();
@@ -167,8 +168,8 @@ class PDFBoxTableTest {
             report.setFooterFont(PDType1Font.TIMES_ITALIC);
             report.setEllipsis("…");
 
-            assertEquals(2, Report.getGroups(new CrossTabTestReport()).size());
-            assertEquals(40, ((Report.GroupInfo) Report.getGroups(new CrossTabTestReport()).toArray()[0]).rows);
+            assertEquals(2, GroupInfo.getGroups(new CrossTabTestReport()).size());
+            //assertEquals(40, ((GroupInfo) GroupInfo.getGroups(new CrossTabTestReport()).toArray()[0]).rows);
 
             report.addTable(new CrossTabTestReport(), "Test Report");
             report.addFooter();

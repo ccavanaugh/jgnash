@@ -17,9 +17,29 @@
  */
 package jgnash.report.pdf;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import jgnash.engine.MathConstants;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.ColumnStyle;
+import jgnash.report.table.GroupInfo;
 import jgnash.report.ui.ReportPrintFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
@@ -39,31 +59,6 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.awt.print.PageFormat;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Path;
-import java.text.MessageFormat;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
-import static jgnash.report.table.AbstractReportTableModel.DEFAULT_GROUP;
 import static jgnash.util.LogUtil.logSevere;
 
 /**
@@ -278,7 +273,7 @@ public abstract class Report implements AutoCloseable {
 
         final float[] columnWidths = getColumnWidths(reportModel);
 
-        final Set<GroupInfo> groupInfoSet = getGroups(reportModel);
+        final Set<GroupInfo> groupInfoSet = GroupInfo.getGroups(reportModel);
 
         // calculate the maximum imageable height of the page before we get too close to the footer
         float imageableBottom = (float) getPageFormat().getHeight() - getBottomMargin() - getTableRowHeight();
@@ -350,7 +345,6 @@ public abstract class Report implements AutoCloseable {
                 throw (e);
             }
         }
-
     }
 
     /**
@@ -361,51 +355,6 @@ public abstract class Report implements AutoCloseable {
      */
     private float docYToPageY(final float y) {
         return (float) getPageFormat().getHeight() - y;
-    }
-
-    public static Set<GroupInfo> getGroups(final AbstractReportTableModel tableModel) {
-        final Map<String, GroupInfo> groupInfoMap = new HashMap<>();
-
-        for (int c = 0; c < tableModel.getColumnCount(); c++) {
-            final ColumnStyle columnStyle = tableModel.getColumnStyle(c);
-
-            if (columnStyle == ColumnStyle.GROUP || columnStyle == ColumnStyle.GROUP_NO_HEADER) {
-                for (int r = 0; r < tableModel.getRowCount(); r++) {
-                    final GroupInfo groupInfo = groupInfoMap.computeIfAbsent(tableModel.getValueAt(r, c).toString(),
-                            GroupInfo::new);
-
-                    groupInfo.rows++;
-                }
-            }
-        }
-
-        // create a default group for tables that do not specify one
-        if (groupInfoMap.isEmpty()) {
-            GroupInfo groupInfo = new GroupInfo(DEFAULT_GROUP);
-            groupInfo.rows = tableModel.getRowCount();
-
-            groupInfoMap.put(DEFAULT_GROUP, groupInfo);
-        }
-
-        // perform summation
-        for (int r = 0; r < tableModel.getRowCount(); r++) {
-            final GroupInfo groupInfo = groupInfoMap.get(tableModel.getGroup(r));
-
-            for (int c = 0; c < tableModel.getColumnCount(); c++) {
-                if (tableModel.getColumnClass(c) == BigDecimal.class) {
-                    switch (tableModel.getColumnStyle(c)) {
-                        case AMOUNT_SUM:
-                        case BALANCE_WITH_SUM:
-                        case BALANCE_WITH_SUM_AND_GLOBAL:
-                            groupInfo.addValue(c, (BigDecimal) tableModel.getValueAt(r, c));
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        return new TreeSet<>(groupInfoMap.values());
     }
 
     /**
@@ -992,67 +941,5 @@ public abstract class Report implements AutoCloseable {
 
     public void setForceGroupPagination(boolean forceGroupPagination) {
         this.forceGroupPagination = forceGroupPagination;
-    }
-
-    /**
-     * Support class for reporting the number of groups and rows per group within a report table.
-     */
-    public static class GroupInfo implements Comparable<GroupInfo> {
-
-        /**
-         * Group name
-         */
-        final String group;
-
-        /**
-         * Number of rows in the group
-         */
-        public int rows;
-
-        /**
-         * Summation values for cross tabulation of columns
-         */
-        final Map<Integer, BigDecimal> summationMap = new HashMap<>();
-
-        private boolean hasSummation = false;
-
-        GroupInfo(@NotNull String group) {
-            Objects.requireNonNull(group);
-
-            this.group = group;
-        }
-
-        @Override
-        public int compareTo(final GroupInfo o) {
-            return group.compareTo(o.group);
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (o instanceof GroupInfo) {
-                return group.equals(((GroupInfo) o).group);
-            }
-            return false;
-        }
-
-        public void addValue(final int column, final BigDecimal value) {
-            if (value != null) {    // protect against a null / filtered value
-                summationMap.put(column, getValue(column).add(value));
-                hasSummation = true;
-            }
-        }
-
-        @NotNull
-        private BigDecimal getValue(final int column) {
-            return summationMap.getOrDefault(column, BigDecimal.ZERO);
-        }
-
-        public boolean hasSummation() {
-            return hasSummation;
-        }
-
-        public int hashCode() {
-            return group.hashCode();
-        }
     }
 }
