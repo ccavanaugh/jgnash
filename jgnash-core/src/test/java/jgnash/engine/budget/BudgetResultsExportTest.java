@@ -30,6 +30,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.time.Period;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -72,7 +73,9 @@ class BudgetResultsExportTest {
 
         final Path exportFile = Files.createTempFile("testworkbook", ".xls");
 
-        BudgetResultsExport.exportBudgetResultsModel(exportFile, model);
+        final String errors = BudgetResultsExport.exportBudgetResultsModel(exportFile, model);
+
+        assertNull(errors);
 
         assertTrue(Files.exists(exportFile));
 

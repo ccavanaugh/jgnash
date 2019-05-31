@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
+import jgnash.poi.StyleFactory;
 import jgnash.text.NumericFormats;
 import jgnash.util.FileUtils;
 import jgnash.resource.util.ResourceUtils;
@@ -88,32 +89,20 @@ public class BudgetResultsExport {
             final Sheet s = wb.createSheet(model.getBudget().getName());
 
             // create header cell styles
-            final CellStyle headerStyle = wb.createCellStyle();
+            final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
 
             // create 2 fonts objects
             final Font amountFont = wb.createFont();
-            final Font headerFont = wb.createFont();
+            final Font headerFont = StyleFactory.createHeaderFont(wb);
 
             amountFont.setFontHeightInPoints((short) 10);
             amountFont.setColor(IndexedColors.BLACK.getIndex());
 
-            headerFont.setFontHeightInPoints((short) 11);
-            headerFont.setColor(IndexedColors.BLACK.getIndex());
-            headerFont.setBold(true);
-
             // Set the other cell style and formatting
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
-            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-            DataFormat df_header = wb.createDataFormat();
+            final DataFormat df_header = wb.createDataFormat();
 
             headerStyle.setDataFormat(df_header.getFormat("text"));
             headerStyle.setFont(headerFont);
-            headerStyle.setAlignment(HorizontalAlignment.CENTER);
 
             int row = 0;
             Row r = s.createRow(row);
