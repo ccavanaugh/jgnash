@@ -32,6 +32,12 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public class StyleFactory {
 
+    /**
+     * Creates the default header style
+     *
+     * @param wb {@code Workbook} the new style is to be assigned to
+     * @return a new {@code CellStyle} instance
+     */
     public static CellStyle createHeaderStyle(final Workbook wb) {
         Objects.requireNonNull(wb);
 
@@ -47,6 +53,12 @@ public class StyleFactory {
         return headerStyle;
     }
 
+    /**
+     * Creates the default header font
+     *
+     * @param wb {@code Workbook} font is to be assigned to
+     * @return a new {@code Font} instance
+     */
     public static Font createHeaderFont(final Workbook wb) {
         Objects.requireNonNull(wb);
 
@@ -54,6 +66,22 @@ public class StyleFactory {
         headerFont.setFontHeightInPoints((short) 11);
         headerFont.setColor(IndexedColors.BLACK.getIndex());
         headerFont.setBold(true);
+
+        return headerFont;
+    }
+
+    /**
+     * Creates the default font
+     *
+     * @param wb {@code Workbook} font is to be assigned to
+     * @return a new {@code Font} instance
+     */
+    public static Font createDefaultFont(final Workbook wb) {
+        Objects.requireNonNull(wb);
+
+        final Font headerFont = wb.createFont();
+        headerFont.setFontHeightInPoints((short) 10);
+        headerFont.setColor(IndexedColors.BLACK.getIndex());
 
         return headerFont;
     }

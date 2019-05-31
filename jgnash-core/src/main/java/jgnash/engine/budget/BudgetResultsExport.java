@@ -33,22 +33,19 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
 import jgnash.poi.StyleFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.util.FileUtils;
-import jgnash.resource.util.ResourceUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -92,11 +89,8 @@ public class BudgetResultsExport {
             final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
 
             // create 2 fonts objects
-            final Font amountFont = wb.createFont();
+            final Font amountFont = StyleFactory.createDefaultFont(wb);
             final Font headerFont = StyleFactory.createHeaderFont(wb);
-
-            amountFont.setFontHeightInPoints((short) 10);
-            amountFont.setColor(IndexedColors.BLACK.getIndex());
 
             // Set the other cell style and formatting
             final DataFormat df_header = wb.createDataFormat();
@@ -221,14 +215,10 @@ public class BudgetResultsExport {
             for (final AccountGroup group : model.getAccountGroupList()) {
                 final DataFormat df = wb.createDataFormat();
 
-                final CellStyle amountStyle = wb.createCellStyle();
+                // reuse the header style but align right
+                final CellStyle amountStyle = StyleFactory.createHeaderStyle(wb);
+                amountStyle.setAlignment(HorizontalAlignment.RIGHT);
                 amountStyle.setFont(amountFont);
-                amountStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                amountStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-                amountStyle.setBorderBottom(BorderStyle.THIN);
-                amountStyle.setBorderTop(BorderStyle.THIN);
-                amountStyle.setBorderLeft(BorderStyle.THIN);
-                amountStyle.setBorderRight(BorderStyle.THIN);
 
                 final DecimalFormat format = (DecimalFormat) NumericFormats.getFullCommodityFormat(model.getBaseCurrency());
                 final String pattern = format.toLocalizedPattern().replace("¤", model.getBaseCurrency().getPrefix());

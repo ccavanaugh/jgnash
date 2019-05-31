@@ -46,7 +46,6 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -79,11 +78,8 @@ public class AccountExport {
             final Sheet s = wb.createSheet(account.getName());
 
             // create 2 fonts objects
-            final Font defaultFont = wb.createFont();
+            final Font defaultFont = StyleFactory.createDefaultFont(wb);
             final Font headerFont = StyleFactory.createHeaderFont(wb);
-
-            defaultFont.setFontHeightInPoints((short) 10);
-            defaultFont.setColor(IndexedColors.BLACK.getIndex());
 
             // create header cell styles
             final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
