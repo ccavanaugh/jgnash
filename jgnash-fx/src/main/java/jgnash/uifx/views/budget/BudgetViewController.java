@@ -148,14 +148,14 @@ public class BudgetViewController implements MessageListener {
         if (file != null) {
             pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());
 
-            final Task<Void> exportTask = new Task<>() {
+            final Task<String> exportTask = new Task<>() {
                 @Override
-                protected Void call() {
+                protected String call() {
                     updateMessage(resources.getString("Message.PleaseWait"));
                     updateProgress(-1, Long.MAX_VALUE);
 
-                    BudgetResultsExport.exportBudgetResultsModel(file.toPath(), budgetTableController.getBudgetResultsModel());
-                    return null;
+                    return BudgetResultsExport.exportBudgetResultsModel(file.toPath(),
+                            budgetTableController.getBudgetResultsModel());
                 }
             };
 

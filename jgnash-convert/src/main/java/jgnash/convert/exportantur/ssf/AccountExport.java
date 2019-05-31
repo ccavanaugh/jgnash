@@ -32,19 +32,18 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
+import jgnash.poi.StyleFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.util.FileUtils;
-import jgnash.resource.util.ResourceUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -81,31 +80,18 @@ public class AccountExport {
 
             // create 2 fonts objects
             final Font defaultFont = wb.createFont();
-            final Font headerFont = wb.createFont();
+            final Font headerFont = StyleFactory.createHeaderFont(wb);
 
             defaultFont.setFontHeightInPoints((short) 10);
             defaultFont.setColor(IndexedColors.BLACK.getIndex());
 
-            headerFont.setFontHeightInPoints((short) 11);
-            headerFont.setColor(IndexedColors.BLACK.getIndex());
-            headerFont.setBold(true);
-
             // create header cell styles
-            final CellStyle headerStyle = wb.createCellStyle();
-
-            // Set the other cell style and formatting
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
-            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
 
             DataFormat df_header = wb.createDataFormat();
 
             headerStyle.setDataFormat(df_header.getFormat("text"));
             headerStyle.setFont(headerFont);
-            headerStyle.setAlignment(HorizontalAlignment.CENTER);
 
             final CellStyle dateStyle = wb.createCellStyle();
             dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yy"));
