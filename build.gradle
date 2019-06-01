@@ -24,7 +24,7 @@ allprojects {
 
         apachePoiVersion = "4.1.0"          // https://poi.apache.org/
         commonsCsvVersion = "1.6"           // https://commons.apache.org/proper/commons-csv/
-        commonsCollectionsVersion = "4.3"   // https://commons.apache.org/proper/commons-csv/
+        commonsCollectionsVersion = "4.3"   // https://commons.apache.org/proper/commons-collections/
         commonsTextVersion = "1.6"          // https://commons.apache.org/proper/commons-text/
         commonsLangVersion = "3.8.1"        // https://commons.apache.org/proper/commons-lang/
 
@@ -33,7 +33,7 @@ allprojects {
 
         xstreamVersion = "1.4.11.1"         // https://github.com/x-stream/xstream
 
-        hibernateVersion = "5.4.2.Final"    // http://hibernate.org/orm/
+        hibernateVersion = "5.4.3.Final"    // http://hibernate.org/orm/
         hikariVersion = "3.3.1"             // https://github.com/brettwooldridge/HikariCP
         
         pdfBoxVersion = "2.0.15"            // https://pdfbox.apache.org/
