@@ -18,6 +18,8 @@
 package jgnash.uifx.report.pdf;
 
 import jgnash.report.pdf.Report;
+import jgnash.report.poi.Workbook;
+import jgnash.report.table.AbstractReportTableModel;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
@@ -457,19 +459,34 @@ public class ReportViewerDialogController {
             fileChooser.setInitialDirectory(initialDirectory);
         }
 
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Document", "*.pdf", "*.PDF"));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(resources.getString("Label.PDFFiles") + " (.pdf)", "*.pdf", "*.PDF"),
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls, *.xlsx)",
+                        "*.xls", "*.xlsx")
+        );
 
         final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
 
         if (file != null) {
             pref.put(LAST_DIR, file.getParent());
 
-            if ("pdf".equals(FileUtils.getFileExtension(file.getAbsolutePath()).toLowerCase(Locale.ROOT))) {
-                try {
-                    report.get().saveToFile(file.toPath());
-                } catch (final IOException ex) {
-                    StaticUIMethods.displayException(ex);
-                }
+            final String extension = FileUtils.getFileExtension(file.getAbsolutePath()).toLowerCase(Locale.ROOT);
+
+            switch (extension) {
+                case "pdf":
+                    try {
+                        report.get().saveToFile(file.toPath());
+                    } catch (final IOException ex) {
+                        StaticUIMethods.displayException(ex);
+                    }
+                    break;
+                case "xls":
+                case "xlsx":
+                    final AbstractReportTableModel model = reportController.createReportModel();
+                    Workbook.export(model, file);
+                    break;
+                default:
+                    break;
             }
         }
     }
