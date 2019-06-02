@@ -136,7 +136,8 @@ public class PortfolioReportController implements ReportController {
         }
     }
 
-    private AbstractReportTableModel createReportModel() {
+    @Override
+    public AbstractReportTableModel createReportModel() {
         return PortfolioReport.createReportModel(accountComboBox.getValue(), subAccountCheckBox.isSelected(),
                 longNameCheckBox.isSelected());
     }

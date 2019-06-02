@@ -18,12 +18,13 @@
 package jgnash.uifx.report.pdf;
 
 import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
 
 import java.util.function.Consumer;
 import java.util.prefs.Preferences;
 
 /**
- * Required interface for a report controller
+ * Required UI interface for a report controller
  *
  * @author Craig Cavanaugh
  */
@@ -47,6 +48,13 @@ public interface ReportController {
      * Forces a refresh/rebuild of the report
      */
     void refreshReport();
+
+    /**
+     * Generated and returns the {@code AbstractReportTableModel} used for report generation
+     *
+     * @return report model
+     */
+    AbstractReportTableModel createReportModel();
 
     /**
      * Returns the default Preference node for the implementing class

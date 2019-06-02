@@ -132,7 +132,8 @@ public class NetWorthReportController implements ReportController {
         }
     }
 
-    private AbstractReportTableModel createReportModel() {
+    @Override
+    public AbstractReportTableModel createReportModel() {
         report.setReportPeriod(resolutionComboBox.getValue());
 
         return report.createReportModel(startDatePicker.getValue(), endDatePicker.getValue(),

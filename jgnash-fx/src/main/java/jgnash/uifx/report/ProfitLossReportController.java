@@ -170,7 +170,8 @@ public class ProfitLossReportController implements ReportController {
         }
     }
 
-    private AbstractReportTableModel createReportModel() {
+    @Override
+    public AbstractReportTableModel createReportModel() {
         report.setAddPercentileColumn(showAccountPercentages.isSelected());
 
         report.setSortOrder(sortOrderComboBox.getValue());
