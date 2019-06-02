@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
@@ -40,6 +42,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -57,14 +60,17 @@ public class Workbook {
         Objects.requireNonNull(reportModel);
         Objects.requireNonNull(file);
 
+
         final Logger logger = Logger.getLogger(Workbook.class.getName());
 
         final String extension = FileUtils.getFileExtension(file.getAbsolutePath());
 
         try (final org.apache.poi.ss.usermodel.Workbook wb = extension.equals("xlsx") ? new XSSFWorkbook() : new HSSFWorkbook()) {
 
+            final Map<Style, CellStyle> styleMap = buildStyleMap(wb);
+
             // create a new sheet
-            final Sheet sheet = wb.createSheet("Sheet1");
+            final Sheet sheet = wb.createSheet(WorkbookUtil.createSafeSheetName("Sheet1"));
 
             final Set<GroupInfo> groupInfoSet = GroupInfo.getGroups(reportModel);
 
@@ -72,7 +78,7 @@ public class Workbook {
 
             // write all of the groups
             for (final GroupInfo groupInfo : groupInfoSet) {
-                sheetRow = addTableSection(reportModel, wb, sheet, groupInfo.group, sheetRow) + 1;
+                sheetRow = addTableSection(reportModel, styleMap, wb, sheet, groupInfo.group, sheetRow) + 1;
             }
 
             // autosize the columns
@@ -86,7 +92,6 @@ public class Workbook {
                 }
             }
 
-            // TODO: Cache, reuse the cell styles
             logger.log(Level.INFO, "{0} cell styles were used", wb.getNumCellStyles());
 
             // Save the file
@@ -109,7 +114,7 @@ public class Workbook {
         }
     }
 
-    private static int addTableSection(@NotNull final AbstractReportTableModel reportModel,
+    private static int addTableSection(@NotNull final AbstractReportTableModel reportModel, final Map<Style, CellStyle> styleMap,
                                         @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
                                         @NotNull final String group, final int startRow) {
         Objects.requireNonNull(group);
@@ -119,15 +124,8 @@ public class Workbook {
 
         int sheetRow = startRow;
 
-        final Font defaultFont = StyleFactory.createDefaultFont(wb);
-        final Font headerFont = StyleFactory.createHeaderFont(wb);
-
-        // create header cell styles
-        final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
-        headerStyle.setFont(headerFont);
-
-        final CellStyle defaultStyle = wb.createCellStyle();
-        defaultStyle.setFont(defaultFont);
+        final CellStyle headerStyle = styleMap.get(Style.HEADER);
+        final CellStyle defaultStyle = styleMap.get(Style.DEFAULT);
 
         final CreationHelper createHelper = wb.getCreationHelper();
 
@@ -172,5 +170,27 @@ public class Workbook {
         }
 
         return sheetRow;
+    }
+
+    private static Map<Style, CellStyle> buildStyleMap(final org.apache.poi.ss.usermodel.Workbook wb) {
+        final Map<Style, CellStyle> styleMap = new EnumMap<>(Style.class);
+
+        final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
+        final Font headerFont = StyleFactory.createHeaderFont(wb);
+        headerStyle.setFont(headerFont);
+        styleMap.put(Style.HEADER, headerStyle);
+
+        final Font defaultFont = StyleFactory.createDefaultFont(wb);
+        final CellStyle defaultStyle = wb.createCellStyle();
+        defaultStyle.setFont(defaultFont);
+        styleMap.put(Style.DEFAULT, defaultStyle);
+
+        return styleMap;
+    }
+
+    private enum Style {
+        FOOTER,
+        HEADER,
+        DEFAULT
     }
 }
