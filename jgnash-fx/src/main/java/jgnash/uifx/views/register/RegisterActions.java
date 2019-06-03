@@ -32,7 +32,7 @@ import javafx.stage.FileChooser;
 
 import jgnash.convert.exportantur.csv.CsvExport;
 import jgnash.convert.exportantur.ofx.OfxExport;
-import jgnash.convert.exportantur.ssf.AccountExport;
+import jgnash.report.poi.AccountExport;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;

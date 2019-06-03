@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.convert.exportantur.ssf;
+package jgnash.report.poi;
 
 import java.io.File;
 import java.io.IOException;
