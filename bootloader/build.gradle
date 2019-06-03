@@ -10,8 +10,8 @@ description = "jGnashFx BootLoader"
 mainClassName = "jGnash"
 
 javafx {
+    version = javaFXVersion
     modules = [ "javafx.controls"]
-    version = "12.0.1"
 }
 
 dependencies {

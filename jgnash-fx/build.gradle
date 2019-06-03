@@ -19,43 +19,43 @@ dependencies {
 
     // Hack to include all javafx platforms in the classpath
     // The platform specific libraries are excluded when distributions is assembled
-    compile 'org.openjfx:javafx-base:12.0.1'
-    compile 'org.openjfx:javafx-controls:12.0.1'
-    compile 'org.openjfx:javafx-fxml:12.0.1'
-    compile 'org.openjfx:javafx-graphics:12.0.1'
-    compile 'org.openjfx:javafx-media:12.0.1'
-    compile 'org.openjfx:javafx-swing:12.0.1'
-    compile 'org.openjfx:javafx-web:12.0.1'
+    compile "org.openjfx:javafx-base:" + javaFXVersion
+    compile "org.openjfx:javafx-controls:" + javaFXVersion
+    compile "org.openjfx:javafx-fxml:" + javaFXVersion
+    compile "org.openjfx:javafx-graphics:" + javaFXVersion
+    compile "org.openjfx:javafx-media:" + javaFXVersion
+    compile "org.openjfx:javafx-swing:" + javaFXVersion
+    compile "org.openjfx:javafx-web:" + javaFXVersion
 
-    compile 'org.openjfx:javafx-base:12.0.1:linux'
-    compile 'org.openjfx:javafx-controls:12.0.1:linux'
-    compile 'org.openjfx:javafx-fxml:12.0.1:linux'
-    compile 'org.openjfx:javafx-graphics:12.0.1:linux'
-    compile 'org.openjfx:javafx-media:12.0.1:linux'
-    compile 'org.openjfx:javafx-swing:12.0.1:linux'
-    compile 'org.openjfx:javafx-web:12.0.1:linux'
+    compile "org.openjfx:javafx-base:" + javaFXVersion + ":linux"
+    compile "org.openjfx:javafx-controls:" + javaFXVersion + ":linux"
+    compile "org.openjfx:javafx-fxml:" + javaFXVersion + ":linux"
+    compile "org.openjfx:javafx-graphics:" + javaFXVersion + ":linux"
+    compile "org.openjfx:javafx-media:" + javaFXVersion + ":linux"
+    compile "org.openjfx:javafx-swing:" + javaFXVersion + ":linux"
+    compile "org.openjfx:javafx-web:" + javaFXVersion + ":linux"
 
-    compile 'org.openjfx:javafx-base:12.0.1:win'
-    compile 'org.openjfx:javafx-controls:12.0.1:win'
-    compile 'org.openjfx:javafx-fxml:12.0.1:win'
-    compile 'org.openjfx:javafx-graphics:12.0.1:win'
-    compile 'org.openjfx:javafx-media:12.0.1:win'
-    compile 'org.openjfx:javafx-swing:12.0.1:win'
-    compile 'org.openjfx:javafx-web:12.0.1:win'
+    compile "org.openjfx:javafx-base:" + javaFXVersion + ":win"
+    compile "org.openjfx:javafx-controls:" + javaFXVersion + ":win"
+    compile "org.openjfx:javafx-fxml:" + javaFXVersion + ":win"
+    compile "org.openjfx:javafx-graphics:" + javaFXVersion + ":win"
+    compile "org.openjfx:javafx-media:" + javaFXVersion + ":win"
+    compile "org.openjfx:javafx-swing:" + javaFXVersion + ":win"
+    compile "org.openjfx:javafx-web:" + javaFXVersion + ":win"
 
-    compile 'org.openjfx:javafx-base:12.0.1:mac'
-    compile 'org.openjfx:javafx-controls:12.0.1:mac'
-    compile 'org.openjfx:javafx-fxml:12.0.1:mac'
-    compile 'org.openjfx:javafx-graphics:12.0.1:mac'
-    compile 'org.openjfx:javafx-media:12.0.1:mac'
-    compile 'org.openjfx:javafx-swing:12.0.1:mac'
-    compile 'org.openjfx:javafx-web:12.0.1:mac'
+    compile "org.openjfx:javafx-base:" + javaFXVersion + ":mac"
+    compile "org.openjfx:javafx-controls:" + javaFXVersion + ":mac"
+    compile "org.openjfx:javafx-fxml:" + javaFXVersion + ":mac"
+    compile "org.openjfx:javafx-graphics:" + javaFXVersion + ":mac"
+    compile "org.openjfx:javafx-media:" + javaFXVersion + ":mac"
+    compile "org.openjfx:javafx-swing:" + javaFXVersion + ":mac"
+    compile "org.openjfx:javafx-web:" + javaFXVersion + ":mac"
     // end hack
 }
 
 javafx {
-    modules = [ "javafx.base", "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing", "javafx.graphics", "javafx.media"]
-    version = "12.0.1"
+    version = javaFXVersion
+    modules = ["javafx.base", "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing", "javafx.graphics", "javafx.media"]
 }
 
 startScripts.enabled = false
@@ -99,7 +99,7 @@ jar {
     exclude "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.MF"
 
     manifest {
-        attributes  "Main-Class": "jGnashFx",
-                    "Class-Path": configurations.runtimeClasspath.files.collect { "lib/$it.name" }.join(" ")
+        attributes "Main-Class": "jGnashFx",
+                "Class-Path": configurations.runtimeClasspath.files.collect { "lib/$it.name" }.join(" ")
     }
 }

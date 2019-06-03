@@ -41,6 +41,8 @@ allprojects {
         nettyVersion = "4.1.36.Final"       // https://netty.io/index.html
 
         slf4jVersion = "1.8.0-beta4"        // https://www.slf4j.org/news.html
+
+        javaFXVersion = "12.0.1"
     }
 }
 
