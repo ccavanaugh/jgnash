@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.engine.budget;
+package jgnash.report.poi;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
+import jgnash.engine.budget.BudgetPeriodResults;
+import jgnash.engine.budget.BudgetResultsModel;
 import jgnash.poi.StyleFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;

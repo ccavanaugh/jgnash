@@ -36,7 +36,7 @@ import javafx.stage.FileChooser;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetResultsExport;
+import jgnash.report.poi.BudgetResultsExport;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;

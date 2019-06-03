@@ -6,6 +6,7 @@ project.ext {
 
 dependencies {
     compile project(":jgnash-core")
+    compile project(":poi-support")
 
     compile group: "org.apache.pdfbox", name: "pdfbox", version: pdfBoxVersion
     compile group: "org.apache.pdfbox", name: "pdfbox-tools", version: pdfBoxVersion

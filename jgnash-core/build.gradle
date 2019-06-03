@@ -6,7 +6,6 @@ project.ext {
 
 dependencies {
     compile project(":jgnash-resources")
-    compile project(":poi-support")
 
     // required for HikariCP, override with modular version
     compile group: "org.slf4j", name: "slf4j-api", version: slf4jVersion

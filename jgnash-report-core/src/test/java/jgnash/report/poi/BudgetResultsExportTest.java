@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.engine.budget;
+package jgnash.report.poi;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +27,8 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetResultsModel;
 import jgnash.time.Period;
 import org.junit.jupiter.api.Test;
 
