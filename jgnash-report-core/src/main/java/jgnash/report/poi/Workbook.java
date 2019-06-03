@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.poi.StyleFactory;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.GroupInfo;
 import jgnash.util.FileUtils;

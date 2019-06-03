@@ -34,7 +34,6 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
 import jgnash.engine.budget.BudgetPeriodResults;
 import jgnash.engine.budget.BudgetResultsModel;
-import jgnash.poi.StyleFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.util.FileUtils;

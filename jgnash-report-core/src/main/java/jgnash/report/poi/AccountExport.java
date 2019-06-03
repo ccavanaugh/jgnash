@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
-import jgnash.poi.StyleFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
