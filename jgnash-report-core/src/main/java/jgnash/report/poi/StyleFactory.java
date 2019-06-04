@@ -28,9 +28,15 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
- * Factory class for  generating consistent POI styles
+ * Factory class for generating consistent POI styles
+ *
+ * @author Craig Cavanaugh
  */
-public class StyleFactory {
+class StyleFactory {
+
+    private StyleFactory() {
+        // Utility class
+    }
 
     /**
      * Creates the default header style
@@ -38,7 +44,7 @@ public class StyleFactory {
      * @param wb {@code Workbook} the new style is to be assigned to
      * @return a new {@code CellStyle} instance
      */
-    public static CellStyle createHeaderStyle(final Workbook wb) {
+    static CellStyle createFooterStyle(final Workbook wb) {
         Objects.requireNonNull(wb);
 
         final CellStyle headerStyle = wb.createCellStyle();
@@ -54,12 +60,33 @@ public class StyleFactory {
     }
 
     /**
+     * Creates the default header style
+     *
+     * @param wb {@code Workbook} the new style is to be assigned to
+     * @return a new {@code CellStyle} instance
+     */
+    static CellStyle createHeaderStyle(final Workbook wb) {
+        Objects.requireNonNull(wb);
+
+        final CellStyle headerStyle = wb.createCellStyle();
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+        headerStyle.setFillForegroundColor(IndexedColors.BLACK.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        return headerStyle;
+    }
+
+    /**
      * Creates the default header font
      *
      * @param wb {@code Workbook} font is to be assigned to
      * @return a new {@code Font} instance
      */
-    public static Font createHeaderFont(final Workbook wb) {
+    static Font createFooterFont(final Workbook wb) {
         Objects.requireNonNull(wb);
 
         final Font headerFont = wb.createFont();
@@ -71,12 +98,29 @@ public class StyleFactory {
     }
 
     /**
+     * Creates the default header font
+     *
+     * @param wb {@code Workbook} font is to be assigned to
+     * @return a new {@code Font} instance
+     */
+    static Font createHeaderFont(final Workbook wb) {
+        Objects.requireNonNull(wb);
+
+        final Font headerFont = wb.createFont();
+        headerFont.setFontHeightInPoints((short) 11);
+        headerFont.setColor(IndexedColors.WHITE.getIndex());
+        headerFont.setBold(true);
+
+        return headerFont;
+    }
+
+    /**
      * Creates the default font
      *
      * @param wb {@code Workbook} font is to be assigned to
      * @return a new {@code Font} instance
      */
-    public static Font createDefaultFont(final Workbook wb) {
+    static Font createDefaultFont(final Workbook wb) {
         Objects.requireNonNull(wb);
 
         final Font headerFont = wb.createFont();

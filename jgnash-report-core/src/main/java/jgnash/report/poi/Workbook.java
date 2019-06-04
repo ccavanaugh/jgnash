@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.GroupInfo;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
@@ -77,11 +78,13 @@ public class Workbook {
 
             // write all of the groups
             for (final GroupInfo groupInfo : groupInfoSet) {
-                sheetRow = addTableSection(reportModel, styleMap, wb, sheet, groupInfo.group, sheetRow) + 1;
+                sheetRow = addTableSection(reportModel, styleMap, wb, sheet, groupInfo, sheetRow) + 1;
             }
 
+            // TODO: Add global footer column
+
             // autosize the columns
-            int col= 0;
+            int col = 0;
             for (int c = 0; c < reportModel.getColumnCount(); c++) {
                 if (reportModel.isColumnVisible(c)) {
                     sheet.autoSizeColumn(col);
@@ -114,24 +117,26 @@ public class Workbook {
     }
 
     private static int addTableSection(@NotNull final AbstractReportTableModel reportModel, final Map<Style, CellStyle> styleMap,
-                                        @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
-                                        @NotNull final String group, final int startRow) {
-        Objects.requireNonNull(group);
+                                       @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
+                                       @NotNull final GroupInfo groupInfo, final int startRow) {
+        Objects.requireNonNull(groupInfo);
         Objects.requireNonNull(reportModel);
         Objects.requireNonNull(wb);
         Objects.requireNonNull(s);
-
-        int sheetRow = startRow;
 
         final CellStyle headerStyle = styleMap.get(Style.HEADER);
         final CellStyle defaultStyle = styleMap.get(Style.DEFAULT);
 
         final CreationHelper createHelper = wb.getCreationHelper();
 
+        final String group = groupInfo.group;
+
+        int sheetRow = startRow;
+
         // Create headers
         Row row = s.createRow(sheetRow);
 
-        int col= 0; // reusable col tracker
+        int col = 0; // reusable col tracker
 
         for (int c = 0; c < reportModel.getColumnCount(); c++) {
             if (reportModel.isColumnVisible(c)) {
@@ -168,28 +173,60 @@ public class Workbook {
             }
         }
 
+        // add the group footer if needed
+        if (groupInfo.hasSummation()) {
+
+            final CellStyle footerStyle = styleMap.get(Style.FOOTER);
+
+            col = 0;
+            row = s.createRow(sheetRow);   // new row is needed
+
+            Cell cell = row.createCell(col);
+            cell.setCellStyle(footerStyle);
+            cell.setCellValue(createHelper.createRichTextString(ResourceUtils.getString("Word.Subtotal")));
+
+            col++;
+
+            for (int c = 0; c < reportModel.getColumnCount(); c++) {
+                if (reportModel.isColumnVisible(c) && reportModel.isColumnSummed(c)) {
+                    cell = row.createCell(col);
+                    cell.setCellStyle(footerStyle);
+                    cell.setCellValue(createHelper.createRichTextString(groupInfo.getValue(c).toString()));
+
+                    col++;
+                }
+            }
+
+            sheetRow++;
+        }
+
         return sheetRow;
     }
 
     private static Map<Style, CellStyle> buildStyleMap(final org.apache.poi.ss.usermodel.Workbook wb) {
         final Map<Style, CellStyle> styleMap = new EnumMap<>(Style.class);
 
-        final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
-        final Font headerFont = StyleFactory.createHeaderFont(wb);
-        headerStyle.setFont(headerFont);
-        styleMap.put(Style.HEADER, headerStyle);
-
         final Font defaultFont = StyleFactory.createDefaultFont(wb);
         final CellStyle defaultStyle = wb.createCellStyle();
         defaultStyle.setFont(defaultFont);
         styleMap.put(Style.DEFAULT, defaultStyle);
 
+        final Font footerFont = StyleFactory.createFooterFont(wb);
+        final CellStyle footerStyle = StyleFactory.createFooterStyle(wb);
+        footerStyle.setFont(footerFont);
+        styleMap.put(Style.FOOTER, footerStyle);
+
+        final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
+        final Font headerFont = StyleFactory.createHeaderFont(wb);
+        headerStyle.setFont(headerFont);
+        styleMap.put(Style.HEADER, headerStyle);
+
         return styleMap;
     }
 
     private enum Style {
+        DEFAULT,
         FOOTER,
-        HEADER,
-        DEFAULT
+        HEADER
     }
 }
