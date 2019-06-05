@@ -25,7 +25,6 @@ import jgnash.engine.InvestmentPerformanceSummary;
 import jgnash.engine.SecurityNode;
 import jgnash.report.pdf.Report;
 import jgnash.report.table.AbstractReportTableModel;
-import jgnash.report.table.ColumnHeaderStyle;
 import jgnash.report.table.ColumnStyle;
 import jgnash.util.NotNull;
 
@@ -211,14 +210,6 @@ public class PortfolioReport extends Report {
                 default:
                     return ColumnStyle.STRING;
             }
-        }
-
-        @Override
-        public ColumnHeaderStyle getColumnHeaderStyle(final int columnIndex) {
-            if (columnIndex == 0) { // security column
-                return ColumnHeaderStyle.LEFT;
-            }
-            return ColumnHeaderStyle.RIGHT;
         }
 
         @Override

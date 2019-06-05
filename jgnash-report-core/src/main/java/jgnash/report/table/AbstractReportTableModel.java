@@ -48,14 +48,11 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
     /**
      * Default group for unassigned rows.
      */
-    public static final String DEFAULT_GROUP = "_default_";
+    static final String DEFAULT_GROUP = "_default_";
 
     public abstract CurrencyNode getCurrency();
 
     public abstract ColumnStyle getColumnStyle(int columnIndex);
-
-    // TODO: Use or remove
-    public abstract ColumnHeaderStyle getColumnHeaderStyle(int columnIndex);
 
     /** Return true if the column should be fixed width
      *

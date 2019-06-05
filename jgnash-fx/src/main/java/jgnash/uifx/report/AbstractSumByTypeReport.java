@@ -17,25 +17,6 @@
  */
 package jgnash.uifx.report;
 
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.Comparators;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.MathConstants;
-import jgnash.report.pdf.Report;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.report.table.ColumnHeaderStyle;
-import jgnash.report.table.ColumnStyle;
-import jgnash.report.table.Row;
-import jgnash.report.table.SortOrder;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.time.DateUtils;
-import jgnash.time.Period;
-import jgnash.util.NotNull;
-
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -50,6 +31,24 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.MathConstants;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.ColumnStyle;
+import jgnash.report.table.Row;
+import jgnash.report.table.SortOrder;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
+import jgnash.time.Period;
+import jgnash.util.NotNull;
 
 /**
  * Abstract Report that groups and sums by {@code AccountGroup} and has a line for a global sum. and cross tabulates
@@ -413,16 +412,6 @@ public abstract class AbstractSumByTypeReport extends Report {
                 return ColumnStyle.GROUP;
             }
             return ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL;
-        }
-
-        @Override
-        public ColumnHeaderStyle getColumnHeaderStyle(final int columnIndex) {
-            if (columnIndex == 0) { // accounts column
-                return ColumnHeaderStyle.LEFT;
-            } else if (columnIndex == getColumnCount() - 1) { // group column
-                return ColumnHeaderStyle.CENTER;
-            }
-            return ColumnHeaderStyle.RIGHT;
         }
 
         private boolean isPercentileColumn(final int columnIndex) {

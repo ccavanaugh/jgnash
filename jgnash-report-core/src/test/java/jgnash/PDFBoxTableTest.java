@@ -17,28 +17,8 @@
  */
 package jgnash;
 
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.DefaultCurrencies;
-import jgnash.report.pdf.Report;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.report.table.ColumnHeaderStyle;
-import jgnash.report.table.ColumnStyle;
-import jgnash.report.table.GroupInfo;
-import jgnash.report.ui.ReportPrintFactory;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.util.NotNull;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.tools.imageio.ImageIOUtil;
-
-import org.junit.jupiter.api.Test;
-
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -47,7 +27,26 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.*;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.DefaultCurrencies;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.ColumnStyle;
+import jgnash.report.table.GroupInfo;
+import jgnash.report.ui.ReportPrintFactory;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.util.NotNull;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.tools.imageio.ImageIOUtil;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PDFBoxTableTest {
 
@@ -240,15 +239,6 @@ class PDFBoxTableTest {
         }
 
         @Override
-        public ColumnHeaderStyle getColumnHeaderStyle(int columnIndex) {
-            if (columnIndex < 6) {
-                return ColumnHeaderStyle.LEFT;
-            }
-
-            return ColumnHeaderStyle.RIGHT;
-        }
-
-        @Override
         public Class<?> getColumnClass(final int columnIndex) {
 
             switch (columnIndex) {
@@ -373,15 +363,6 @@ class PDFBoxTableTest {
         @Override
         public ColumnStyle getColumnStyle(int columnIndex) {
             return columnStyles[columnIndex];
-        }
-
-        @Override
-        public ColumnHeaderStyle getColumnHeaderStyle(int columnIndex) {
-            if (columnIndex < 6) {
-                return ColumnHeaderStyle.LEFT;
-            }
-
-            return ColumnHeaderStyle.RIGHT;
         }
 
         @Override

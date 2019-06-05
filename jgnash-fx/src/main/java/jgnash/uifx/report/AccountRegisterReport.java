@@ -17,25 +17,6 @@
  */
 package jgnash.uifx.report;
 
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
-import jgnash.engine.Transaction;
-import jgnash.engine.TransactionEntry;
-import jgnash.engine.TransactionType;
-import jgnash.report.pdf.Report;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.report.table.ColumnHeaderStyle;
-import jgnash.report.table.ColumnStyle;
-import jgnash.report.table.Row;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.time.DateUtils;
-import jgnash.uifx.views.register.RegisterFactory;
-import jgnash.util.Nullable;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,6 +30,24 @@ import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionType;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.ColumnStyle;
+import jgnash.report.table.Row;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
+import jgnash.uifx.views.register.RegisterFactory;
+import jgnash.util.Nullable;
 
 /**
  * Account Register Report Model
@@ -197,19 +196,6 @@ public class AccountRegisterReport extends Report {
             }
 
             return columnStyles[columnIndex];
-        }
-
-        @Override
-        public ColumnHeaderStyle getColumnHeaderStyle(final int columnIndex) {
-            if (sumAmounts && columnIndex == columnNames.length) {
-                return ColumnHeaderStyle.LEFT;
-            }
-
-            if (columnIndex < 6) {
-                return ColumnHeaderStyle.LEFT;
-            }
-
-            return ColumnHeaderStyle.RIGHT;
         }
 
         @Override
@@ -435,15 +421,6 @@ public class AccountRegisterReport extends Report {
         @Override
         public ColumnStyle getColumnStyle(final int columnIndex) {
             return columnStyles[columnIndex];
-        }
-
-        @Override
-        public ColumnHeaderStyle getColumnHeaderStyle(final int columnIndex) {
-            if (columnIndex < 5) {
-                return ColumnHeaderStyle.LEFT;
-            }
-
-            return ColumnHeaderStyle.RIGHT;
         }
 
         @Override
