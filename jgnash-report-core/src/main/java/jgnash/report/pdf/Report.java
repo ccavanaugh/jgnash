@@ -662,13 +662,13 @@ public abstract class Report implements AutoCloseable {
                 final DateTimeFormatter dateFormatter = DateUtils.getShortDateFormatter();
                 return dateFormatter.format((LocalDate) value);
             case SHORT_AMOUNT:
-                final NumberFormat shortNumberFormat = NumericFormats.getShortCommodityFormat(reportModel.getCurrency());
+                final NumberFormat shortNumberFormat = NumericFormats.getShortCommodityFormat(reportModel.getCurrencyNode());
                 return shortNumberFormat.format(value);
             case BALANCE:
             case BALANCE_WITH_SUM:
             case BALANCE_WITH_SUM_AND_GLOBAL:
             case AMOUNT_SUM:
-                final NumberFormat numberFormat = NumericFormats.getFullCommodityFormat(reportModel.getCurrency());
+                final NumberFormat numberFormat = NumericFormats.getFullCommodityFormat(reportModel.getCurrencyNode());
                 return numberFormat.format(value);
             case PERCENTAGE:
                 final NumberFormat percentageFormat = NumericFormats.getPercentageFormat();

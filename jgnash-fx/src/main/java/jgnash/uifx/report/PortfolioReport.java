@@ -182,7 +182,7 @@ public class PortfolioReport extends Report {
         }
 
         @Override
-        public CurrencyNode getCurrency() {
+        public CurrencyNode getCurrencyNode() {
             return baseCurrency;
         }
 

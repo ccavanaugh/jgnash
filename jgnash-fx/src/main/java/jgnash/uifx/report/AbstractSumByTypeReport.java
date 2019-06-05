@@ -366,7 +366,7 @@ public abstract class AbstractSumByTypeReport extends Report {
         }
 
         @Override
-        public CurrencyNode getCurrency() {
+        public CurrencyNode getCurrencyNode() {
             return baseCurrency;
         }
 
@@ -460,11 +460,11 @@ public abstract class AbstractSumByTypeReport extends Report {
                     return getValue().getAccountType().getAccountGroup().toString();
                 } else if (columnIndex > 0 && columnIndex <= startDates.size()) {
                     if (runningTotal) {
-                        return getValue().getBalance(endDates.get(columnIndex - 1), getCurrency());
+                        return getValue().getBalance(endDates.get(columnIndex - 1), getCurrencyNode());
                     }
 
                     return getValue().getBalance(startDates.get(columnIndex - 1), endDates.get(columnIndex - 1),
-                            getCurrency()).negate();
+                            getCurrencyNode()).negate();
                 }
 
                 return null;

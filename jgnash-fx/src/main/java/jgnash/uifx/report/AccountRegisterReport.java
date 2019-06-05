@@ -181,7 +181,7 @@ public class AccountRegisterReport extends Report {
         }
 
         @Override
-        public CurrencyNode getCurrency() {
+        public CurrencyNode getCurrencyNode() {
             return account.getCurrencyNode();
         }
 
@@ -414,7 +414,7 @@ public class AccountRegisterReport extends Report {
         }
 
         @Override
-        public CurrencyNode getCurrency() {
+        public CurrencyNode getCurrencyNode() {
             return account.getCurrencyNode();
         }
 

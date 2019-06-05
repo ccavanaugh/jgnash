@@ -50,7 +50,7 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
      */
     static final String DEFAULT_GROUP = "_default_";
 
-    public abstract CurrencyNode getCurrency();
+    public abstract CurrencyNode getCurrencyNode();
 
     public abstract ColumnStyle getColumnStyle(int columnIndex);
 
@@ -192,7 +192,7 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
                     nf = NumericFormats.getPercentageFormat();
                     break;
                 default:
-                    nf = NumericFormats.getFullCommodityFormat(getCurrency());
+                    nf = NumericFormats.getFullCommodityFormat(getCurrencyNode());
                     break;
             }
 

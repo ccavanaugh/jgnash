@@ -229,7 +229,7 @@ class PDFBoxTableTest {
         }
 
         @Override
-        public CurrencyNode getCurrency() {
+        public CurrencyNode getCurrencyNode() {
             return currencyNode;
         }
 
@@ -356,7 +356,7 @@ class PDFBoxTableTest {
 
 
         @Override
-        public CurrencyNode getCurrency() {
+        public CurrencyNode getCurrencyNode() {
             return currencyNode;
         }
 
