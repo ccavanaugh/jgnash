@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.text.NumericFormats;
+import jgnash.util.NotNull;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -87,21 +88,27 @@ class StyleFactory {
         return headerStyle;
     }
 
-    static CellStyle createDefaultAmountStyle(final Workbook wb, final CurrencyNode currencyNode) {
-        Objects.requireNonNull(wb);
-        Objects.requireNonNull(currencyNode);
-
+    static CellStyle applyNumericFormat(final Workbook wb, final CurrencyNode currencyNode, final CellStyle cellStyle) {
         final DecimalFormat format = (DecimalFormat) NumericFormats.getFullCommodityFormat(currencyNode);
         final String pattern = format.toLocalizedPattern().replace("¤", currencyNode.getPrefix());
-
-        final Font defaultFont = createDefaultFont(wb);
-        final CellStyle amountStyle = wb.createCellStyle();
         final DataFormat df = wb.createDataFormat();
+        cellStyle.setDataFormat(df.getFormat(pattern));
+        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
 
-        amountStyle.setFont(defaultFont);
-        amountStyle.setDataFormat(df.getFormat(pattern));
+        return cellStyle;
+    }
 
-        return amountStyle;
+    static CellStyle createDefaultAmountStyle(@NotNull final Workbook wb, @NotNull final CurrencyNode currencyNode) {
+        return applyNumericFormat(wb, currencyNode, createDefaultStyle(wb));
+    }
+
+    static CellStyle createDefaultStyle(@NotNull final Workbook wb) {
+        final Font defaultFont = createDefaultFont(wb);
+        final CellStyle cellStyle = wb.createCellStyle();
+
+        cellStyle.setFont(defaultFont);
+
+        return cellStyle;
     }
 
     /**
@@ -110,7 +117,7 @@ class StyleFactory {
      * @param wb {@code Workbook} font is to be assigned to
      * @return a new {@code Font} instance
      */
-    private static Font createFooterFont(final Workbook wb) {
+    private static Font createFooterFont(@NotNull final Workbook wb) {
         Objects.requireNonNull(wb);
 
         final Font font = wb.createFont();
@@ -127,7 +134,7 @@ class StyleFactory {
      * @param wb {@code Workbook} font is to be assigned to
      * @return a new {@code Font} instance
      */
-    static Font createHeaderFont(final Workbook wb) {
+    static Font createHeaderFont(@NotNull final Workbook wb) {
         Objects.requireNonNull(wb);
 
         final Font font = wb.createFont();
@@ -144,7 +151,7 @@ class StyleFactory {
      * @param wb {@code Workbook} font is to be assigned to
      * @return a new {@code Font} instance
      */
-    static Font createDefaultFont(final Workbook wb) {
+    static Font createDefaultFont(@NotNull final Workbook wb) {
         Objects.requireNonNull(wb);
 
         final Font font = wb.createFont();

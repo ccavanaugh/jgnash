@@ -175,23 +175,18 @@ public class Workbook {
         // add the group footer if needed
         if (groupInfo.hasSummation()) {
 
-            final CellStyle footerStyle = styleMap.get(Style.FOOTER);
+            //final CellStyle footerStyle = styleMap.get(Style.FOOTER);
 
             col = 0;
             row = s.createRow(sheetRow);   // new row is needed
 
-            Cell cell = row.createCell(col);
-            cell.setCellStyle(footerStyle);
-            cell.setCellValue(createHelper.createRichTextString(ResourceUtils.getString("Word.Subtotal")));
+            setCellValue(ResourceUtils.getString("Word.Subtotal"), ColumnStyle.STRING, styleMap, wb, row, col);
 
             col++;
 
             for (int c = 0; c < reportModel.getColumnCount(); c++) {
                 if (reportModel.isColumnVisible(c) && reportModel.isColumnSummed(c)) {
-                    cell = row.createCell(col);
-                    cell.setCellStyle(footerStyle);
-                    cell.setCellValue(createHelper.createRichTextString(groupInfo.getValue(c).toString()));
-
+                    setCellValue(groupInfo.getValue(c), ColumnStyle.BALANCE_WITH_SUM, styleMap, wb, row, col);
                     col++;
                 }
             }
@@ -208,25 +203,50 @@ public class Workbook {
 
         final ColumnStyle columnStyle = reportModel.getColumnStyle(tableColumn);
 
-        final Cell cell;
-
         switch (columnStyle) {
             case SHORT_AMOUNT:
             case BALANCE:
             case BALANCE_WITH_SUM:
             case BALANCE_WITH_SUM_AND_GLOBAL:
             case AMOUNT_SUM: {
-                cell = row.createCell(tableColumn, CellType.NUMERIC);
+                Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
                 cell.setCellStyle(styleMap.get(Style.AMOUNT));
                 cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
             }
             break;
+            case STRING:
             default: {
                 final CreationHelper createHelper = wb.getCreationHelper();
 
-                cell = row.createCell(tableColumn);
+                Cell cell = row.createCell(tableColumn);
                 cell.setCellStyle(styleMap.get(Style.DEFAULT));
                 cell.setCellValue(createHelper.createRichTextString(reportModel.getValueAt(tableRow, tableColumn).toString()));
+            }
+        }
+    }
+
+    private static void setCellValue(@NotNull final Object value, @NotNull ColumnStyle columnStyle, @NotNull final Map<Style, CellStyle> styleMap,
+                                     @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Row row,
+                                     final int col) {
+
+        switch (columnStyle) {
+            case BALANCE_WITH_SUM:
+            case BALANCE_WITH_SUM_AND_GLOBAL:
+            {
+                Cell cell = row.createCell(col, CellType.NUMERIC);
+                cell.setCellStyle(styleMap.get(Style.NUMERIC_FOOTER));
+                cell.setCellValue(((BigDecimal) value).doubleValue());
+            }
+            break;
+            case STRING:
+            default:
+            {
+                final CreationHelper createHelper = wb.getCreationHelper();
+
+                Cell cell = row.createCell(col);
+                cell.setCellStyle(styleMap.get(Style.FOOTER));
+
+                cell.setCellValue(createHelper.createRichTextString(value.toString()));
             }
         }
     }
@@ -235,13 +255,12 @@ public class Workbook {
         final Map<Style, CellStyle> styleMap = new EnumMap<>(Style.class);
 
         styleMap.put(Style.AMOUNT, StyleFactory.createDefaultAmountStyle(wb, currencyNode));
-
-        final CellStyle defaultStyle = wb.createCellStyle();
-        defaultStyle.setFont(StyleFactory.createDefaultFont(wb));
-        styleMap.put(Style.DEFAULT, defaultStyle);
-
+        styleMap.put(Style.DEFAULT, StyleFactory.createDefaultStyle(wb));
         styleMap.put(Style.FOOTER, StyleFactory.createFooterStyle(wb));
         styleMap.put(Style.HEADER, StyleFactory.createHeaderStyle(wb));
+
+        styleMap.put(Style.NUMERIC_FOOTER, StyleFactory.applyNumericFormat(wb, currencyNode,
+                StyleFactory.createFooterStyle(wb)));
 
         return styleMap;
     }
@@ -250,6 +269,7 @@ public class Workbook {
         AMOUNT,
         DEFAULT,
         FOOTER,
-        HEADER
+        HEADER,
+        NUMERIC_FOOTER
     }
 }
