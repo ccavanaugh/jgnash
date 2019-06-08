@@ -20,6 +20,7 @@ package jgnash.report.poi;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.EnumMap;
@@ -29,7 +30,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.CurrencyNode;
 import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.ColumnStyle;
 import jgnash.report.table.GroupInfo;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.util.FileUtils;
@@ -38,8 +41,8 @@ import jgnash.util.NotNull;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.WorkbookUtil;
@@ -67,7 +70,7 @@ public class Workbook {
 
         try (final org.apache.poi.ss.usermodel.Workbook wb = extension.equals("xlsx") ? new XSSFWorkbook() : new HSSFWorkbook()) {
 
-            final Map<Style, CellStyle> styleMap = buildStyleMap(wb);
+            final Map<Style, CellStyle> styleMap = buildStyleMap(wb, reportModel.getCurrencyNode());
 
             // create a new sheet
             final Sheet sheet = wb.createSheet(WorkbookUtil.createSafeSheetName("Sheet1"));
@@ -125,7 +128,6 @@ public class Workbook {
         Objects.requireNonNull(s);
 
         final CellStyle headerStyle = styleMap.get(Style.HEADER);
-        final CellStyle defaultStyle = styleMap.get(Style.DEFAULT);
 
         final CreationHelper createHelper = wb.getCreationHelper();
 
@@ -152,20 +154,17 @@ public class Workbook {
         sheetRow++;
 
         // add the groups rows
-        for (int r = 0; r < reportModel.getRowCount(); r++) {
-            final String rowGroup = reportModel.getGroup(r);
+        for (int tableRow = 0; tableRow < reportModel.getRowCount(); tableRow++) {
+            final String rowGroup = reportModel.getGroup(tableRow);
 
             col = 0;
 
             if (group.equals(rowGroup)) {
                 row = s.createRow(sheetRow);   // new row is needed
 
-                for (int c = 0; c < reportModel.getColumnCount(); c++) {
-                    if (reportModel.isColumnVisible(c)) {
-                        final Cell cell = row.createCell(col);
-                        cell.setCellStyle(defaultStyle);
-                        cell.setCellValue(createHelper.createRichTextString(reportModel.getValueAt(r, c).toString()));
-
+                for (int tableCol = 0; tableCol < reportModel.getColumnCount(); tableCol++) {
+                    if (reportModel.isColumnVisible(tableCol)) {
+                        setCellValue(reportModel, styleMap, wb, row, tableRow, tableCol);
                         col++;
                     }
                 }
@@ -203,28 +202,52 @@ public class Workbook {
         return sheetRow;
     }
 
-    private static Map<Style, CellStyle> buildStyleMap(final org.apache.poi.ss.usermodel.Workbook wb) {
+    private static void setCellValue(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
+                                     @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Row row,
+                                     final int tableRow, final int tableColumn ) {
+
+        final ColumnStyle columnStyle = reportModel.getColumnStyle(tableColumn);
+
+        final Cell cell;
+
+        switch (columnStyle) {
+            case SHORT_AMOUNT:
+            case BALANCE:
+            case BALANCE_WITH_SUM:
+            case BALANCE_WITH_SUM_AND_GLOBAL:
+            case AMOUNT_SUM: {
+                cell = row.createCell(tableColumn, CellType.NUMERIC);
+                cell.setCellStyle(styleMap.get(Style.AMOUNT));
+                cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
+            }
+            break;
+            default: {
+                final CreationHelper createHelper = wb.getCreationHelper();
+
+                cell = row.createCell(tableColumn);
+                cell.setCellStyle(styleMap.get(Style.DEFAULT));
+                cell.setCellValue(createHelper.createRichTextString(reportModel.getValueAt(tableRow, tableColumn).toString()));
+            }
+        }
+    }
+
+    private static Map<Style, CellStyle> buildStyleMap(final org.apache.poi.ss.usermodel.Workbook wb, final CurrencyNode currencyNode) {
         final Map<Style, CellStyle> styleMap = new EnumMap<>(Style.class);
 
-        final Font defaultFont = StyleFactory.createDefaultFont(wb);
+        styleMap.put(Style.AMOUNT, StyleFactory.createDefaultAmountStyle(wb, currencyNode));
+
         final CellStyle defaultStyle = wb.createCellStyle();
-        defaultStyle.setFont(defaultFont);
+        defaultStyle.setFont(StyleFactory.createDefaultFont(wb));
         styleMap.put(Style.DEFAULT, defaultStyle);
 
-        final Font footerFont = StyleFactory.createFooterFont(wb);
-        final CellStyle footerStyle = StyleFactory.createFooterStyle(wb);
-        footerStyle.setFont(footerFont);
-        styleMap.put(Style.FOOTER, footerStyle);
-
-        final CellStyle headerStyle = StyleFactory.createHeaderStyle(wb);
-        final Font headerFont = StyleFactory.createHeaderFont(wb);
-        headerStyle.setFont(headerFont);
-        styleMap.put(Style.HEADER, headerStyle);
+        styleMap.put(Style.FOOTER, StyleFactory.createFooterStyle(wb));
+        styleMap.put(Style.HEADER, StyleFactory.createHeaderStyle(wb));
 
         return styleMap;
     }
 
     private enum Style {
+        AMOUNT,
         DEFAULT,
         FOOTER,
         HEADER
