@@ -60,7 +60,7 @@ class StyleFactory {
         footerStyle.setBorderRight(BorderStyle.THIN);
         footerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         footerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        footerStyle.setAlignment(HorizontalAlignment.CENTER);
+        footerStyle.setAlignment(HorizontalAlignment.RIGHT);
         footerStyle.setFont(createFooterFont(wb));
 
         return footerStyle;

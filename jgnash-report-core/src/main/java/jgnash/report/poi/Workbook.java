@@ -84,7 +84,12 @@ public class Workbook {
                 sheetRow = addTableSection(reportModel, styleMap, wb, sheet, groupInfo, sheetRow) + 1;
             }
 
-            // TODO: Add global footer column
+
+            // Add global footer column
+            if (reportModel.hasGlobalSummary()) {
+                addGlobalFooter(reportModel, styleMap, wb, sheet, sheetRow);
+            }
+
 
             // autosize the columns
             int col = 0;
@@ -119,7 +124,7 @@ public class Workbook {
         }
     }
 
-    private static int addTableSection(@NotNull final AbstractReportTableModel reportModel, final Map<Style, CellStyle> styleMap,
+    private static int addTableSection(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
                                        @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
                                        @NotNull final GroupInfo groupInfo, final int startRow) {
         Objects.requireNonNull(groupInfo);
@@ -174,9 +179,6 @@ public class Workbook {
 
         // add the group footer if needed
         if (groupInfo.hasSummation()) {
-
-            //final CellStyle footerStyle = styleMap.get(Style.FOOTER);
-
             col = 0;
             row = s.createRow(sheetRow);   // new row is needed
 
@@ -195,6 +197,24 @@ public class Workbook {
         }
 
         return sheetRow;
+    }
+
+    private static void addGlobalFooter(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
+                                       @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
+                                       final int startRow) {
+        int col = 0;
+        Row row = s.createRow(startRow);   // new row is needed
+
+        setCellValue(ResourceUtils.getString("Word.Total"), ColumnStyle.STRING, styleMap, wb, row, col);
+
+        col++;
+
+        for (int c = 0; c < reportModel.getColumnCount(); c++) {
+            if (reportModel.isColumnVisible(c) && reportModel.isColumnSummed(c)) {
+                setCellValue(reportModel.getGlobalSum(c), ColumnStyle.BALANCE_WITH_SUM, styleMap, wb, row, col);
+                col++;
+            }
+        }
     }
 
     private static void setCellValue(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
