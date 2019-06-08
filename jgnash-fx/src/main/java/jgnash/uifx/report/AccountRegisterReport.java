@@ -54,7 +54,7 @@ import jgnash.util.Nullable;
  *
  * @author Craig Cavanaugh
  */
-public class AccountRegisterReport extends Report {
+class AccountRegisterReport extends Report {
 
     AccountRegisterReport() {
         setForceGroupPagination(false);
@@ -73,16 +73,6 @@ public class AccountRegisterReport extends Report {
         return new AccountRegisterReport.AccountReportModel(account, showSplits, startDate, endDate, memoFilter,
                 payeeFilter, showTimeStamp);
 
-    }
-
-    @Override
-    public String getGrandTotalLegend() {
-        return null;
-    }
-
-    @Override
-    public String getGroupFooterLabel() {
-        return rb.getString("Word.Totals");
     }
 
     private static class AccountReportModel extends AbstractReportTableModel {
@@ -126,6 +116,11 @@ public class AccountRegisterReport extends Report {
             this.showTimestamp = showTimestamp;
 
             loadAccount();
+        }
+
+        @Override
+        public String getGroupFooterLabel() {
+            return rb.getString("Word.Totals");
         }
 
         @Override

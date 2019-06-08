@@ -527,18 +527,16 @@ public abstract class Report implements AutoCloseable {
         // draw summation values
         float xPos = getLeftMargin() + getCellPadding();
 
-        //drawText(contentStream, xPos, docYToPageY(yDoc - getRowTextBaselineOffset()), getGroupFooterLabel());
-
         // search for first visible column width
         for (int c = 0; c < reportModel.getColumnCount(); c++) {
             if (reportModel.isColumnVisible(c)) {
 
                 // right align the text
                 final float availWidth = columnWidths[c] - getCellPadding() * 2;
-                final float shift = availWidth - getStringWidth(getGroupFooterLabel(), getTableFont(), getBaseFontSize());
+                final float shift = availWidth - getStringWidth(reportModel.getGroupFooterLabel(), getTableFont(), getBaseFontSize());
 
                 drawText(contentStream, xPos + shift, docYToPageY(yDoc - getRowTextBaselineOffset()),
-                        getGroupFooterLabel());
+                        reportModel.getGroupFooterLabel());
 
                 break;
             }
@@ -609,10 +607,10 @@ public abstract class Report implements AutoCloseable {
 
                 // right align the text
                 final float availWidth = columnWidths[c] - getCellPadding() * 2;
-                final float shift = availWidth - getStringWidth(getGrandTotalLegend(), getTableFont(), getBaseFontSize());
+                final float shift = availWidth - getStringWidth(reportModel.getGrandTotalLegend(), getTableFont(), getBaseFontSize());
 
                 drawText(contentStream, xPos + shift, docYToPageY(yDoc - getRowTextBaselineOffset()),
-                        getGrandTotalLegend());
+                        reportModel.getGrandTotalLegend());
 
                 break;
             }

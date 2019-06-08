@@ -34,7 +34,6 @@ import jgnash.engine.CurrencyNode;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.ColumnStyle;
 import jgnash.report.table.GroupInfo;
-import jgnash.resource.util.ResourceUtils;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
@@ -182,7 +181,7 @@ public class Workbook {
             col = 0;
             row = s.createRow(sheetRow);   // new row is needed
 
-            setCellValue(ResourceUtils.getString("Word.Subtotal"), ColumnStyle.STRING, styleMap, wb, row, col);
+            setCellValue(reportModel.getGroupFooterLabel(), ColumnStyle.STRING, styleMap, wb, row, col);
 
             col++;
 
@@ -205,7 +204,7 @@ public class Workbook {
         int col = 0;
         Row row = s.createRow(startRow);   // new row is needed
 
-        setCellValue(ResourceUtils.getString("Word.Total"), ColumnStyle.STRING, styleMap, wb, row, col);
+        setCellValue(reportModel.getGrandTotalLegend(), ColumnStyle.STRING, styleMap, wb, row, col);
 
         col++;
 

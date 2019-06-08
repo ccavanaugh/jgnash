@@ -19,6 +19,7 @@ package jgnash.report.table;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.MathConstants;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.util.LogUtil;
@@ -159,6 +160,24 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
         }
 
         return sum;
+    }
+
+    /**
+     * Returns the legend for the grand total
+     *
+     * @return report name
+     */
+    public String getGrandTotalLegend() {
+        return ResourceUtils.getString("Word.Total");
+    }
+
+    /**
+     * Returns the general label for the group footer
+     *
+     * @return footer label
+     */
+    public String getGroupFooterLabel() {
+        return ResourceUtils.getString("Word.Subtotal");
     }
 
     /**

@@ -315,6 +315,25 @@ public abstract class AbstractSumByTypeReport extends Report {
             this.baseCurrency = currency;
         }
 
+        /**
+         * Returns the legend for the grand total
+         *
+         * @return report name
+         */
+        @Override
+        public String getGrandTotalLegend() {
+            return AbstractSumByTypeReport.this.getGrandTotalLegend();
+        }
+
+        /**
+         * Returns the general label for the group footer
+         *
+         * @return footer label
+         */
+        public String getGroupFooterLabel() {
+            return AbstractSumByTypeReport.this.getGroupFooterLabel();
+        }
+
         void addAccounts(final Collection<Account> accounts) {
             accounts.forEach(this::addAccount);
         }
