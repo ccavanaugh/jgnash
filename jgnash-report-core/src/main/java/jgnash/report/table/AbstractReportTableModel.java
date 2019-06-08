@@ -37,7 +37,7 @@ import java.util.HashMap;
  * Base Report model class
  *
  * The report must contain a minimum of one group defined by {@code ColumnStyle.GROUP_NO_HEADER} or
- * {@code ColumnStyle.GROUP}.  If a is not defined/assigned, all rows will be grouped together.
+ * {@code ColumnStyle.GROUP}.  If a group is not defined/assigned, all rows will be grouped together.
  *
  * TODO, convert to extend a report specific interface
  *
