@@ -32,20 +32,22 @@ import javafx.stage.FileChooser;
 
 import jgnash.convert.exportantur.csv.CsvExport;
 import jgnash.convert.exportantur.ofx.OfxExport;
-import jgnash.report.poi.AccountExport;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.report.poi.Workbook;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.report.AccountRegisterReport;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController;
 import jgnash.util.FileUtils;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Register actions utility class.
@@ -185,11 +187,15 @@ public class RegisterActions {
                     updateProgress(-1, Long.MAX_VALUE);
 
                     if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
-                        OfxExport export = new OfxExport(account, startDate, endDate, file);
+                        final OfxExport export = new OfxExport(account, startDate, endDate, file);
                         export.exportAccount();
                     } else if (FileUtils.getFileExtension(file.getName()).contains(XLS)) {
-                        AccountExport.exportAccount(account, RegisterFactory.getColumnNames(account.getAccountType()),
-                                startDate, endDate, file);
+                        final AbstractReportTableModel reportTableModel = AccountRegisterReport.createReportModel(account,
+                                startDate, endDate, false, "", "", true);
+
+                        Workbook.export(reportTableModel, file);
+
+
                     } else {
                         CsvExport.exportAccount(account, startDate, endDate, file);
                     }
