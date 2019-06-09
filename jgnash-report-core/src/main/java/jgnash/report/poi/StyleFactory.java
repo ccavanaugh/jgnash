@@ -145,6 +145,34 @@ class StyleFactory {
     }
 
     /**
+     * Applies a short date format to a {@code CellStyle}
+     *
+     * @param wb        the {@code Workbook} the numeric format is being created for
+     * @param cellStyle the {@code CellStyle} being updated
+     * @return the {@code CellStyle} being updated
+     */
+    static CellStyle applyShortDateFormat(final Workbook wb, final CellStyle cellStyle) {
+        cellStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("mm/dd/yy"));
+        cellStyle.setAlignment(HorizontalAlignment.LEFT);
+
+        return cellStyle;
+    }
+
+    /**
+     * Applies a short date format to a {@code CellStyle}
+     *
+     * @param wb        the {@code Workbook} the numeric format is being created for
+     * @param cellStyle the {@code CellStyle} being updated
+     * @return the {@code CellStyle} being updated
+     */
+    static CellStyle applyTimestampFormat(final Workbook wb, final CellStyle cellStyle) {
+        cellStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("YYYY-MM-DD HH:MM:SS"));
+        cellStyle.setAlignment(HorizontalAlignment.LEFT);
+
+        return cellStyle;
+    }
+
+    /**
      * Creates the default {@code CellStyle} for currency value
      *
      * @param wb the {@code Workbook} the numeric format is being created for

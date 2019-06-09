@@ -88,13 +88,9 @@ public class AccountExport {
             headerStyle.setDataFormat(df_header.getFormat("text"));
             headerStyle.setFont(headerFont);
 
-            final CellStyle dateStyle = wb.createCellStyle();
-            dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yy"));
-            dateStyle.setFont(defaultFont);
+            final CellStyle dateStyle = StyleFactory.applyShortDateFormat(wb, StyleFactory.createDefaultStyle(wb));
 
-            final CellStyle timestampStyle = wb.createCellStyle();
-            timestampStyle.setDataFormat(createHelper.createDataFormat().getFormat("YYYY-MM-DD HH:MM:SS"));
-            timestampStyle.setFont(defaultFont);
+            final CellStyle timestampStyle = StyleFactory.applyShortDateFormat(wb, StyleFactory.createDefaultStyle(wb));
 
             final CellStyle textStyle = wb.createCellStyle();
             textStyle.setFont(defaultFont);

@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
@@ -34,6 +36,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.ColumnStyle;
 import jgnash.report.table.GroupInfo;
+import jgnash.time.DateUtils;
 import jgnash.util.FileUtils;
 import jgnash.util.NotNull;
 
@@ -170,7 +173,7 @@ public class Workbook {
 
                 for (int tableCol = 0; tableCol < reportModel.getColumnCount(); tableCol++) {
                     if (reportModel.isColumnVisible(tableCol)) {
-                        setCellValue(reportModel, styleMap, wb, row, tableRow, tableCol);
+                        setCellValue(reportModel, styleMap, wb, row, col, tableRow, tableCol);
                         col++;
                     }
                 }
@@ -223,7 +226,7 @@ public class Workbook {
     }
 
     private static void setCellValue(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
-                                     @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Row row,
+                                     @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Row row, final int wbCol,
                                      final int tableRow, final int tableColumn) {
 
         if (reportModel.getValueAt(tableRow, tableColumn) != null) {
@@ -235,28 +238,40 @@ public class Workbook {
                 case BALANCE_WITH_SUM:
                 case BALANCE_WITH_SUM_AND_GLOBAL:
                 case AMOUNT_SUM: {
-                    Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
+                    Cell cell = row.createCell(wbCol, CellType.NUMERIC);
                     cell.setCellStyle(styleMap.get(Style.AMOUNT));
                     cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
                 }
                 break;
                 case PERCENTAGE: {
-                    Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
+                    Cell cell = row.createCell(wbCol, CellType.NUMERIC);
                     cell.setCellStyle(styleMap.get(Style.PERCENTAGE));
                     cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
                 }
                 break;
                 case QUANTITY: {
-                    Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
+                    Cell cell = row.createCell(wbCol, CellType.NUMERIC);
                     cell.setCellStyle(styleMap.get(Style.QUANTITY));
                     cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
+                }
+                break;
+                case SHORT_DATE: {
+                    Cell cell = row.createCell(wbCol, CellType.STRING);
+                    cell.setCellStyle(styleMap.get(Style.SHORT_DATE));
+                    cell.setCellValue(DateUtils.asDate((LocalDate) reportModel.getValueAt(tableRow, tableColumn)));
+                }
+                break;
+                case TIMESTAMP: {
+                    Cell cell = row.createCell(wbCol, CellType.STRING);
+                    cell.setCellStyle(styleMap.get(Style.TIMESTAMP));
+                    cell.setCellValue(DateUtils.asDate((LocalDateTime) reportModel.getValueAt(tableRow, tableColumn)));
                 }
                 break;
                 case STRING:
                 default: {
                     final CreationHelper createHelper = wb.getCreationHelper();
 
-                    Cell cell = row.createCell(tableColumn);
+                    Cell cell = row.createCell(wbCol);
                     cell.setCellStyle(styleMap.get(Style.DEFAULT));
                     cell.setCellValue(createHelper.createRichTextString(reportModel.getValueAt(tableRow, tableColumn).toString()));
                 }
@@ -311,6 +326,9 @@ public class Workbook {
 
         styleMap.put(Style.PERCENTAGE, StyleFactory.applyPercentageFormat(wb, StyleFactory.createDefaultStyle(wb)));
 
+        styleMap.put(Style.SHORT_DATE, StyleFactory.applyShortDateFormat(wb, StyleFactory.createDefaultStyle(wb)));
+        styleMap.put(Style.TIMESTAMP, StyleFactory.applyTimestampFormat(wb, StyleFactory.createDefaultStyle(wb)));
+
         return styleMap;
     }
 
@@ -321,6 +339,8 @@ public class Workbook {
         HEADER,
         NUMERIC_FOOTER,
         PERCENTAGE,
-        QUANTITY
+        QUANTITY,
+        SHORT_DATE,
+        TIMESTAMP
     }
 }
