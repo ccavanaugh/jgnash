@@ -18,9 +18,11 @@
 package jgnash.report.poi;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Objects;
 
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.MathConstants;
 import jgnash.text.NumericFormats;
 import jgnash.util.NotNull;
 
@@ -88,7 +90,15 @@ class StyleFactory {
         return headerStyle;
     }
 
-    static CellStyle applyNumericFormat(final Workbook wb, final CurrencyNode currencyNode, final CellStyle cellStyle) {
+    /**
+     * Applies a currency format to a {@code CellStyle}
+     *
+     * @param wb           the {@code Workbook} the numeric format is being created for
+     * @param currencyNode the {@code CurrencyNode} to extract symbol information from
+     * @param cellStyle    the {@code CellStyle} being updated
+     * @return the {@code CellStyle} being updated
+     */
+    static CellStyle applyCurrencyFormat(final Workbook wb, final CurrencyNode currencyNode, final CellStyle cellStyle) {
         final DecimalFormat format = (DecimalFormat) NumericFormats.getFullCommodityFormat(currencyNode);
         final String pattern = format.toLocalizedPattern().replace("¤", currencyNode.getPrefix());
         final DataFormat df = wb.createDataFormat();
@@ -98,10 +108,58 @@ class StyleFactory {
         return cellStyle;
     }
 
-    static CellStyle createDefaultAmountStyle(@NotNull final Workbook wb, @NotNull final CurrencyNode currencyNode) {
-        return applyNumericFormat(wb, currencyNode, createDefaultStyle(wb));
+    /**
+     * Applies a percentage format to a {@code CellStyle}
+     *
+     * @param wb        the {@code Workbook} the numeric format is being created for
+     * @param cellStyle the {@code CellStyle} being updated
+     * @return the {@code CellStyle} being updated
+     */
+    static CellStyle applyPercentageFormat(final Workbook wb, final CellStyle cellStyle) {
+
+        final NumberFormat percentageFormat = NumericFormats.getPercentageFormat();
+
+        final DataFormat df = wb.createDataFormat();
+        cellStyle.setDataFormat(df.getFormat(((DecimalFormat) percentageFormat).toPattern()));
+        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
+
+        return cellStyle;
     }
 
+    /**
+     * Applies a Security quantity format to a {@code CellStyle}
+     *
+     * @param wb        the {@code Workbook} the numeric format is being created for
+     * @param cellStyle the {@code CellStyle} being updated
+     * @return the {@code CellStyle} being updated
+     */
+    static CellStyle applySecurityQuantityFormat(final Workbook wb, final CellStyle cellStyle) {
+
+        final NumberFormat qtyFormat = NumericFormats.getFixedPrecisionFormat(MathConstants.SECURITY_QUANTITY_ACCURACY);
+
+        final DataFormat df = wb.createDataFormat();
+        cellStyle.setDataFormat(df.getFormat(((DecimalFormat) qtyFormat).toPattern()));
+        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
+
+        return cellStyle;
+    }
+
+    /**
+     * Creates the default {@code CellStyle} for currency value
+     *
+     * @param wb the {@code Workbook} the numeric format is being created for
+     * @return the {@code CellStyle} being created
+     */
+    static CellStyle createDefaultAmountStyle(@NotNull final Workbook wb, @NotNull final CurrencyNode currencyNode) {
+        return applyCurrencyFormat(wb, currencyNode, createDefaultStyle(wb));
+    }
+
+    /**
+     * Creates the default {@code CellStyle} for a {@code Workbook}
+     *
+     * @param wb the {@code Workbook} the default format is being created for
+     * @return the {@code CellStyle} being created
+     */
     static CellStyle createDefaultStyle(@NotNull final Workbook wb) {
         final Font defaultFont = createDefaultFont(wb);
         final CellStyle cellStyle = wb.createCellStyle();

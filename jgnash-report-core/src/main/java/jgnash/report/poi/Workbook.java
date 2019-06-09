@@ -139,6 +139,8 @@ public class Workbook {
 
         int sheetRow = startRow;
 
+        // TODO, add group title
+
         // Create headers
         Row row = s.createRow(sheetRow);
 
@@ -181,13 +183,15 @@ public class Workbook {
             col = 0;
             row = s.createRow(sheetRow);   // new row is needed
 
-            setCellValue(reportModel.getGroupFooterLabel(), ColumnStyle.STRING, styleMap, wb, row, col);
+            // column zero is assumed to be a total descriptor
+            setFooterCellValue(reportModel.getGroupFooterLabel(), ColumnStyle.STRING, styleMap, wb, row, col);
 
             col++;
 
-            for (int c = 0; c < reportModel.getColumnCount(); c++) {
-                if (reportModel.isColumnVisible(c) && reportModel.isColumnSummed(c)) {
-                    setCellValue(groupInfo.getValue(c), ColumnStyle.BALANCE_WITH_SUM, styleMap, wb, row, col);
+            for (int c = 1; c < reportModel.getColumnCount(); c++) {
+                if (reportModel.isColumnVisible(c)) {
+                    setFooterCellValue(groupInfo.getValue(c), reportModel.getColumnStyle(c), styleMap, wb, row, col);
+
                     col++;
                 }
             }
@@ -199,18 +203,20 @@ public class Workbook {
     }
 
     private static void addGlobalFooter(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
-                                       @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
-                                       final int startRow) {
+                                        @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
+                                        final int startRow) {
         int col = 0;
         Row row = s.createRow(startRow);   // new row is needed
 
-        setCellValue(reportModel.getGrandTotalLegend(), ColumnStyle.STRING, styleMap, wb, row, col);
+        // column zero is assumed to be a total descriptor
+        setFooterCellValue(reportModel.getGrandTotalLegend(), ColumnStyle.STRING, styleMap, wb, row, col);
 
         col++;
 
-        for (int c = 0; c < reportModel.getColumnCount(); c++) {
-            if (reportModel.isColumnVisible(c) && reportModel.isColumnSummed(c)) {
-                setCellValue(reportModel.getGlobalSum(c), ColumnStyle.BALANCE_WITH_SUM, styleMap, wb, row, col);
+        for (int c = 1; c < reportModel.getColumnCount(); c++) {
+            if (reportModel.isColumnVisible(c)) {
+                setFooterCellValue(reportModel.getGlobalSum(c), reportModel.getColumnStyle(c), styleMap, wb, row, col);
+
                 col++;
             }
         }
@@ -218,48 +224,68 @@ public class Workbook {
 
     private static void setCellValue(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
                                      @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Row row,
-                                     final int tableRow, final int tableColumn ) {
+                                     final int tableRow, final int tableColumn) {
 
-        final ColumnStyle columnStyle = reportModel.getColumnStyle(tableColumn);
+        if (reportModel.getValueAt(tableRow, tableColumn) != null) {
+            final ColumnStyle columnStyle = reportModel.getColumnStyle(tableColumn);
 
-        switch (columnStyle) {
-            case SHORT_AMOUNT:
-            case BALANCE:
-            case BALANCE_WITH_SUM:
-            case BALANCE_WITH_SUM_AND_GLOBAL:
-            case AMOUNT_SUM: {
-                Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
-                cell.setCellStyle(styleMap.get(Style.AMOUNT));
-                cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
-            }
-            break;
-            case STRING:
-            default: {
-                final CreationHelper createHelper = wb.getCreationHelper();
+            switch (columnStyle) {
+                case SHORT_AMOUNT:
+                case BALANCE:
+                case BALANCE_WITH_SUM:
+                case BALANCE_WITH_SUM_AND_GLOBAL:
+                case AMOUNT_SUM: {
+                    Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
+                    cell.setCellStyle(styleMap.get(Style.AMOUNT));
+                    cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
+                }
+                break;
+                case PERCENTAGE: {
+                    Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
+                    cell.setCellStyle(styleMap.get(Style.PERCENTAGE));
+                    cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
+                }
+                break;
+                case QUANTITY: {
+                    Cell cell = row.createCell(tableColumn, CellType.NUMERIC);
+                    cell.setCellStyle(styleMap.get(Style.QUANTITY));
+                    cell.setCellValue(((BigDecimal) reportModel.getValueAt(tableRow, tableColumn)).doubleValue());
+                }
+                break;
+                case STRING:
+                default: {
+                    final CreationHelper createHelper = wb.getCreationHelper();
 
-                Cell cell = row.createCell(tableColumn);
-                cell.setCellStyle(styleMap.get(Style.DEFAULT));
-                cell.setCellValue(createHelper.createRichTextString(reportModel.getValueAt(tableRow, tableColumn).toString()));
+                    Cell cell = row.createCell(tableColumn);
+                    cell.setCellStyle(styleMap.get(Style.DEFAULT));
+                    cell.setCellValue(createHelper.createRichTextString(reportModel.getValueAt(tableRow, tableColumn).toString()));
+                }
             }
         }
     }
 
-    private static void setCellValue(@NotNull final Object value, @NotNull ColumnStyle columnStyle, @NotNull final Map<Style, CellStyle> styleMap,
-                                     @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Row row,
-                                     final int col) {
+    private static void setFooterCellValue(@NotNull final Object value, @NotNull ColumnStyle columnStyle, @NotNull final Map<Style, CellStyle> styleMap,
+                                           @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Row row,
+                                           final int col) {
 
         switch (columnStyle) {
+            case AMOUNT_SUM:
             case BALANCE_WITH_SUM:
-            case BALANCE_WITH_SUM_AND_GLOBAL:
-            {
+            case BALANCE_WITH_SUM_AND_GLOBAL: {
                 Cell cell = row.createCell(col, CellType.NUMERIC);
                 cell.setCellStyle(styleMap.get(Style.NUMERIC_FOOTER));
                 cell.setCellValue(((BigDecimal) value).doubleValue());
             }
             break;
+            case BALANCE:
+            case PERCENTAGE:
+            case QUANTITY: {
+                Cell cell = row.createCell(col);
+                cell.setCellStyle(styleMap.get(Style.FOOTER));
+            }
+            break;
             case STRING:
-            default:
-            {
+            default: {
                 final CreationHelper createHelper = wb.getCreationHelper();
 
                 Cell cell = row.createCell(col);
@@ -278,8 +304,12 @@ public class Workbook {
         styleMap.put(Style.FOOTER, StyleFactory.createFooterStyle(wb));
         styleMap.put(Style.HEADER, StyleFactory.createHeaderStyle(wb));
 
-        styleMap.put(Style.NUMERIC_FOOTER, StyleFactory.applyNumericFormat(wb, currencyNode,
+        styleMap.put(Style.NUMERIC_FOOTER, StyleFactory.applyCurrencyFormat(wb, currencyNode,
                 StyleFactory.createFooterStyle(wb)));
+
+        styleMap.put(Style.QUANTITY, StyleFactory.applySecurityQuantityFormat(wb, StyleFactory.createDefaultStyle(wb)));
+
+        styleMap.put(Style.PERCENTAGE, StyleFactory.applyPercentageFormat(wb, StyleFactory.createDefaultStyle(wb)));
 
         return styleMap;
     }
@@ -289,6 +319,8 @@ public class Workbook {
         DEFAULT,
         FOOTER,
         HEADER,
-        NUMERIC_FOOTER
+        NUMERIC_FOOTER,
+        PERCENTAGE,
+        QUANTITY
     }
 }
