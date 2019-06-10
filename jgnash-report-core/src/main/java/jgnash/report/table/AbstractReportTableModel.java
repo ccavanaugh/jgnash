@@ -25,8 +25,6 @@ import jgnash.time.DateUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
 
-import javax.swing.table.AbstractTableModel;
-
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -36,15 +34,13 @@ import java.util.HashMap;
 
 /**
  * Base Report model class
- *
+ * <p>
  * The report must contain a minimum of one group defined by {@code ColumnStyle.GROUP_NO_HEADER} or
  * {@code ColumnStyle.GROUP}.  If a group is not defined/assigned, all rows will be grouped together.
  *
- * TODO, convert to extend a report specific interface
- *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractReportTableModel extends AbstractTableModel {
+public abstract class AbstractReportTableModel {
 
     /**
      * Default group for unassigned rows.
@@ -53,9 +49,57 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
 
     public abstract CurrencyNode getCurrencyNode();
 
+    /**
+     * Returns the formatting style for the values in the column.
+     *
+     * @param columnIndex the index of the column
+     * @return the common {@code ColumnStyle} of the object values for the column
+     */
     public abstract ColumnStyle getColumnStyle(int columnIndex);
 
-    /** Return true if the column should be fixed width
+    /**
+     * Returns the column class for the values in the column.
+     *
+     * @param columnIndex the index of the column
+     * @return the common  class of the object values in the model.
+     */
+    public abstract Class<?> getColumnClass(int columnIndex);
+
+    /**
+     * Returns the column count in the model.
+     *
+     * @return the number of columns in the model
+     * @see #getRowCount
+     */
+    public abstract int getColumnCount();
+
+    /**
+     * Returns column name at {@code columnIndex}.
+     *
+     * @param columnIndex the index of the column
+     * @return the name of the column
+     */
+    public abstract String getColumnName(int columnIndex);
+
+    /**
+     * Returns the row count in the model.
+     *
+     * @return the number of rows in the model
+     * @see #getColumnCount
+     */
+    public abstract int getRowCount();
+
+    /**
+     * Returns the value at {@code columnIndex} and {@code rowIndex}.
+     *
+     * @param rowIndex    the row whose value is to be queried
+     * @param columnIndex the column whose value is to be queried
+     * @return the value Object at the specified cell
+     */
+    public abstract Object getValueAt(int rowIndex, int columnIndex);
+
+    /**
+     * Return true if the column should be fixed width
      *
      * @param columnIndex column to verify
      * @return true if fixed width
@@ -128,8 +172,8 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
      */
     public boolean isColumnSummed(final int columnIndex) {
         return getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM ||
-                getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL
-                || getColumnStyle(columnIndex) == ColumnStyle.AMOUNT_SUM;
+                       getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL
+                       || getColumnStyle(columnIndex) == ColumnStyle.AMOUNT_SUM;
     }
 
     private boolean isColumnGloballySummed(final int columnIndex) {
