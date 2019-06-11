@@ -267,7 +267,9 @@ public abstract class Report implements AutoCloseable {
         return "";
     }
 
-    public void addTable(final AbstractReportTableModel reportModel, final String title) throws IOException {
+    public void addTable(final AbstractReportTableModel reportModel) throws IOException {
+
+        String title = reportModel.getTitle();
 
         boolean titleWritten = false;
 

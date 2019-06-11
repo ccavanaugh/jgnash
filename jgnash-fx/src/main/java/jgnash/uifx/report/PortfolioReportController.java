@@ -128,8 +128,7 @@ public class PortfolioReportController implements ReportController {
         report.clearReport();
 
         try {
-            report.addTable(model, accountComboBox.getValue().getName()
-                    + " - " + resources.getString("Title.PortfolioReport"));
+            report.addTable(model);
             report.addFooter();
         } catch (final IOException e) {
             e.printStackTrace();

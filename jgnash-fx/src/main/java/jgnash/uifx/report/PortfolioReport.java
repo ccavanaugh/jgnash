@@ -64,6 +64,8 @@ public class PortfolioReport extends Report {
 
     private static class PortfolioReportTableModel extends AbstractReportTableModel {
 
+        private final Account account;
+
         private final CurrencyNode baseCurrency;
 
         private InvestmentPerformanceSummary performanceSummary;
@@ -74,6 +76,7 @@ public class PortfolioReport extends Report {
             Objects.requireNonNull(account);
             Objects.requireNonNull(baseCurrency);
 
+            this.account = account;
             this.baseCurrency = baseCurrency;
             this.longNames = longNames;
 
@@ -84,6 +87,11 @@ public class PortfolioReport extends Report {
             } catch (final Exception e) {
                 Logger.getLogger(PortfolioReport.class.getName()).log(Level.SEVERE, null, e);
             }
+        }
+
+        @Override
+        public String getTitle() {
+            return account.getName() + " - " + rb.getString("Title.PortfolioReport");
         }
 
         @Override

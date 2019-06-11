@@ -120,12 +120,13 @@ public class BalanceSheetReportController implements ReportController {
     }
 
     private void addTable() {
-        AbstractReportTableModel model = createReportModel();
+        final AbstractReportTableModel model = createReportModel();
 
         report.clearReport();
+        report.setTitle(ResourceUtils.getString("Title.BalanceSheet"));
 
         try {
-            report.addTable(model, ResourceUtils.getString("Title.BalanceSheet"));
+            report.addTable(model);
             report.addFooter();
         } catch (final IOException e) {
             e.printStackTrace();

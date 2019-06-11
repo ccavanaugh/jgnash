@@ -99,6 +99,13 @@ public abstract class AbstractReportTableModel {
     public abstract Object getValueAt(int rowIndex, int columnIndex);
 
     /**
+     * Returns the title for the Report
+     *
+     * @return the report title
+     */
+    public abstract String getTitle();
+
+    /**
      * Return true if the column should be fixed width
      *
      * @param columnIndex column to verify

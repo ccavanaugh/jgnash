@@ -152,12 +152,12 @@ public class AccountRegisterReportController implements ReportController {
     }
 
     private void addTable() {
-        AbstractReportTableModel model = createReportModel();
+        final AbstractReportTableModel model = createReportModel();
 
         report.clearReport();
 
         try {
-            report.addTable(model, accountComboBox.getValue().getName());
+            report.addTable(model);
             report.addFooter();
         } catch (final IOException e) {
             e.printStackTrace();

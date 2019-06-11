@@ -79,6 +79,8 @@ public abstract class AbstractSumByTypeReport extends Report {
 
     private String subTitle = "";
 
+    private String title = "";
+
     private boolean showFullAccountPath = false;
 
     private SortOrder sortOrder = SortOrder.BY_NAME;
@@ -108,6 +110,10 @@ public abstract class AbstractSumByTypeReport extends Report {
 
     void setSortOrder(@NotNull final SortOrder sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate,
@@ -313,6 +319,11 @@ public abstract class AbstractSumByTypeReport extends Report {
 
         ReportModel(final CurrencyNode currency) {
             this.baseCurrency = currency;
+        }
+
+        @Override
+        public String getTitle() {
+            return AbstractSumByTypeReport.this.title;
         }
 
         /**

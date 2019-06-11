@@ -119,6 +119,11 @@ public class AccountRegisterReport extends Report {
         }
 
         @Override
+        public String getTitle() {
+            return account.getName();
+        }
+
+        @Override
         public String getGroupFooterLabel() {
             return rb.getString("Word.Totals");
         }
@@ -372,6 +377,11 @@ public class AccountRegisterReport extends Report {
             this.showTimestamp = showTimestamp;
 
             loadAccount();
+        }
+
+        @Override
+        public String getTitle() {
+            return account.getName();
         }
 
         @Override
