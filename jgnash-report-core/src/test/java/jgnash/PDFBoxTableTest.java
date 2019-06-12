@@ -327,6 +327,11 @@ class PDFBoxTableTest {
         public String getTitle() {
             return "Test Report";
         }
+
+        @Override
+        public String getSubTitle() {
+            return null;
+        }
     }
 
     private class CrossTabTestReport extends AbstractReportTableModel {
@@ -466,6 +471,11 @@ class PDFBoxTableTest {
         @Override
         public String getTitle() {
             return "Test Report";
+        }
+
+        @Override
+        public String getSubTitle() {
+            return null;
         }
     }
 

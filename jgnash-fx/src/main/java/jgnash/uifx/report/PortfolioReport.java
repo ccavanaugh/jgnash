@@ -95,6 +95,11 @@ public class PortfolioReport extends Report {
         }
 
         @Override
+        public String getSubTitle() {
+            return DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(LocalDate.now());
+        }
+
+        @Override
         public int getColumnCount() {
             return 13;
         }

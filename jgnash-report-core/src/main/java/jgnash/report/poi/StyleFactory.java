@@ -198,6 +198,38 @@ class StyleFactory {
     }
 
     /**
+     * Creates the Title {@code CellStyle} for a {@code Workbook}
+     *
+     * @param wb the {@code Workbook} the default format is being created for
+     * @return the {@code CellStyle} being created
+     */
+    static CellStyle createTitleStyle(@NotNull final Workbook wb) {
+        final Font font = createTitleFont(wb);
+        final CellStyle cellStyle = wb.createCellStyle();
+
+        cellStyle.setFont(font);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        return cellStyle;
+    }
+
+    /**
+     * Creates the Title {@code CellStyle} for a {@code Workbook}
+     *
+     * @param wb the {@code Workbook} the default format is being created for
+     * @return the {@code CellStyle} being created
+     */
+    static CellStyle createSubTitleStyle(@NotNull final Workbook wb) {
+        final Font font = createSubTitleFont(wb);
+        final CellStyle cellStyle = wb.createCellStyle();
+
+        cellStyle.setFont(font);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        return cellStyle;
+    }
+
+    /**
      * Creates the default header font
      *
      * @param wb {@code Workbook} font is to be assigned to
@@ -243,6 +275,38 @@ class StyleFactory {
         final Font font = wb.createFont();
         font.setFontHeightInPoints((short) 10);
         font.setColor(IndexedColors.BLACK.getIndex());
+
+        return font;
+    }
+
+    /**
+     * Creates the default title font
+     *
+     * @param wb {@code Workbook} font is to be assigned to
+     * @return a new {@code Font} instance
+     */
+    private static Font createTitleFont(@NotNull final Workbook wb) {
+        Objects.requireNonNull(wb);
+
+        final Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 14);
+        font.setBold(true);
+        font.setColor(IndexedColors.BLACK.getIndex());
+
+        return font;
+    }
+
+    /**
+     * Creates the default title font
+     *
+     * @param wb {@code Workbook} font is to be assigned to
+     * @return a new {@code Font} instance
+     */
+    private static Font createSubTitleFont(@NotNull final Workbook wb) {
+        Objects.requireNonNull(wb);
+
+        final Font font = createDefaultFont(wb);
+        font.setItalic(true);
 
         return font;
     }

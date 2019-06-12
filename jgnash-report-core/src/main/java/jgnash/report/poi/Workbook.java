@@ -47,11 +47,16 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Exports a {@code AbstractReportTableModel} to a spreadsheet using POI
+ *
+ * TODO: Size the row height
+ * TODO: Correct / tickle the subtitle generation (report model issue)
+ * TODO: Add headers for groups
  *
  * @author Craig Cavanaugh
  */
@@ -64,7 +69,6 @@ public class Workbook {
     public static void export(@NotNull final AbstractReportTableModel reportModel, @NotNull final File file) {
         Objects.requireNonNull(reportModel);
         Objects.requireNonNull(file);
-
 
         final Logger logger = Logger.getLogger(Workbook.class.getName());
 
@@ -81,11 +85,13 @@ public class Workbook {
 
             int sheetRow = 0;
 
+            // Add the title
+            sheetRow = addReportHeader(reportModel, styleMap, wb, sheet, sheetRow);
+
             // write all of the groups
             for (final GroupInfo groupInfo : groupInfoSet) {
-                sheetRow = addTableSection(reportModel, styleMap, wb, sheet, groupInfo, sheetRow) + 1;
+                sheetRow = addTableSection(reportModel, styleMap, wb, sheet, groupInfo, sheetRow);
             }
-
 
             // Add global footer column
             if (reportModel.hasGlobalSummary()) {
@@ -126,13 +132,44 @@ public class Workbook {
         }
     }
 
+    private static int addReportHeader(@NotNull final AbstractReportTableModel reportModel,
+                                       @NotNull final Map<Style, CellStyle> styleMap,
+                                       @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
+                                       final int startRow) {
+
+        int sheetRow = startRow;
+        final CreationHelper createHelper = wb.getCreationHelper();
+
+        Row row = s.createRow(sheetRow);
+
+        Cell cell = row.createCell(0);
+        cell.setCellStyle(styleMap.get(Style.TITLE));
+        cell.setCellValue(createHelper.createRichTextString(reportModel.getTitle()));
+        s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
+
+        row.setHeight((short)-1);
+
+        sheetRow++;
+
+        if (reportModel.getSubTitle() != null) {
+            row = s.createRow(sheetRow);
+
+            cell = row.createCell(reportModel.getVisibleColumnCount() / 2);
+            cell.setCellStyle(styleMap.get(Style.SUBTITLE));
+            cell.setCellValue(createHelper.createRichTextString(reportModel.getSubTitle()));
+            s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
+
+            row.setHeight((short)-1);
+
+            sheetRow++;
+        }
+
+        return ++sheetRow;
+    }
+
     private static int addTableSection(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
                                        @NotNull final org.apache.poi.ss.usermodel.Workbook wb, @NotNull final Sheet s,
                                        @NotNull final GroupInfo groupInfo, final int startRow) {
-        Objects.requireNonNull(groupInfo);
-        Objects.requireNonNull(reportModel);
-        Objects.requireNonNull(wb);
-        Objects.requireNonNull(s);
 
         final CellStyle headerStyle = styleMap.get(Style.HEADER);
 
@@ -202,7 +239,7 @@ public class Workbook {
             sheetRow++;
         }
 
-        return sheetRow;
+        return ++sheetRow;
     }
 
     private static void addGlobalFooter(@NotNull final AbstractReportTableModel reportModel, @NotNull final Map<Style, CellStyle> styleMap,
@@ -327,7 +364,9 @@ public class Workbook {
         styleMap.put(Style.PERCENTAGE, StyleFactory.applyPercentageFormat(wb, StyleFactory.createDefaultStyle(wb)));
 
         styleMap.put(Style.SHORT_DATE, StyleFactory.applyShortDateFormat(wb, StyleFactory.createDefaultStyle(wb)));
+        styleMap.put(Style.SUBTITLE, StyleFactory.createSubTitleStyle(wb));
         styleMap.put(Style.TIMESTAMP, StyleFactory.applyTimestampFormat(wb, StyleFactory.createDefaultStyle(wb)));
+        styleMap.put(Style.TITLE, StyleFactory.createTitleStyle(wb));
 
         return styleMap;
     }
@@ -341,6 +380,8 @@ public class Workbook {
         PERCENTAGE,
         QUANTITY,
         SHORT_DATE,
-        TIMESTAMP
+        SUBTITLE,
+        TIMESTAMP,
+        TITLE
     }
 }

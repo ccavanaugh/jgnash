@@ -24,6 +24,7 @@ import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -103,7 +104,16 @@ public abstract class AbstractReportTableModel {
      *
      * @return the report title
      */
+    @NotNull
     public abstract String getTitle();
+
+    /**
+     * Returns the subtitle for the Report
+     *
+     * @return the report title
+     */
+    @Nullable
+    public abstract String getSubTitle();
 
     /**
      * Return true if the column should be fixed width
@@ -181,6 +191,25 @@ public abstract class AbstractReportTableModel {
         return getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM ||
                        getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL
                        || getColumnStyle(columnIndex) == ColumnStyle.AMOUNT_SUM;
+    }
+
+    /**
+     * Returns the column count in the model.
+     *
+     * @return the number of columns in the model
+     * @see #getColumnCount
+     */
+    public int getVisibleColumnCount() {
+
+        int count = 0;
+
+        for (int i = 0; i < getColumnCount(); i++) {
+            if (isColumnVisible(i)) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private boolean isColumnGloballySummed(final int columnIndex) {

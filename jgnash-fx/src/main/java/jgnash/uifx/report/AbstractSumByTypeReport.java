@@ -326,6 +326,11 @@ public abstract class AbstractSumByTypeReport extends Report {
             return AbstractSumByTypeReport.this.title;
         }
 
+        @Override
+        public String getSubTitle() {
+            return AbstractSumByTypeReport.this.subTitle;
+        }
+
         /**
          * Returns the legend for the grand total
          *
