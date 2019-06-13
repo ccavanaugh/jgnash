@@ -77,7 +77,7 @@ public abstract class AbstractSumByTypeReport extends Report {
 
     private boolean addPercentileColumn = false;
 
-    private String subTitle = "";
+    private String subTitle = "subtitle";
 
     private String title = "";
 
@@ -123,6 +123,10 @@ public abstract class AbstractSumByTypeReport extends Report {
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
+
+        // update the subtitle
+        final MessageFormat format = new MessageFormat(rb.getString("Pattern.DateRange"));
+        subTitle = format.format(new Object[]{DateUtils.asDate(startDate), DateUtils.asDate(endDate)});
 
         // generate the required date and label arrays
         updateResolution(startDate, endDate);
@@ -221,10 +225,7 @@ public abstract class AbstractSumByTypeReport extends Report {
     private void updateResolution(final LocalDate startDate, final LocalDate endDate) {
 
         final DateTimeFormatter dateFormat = DateUtils.getShortDateFormatter();
-        final MessageFormat format = new MessageFormat(rb.getString("Pattern.DateRange"));
 
-        // update the subtitle
-        subTitle = format.format(new Object[]{DateUtils.asDate(startDate), DateUtils.asDate(endDate)});
 
         startDates.clear();
         endDates.clear();

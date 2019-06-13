@@ -55,7 +55,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Exports a {@code AbstractReportTableModel} to a spreadsheet using POI
  *
  * TODO: Size the row height
- * TODO: Correct / tickle the subtitle generation (report model issue)
  * TODO: Add headers for groups
  *
  * @author Craig Cavanaugh
@@ -151,10 +150,10 @@ public class Workbook {
 
         sheetRow++;
 
-        if (reportModel.getSubTitle() != null) {
+        if (reportModel.getSubTitle() != null && !reportModel.getSubTitle().isBlank()) {
             row = s.createRow(sheetRow);
 
-            cell = row.createCell(reportModel.getVisibleColumnCount() / 2);
+            cell = row.createCell(0);
             cell.setCellStyle(styleMap.get(Style.SUBTITLE));
             cell.setCellValue(createHelper.createRichTextString(reportModel.getSubTitle()));
             s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
