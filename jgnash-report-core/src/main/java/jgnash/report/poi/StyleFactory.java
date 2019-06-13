@@ -42,6 +42,11 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 class StyleFactory {
 
+    static final int DEFAULT_HEIGHT = 10;
+    static final int HEADER_FOOTER_HEIGHT = 11;
+    static final int MARGIN = 4;
+    static final int TITLE_HEIGHT = 14;
+
     private StyleFactory() {
         // Utility class
     }
@@ -239,7 +244,7 @@ class StyleFactory {
         Objects.requireNonNull(wb);
 
         final Font font = wb.createFont();
-        font.setFontHeightInPoints((short) 11);
+        font.setFontHeightInPoints((short) HEADER_FOOTER_HEIGHT);
         font.setColor(IndexedColors.BLACK.getIndex());
         font.setBold(true);
 
@@ -256,7 +261,7 @@ class StyleFactory {
         Objects.requireNonNull(wb);
 
         final Font font = wb.createFont();
-        font.setFontHeightInPoints((short) 11);
+        font.setFontHeightInPoints((short) HEADER_FOOTER_HEIGHT);
         font.setColor(IndexedColors.WHITE.getIndex());
         font.setBold(true);
 
@@ -273,7 +278,7 @@ class StyleFactory {
         Objects.requireNonNull(wb);
 
         final Font font = wb.createFont();
-        font.setFontHeightInPoints((short) 10);
+        font.setFontHeightInPoints((short) DEFAULT_HEIGHT);
         font.setColor(IndexedColors.BLACK.getIndex());
 
         return font;
@@ -289,7 +294,7 @@ class StyleFactory {
         Objects.requireNonNull(wb);
 
         final Font font = wb.createFont();
-        font.setFontHeightInPoints((short) 14);
+        font.setFontHeightInPoints((short) TITLE_HEIGHT);
         font.setBold(true);
         font.setColor(IndexedColors.BLACK.getIndex());
 

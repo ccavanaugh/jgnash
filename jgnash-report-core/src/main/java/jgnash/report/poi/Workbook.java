@@ -51,11 +51,16 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import static jgnash.report.poi.StyleFactory.DEFAULT_HEIGHT;
+import static jgnash.report.poi.StyleFactory.HEADER_FOOTER_HEIGHT;
+import static jgnash.report.poi.StyleFactory.MARGIN;
+import static jgnash.report.poi.StyleFactory.TITLE_HEIGHT;
+
 /**
  * Exports a {@code AbstractReportTableModel} to a spreadsheet using POI
  *
- * TODO: Size the row height
  * TODO: Add headers for groups
+ * TODO: Cross tabulation formulas
  *
  * @author Craig Cavanaugh
  */
@@ -146,7 +151,7 @@ public class Workbook {
         cell.setCellValue(createHelper.createRichTextString(reportModel.getTitle()));
         s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
 
-        row.setHeight((short)-1);
+        row.setHeightInPoints(TITLE_HEIGHT + MARGIN);
 
         sheetRow++;
 
@@ -158,7 +163,7 @@ public class Workbook {
             cell.setCellValue(createHelper.createRichTextString(reportModel.getSubTitle()));
             s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
 
-            row.setHeight((short)-1);
+            row.setHeightInPoints(DEFAULT_HEIGHT + MARGIN);
 
             sheetRow++;
         }
@@ -182,6 +187,7 @@ public class Workbook {
 
         // Create headers
         Row row = s.createRow(sheetRow);
+        row.setHeightInPoints(HEADER_FOOTER_HEIGHT + MARGIN);
 
         int col = 0; // reusable col tracker
 
@@ -206,6 +212,7 @@ public class Workbook {
 
             if (group.equals(rowGroup)) {
                 row = s.createRow(sheetRow);   // new row is needed
+                row.setHeightInPoints(DEFAULT_HEIGHT + MARGIN);
 
                 for (int tableCol = 0; tableCol < reportModel.getColumnCount(); tableCol++) {
                     if (reportModel.isColumnVisible(tableCol)) {
@@ -221,6 +228,7 @@ public class Workbook {
         if (groupInfo.hasSummation()) {
             col = 0;
             row = s.createRow(sheetRow);   // new row is needed
+            row.setHeightInPoints(HEADER_FOOTER_HEIGHT + MARGIN);
 
             // column zero is assumed to be a total descriptor
             setFooterCellValue(reportModel.getGroupFooterLabel(), ColumnStyle.STRING, styleMap, wb, row, col);
@@ -246,6 +254,7 @@ public class Workbook {
                                         final int startRow) {
         int col = 0;
         Row row = s.createRow(startRow);   // new row is needed
+        row.setHeightInPoints(HEADER_FOOTER_HEIGHT + MARGIN);
 
         // column zero is assumed to be a total descriptor
         setFooterCellValue(reportModel.getGrandTotalLegend(), ColumnStyle.STRING, styleMap, wb, row, col);
