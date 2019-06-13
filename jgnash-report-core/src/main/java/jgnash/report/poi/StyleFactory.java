@@ -46,6 +46,7 @@ class StyleFactory {
     static final int HEADER_FOOTER_HEIGHT = 11;
     static final int MARGIN = 4;
     static final int TITLE_HEIGHT = 14;
+    static final int GROUP_HEIGHT = 12;
 
     private StyleFactory() {
         // Utility class
@@ -224,6 +225,22 @@ class StyleFactory {
      * @param wb the {@code Workbook} the default format is being created for
      * @return the {@code CellStyle} being created
      */
+    static CellStyle createGroupStyle(@NotNull final Workbook wb) {
+        final Font font = createGroupFont(wb);
+        final CellStyle cellStyle = wb.createCellStyle();
+
+        cellStyle.setFont(font);
+        cellStyle.setAlignment(HorizontalAlignment.LEFT);
+
+        return cellStyle;
+    }
+
+    /**
+     * Creates the Title {@code CellStyle} for a {@code Workbook}
+     *
+     * @param wb the {@code Workbook} the default format is being created for
+     * @return the {@code CellStyle} being created
+     */
     static CellStyle createSubTitleStyle(@NotNull final Workbook wb) {
         final Font font = createSubTitleFont(wb);
         final CellStyle cellStyle = wb.createCellStyle();
@@ -295,6 +312,23 @@ class StyleFactory {
 
         final Font font = wb.createFont();
         font.setFontHeightInPoints((short) TITLE_HEIGHT);
+        font.setBold(true);
+        font.setColor(IndexedColors.BLACK.getIndex());
+
+        return font;
+    }
+
+    /**
+     * Creates the default group font
+     *
+     * @param wb {@code Workbook} font is to be assigned to
+     * @return a new {@code Font} instance
+     */
+    private static Font createGroupFont(@NotNull final Workbook wb) {
+        Objects.requireNonNull(wb);
+
+        final Font font = wb.createFont();
+        font.setFontHeightInPoints((short) GROUP_HEIGHT);
         font.setBold(true);
         font.setColor(IndexedColors.BLACK.getIndex());
 

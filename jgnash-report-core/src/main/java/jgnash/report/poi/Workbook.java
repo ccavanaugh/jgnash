@@ -52,6 +52,7 @@ import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import static jgnash.report.poi.StyleFactory.DEFAULT_HEIGHT;
+import static jgnash.report.poi.StyleFactory.GROUP_HEIGHT;
 import static jgnash.report.poi.StyleFactory.HEADER_FOOTER_HEIGHT;
 import static jgnash.report.poi.StyleFactory.MARGIN;
 import static jgnash.report.poi.StyleFactory.TITLE_HEIGHT;
@@ -59,7 +60,6 @@ import static jgnash.report.poi.StyleFactory.TITLE_HEIGHT;
 /**
  * Exports a {@code AbstractReportTableModel} to a spreadsheet using POI
  *
- * TODO: Add headers for groups
  * TODO: Cross tabulation formulas
  *
  * @author Craig Cavanaugh
@@ -183,17 +183,27 @@ public class Workbook {
 
         int sheetRow = startRow;
 
-        // TODO, add group title
+        int col = 0; // reusable col tracker
+
+        // Add group title
+        Row row = s.createRow(sheetRow);
+        Cell cell = row.createCell(col);
+        cell.setCellStyle(styleMap.get(Style.GROUP));
+        cell.setCellValue(createHelper.createRichTextString(group));
+        s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
+        row.setHeightInPoints(GROUP_HEIGHT + MARGIN);
+
+        sheetRow++;
 
         // Create headers
-        Row row = s.createRow(sheetRow);
+        row = s.createRow(sheetRow);
         row.setHeightInPoints(HEADER_FOOTER_HEIGHT + MARGIN);
 
-        int col = 0; // reusable col tracker
+        col = 0; // reusable col tracker
 
         for (int c = 0; c < reportModel.getColumnCount(); c++) {
             if (reportModel.isColumnVisible(c)) {
-                final Cell cell = row.createCell(col);
+                cell = row.createCell(col);
 
                 cell.setCellStyle(headerStyle);
                 cell.setCellValue(createHelper.createRichTextString(reportModel.getColumnName(c)));
@@ -362,6 +372,7 @@ public class Workbook {
         styleMap.put(Style.AMOUNT, StyleFactory.createDefaultAmountStyle(wb, currencyNode));
         styleMap.put(Style.DEFAULT, StyleFactory.createDefaultStyle(wb));
         styleMap.put(Style.FOOTER, StyleFactory.createFooterStyle(wb));
+        styleMap.put(Style.GROUP, StyleFactory.createGroupStyle(wb));
         styleMap.put(Style.HEADER, StyleFactory.createHeaderStyle(wb));
 
         styleMap.put(Style.NUMERIC_FOOTER, StyleFactory.applyCurrencyFormat(wb, currencyNode,
@@ -383,6 +394,7 @@ public class Workbook {
         AMOUNT,
         DEFAULT,
         FOOTER,
+        GROUP,
         HEADER,
         NUMERIC_FOOTER,
         PERCENTAGE,
