@@ -36,6 +36,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 
+import jgnash.util.Nullable;
+
 /**
  * Exchange rate object.
  *
@@ -136,6 +138,7 @@ public class ExchangeRate extends StoredObject {
         return result;
     }
 
+    @Nullable
     ExchangeRateHistoryNode getHistory(final LocalDate localDate) {
         ExchangeRateHistoryNode node = null;
 

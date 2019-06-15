@@ -592,16 +592,72 @@ public abstract class EngineTest {
         assertEquals(defaultCurrency.getSymbol(), "USD");
     }
 
-    @Disabled
     @Test
     void testRemoveExchangeRateHistory() {
-        fail("Not yet implemented");
+
+        final LocalDate testDate = LocalDate.now().minusYears(2);
+
+        CurrencyNode usdCurrency = e.getDefaultCurrency();
+        assertEquals(usdCurrency.getSymbol(), "USD");
+
+        CurrencyNode cadCurrency = e.getCurrency("CAD");
+        assertEquals(cadCurrency.getSymbol(), "CAD");
+
+        e.setExchangeRate(usdCurrency, cadCurrency, new BigDecimal("0.5"), testDate);
+
+        ExchangeRate exchangeRate = e.getExchangeRate(usdCurrency, cadCurrency);
+        assertNotNull(exchangeRate);
+
+        closeEngine();
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+        usdCurrency = e.getDefaultCurrency();
+        cadCurrency = e.getCurrency("CAD");
+        exchangeRate = e.getExchangeRate(usdCurrency, cadCurrency);
+        assertNotNull(exchangeRate);
+
+        ExchangeRateHistoryNode historyNode = exchangeRate.getHistory(testDate);
+        assertNotNull(historyNode);
+
+        e.removeExchangeRateHistory(exchangeRate, historyNode);
+        historyNode = exchangeRate.getHistory(testDate);
+        assertNull(historyNode);
+
+        closeEngine();
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+        usdCurrency = e.getDefaultCurrency();
+        cadCurrency = e.getCurrency("CAD");
+        exchangeRate = e.getExchangeRate(usdCurrency, cadCurrency);
+        assertNotNull(exchangeRate);
+        historyNode = exchangeRate.getHistory(testDate);
+        assertNull(historyNode);
     }
 
-    @Disabled
     @Test
-    void testUpdateCommodity() {
-        fail("Not yet implemented");
+    void testUpdateCommodity() throws CloneNotSupportedException {
+        CurrencyNode testNode = DefaultCurrencies.buildCustomNode("CAD");
+        assertNotNull(testNode);
+        e.addCurrency(testNode);
+
+        // close and reopen to force check for persistence
+        closeEngine();
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+        testNode = e.getCurrency("CAD");
+        assertNotNull(testNode);
+
+        final CurrencyNode clone = (CurrencyNode)testNode.clone();
+        clone.setDescription("changed");
+        e.updateCommodity(testNode, clone);
+
+        testNode = e.getCurrency("CAD");
+        assertNotNull(testNode);
+
+        assertEquals("changed", testNode.getDescription());
+
+        closeEngine();
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+        testNode = e.getCurrency("CAD");
+        assertNotNull(testNode);
+        assertEquals("changed", testNode.getDescription());
     }
 
     @Disabled
