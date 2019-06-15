@@ -649,7 +649,12 @@ public class Engine {
     public boolean addReminder(final Reminder reminder) {
         Objects.requireNonNull(reminder.getUuid());
 
-        boolean result = getReminderDAO().addReminder(reminder);
+        boolean result = false;
+
+        // make sure the description has been set
+        if (reminder.getDescription() != null && !reminder.getDescription().isBlank()) {
+            result = getReminderDAO().addReminder(reminder);
+        }
 
         Message message;
         if (result) {

@@ -18,6 +18,7 @@
 package jgnash.engine.recurring;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -242,7 +243,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      *
      * @param description The description to set.
      */
-    public void setDescription(final String description) {
+    public void setDescription(@NotNull final String description) {
+        Objects.requireNonNull(description);
         this.description = description;
     }
 

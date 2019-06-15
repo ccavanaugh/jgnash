@@ -52,6 +52,9 @@ public class RecurringPropertiesController {
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
+    private Button okButton;
+
+    @FXML
     private ButtonBar buttonBar;
 
     @FXML
@@ -108,6 +111,9 @@ public class RecurringPropertiesController {
         daysBeforeTextField.disableProperty().bind(autoEnterCheckBox.selectedProperty().not());
 
         enabledCheckBox.setSelected(true);  // enable by default
+
+        // ensure the description if not empty
+        okButton.disableProperty().bind(descriptionTextField.textProperty().isEmpty());
 
         loadTab("NoneTab.fxml", "Tab.None");
         loadTab("DayTab.fxml", "Tab.Day");

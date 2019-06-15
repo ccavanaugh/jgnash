@@ -25,7 +25,6 @@ import jgnash.time.Period;
 import jgnash.util.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -125,17 +124,19 @@ public abstract class EngineTest {
     }
 
     @Test
-    void testReminders() {
+    void testReminders() throws CloneNotSupportedException {
 
         assertEquals(0, e.getReminders().size());
-
         assertEquals(0, e.getPendingReminders().size());
 
         Reminder r = new DailyReminder();
+
         r.setIncrement(1);
         r.setEndDate(null);
+        assertFalse(e.addReminder(r));  // should fail because description is not set
 
-        assertTrue(e.addReminder(r));
+        r.setDescription("test");
+        assertTrue(e.addReminder(r));   // should pass now
 
         assertEquals(1, e.getReminders().size());
         assertEquals(1, e.getPendingReminders().size());
@@ -144,6 +145,15 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
         assertEquals(e.getReminders().size(), 1);
+
+        // Clone reminders
+        r = e.getReminders().get(0);
+        assertNotNull(r);
+        Reminder clone = (Reminder)r.clone();
+        assertNotNull(clone);
+
+        assertNotEquals(clone, r);
+        assertNotEquals(0, clone.compareTo(r));
 
         // remove a reminder
         e.removeReminder(e.getReminders().get(0));
@@ -646,12 +656,6 @@ public abstract class EngineTest {
         testNode = e.getCurrency("CAD");
         assertNotNull(testNode);
         assertEquals("changed", testNode.getDescription());
-    }
-
-    @Disabled
-    @Test
-    void testUpdateReminder() {
-        fail("Not yet implemented");
     }
 
     @Test
