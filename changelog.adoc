@@ -22,6 +22,7 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.2.x
+* 06/15/2019 Improved the speed of detecting a non converging IRR calculation.
 * 06/15/2019 Protect against Reminders without descriptions.
 * 06/14/2019 Tabular reports may now be exported to a spreadsheet.
 * 06/01/2019 Updated to the latest Hibernate dependency.

@@ -17,12 +17,11 @@
  */
 package jgnash.engine;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,7 +56,6 @@ class CashFlowTest {
     }
 
     @Test
-    @Disabled
     void testUglyData() {
         CashFlow cashFlow = new CashFlow();
 
@@ -74,9 +72,9 @@ class CashFlowTest {
         cashFlow.add(LocalDate.of(2012, Month.NOVEMBER, 12), new BigDecimal(0.92));
         cashFlow.add(LocalDate.of(2012, Month.DECEMBER, 2), new BigDecimal(8.885624));
 
-
         double irr = cashFlow.internalRateOfReturn();
-        assertEquals(1, irr, 1.e-5);
+
+        assertEquals(Double.NaN, irr);
     }
 
 }
