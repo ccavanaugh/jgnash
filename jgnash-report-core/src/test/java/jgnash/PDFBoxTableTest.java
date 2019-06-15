@@ -82,7 +82,7 @@ class PDFBoxTableTest {
         }
     }
 
-    private class SimpleReport extends Report {
+    private static class SimpleReport extends Report {
 
     }
 
@@ -198,7 +198,7 @@ class PDFBoxTableTest {
         }
     }
 
-    private class BasicTestReport extends AbstractReportTableModel {
+    private static class BasicTestReport extends AbstractReportTableModel {
 
         private static final String COLUMN_DATE = "Column.Date";
         private static final String COLUMN_NUM = "Column.Num";
@@ -334,7 +334,7 @@ class PDFBoxTableTest {
         }
     }
 
-    private class CrossTabTestReport extends AbstractReportTableModel {
+    private static class CrossTabTestReport extends AbstractReportTableModel {
 
         private static final String COLUMN_DATE = "Column.Date";
         private static final String COLUMN_NUM = "Column.Num";
