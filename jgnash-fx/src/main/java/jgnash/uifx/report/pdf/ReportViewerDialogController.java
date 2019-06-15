@@ -614,7 +614,7 @@ public class ReportViewerDialogController {
 
         zoomComboBox.getSelectionModel().clearSelection();
 
-        setActualZoomRatio(heightRatio < widthRatio ? heightRatio : widthRatio);
+        setActualZoomRatio(Math.min(heightRatio, widthRatio));
     }
 
     @FXML
