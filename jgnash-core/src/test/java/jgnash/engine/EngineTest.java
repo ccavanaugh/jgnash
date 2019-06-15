@@ -276,18 +276,6 @@ public abstract class EngineTest {
         assertEquals(0, a.getSecurities().size());
     }
 
-    @Disabled
-    @Test
-    void testGetMarketPrice() {
-        fail("Not yet implemented");
-    }
-
-    @Disabled
-    @Test
-    void testGetBaseCurrencies() {
-        fail("Not yet implemented");
-    }
-
     @Test
     void exchangeRateTest1() {
 
