@@ -118,7 +118,7 @@ public class SqlUtils {
                     try (final Statement statement = connection.createStatement()) {
                         try (final ResultSet resultSet = statement.executeQuery("SELECT FILEFORMAT FROM CONFIG")) {
                             resultSet.next();
-                            fileVersion = Float.valueOf(resultSet.getString("fileformat"));
+                            fileVersion = Float.parseFloat(resultSet.getString("fileformat"));
                         }
                     }
                     // must issue a shutdown for correct file closure

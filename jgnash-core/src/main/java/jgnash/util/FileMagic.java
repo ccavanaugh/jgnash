@@ -312,7 +312,7 @@ public class FileMagic {
 
         if (isFile(path, XML_HEADER)) {
             try {
-                result = (int)Math.floor(Float.valueOf(getXMLVersion(path))) <= Engine.CURRENT_MAJOR_VERSION;
+                result = (int)Math.floor(Float.parseFloat(getXMLVersion(path))) <= Engine.CURRENT_MAJOR_VERSION;
             } catch (final NumberFormatException nfe) {
                Logger.getLogger(FileMagic.class.getName()).info("Invalid version string");
             }

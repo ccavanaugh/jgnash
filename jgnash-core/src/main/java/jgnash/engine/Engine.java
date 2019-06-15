@@ -2726,7 +2726,7 @@ public class Engine {
         final String stringResult = getPreference(key);
 
         if (stringResult != null && !stringResult.isEmpty()) {
-            value = Boolean.valueOf(stringResult);
+            value = Boolean.parseBoolean(stringResult);
         }
 
         return value;

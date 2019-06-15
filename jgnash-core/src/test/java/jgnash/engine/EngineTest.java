@@ -98,7 +98,7 @@ public abstract class EngineTest {
         // check for correct file version
         final float version = EngineFactory.getFileVersion(Paths.get(testFile), EngineFactory.EMPTY_PASSWORD);
         final Config config = new Config();
-        assertEquals(Float.valueOf(config.getFileFormat()), version, .0001);
+        assertEquals(Float.parseFloat(config.getFileFormat()), version, .0001);
 
         // reopen the file for more tests
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
@@ -980,7 +980,7 @@ public abstract class EngineTest {
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
             final float version = EngineFactory.getFileVersion(Paths.get(testFile), EngineFactory.EMPTY_PASSWORD);
-            final float engineVersion = Float.valueOf(Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION);
+            final float engineVersion = Float.parseFloat(Engine.CURRENT_MAJOR_VERSION + "." + Engine.CURRENT_MINOR_VERSION);
 
             assertEquals(version, engineVersion, DELTA);
         } catch (final Exception e) {
