@@ -156,7 +156,7 @@ little time and contribute your experience to the group and help others.
 
 [[_gettingstarted]]
 == Getting Started
-The basic elements of jGnash are Accounts, Currencies, Securites, and Transactions.  Every account is assigned one
+The basic elements of jGnash are Accounts, Currencies, Securities, and Transactions.  Every account is assigned one
 currency and every transaction is associated with at least one account.  Investment Accounts and Investment Transactions
 will be associated with a Security.
 
@@ -196,8 +196,8 @@ few shortcuts to speed up entry of transactions.
 jGnash knows and understands just about any known locale and country setting.
 Depending on your settings, the decimal symbol will change accordingly as well as the displayed format of dates.
 
-Error checking of _required_ form fields is performed realtime.  As information is entered you will notice buttons
-such as kbd:[Enter] enable and disabled based on validaity of what has been entered.
+Error checking of _required_ form fields is performed real-time.  As information is entered you will notice buttons
+such as kbd:[Enter] enable and disabled based on validity of what has been entered.
 
 [[dateFields]]
 ==== Date Fields
@@ -336,7 +336,8 @@ The XML format is also used for creating automatic backups of jGnash files if en
 ==== Binary File
 
 The binary file format is the most compact file format and will open and close the quickest.
-This is the recommended file format if you do not need client / server functionality and you are using a laptop or a workstaion with a UPS.
+This is the recommended file format if you do not need client / server functionality and you are using a laptop
+or a workstation with a UPS.
 
 [[_accounts]]
 === Accounts
@@ -537,7 +538,7 @@ The benefit of double entry accounting in jGnash is the ability to use reports a
 going and coming from.  Single entry transactions hide those details and make tracking difficult and tedious.
 
 ****
-For simplicty, the terms used here to discuss changes in account balances will be *Increase* and *Decrease*.
+For simplicity, the terms used here to discuss changes in account balances will be *Increase* and *Decrease*.
 
 Business accounting practices use the Credit and Debit terms which can appear to be backwards depending on account type
 and cause confusion for those who are not familiar.
@@ -574,8 +575,7 @@ The Memo is a brief description of the transaction so you can remember what it w
 learn the Memos you commonly use.  This helps aid speed of transaction entry and helps to establish
 consistency making searching and filter much easier.
 
-Split transactions have an option to Concatenate
-or automatically merge the Memos of the split entries.
+Split transactions have an option to Concatenate or automatically merge the Memos of the split entries.
 
 ===== Amount
 This is the transaction amount.  If entering a multi-currency transaction, this field will be expanded to handle
@@ -590,9 +590,8 @@ all three of the reconciliation states described below.
 
 .A jGnash transaction has three reconciliation states
 Not Reconciled:: The transaction has not been reconciled against a bank or online statement
-Cleared:: The intended use is for manual reconcilation of a specific transaction prior to a full reconcilation for the
- period.
-Reconciled:: The transaction has been reconciled manually or through use of the Reconcilation tool
+Cleared:: The intended use is for manual reconciliation of a specific transaction prior to a full reconciliation for the period.
+Reconciled:: The transaction has been reconciled manually or through use of the Reconciliation tool
 
 ===== Transaction Attachments
 jGnash allows the attachment of an image file to the transaction using the chain link button at the bottom of the
@@ -713,7 +712,7 @@ An Account must be selected for the Reminder and fields exist to provide a descr
 is optional.  A Reminder without a transaction will simply be a Reminder to do something.
 
 The typical approach for assigning the Account is to use a bank or cash account of some sort.  When you create the
-transaction, it wil be against an expense or income account unless it is a periodic transfer between accounts.
+transaction, it will be against an expense or income account unless it is a periodic transfer between accounts.
 
 However, if you prefer to organize Reminders by expense type or account, you can pick an expense or income account and
 create the transaction against a bank account.  Regardless of approach, be consistent to avoid confusion later.
