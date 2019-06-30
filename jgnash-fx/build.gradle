@@ -9,7 +9,7 @@ description = "jGnash JavaFx"
 mainClassName = "jGnashFx"
 
 dependencies {
-    compile project(":jgnash-help")
+    //compile project(":jgnash-manual")
     compile project(":jgnash-core")
     compile project(":jgnash-convert")
     compile project(":jgnash-report-core")
@@ -62,9 +62,6 @@ startScripts.enabled = false
 
 // build the mt940 plugin prior to creating the zip file without creating a circular loop
 distZip.dependsOn(":mt940:build")
-
-// ensure the manual is built and included
-distZip.dependsOn(":jgnash-help:asciidoctor")
 
 distZip {
     into("jGnash-$version") {

@@ -2,7 +2,7 @@ rootProject.name = "jgnash"
 
 include ":bootloader"
 include ":jgnash-bayes"
-include ":jgnash-help"
+// include ":jgnash-manual"
 include ":jgnash-resources"
 include ":jgnash-core"
 include ":jgnash-report-core"
@@ -15,7 +15,7 @@ include ":mt940"
 
 project(":bootloader").projectDir = "$rootDir/bootloader" as File
 project(":jgnash-bayes").projectDir = "$rootDir/jgnash-bayes" as File
-project(":jgnash-help").projectDir = "$rootDir/jgnash-help" as File
+// project(":jgnash-manual").projectDir = "$rootDir/jgnash-manual" as File
 project(":jgnash-resources").projectDir = "$rootDir/jgnash-resources" as File
 project(":jgnash-core").projectDir = "$rootDir/jgnash-core" as File
 project(":jgnash-report-core").projectDir = "$rootDir/jgnash-report-core" as File

@@ -45,7 +45,7 @@ distributions {
     main {
         baseName = "jGnash"
         contents {
-            from { "../jgnash-help/build/asciidoc/pdf/Manual.pdf" }
+            from { "../jgnash-manual/src/Manual.pdf" }
             from { "../changelog.adoc" }
             from { "build/launch4j/jGnash.exe" }
             from { "../README.html" }

@@ -22,6 +22,8 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.2.x
+* 06/30/2019 The manual was missing from the distribution.
+* 06/30/2019 Converted the manual to Latex and moved to manual process to improve build performance.
 * 06/15/2019 Improved the speed of detecting a non converging IRR calculation.
 * 06/15/2019 Protect against Reminders without descriptions.
 * 06/14/2019 Tabular reports may now be exported to a spreadsheet.

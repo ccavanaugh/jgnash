@@ -17,3 +17,9 @@ nb-configuration.xml
 /*.zip
 .gradle/
 lib/
+*.aux
+*.toc
+*.gz
+*.fls
+*.fdb*
+*.out
