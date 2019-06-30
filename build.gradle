@@ -36,9 +36,9 @@ allprojects {
         hibernateVersion = "5.4.3.Final"    // http://hibernate.org/orm/
         hikariVersion = "3.3.1"             // https://github.com/brettwooldridge/HikariCP
         
-        pdfBoxVersion = "2.0.15"            // https://pdfbox.apache.org/
+        pdfBoxVersion = "2.0.16"            // https://pdfbox.apache.org/
 
-        nettyVersion = "4.1.36.Final"       // https://netty.io/index.html
+        nettyVersion = "4.1.37.Final"       // https://netty.io/index.html
 
         slf4jVersion = "1.8.0-beta4"        // https://www.slf4j.org/news.html
 
