@@ -8,7 +8,7 @@ allprojects {
     if (!it.name.startsWith("jgnash-help")) {
         apply plugin: "java"
     }
-    
+
     sourceCompatibility = 11
     targetCompatibility = 11
 
@@ -35,7 +35,7 @@ allprojects {
 
         hibernateVersion = "5.4.3.Final"    // http://hibernate.org/orm/
         hikariVersion = "3.3.1"             // https://github.com/brettwooldridge/HikariCP
-        
+
         pdfBoxVersion = "2.0.16"            // https://pdfbox.apache.org/
 
         nettyVersion = "4.1.37.Final"       // https://netty.io/index.html
@@ -54,18 +54,15 @@ subprojects {
         maven { url "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/" }
     }
 
-    // jgnash-help is not a compiled sub-project
-    if (!it.name.startsWith("jgnash-help")) {
-        dependencies {
 
-            testCompile group: "org.junit.jupiter", name: "junit-jupiter-api", version: junitVersion
-            testCompile group: "org.junit.jupiter", name: "junit-jupiter-params", version: junitVersion
-            testRuntime group: "org.junit.jupiter", name: "junit-jupiter-engine", version: junitVersion
+    dependencies {
+        testCompile group: "org.junit.jupiter", name: "junit-jupiter-api", version: junitVersion
+        testCompile group: "org.junit.jupiter", name: "junit-jupiter-params", version: junitVersion
+        testRuntime group: "org.junit.jupiter", name: "junit-jupiter-engine", version: junitVersion
 
-            testCompile group: "io.github.glytching", name: "junit-extensions", version: junitextensionsVersion
-            testCompile group: "org.awaitility", name: "awaitility", version: awaitilityVersion
-            testCompile group: "org.apache.commons", name: "commons-text", version: commonsTextVersion
-        }
+        testCompile group: "io.github.glytching", name: "junit-extensions", version: junitextensionsVersion
+        testCompile group: "org.awaitility", name: "awaitility", version: awaitilityVersion
+        testCompile group: "org.apache.commons", name: "commons-text", version: commonsTextVersion
     }
 
     test {
