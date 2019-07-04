@@ -11,15 +11,3 @@ include ":jgnash-fx"
 include ":jgnash-fx-test-plugin"
 
 include ":mt940"
-
-project(":bootloader").projectDir = "$rootDir/bootloader" as File
-project(":jgnash-bayes").projectDir = "$rootDir/jgnash-bayes" as File
-project(":jgnash-resources").projectDir = "$rootDir/jgnash-resources" as File
-project(":jgnash-core").projectDir = "$rootDir/jgnash-core" as File
-project(":jgnash-report-core").projectDir = "$rootDir/jgnash-report-core" as File
-project(":jgnash-convert").projectDir = "$rootDir/jgnash-convert" as File
-project(":jgnash-plugin").projectDir = "$rootDir/jgnash-plugin" as File
-project(":jgnash-fx").projectDir = "$rootDir/jgnash-fx" as File
-project(":jgnash-fx-test-plugin").projectDir = "$rootDir/jgnash-fx-test-plugin" as File
-
-project(":mt940").projectDir = "$rootDir/mt940" as File
