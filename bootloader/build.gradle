@@ -1,5 +1,5 @@
 plugins {
-    id "edu.sc.seis.launch4j" version "2.4.5"
+    id "edu.sc.seis.launch4j" version "2.4.6"
     id "org.openjfx.javafxplugin" version "0.0.7"
 }
 
