@@ -37,7 +37,6 @@ import jgnash.uifx.control.DetailedDecimalTextField;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class FeePane extends DetailedDecimalTextField {
 
     private final SimpleObjectProperty<Account> account = new SimpleObjectProperty<>(null);
