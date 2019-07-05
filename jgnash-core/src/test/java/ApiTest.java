@@ -200,6 +200,10 @@ public class ApiTest extends AbstractEngineTest {
 
         e.addTransaction(transaction);
 
+        assertTrue(a.contains(transaction));
+
+        assertEquals(0, a.indexOf(transaction));
+
         assertEquals(TransactionType.SINGLENTRY, transaction.getTransactionType());
 
         for (final TransactionEntry transactionEntry : transaction.getTransactionEntries()) {
