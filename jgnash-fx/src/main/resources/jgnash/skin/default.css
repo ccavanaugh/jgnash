@@ -54,6 +54,10 @@
     -fx-background: -fx-control-inner-background-alt;
 }
 
+.tree-table-row-cell:odd:focused {
+    -fx-background: -fx-selection-bar;
+}
+
 /*
  * Adjust margins of the status label for improved appearance
  */
