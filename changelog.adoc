@@ -22,6 +22,8 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.2.0
+* 07/05/2019 Fixed a bug that was causing backup files and database conversions to save in the wrong location or
+             fail completely if a period existed within the file name's path other than the file extension.
 * 06/30/2019 Updated to latest Netty and PDFBox dependencies.
 * 06/30/2019 The manual was missing from the distribution.
 * 06/30/2019 Converted the manual to Latex and moved to manual process to improve build performance.

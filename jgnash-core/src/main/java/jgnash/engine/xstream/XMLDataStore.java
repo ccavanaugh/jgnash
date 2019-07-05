@@ -44,7 +44,7 @@ public class XMLDataStore implements DataStore {
 
     private static final Logger logger = Logger.getLogger(XMLDataStore.class.getName());
 
-    private static final String FILE_EXT = ".xml";
+    public static final String FILE_EXT = ".xml";
 
     private XMLContainer container;
 

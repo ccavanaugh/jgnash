@@ -36,6 +36,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +49,7 @@ import java.util.zip.ZipOutputStream;
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaH2MvDataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
+import jgnash.engine.xstream.XMLDataStore;
 
 import static jgnash.util.LogUtil.logSevere;
 
@@ -63,10 +65,11 @@ public final class FileUtils {
      */
     private static final String FILE_EXT_REGEX = "(?<=\\.).*$";
 
-    private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
-
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
             JpaH2DataStore.LOCK_EXT, JpaH2MvDataStore.LOCK_EXT, ".lock"};
+
+    private static final String[] FILE_EXTENSIONS = new String[]{JpaH2DataStore.FILE_EXT,
+            JpaH2MvDataStore.FILE_EXT, JpaHsqlDataStore.FILE_EXT, XMLDataStore.FILE_EXT};
 
     public static final String SEPARATOR = System.getProperty("file.separator");
 
@@ -200,14 +203,32 @@ public final class FileUtils {
     }
 
     /**
-     * Strips the extension off of the supplied filename including the period. If the supplied
-     * filename does not contain an extension then the original is returned
+     * Strips the file extensions off the supplied filename including the period.
+     *
+     * Known @code(DataStore} extensions are checked first prior to assuming a simple file extension.
+     * If the supplied filename does not contain an extension ending with a period, the original is returned.
      *
      * @param fileName filename to strip the extension off
      * @return filename with extension removed
      */
-    public static String stripFileExtension(final String fileName) {
-        return FILE_EXTENSION_SPLIT_PATTERN.split(fileName)[0];
+    public static String stripFileExtension(@NotNull final String fileName) {
+
+        // check for known types first
+        for (final String extension : FILE_EXTENSIONS) {
+            int index = fileName.toLowerCase(Locale.getDefault()).lastIndexOf(extension.toLowerCase(Locale.getDefault()));
+
+            if (index >= 0) {
+                return fileName.substring(0, index);
+            }
+        }
+
+        int index = fileName.lastIndexOf('.');
+
+        if (index >= 0) {
+            return fileName.substring(0, index);
+        }
+
+        return fileName;
     }
 
     /**

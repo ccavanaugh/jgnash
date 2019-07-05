@@ -58,9 +58,9 @@ class FileUtilsTest {
         final Path tempFile = Files.createTempFile("temp", null);
 
         try (final Writer writer = Files.newBufferedWriter(tempFile)) {
-        	writer.write("test");
+            writer.write("test");
         } catch (Exception e) {
-        	fail();
+            fail();
         }
 
         assertTrue(Files.isWritable(tempFile));
@@ -88,7 +88,15 @@ class FileUtilsTest {
     @Test
     void strip() {
         assertEquals("database", FileUtils.stripFileExtension("database.h2.db"));
-        assertEquals("database", FileUtils.stripFileExtension("database.db"));
+        assertEquals("database", FileUtils.stripFileExtension("database.xml"));
+
+        assertEquals("database", FileUtils.stripFileExtension("database.xyz"));
+
+        assertEquals("/home/craig/test.test@xyz.com/jgnash files/craig",
+                FileUtils.stripFileExtension("/home/craig/test.test@xyz.com/jgnash files/craig.xml"));
+
+        assertEquals("/home/craig/test.test@xyz.com/jgnash files/craig",
+                FileUtils.stripFileExtension("/home/craig/test.test@xyz.com/jgnash files/craig.h2.db"));
     }
 
     @Test
