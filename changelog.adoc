@@ -22,6 +22,8 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.2.0
+* 07/05/2019 Fixed a bug that was preventing entry of investment transaction gains or losses without using the detailed
+             entry form and specifying a gains and loss account.
 * 07/05/2019 Fixed a bug that was causing backup files and database conversions to save in the wrong location or
              fail completely if a period existed within the file name's path other than the file extension.
 * 07/05/2019 The style of selected odd rows of TreeTables were not consistent with even rows.

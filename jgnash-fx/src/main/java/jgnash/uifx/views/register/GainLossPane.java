@@ -17,16 +17,17 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.beans.property.SimpleObjectProperty;
-import jgnash.engine.Account;
-import jgnash.engine.TransactionEntry;
-import jgnash.engine.TransactionTag;
-import jgnash.uifx.control.DetailedDecimalTextField;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javafx.beans.property.SimpleObjectProperty;
+
+import jgnash.engine.Account;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionTag;
+import jgnash.uifx.control.DetailedDecimalTextField;
 
 /**
  * UI Panel for handling investment transaction fees
@@ -36,7 +37,6 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("WeakerAccess")
 public class GainLossPane extends DetailedDecimalTextField {
 
     private final SimpleObjectProperty<Account> account = new SimpleObjectProperty<>(null);
@@ -72,7 +72,7 @@ public class GainLossPane extends DetailedDecimalTextField {
         // adjust the cash balance of the investment account
         if (feeList.isEmpty() && getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
             TransactionEntry fee = new TransactionEntry(accountProperty().get(), getDecimal().abs().negate());
-            fee.setTransactionTag(TransactionTag.INVESTMENT_FEE);
+            fee.setTransactionTag(TransactionTag.GAIN_LOSS);
 
             feeList.add(fee);
         }
