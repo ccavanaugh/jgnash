@@ -12,7 +12,7 @@ allprojects {
     version = "3.2.0"
 
     project.ext {
-        junitVersion = "5.4.2"              // https://junit.org/junit5/
+        junitVersion = "5.5.0"              // https://junit.org/junit5/
         junitextensionsVersion = "2.3.0"    // https://github.com/glytching/junit-extensions
         awaitilityVersion = "3.1.6"         // https://github.com/awaitility/awaitility
 
