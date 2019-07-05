@@ -58,15 +58,15 @@ public class GenericImport {
             Objects.requireNonNull(tran.getAccount());
 
             if (tran.getState() == ImportState.NEW
-                    || tran.getState() == ImportState.NOT_EQUAL) { // do not import matched transactions
+                        || tran.getState() == ImportState.NOT_EQUAL) { // do not import matched transactions
 
                 Transaction transaction;
 
                 if (tran.isInvestmentTransaction()) {
                     if (baseAccount.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-                        System.out.println("Create investment transaction");
+                        System.out.println("Should be creating an investment transaction");
                     } else { // Signal an error
-                        System.out.println("Base account was not an investment account type");
+                        System.out.println("The base account was not an investment account type");
                     }
                 }
 
@@ -85,11 +85,8 @@ public class GenericImport {
                     }
                 }
 
-                // add the new transaction
-                if (transaction != null) {
-                    transaction.setFitid(tran.getFITID());
-                    engine.addTransaction(transaction);
-                }
+                transaction.setFitid(tran.getFITID());
+                engine.addTransaction(transaction);
             }
         }
     }
@@ -182,6 +179,7 @@ public class GenericImport {
                 // if the ImportSecurity has pricing information, import it as well
                 importSecurity.getLocalDate().ifPresent(localDate -> importSecurity.getUnitPrice().ifPresent(price -> {
                     SecurityHistoryNode securityHistoryNode = new SecurityHistoryNode(localDate, price, 0, price, price);
+
                     engine.addSecurityHistory(securityNode, securityHistoryNode);
                 }));
             } else {    // check to see if the cuspid needs to be updated
