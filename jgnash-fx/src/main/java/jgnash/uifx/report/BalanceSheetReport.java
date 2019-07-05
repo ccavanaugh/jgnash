@@ -46,6 +46,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
         setForceGroupPagination(false);
     }
 
+    @Override
     protected ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate, final boolean hideZeroBalanceAccounts) {
         ReportModel model = super.createReportModel(startDate, endDate, hideZeroBalanceAccounts);
 
