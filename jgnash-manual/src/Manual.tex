@@ -1,12 +1,14 @@
 \documentclass[letterpaper,12pt]{book}
 \usepackage[titletoc]{appendix}
-\usepackage[margin=0.75in]{geometry}
+\usepackage[margin=.75in,heightrounded]{geometry}
+\usepackage{fancyhdr}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 %\usepackage{lmodern}					%font
 \usepackage{fourier}                    %font
 
+\usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{awesomebox}
@@ -22,6 +24,8 @@
 \usepackage[singlelinecheck=false]{caption}
 \usepackage[hidelinks, linktocpage=true]{hyperref}
 
+\pagestyle{fancy}
+
 \floatstyle{plaintop}
 \restylefloat{table}                    % control table placement
 
@@ -30,6 +34,7 @@
 
 \parindent0pt  \parskip10pt            % make block paragraphs
 
+\setlength\headheight{16pt}
 \setlist[description]{style=nextline}    % newline for descriptive lists
 
 \setlength{\aweboxrulewidth}{0.8pt}    % reduce width the awesome box vertical line
@@ -107,7 +112,7 @@ morestring=[b]"
 
         \raggedleft % Right align the title page
 
-        \rule{2pt}{\textheight} % Vertical line
+        {\color{gray} \rule{4pt}{\textheight}} % Vertical line
         \hspace{0.08\textwidth} % White space between the vertical line and title page text
         \parbox[b]{0.75\textwidth}{ % Paragraph box for holding the title page text, adjust the width to move the title page left or right on the page
 
@@ -122,8 +127,8 @@ morestring=[b]"
     \end{titlepage}
 
     \tableofcontents
-    \mainmatter
-
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \chapter{Legal}\label{ch:legal}
     {\bfseries jGnash Manual}
 
@@ -149,11 +154,36 @@ morestring=[b]"
     Linux\textregistered~ is the registered trademark of Linus Torvalds in the U.S.\ and other countries.
     Windows is a registered trademark of Microsoft Corporation in the United States and other countries.
     Java\texttrademark~ and OpenJDK\texttrademark~ are registered trademarks of Oracle and/or its affiliates.
-
+    
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \chapter{Conventions and Typographical Features}\label{ch:conventions-and-typographical-features}
+    
+    Below are conventions used throughout this manual. With jGnash being a cross platform application, there
+    may be slight variations in the user interface behavior depending on your operating system. 
+    
+    \begin{tabularx}{\linewidth}{|l|X|}
+        \hline 
+        \textbf{Convention} & \textbf{Usage} \\ 
+        \hline 
+        \hline 
+        \keys{CTRL + C} & User Interface buttons, Keyboard shortcuts and individual keys. The \keys{CTRL} key is used generically for \keys{CTRL} and \keys{\cmd} 
+        depending on your operating system. \\ 
+        \hline 
+        \menu{File > Open} & Menu commands with the separator representing a level within the menu hierarchy.\\
+        \hline 
+        \directory{directory} & Indicates a directory within your operating system. \\        
+        \hline
+        \hyperref[ch:conventions-and-typographical-features]{Link} & An internal or external hyperlink. \\
+        \hline
+        \texttt{Monospace} & Example text	\\
+        \hline               
+    \end{tabularx}      
+    
+    \mainmatter
     \pagenumbering{arabic}
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
     \chapter{Introduction}\label{ch:introduction}
     \includegraphics[scale=.6]{images/jgnash-logo-small}
 
@@ -175,7 +205,7 @@ morestring=[b]"
         \item Double Entry Accounting with reconciliation tools.
         \item Budgeting with multiple scenario options and export to spreadsheet capability.
         \item Investment Accounts and automatic import of Stocks, Bond, and Funds price history.
-        \item Nestable accounts with automatic roll-up of totals and intelligent handling of mixed currencies.
+        \item Hierarchical accounts with automatic roll-up of totals and intelligent handling of mixed currencies.
         \item OFX, QFX, mt940, and QIF import with the ability to pre-process using JavaScript.
         \item Reminders and automatic transaction entry and notifications.
         \item Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates.
@@ -184,10 +214,8 @@ morestring=[b]"
         \item Operates on most all modern PC operating system \textit{(Java\texttrademark~11 is required)}.
         \item jGnash will utilize multi-core processors.
     \end{itemize}
-
-    % ======================
-    % Installation
-    % ======================
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \section{Installation}\label{sec:installation}
     jGnash is not currently distributed with an automatic installation tool.
     You will be required to perform a couple of manual operations that are easily performed for those with a basic
@@ -234,6 +262,7 @@ morestring=[b]"
     When upgrading between versions of jGnash, do not unzip to the same location and overwrite the existing files.
     Use a new location or delete the existing files first.
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \section{Starting jGnash}\label{sec:starting-jgnash}
 
     After the \texttt{jGnash} directory has been extracted from the zip file, you should see several files in the directory.
@@ -245,7 +274,6 @@ morestring=[b]"
     If you are running on a Un*x or BSD (macOS) based system you can start jGnash from a terminal as shown below using
     the included Bash script.
     You can also create your own application launcher using the Bash script in your desktop environment of choice.
-
 
     \begin{mdframed}[style=info]
         \texttt{./jGnash}
@@ -293,7 +321,7 @@ morestring=[b]"
     little time and contribute your experience to the group and help others.
 
     The~\nameref{ch:frequently-asked-questions} chapter will help answer a few common questions.
-
+      
     % ======================
     % Getting Started
     % ======================
@@ -352,7 +380,7 @@ morestring=[b]"
     As information is entered you will notice buttons such as \keys{Enter} are enabled and disabled based on validity
     of what has been entered.
 
-    \subsection{Date Fields}\label{subsec:datefields}
+    \subsection{Date Fields}\label{subsec:dateFields}
     The date field is freely editable and jGnash will make the best attempt at interpreting an invalid entry, but the results
     are indeterminate.
     Clicking on the button to the right of the field will display a calendar dialog where you can select a date as well.
@@ -368,13 +396,13 @@ morestring=[b]"
     \begin{table}[H]
         \begin{tabular}{ll}
             \hline
-            \multicolumn{1}{|l|}{\textbf{Keys / Mouse}}                               & \multicolumn{1}{l|}{\textbf{Function}}            \\ \hline \hline
-            \multicolumn{1}{|l|}{\keys{{+}} \keys{\arrowkeyup}, Mouse Scroll Up}     & \multicolumn{1}{l|}{Increase the date by one day} \\ \hline
-            \multicolumn{1}{|l|}{\keys{-} \keys{\arrowkeydown}, Mouse Scroll Down}   & \multicolumn{1}{l|}{Decrease the date by one day} \\ \hline
-            \multicolumn{1}{|l|}{\keys{PgUp}, Mouse Thumb Wheel Up}                   & \multicolumn{1}{l|}{Increase the date by one month} \\ \hline
-            \multicolumn{1}{|l|}{\keys{PgDn}, Mouse Thumb Wheel Down}                 & \multicolumn{1}{l|}{Decrease the date by one month} \\ \hline
-            \multicolumn{1}{|l|}{\keys{t} \keys{T}}                                  & \multicolumn{1}{l|}{Change to today's date} \\ \hline
-            \multicolumn{1}{|l|}{\keys{,} \keys{.} \keys{/} \keys{\textbackslash}} & \multicolumn{1}{l|}{Valid field separator for all locales} \\ \hline
+            \multicolumn{1}{|l|}{\textbf{Keys / Mouse}}                            	& \multicolumn{1}{l|}{\textbf{Function}}            \\ \hline \hline
+            \multicolumn{1}{|l|}{\keys{{+}} \keys{\arrowkeyup}, Mouse Scroll Up}   	& \multicolumn{1}{l|}{Increase the date by one day} \\ \hline
+            \multicolumn{1}{|l|}{\keys{-} \keys{\arrowkeydown}, Mouse Scroll Down} 	& \multicolumn{1}{l|}{Decrease the date by one day} \\ \hline
+            \multicolumn{1}{|l|}{\keys{PgUp}, Mouse Thumb Wheel Up}                	& \multicolumn{1}{l|}{Increase the date by one month} \\ \hline
+            \multicolumn{1}{|l|}{\keys{PgDn}, Mouse Thumb Wheel Down}              	& \multicolumn{1}{l|}{Decrease the date by one month} \\ \hline
+            \multicolumn{1}{|l|}{\keys{t} \keys{T}}                                	& \multicolumn{1}{l|}{Change to today's date} \\ \hline
+            \multicolumn{1}{|l|}{\keys{,} \keys{.} \keys{/} \keys{\textbackslash}} 	& \multicolumn{1}{l|}{Valid field separator for all locales} \\ \hline
         \end{tabular}
         \caption{Date Entry Shortcut Keys}
     \end{table}
@@ -512,7 +540,7 @@ morestring=[b]"
 
     %\newpage
     \subsection{Creating Accounts}
-    \label{subsec:creatingaccounts}
+    \label{subsec:creatingAccounts}
     A new account is created by clicking on the \keys{New} button in the toolbar of the account list view shown below.
 
     \begin{figure}[h]
@@ -522,7 +550,7 @@ morestring=[b]"
 
     A new dialog box will be displayed that allows you to create a new account to suit your particular needs.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \caption{New Account Dialog}
         \includegraphics[width=0.55\linewidth]{images/account-dialog}
     \end{figure}
@@ -771,12 +799,11 @@ morestring=[b]"
 
     A double entry transaction normally begins within the register of some type of Cash or Bank account.
     In the example below, a Withdrawal is being made from a Cash account. The balance of the account will be decreased
-    by \texttt{25.67} and the balance of the Expense Account \texttt{Automobile:Fuel} will be increased by \texttt{25.67}.
+    by \texttt{25.67} and the balance of the \texttt{Expense Accounts:Automobile:Fuel} will be increased by \texttt{25.67}.
 
     The account to withdraw funds from (Decrease) or deposit to (Increase) is selected in the Account ComboBox.
 
-
-    \begin{figure}[h]
+    \begin{figure}[H]
         \caption{Double Entry Transaction}
         \includegraphics[width=0.9\linewidth]{images/basicDoubleEntry}
     \end{figure}
@@ -787,7 +814,7 @@ morestring=[b]"
     A Split Entry Transaction is started by clicking the \menu{Splits} Button. A dialog will be shown that allows an entry
     for multiple accounts to be made.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \caption{Split Transaction Entry}
         \includegraphics[width=1.0\linewidth]{images/splitTransactionEntry}
     \end{figure}
@@ -801,8 +828,8 @@ morestring=[b]"
     If a memo is not entered for a Split Transaction and the \menu{Concatenate Memos} button is not selected, the
     Transactions register will display the memo of the first Split Entry.
 
-    A Split Transaction may consist of multiple Deposits and Withdrawals as shown below. This is a typical example
-    of a paycheck where insurance and taxes are deducted from the gross salary.
+    A Split Transaction may consist of multiple Deposits and Withdrawals as shown in Figure~\ref{fig:mixed-split-trans}. 
+    This is a typical example of a paycheck where insurance and taxes are deducted from the gross salary.
 
     \tipbox{
     Options specfic to reconsiliation of Split transactions will be covered in a later Chapter.
@@ -811,22 +838,22 @@ morestring=[b]"
     You have the option of manual reconsiliation, but there are other ways to speed up the process.
     }
 
-    \begin{figure}[h]
-        \caption{Mixed Split Transaction Entry}
-        \includegraphics[width=1.0\linewidth]{images/mixedSplitTransaction}
+    \begin{figure}[H]        
+        \caption{Mixed Split Transaction Entry} \label{fig:mixed-split-trans}
+        \includegraphics[width=1.0\linewidth]{images/mixedSplitTransaction}               
     \end{figure}
 
-    \newpage
     \subsection{Single Entry / Adjustment Transaction}\label{subsec:single-entry-/-adjustment-transaction}
     A Single Entry Transaction is primarily used to adjust \textit{(fudge)} an Account balance when you simply do not
     have the information to correctly balance the account.
 
-    In the example below, you can see a negative amount of \texttt{-1.23} was used to decrease the balance of the account.
+    In Figure~\ref{fig:adjustment-trans}, you can see a negative amount of \texttt{-1.23} was used to decrease the balance of the account.
 
-    \begin{figure}[h]
-        \caption{Adjustment Transaction Entry}
+    \begin{figure}[H]
+        \caption{Adjustment Transaction Entry} \label{fig:adjustment-trans}
         \includegraphics[width=1.0\linewidth]{images/adjustmentTransaction}
     \end{figure}
+
 
     The half black and half white circular button at the bottom of the form is a utility to help convert the
     Single Entry transaction into a Double Entry Transaction after you find the needed information.
@@ -834,7 +861,7 @@ morestring=[b]"
     \subsection{Transfer Transaction}
     The Transfer tab provides a slightly faster way to move money between accounts without requiring as much information.
     If go back to edit the Transaction, the edits will be performed within the Deposit or Withdrawal forms.
-
+    
     \section{Investment Accounts}
     Investment Accounts need to be populated correctly if the Portfolio report is to work correctly.
 
@@ -906,7 +933,7 @@ morestring=[b]"
     Creating a transaction for a Reminder is identical to creating a transaction in the register. The Date field will be
     ignored and replaced by the recurrence date of the transaction defined in the Frequency section.
 
-    \includegraphics[width=0.8\linewidth]{images/remindersNewTransaction}
+    \includegraphics[width=0.85\linewidth]{images/remindersNewTransaction}
 
     The \textbf{Entry} section of the New Reminder form gives you option to automatically enter a new transaction a defined number
     of days prior to the date defined by the Frequency section. When enabled, you will not see the Notification dialog.
@@ -1372,7 +1399,7 @@ morestring=[b]"
     attempt to match the \texttt{<ACCTID>} identifier on line 4 to an existing Account Number
     that is specified within the properties of your jGnash account.
     \\ % new line
-    \begin{lstlisting}
+    \begin{lstlisting}[caption={OFX File Fragment}]
         <BANKACCTTO>
         <BANKID>100000009
         <BRANCHID>TEST
@@ -1417,7 +1444,7 @@ morestring=[b]"
 
     The \textbf{getDescription} function should return a meaningful description of the script.
     \\ % new line
-    \begin{lstlisting}[language=JavaScript,numbers=left]
+    \begin{lstlisting}[caption={Example Import Script},language=JavaScript,numbers=left]
         /* Normalizes the case of the payee and memo fields */
 
         // place holder for the passed ImportTransaction
@@ -1426,40 +1453,40 @@ morestring=[b]"
         // This will be called first and passed the ImportTransaction
         function acceptTransaction(transaction) {
 
-        // does nothing with it in this script
-        importTransaction = transaction;
+            // does nothing with it in this script
+            importTransaction = transaction;
         }
 
         // This is a required function
         function processMemo(memo) {
-        return capitalizeFirstLetter(memo.toLocaleLowerCase());
+            return capitalizeFirstLetter(memo.toLocaleLowerCase());
         }
 
         // This is a required function
         function processPayee(payee) {
-        return titleCase(payee.toLocaleLowerCase());
+            return titleCase(payee.toLocaleLowerCase());
         }
 
         // This is a required function
         var getDescription = function (locale) {
-        var Locale = Packages.java.util.Locale;
-
-        switch (locale) {
-        case Locale.ENGLISH:
-        return "Tidy Memo and Payee fields";
-        default:
-        return "Tidy Memo and Payee fields";
-        }
+            var Locale = Packages.java.util.Locale;
+    
+            switch (locale) {
+                case Locale.ENGLISH:
+                    return "Tidy Memo and Payee fields";
+                default:
+                    return "Tidy Memo and Payee fields";
+            }
         };
 
         // Capitalizes the first letter or a String
         function capitalizeFirstLetter(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+            return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
         // Converts a string to Title Case
         function titleCase(str) {
-        return str.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
+            return str.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
         }
     \end{lstlisting}
 
@@ -1613,7 +1640,7 @@ morestring=[b]"
 
         // helper function to print messages to the console
         function debug(message) {
-        java.lang.System.out.println(message);
+            java.lang.System.out.println(message);
         }
 
         // show the console dialog to see the debug information
@@ -1629,8 +1656,8 @@ morestring=[b]"
         // loop and print the account names to the console
         for (var i = 0; i; accountList.size(); i++)
         {
-        var account = accountList.get(i);
-        debug(account.getName());
+            var account = accountList.get(i);
+            debug(account.getName());
         }
     \end{lstlisting}
 
@@ -1645,7 +1672,7 @@ morestring=[b]"
     % Command Line Options
     % ======================
     \chapter{Command Line Options}
-    \label{ch:cmdoptions}
+    \label{ch:cmdOptions}
 
     jGnash has several command line options for advanced users.
 
@@ -1764,7 +1791,7 @@ morestring=[b]"
 
         Depending on your operating system and how you have it configured, other shortcuts may be
         available that perform the same function.
-
+        
         \begin{table}[H]
             \begin{tabular}{|l|l|}
                 \hline
@@ -1773,7 +1800,11 @@ morestring=[b]"
                 \hline
                 \keys{CTRL + F4}& Closes the active register window if you have one open \\
                 \hline
-                \keys{CTRL + A} & Displays the About dialog \\
+                \keys{CTRL + A} & Displays the About dialog \textit{(When a register table does not have the focus)}\\
+                \hline
+                \keys{CTRL + A} & Selects all transactions \textit{(When a register table has the focus)}\\
+                \hline
+                \keys{CTRL + C} & Copies selected transaction information to the clipboard \\
                 \hline
             \end{tabular}
             \caption{Shortcut Keys}
