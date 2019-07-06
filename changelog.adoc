@@ -21,6 +21,9 @@
 * Open zipped backups instead of manually unzipping.
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
+== Release 3.2.1
+* 07/06/2019 Selected transactions can now be copied using CTRL-C.
+
 == Release 3.2.0
 * 07/05/2019 Fixed a bug that was preventing entry of investment transaction gains or losses without using the detailed
              entry form and specifying a gains and loss account.
