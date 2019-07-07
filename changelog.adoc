@@ -22,8 +22,7 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.2.1
-* 07/07/2019 Selected Reminders may now be copied to the clipboard using CTRL-C.
-* 07/06/2019 Selected Transactions may now be copied to the clipboard using CTRL-C.
+* 07/07/2019 Selected tabular rows may now be copied to the clipboard using CTRL-C.
 
 == Release 3.2.0
 * 07/05/2019 Fixed a bug that was preventing entry of investment transaction gains or losses without using the detailed

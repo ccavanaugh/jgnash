@@ -3,21 +3,21 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.Scene?>
 <?import javafx.stage.Stage?>
+<?import jgnash.uifx.control.TableViewEx?>
 
-<fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
          minWidth="680" minHeight="440">
     <scene>
         <Scene>
             <BorderPane>
                 <center>
                     <VBox styleClass="dialog, form">
-                        <TableView fx:id="tableView" VBox.vgrow="ALWAYS"/>
+                        <TableViewEx fx:id="tableView" VBox.vgrow="ALWAYS"/>
                         <ButtonBar VBox.vgrow="NEVER">
                             <buttons>
                                 <Button fx:id="newButton" text="%Button.New" ButtonBar.buttonData="LEFT"/>

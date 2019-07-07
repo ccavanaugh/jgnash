@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.TextFlow?>
-<?import javafx.geometry.Insets?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxHeight="Infinity"
+<?import jgnash.uifx.control.TableViewEx?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" maxHeight="Infinity"
           maxWidth="Infinity" fx:controller="jgnash.uifx.wizard.imports.ImportPageTwoController" styleClass="form">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
@@ -28,7 +29,7 @@
             </TextFlow>
         </top>
         <center>
-            <TableView fx:id="tableView"/>
+            <TableViewEx fx:id="tableView"/>
         </center>
     </BorderPane>
 

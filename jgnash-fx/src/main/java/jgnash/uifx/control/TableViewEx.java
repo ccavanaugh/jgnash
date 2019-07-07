@@ -17,18 +17,25 @@
  */
 package jgnash.uifx.control;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;
 
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 
+import jgnash.time.DateUtils;
+
 /**
  * Expanded TableView with a default Copy to clipboard handler
  *
  * @param <S> The type of the objects contained within the TableView items list.
+ *
+ * @author Craig Cavanaugh
  */
 public class TableViewEx<S> extends TableView<S> {
 
@@ -40,7 +47,11 @@ public class TableViewEx<S> extends TableView<S> {
         // register a keyboard copy command for transactions
         setOnKeyPressed(event -> {
             if (event.isShortcutDown() && event.getCode() == KeyCode.C) {
-                handleCopyToClipboard();
+                if (clipBoardStringFunction != null) {
+                    handleCopyToClipboard();
+                } else {
+                    handleGenericCopyToClipboard();
+                }
                 event.consume();
             }
         });
@@ -71,5 +82,42 @@ public class TableViewEx<S> extends TableView<S> {
 
     public void setClipBoardStringFunction(final Function<S, String> clipBoardStringFunction) {
         this.clipBoardStringFunction = clipBoardStringFunction;
+    }
+
+    private void handleGenericCopyToClipboard() {
+        final List<Integer> integerList = getSelectionModel().getSelectedIndices();
+
+        if (integerList.size() > 0) {
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            final StringBuilder builder = new StringBuilder();
+
+            for (final Integer row : integerList) {
+                final List<TableColumn<S, ?>> columns = getColumns();
+                for (int i = 0; i < columns.size(); i++) {
+                    final TableColumn<S, ?> column = columns.get(i);
+
+                    if (column.getCellObservableValue(row) != null) {
+                        final Object value = column.getCellObservableValue(row).getValue();
+
+                        if (value != null) {
+                            if (value instanceof BigDecimal) {
+                                builder.append(((BigDecimal) value).toPlainString());
+                            } else if (value instanceof LocalDate) {
+                                builder.append(DateUtils.getExcelDateFormatter().format((LocalDate) value));
+                            } else {
+                                builder.append(value.toString());
+                            }
+                        }
+                    }
+                    if (i < columns.size() - i) {
+                        builder.append('\t');
+                    }
+                }
+                builder.append('\n');
+            }
+            content.putString(builder.toString());
+            clipboard.setContent(content);
+        }
     }
 }

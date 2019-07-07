@@ -6,13 +6,14 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import jgnash.uifx.control.TableViewEx?>
 
-<?import javafx.scene.layout.BorderPane?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity" minWidth="600"
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" minHeight="-Infinity" minWidth="600"
           fx:controller="jgnash.uifx.views.register.reconcile.ReconcileDialogController" styleClass="dialog, form">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
@@ -27,7 +28,7 @@
                 GridPane.rowSpan="2">
         <BorderPane styleClass="form">
             <center>
-                <TableView fx:id="decreaseTableView" prefHeight="200.0" minWidth="300.0"/>
+                <TableViewEx fx:id="decreaseTableView" prefHeight="200.0" minWidth="300.0"/>
             </center>
             <bottom>
                 <GridPane  styleClass="form">

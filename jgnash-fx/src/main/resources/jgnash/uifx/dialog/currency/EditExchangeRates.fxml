@@ -5,16 +5,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.CurrencyComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
+<?import jgnash.uifx.control.TableViewEx?>
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 
-<GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="jgnash.uifx.dialog.currency.EditExchangeRatesController" styleClass="dialog, form">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -75,9 +75,8 @@
                         ButtonBar.buttonUniformSize="true"/>
             </buttons>
         </ButtonBar>
-        <TableView fx:id="exchangeRateTable" minHeight="150.0" minWidth="100.0" prefHeight="150.0"
-                   prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="2">
-        </TableView>
+        <TableViewEx fx:id="exchangeRateTable" minHeight="150.0" minWidth="100.0" prefHeight="150.0"
+                     prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="2"/>
     </GridPane>
     <Separator GridPane.rowIndex="3"/>
     <GridPane GridPane.rowIndex="4" styleClass="form">

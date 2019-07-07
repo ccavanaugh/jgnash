@@ -3,22 +3,22 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.IntegerTextField?>
 <?import jgnash.uifx.control.SecurityComboBox?>
 <?import jgnash.uifx.control.SecurityHistoryEventTypeComboBox?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tooltip?>
+<?import jgnash.uifx.control.TableViewEx?>
 
-<GridPane prefHeight="400.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<GridPane prefHeight="400.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="jgnash.uifx.dialog.security.SecurityHistoryController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
@@ -66,8 +66,8 @@
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
-            <TableView fx:id="priceTableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
-                       GridPane.columnSpan="6"/>
+            <TableViewEx fx:id="priceTableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
+                         GridPane.columnSpan="6"/>
 
             <Label text="%Label.Date" GridPane.rowIndex="1"/>
             <DatePickerEx fx:id="historyDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
@@ -156,7 +156,7 @@
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
-            <TableView fx:id="eventTableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
+            <TableViewEx fx:id="eventTableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
                        GridPane.columnSpan="6"/>
 
             <Label text="%Label.Date" GridPane.rowIndex="1"/>

@@ -2,14 +2,14 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import jgnash.uifx.control.TableViewEx?>
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" minHeight="-Infinity"
           fx:controller="jgnash.uifx.dialog.ImportScriptsDialogController" styleClass="dialog, form">
 
     <columnConstraints>
@@ -21,7 +21,7 @@
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
-    <TableView fx:id="tableView"/>
+    <TableViewEx fx:id="tableView"/>
 
     <VBox GridPane.columnIndex="1" styleClass="form">
         <Button fx:id="upButton" onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" minWidth="50">
