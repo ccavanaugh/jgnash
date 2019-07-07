@@ -62,7 +62,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
@@ -82,6 +81,7 @@ import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
+import jgnash.uifx.control.TableViewEx;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
@@ -143,7 +143,7 @@ abstract class RegisterTableController {
     private ChangeListener<Number> fontScaleListener;
 
     @FXML
-    protected TableView<Transaction> tableView;
+    protected TableViewEx<Transaction> tableView;
 
     @FXML
     protected Label balanceLabel;
@@ -194,13 +194,8 @@ abstract class RegisterTableController {
         tableView.setItems(sortedList);
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
-        // register a keyboard copy command for transactions
-        tableView.setOnKeyPressed(event -> {
-            if (event.isShortcutDown() && event.getCode() == KeyCode.C) {
-                handleCopyToClipboard();
-                event.consume();
-            }
-        });
+        // register the copy to clipboard function
+        tableView.setClipBoardStringFunction(this::transactionToExcel);
 
         // Bind the account property
         getAccountPropertyWrapper().accountProperty().bind(account);

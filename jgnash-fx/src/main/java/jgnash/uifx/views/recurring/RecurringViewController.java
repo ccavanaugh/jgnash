@@ -42,15 +42,18 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.text.NumericFormats;
+import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ShortDateTableCell;
+import jgnash.uifx.control.TableViewEx;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.LogUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -78,7 +81,7 @@ public class RecurringViewController implements MessageListener {
     private Button nowButton;
 
     @FXML
-    private TableView<Reminder> tableView;
+    private TableViewEx<Reminder> tableView;
 
     @FXML
     private ResourceBundle resources;
@@ -100,6 +103,8 @@ public class RecurringViewController implements MessageListener {
 
     @FXML
     private void initialize() {
+        tableView.setClipBoardStringFunction(this::reminderToExcel);
+
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -179,6 +184,30 @@ public class RecurringViewController implements MessageListener {
         };
 
         Options.reminderSnoozePeriodProperty().addListener(new WeakChangeListener<>(snoozePeriodListener));
+    }
+
+    private String reminderToExcel(final Reminder reminder) {
+        final StringBuilder builder = new StringBuilder();
+        final DateTimeFormatter dateFormatter = DateUtils.getExcelDateFormatter();
+
+        builder.append(reminder.getDescription());
+        builder.append('\t');
+        builder.append(reminder.getAccount().getName());
+        builder.append('\t');
+        builder.append(reminder.getTransaction().getAmount(reminder.getAccount()).toPlainString());
+        builder.append('\t');
+        builder.append(reminder.getReminderType());
+        builder.append('\t');
+        builder.append(reminder.isEnabled());
+        builder.append('\t');
+        builder.append(dateFormatter.format(reminder.getLastDate()));
+        builder.append('\t');
+        if (reminder.getIterator().next() != null)
+        {
+            builder.append(dateFormatter.format(reminder.getIterator().next()));
+        }
+
+        return builder.toString();
     }
 
     private void loadTable() {

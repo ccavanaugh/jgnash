@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import jgnash.uifx.control.TableViewEx?>
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.InvestmentRegisterTableController">
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jgnash.uifx.views.register.InvestmentRegisterTableController">
    <top>
        <TitledPane focusTraversable="false" expanded="false">
            <graphic>
@@ -49,6 +57,6 @@
        </TitledPane>
    </top>
    <center>
-      <TableView fx:id="tableView"  BorderPane.alignment="CENTER" />
+      <TableViewEx fx:id="tableView" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

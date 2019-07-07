@@ -2,12 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
+<?import jgnash.uifx.control.TableViewEx?>
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.recurring.RecurringViewController">
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jgnash.uifx.views.recurring.RecurringViewController">
     <top>
         <ToolBar>
             <Button mnemonicParsing="false" text="%Button.New" onAction="#handleNewAction">
@@ -39,6 +39,6 @@
         </ToolBar>
     </top>
     <center>
-        <TableView fx:id="tableView"/>
+        <TableViewEx fx:id="tableView"/>
     </center>
 </BorderPane>
