@@ -63,10 +63,6 @@ public class BootLoader {
 
     private static final String OS = getOS();
 
-    private static final String LIB = "lib";
-
-    private static final String USER_DIR = "user.dir";
-
     public static final int FAILED_EXIT = -1;
 
     static final int REBOOT_EXIT = 100;
@@ -100,9 +96,10 @@ public class BootLoader {
         // folder.
         // https://stackoverflow.com/questions/320542/how-to-get-the-path-of-a-running-jar-file?noredirect=1&lq=1
         try {
-            return new File(BootLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Unable to determine jGnash lib path");
+            return new File(BootLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+                           .getParentFile().getPath();
+        } catch (final URISyntaxException e) {
+            throw new RuntimeException("Unable to determine lib path fpr bootloader");
         }
     }
 
@@ -120,7 +117,7 @@ public class BootLoader {
         return null;
     }
 
-    public static boolean downloadFiles(Consumer<String> fileNameConsumer, IntConsumer percentCompleteConsumer) {
+    public static boolean downloadFiles(final Consumer<String> fileNameConsumer, final IntConsumer percentCompleteConsumer) {
         percentCompleteConsumer.accept(0);
         boolean result = true;
 
