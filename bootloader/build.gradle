@@ -25,6 +25,7 @@ launch4j {
     dontWrapJar = true
     icon = "../../../jgnash-fx/gnome-money.ico"
     downloadUrl = "https://www.azul.com/downloads/zulu/"
+    bundledJrePath = "%JAVA_HOME%"  // work around for not being able to find installed jre, https://sourceforge.net/p/launch4j/bugs/197/
     jreMinVersion = "11"
 }
 

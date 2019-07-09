@@ -22,6 +22,7 @@
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 
 == Release 3.2.1
+* 07/09/2019 Fixed an issue that was preventing the jGnash.exe file from detecting Java on some systems.
 * 07/09/2019 Improved bootloader behavior when determining "lib" location. (GitHub Issue #84) _[Raven Kopelman]_
 * 07/07/2019 Selected tabular rows may now be copied to the clipboard using CTRL-C.
 
