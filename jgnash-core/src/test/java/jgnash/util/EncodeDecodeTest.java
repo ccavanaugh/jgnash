@@ -39,6 +39,7 @@ class EncodeDecodeTest {
         final String result = EncodeDecode.encodeDoubleArray(base);
 
         assertNotNull(result);
+        System.out.println(result);
 
         assertEquals("10.23,11.35,45.34,2,4,9,0", result);
 
