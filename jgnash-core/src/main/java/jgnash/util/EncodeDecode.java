@@ -18,9 +18,11 @@
 package jgnash.util;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.joining;
@@ -40,13 +42,18 @@ public class EncodeDecode {
     }
 
     /**
-     * Encodes a double array as a comma separated {@code String}. Values will be rounded to 2 decimal places
+     * Encodes a double array as a comma separated {@code String}. Values will be rounded to 2 decimal places.
+     * <p>
+     * The format is forced to use '.' as the decimal separator because some locales will use a comma.
      *
      * @param doubleArray array of doubles to encode
      * @return resultant {@code String}
      */
     public static String encodeDoubleArray(final double[] doubleArray) {
-        final DecimalFormat df = new DecimalFormat("#.##");
+        final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+
+        final DecimalFormat df = (DecimalFormat) numberFormat;
+        df.applyPattern("#.##");
 
         return Arrays.stream(doubleArray).mapToObj(df::format).collect(joining(String.valueOf(COMMA_DELIMITER)));
     }
