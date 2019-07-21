@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -34,8 +35,11 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.AutoCompleteTextField;
+import jgnash.uifx.util.JavaFXUtils;
 
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -45,7 +49,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxToolkit.registerPrimaryStage;
 
+/**
+ * Unit test for the Autocomplete models
+ */
 class AutoCompleteModelTest {
+    private static final int TRANSACTION_COUNT = 2000;
+
     @SuppressWarnings("WeakerAccess")
     @TempDir
     static Path tempDir;
@@ -83,7 +92,9 @@ class AutoCompleteModelTest {
     }
 
     @Test
-    void testPayeeModel() {
+    void testPayeeMemoModels() {
+        Options.useFuzzyMatchForAutoCompleteProperty().set(true);
+
         final Engine engine = createEngine("payee-test");
 
         final Account account = new Account(AccountType.CASH, engine.getDefaultCurrency());
@@ -91,23 +102,39 @@ class AutoCompleteModelTest {
         engine.addAccount(engine.getRootAccount(), account);
         assertEquals(1, engine.getAccountList().size());
 
-        LocalDate localDate = LocalDate.of(2019, Month.JANUARY, 1);
+        final LocalDate localDate = LocalDate.of(2000, Month.JANUARY, 1);
 
-        for (int i = 1; i <= 100; i++) {
+        // create a bunch of transactions
+        for (int i = 1; i <= TRANSACTION_COUNT; i++) {
             final Transaction t = TransactionFactory.generateSingleEntryTransaction(account, BigDecimal.TEN,
-                    localDate.plusDays(i), "Memo " + i, "Payee " + i, "");
+                    localDate.plusDays(i), "Memo " + i, "Payee " + i, Integer.toString(i));
 
             engine.addTransaction(t);
             assertEquals(i, engine.getTransactions().size());
         }
+        assertEquals(TRANSACTION_COUNT, engine.getTransactions().size());
 
-        final AutoCompleteTextField<Transaction> autoCompleteTextField = new AutoCompleteTextField<>();
-        AutoCompleteFactory.setPayeeModel(autoCompleteTextField, account);
+        final AutoCompleteTextField<Transaction> autoCompletePayeeTextField = new AutoCompleteTextField<>();
+        AutoCompleteFactory.setPayeeModel(autoCompletePayeeTextField, account);
 
-        // TODO, model tests
+        final AutoCompleteTextField<Transaction> autoCompleteMemoTextField = new AutoCompleteTextField<>();
+        AutoCompleteFactory.setMemoModel(autoCompleteMemoTextField);
+
+        // Auto complete model loading is pushed to the end of the JavaFX thread.
+        // Block until the atomic has been set or the test will fail
+        final AtomicBoolean atomic = new AtomicBoolean(false);
+        JavaFXUtils.runLater(() -> atomic.set(true));
+        Awaitility.await().untilTrue(atomic);
+
+        final AutoCompleteModel<Transaction> payeeModel = autoCompletePayeeTextField.autoCompleteModelObjectProperty().get();
+        final AutoCompleteModel<Transaction> memoModel = autoCompleteMemoTextField.autoCompleteModelObjectProperty().get();
+
+        final String payeeResult = payeeModel.doLookAhead("Paye");
+        final String memoResult = memoModel.doLookAhead("Me");
+
+        assertEquals("Payee " + TRANSACTION_COUNT, payeeResult);
+        assertEquals("Memo " + TRANSACTION_COUNT, memoResult);
 
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
-
-
 }
