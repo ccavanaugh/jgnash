@@ -1,0 +1,113 @@
+/*
+ * jGnash, a personal finance application
+ * Copyright (C) 2001-2019 Craig Cavanaugh
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package jgnash.uifx.control.autocomplete;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.concurrent.TimeoutException;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountType;
+import jgnash.engine.DataStoreType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineException;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionFactory;
+import jgnash.engine.xstream.BinaryXStreamDataStore;
+import jgnash.uifx.control.AutoCompleteTextField;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.testfx.api.FxToolkit.registerPrimaryStage;
+
+class AutoCompleteModelTest {
+    @SuppressWarnings("WeakerAccess")
+    @TempDir
+    static Path tempDir;
+
+    @BeforeAll
+    static void setUp() throws TimeoutException {
+        assertTrue(Files.isDirectory(tempDir));
+
+        if (Boolean.getBoolean("headless")) {
+            System.setProperty("java.awt.headless", "true");
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+            System.setProperty("prism.verbose", "true");
+
+        }
+        registerPrimaryStage();
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    Engine createEngine(final String fileName) {
+
+        final String database = tempDir.toString() + File.separator + fileName + BinaryXStreamDataStore.FILE_EXT;
+
+        System.out.println(database);
+
+        try {
+            return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+                    DataStoreType.BINARY_XSTREAM);
+        } catch (final EngineException e) {
+            fail("Fatal error occurred");
+            return  null;
+        }
+    }
+
+    @Test
+    void testPayeeModel() {
+        final Engine engine = createEngine("payee-test");
+
+        final Account account = new Account(AccountType.CASH, engine.getDefaultCurrency());
+
+        engine.addAccount(engine.getRootAccount(), account);
+        assertEquals(1, engine.getAccountList().size());
+
+        LocalDate localDate = LocalDate.of(2019, Month.JANUARY, 1);
+
+        for (int i = 1; i <= 100; i++) {
+            final Transaction t = TransactionFactory.generateSingleEntryTransaction(account, BigDecimal.TEN,
+                    localDate.plusDays(i), "Memo " + i, "Payee " + i, "");
+
+            engine.addTransaction(t);
+            assertEquals(i, engine.getTransactions().size());
+        }
+
+        final AutoCompleteTextField<Transaction> autoCompleteTextField = new AutoCompleteTextField<>();
+        AutoCompleteFactory.setPayeeModel(autoCompleteTextField, account);
+
+        // TODO, model tests
+
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+    }
+
+
+}

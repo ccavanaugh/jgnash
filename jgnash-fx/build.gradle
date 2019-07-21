@@ -51,6 +51,10 @@ dependencies {
     compile "org.openjfx:javafx-swing:" + javaFXVersion + ":mac"
     compile "org.openjfx:javafx-web:" + javaFXVersion + ":mac"
     // end hack
+
+    // required of Unit testing JavaFX
+    testCompile group: 'org.testfx', name: 'testfx-junit5', version: '4.0.15-alpha'
+    testCompile group: 'org.testfx', name: 'openjfx-monocle', version: 'jdk-11+26'
 }
 
 javafx {

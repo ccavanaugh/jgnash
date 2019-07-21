@@ -6,15 +6,21 @@ before_install:
   - sudo apt-get update -q
   - sudo apt-get install lib32z1 lib32ncurses5 -y
 
+before_script:
+  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16; fi
+
 jdk:
     - openjdk11
     #- oraclejdk11
 
 before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.bin
+  - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.lock
 
 cache:
   directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.m2
