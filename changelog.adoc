@@ -20,6 +20,7 @@
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
+* Option to load a custom style sheet.
 
 == Release 3.2.1
 * 07/21/2019 Fixed a very old UI bug that would prevent table column width restoration for locales that use a comma
