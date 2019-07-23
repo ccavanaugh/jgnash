@@ -23,6 +23,7 @@
 * Option to load a custom style sheet.
 
 == Release 3.2.1
+* 07/23/2019 The Create / Modify Security form was not validating the reported Currency had been set.
 * 07/21/2019 Fixed a very old UI bug that would prevent table column width restoration for locales that use a comma
              for a decimal separator.  It would also trigger unit test failures for the same locales.
 * 07/09/2019 Fixed an issue that was preventing the jGnash.exe file from detecting Java on some systems.

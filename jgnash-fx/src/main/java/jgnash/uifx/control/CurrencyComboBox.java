@@ -20,7 +20,6 @@ package jgnash.uifx.control;
 import java.util.List;
 import java.util.Objects;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ComboBox;
@@ -33,6 +32,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * ComboBox that allows selection of a CurrencyNode and manages it's own model.
@@ -45,7 +45,7 @@ public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageL
     private ObservableList<CurrencyNode> items;
 
     public CurrencyComboBox() {
-        Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
+        JavaFXUtils.runLater(this::loadModel); // lazy load to let the ui build happen faster
     }
 
     private void loadModel() {
@@ -53,7 +53,6 @@ public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageL
         Objects.requireNonNull(engine);
 
         final List<CurrencyNode> nodeList = engine.getCurrencies();
-        final CurrencyNode defaultCurrency = engine.getDefaultCurrency();
 
         // extract and reuse the default model
         items = getItems();
@@ -62,6 +61,8 @@ public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageL
         setItems(new SortedList<>(items, null));
 
         items.addAll(nodeList);
+
+        final CurrencyNode defaultCurrency = engine.getDefaultCurrency();
         setValue(defaultCurrency);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
@@ -73,7 +74,7 @@ public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageL
 
             final CurrencyNode node = event.getObject(MessageProperty.COMMODITY);
 
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 switch (event.getEvent()) {
                     case CURRENCY_REMOVE:
                         items.removeAll(node);

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -48,6 +47,7 @@ import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.control.QuoteSourceComboBox;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Controller for creating and modifying securities.
@@ -101,10 +101,11 @@ public class CreateModifySecuritiesController implements MessageListener {
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 
-        // disable button if the symbol or scale are not specified.
+        // disable button if the symbol, scale, or reported currency are not specified.
         applyButton.disableProperty()
                 .bind(symbolTextField.textProperty().isEmpty()
-                        .or(scaleTextField.textProperty().isEmpty()));
+                        .or(scaleTextField.textProperty().isEmpty())
+                              .or(reportedCurrencyComboBox.valueProperty().isNull()));
 
         new Thread(this::loadList).start();
     }
@@ -141,9 +142,12 @@ public class CreateModifySecuritiesController implements MessageListener {
         symbolTextField.setText("");
         cusipTextField.setText("");
         descriptionTextField.setText("");
-        scaleTextField.setInteger((int) reportedCurrencyComboBox.getValue().getScale());
         quoteSourceComboBox.setValue(QuoteSource.YAHOO);
         reportedCurrencyComboBox.setValue(engine.getDefaultCurrency());
+
+        if (reportedCurrencyComboBox.getValue() != null) {  // null value is a miss configured file
+            scaleTextField.setInteger((int) reportedCurrencyComboBox.getValue().getScale());
+        }
     }
 
     private void loadList() {
@@ -152,9 +156,10 @@ public class CreateModifySecuritiesController implements MessageListener {
 
         final List<SecurityNode> securityNodeList = engine.getSecurities();
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             listView.getItems().setAll(securityNodeList);
             FXCollections.sort(listView.getItems());
+            clearForm();
         });
     }
 
