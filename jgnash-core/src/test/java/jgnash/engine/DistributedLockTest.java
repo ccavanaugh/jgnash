@@ -80,17 +80,9 @@ public class DistributedLockTest {
     }
 
     @Test
-    void testStartUp() throws Exception{
-        Thread.sleep(1000); // helps with sort order of logging because it's so fast
-
-        assertTrue(true);
-    }
-
-    @Test
     void simpleLock() {
-
-        ReadWriteLock accountLock = manager.getLock("account");
-        ReadWriteLock transactionLock = manager.getLock("transaction");
+        final ReadWriteLock accountLock = manager.getLock("account");
+        final ReadWriteLock transactionLock = manager.getLock("transaction");
 
         try {
             accountLock.readLock().lock();
