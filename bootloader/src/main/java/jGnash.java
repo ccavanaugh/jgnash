@@ -51,9 +51,11 @@ public class jGnash {
             }
 
             bypassBootLoader = options.bypassBootloader;
+        } catch (final CommandLine.UnmatchedArgumentException uae) {
+            commandLine.usage(System.err, CommandLine.Help.Ansi.AUTO);
+            System.exit(1);
         } catch (final Exception e) {
             logSevere(jGnash.class, e);
-            commandLine.usage(System.err, CommandLine.Help.Ansi.AUTO);
             System.exit(1);
         }
 
