@@ -12,17 +12,17 @@ allprojects {
     version = "3.2.1"
 
     project.ext {
-        junitVersion = "5.5.0"              // https://junit.org/junit5/
+        junitVersion = "5.5.1"              // https://junit.org/junit5/
         junitextensionsVersion = "2.3.0"    // https://github.com/glytching/junit-extensions
         awaitilityVersion = "3.1.6"         // https://github.com/awaitility/awaitility
 
-        picocliVersion = "3.9.5"            // https://github.com/remkop/picocli
+        picocliVersion = "4.0.1"            // https://github.com/remkop/picocli
 
         apachePoiVersion = "4.1.0"          // https://poi.apache.org/
-        commonsCsvVersion = "1.6"           // https://commons.apache.org/proper/commons-csv/
-        commonsCollectionsVersion = "4.3"   // https://commons.apache.org/proper/commons-collections/
-        commonsTextVersion = "1.6"          // https://commons.apache.org/proper/commons-text/
-        commonsLangVersion = "3.8.1"        // https://commons.apache.org/proper/commons-lang/
+        commonsCsvVersion = "1.7"           // https://commons.apache.org/proper/commons-csv/
+        commonsCollectionsVersion = "4.4"   // https://commons.apache.org/proper/commons-collections/
+        commonsTextVersion = "1.7"          // https://commons.apache.org/proper/commons-text/
+        commonsLangVersion = "3.9"          // https://commons.apache.org/proper/commons-lang/
 
         h2Version = "1.4.199"               // http://www.h2database.com/html/main.html
         hsqldbVersion = "2.4.1"             // http://hsqldb.org/
@@ -34,7 +34,7 @@ allprojects {
 
         pdfBoxVersion = "2.0.16"            // https://pdfbox.apache.org/
 
-        nettyVersion = "4.1.37.Final"       // https://netty.io/index.html
+        nettyVersion = "4.1.38.Final"       // https://netty.io/index.html
 
         slf4jVersion = "1.8.0-beta4"        // https://www.slf4j.org/news.html
 
