@@ -23,6 +23,7 @@
 * Option to load a custom style sheet.
 
 == Release 3.2.1
+* 07/30/2019 Reduced console messages about ignored use of font Layout tables when creating tabular reports.
 * 07/27/2019 Updated to the latest Commons Lang, Commons Text, Commons Collections, Commons CSV, Netty
              and Picocli dependencies.
 * 07/23/2019 The Create / Modify Security form was not validating the reported Currency had been set.
