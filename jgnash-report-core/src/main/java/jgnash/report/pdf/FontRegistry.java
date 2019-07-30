@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -59,6 +60,10 @@ public class FontRegistry {
     private static final Lock lock = new ReentrantLock();
 
     private static final Condition isComplete = lock.newCondition();
+
+    static {
+        Logger.getLogger("org.apache.pdfbox").setLevel(Level.WARNING);  // reduce messages about font Layout tables use
+    }
 
     private FontRegistry() {
     }
