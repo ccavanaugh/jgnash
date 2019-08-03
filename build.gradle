@@ -29,7 +29,7 @@ allprojects {
 
         xstreamVersion = "1.4.11.1"         // https://github.com/x-stream/xstream
 
-        hibernateVersion = "5.4.3.Final"    // http://hibernate.org/orm/
+        hibernateVersion = "5.4.4.Final"    // http://hibernate.org/orm/
         hikariVersion = "3.3.1"             // https://github.com/brettwooldridge/HikariCP
 
         pdfBoxVersion = "2.0.16"            // https://pdfbox.apache.org/

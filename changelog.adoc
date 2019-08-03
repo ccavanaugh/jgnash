@@ -21,8 +21,10 @@
 * Open zipped backups instead of manually unzipping.
 * Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 * Option to load a custom style sheet.
+* Dirty check, don't create a backup file if not changed at all
 
 == Release 3.2.1
+* 08/03/2019 Update to the latest Hibernate dependency.
 * 07/30/2019 Reduced console messages about ignored use of font Layout tables when creating tabular reports.
 * 07/27/2019 Updated to the latest Commons Lang, Commons Text, Commons Collections, Commons CSV, Netty
              and Picocli dependencies.
