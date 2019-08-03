@@ -380,6 +380,27 @@ public abstract class EngineTest {
     }
 
     @Test
+    void testCurrencyRemove() {
+        CurrencyNode currencyNode = new CurrencyNode();
+        currencyNode.setDescription("Test");
+        currencyNode.setSymbol("BTC");
+        currencyNode.setPrefix("$");
+        currencyNode.setScale((byte) 8);
+
+        int oldCount = e.getCurrencies().size();
+        e.addCurrency(currencyNode);
+
+        assertEquals(oldCount + 1, e.getCurrencies().size());
+
+        currencyNode = e.getCurrency("BTC");
+
+        assertNotNull(currencyNode);
+
+        e.removeCommodity(currencyNode);
+        assertEquals(oldCount, e.getCurrencies().size());
+    }
+
+    @Test
     void testBudget() {
 
         final String ACCOUNT_NAME = "testAccount";
