@@ -79,8 +79,9 @@ class JpaConfiguration {
 
         switch (dataStoreType) {
             case H2_DATABASE:
-            case H2MV_DATABASE:
-                urlBuilder.append("jdbc:h2:nio:");
+            case H2MV_DATABASE: //
+                //urlBuilder.append("jdbc:h2:nio:");
+                urlBuilder.append("jdbc:h2:async:");
 
                 urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
@@ -92,7 +93,7 @@ class JpaConfiguration {
 
                 // use the old 1.3 page storage format instead of the MVStore based on file extension.  This allows
                 // for correct handling of old files without forcing an upgrade
-                if (FileUtils.getFileExtension(fileName).contains("h2.db")) {
+                if (FileUtils.getFileExtension(fileName).contains(".h2.db")) {
                     urlBuilder.append(";MV_STORE=FALSE;MVCC=FALSE");
                 } else {
                     urlBuilder.append(";COMPRESS=TRUE;FILE_LOCK=FILE");   // do not use FS locking for
