@@ -101,7 +101,12 @@ class FileUtilsTest {
 
     @Test
     void fileExtensionText() {
-        assertEquals(FileUtils.getFileExtension("test.txt"), "txt");
+        assertEquals("txt", FileUtils.getFileExtension("test.txt"));
+
+        assertEquals("h2.db",
+                FileUtils.getFileExtension("/home/craig/test.test@xyz.com/jgnash files/craig.h2.db"));
+
+        assertEquals("xml", FileUtils.getFileExtension("database.xml"));
     }
 
     @Test

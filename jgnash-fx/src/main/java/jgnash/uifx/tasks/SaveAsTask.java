@@ -42,10 +42,10 @@ public class SaveAsTask extends Task<Void> {
     private static final int FORCED_DELAY = 1500;
     private static final int INDETERMINATE = -1;
 
-    private final File file;
+    private final File newFile;
 
     private SaveAsTask(final File file) {
-        this.file = file;
+        this.newFile = file;
     }
 
     public static void start() {
@@ -76,7 +76,7 @@ public class SaveAsTask extends Task<Void> {
             updateMessage(resources.getString("Message.PleaseWait"));
             updateProgress(INDETERMINATE, Long.MAX_VALUE);
 
-            EngineFactory.saveAs(file.getAbsolutePath(), value ->
+            EngineFactory.saveAs(newFile.getAbsolutePath(), value ->
                     updateMessage(resources.getString("Message.PleaseWait") + "\n" + percentFormat.format(value)));
 
             updateProgress(1, 1);

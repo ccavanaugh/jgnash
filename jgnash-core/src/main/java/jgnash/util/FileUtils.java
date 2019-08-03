@@ -36,7 +36,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -149,6 +149,7 @@ public final class FileUtils {
 
     /**
      * Determines if a lock file is stale / leftover from a crash
+     *
      * @param fileName database file/lockfile to test
      * @return true if the lock file is determined to be stale
      * @throws IOException thrown if file does not exist or it is a directory
@@ -204,7 +205,7 @@ public final class FileUtils {
 
     /**
      * Strips the file extensions off the supplied filename including the period.
-     *
+     * <p>
      * Known @code(DataStore} extensions are checked first prior to assuming a simple file extension.
      * If the supplied filename does not contain an extension ending with a period, the original is returned.
      *
@@ -215,7 +216,7 @@ public final class FileUtils {
 
         // check for known types first
         for (final String extension : FILE_EXTENSIONS) {
-            int index = fileName.toLowerCase(Locale.getDefault()).lastIndexOf(extension.toLowerCase(Locale.getDefault()));
+            int index = fileName.toLowerCase().lastIndexOf(extension.toLowerCase());
 
             if (index >= 0) {
                 return fileName.substring(0, index);
@@ -252,7 +253,21 @@ public final class FileUtils {
         return !stripFileExtension(fileName).equals(fileName);
     }
 
+    /**
+     * Returns the file extension if it has one
+     * jGnash specific file extensions are check first.
+     *
+     * @param fileName file name to extract extension from
+     * @return file extension or an empty string if not found.
+     */
     public static String getFileExtension(final String fileName) {
+        Objects.requireNonNull(fileName);
+
+        for (final String extension : FILE_EXTENSIONS) {
+            if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
+                return extension.substring(1);  // skip the leading period
+            }
+        }
 
         String result = "";
 
@@ -347,7 +362,7 @@ public final class FileUtils {
 
             try (final Stream<Path> stream = Files.list(directory)) {
                 fileList.addAll(stream.filter(path -> p.matcher(path.toString()).matches())
-                        .collect(Collectors.toList()));
+                                        .collect(Collectors.toList()));
             } catch (IOException e) {
                 logSevere(FileUtils.class, e);
             }

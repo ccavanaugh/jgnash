@@ -490,7 +490,7 @@ public class EngineFactory {
 
         if (!fileExtension.isEmpty()) {
             for (final DataStoreType type : DataStoreType.values()) {
-                if (type.getDataStore().getFileExt().equals(fileExtension)) {
+                if (type.getDataStore().getFileExt().equalsIgnoreCase(fileExtension)) {
                     newFileType = type;
                     break;
                 }
@@ -595,7 +595,7 @@ public class EngineFactory {
         // Determine the data store type given the file extension
         if (!fileExtension.isEmpty()) {
             for (final DataStoreType type : DataStoreType.values()) {
-                if (type.getDataStore().getFileExt().equals(fileExtension)) {
+                if (type.getDataStore().getFileExt().equalsIgnoreCase(fileExtension)) {
                     newFileType = type;
                     break;
                 }
