@@ -17,17 +17,10 @@
  */
 package jgnash.engine.jpa;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import jgnash.engine.budget.Budget;
 import jgnash.engine.dao.BudgetDAO;
@@ -38,8 +31,6 @@ import jgnash.engine.dao.BudgetDAO;
  * @author Craig Cavanaugh
  */
 class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
-
-    private final static Logger logger = Logger.getLogger(JpaBudgetDAO.class.getName());
 
     JpaBudgetDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -57,28 +48,7 @@ class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     @Override
     public List<Budget> getBudgets() {
-        List<Budget> budgetList = Collections.emptyList();
-
-        try {
-            Future<List<Budget>> future = executorService.submit(() -> {
-                emLock.lock();
-
-                try {
-                    TypedQuery<Budget> q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false",
-                            Budget.class);
-
-                    return new ArrayList<>(q.getResultList());
-                } finally {
-                    emLock.unlock();
-                }
-            });
-
-            budgetList = future.get(); // block until complete
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
-        return budgetList;
+        return query(Budget.class);
     }
 
     @Override

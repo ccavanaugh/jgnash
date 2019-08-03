@@ -17,17 +17,11 @@
  */
 package jgnash.engine.jpa;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AccountDAO;
@@ -140,60 +134,12 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     @Override
     public List<StoredObject> getStoredObjects() {
-        List<StoredObject> list = Collections.emptyList();
-
-        try {
-            final Future<List<StoredObject>> future = executorService.submit(() -> {
-                emLock.lock();
-
-                try {
-                    final CriteriaBuilder cb = em.getCriteriaBuilder();
-                    final CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
-                    final Root<StoredObject> root = cq.from(StoredObject.class);
-                    cq.select(root);
-
-                    final TypedQuery<StoredObject> q = em.createQuery(cq);
-
-                    return new ArrayList<>(q.getResultList());
-                } finally {
-                    emLock.unlock();
-                }
-            });
-
-            list = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logSevere(JpaEngineDAO.class, e);
-        }
-
-        return list;
+        return query(StoredObject.class);
     }
 
     @Override
     public <T extends StoredObject> List<T> getStoredObjects(final Class<T> tClass) {
-        List<T> list = Collections.emptyList();
-
-        emLock.lock();
-
-        try {
-            final Future<List<T>> future = executorService.submit(() -> {
-                final CriteriaBuilder cb = em.getCriteriaBuilder();
-                final CriteriaQuery<T> cq = cb.createQuery(tClass);
-                final Root<T> root = cq.from(tClass);
-                cq.select(root);
-
-                final TypedQuery<T> q = em.createQuery(cq);
-
-                return new ArrayList<>(q.getResultList());
-            });
-
-            list = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            logSevere(JpaEngineDAO.class, e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return stripMarkedForRemoval(list);
+        return query(tClass);
     }
 
     /**

@@ -71,7 +71,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
                         return list.get(0);
                     } else if (list.size() > 1) {
                         LogUtil.logSevere(JpaAccountDAO.class, new Exception("More than one RootAccount was found: "
-                                + list.size()));
+                                                                                     + list.size()));
 
                         for (final RootAccount rootAccount : list) {
                             if (rootAccount.getChildCount() > 0) {
@@ -99,28 +99,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public List<Account> getAccountList() {
-        List<Account> accountList = Collections.emptyList();
-
-        try {
-            final Future<List<Account>> future = executorService.submit(() -> {
-                emLock.lock();
-
-                try {
-                    final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
-                            Account.class);
-
-                    return new ArrayList<>(q.getResultList());
-                } finally {
-                    emLock.unlock();
-                }
-            });
-
-            accountList = future.get(); // block and return
-        } catch (final ExecutionException | InterruptedException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
-        return accountList;
+        return query(Account.class);
     }
 
     /*
@@ -220,18 +199,10 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public List<Account> getInvestmentAccountList() {
-        emLock.lock();
 
-        try {
-            final TypedQuery<Account> q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false",
-                    Account.class);
-
-            // do not use a parallel stream, result list is not thread safe
-            return q.getResultList().stream().filter(a -> a.memberOf(AccountGroup.INVEST))
-                    .collect(Collectors.toList());
-        } finally {
-            emLock.unlock();
-        }
+        // do not use a parallel stream, result list is not thread safe
+        return query(Account.class).parallelStream().filter(a -> a.memberOf(AccountGroup.INVEST))
+                       .collect(Collectors.toList());
     }
 
     /*

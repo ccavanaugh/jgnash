@@ -51,29 +51,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
      */
     @Override
     public List<Transaction> getTransactions() {
-        List<Transaction> transactionList = Collections.emptyList();
-
-        try {
-            final Future<List<Transaction>> future = executorService.submit(() -> {
-                emLock.lock();
-
-                try {
-                    final TypedQuery<Transaction> q = em
-                            .createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false",
-                                    Transaction.class);
-
-                    return new ArrayList<>(q.getResultList());
-                } finally {
-                    emLock.unlock();
-                }
-            });
-
-            transactionList = future.get(); // block and return
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
-        return transactionList;
+        return query(Transaction.class);
     }
 
     /*

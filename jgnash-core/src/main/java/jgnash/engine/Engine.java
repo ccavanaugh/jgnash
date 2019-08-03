@@ -783,7 +783,7 @@ public class Engine {
             List<StoredObject> objects = eDAO.getStoredObjects();
 
             // Filter out objects to be removed
-            objects.removeIf(o -> o instanceof TrashObject || o.isMarkedForRemoval());
+            objects.removeIf(o -> o instanceof TrashObject);
 
             objects.sort(new StoredObjectComparator());
 

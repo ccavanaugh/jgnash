@@ -17,6 +17,8 @@
  */
 package jgnash.engine.jpa;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -29,12 +31,18 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
 import jgnash.engine.dao.AbstractDAO;
 import jgnash.engine.dao.DAO;
 import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.NotNull;
 
 import static jgnash.util.LogUtil.logSevere;
 
@@ -95,6 +103,50 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
     }
 
     /**
+     * Returns a list of objects that are assignable from from the specified Class.
+     * <p>
+     * Objects marked for removal are not included
+     *
+     * @param clazz the Class to query for
+     * @param <T>   the type of class to query
+     * @return A list of type T containing objects of type clazz
+     */
+    @NotNull
+    public <T extends StoredObject> List<T> query(final Class<T> clazz) {
+
+        try {
+            final Future<List<T>> future = executorService.submit(() -> {
+                emLock.lock();
+
+                try {
+                    final CriteriaBuilder cb = em.getCriteriaBuilder();
+                    final CriteriaQuery<T> cq = cb.createQuery(clazz);
+                    final Root<T> c = cq.from(clazz);
+                    final ParameterExpression<Boolean> p = cb.parameter(Boolean.class);
+
+                    cq.select(c).where(cb.equal(c.get("markedForRemoval"), p));
+
+                    final TypedQuery<T> query = em.createQuery(cq);
+                    query.setParameter(p, Boolean.FALSE);
+
+                    return new ArrayList<>(query.getResultList());
+                } catch (final PersistenceException | IllegalStateException e1) {
+                    logSevere(AbstractJpaDAO.class, e1);
+                    return null;
+                } finally {
+                    emLock.unlock();
+                }
+            });
+
+            return future.get();    // block and return
+        } catch (final InterruptedException | ExecutionException e) {
+            logSevere(AbstractJpaDAO.class, e);
+            Thread.currentThread().interrupt();
+            return null;
+        }
+    }
+
+    /**
      * Merge / Update the object in place.
      *
      * @param object {@link StoredObject} to merge
@@ -112,7 +164,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                     em.getTransaction().commit();
 
                     return mergedObject;
-                } catch (final PersistenceException | IllegalStateException  e1) {
+                } catch (final PersistenceException | IllegalStateException e1) {
                     logSevere(AbstractJpaDAO.class, e1);
                     return null;
                 } finally {
@@ -151,7 +203,7 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                     em.getTransaction().commit();
 
                     return true;
-                } catch (final PersistenceException | IllegalStateException  e1) {
+                } catch (final PersistenceException | IllegalStateException e1) {
                     logSevere(AbstractJpaDAO.class, e1);
                     return false;
                 } finally {

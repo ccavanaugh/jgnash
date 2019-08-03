@@ -18,20 +18,10 @@
 package jgnash.engine.jpa;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import jgnash.engine.dao.RecurringDAO;
 import jgnash.engine.recurring.Reminder;
@@ -43,8 +33,6 @@ import jgnash.engine.recurring.Reminder;
  */
 class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
-    private static final Logger logger = Logger.getLogger(JpaRecurringDAO.class.getName());
-
     JpaRecurringDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
     }
@@ -54,33 +42,7 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
      */
     @Override
     public List<Reminder> getReminderList() {
-
-        List<Reminder> reminderList = Collections.emptyList();
-
-        try {
-            final Future<List<Reminder>> future = executorService.submit(() -> {
-                emLock.lock();
-
-                try {
-                    final CriteriaBuilder cb = em.getCriteriaBuilder();
-                    final CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
-                    final Root<Reminder> root = cq.from(Reminder.class);
-                    cq.select(root);
-
-                    final TypedQuery<Reminder> q = em.createQuery(cq);
-
-                    return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
-                } finally {
-                    emLock.unlock();
-                }
-            });
-
-            reminderList = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
-        return reminderList;
+        return query(Reminder.class);
     }
 
     /*
