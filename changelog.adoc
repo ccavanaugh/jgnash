@@ -24,6 +24,7 @@
 * Dirty check, don't create a backup file if not changed at all
 
 == Release 3.2.1
+* 08/04/2019 Corrected the column sizing behavior of tabular reports with long values.
 * 08/03/2019 Changed H2 relation databases to use Asynchronous access instead of NIO for safer file access.
 * 08/03/2019 Fixed a bug that was causing File > Save As to force files to a .bxds file if a period existed within the
              file name's path other than the file extension.

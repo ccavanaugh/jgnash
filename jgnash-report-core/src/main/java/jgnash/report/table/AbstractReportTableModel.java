@@ -75,6 +75,26 @@ public abstract class AbstractReportTableModel {
     public abstract int getColumnCount();
 
     /**
+     * Returns the column width weighting.
+     *
+     * Sum of all flexible columns should sum to 100
+     *
+     * @param columnIndex column index
+     * @return column width weighting
+     */
+    public float getColumnWidthWeight(int columnIndex) {
+        int flexColumnCount = 0;
+
+        for (int i = 0; i < getColumnCount(); i++) {
+            if (!isColumnFixedWidth(i) && isColumnVisible(i)) {
+                flexColumnCount++;
+            }
+        }
+
+        return 100f / flexColumnCount;
+    }
+
+    /**
      * Returns column name at {@code columnIndex}.
      *
      * @param columnIndex the index of the column

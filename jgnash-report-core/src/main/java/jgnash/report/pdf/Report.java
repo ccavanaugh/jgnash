@@ -851,10 +851,9 @@ public abstract class Report implements AutoCloseable {
 
         float[] widths = new float[reportModel.getColumnCount()]; // calculated optimal widths
 
-        float measuredWidth = 0;
-        float fixedWidth = 0;
-        boolean compressAll = false;
-        int flexColumns = 0;
+        float fixedWidth = 0;           // total fixed width
+        boolean compressAll = false;    // true if all columns need to be compressed
+        float minWidth = 0;             // the minimum width based on column names
 
         for (int i = 0; i < reportModel.getColumnCount(); i++) {
             if (reportModel.isColumnVisible(i)) {
@@ -866,35 +865,28 @@ public abstract class Report implements AutoCloseable {
 
                 widths[i] = Math.max(headerWidth, cellTextWidth);
 
-                measuredWidth += widths[i];
-
                 if (reportModel.isColumnFixedWidth(i)) {
                     fixedWidth += widths[i];
-                } else {
-                    flexColumns++;
                 }
             } else {
                 widths[i] = 0;    // not visible, but a place holder is needed
             }
         }
 
-        if (fixedWidth > getAvailableWidth()) {
+        // it gets ugly if there is simply not enough room
+        if (fixedWidth > getAvailableWidth() || minWidth > getAvailableWidth()) {
             compressAll = true;
-            flexColumns = visibleColumnCount;
-        }
-
-        float widthDelta;
-
-        if (compressAll) {  // make it ugly
-            widthDelta = (getAvailableWidth() - measuredWidth) / visibleColumnCount;
-        } else {
-            widthDelta = (getAvailableWidth() - measuredWidth) / flexColumns;
+            Logger.getLogger(Report.class.getName()).warning("Page width is not wide enough");
         }
 
         for (int i = 0; i < reportModel.getColumnCount(); i++) {
             if (reportModel.isColumnVisible(i)) {
-                if (compressAll || !reportModel.isColumnFixedWidth(i)) {
-                    widths[i] += widthDelta;
+                if (compressAll) {  // make it ugly
+                    widths[i] = getAvailableWidth() / visibleColumnCount;
+                } else if (!reportModel.isColumnFixedWidth(i)) {
+                    float remainder = getAvailableWidth() - fixedWidth;
+
+                    widths[i] = (reportModel.getColumnWidthWeight(i) / 100f) * remainder;
                 }
             }
         }

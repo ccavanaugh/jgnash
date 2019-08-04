@@ -161,6 +161,18 @@ public class AccountRegisterReport extends Report {
             }
         }
 
+        public float getColumnWidthWeight(int columnIndex) {
+            switch (columnIndex) {
+                case 3:
+                case 5:
+                    return 30;
+                case 4:
+                    return 40;
+                default:
+                    return 0;
+            }
+        }
+
         private void loadAccount() {
             if (account != null) {
                 if (sumAmounts) {   // dump the running total column as it does not make sense when filtering
