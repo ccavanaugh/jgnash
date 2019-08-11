@@ -25,6 +25,8 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 
+import jgnash.uifx.skin.StyleClass;
+
 /**
  * Pop Over Button control
  *
@@ -40,7 +42,7 @@ public class PopOverButton extends MenuButton {
     public PopOverButton(final Node graphic) {
         super(null, graphic, (MenuItem[])null);
 
-        getStyleClass().add("pop-over-button");
+        getStyleClass().add(StyleClass.POP_OVER_BUTTON);
     }
 
     private final ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(this, "contentNode");

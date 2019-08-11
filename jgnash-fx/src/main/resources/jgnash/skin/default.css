@@ -137,6 +137,18 @@
     -fx-border-color: -fx-box-border;
 }
 
+/* ==== Hidden column headers ==== */
+.hidden-column-header .column-header-background {
+    visibility: hidden;
+    -fx-padding: -2em;
+    -fx-size: 0;
+}
+
+/* ==== Hide row focus for tables ==== */
+.hidden-row-focus .table-row-cell {
+    -fx-background-insets: 0, 0 0 0 0;
+}
+
 #disabled-cell {
     -fx-opacity: 0.4;
     -fx-font-weight: bold;
