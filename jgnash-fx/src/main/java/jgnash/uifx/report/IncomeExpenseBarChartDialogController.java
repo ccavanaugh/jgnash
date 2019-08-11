@@ -61,8 +61,6 @@ import jgnash.resource.util.ResourceUtils;
  */
 public class IncomeExpenseBarChartDialogController {
 
-    private static final String CHART_CSS = "jgnash/skin/incomeExpenseBarChart.css";
-
     private static final String REPORT_PERIOD = "reportPeriod";
 
     private static final int BAR_GAP = 1;
@@ -109,7 +107,6 @@ public class IncomeExpenseBarChartDialogController {
         defaultCurrency = engine.getDefaultCurrency();
         numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
-        barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
         barChart.barGapProperty().set(BAR_GAP);
         barChart.setCategoryGap(PERIOD_GAP);

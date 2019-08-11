@@ -28,9 +28,23 @@
     -fx-font-smoothing-type: gray;
 }
 
-/*
- * Hide the focus around tables
- */
+.default-color0.chart-bar { -fx-bar-fill: CHART_COLOR_3; }
+.default-color1.chart-bar { -fx-bar-fill: CHART_COLOR_1; }
+.default-color2.chart-bar { -fx-bar-fill: CHART_COLOR_2; }
+
+.chart-content {
+    -fx-padding: 5px;
+}
+
+.chart-pie-label {
+    -fx-padding: 3px;
+}
+
+.pie-legend-symbol.chart-pie {
+    -fx-padding: 4px;
+}
+
+/* ==== Hides the focus around tables ==== */
 .table-view:focused,
 .tree-table-view:focused {
     -fx-background-color: -fx-box-border, -fx-control-inner-background;
@@ -47,9 +61,7 @@
     -fx-cell-size: 1.75em;
 }*/
 
-/*
- * Ensure we have odd/even background changes
- */
+/* ==== Ensure we have odd/even background changes ==== */
 .tree-table-row-cell:odd {
     -fx-background: -fx-control-inner-background-alt;
 }
@@ -58,15 +70,12 @@
     -fx-background: -fx-selection-bar;
 }
 
-/*
- * Adjust margins of the status label for improved appearance
- */
+/* ==== Adjust margins of the status label for improved appearance ==== */
 .status-label {
     -fx-graphic-text-gap: 0.833333em;
     -fx-label-padding: 0 0 0 0.25em;
 }
 
-/*noinspection CssUnusedSymbol*/
 .status-bar {
     -fx-padding: 4px;
     -fx-pref-height: 30px;

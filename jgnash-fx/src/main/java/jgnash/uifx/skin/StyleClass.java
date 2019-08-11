@@ -24,17 +24,15 @@ package jgnash.uifx.skin;
  */
 public class StyleClass {
 
+    private StyleClass() {
+        // utility class
+    }
+
     public static final String HIDDEN_COLUMN_HEADER = "hidden-column-header";
 
     public static final String POP_OVER_BUTTON = "pop-over-button";
 
     public static final String HIDDEN_ROW_FOCUS = "hidden-row-focus";
-
-    //public static final String HIDDEN_VERTICAL_SCROLL_BAR = "hidden-vertical-scroll-bar";
-
-    private StyleClass() {
-        // utility class
-    }
 
     public static final String LIST_TITLE_STYLE = "list-title";
 

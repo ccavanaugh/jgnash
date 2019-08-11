@@ -68,8 +68,6 @@ import jgnash.util.Nullable;
  */
 public class AccountBalanceChartController {
 
-    private static final String CHART_CSS = "jgnash/skin/incomeExpenseBarChart.css";
-
     private static final String REPORT_PERIOD = "reportPeriod";
 
     private static final String RUNNING_BALANCE = "runningBalance";
@@ -166,7 +164,6 @@ public class AccountBalanceChartController {
         defaultCurrency = engine.getDefaultCurrency();
         numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
-        barChart.getStylesheets().addAll(CHART_CSS);
         barChart.getYAxis().setLabel(defaultCurrency.getSymbol());
         barChart.barGapProperty().set(BAR_GAP);
         barChart.setCategoryGap(CATEGORY_GAP);

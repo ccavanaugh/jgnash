@@ -89,8 +89,6 @@ public class IncomeExpensePayeePieChartDialogController {
 
     private static final String ELLIPSIS = "…";
 
-    private static final String CHART_CSS = "jgnash/skin/incomeExpensePieChart.css";
-
     private final Preferences preferences
             = Preferences.userNodeForPackage(IncomeExpensePayeePieChartDialogController.class)
             .node("IncomeExpensePayeePieChart");
@@ -154,9 +152,6 @@ public class IncomeExpensePayeePieChartDialogController {
         // Respect animation preference
         debitPieChart.animatedProperty().set(Options.animationsEnabledProperty().get());
         creditPieChart.animatedProperty().set(Options.animationsEnabledProperty().get());
-
-        creditPieChart.getStylesheets().addAll(CHART_CSS);
-        debitPieChart.getStylesheets().addAll(CHART_CSS);
 
         creditPieChart.centerTitleProperty().set(resources.getString("Column.Credit"));
         debitPieChart.centerTitleProperty().set(resources.getString("Column.Debit"));

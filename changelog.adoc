@@ -24,6 +24,7 @@
 * Dirty check, don't create a backup file if not changed at all
 
 == Release 3.2.2
+* 08/11/2019 Consolidated CSS to make customization easier.
 * 08/11/2019 Prevent a transaction form null pointer exception at shutdown when working with a multi-currency files.
 
 == Release 3.2.1
