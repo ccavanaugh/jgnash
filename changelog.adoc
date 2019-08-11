@@ -23,6 +23,9 @@
 * Option to load a custom style sheet.
 * Dirty check, don't create a backup file if not changed at all
 
+== Release 3.2.2
+* 08/11/2019 Prevent a transaction form null pointer exception at shutdown when working with a multi-currency files.
+
 == Release 3.2.1
 * 08/10/2019 Updated to JavaFX 13-ea+11 dependency.
 * 08/04/2019 Corrected the column sizing behavior of tabular reports with long values.

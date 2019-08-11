@@ -9,7 +9,7 @@ allprojects {
     targetCompatibility = 11
 
     group = "jgnash"
-    version = "3.2.1"
+    version = "3.2.2"
 
     project.ext {
         junitVersion = "5.5.1"              // https://junit.org/junit5/

@@ -152,9 +152,14 @@ public class AccountExchangePane extends GridPane {
         selectedAccountProperty().bindBidirectional(accountCombo.valueProperty());
 
         // update the exchange label text
-        expandButton.focusedProperty().addListener((observable, oldValue, newValue)
-                -> exchangeLabel.setText(NumericFormats.getConversion(baseCurrency.get(),
-                accountCombo.getValue().getCurrencyNode())));
+        expandButton.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            // protect against an NPE / race condition at application shutdown should the accountCombo have purged
+            // all values prior to a focus change
+            if (accountCombo.getValue() != null) {
+                exchangeLabel.setText(NumericFormats.getConversion(baseCurrency.get(),
+                        accountCombo.getValue().getCurrencyNode()));
+            }
+        });
 
         exchangeAmount.bindBidirectional(exchangeAmountField.decimalProperty());
 
