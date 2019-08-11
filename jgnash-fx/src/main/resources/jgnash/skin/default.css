@@ -119,6 +119,24 @@
     -fx-text-fill: -fx-selection-bar-text;
 }
 
+/* ==== jGnash Pop over buttons ==== */
+.pop-over-button .arrow-button {
+    -fx-padding: 0;
+}
+.pop-over-button .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+.pop-over-button .menu-item:focused {
+    -fx-background-color: transparent;
+}
+.pop-over-button .menu-item:focused .label {
+    -fx-text-fill: -fx-text-base-color;
+}
+.pop-over-button .context-menu {
+    -fx-background-color: -fx-background;
+    -fx-border-color: -fx-box-border;
+}
+
 #disabled-cell {
     -fx-opacity: 0.4;
     -fx-font-weight: bold;
