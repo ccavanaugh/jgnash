@@ -34,7 +34,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public interface CommodityDAO {
+public interface CommodityDAO extends DAO {
 
     boolean addCommodity(CommodityNode node);
 

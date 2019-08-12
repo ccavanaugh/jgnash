@@ -18,6 +18,7 @@
 package jgnash.engine.dao;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import jgnash.engine.StoredObject;
 
@@ -26,10 +27,17 @@ import jgnash.engine.StoredObject;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractDAO {
+public abstract class AbstractDAO implements DAO {
+
+    protected final AtomicBoolean dirtyFlag = new AtomicBoolean(false);
 
     protected static <T extends StoredObject> List<T> stripMarkedForRemoval(final List<T> list) {
         list.removeIf(StoredObject::isMarkedForRemoval);
         return list;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return dirtyFlag.get();
     }
 }

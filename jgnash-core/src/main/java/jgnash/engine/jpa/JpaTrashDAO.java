@@ -128,6 +128,8 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
                     em.getTransaction().commit();
 
+                    dirtyFlag.set(true);
+
                     return null;
                 } finally {
                     emLock.unlock();
@@ -156,6 +158,8 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
                     em.getTransaction().commit();
 
+                    dirtyFlag.set(true);
+
                     logger.info("Removed TrashObject");
 
                     return null;
@@ -183,6 +187,8 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
                     em.persist(new JpaTrashEntity(entity));
 
                     em.getTransaction().commit();
+
+                    dirtyFlag.set(true);
 
                     return null;
                 } finally {

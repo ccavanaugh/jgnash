@@ -24,7 +24,7 @@ import jgnash.engine.Config;
  *
  * @author Craig Cavanaugh
  */
-public interface ConfigDAO {
+public interface ConfigDAO extends DAO {
 
     Config getDefaultConfig();
 

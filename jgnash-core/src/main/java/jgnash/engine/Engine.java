@@ -159,18 +159,19 @@ public class Engine {
      * All engine instances will share the same message bus.
      */
     private MessageBus messageBus;
-    
+
     /**
      * Cached for performance.
      */
     private Config config;
-    
+
     /**
      * Cached for performance.
      */
     private RootAccount rootAccount;
-    
+
     private ExchangeRateDAO exchangeRateDAO;
+
     /**
      * Cached for performance.
      */
@@ -220,6 +221,12 @@ public class Engine {
                 startExchangeRateUpdate(SCHEDULED_DELAY);
             }
         }, 30, TimeUnit.SECONDS);
+    }
+
+    boolean isFileDirty() {
+        return eDAO.isDirty() || getAccountDAO().isDirty() || getBudgetDAO().isDirty() || getCommodityDAO().isDirty()
+                       || getConfigDAO().isDirty() || getReminderDAO().isDirty() || getTransactionDAO().isDirty()
+                       || getTrashDAO().isDirty();
     }
 
     /**
@@ -376,7 +383,7 @@ public class Engine {
         final List<BackgroundCallable> callables = new ArrayList<>();
 
         getSecurities().stream().filter(securityNode ->
-                securityNode.getQuoteSource() != QuoteSource.NONE).forEach(securityNode -> { // failure will occur if source is not defined
+                                                securityNode.getQuoteSource() != QuoteSource.NONE).forEach(securityNode -> { // failure will occur if source is not defined
 
             callables.add(new BackgroundCallable(new UpdateFactory.UpdateSecurityNodeCallable(securityNode)));
             callables.add(new BackgroundCallable(new UpdateFactory.UpdateSecurityNodeEventsCallable(securityNode)));
@@ -454,7 +461,7 @@ public class Engine {
         try {
             // check and correct multiple root accounts from old files... there are still a few.
             List<Account> accountList = getAccountList().stream().filter(account -> account.getAccountType()
-                    .equals(AccountType.ROOT)).collect(Collectors.toList());
+                                                                                            .equals(AccountType.ROOT)).collect(Collectors.toList());
 
             if (accountList.size() > 1) {
                 for (Account account : accountList) {
@@ -482,7 +489,7 @@ public class Engine {
 
             // update the file version if it is not current
             if (getConfig().getMajorFileFormatVersion() != CURRENT_MAJOR_VERSION
-                    || getConfig().getMinorFileFormatVersion() != CURRENT_MINOR_VERSION) {
+                        || getConfig().getMinorFileFormatVersion() != CURRENT_MINOR_VERSION) {
 
                 final Config localConfig = getConfig();
                 localConfig.updateFileVersion();
@@ -525,42 +532,34 @@ public class Engine {
     }
 
     public String getName() {
-
         return name;
     }
 
     private AccountDAO getAccountDAO() {
-
         return eDAO.getAccountDAO();
     }
 
     private BudgetDAO getBudgetDAO() {
-
         return eDAO.getBudgetDAO();
     }
 
     private CommodityDAO getCommodityDAO() {
-
         return eDAO.getCommodityDAO();
     }
 
     private ConfigDAO getConfigDAO() {
-
         return eDAO.getConfigDAO();
     }
 
     private RecurringDAO getReminderDAO() {
-
         return eDAO.getRecurringDAO();
     }
 
     private TransactionDAO getTransactionDAO() {
-
         return eDAO.getTransactionDAO();
     }
 
     private TrashDAO getTrashDAO() {
-
         return eDAO.getTrashDAO();
     }
 
@@ -590,7 +589,6 @@ public class Engine {
      * Empty the trash if any objects are older than the defined time.
      */
     private void emptyTrash() {
-
         if (backGroundCounter.incrementAndGet() == 1) {
             messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED,
                     Engine.this));
@@ -1021,7 +1019,7 @@ public class Engine {
      */
     private Set<Account> getInvestmentAccountList(final SecurityNode node) {
         return getInvestmentAccountList().parallelStream()
-                .filter(account -> account.containsSecurity(node)).collect(Collectors.toSet());
+                       .filter(account -> account.containsSecurity(node)).collect(Collectors.toSet());
     }
 
     /**
@@ -2025,7 +2023,7 @@ public class Engine {
      * Returns an {@code Account} attribute.
      *
      * @param account account to extract attribute from
-     * @param key the attribute key
+     * @param key     the attribute key
      * @return the attribute if found
      * @see #setAccountAttribute
      */
@@ -2527,11 +2525,11 @@ public class Engine {
                                         entry.getCreditAccount().getCurrencyNode());
 
                                 if (rate.getRate(transaction.getLocalDate()).equals(BigDecimal.ZERO)) { // no rate for the date has been set
-                                    final BigDecimal exchangeRate = entry.getDebitAmount().abs()
-                                            .divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
+                                    final BigDecimal exchangeRate = entry.getDebitAmount()
+                                                                            .abs().divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
 
-                                    setExchangeRate(entry.getCreditAccount().getCurrencyNode(), entry.getDebitAccount()
-                                            .getCurrencyNode(), exchangeRate, transaction.getLocalDate());
+                                    setExchangeRate(entry.getCreditAccount().getCurrencyNode(),
+                                            entry.getDebitAccount().getCurrencyNode(), exchangeRate, transaction.getLocalDate());
                                 }
                             });
                 }

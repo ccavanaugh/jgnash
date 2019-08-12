@@ -27,7 +27,7 @@ import jgnash.engine.recurring.Reminder;
  *
  * @author Craig Cavanaugh
  */
-public interface RecurringDAO {
+public interface RecurringDAO extends DAO {
 
     List<Reminder> getReminderList();
 

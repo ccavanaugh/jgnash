@@ -27,7 +27,7 @@ import jgnash.engine.Transaction;
  *
  * @author Craig Cavanaugh
  */
-public interface TransactionDAO {
+public interface TransactionDAO extends DAO {
 
     /**
      * Returns a list of transactions.

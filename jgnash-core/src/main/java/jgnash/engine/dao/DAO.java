@@ -26,4 +26,6 @@ import java.util.UUID;
  */
 public interface DAO {
     <T> T getObjectByUuid(final Class<T> tClass, final UUID uuid);
+
+    boolean isDirty();
 }

@@ -27,7 +27,7 @@ import jgnash.engine.budget.Budget;
  *
  * @author Craig Cavanaugh
  */
-public interface BudgetDAO {
+public interface BudgetDAO extends DAO {
 
     boolean add(Budget budget);
 

@@ -26,7 +26,7 @@ import jgnash.engine.TrashObject;
  *
  * @author Craig Cavanaugh
  */
-public interface TrashDAO {
+public interface TrashDAO extends DAO {
 
     List<TrashObject> getTrashObjects();
 

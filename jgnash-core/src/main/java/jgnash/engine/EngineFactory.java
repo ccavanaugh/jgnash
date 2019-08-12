@@ -203,14 +203,18 @@ public class EngineFactory {
             final Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_CLOSING, oldEngine);
             MessageBus.getInstance(engineName).fireBlockingEvent(message);  // block until event has been completely processed
 
-            // Dump an XML backup
-            if (oldEngine.createBackups() && oldDataStore.isLocal()) {
-                exportCompressedXML(engineName);
-            }
+            if (oldEngine.isFileDirty()) {  // should a backup file be created?
+                // Dump an XML backup
+                if (oldEngine.createBackups() && oldDataStore.isLocal()) {
+                    exportCompressedXML(engineName);
+                }
 
-            // Purge old backups
-            if (oldEngine.removeOldBackups() && oldDataStore.isLocal()) {
-                removeOldCompressedXML(oldDataStore.getFileName(), oldEngine.getRetainedBackupLimit());
+                // Purge old backups
+                if (oldEngine.removeOldBackups() && oldDataStore.isLocal()) {
+                    removeOldCompressedXML(oldDataStore.getFileName(), oldEngine.getRetainedBackupLimit());
+                }
+            } else {
+                logger.info("File was not dirty");
             }
 
             // Initiate a complete shutdown

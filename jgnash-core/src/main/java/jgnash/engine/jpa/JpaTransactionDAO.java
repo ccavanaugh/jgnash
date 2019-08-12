@@ -73,6 +73,8 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
                     em.getTransaction().commit();
 
+                    dirtyFlag.set(true);
+
                     return true;
                 } finally {
                     emLock.unlock();
@@ -111,6 +113,8 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
                     em.persist(transaction);    // saved, removed with the trash
                     em.getTransaction().commit();
+
+                    dirtyFlag.set(true);
 
                     return true;
                 } finally {

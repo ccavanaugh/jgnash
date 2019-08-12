@@ -163,6 +163,8 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                     T mergedObject = em.merge(object);
                     em.getTransaction().commit();
 
+                    dirtyFlag.set(true);
+
                     return mergedObject;
                 } catch (final PersistenceException | IllegalStateException e1) {
                     logSevere(AbstractJpaDAO.class, e1);
@@ -201,6 +203,8 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                     }
 
                     em.getTransaction().commit();
+
+                    dirtyFlag.set(true);
 
                     return true;
                 } catch (final PersistenceException | IllegalStateException e1) {

@@ -29,7 +29,7 @@ import jgnash.engine.SecurityNode;
  *
  * @author Craig Cavanaugh
  */
-public interface AccountDAO {
+public interface AccountDAO extends DAO {
 
     RootAccount getRootAccount();
 

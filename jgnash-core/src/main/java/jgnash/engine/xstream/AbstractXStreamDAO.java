@@ -70,6 +70,8 @@ abstract class AbstractXStreamDAO extends AbstractDAO implements DAO {
     }
 
     final void commit() {
+        dirtyFlag.set(true);
+
         if (commitCount.getAndIncrement() >= MAX_COMMIT_COUNT) {
             commitAndReset();
         }

@@ -121,6 +121,8 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
 
                     em.getTransaction().commit();
 
+                    dirtyFlag.set(true);
+
                     return true;
                 } finally {
                     emLock.unlock();
