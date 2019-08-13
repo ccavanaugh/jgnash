@@ -80,6 +80,8 @@ public class Options {
 
     private static final String LAST_FORMAT_CHANGE = "lastFormatChange";
 
+    private static final String RESTORE_REPORT_DATES = "restoreReportDates";
+
     private static final int DEFAULT_SNOOZE = TimePeriodComboBox.getPeriods()[0];
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -113,6 +115,8 @@ public class Options {
     private static final SimpleBooleanProperty regexForFilters;
 
     private static final SimpleBooleanProperty globalBayesEnabled;
+
+    private static final SimpleBooleanProperty restoreReportDates;
 
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
@@ -151,6 +155,7 @@ public class Options {
         restoreLastRegisterTab = createBooleanProperty(RESTORE_LAST_TAB, true);
         regexForFilters = createBooleanProperty(REGEX_FOR_FILTERS, false);
         globalBayesEnabled = createBooleanProperty(GLOBAL_BAYES_ENABLED, false);
+        restoreReportDates = createBooleanProperty(RESTORE_REPORT_DATES, false);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
 
@@ -268,6 +273,15 @@ public class Options {
      */
     public static BooleanProperty rememberLastDateProperty() {
         return rememberDate;
+    }
+
+    /**
+     * Determines if the last date used for a report is restored or ignored.
+     *
+     * @return true if the last date should be used
+     */
+    public static BooleanProperty restoreReportDateProperty() {
+        return restoreReportDates;
     }
 
     /**

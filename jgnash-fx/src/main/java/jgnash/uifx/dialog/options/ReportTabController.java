@@ -17,14 +17,16 @@
  */
 package jgnash.uifx.dialog.options;
 
+import java.util.List;
+
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 
 import jgnash.report.pdf.FontRegistry;
 import jgnash.report.pdf.ReportFactory;
+import jgnash.uifx.Options;
 import jgnash.uifx.util.JavaFXUtils;
-
-import java.util.List;
 
 /**
  * Controller for Report Options.
@@ -32,6 +34,9 @@ import java.util.List;
  * @author Craig Cavanaguh
  */
 public class ReportTabController {
+
+    @FXML
+    private CheckBox rememberLastReportDateCheckBox;
 
     @FXML
     private ComboBox<String> headerFontComboBox;
@@ -44,16 +49,15 @@ public class ReportTabController {
 
     @FXML
     private void initialize() {
+        rememberLastReportDateCheckBox.selectedProperty().bindBidirectional(Options.restoreReportDateProperty());
 
         new Thread(() -> {
-
             final List<String> fonts = FontRegistry.getFontList();
 
             JavaFXUtils.runLater(() -> {
 
                 monoFontComboBox.getItems().setAll(fonts);
                 monoFontComboBox.setValue(ReportFactory.getMonoFont());
-
 
                 proportionalFontComboBox.getItems().setAll(fonts);
                 proportionalFontComboBox.setValue(ReportFactory.getProportionalFont());
@@ -67,9 +71,7 @@ public class ReportTabController {
                         ReportFactory.setProportionalFont(proportionalFontComboBox.getValue()));
 
                 headerFontComboBox.setOnAction(event -> ReportFactory.setHeaderFont(headerFontComboBox.getValue()));
-
             });
         }).start();
-
     }
 }

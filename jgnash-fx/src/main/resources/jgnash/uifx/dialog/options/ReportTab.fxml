@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TitledPane?>
@@ -9,7 +10,20 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:controller="jgnash.uifx.dialog.options.ReportTabController" minHeight="-Infinity"
-      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="dialog, form">
+
+    <TitledPane text="%Title.DefaultBehavior" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <CheckBox text="%Button.ReportDate" fx:id="rememberLastReportDateCheckBox"/>
+        </GridPane>
+    </TitledPane>
 
     <TitledPane text="%Title.Fonts" collapsible="false">
         <GridPane styleClass="form">
@@ -34,5 +48,4 @@
 
         </GridPane>
     </TitledPane>
-
 </VBox>
