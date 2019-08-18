@@ -20,8 +20,16 @@ package jgnash.uifx.control;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.DatePicker;
@@ -29,6 +37,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.converter.LocalDateStringConverter;
 
 import jgnash.time.DateUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Enhanced DatePicker.  Adds short cuts for date entry with better input character filters
@@ -44,13 +53,52 @@ public class DatePickerEx extends DatePicker {
     private char dateFormatSeparator = '/';
 
     /**
-     * Reference is needed to prevent premature garbage collection.
+     * Strong Reference is needed to prevent premature garbage collection.
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final ChangeListener<Boolean> focusChangeListener;
 
+    /**
+     * Strong Reference is needed to prevent premature garbage collection.
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ChangeListener<LocalDate> valueListener;
+
+    private final BooleanProperty preserveDate = new SimpleBooleanProperty(false);
+
+    private final StringProperty preferenceKey = new SimpleStringProperty();
+
+    private final ObjectProperty<Preferences> preferences = new SimpleObjectProperty<>();
+
+    /**
+     * Composite to make handling of bindings simpler
+     */
+    private final BooleanProperty saveRestoreDate = new SimpleBooleanProperty(false);
+
+    /**
+     * One shot restoration of the data value if enabled
+     */
+    private final AtomicBoolean oldValueRestored = new AtomicBoolean(false);
+
     public DatePickerEx() {
         super(LocalDate.now()); // initialize with a valid date
+
+        saveRestoreDate.bind(preferenceKey.isNotEmpty().and(preferences.isNotNull()).and(preserveDate));
+
+        // restore the date when the property goes from false to true
+        saveRestoreDate.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue && !oldValueRestored.get()) {
+                oldValueRestored.set(true);
+
+                Preferences preferences = preferencesProperty().get();
+                final long value = preferences.getLong(preferenceKeyProperty().get(), -1);
+
+                if (value > 0) {
+                    final LocalDate restoreDate = DateUtils.asLocalDate(value);
+                    JavaFXUtils.runLater(() -> setValue(restoreDate));
+                }
+            }
+        });
 
         final StringBuilder buf = new StringBuilder("0123456789");
 
@@ -116,7 +164,8 @@ public class DatePickerEx extends DatePicker {
             getEditor().positionCaret(caretPosition);
         });
 
-        // Ensure the last parsable value is displayed after focus is lost
+        // Ensure the last parsable value is displayed after focus is lost.
+        // Wrap in a weak change listener to protect against memory leaks.
         getEditor().focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
 
         getEditor().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -133,7 +182,7 @@ public class DatePickerEx extends DatePicker {
 
                         if (text.length() > caretPosition) {
                             if (text.charAt(caretPosition) != dateFormatSeparator && (caretPosition > 0
-                                    && text.charAt(caretPosition - 1) != dateFormatSeparator)) {
+                                                                                              && text.charAt(caretPosition - 1) != dateFormatSeparator)) {
                                 text.insert(caretPosition, dateFormatSeparator);
                             }
                         } else {
@@ -181,11 +230,16 @@ public class DatePickerEx extends DatePicker {
             }
         });
 
-        valueProperty().addListener(new WeakChangeListener<>((observable, oldValue, newValue) -> {
+        valueListener = (observable, oldValue, newValue) -> {
             if (newValue == null) {
                 setValue(oldValue);
+            } else if (saveRestoreDate.get()) { // save the date
+                preferencesProperty().get().putLong(preferenceKeyProperty().get(), DateUtils.asEpochMilli(newValue));
             }
-        }));
+        };
+
+        // Wrap in a weak change listener to protect against memory leaks.
+        valueProperty().addListener(new WeakChangeListener<>(valueListener));
     }
 
     private LocalDate _getValue() {
@@ -196,5 +250,17 @@ public class DatePickerEx extends DatePicker {
         } catch (final DateTimeParseException ignored) {
             return getValue();  // return the current value
         }
+    }
+
+    public BooleanProperty preserveDateProperty() {
+        return preserveDate;
+    }
+
+    public StringProperty preferenceKeyProperty() {
+        return preferenceKey;
+    }
+
+    public ObjectProperty<Preferences> preferencesProperty() {
+        return preferences;
     }
 }
