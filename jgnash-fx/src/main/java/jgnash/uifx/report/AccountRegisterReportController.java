@@ -17,15 +17,6 @@
  */
 package jgnash.uifx.report;
 
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.report.pdf.Report;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.uifx.control.AccountComboBox;
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.uifx.report.pdf.ReportController;
-import jgnash.util.Nullable;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.function.Consumer;
@@ -36,6 +27,17 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.uifx.Options;
+import jgnash.uifx.control.AccountComboBox;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.report.pdf.ReportController;
+import jgnash.uifx.util.JavaFXUtils;
+import jgnash.util.Nullable;
 
 /**
  * Account Register Report Controller
@@ -87,6 +89,14 @@ public class AccountRegisterReportController implements ReportController {
         showSplitsCheckBox.setSelected(preferences.getBoolean(SHOW_SPLITS, false));
         showTimestampCheckBox.setSelected(preferences.getBoolean(SHOW_TIMESTAMP, false));
 
+        startDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        startDatePicker.preferencesProperty().setValue(preferences);
+        startDatePicker.preferenceKeyProperty().setValue("startDate");
+
+        endDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        endDatePicker.preferencesProperty().setValue(preferences);
+        endDatePicker.preferenceKeyProperty().setValue("endDate");
+
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 refreshAccount(newValue);
@@ -129,10 +139,16 @@ public class AccountRegisterReportController implements ReportController {
 
     private void refreshAccount(final Account account) {
         if (account != null) {
-            if (account.getTransactionCount() > 0) {
-                startDatePicker.setValue(account.getTransactionAt(0).getLocalDate());
-                endDatePicker.setValue(LocalDate.now());
+            if (!Options.restoreReportDateProperty().get()) {
+                resetDates();
             }
+        }
+    }
+
+    private void resetDates() {
+        if (accountComboBox.getValue() != null && accountComboBox.getValue().getTransactionCount() > 0 ) {
+            startDatePicker.setValue(accountComboBox.getValue().getTransactionAt(0).getLocalDate());
+            endDatePicker.setValue(LocalDate.now());
         }
     }
 
@@ -175,5 +191,14 @@ public class AccountRegisterReportController implements ReportController {
         return AccountRegisterReport.createReportModel(account, startDatePicker.getValue(), endDatePicker.getValue(),
                 showSplitsCheckBox.isSelected(), memoFilterTextField.getText(), payeeFilterTextField.getText(),
                 showTimestampCheckBox.isSelected());
+    }
+
+    @FXML
+    private void handleResetAll() {
+        JavaFXUtils.runLater(() -> {
+            resetDates();
+            memoFilterTextField.setText("");
+            payeeFilterTextField.setText("");
+        });
     }
 }
