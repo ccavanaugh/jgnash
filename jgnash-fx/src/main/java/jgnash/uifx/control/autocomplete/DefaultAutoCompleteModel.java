@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -43,6 +44,11 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
     final SimpleBooleanProperty ignoreCaseEnabled = new SimpleBooleanProperty(false);
 
     private final SimpleBooleanProperty fuzzyMatchEnabled = new SimpleBooleanProperty(false);
+
+    /**
+     * Must be set to true when the initial load has been completed
+     */
+    final AtomicBoolean loadComplete = new AtomicBoolean(false);
 
     DefaultAutoCompleteModel() {
 
@@ -116,6 +122,14 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
         synchronized (list) {
             list.clear();
         }
+    }
+
+    void load() {
+        loadComplete.set(true);
+    }
+
+    public final AtomicBoolean isLoadComplete() {
+        return loadComplete;
     }
 
     /**

@@ -18,6 +18,7 @@
 package jgnash.uifx.control.autocomplete;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Auto complete model interface.
@@ -47,4 +48,12 @@ public interface AutoCompleteModel<E> {
      * @return A collection of objects that would give extra information about the key
      */
     Collection<E> getAllExtraInfo(String key);
+
+    /**
+     * Atomic indicating if the initial load of data is complete to support
+     * a full search
+     *
+     * @return AtomicBoolean indicating completion
+     */
+    AtomicBoolean isLoadComplete();
 }

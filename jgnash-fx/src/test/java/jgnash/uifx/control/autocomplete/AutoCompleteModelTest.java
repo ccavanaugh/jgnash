@@ -37,7 +37,6 @@ import jgnash.engine.TransactionFactory;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AutoCompleteTextField;
-import jgnash.uifx.util.JavaFXUtils;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
@@ -120,15 +119,17 @@ class AutoCompleteModelTest {
         final AutoCompleteTextField<Transaction> autoCompleteMemoTextField = new AutoCompleteTextField<>();
         AutoCompleteFactory.setMemoModel(autoCompleteMemoTextField);
 
-        // Auto complete model loading is pushed to the end of the JavaFX thread.
-        // Block until the atomic has been set or the test will fail
-        final AtomicBoolean atomic = new AtomicBoolean(false);
-        JavaFXUtils.runLater(() -> atomic.set(true));
-        Awaitility.await().untilTrue(atomic);
-
         final AutoCompleteModel<Transaction> payeeModel = autoCompletePayeeTextField.autoCompleteModelObjectProperty().get();
         final AutoCompleteModel<Transaction> memoModel = autoCompleteMemoTextField.autoCompleteModelObjectProperty().get();
 
+        final AtomicBoolean payeeModelLoaded = payeeModel.isLoadComplete();
+        final AtomicBoolean memoModelLoaded = memoModel.isLoadComplete();
+
+        // Block until the atomics have been set or the test will fail
+        Awaitility.await().untilTrue(payeeModelLoaded);
+        Awaitility.await().untilTrue(memoModelLoaded);
+
+        //noinspection SpellCheckingInspection
         final String payeeResult = payeeModel.doLookAhead("Paye");
         final String memoResult = memoModel.doLookAhead("Me");
 

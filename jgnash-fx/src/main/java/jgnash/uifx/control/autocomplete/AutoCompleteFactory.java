@@ -144,10 +144,12 @@ public class AutoCompleteFactory {
                     for (final Transaction t : transactions) {
                         if (load) {
                             load(t);
-                        } else {
+                        } else {    // loading has been stopped
                             return;
                         }
                     }
+
+                    super.load();
                 } catch (Exception e) {
                     Logger.getLogger(TransactionModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
                 }
@@ -196,6 +198,8 @@ public class AutoCompleteFactory {
                 if (account != null) {
                     account.getSortedTransactionList().forEach(this::load);
                 }
+
+                loadComplete.set(true);
             }));
         }
 
