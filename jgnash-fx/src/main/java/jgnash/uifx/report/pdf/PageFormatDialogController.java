@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.report.pdf;
 
-
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.math.BigDecimal;
@@ -52,6 +51,8 @@ import jgnash.util.Nullable;
 public class PageFormatDialogController {
 
     private static final String LAST_UNIT = "lastUnit";
+
+    private static final float EPSILON = 0.5f;  // round error occur due to saved precision of the page size
 
     @InjectFXML
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
@@ -179,6 +180,12 @@ public class PageFormatDialogController {
         final float rightMargin = width - (float) pageFormat.getImageableWidth() - imageableX;
         final float bottomMargin = height - (float) pageFormat.getImageableHeight() - imageableY;
 
+        final PageSize oldPageSize = matchPageSize(width, height);
+
+        if (oldPageSize != null) {
+            pageSizeComboBox.setValue(oldPageSize);
+        }
+
         // load the fields with the new values
         final Unit currentUnit = unitsComboBox.getValue();
 
@@ -188,6 +195,21 @@ public class PageFormatDialogController {
         handleUnitChange(topMarginField, imageableY, currentUnit);
         handleUnitChange(rightMarginField, rightMargin, currentUnit);
         handleUnitChange(bottomMarginField, bottomMargin, currentUnit);
+    }
+
+    private PageSize matchPageSize(final float width, final float height) {
+        for (final PageSize pageSize : PageSize.values()) {
+            if ((compare(width, pageSize.width) && compare(height,pageSize.height))
+                        || (compare(height, pageSize.width) && compare(width, pageSize.height))) {
+                return pageSize;
+            }
+        }
+
+        return null;
+    }
+
+    private boolean compare(float num1, float num2) {
+        return Math.abs(num1 - num2) <= EPSILON;
     }
 
     @Nullable

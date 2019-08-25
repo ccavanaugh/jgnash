@@ -22,6 +22,7 @@
 * Option to load a custom style sheet.
 
 == Release 3.2.2
+* 08/25/2019 Properly restore the configured page size of a report if it's not a custom size.
 * 08/25/2019 Expanded the auto-completion API to improve unit testing robustness.
 * 08/25/2019 Fixed a regression that was causing a failure to load .h2.db files.
 * 08/25/2019 Added a new option to save/restore prior report dates and added a Reset button.  The default start date
