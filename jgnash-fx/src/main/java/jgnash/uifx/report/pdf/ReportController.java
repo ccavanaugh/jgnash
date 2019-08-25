@@ -31,6 +31,16 @@ import java.util.prefs.Preferences;
 public interface ReportController {
 
     /**
+     * Preference key
+     */
+    String START_DATE_KEY = "startDate";
+
+    /**
+     * Preference key
+     */
+    String END_DATE_KEY = "endDate";
+
+    /**
      * Installs a callback to notify the report viewer that the underlying report has changed itself.
      *
      * @param runnable Runnable / callback that should be executed

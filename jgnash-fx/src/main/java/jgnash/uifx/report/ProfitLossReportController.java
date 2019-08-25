@@ -17,16 +17,6 @@
  */
 package jgnash.uifx.report;
 
-import jgnash.report.pdf.Report;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.report.table.SortOrder;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.time.DateUtils;
-import jgnash.time.Period;
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.uifx.report.pdf.ReportController;
-import jgnash.uifx.util.JavaFXUtils;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.function.Consumer;
@@ -37,6 +27,17 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.report.table.SortOrder;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
+import jgnash.time.Period;
+import jgnash.uifx.Options;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.report.pdf.ReportController;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Profit Loss Report Controller
@@ -82,6 +83,8 @@ public class ProfitLossReportController implements ReportController {
 
     private Runnable refreshRunnable = null;
 
+    private final Preferences preferences = getPreferences();
+
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Object> changeListener;  // need to hold a reference to prevent premature collection
 
@@ -94,15 +97,22 @@ public class ProfitLossReportController implements ReportController {
         final Preferences preferences = getPreferences();
 
         hideZeroBalanceAccounts.setSelected(preferences.getBoolean(HIDE_ZERO_BALANCE, true));
-        startDatePicker.setValue(LocalDate.now().minusMonths(preferences.getInt(MONTHS, 4) - 1));
 
         showLongNamesCheckBox.setSelected(preferences.getBoolean(SHOW_FULL_ACCOUNT_PATH, false));
         showAccountPercentages.setSelected(preferences.getBoolean(SHOW_PERCENTAGES, false));
 
-        resolutionComboBox.getItems().add(Period.MONTHLY);
-        resolutionComboBox.getItems().add(Period.QUARTERLY);
-        resolutionComboBox.getItems().add(Period.YEARLY);
+        resolutionComboBox.getItems().setAll(Period.MONTHLY, Period.QUARTERLY, Period.YEARLY);
         resolutionComboBox.setValue(Period.values()[preferences.getInt(PERIOD, Period.QUARTERLY.ordinal())]);
+
+        resetDates();
+
+        startDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        startDatePicker.preferencesProperty().setValue(preferences);
+        startDatePicker.preferenceKeyProperty().setValue(START_DATE_KEY);
+
+        endDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        endDatePicker.preferencesProperty().setValue(preferences);
+        endDatePicker.preferenceKeyProperty().setValue(END_DATE_KEY);
 
         sortOrderComboBox.getItems().setAll(SortOrder.values());
         sortOrderComboBox.setValue(SortOrder.values()[preferences.getInt(SORT_ORDER, SortOrder.BY_NAME.ordinal())]);
@@ -138,8 +148,6 @@ public class ProfitLossReportController implements ReportController {
 
     private void handleReportRefresh() {
 
-        final Preferences preferences = getPreferences();
-
         preferences.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
         preferences.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDatePicker.getValue(),
                 endDatePicker.getValue()).size());
@@ -154,6 +162,15 @@ public class ProfitLossReportController implements ReportController {
         if (refreshRunnable != null) {
             refreshRunnable.run();
         }
+    }
+
+    private void resetDates() {
+
+        // calculate number of months for 4-5 columns
+        final int months = (int)(resolutionComboBox.getValue().getMonths() * 4);
+
+        endDatePicker.setValue(LocalDate.now());
+        startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(LocalDate.now().minusMonths(months - 1)));
     }
 
     private void addTable() {
@@ -187,5 +204,10 @@ public class ProfitLossReportController implements ReportController {
     @FXML
     public void handleRefresh() {
         JavaFXUtils.runLater(this::refreshReport);
+    }
+
+    @FXML
+    private void handleResetAll() {
+        resetDates();
     }
 }

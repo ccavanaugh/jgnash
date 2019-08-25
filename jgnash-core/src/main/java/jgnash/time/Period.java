@@ -26,22 +26,32 @@ import jgnash.resource.util.ResourceUtils;
  */
 public enum Period {
 
-    DAILY(ResourceUtils.getString("Period.Daily")),
-    WEEKLY(ResourceUtils.getString("Period.Weekly")),
-    BI_WEEKLY(ResourceUtils.getString("Period.BiWeekly")),
-    MONTHLY(ResourceUtils.getString("Period.Monthly")),
-    QUARTERLY(ResourceUtils.getString("Period.Quarterly")),
-    YEARLY(ResourceUtils.getString("Period.Yearly"));
+    DAILY(ResourceUtils.getString("Period.Daily"), 1/30f),      // approximation
+    WEEKLY(ResourceUtils.getString("Period.Weekly"), .25f),     // approximation
+    BI_WEEKLY(ResourceUtils.getString("Period.BiWeekly"), .5f), // approximation
+    MONTHLY(ResourceUtils.getString("Period.Monthly"), 1),
+    QUARTERLY(ResourceUtils.getString("Period.Quarterly"), 3),
+    YEARLY(ResourceUtils.getString("Period.Yearly" ), 12);
 
     private final transient String description;
 
-    Period(final String description) {
+    /**
+     * The number of months in a period.  The value may be an approximation
+     */
+    private final transient float months;
+
+    Period(final String description, final float months) {
         this.description = description;
+        this.months = months;
     }
 
     @Override
     public String toString() {
         return description;
+    }
+
+    public float getMonths() {
+        return months;
     }
 
 }

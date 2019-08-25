@@ -91,11 +91,11 @@ public class AccountRegisterReportController implements ReportController {
 
         startDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
         startDatePicker.preferencesProperty().setValue(preferences);
-        startDatePicker.preferenceKeyProperty().setValue("startDate");
+        startDatePicker.preferenceKeyProperty().setValue(START_DATE_KEY);
 
         endDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
         endDatePicker.preferencesProperty().setValue(preferences);
-        endDatePicker.preferenceKeyProperty().setValue("endDate");
+        endDatePicker.preferenceKeyProperty().setValue(END_DATE_KEY);
 
         accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

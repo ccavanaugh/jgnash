@@ -19,11 +19,11 @@
 * Reinstate archive capability
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
-* Write and replace for bxds and xml files to protect against corruption if a crash occurs during a save.
 * Option to load a custom style sheet.
-* Sticky dates for reports
 
 == Release 3.2.2
+* 08/25/2019 Added a new option to save/restore prior report dates and added a Reset button.  The default start date
+             is now the 1st day of the month.
 * 08/12/2019 Backup files are no longer created unless the data file/database has been changed during a session.
 * 08/11/2019 Consolidated CSS to make customization easier.
 * 08/11/2019 Prevent a transaction form null pointer exception at shutdown when working with a multi-currency files.

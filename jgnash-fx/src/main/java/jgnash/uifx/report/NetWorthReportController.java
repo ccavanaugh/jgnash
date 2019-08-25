@@ -17,15 +17,6 @@
  */
 package jgnash.uifx.report;
 
-import jgnash.report.pdf.Report;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.time.DateUtils;
-import jgnash.time.Period;
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.uifx.report.pdf.ReportController;
-import jgnash.uifx.util.JavaFXUtils;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.function.Consumer;
@@ -34,6 +25,16 @@ import java.util.prefs.Preferences;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+
+import jgnash.report.pdf.Report;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
+import jgnash.time.Period;
+import jgnash.uifx.Options;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.report.pdf.ReportController;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Net Worth Report Controller
@@ -64,6 +65,8 @@ public class NetWorthReportController implements ReportController {
 
     private Runnable refreshRunnable = null;
 
+    private final Preferences preferences = getPreferences();
+
     public NetWorthReportController() {
         super();
     }
@@ -73,10 +76,19 @@ public class NetWorthReportController implements ReportController {
         final Preferences preferences = getPreferences();
 
         hideZeroBalanceAccounts.setSelected(preferences.getBoolean(HIDE_ZERO_BALANCE, true));
-        startDatePicker.setValue(LocalDate.now().minusMonths(preferences.getInt(MONTHS, 4) - 1));
 
         resolutionComboBox.getItems().setAll(Period.MONTHLY, Period.QUARTERLY, Period.YEARLY);
         resolutionComboBox.setValue(Period.values()[preferences.getInt(PERIOD, Period.MONTHLY.ordinal())]);
+
+        resetDates();
+
+        startDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        startDatePicker.preferencesProperty().setValue(preferences);
+        startDatePicker.preferenceKeyProperty().setValue(START_DATE_KEY);
+
+        endDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        endDatePicker.preferencesProperty().setValue(preferences);
+        endDatePicker.preferenceKeyProperty().setValue(END_DATE_KEY);
 
         startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
         endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> handleReportRefresh());
@@ -104,8 +116,6 @@ public class NetWorthReportController implements ReportController {
 
     private void handleReportRefresh() {
 
-        final Preferences preferences = getPreferences();
-
         preferences.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
         preferences.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDatePicker.getValue(),
                 endDatePicker.getValue()).size());
@@ -117,6 +127,15 @@ public class NetWorthReportController implements ReportController {
         if (refreshRunnable != null) {
             refreshRunnable.run();
         }
+    }
+
+    private void resetDates() {
+
+        // calculate number of months for 4-5 columns
+        final int months = (int)(resolutionComboBox.getValue().getMonths() * 4);
+
+        endDatePicker.setValue(LocalDate.now());
+        startDatePicker.setValue(DateUtils.getFirstDayOfTheMonth(LocalDate.now().minusMonths(months - 1)));
     }
 
     private void addTable() {
@@ -139,5 +158,10 @@ public class NetWorthReportController implements ReportController {
 
         return report.createReportModel(startDatePicker.getValue(), endDatePicker.getValue(),
                 hideZeroBalanceAccounts.isSelected());
+    }
+
+    @FXML
+    private void handleResetAll() {
+        resetDates();
     }
 }

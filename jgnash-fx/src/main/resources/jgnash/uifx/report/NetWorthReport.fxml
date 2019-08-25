@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import jgnash.uifx.control.DatePickerEx?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.DatePickerEx?>
 
 <GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.report.NetWorthReportController" styleClass="form, dialog">
@@ -32,6 +33,9 @@
     <ComboBox fx:id="resolutionComboBox" GridPane.columnIndex="5"/>
 
     <CheckBox fx:id="hideZeroBalanceAccounts" text="%Button.HideZeroBalance" GridPane.rowIndex="1"
-              GridPane.columnIndex="0" GridPane.columnSpan="6"/>
+              GridPane.columnIndex="0" GridPane.columnSpan="5"/>
+
+    <Button text="%Button.ResetAll" onAction="#handleResetAll" GridPane.rowIndex="1" GridPane.columnIndex="5"
+            GridPane.halignment="RIGHT"/>
 
 </GridPane>
