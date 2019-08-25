@@ -1,6 +1,6 @@
 plugins {
-    id "edu.sc.seis.launch4j" version "2.4.6"
-    id "org.openjfx.javafxplugin" version "0.0.8"
+    id "edu.sc.seis.launch4j"
+    id "org.openjfx.javafxplugin"
 }
 
 apply plugin: "distribution"
