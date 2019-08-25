@@ -39,10 +39,10 @@ public class JpaH2EngineTest extends EngineTest {
 
     @Override
     public Engine createEngine() {
-        testFile = "jpa-test" + JpaH2DataStore.FILE_EXT;
+        testFile = "jpa-test" + JpaH2DataStore.H2_FILE_EXT;
 
         try {
-            testFile = Files.createTempFile("jpa-test", JpaH2DataStore.FILE_EXT).toString();
+            testFile = Files.createTempFile("jpa-test", JpaH2DataStore.H2_FILE_EXT).toString();
 
         } catch (final IOException ex) {
             Logger.getLogger(JpaH2EngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);

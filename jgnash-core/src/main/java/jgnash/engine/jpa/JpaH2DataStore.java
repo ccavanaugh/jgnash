@@ -33,14 +33,14 @@ import jgnash.util.NotNull;
  */
 public class JpaH2DataStore extends AbstractJpaDataStore {
 
-    public static final String FILE_EXT = ".h2.db";
+    public static final String H2_FILE_EXT = ".h2.db";
 
     public static final String LOCK_EXT = ".lock.db";
 
     @NotNull
     @Override
     public String getFileExt() {
-        return FILE_EXT;
+        return H2_FILE_EXT;
     }
 
     @Override

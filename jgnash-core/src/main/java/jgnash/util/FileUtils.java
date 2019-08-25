@@ -68,8 +68,8 @@ public final class FileUtils {
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT,
             JpaH2DataStore.LOCK_EXT, JpaH2MvDataStore.LOCK_EXT, ".lock"};
 
-    private static final String[] FILE_EXTENSIONS = new String[]{JpaH2DataStore.FILE_EXT,
-            JpaH2MvDataStore.FILE_EXT, JpaHsqlDataStore.FILE_EXT, XMLDataStore.FILE_EXT};
+    private static final String[] FILE_EXTENSIONS = new String[]{JpaH2DataStore.H2_FILE_EXT,
+            JpaH2MvDataStore.MV_FILE_EXT, JpaHsqlDataStore.FILE_EXT, XMLDataStore.FILE_EXT};
 
     public static final String SEPARATOR = System.getProperty("file.separator");
 

@@ -40,10 +40,10 @@ public class JpaH2MvEngineTest extends EngineTest {
 
     @Override
     public Engine createEngine() {
-        testFile = "jpa-testmv" + JpaH2MvDataStore.FILE_EXT;
+        testFile = "jpa-testmv" + JpaH2MvDataStore.MV_FILE_EXT;
 
         try {
-            testFile = Files.createTempFile("jpa-testmv", JpaH2MvDataStore.FILE_EXT).toString();
+            testFile = Files.createTempFile("jpa-testmv", JpaH2MvDataStore.MV_FILE_EXT).toString();
 
         } catch (final IOException ex) {
             Logger.getLogger(JpaH2MvEngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);

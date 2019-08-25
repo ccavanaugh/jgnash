@@ -27,12 +27,12 @@ import jgnash.util.NotNull;
  */
 public class JpaH2MvDataStore extends JpaH2DataStore {
 
-    public static final String FILE_EXT = ".mv.db";
+    public static final String MV_FILE_EXT = ".mv.db";
 
     @NotNull
     @Override
     public String getFileExt() {
-        return FILE_EXT;
+        return MV_FILE_EXT;
     }
 
     @Override
