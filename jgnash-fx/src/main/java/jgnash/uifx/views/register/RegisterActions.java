@@ -54,7 +54,7 @@ import jgnash.util.FileUtils;
  *
  * @author Craig Cavanaugh
  */
-public class RegisterActions {
+public final class RegisterActions {
 
     private static final String EXPORT_DIR = "exportDir";
 
@@ -171,14 +171,24 @@ public class RegisterActions {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(resources.getString("Label.CsvFiles") + " (*.csv)", "*.csv"),
                 new FileChooser.ExtensionFilter(resources.getString("Label.OfxFiles") + " (*.ofx)", "*.ofx"),
-                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls, *.xlsx)",
-                        "*.xls", "*.xlsx")
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls)",
+                        "*.xls"),
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xlsx)",
+                         "*.xlsx")
         );
 
         final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
+        final File exportFile;
 
         if (file != null) {
-            pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());
+            if (!FileUtils.fileHasExtension(file.getName())) {  // fix up the file name if the user did not specify it
+                final String fileExtension = fileChooser.getSelectedExtensionFilter().getExtensions().get(0).substring(1);
+                exportFile = new  File(FileUtils.stripFileExtension(file.getAbsolutePath()) + fileExtension);
+            } else {
+                exportFile = file;
+            }
+
+            pref.put(EXPORT_DIR, exportFile.getParentFile().getAbsolutePath());
 
             final Task<Void> exportTask = new Task<>() {
                 @Override
@@ -186,18 +196,16 @@ public class RegisterActions {
                     updateMessage(resources.getString("Message.PleaseWait"));
                     updateProgress(-1, Long.MAX_VALUE);
 
-                    if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
-                        final OfxExport export = new OfxExport(account, startDate, endDate, file);
+                    if (OFX.equals(FileUtils.getFileExtension(exportFile.getName()))) {
+                        final OfxExport export = new OfxExport(account, startDate, endDate, exportFile);
                         export.exportAccount();
-                    } else if (FileUtils.getFileExtension(file.getName()).contains(XLS)) {
+                    } else if (FileUtils.getFileExtension(exportFile.getName()).contains(XLS)) {
                         final AbstractReportTableModel reportTableModel = AccountRegisterReport.createReportModel(account,
                                 startDate, endDate, false, "", "", true);
 
-                        Workbook.export(reportTableModel, file);
-
-
+                        Workbook.export(reportTableModel, exportFile);
                     } else {
-                        CsvExport.exportAccount(account, startDate, endDate, file);
+                        CsvExport.exportAccount(account, startDate, endDate, exportFile);
                     }
                     return null;
                 }

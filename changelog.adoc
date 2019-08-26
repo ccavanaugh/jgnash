@@ -22,6 +22,8 @@
 * Option to load a custom style sheet.
 
 == Release 3.2.2
+* 08/26/2019 The selected file type was ignored when exporting a register and the extension was not specified within
+             the filename.
 * 08/25/2019 Properly restore the configured page size of a report if it's not a custom size.
 * 08/25/2019 Expanded the auto-completion API to improve unit testing robustness.
 * 08/25/2019 Fixed a regression that was causing a failure to load .h2.db files.
