@@ -58,7 +58,7 @@ public class ReportActions {
         pair.getStage().show();
     }
 
-    public static void displayAccountRegisterReport2(@Nullable final Account account) {
+    public static void displayAccountRegisterReport(@Nullable final Account account) {
         final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
                 FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),
                         ResourceUtils.getString("Title.AccountRegister"));

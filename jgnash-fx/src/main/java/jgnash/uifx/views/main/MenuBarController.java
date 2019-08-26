@@ -443,7 +443,7 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleDisplayAccountRegisterReport() {
-        ReportActions.displayAccountRegisterReport2(null);
+        ReportActions.displayAccountRegisterReport(null);
     }
 
     @FXML
