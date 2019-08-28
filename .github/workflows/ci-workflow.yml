@@ -5,10 +5,7 @@ on: [push]
 jobs:
   test:
 
-    runs-on: ${{ matrix.operating-system }}
-      strategy:
-        matrix:
-          operating-system: [ubuntu-latest, windows-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@master
