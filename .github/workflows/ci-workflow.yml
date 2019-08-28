@@ -1,0 +1,21 @@
+name: 'CI Test'
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ${{ matrix.operating-system }}
+      strategy:
+        matrix:
+          operating-system: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: actions/setup-java@master
+        with:
+          java-version: '11'
+          architecture: 'x64'
+
+      - run: ./gradlew test
