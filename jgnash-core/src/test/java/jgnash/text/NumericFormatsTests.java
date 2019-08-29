@@ -92,6 +92,9 @@ class NumericFormatsTests {
         NumberFormat shortFormat = NumericFormats.getShortCommodityFormat(node);
         NumberFormat fullFormat = NumericFormats.getFullCommodityFormat(node);
 
+        // why does this fail test on Github?
+        System.out.println("." + shortFormat.format(BigDecimal.TEN) + ".");
+
         assertEquals("$10.00", shortFormat.format(BigDecimal.TEN));
         assertEquals("$10.00 ", fullFormat.format(BigDecimal.TEN));
 
