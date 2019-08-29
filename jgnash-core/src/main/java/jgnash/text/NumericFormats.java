@@ -137,11 +137,11 @@ public final class NumericFormats {
     }
 
     public static void setShortFormatPattern(@NotNull final String pattern) {
-        if (!getShortFormatPattern().equals(pattern)) {
+        //if (!getShortFormatPattern().equals(pattern)) {
             setFormatPattern(SHORT_FORMAT, pattern);
 
             simpleInstanceMap.clear();  // flush the cached instance map
-        }
+        //}
     }
 
     private static void setFormatPattern(@NotNull final String key, @NotNull final String pattern) {
