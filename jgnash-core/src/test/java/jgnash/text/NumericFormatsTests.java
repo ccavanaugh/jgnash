@@ -47,6 +47,18 @@ class NumericFormatsTests {
 
     }
 
+    @Test void testPercentages() {
+        final NumberFormat format = NumericFormats.getPercentageFormat();
+
+        assertEquals("12.34%", format.format(.12344));
+        assertEquals("12.35%", format.format(.12345));
+    }
+
+    @Test void testFixedPrecisionFormat() {
+        assertEquals("12.34", NumericFormats.getFixedPrecisionFormat(2).format(12.344));
+        assertEquals("12.35", NumericFormats.getFixedPrecisionFormat(2).format(12.345));
+    }
+
     @Test
     void knowCurrencyFormats() {
         System.out.println("Full formats");
