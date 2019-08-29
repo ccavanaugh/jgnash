@@ -62,7 +62,7 @@ class AutoCompleteModelTest {
     static void setUp() throws TimeoutException {
         assertTrue(Files.isDirectory(tempDir));
 
-        if (Boolean.getBoolean("headless")) {
+        //if (Boolean.getBoolean("headless")) {
             System.setProperty("java.awt.headless", "true");
             System.setProperty("testfx.robot", "glass");
             System.setProperty("testfx.headless", "true");
@@ -70,7 +70,7 @@ class AutoCompleteModelTest {
             System.setProperty("prism.text", "t2k");
             System.setProperty("prism.verbose", "true");
 
-        }
+        //}
         registerPrimaryStage();
     }
 
