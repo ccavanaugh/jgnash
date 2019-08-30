@@ -1,12 +1,17 @@
 plugins {
+    id 'application'
     id "org.openjfx.javafxplugin"
+    id 'org.beryx.jlink' version '2.15.1'
+    id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
-apply plugin: "distribution"
-apply plugin: "application" // creates a task to run the full application
-
 description = "jGnash JavaFx"
-mainClassName = "jGnashFx"
+
+application {
+    mainClassName = "$moduleName/jgnash.app.jGnashFx"
+    applicationName = 'jGnashFx'
+}
+
 
 dependencies {
     //compile project(":jgnash-manual")
@@ -16,42 +21,7 @@ dependencies {
     compile project(":jgnash-plugin")
 
     compile group: "info.picocli", name: "picocli", version: picocliVersion
-
-    // Hack to include all javafx platforms in the classpath
-    // The platform specific libraries are excluded when distributions is assembled
-    compile "org.openjfx:javafx-base:" + javaFXVersion
-    compile "org.openjfx:javafx-controls:" + javaFXVersion
-    compile "org.openjfx:javafx-fxml:" + javaFXVersion
-    compile "org.openjfx:javafx-graphics:" + javaFXVersion
-    compile "org.openjfx:javafx-media:" + javaFXVersion
-    compile "org.openjfx:javafx-swing:" + javaFXVersion
-    compile "org.openjfx:javafx-web:" + javaFXVersion
-
-    compile "org.openjfx:javafx-base:" + javaFXVersion + ":linux"
-    compile "org.openjfx:javafx-controls:" + javaFXVersion + ":linux"
-    compile "org.openjfx:javafx-fxml:" + javaFXVersion + ":linux"
-    compile "org.openjfx:javafx-graphics:" + javaFXVersion + ":linux"
-    compile "org.openjfx:javafx-media:" + javaFXVersion + ":linux"
-    compile "org.openjfx:javafx-swing:" + javaFXVersion + ":linux"
-    compile "org.openjfx:javafx-web:" + javaFXVersion + ":linux"
-
-    compile "org.openjfx:javafx-base:" + javaFXVersion + ":win"
-    compile "org.openjfx:javafx-controls:" + javaFXVersion + ":win"
-    compile "org.openjfx:javafx-fxml:" + javaFXVersion + ":win"
-    compile "org.openjfx:javafx-graphics:" + javaFXVersion + ":win"
-    compile "org.openjfx:javafx-media:" + javaFXVersion + ":win"
-    compile "org.openjfx:javafx-swing:" + javaFXVersion + ":win"
-    compile "org.openjfx:javafx-web:" + javaFXVersion + ":win"
-
-    compile "org.openjfx:javafx-base:" + javaFXVersion + ":mac"
-    compile "org.openjfx:javafx-controls:" + javaFXVersion + ":mac"
-    compile "org.openjfx:javafx-fxml:" + javaFXVersion + ":mac"
-    compile "org.openjfx:javafx-graphics:" + javaFXVersion + ":mac"
-    compile "org.openjfx:javafx-media:" + javaFXVersion + ":mac"
-    compile "org.openjfx:javafx-swing:" + javaFXVersion + ":mac"
-    compile "org.openjfx:javafx-web:" + javaFXVersion + ":mac"
-    // end hack
-
+    
     // required of Unit testing JavaFX
     testCompile group: 'org.testfx', name: 'testfx-junit5', version: '4.0.15-alpha'
     testCompile group: 'org.testfx', name: 'openjfx-monocle', version: 'jdk-12.0.1+2'
@@ -84,17 +54,6 @@ distZip {
     }
 }
 
-distributions {
-    main {
-        baseName = "jGnash"
-        contents {
-            exclude("**/*-linux*")  // excludes linux specific JavaFx modules from cross platform zip
-            exclude("**/*-win*")    // excludes windows specific JavaFx modules from cross platform zip
-            exclude("**/*-mac*")    // excludes mac specific JavaFx modules from cross platform zip
-        }
-    }
-}
-
 jar {
     // Keep jar clean:
     exclude "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.MF"
@@ -104,3 +63,31 @@ jar {
                 "Class-Path": configurations.runtimeClasspath.files.collect { "lib/$it.name" }.join(" ")
     }
 }
+
+jlink {
+    addExtraDependencies("javafx")
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = applicationName
+        jvmArgs = []
+    }
+    mergedModule {
+        requires 'java.logging'
+
+        requires 'javafx.controls'
+        requires 'javafx.fxml'
+        requires 'javafx.web'
+        requires 'javafx.swing'
+        requires 'javafx.graphics'
+        requires 'javafx.media'
+    }
+    jpackage {
+        // See https://badass-jlink-plugin.beryx.org/releases/latest/#_jpackage for
+        // where the plugin's jpackage task finds the path to the jpackage tool by default
+        // (Currently you need to manually install a OpenJDK 14 Early Access Build including jpackage)
+        jpackageHome = System.getenv('BADASS_JLINK_JPACKAGE_HOME')
+        skipInstaller = false
+        identifier = applicationName
+    }
+}
+
