@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package jgnash.app;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -91,6 +92,10 @@ public class jGnashFx extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
 
         final CommandLine commandLine = new CommandLine(new CommandLineOptions());
+        // Hack: Allow unmatched arguments due to Gradle -- because of xx plugin(s)? -- is putting the following args
+        // '-Dfile.encoding=UTF-8', '-Duser.country=US', '-Duser.language=en', '-Duser.variant' at the
+        // end of the JavaExec command line for :run task
+        commandLine.setUnmatchedArgumentsAllowed(true);
         commandLine.setToggleBooleanFlags(false);
         commandLine.setUsageHelpWidth(80);
 

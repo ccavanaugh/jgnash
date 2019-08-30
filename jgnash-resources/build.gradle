@@ -4,7 +4,7 @@ import static org.gradle.internal.os.OperatingSystem.*
 description = "jGnash Resources"
 
 project.ext {
-    moduleName = "jgnash.convert"
+    moduleName = "jgnash.resources"
 
     javaVersion = Jvm.current()
     osName = current()

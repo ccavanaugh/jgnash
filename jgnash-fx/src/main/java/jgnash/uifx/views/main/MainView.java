@@ -166,8 +166,14 @@ public class MainView implements MessageListener {
 
         busyPane = new BusyPane();
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), resources);
-        menuBar = fxmlLoader.load();
+        // It's nice to have some logging output when stuff fails in the FX start() method, and this code
+        // was failing as I was debugging module-info.java
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), resources);
+            menuBar = fxmlLoader.load();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
 
         final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), resources);
 
@@ -193,7 +199,10 @@ public class MainView implements MessageListener {
         scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 
         stage.setTitle(TITLE);
-        stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+        // Hack: Comment out this line so `./gradlew  :jgnash-fx:run` can at least start the app
+        // The hack is just kicking the can down the road as the app will crash later when the icon is expected
+        // to be non-null
+        //stage.getIcons().add(StaticUIMethods.getApplicationIcon());
         stage.setScene(scene);
         stage.setResizable(true);
 
