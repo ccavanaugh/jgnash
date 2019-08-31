@@ -61,8 +61,12 @@ public class ApiTest extends AbstractEngineTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
+            final Engine engine =  EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
                     DataStoreType.BINARY_XSTREAM);
+
+            engine.setCreateBackups(false); // disable for test
+
+            return engine;
         } catch (final EngineException e) {
             fail("Fatal error occurred");
             return  null;

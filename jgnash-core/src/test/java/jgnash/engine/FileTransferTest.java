@@ -89,6 +89,9 @@ class FileTransferTest {
         // Start an engine and close so we have a populated file
         EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
                 DataStoreType.H2_DATABASE);
+
+        EngineFactory.getEngine(EngineFactory.DEFAULT).setCreateBackups(false); // disable for test
+
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         // Change the password
@@ -194,6 +197,8 @@ class FileTransferTest {
         // Start an engine and close so we have a populated file
         EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
                 DataStoreType.HSQL_DATABASE);
+
+        EngineFactory.getEngine(EngineFactory.DEFAULT).setCreateBackups(false); // disable for test
 
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
