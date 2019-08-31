@@ -166,8 +166,12 @@ public class MainView implements MessageListener {
 
         busyPane = new BusyPane();
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), resources);
-        menuBar = fxmlLoader.load();
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), resources);
+            menuBar = fxmlLoader.load();
+        } catch (final Exception e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
 
         final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), resources);
 
