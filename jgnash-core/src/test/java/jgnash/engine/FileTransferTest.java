@@ -70,17 +70,10 @@ class FileTransferTest {
             final Path temp = Files.createTempFile("jpa-test-e", JpaH2DataStore.H2_FILE_EXT);
             Files.delete(temp);
 
+            temp.toFile().deleteOnExit();
             testFile = temp.toString();
 
             assertNotNull(testFile);
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    Files.delete(temp);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }));
         } catch (final IOException e) {
             Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
@@ -178,17 +171,11 @@ class FileTransferTest {
             Path temp = Files.createTempFile("jpa-test", JpaHsqlDataStore.FILE_EXT);
             Files.delete(temp);
 
+            temp.toFile().deleteOnExit();
+
             testFile = temp.toString();
 
             assertNotNull(testFile);
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    Files.delete(temp);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }));
         } catch (final IOException e) {
             Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
