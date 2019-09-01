@@ -46,6 +46,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class YahooEventParserTest extends AbstractEngineTest {
 
+    private static final int ATTEMPTS = 3;
+    private static final String GITHUB_ACTION = "GITHUB_ACTION";
+
     @Override
     protected Engine createEngine() throws IOException {
 
@@ -61,9 +64,11 @@ public class YahooEventParserTest extends AbstractEngineTest {
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
     void testParser() throws IOException {
 
-        // try 3 times to pass
-        for (int i = 0; i < 3; i++) {
+        if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions
+           return;
+        }
 
+        for (int i = 0; i < ATTEMPTS; i++) {     // try multiple times to pass
             final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
             ibm.setSymbol("IBM");
             ibm.setScale((byte) 2);
@@ -92,9 +97,11 @@ public class YahooEventParserTest extends AbstractEngineTest {
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
     void testHistoricalDownload() throws IOException {
 
-        // try 3 times to pass
-        for (int i = 0; i < 3; i++) {
+        if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions
+            return;
+        }
 
+        for (int i = 0; i < ATTEMPTS; i++) {      // try multiple times to pass
             final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
             ibm.setSymbol("IBM");
             ibm.setScale((byte) 2);
