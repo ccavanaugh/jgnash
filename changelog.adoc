@@ -23,7 +23,7 @@
 
 == Release 3.2.2
 * 09/01/2019 Fixed a source code encoding issue that caused issues when compiling and testing under Windows.
-* 09/01/2019 Updated to the latest Picocli, Netty, and  SLF4J dependencies.
+* 09/01/2019 Updated to the latest Picocli, and Netty dependencies.
 * 08/26/2019 The selected file type was ignored when exporting a register and the extension was not specified within
              the filename.
 * 08/25/2019 Properly restore the configured page size of a report if it's not a custom size.
