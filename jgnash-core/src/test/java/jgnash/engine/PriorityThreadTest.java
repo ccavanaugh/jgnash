@@ -17,21 +17,24 @@
  */
 package jgnash.engine;
 
+import jgnash.engine.concurrent.Priority;
+import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
-import jgnash.engine.concurrent.Priority;
-import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Craig Cavanaugh
  */
 class PriorityThreadTest {
+
+    private static final int FUTURES = 25;   // 25 futures
+    private static final int DELAY_MILLIS = 500;
 
     @Test
     void testPriorityThreadPoolExecutor() throws Exception {
@@ -42,11 +45,11 @@ class PriorityThreadTest {
 
         final List<Future<Void>> futures = new ArrayList<>();
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < FUTURES; i++) {
             Future<Void> future = executorService.submit(() -> {
                 final long value = atomicLongSequence.incrementAndGet();
 
-                Thread.sleep(500);
+                Thread.sleep(DELAY_MILLIS);
                 System.out.println("Background Callable: " + value);
                 return null;
             }, Priority.BACKGROUND);
@@ -59,10 +62,10 @@ class PriorityThreadTest {
         final Future<Void> priorityFuture = executorService.submit(() -> {
             final long value = atomicLongSequence.incrementAndGet();
 
-            Thread.sleep(500);
+            Thread.sleep(DELAY_MILLIS);
             System.out.println("System Callable: " + value);
 
-            assertEquals(5, value);
+            assertTrue(value < (FUTURES / 2));    // should not be the last value
             return null;
         });
 
