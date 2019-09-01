@@ -68,9 +68,10 @@ public abstract class AbstractEngineTest {
         this.testFolder = testFolder;
 
         e = createEngine();
-        e.setCreateBackups(false);
 
         assertNotNull(e);
+
+        e.setCreateBackups(false);
 
         // Creating currencies
         CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
