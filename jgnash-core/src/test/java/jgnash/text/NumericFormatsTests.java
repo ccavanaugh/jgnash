@@ -24,8 +24,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NumericFormatsTests {
 
@@ -44,7 +43,6 @@ class NumericFormatsTests {
         assertEquals("EUR", numberFormat.getCurrency().getCurrencyCode());
 
         assertThrows(NullPointerException.class, () -> NumericFormats.getFullCommodityFormat(null));
-
     }
 
     @Test void testPercentages() {
@@ -86,14 +84,23 @@ class NumericFormatsTests {
         final String oldShortPattern = NumericFormats.getShortFormatPattern();
         final String oldFullPattern = NumericFormats.getFullFormatPattern();
 
-        NumericFormats.setFullFormatPattern("¤#,##0.00;(¤#,##0.00)");
+        NumericFormats.setFullFormatPattern("\u00A4#,##0.00;(\u00A4#,##0.00)");
+        NumericFormats.setShortFormatPattern("\u00A4#,##0.00;-\u00A4#,##0.00");
+
+        NumberFormat shortFormat = NumericFormats.getShortCommodityFormat(node);
         NumberFormat fullFormat = NumericFormats.getFullCommodityFormat(node);
 
+        assertNotNull(fullFormat);
+        assertNotNull(shortFormat);
+
+        assertEquals("$10.00", shortFormat.format(BigDecimal.TEN));
         assertEquals("$10.00 ", fullFormat.format(BigDecimal.TEN));
+
+        assertEquals("-$10.00", shortFormat.format(BigDecimal.TEN.negate()));
         assertEquals("($10.00)", fullFormat.format(BigDecimal.TEN.negate()));
 
         NumericFormats.setShortFormatPattern("#,##0.00;-#,##0.00");
-        NumberFormat shortFormat = NumericFormats.getShortCommodityFormat(node);
+        shortFormat = NumericFormats.getShortCommodityFormat(node);
 
         assertEquals("10.00", shortFormat.format(BigDecimal.TEN));
         assertEquals("-10.00", shortFormat.format(BigDecimal.TEN.negate()));

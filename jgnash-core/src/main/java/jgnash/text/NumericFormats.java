@@ -52,7 +52,7 @@ public final class NumericFormats {
 
     private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> simpleInstanceMap = new WeakHashMap<>();
 
-    private static final String CURRENCY_SYMBOL = "¤";
+    private static final String CURRENCY_SYMBOL = "\u00A4"; // ¤, must be defined using unicode or some platforms fail test
 
     static {
         /*
@@ -78,8 +78,8 @@ public final class NumericFormats {
         }
 
         // TODO: add missing US locale format, JDK 11 Bug
-        patternSet.add("¤#,##0.00;(¤#,##0.00)");
-        patternSet.add("¤ #,##0.00;(¤ #,##0.00)");
+        patternSet.add("\u00A4#,##0.00;(\u00A4#,##0.00)");
+        patternSet.add("\u00A4 #,##0.00;(\u00A4 #,##0.00)");
 
         patternSet.add(getFullFormatPattern()); // add the users own format
 
