@@ -1,4 +1,4 @@
-name: 'CI Test Linux'
+name: 'CI Test macOS'
 
 on: [push]
 
