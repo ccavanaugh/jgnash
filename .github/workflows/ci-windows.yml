@@ -15,4 +15,4 @@ jobs:
           java-version: '11'
           architecture: 'x64'
 
-      - run: gradlew.bat test
+      - run: ./gradlew.bat test
