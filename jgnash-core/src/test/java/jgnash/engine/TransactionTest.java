@@ -29,6 +29,8 @@ class TransactionTest {
             Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
                     DataStoreType.XML);
 
+            e.setCreateBackups(false);
+
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
             e.addCurrency(defaultCurrency);
@@ -88,6 +90,8 @@ class TransactionTest {
         try {
             Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD,
                     DataStoreType.XML);
+
+            e.setCreateBackups(false);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
