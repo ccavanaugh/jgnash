@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.Objects;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
@@ -26,19 +28,18 @@ import javafx.scene.control.ButtonBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import jgnash.engine.Account;
 import jgnash.engine.AmortizeObject;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
-import jgnash.resource.util.ResourceUtils;
-
-import java.util.Objects;
 
 public class LiabilityRegisterPaneController extends BankRegisterPaneController {
 
@@ -70,7 +71,7 @@ public class LiabilityRegisterPaneController extends BankRegisterPaneController 
             controller.setAmortizeObject(accountProperty().get().getAmortizeObject());
         }
 
-        dialog.getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
+        ThemeManager.applyStyleSheets(dialog.getScene());
 
         dialog.setResizable(false);
 
@@ -106,7 +107,9 @@ public class LiabilityRegisterPaneController extends BankRegisterPaneController 
                     "DateTransNumberDialog.fxml", ResourceUtils.getBundle());
 
             controller.setAccount(amortizeObject.getBankAccount());
-            dialog.getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
+
+            ThemeManager.applyStyleSheets(dialog.getScene());
+
             dialog.setResizable(false);
             StageUtils.addBoundsListener(dialog, DateTransNumberDialogController.class, MainView.getPrimaryStage());
 

@@ -34,6 +34,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -44,8 +45,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
-import jgnash.util.NotNull;
 import jgnash.resource.util.OS;
+import jgnash.util.NotNull;
 
 /**
  * Theme manager.
@@ -57,7 +58,7 @@ public class ThemeManager {
     /**
      * Default style sheet.
      */
-    public static final String DEFAULT_CSS = "jgnash/skin/default.css";
+    private static final String DEFAULT_CSS = "jgnash/skin/default.css";
 
     private static final Preferences preferences;
 
@@ -200,6 +201,14 @@ public class ThemeManager {
 
     private ThemeManager() {
         // Utility class
+    }
+
+    public static void applyStyleSheets(final Scene scene) {
+        scene.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
+    }
+
+    public static void applyStyleSheets(final Parent parent) {
+        parent.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
     }
 
     static Color getDefaultColor(final String theme, final byte colorIndex) {

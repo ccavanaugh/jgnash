@@ -35,13 +35,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * A dialog for displaying and printing an image.
@@ -100,7 +100,7 @@ public class ImageDialog {
         borderPane.styleProperty().bind(ThemeManager.styleProperty());
 
         dialog.setScene(new Scene(borderPane));
-        dialog.getScene().getStylesheets().add(ThemeManager.DEFAULT_CSS);
+        ThemeManager.applyStyleSheets(dialog.getScene());
 
         // Remember dialog size and location
         StageUtils.addBoundsListener(dialog, ImageDialog.class, MainView.getPrimaryStage());

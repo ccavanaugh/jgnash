@@ -84,8 +84,6 @@ public class FontAwesomeLabel extends Label {
             textFillProperty().bind(ThemeManager.controlTextFillProperty());
         }
 
-        getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
-
         setCache(true); // enable caching
     }
 

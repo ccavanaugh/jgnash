@@ -47,8 +47,9 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.control.LockedCommodityListCell;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.StageUtils;
@@ -56,7 +57,6 @@ import jgnash.uifx.views.main.MainView;
 import jgnash.util.LockedCommodityNode;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Dialog for selecting allowed account securities from a list.  If a security is used within the account, selection
@@ -135,7 +135,7 @@ public class SelectAccountSecuritiesDialog {
         gridPane.add(createButtonBar(), 0, 2, 3, 1);
 
         dialog.setScene(new Scene(gridPane));
-        dialog.getScene().getStylesheets().add(ThemeManager.DEFAULT_CSS);
+        ThemeManager.applyStyleSheets(dialog.getScene());
         dialog.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 

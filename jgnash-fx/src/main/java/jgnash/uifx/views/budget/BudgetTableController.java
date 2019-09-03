@@ -1185,7 +1185,6 @@ public class BudgetTableController implements MessageListener {
 
             final HBox hBox = new HBox(new Label(group.toString()), new BudgetSparkLine(remaining));
             hBox.setAlignment(Pos.CENTER_LEFT);
-            hBox.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
 
             sparkLinePane.getChildren().add(hBox);
         }

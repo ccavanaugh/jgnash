@@ -188,7 +188,7 @@ public class MainView implements MessageListener {
         stackPane.getChildren().addAll(borderPane, busyPane);
 
         final Scene scene = new Scene(stackPane, 640, 480);
-        scene.getStylesheets().add(ThemeManager.DEFAULT_CSS);
+        ThemeManager.applyStyleSheets(scene);
 
         scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 

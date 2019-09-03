@@ -67,7 +67,7 @@ public class RegisterStage extends Stage {
         controller = FXMLUtils.loadFXML(scene -> setScene(new Scene((Parent) scene)), formResource,
                 ResourceUtils.getBundle());
 
-        getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
+        ThemeManager.applyStyleSheets(getScene());
 
         // handle CTRL-F4
         getScene().setOnKeyPressed(event -> {

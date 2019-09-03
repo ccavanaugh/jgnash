@@ -55,8 +55,6 @@ import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.LogUtil;
 
-import static jgnash.uifx.skin.ThemeManager.DEFAULT_CSS;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -65,7 +63,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings({"WeakerAccess"})
 public class ControlsTest extends Application {
 
     private String testFile;
@@ -144,7 +141,7 @@ public class ControlsTest extends Application {
 
         primaryStage.setScene(new Scene(vBox, 300, 420));
 
-        primaryStage.getScene().getStylesheets().add(DEFAULT_CSS);
+        ThemeManager.applyStyleSheets(primaryStage.getScene());
         primaryStage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         primaryStage.show();
