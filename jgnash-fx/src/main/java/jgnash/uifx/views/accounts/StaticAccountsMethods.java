@@ -31,6 +31,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
@@ -58,7 +59,7 @@ public final class StaticAccountsMethods {
         final AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountTypeFilterForm.fxml", ResourceUtils.getBundle());
 
-        dialog.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
 
         controller.setAccountTypeFilter(accountTypeFilter);
 
@@ -78,7 +79,7 @@ public final class StaticAccountsMethods {
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
 
-        dialog.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -115,7 +116,7 @@ public final class StaticAccountsMethods {
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
 
-        dialog.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
 
         controller.loadProperties(account);
 

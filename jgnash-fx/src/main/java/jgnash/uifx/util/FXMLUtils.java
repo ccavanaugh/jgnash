@@ -99,7 +99,7 @@ public class FXMLUtils {
         }
 
         stage.initOwner(MainView.getPrimaryStage());
-        stage.getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
+        stage.getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
         stage.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         stage.initStyle(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -195,7 +195,7 @@ public class FXMLUtils {
             fxmlLoader.setController(controller);
 
             final Scene scene = new Scene(fxmlLoader.load());
-            scene.getStylesheets().addAll(MainView.DEFAULT_CSS);
+            scene.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
             scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 
             stage.setScene(scene);
@@ -252,7 +252,7 @@ public class FXMLUtils {
 
         try {
             final Scene scene = new Scene(fxmlLoader.load());
-            scene.getStylesheets().addAll(MainView.DEFAULT_CSS);
+            scene.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
             scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 
             final C controller = fxmlLoader.getController();

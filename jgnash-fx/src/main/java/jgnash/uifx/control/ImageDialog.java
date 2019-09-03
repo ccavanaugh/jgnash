@@ -100,7 +100,7 @@ public class ImageDialog {
         borderPane.styleProperty().bind(ThemeManager.styleProperty());
 
         dialog.setScene(new Scene(borderPane));
-        dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().add(ThemeManager.DEFAULT_CSS);
 
         // Remember dialog size and location
         StageUtils.addBoundsListener(dialog, ImageDialog.class, MainView.getPrimaryStage());

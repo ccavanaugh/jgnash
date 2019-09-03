@@ -34,7 +34,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 import jgnash.net.AbstractAuthenticator;
-import jgnash.uifx.views.main.MainView;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.resource.util.ResourceUtils;
 
 /**
@@ -78,13 +78,13 @@ public class NetworkAuthenticator extends AbstractAuthenticator {
             // Set the button types.
             final ButtonType loginButtonType = new ButtonType(resources.getString("Button.Ok"), ButtonBar.ButtonData.OK_DONE);
 
-            dialog.getDialogPane().getStylesheets().addAll(MainView.DEFAULT_CSS);
+            dialog.getDialogPane().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
             dialog.getDialogPane().getStyleClass().addAll("dialog");
             dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
             // Create the username and password labels and fields.
             final GridPane grid = new GridPane();
-            grid.getStylesheets().addAll(MainView.DEFAULT_CSS);
+            grid.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
             grid.getStyleClass().addAll("form");
 
             final TextField userNameField = new TextField();

@@ -90,7 +90,6 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainView;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 
@@ -1186,7 +1185,7 @@ public class BudgetTableController implements MessageListener {
 
             final HBox hBox = new HBox(new Label(group.toString()), new BudgetSparkLine(remaining));
             hBox.setAlignment(Pos.CENTER_LEFT);
-            hBox.getStylesheets().addAll(MainView.DEFAULT_CSS);
+            hBox.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
 
             sparkLinePane.getChildren().add(hBox);
         }

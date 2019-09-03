@@ -81,10 +81,6 @@ import java.util.prefs.Preferences;
  * @author Craig Cavanaugh
  */
 public class MainView implements MessageListener {
-    /**
-     * Default style sheet.
-     */
-    public static final String DEFAULT_CSS = "jgnash/skin/default.css";
 
     private static final String TITLE;
 
@@ -192,7 +188,7 @@ public class MainView implements MessageListener {
         stackPane.getChildren().addAll(borderPane, busyPane);
 
         final Scene scene = new Scene(stackPane, 640, 480);
-        scene.getStylesheets().add(DEFAULT_CSS);
+        scene.getStylesheets().add(ThemeManager.DEFAULT_CSS);
 
         scene.getRoot().styleProperty().bind(ThemeManager.styleProperty());
 

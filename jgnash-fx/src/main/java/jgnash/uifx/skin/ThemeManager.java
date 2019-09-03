@@ -54,6 +54,11 @@ import jgnash.resource.util.OS;
  */
 public class ThemeManager {
 
+    /**
+     * Default style sheet.
+     */
+    public static final String DEFAULT_CSS = "jgnash/skin/default.css";
+
     private static final Preferences preferences;
 
     private static final String LAST = "last";

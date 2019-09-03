@@ -40,9 +40,9 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.FXMLUtils.Pair;
-import jgnash.uifx.views.main.MainView;
 import jgnash.resource.util.HTMLResource;
 import jgnash.util.NotNull;
 import jgnash.resource.util.ResourceUtils;
@@ -117,7 +117,7 @@ public class AboutDialogController {
         tableViewColumns.add(keyCol);
         tableViewColumns.add(valueCol);
 
-        tableView.getStylesheets().addAll(MainView.DEFAULT_CSS);
+        tableView.getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
 
         final ContextMenu menu = new ContextMenu();
         final MenuItem copyMenuItem = new MenuItem(resources.getString("Menu.Copy.Name"));

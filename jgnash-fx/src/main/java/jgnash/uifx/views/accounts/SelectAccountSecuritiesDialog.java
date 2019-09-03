@@ -135,7 +135,7 @@ public class SelectAccountSecuritiesDialog {
         gridPane.add(createButtonBar(), 0, 2, 3, 1);
 
         dialog.setScene(new Scene(gridPane));
-        dialog.getScene().getStylesheets().add(MainView.DEFAULT_CSS);
+        dialog.getScene().getStylesheets().add(ThemeManager.DEFAULT_CSS);
         dialog.getScene().getRoot().styleProperty().bind(ThemeManager.styleProperty());
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 

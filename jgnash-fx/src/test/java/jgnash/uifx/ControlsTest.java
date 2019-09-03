@@ -55,7 +55,7 @@ import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.LogUtil;
 
-import static jgnash.uifx.views.main.MainView.DEFAULT_CSS;
+import static jgnash.uifx.skin.ThemeManager.DEFAULT_CSS;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

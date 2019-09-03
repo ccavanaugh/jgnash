@@ -18,10 +18,10 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Transaction;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.resource.util.Version;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 
 /**
@@ -67,7 +67,7 @@ public class RegisterStage extends Stage {
         controller = FXMLUtils.loadFXML(scene -> setScene(new Scene((Parent) scene)), formResource,
                 ResourceUtils.getBundle());
 
-        getScene().getStylesheets().addAll(MainView.DEFAULT_CSS);
+        getScene().getStylesheets().addAll(ThemeManager.DEFAULT_CSS);
 
         // handle CTRL-F4
         getScene().setOnKeyPressed(event -> {
