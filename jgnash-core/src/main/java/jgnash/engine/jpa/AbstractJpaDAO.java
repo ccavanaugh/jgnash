@@ -17,7 +17,7 @@
  */
 package jgnash.engine.jpa;
 
-import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -34,8 +35,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.concurrent.PriorityThreadPoolExecutor;
@@ -121,16 +120,15 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
                 try {
                     final CriteriaBuilder cb = em.getCriteriaBuilder();
                     final CriteriaQuery<T> cq = cb.createQuery(clazz);
-                    final Root<T> c = cq.from(clazz);
-                    final ParameterExpression<Boolean> p = cb.parameter(Boolean.class);
-
-                    cq.select(c).where(cb.equal(c.get("markedForRemoval"), p));
+                    cq.from(clazz);
 
                     final TypedQuery<T> query = em.createQuery(cq);
-                    query.setParameter(p, Boolean.FALSE);
 
-                    return new ArrayList<>(query.getResultList());
-                } catch (final PersistenceException | IllegalStateException e1) {
+                    // filtering though the stream is not has fast as performing the filter within the query, but it
+                    // ensures a ConcurrentModificationException is not thrown in rare circumstances by iterating.
+                    return query.getResultStream().filter(t -> !t.isMarkedForRemoval()).collect(Collectors.toList());
+
+                } catch (final ConcurrentModificationException | PersistenceException | IllegalStateException e1) {
                     logSevere(AbstractJpaDAO.class, e1);
                     return null;
                 } finally {
