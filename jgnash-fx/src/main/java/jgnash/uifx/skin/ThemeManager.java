@@ -48,6 +48,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import jgnash.resource.util.OS;
+import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
@@ -285,6 +286,9 @@ public class ThemeManager {
 
             if (!preferences.get(USER_STYLE, "").equals(newValue)) {
                 preferences.put(USER_STYLE, "file:///" + path.toString().replace("\\", "/"));
+
+                applyStyleSheets(MainView.getPrimaryStage().getScene());    // apply style sheet
+
                 result = true;
             }
         } else {
