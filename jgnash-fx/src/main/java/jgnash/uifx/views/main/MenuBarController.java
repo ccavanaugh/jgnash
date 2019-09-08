@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.main;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -29,6 +30,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.stage.FileChooser;
 
 import jgnash.convert.importat.ImportFilter;
 import jgnash.engine.Engine;
@@ -72,6 +74,7 @@ import jgnash.uifx.views.budget.BudgetManagerDialogController;
 import jgnash.uifx.views.recurring.RecurringDialogController;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
+import jgnash.util.FileUtils;
 
 /**
  * Primary Menu Controller.
@@ -364,6 +367,29 @@ public class MenuBarController implements MessageListener {
 
         pair.getStage().setResizable(false);
         pair.getStage().show();
+    }
+
+    @FXML
+    private void handleApplyStyleAction() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(resources.getString("Title.Open"));
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSS Files", "*.css"));
+
+        final File file = fileChooser.showOpenDialog(MainView.getPrimaryStage());
+
+        if (file != null && FileUtils.getFileExtension(file.toString()).equalsIgnoreCase("css")) {
+            if (ThemeManager.setUserStyle(file.toPath())) {
+                JavaFXUtils.runLater(() -> StaticUIMethods.displayMessage(resources.getString("Message.Info.RestartToApply")));
+            }
+        }
+    }
+
+    @FXML
+    private void handleClearStyleAction() {
+        if (ThemeManager.setUserStyle(null)) {
+            JavaFXUtils.runLater(() -> StaticUIMethods.displayMessage(resources.getString("Message.Info.RestartToApply")));
+        }
     }
 
     @FXML

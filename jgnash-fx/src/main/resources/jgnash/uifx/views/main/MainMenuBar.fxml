@@ -99,6 +99,8 @@
 
     <Menu text="%Menu.View.Name" id="viewMenu">
         <Menu fx:id="themesMenu" text="%Menu.Themes.Name"/>
+        <MenuItem text="%Menu.CustomStyleSheetApply.Name" onAction="#handleApplyStyleAction"/>
+        <MenuItem text="%Menu.CustomStyleSheetRemove.Name" onAction="#handleClearStyleAction"/>
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.FontSize.Name" onAction="#handleFontSizeAction">
             <graphic>
