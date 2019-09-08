@@ -374,7 +374,7 @@ public class MenuBarController implements MessageListener {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(resources.getString("Title.Open"));
 
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSS Files", "*.css"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(resources.getString("Label.CssFiles"), "*.css"));
 
         final File file = fileChooser.showOpenDialog(MainView.getPrimaryStage());
 
