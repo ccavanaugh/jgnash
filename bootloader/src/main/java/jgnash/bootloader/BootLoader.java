@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  */
 public class BootLoader {
 
-    private static final String JFX_VERSION = "13-ea+14b";
+    private static final String JFX_VERSION = "13";
 
     private static final String MAVEN_REPO = "http://central.maven.org/maven2/org/openjfx/";
 
