@@ -61,7 +61,8 @@ abstract class AbstractJpaDAO extends AbstractDAO implements DAO {
      * This ExecutorService is to be used whenever the entity manager is
      * accessed because the EntityManager is not thread safe, but we want to return from some methods without blocking
      */
-    static PriorityThreadPoolExecutor executorService = new PriorityThreadPoolExecutor(new DefaultDaemonThreadFactory());
+    static PriorityThreadPoolExecutor executorService =
+            new PriorityThreadPoolExecutor(new DefaultDaemonThreadFactory("JPA Priority Executor"));
 
     /**
      * Entity manager reference.

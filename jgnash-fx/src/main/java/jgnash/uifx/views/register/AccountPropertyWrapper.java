@@ -47,7 +47,8 @@ import jgnash.util.DefaultDaemonThreadFactory;
  */
 class AccountPropertyWrapper implements MessageListener {
 
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private static final ExecutorService executorService =
+            Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory("Account Property Wrapper Executor"));
 
     private final Object numberFormatLock = new Object();
 

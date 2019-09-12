@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -106,7 +107,13 @@ public class DistributedLockTest {
 
         final int TEST_COUNT = 33;
 
+        final AtomicInteger threadCount = new AtomicInteger();
+
         class WriteLockTest extends Thread {
+
+            private WriteLockTest() {
+                setName("DistributedLockTest WriteLockTest Thread " + threadCount.incrementAndGet());
+            }
 
             @Override
             public void run() {

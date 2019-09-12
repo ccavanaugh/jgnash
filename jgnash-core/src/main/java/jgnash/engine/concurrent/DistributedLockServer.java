@@ -17,6 +17,20 @@
  */
 package jgnash.engine.concurrent;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.util.EncodeDecode;
+import jgnash.util.EncryptionManager;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -38,18 +52,6 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jgnash.util.EncodeDecode;
-import jgnash.util.EncryptionManager;
-
 /**
  * Distributed Lock Server.
  *
@@ -59,8 +61,15 @@ public class DistributedLockServer {
 
     private static final Logger logger = Logger.getLogger(DistributedLockServer.class.getName());
 
-    // this needs to be to 2 threads to ensure order of operations and allow for unlocking without blocking
-    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
+    // there needs to be to 2 threads to ensure order of operations and allow for unlocking without blocking
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2, new ThreadFactory() {
+        private final AtomicLong counter = new AtomicLong();
+
+        @Override
+        public Thread newThread(final Runnable r) {
+            return new Thread(r, "jGnash Distributed Lock Server " + counter.incrementAndGet());
+        }
+    });
 
     private final ChannelGroup channelGroup = new DefaultChannelGroup("lock-server", GlobalEventExecutor.INSTANCE);
 

@@ -153,7 +153,8 @@ public class JpaNetworkServer {
                 if (result) { // don't continue if the server is not started successfully
                     // Start the backup thread that ensures an XML backup is created at set intervals
                     final ScheduledExecutorService backupExecutor
-                            = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+                            = Executors.newSingleThreadScheduledExecutor(
+                                    new DefaultDaemonThreadFactory("JPA Network Server Executor"));
 
                     // run commit every backup period after startup
                     backupExecutor.scheduleWithFixedDelay(() -> {

@@ -142,8 +142,10 @@ public class StageUtils {
         private final Stage parent;
 
         BoundsListener(final Window window, final String prefNode, @Nullable final Stage parent) {
-            executor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
+            executor = new ScheduledThreadPoolExecutor(1,
+                    new DefaultDaemonThreadFactory("Stage Bounds Listener Executor"),
                     new ThreadPoolExecutor.DiscardPolicy());
+
             p = Preferences.userRoot().node(prefNode);
             this.window = window;
             this.parent = parent;

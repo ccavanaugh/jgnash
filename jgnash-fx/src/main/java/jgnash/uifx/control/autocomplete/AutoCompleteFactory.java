@@ -61,7 +61,9 @@ public class AutoCompleteFactory {
     /**
      * Use an ExecutorService to manage the number of running threads.
      */
-    private static final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private static final ExecutorService pool
+            = Executors.newSingleThreadExecutor(
+                    new DefaultDaemonThreadFactory("Auto Complete Factory Executor"));
 
     private AutoCompleteFactory() {
         // Factory class

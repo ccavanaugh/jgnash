@@ -41,13 +41,13 @@ public class DefaultDaemonThreadFactory implements ThreadFactory {
 
     private final String namePrefix;
 
-    public DefaultDaemonThreadFactory() {
-        namePrefix = "pool-" + poolNumber.getAndIncrement() + "-thread-";
+    public DefaultDaemonThreadFactory(final String description) {
+        namePrefix = description + "(" + poolNumber.incrementAndGet() + "), Thread ";
     }
 
     @Override
     public Thread newThread(final @NotNull Runnable r) {
-        Thread t = new Thread(r, namePrefix + threadNumber.getAndIncrement());
+        Thread t = new Thread(r, namePrefix + threadNumber.incrementAndGet());
 
         t.setDaemon(true);
         t.setPriority(Thread.NORM_PRIORITY);

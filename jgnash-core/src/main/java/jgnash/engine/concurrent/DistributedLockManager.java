@@ -43,7 +43,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -86,7 +88,14 @@ public class DistributedLockManager implements LockManager {
 
     private static final String EOL_DELIMITER = "\r\n";
 
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+        private final AtomicLong counter = new AtomicLong();
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "jGnash DistributedLockManager " + counter.incrementAndGet());
+        }
+    });
 
     private EncryptionManager encryptionManager = null;
 

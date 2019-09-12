@@ -196,7 +196,8 @@ public class Engine {
 
         checkAndCorrect();
 
-        backgroundExecutorService = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory());
+        backgroundExecutorService = new ScheduledThreadPoolExecutor(1,
+                new DefaultDaemonThreadFactory("Engine Background Executor"));
         backgroundExecutorService.setRemoveOnCancelPolicy(true);
         backgroundExecutorService.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
 

@@ -57,7 +57,7 @@ public class MessageBus {
 
     private final ConcurrentMap<MessageChannel, Set<WeakReference<MessageListener>>> map = new ConcurrentHashMap<>();
 
-    private final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory("Message Bus Executor"));
 
     private MessageBusClient messageBusClient = null;
 

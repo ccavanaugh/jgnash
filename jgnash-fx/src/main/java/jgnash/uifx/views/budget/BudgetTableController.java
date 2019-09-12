@@ -259,7 +259,8 @@ public class BudgetTableController implements MessageListener {
     private void initialize() {
         runningTotalsButton.selectedProperty().setValue(preferences.getBoolean(RUNNING_TOTALS, false));
 
-        rateLimitExecutor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
+        rateLimitExecutor = new ScheduledThreadPoolExecutor(1,
+                new DefaultDaemonThreadFactory("Budget View Rate Limit Executor"),
                 new ThreadPoolExecutor.DiscardPolicy());
 
         tableWidthChangeListener = (observable, oldValue, newValue) -> {

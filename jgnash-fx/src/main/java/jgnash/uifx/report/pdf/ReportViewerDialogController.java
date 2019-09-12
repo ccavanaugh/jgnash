@@ -190,7 +190,7 @@ public class ReportViewerDialogController {
      * Used to limit report update rates.
      */
     private final ScheduledThreadPoolExecutor reportExecutor = new ScheduledThreadPoolExecutor(1,
-            new DefaultDaemonThreadFactory(), new ThreadPoolExecutor.DiscardPolicy());
+            new DefaultDaemonThreadFactory("Report View Executor"), new ThreadPoolExecutor.DiscardPolicy());
 
     @FXML
     private void initialize() {

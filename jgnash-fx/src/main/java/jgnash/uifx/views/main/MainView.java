@@ -90,7 +90,8 @@ public class MainView implements MessageListener {
 
     private final ResourceBundle resources = ResourceUtils.getBundle();
 
-    private final Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private final Executor backgroundExecutor =
+            Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory("Main View Background Executor"));
 
     private final StatusBarLogHandler statusBarLogHandler = new StatusBarLogHandler();
 
