@@ -159,11 +159,13 @@ public class AccountRegisterReportController implements ReportController {
         preferences.putBoolean(SHOW_SPLITS, showSplitsCheckBox.isSelected());
         preferences.putBoolean(SHOW_TIMESTAMP, showTimestampCheckBox.isSelected());
 
-        addTable();
+        if (accountComboBox.getValue() != null) {
+            addTable();
 
-        // send notification the report has been updated
-        if (refreshRunnable != null) {
-            refreshRunnable.run();
+            // send notification the report has been updated
+            if (refreshRunnable != null) {
+                refreshRunnable.run();
+            }
         }
     }
 
