@@ -47,17 +47,20 @@ public class InvestmentPerformanceSummary {
 
     private CurrencyNode baseCurrency;
 
-    public InvestmentPerformanceSummary(final Account account, final boolean recursive) {
-        this(account, null, null, recursive);
-    }
+    /**
+     * If true, recurse into sub accounts
+     */
+    private final boolean recursive;
 
     @SuppressWarnings("SameParameterValue")
-    private InvestmentPerformanceSummary(final Account account, final LocalDate startDate, final LocalDate endDate,
+    public InvestmentPerformanceSummary(final Account account, final LocalDate startDate, final LocalDate endDate,
                                          final boolean recursive) {
         Objects.requireNonNull(account, "Account may not be null");
 
+        this.recursive = recursive;
+
         if (!account.memberOf(AccountGroup.INVEST)) {
-            throw new IllegalArgumentException("Not a valid account type");
+            throw new IllegalArgumentException("The account is not a valid type");
         }
 
         this.baseCurrency = account.getCurrencyNode();
@@ -78,8 +81,6 @@ public class InvestmentPerformanceSummary {
         }
 
         Collections.sort(transactions);
-
-        runCalculations(recursive);
     }
 
     private void collectSubAccountTransactions(final Account account, final List<Transaction> transactions) {
@@ -344,7 +345,7 @@ public class InvestmentPerformanceSummary {
         data.setInternalRateOfReturn(cashFlow.internalRateOfReturn());
     }
 
-    private void runCalculations(final boolean recursive) {
+    public void runCalculations() {
 
         Set<SecurityNode> nodes = account.getSecurities();
 

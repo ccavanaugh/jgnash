@@ -81,7 +81,9 @@ public class PortfolioReport extends Report {
             this.longNames = longNames;
 
             try {
-                performanceSummary = new InvestmentPerformanceSummary(account, recursive);
+                performanceSummary = new InvestmentPerformanceSummary(account, null, null, recursive);
+
+                performanceSummary.runCalculations();
 
                 Logger.getLogger(PortfolioReport.class.getName()).info(performanceSummary.toString());
             } catch (final Exception e) {
