@@ -19,7 +19,7 @@
 * Reinstate archive capability
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
-* Option to load a custom style sheet.
+* Control the displayed columns of the portfolio report
 
 == Release 3.2.2
 * 09/14/2019 Updated to the latest Picocli and Commons Text dependencies.
