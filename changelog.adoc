@@ -22,6 +22,7 @@
 * Option to load a custom style sheet.
 
 == Release 3.2.2
+* 09/14/2019 Updated to the latest Picocli and Commons Text dependencies.
 * 09/12/2019 Updated to JavaFX 13 dependency.
 * 09/08/2019 Custom style sheets can now be applied to theme the UI.
 * 09/07/2019 Made changes to prevent a very rare ConcurrentModificationException when using a relational database.
