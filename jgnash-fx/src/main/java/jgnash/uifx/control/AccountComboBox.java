@@ -208,6 +208,23 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         selectDefaultAccount();
     }
 
+    /**
+     * Deterministic removal of an account
+     *
+     * @param account Account to remove
+     */
+    private void removeAccount(final Account account) {
+        final int oldIndex = items.indexOf(account);
+
+        items.removeAll(account);
+
+        if (oldIndex >= 0) {
+            setAccountValue(items.get(oldIndex));
+        } else if (items.size() > 0) {
+            setAccountValue(items.get(0));
+        }
+    }
+
     @Override
     public void messagePosted(final Message event) {
 
@@ -222,7 +239,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                     items.clear();
                     break;
                 case ACCOUNT_REMOVE:
-                    items.removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
+                    removeAccount(event.getObject(MessageProperty.ACCOUNT));
                     break;
                 case ACCOUNT_ADD:
                 case ACCOUNT_MODIFY:
