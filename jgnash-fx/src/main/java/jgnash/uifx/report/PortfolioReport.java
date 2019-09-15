@@ -17,6 +17,13 @@
  */
 package jgnash.uifx.report;
 
+import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
@@ -26,15 +33,8 @@ import jgnash.engine.SecurityNode;
 import jgnash.report.pdf.Report;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.report.table.ColumnStyle;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Portfolio Report
@@ -49,17 +49,15 @@ public class PortfolioReport extends Report {
         setForceGroupPagination(false);
     }
 
-    static AbstractReportTableModel createReportModel(final Account account, final boolean recursive, final boolean longNames) {
+    static AbstractReportTableModel createReportModel(final Account account, final LocalDate startDate,
+                                                      final LocalDate endDate, final boolean recursive,
+                                                      final boolean longNames) {
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        return new PortfolioReportTableModel(account, engine.getDefaultCurrency(), recursive, longNames);
-    }
-
-    @Override
-    public String getSubTitle() {
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(LocalDate.now());
+        return new PortfolioReportTableModel(account, engine.getDefaultCurrency(), startDate, endDate, recursive,
+                longNames);
     }
 
     private static class PortfolioReportTableModel extends AbstractReportTableModel {
@@ -72,7 +70,11 @@ public class PortfolioReport extends Report {
 
         private final boolean longNames;
 
-        PortfolioReportTableModel(@NotNull final Account account, @NotNull final CurrencyNode baseCurrency, final boolean recursive, final boolean longNames) {
+        private String subTitle;
+
+        PortfolioReportTableModel(@NotNull final Account account, @NotNull final CurrencyNode baseCurrency,
+                                  final LocalDate startDate, final LocalDate endDate, final boolean recursive,
+                                  final boolean longNames) {
             Objects.requireNonNull(account);
             Objects.requireNonNull(baseCurrency);
 
@@ -80,8 +82,12 @@ public class PortfolioReport extends Report {
             this.baseCurrency = baseCurrency;
             this.longNames = longNames;
 
+            // update the subtitle
+            final MessageFormat format = new MessageFormat(rb.getString("Pattern.DateRange"));
+            subTitle = format.format(new Object[]{DateUtils.asDate(startDate), DateUtils.asDate(endDate)});
+
             try {
-                performanceSummary = new InvestmentPerformanceSummary(account, null, null, recursive);
+                performanceSummary = new InvestmentPerformanceSummary(account, startDate, endDate, recursive);
 
                 performanceSummary.runCalculations();
 
@@ -98,7 +104,7 @@ public class PortfolioReport extends Report {
 
         @Override
         public String getSubTitle() {
-            return DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(LocalDate.now());
+            return subTitle;
         }
 
         @Override

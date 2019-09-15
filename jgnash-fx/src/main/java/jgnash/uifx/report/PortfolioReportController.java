@@ -18,6 +18,7 @@
 package jgnash.uifx.report;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.prefs.Preferences;
@@ -29,11 +30,15 @@ import javafx.scene.control.CheckBox;
 
 import jgnash.engine.AccountType;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentPerformanceSummary;
 import jgnash.report.pdf.Report;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.uifx.control.AccountComboBox;
+import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.pdf.ReportController;
 import jgnash.uifx.util.JavaFXUtils;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Portfolio report controller.
@@ -45,6 +50,12 @@ public class PortfolioReportController implements ReportController {
     private static final String RECURSIVE = "recursive";
 
     private static final String VERBOSE = "verbose";
+
+    @FXML
+    private DatePickerEx startDatePicker;
+
+    @FXML
+    private DatePickerEx endDatePicker;
 
     @FXML
     private AccountComboBox accountComboBox;
@@ -65,6 +76,9 @@ public class PortfolioReportController implements ReportController {
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Object> changeListener;
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Object> accountChangeListener;
+
     @FXML
     private void initialize() {
         // Only show visible investment accounts
@@ -75,18 +89,42 @@ public class PortfolioReportController implements ReportController {
         subAccountCheckBox.setSelected(preferences.getBoolean(RECURSIVE, true));
         longNameCheckBox.setSelected(preferences.getBoolean(VERBOSE, false));
 
+        // set date range
+        updateDateRanges();
+
         changeListener = (observable, oldValue, newValue) -> {
             if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {   // could be null if GC is slow
                 handleReportRefresh();
             }
         };
 
+        // update data ranges prior to refresh
+        accountChangeListener = (observable, oldValue, newValue) -> {
+            updateDateRanges();
+            changeListener.changed(observable, oldValue, newValue);
+        };
+
         subAccountCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
         longNameCheckBox.selectedProperty().addListener(new WeakChangeListener<>(changeListener));
-        accountComboBox.valueProperty().addListener(new WeakChangeListener<>(changeListener));
+        accountComboBox.valueProperty().addListener(new WeakChangeListener<>(accountChangeListener));
+        startDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));
+        endDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));
+
 
         // boot the report generation
         JavaFXUtils.runLater(this::refreshReport);
+    }
+
+    private void updateDateRanges() {
+        if (accountComboBox.getValue() != null) {
+
+            final Pair<LocalDate, LocalDate> dateRange
+                    = InvestmentPerformanceSummary.getTransactionDateRange(accountComboBox.getValue(),
+                    subAccountCheckBox.isSelected());
+
+            startDatePicker.setValue(dateRange.getLeft());
+            endDatePicker.setValue(dateRange.getRight());
+        }
     }
 
     @Override
@@ -138,7 +176,7 @@ public class PortfolioReportController implements ReportController {
 
     @Override
     public AbstractReportTableModel createReportModel() {
-        return PortfolioReport.createReportModel(accountComboBox.getValue(), subAccountCheckBox.isSelected(),
-                longNameCheckBox.isSelected());
+        return PortfolioReport.createReportModel(accountComboBox.getValue(), startDatePicker.getValue(),
+                endDatePicker.getValue(), subAccountCheckBox.isSelected(), longNameCheckBox.isSelected());
     }
 }

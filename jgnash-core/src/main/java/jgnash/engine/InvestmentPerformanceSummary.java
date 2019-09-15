@@ -28,6 +28,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 /**
  * Investment Performance Summary Class.
  * 
@@ -52,7 +55,6 @@ public class InvestmentPerformanceSummary {
      */
     private final boolean recursive;
 
-    @SuppressWarnings("SameParameterValue")
     public InvestmentPerformanceSummary(final Account account, final LocalDate startDate, final LocalDate endDate,
                                          final boolean recursive) {
         Objects.requireNonNull(account, "Account may not be null");
@@ -67,8 +69,11 @@ public class InvestmentPerformanceSummary {
         this.account = account;
 
         if (startDate == null || endDate == null) {
-            setStartDate(LocalDate.ofEpochDay(0));
-            setEndDate(LocalDate.now());
+
+            final Pair<LocalDate, LocalDate> datePair = getTransactionDateRange(account, recursive);
+
+            setStartDate(datePair.getLeft());
+            setEndDate(datePair.getRight());
         } else {
             setStartDate(startDate);
             setEndDate(endDate);
@@ -81,6 +86,29 @@ public class InvestmentPerformanceSummary {
         }
 
         Collections.sort(transactions);
+    }
+
+    public static Pair<LocalDate, LocalDate> getTransactionDateRange(final Account account, final boolean recursive) {
+        List<Transaction> transactions = new ArrayList<>(account.getSortedTransactionList());
+
+        if (recursive && account.getChildCount() > 0) {
+            _collectSubAccountTransactions(account, transactions);
+        }
+
+        transactions.sort(null);
+
+        return new ImmutablePair<>(transactions.get(0).getLocalDate(),
+                transactions.get(transactions.size() - 1).getLocalDate());
+    }
+
+    private static void _collectSubAccountTransactions(final Account account, final List<Transaction> transactions) {
+        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
+            transactions.addAll(child.getSortedTransactionList());
+
+            if (child.getChildCount() > 0) {
+                _collectSubAccountTransactions(child, transactions);
+            }
+        }
     }
 
     private void collectSubAccountTransactions(final Account account, final List<Transaction> transactions) {
