@@ -217,11 +217,6 @@ public abstract class AbstractSumByTypeReport extends Report {
         return model;
     }
 
-    @Override
-    public String getSubTitle() {
-        return subTitle;
-    }
-
     private void updateResolution(final LocalDate startDate, final LocalDate endDate) {
 
         final DateTimeFormatter dateFormat = DateUtils.getShortDateFormatter();

@@ -263,13 +263,10 @@ public abstract class Report implements AutoCloseable {
         return ResourceUtils.getString("Word.Subtotal");
     }
 
-    public String getSubTitle() {
-        return "";
-    }
-
     public void addTable(final AbstractReportTableModel reportModel) throws IOException {
 
-        String title = reportModel.getTitle();
+        final String title = reportModel.getTitle();
+        final String subTitle = reportModel.getSubTitle();
 
         boolean titleWritten = false;
 
@@ -300,7 +297,7 @@ public abstract class Report implements AutoCloseable {
 
                     // add the table title if its not been added
                     if (title != null && !title.isEmpty() && row == 0 && !titleWritten) {
-                        docY = addReportTitle(contentStream, title, getSubTitle(), docY);
+                        docY = addReportTitle(contentStream, title, subTitle, docY);
 
                         titleWritten = true;
                     }
