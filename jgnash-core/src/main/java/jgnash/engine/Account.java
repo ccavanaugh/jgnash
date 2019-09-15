@@ -1021,12 +1021,12 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns an array of transactions that occur after account specified cut
-     * off date. The returned array is inclusive of the specified dates.
+     * Returns a {@code List} of {@code Transaction} that occur during the specified period.
+     * The specified dates are inclusive.
      *
-     * @param startDate starting cut off date
-     * @param endDate   ending cut off date
-     * @return the array of transactions that occurred between the specified dates
+     * @param startDate starting date
+     * @param endDate   ending date
+     * @return a {@code List} of transactions that occurred within the specified dates
      */
     public List<Transaction> getTransactions(final LocalDate startDate, final LocalDate endDate) {
         transactionLock.readLock().lock();
