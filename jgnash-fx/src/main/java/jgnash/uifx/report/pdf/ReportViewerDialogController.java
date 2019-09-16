@@ -202,14 +202,14 @@ public class ReportViewerDialogController {
         fontSizeSpinner.disableProperty().bind(report.isNull());
 
         firstButton.disableProperty().bind(report.isNull().or(pageCount.isEqualTo(0))
-                .or(pageIndex.isEqualTo(0)));
+                                                   .or(pageIndex.isEqualTo(0)));
         previousButton.disableProperty().bind(report.isNull().or(pageCount.isEqualTo(0))
-                .or(pageIndex.isEqualTo(0)));
+                                                      .or(pageIndex.isEqualTo(0)));
 
         nextButton.disableProperty().bind(report.isNull().or(pageCount.isEqualTo(0))
-                .or(pageIndex.isEqualTo(pageCount.subtract(1))));
+                                                  .or(pageIndex.isEqualTo(pageCount.subtract(1))));
         lastButton.disableProperty().bind(report.isNull().or(pageCount.isEqualTo(0))
-                .or(pageIndex.isEqualTo(pageCount.subtract(1))));
+                                                  .or(pageIndex.isEqualTo(pageCount.subtract(1))));
 
         fitPageButton.disableProperty().bind(report.isNull());
         fitHeightButton.disableProperty().bind(report.isNull());
@@ -217,10 +217,10 @@ public class ReportViewerDialogController {
 
         zoomComboBox.disableProperty().bind(report.isNull());
         zoomInButton.disableProperty().bind(report.isNull()
-                .or(zoomProperty.greaterThanOrEqualTo(DEFAULT_ZOOMS[DEFAULT_ZOOMS.length - 1] / 100)));
+                                                    .or(zoomProperty.greaterThanOrEqualTo(DEFAULT_ZOOMS[DEFAULT_ZOOMS.length - 1] / 100)));
 
         zoomOutButton.disableProperty().bind(report.isNull()
-                .or(zoomProperty.lessThanOrEqualTo(DEFAULT_ZOOMS[0] / 100)));
+                                                     .or(zoomProperty.lessThanOrEqualTo(DEFAULT_ZOOMS[0] / 100)));
 
         fitPageButton.setSelected(true);
 
@@ -400,29 +400,24 @@ public class ReportViewerDialogController {
                         if (report.get() != null) {
 
                             for (int i = 0; i < report.get().getPageCount(); i++) {
-                                try {
 
-                                    // report resolution is fixed and the ImageView width and height are adjusted to the zoom value
-                                    final BufferedImage bufferedImage = report.get().renderImage(i, REPORT_RESOLUTION * UP_SCALING);
+                                // report resolution is fixed and the ImageView width and height are adjusted to the zoom value
+                                final BufferedImage bufferedImage = report.get().renderImage(i, REPORT_RESOLUTION * UP_SCALING);
 
-                                    JavaFXUtils.runLater(() -> {
+                                JavaFXUtils.runLater(() -> {
 
-                                        final ImageView imageView = new ImageView(SwingFXUtils.toFXImage(bufferedImage, null));
+                                    final ImageView imageView = new ImageView(SwingFXUtils.toFXImage(bufferedImage, null));
 
-                                        imageView.setEffect(dropShadow);
+                                    imageView.setEffect(dropShadow);
 
-                                        // bind the width and height to the zoom level
-                                        imageView.fitWidthProperty().bind(zoomProperty.multiply(bufferedImage.getWidth() / UP_SCALING));
-                                        imageView.fitHeightProperty().bind(zoomProperty.multiply(bufferedImage.getHeight() / UP_SCALING));
+                                    // bind the width and height to the zoom level
+                                    imageView.fitWidthProperty().bind(zoomProperty.multiply(bufferedImage.getWidth() / UP_SCALING));
+                                    imageView.fitHeightProperty().bind(zoomProperty.multiply(bufferedImage.getHeight() / UP_SCALING));
 
-                                        children.add(imageView);
+                                    children.add(imageView);
 
-                                        pageCount.set(pageCount.get() + 1);
-                                    });
-
-                                } catch (final IOException ex) {
-                                    StaticUIMethods.displayException(ex);
-                                }
+                                    pageCount.set(pageCount.get() + 1);
+                                });
                             }
                         }
 
@@ -607,10 +602,10 @@ public class ReportViewerDialogController {
         final PageFormat pageFormat = report.get().getPageFormat();
 
         final double heightRatio = (scrollPane.getViewportBounds().getHeight() - (2 * PAGE_BORDER))
-                / pageFormat.getHeight();
+                                           / pageFormat.getHeight();
 
         final double widthRatio = (scrollPane.getViewportBounds().getWidth() - (2 * PAGE_BORDER))
-                / pageFormat.getWidth();
+                                          / pageFormat.getWidth();
 
         zoomComboBox.getSelectionModel().clearSelection();
 
@@ -622,7 +617,7 @@ public class ReportViewerDialogController {
         zoomComboBox.getSelectionModel().clearSelection();
 
         setActualZoomRatio((scrollPane.getViewportBounds().getWidth() - (2 * PAGE_BORDER)) /
-                report.get().getPageFormat().getWidth());
+                                   report.get().getPageFormat().getWidth());
     }
 
     @FXML
