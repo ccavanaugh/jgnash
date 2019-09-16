@@ -22,6 +22,7 @@
 * Control the displayed columns of the portfolio report
 
 == Release 3.2.2
+* 09/16/2019 Don't display an exception if tabular report generation is interrupted.
 * 09/15/2019 The Date range of a Portfolio report can now be changed.
 * 09/14/2019 Prevent a rare NPE that would occur when deleting an account shortly after closure of a tabular report.
 * 09/14/2019 Updated to the latest Picocli and Commons Text dependencies.

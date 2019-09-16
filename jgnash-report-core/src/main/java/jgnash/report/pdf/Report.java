@@ -901,11 +901,16 @@ public abstract class Report implements AutoCloseable {
      * @param pageIndex page index
      * @param dpi       DPI for the image
      * @return the image
-     * @throws IOException IO exception
      */
-    public BufferedImage renderImage(final int pageIndex, final int dpi) throws IOException {
+    public BufferedImage renderImage(final int pageIndex, final int dpi) {
         final PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
-        return pdfRenderer.renderImageWithDPI(pageIndex, dpi, ImageType.RGB);
+
+        try {
+            return pdfRenderer.renderImageWithDPI(pageIndex, dpi, ImageType.RGB);
+        } catch (final IOException ioe) {   // occurs when report render is interrupted
+            Logger.getLogger(Report.class.getName()).warning(ioe.getLocalizedMessage());
+            return new BufferedImage(1,1, BufferedImage.TYPE_INT_RGB);
+        }
     }
 
     /**
