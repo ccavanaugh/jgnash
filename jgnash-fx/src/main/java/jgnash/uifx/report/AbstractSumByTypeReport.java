@@ -77,7 +77,7 @@ public abstract class AbstractSumByTypeReport extends Report {
 
     private boolean addPercentileColumn = false;
 
-    private String subTitle = "subtitle";
+    private String subTitle = "";
 
     private String title = "";
 
