@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.AccountComboBox?>
-
 <?import jgnash.uifx.control.DatePickerEx?>
+
 <GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.report.PortfolioReportController" styleClass="form, dialog">
     <columnConstraints>
@@ -44,6 +45,8 @@
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
@@ -51,5 +54,6 @@
 
         <CheckBox fx:id="subAccountCheckBox" text="%Button.IncludeSubAccounts"/>
         <CheckBox fx:id="longNameCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="1"/>
+        <Button text="%Button.ResetAll" onAction="#handleResetAll" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
     </GridPane>
 </GridPane>

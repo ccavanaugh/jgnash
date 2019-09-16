@@ -33,6 +33,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentPerformanceSummary;
 import jgnash.report.pdf.Report;
 import jgnash.report.table.AbstractReportTableModel;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.pdf.ReportController;
@@ -81,16 +82,24 @@ public class PortfolioReportController implements ReportController {
 
     @FXML
     private void initialize() {
+        final Preferences preferences = getPreferences();
+
         // Only show visible investment accounts
         accountComboBox.setPredicate(account -> account.instanceOf(AccountType.INVEST) && account.isVisible());
-
-        final Preferences preferences = getPreferences();
 
         subAccountCheckBox.setSelected(preferences.getBoolean(RECURSIVE, true));
         longNameCheckBox.setSelected(preferences.getBoolean(VERBOSE, false));
 
         // set date range
         updateDateRanges();
+
+        startDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        startDatePicker.preferencesProperty().setValue(preferences);
+        startDatePicker.preferenceKeyProperty().setValue(START_DATE_KEY);
+
+        endDatePicker.preserveDateProperty().bind(Options.restoreReportDateProperty());
+        endDatePicker.preferencesProperty().setValue(preferences);
+        endDatePicker.preferenceKeyProperty().setValue(END_DATE_KEY);
 
         changeListener = (observable, oldValue, newValue) -> {
             if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {   // could be null if GC is slow
@@ -110,9 +119,13 @@ public class PortfolioReportController implements ReportController {
         startDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));
         endDatePicker.valueProperty().addListener(new WeakChangeListener<>(changeListener));
 
-
         // boot the report generation
         JavaFXUtils.runLater(this::refreshReport);
+    }
+
+    @FXML
+    private void handleResetAll() {
+        JavaFXUtils.runLater(this::updateDateRanges);
     }
 
     private void updateDateRanges() {
@@ -179,4 +192,6 @@ public class PortfolioReportController implements ReportController {
         return PortfolioReport.createReportModel(accountComboBox.getValue(), startDatePicker.getValue(),
                 endDatePicker.getValue(), subAccountCheckBox.isSelected(), longNameCheckBox.isSelected());
     }
+
+
 }
