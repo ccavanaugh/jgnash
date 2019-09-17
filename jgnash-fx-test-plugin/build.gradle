@@ -1,5 +1,5 @@
 plugins {
-  id "org.openjfx.javafxplugin"
+  id "org.openjfx.javafxplugin" version "$javafxPluginVersion"
 }
 
 description = "jGnash Test Plugin"
@@ -10,8 +10,8 @@ dependencies {
 }
 
 javafx {
-  modules = [ "javafx.controls"]
   version = javaFXVersion
+  modules = [ "javafx.controls"]
 }
 
 jar {

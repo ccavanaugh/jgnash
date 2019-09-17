@@ -1,5 +1,5 @@
 plugins {
-    id "org.openjfx.javafxplugin" version "0.0.7"
+    id "org.openjfx.javafxplugin" version "$javafxPluginVersion"
 }
 
 description = "mt940 Plugin"
@@ -12,6 +12,7 @@ dependencies {
 }
 
 javafx {
+    version = javaFXVersion
     modules = [ "javafx.controls"]
 }
 
