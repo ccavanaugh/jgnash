@@ -22,6 +22,7 @@
 * Control the displayed columns of the portfolio report
 
 == Release 3.2.2
+* 09/18/2019 The displayed columns for the Portfolio report can now be changed.
 * 09/16/2019 Don't display an exception if tabular report generation is interrupted.
 * 09/15/2019 The Date range of a Portfolio report can now be changed.
 * 09/14/2019 Prevent a rare NPE that would occur when deleting an account shortly after closure of a tabular report.
@@ -30,7 +31,7 @@
 * 09/08/2019 Custom style sheets can now be applied to theme the UI.
 * 09/07/2019 Made changes to prevent a very rare ConcurrentModificationException when using a relational database.
 * 09/01/2019 Fixed a source code encoding issue that caused issues when compiling and testing under Windows.
-* 09/01/2019 Updated to the latest Picocli, and Netty dependencies.
+* 09/01/2019 Updated to the latest Netty dependency.
 * 08/26/2019 The selected file type was ignored when exporting a register and the extension was not specified within
              the filename.
 * 08/25/2019 Properly restore the configured page size of a report if it's not a custom size.

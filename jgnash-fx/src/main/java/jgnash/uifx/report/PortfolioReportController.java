@@ -19,6 +19,8 @@ package jgnash.uifx.report;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.prefs.Preferences;
@@ -27,6 +29,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 
 import jgnash.engine.AccountType;
 import jgnash.engine.EngineFactory;
@@ -35,6 +38,7 @@ import jgnash.report.pdf.Report;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
+import jgnash.uifx.control.CheckComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.report.pdf.ReportController;
 import jgnash.uifx.util.JavaFXUtils;
@@ -51,6 +55,11 @@ public class PortfolioReportController implements ReportController {
     private static final String RECURSIVE = "recursive";
 
     private static final String VERBOSE = "verbose";
+
+    private static final String REPORT_COLUMNS = "reportColumns";
+
+    @FXML
+    private CheckComboBox<String> columnComboBox;
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -83,6 +92,22 @@ public class PortfolioReportController implements ReportController {
     @FXML
     private void initialize() {
         final Preferences preferences = getPreferences();
+
+        initColumnCombo();
+
+        // listen for combobox close and update preferences and the report
+        columnComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> JavaFXUtils.runLater(() -> {
+            final List<String> columns = columnComboBox.getCheckedItems();
+
+            if (columns.size() > 0) {
+                preferences.put(REPORT_COLUMNS, String.join(",", columns));
+                System.out.println(String.join(",", columns));
+            } else {
+                preferences.put(REPORT_COLUMNS, "");
+            }
+
+            handleReportRefresh();
+        }));
 
         // Only show visible investment accounts
         accountComboBox.setPredicate(account -> account.instanceOf(AccountType.INVEST) && account.isVisible());
@@ -123,8 +148,28 @@ public class PortfolioReportController implements ReportController {
         JavaFXUtils.runLater(this::refreshReport);
     }
 
+    private void initColumnCombo() {
+        final List<String> columnNames = getAvailColumns();
+
+        for (final String columnName : columnNames) {
+            columnComboBox.add(columnName, false);
+        }
+
+        final String availColumns = getPreferences().get(REPORT_COLUMNS, String.join(",", columnNames));
+
+        if (availColumns != null && !availColumns.isBlank()) {
+            String[] columns = availColumns.split(",");
+
+            for (String column : columns) {
+                columnComboBox.setChecked(column, true);
+            }
+        }
+    }
+
     @FXML
     private void handleResetAll() {
+        columnComboBox.setAllChecked();
+
         JavaFXUtils.runLater(this::updateDateRanges);
     }
 
@@ -175,7 +220,7 @@ public class PortfolioReportController implements ReportController {
     }
 
     private void addTable() {
-        AbstractReportTableModel model = createReportModel();
+        final AbstractReportTableModel model = createReportModel();
 
         report.clearReport();
 
@@ -189,9 +234,21 @@ public class PortfolioReportController implements ReportController {
 
     @Override
     public AbstractReportTableModel createReportModel() {
+        final List<String> availableColumns = columnComboBox.getCheckedItems();
+
         return PortfolioReport.createReportModel(accountComboBox.getValue(), startDatePicker.getValue(),
-                endDatePicker.getValue(), subAccountCheckBox.isSelected(), longNameCheckBox.isSelected());
+                endDatePicker.getValue(), subAccountCheckBox.isSelected(), longNameCheckBox.isSelected(),
+                availableColumns::contains);
     }
 
+    private List<String> getAvailColumns() {
+        final List<String> availColumns = new ArrayList<>();
+
+        for (int i = 1; i < PortfolioReport.getColumnCount(); i++) {
+            availColumns.add(PortfolioReport.getColumnName(i));
+        }
+
+        return availColumns;
+    }
 
 }

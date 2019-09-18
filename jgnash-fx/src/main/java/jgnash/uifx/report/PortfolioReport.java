@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,15 +50,51 @@ public class PortfolioReport extends Report {
         setForceGroupPagination(false);
     }
 
+    static int getColumnCount() {
+        return 12;
+    }
+
+    static String getColumnName(final int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                return rb.getString("Column.Security");
+            case 1:
+                return rb.getString("Column.Short.Quantity");
+            case 2:
+                return rb.getString("Column.CostBasis");
+            case 3:
+                return rb.getString("Column.TotalCostBasis");
+            case 4:
+                return rb.getString("Column.Price");
+            case 5:
+                return rb.getString("Column.MktValue");
+            case 6:
+                return rb.getString("Column.Short.UnrealizedGain");
+            case 7:
+                return rb.getString("Column.Short.RealizedGain");
+            case 8:
+                return rb.getString("Column.Short.TotalGain");
+            case 9:
+                return rb.getString("Column.Short.TotalGainPercentage");
+            case 10:
+                return rb.getString("Column.Short.InternalRateOfReturn");
+            case 11:
+                return rb.getString("Column.Short.PercentagePortfolio");
+            default:
+                return "ERR";
+        }
+    }
+
     static AbstractReportTableModel createReportModel(final Account account, final LocalDate startDate,
                                                       final LocalDate endDate, final boolean recursive,
-                                                      final boolean longNames) {
+                                                      final boolean longNames,
+                                                      final Function<String, Boolean> columnVisibilityFunction) {
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
         return new PortfolioReportTableModel(account, engine.getDefaultCurrency(), startDate, endDate, recursive,
-                longNames);
+                longNames, columnVisibilityFunction);
     }
 
     private static class PortfolioReportTableModel extends AbstractReportTableModel {
@@ -72,15 +109,19 @@ public class PortfolioReport extends Report {
 
         private String subTitle;
 
+        private final Function<String, Boolean> columnVisibilityFunction;
+
         PortfolioReportTableModel(@NotNull final Account account, @NotNull final CurrencyNode baseCurrency,
                                   final LocalDate startDate, final LocalDate endDate, final boolean recursive,
-                                  final boolean longNames) {
+                                  final boolean longNames, final Function<String, Boolean> columnVisibilityFunction) {
             Objects.requireNonNull(account);
             Objects.requireNonNull(baseCurrency);
 
             this.account = account;
             this.baseCurrency = baseCurrency;
             this.longNames = longNames;
+
+            this.columnVisibilityFunction = Objects.requireNonNullElseGet(columnVisibilityFunction, () -> s -> true);
 
             // update the subtitle
             final MessageFormat format = new MessageFormat(rb.getString("Pattern.DateRange"));
@@ -98,6 +139,19 @@ public class PortfolioReport extends Report {
         }
 
         @Override
+        public boolean isColumnVisible(final int column) {
+
+            // super can override
+            boolean result  = super.isColumnVisible(column);
+
+            if (column != 0 && result) {    // security name is not an option
+                result = columnVisibilityFunction.apply(getColumnName(column));
+            }
+
+            return result;
+        }
+
+        @Override
         public String getTitle() {
             return account.getName() + " - " + rb.getString("Title.PortfolioReport");
         }
@@ -105,11 +159,6 @@ public class PortfolioReport extends Report {
         @Override
         public String getSubTitle() {
             return subTitle;
-        }
-
-        @Override
-        public int getColumnCount() {
-            return 13;
         }
 
         @Override
@@ -161,36 +210,15 @@ public class PortfolioReport extends Report {
 
         @Override
         public String getColumnName(final int columnIndex) {
-            switch (columnIndex) {
-                case 0:
-                    return rb.getString("Column.Security");
-                case 1:
-                    return rb.getString("Column.Short.Quantity");
-                case 2:
-                    return rb.getString("Column.CostBasis");
-                case 3:
-                    return rb.getString("Column.TotalCostBasis");
-                case 4:
-                    return rb.getString("Column.Price");
-                case 5:
-                    return rb.getString("Column.MktValue");
-                case 6:
-                    return rb.getString("Column.Short.UnrealizedGain");
-                case 7:
-                    return rb.getString("Column.Short.RealizedGain");
-                case 8:
-                    return rb.getString("Column.Short.TotalGain");
-                case 9:
-                    return rb.getString("Column.Short.TotalGainPercentage");
-                case 10:
-                    return rb.getString("Column.Short.InternalRateOfReturn");
-                case 11:
-                    return rb.getString("Column.Short.PercentagePortfolio");
-                case 12:
-                    return "group";
-                default:
-                    return "ERR";
+            if (columnIndex >= getColumnCount()) {
+                return "group";
             }
+
+            return PortfolioReport.getColumnName(columnIndex);
+        }
+        @Override
+        public int getColumnCount() {
+            return PortfolioReport.getColumnCount() + 1;    // add group column
         }
 
         @Override

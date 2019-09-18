@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.AccountComboBox?>
+<?import jgnash.uifx.control.CheckComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 
 <GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
@@ -45,6 +46,8 @@
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
             <ColumnConstraints hgrow="ALWAYS"/>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
         </columnConstraints>
@@ -52,8 +55,11 @@
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
-        <CheckBox fx:id="subAccountCheckBox" text="%Button.IncludeSubAccounts"/>
-        <CheckBox fx:id="longNameCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="1"/>
-        <Button text="%Button.ResetAll" onAction="#handleResetAll" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
+        <Label text="%Label.ReportColumns" GridPane.columnIndex="0"/>
+        <CheckComboBox fx:id="columnComboBox" GridPane.columnIndex="1" maxWidth="280"/>
+        <CheckBox fx:id="subAccountCheckBox" text="%Button.IncludeSubAccounts" GridPane.columnIndex="2"/>
+        <CheckBox fx:id="longNameCheckBox" text="%Button.UseLongNames" GridPane.columnIndex="3"/>
+
+        <Button text="%Button.ResetAll" onAction="#handleResetAll" GridPane.columnIndex="5" GridPane.halignment="RIGHT"/>
     </GridPane>
 </GridPane>
