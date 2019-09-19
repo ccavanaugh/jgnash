@@ -18,12 +18,12 @@
 package jgnash.uifx.control;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -40,29 +40,35 @@ import jgnash.uifx.util.JavaFXUtils;
  *
  * @author Craig Cavanaugh
  */
-public class CheckComboBox<T> extends ComboBox<CheckComboBox.CheckBoxWrapper<T>> {
+public class CheckComboBox<T> extends ComboBox<T> {
+
+    private Map<T, BooleanProperty> checkMap = new HashMap<>();
 
     public CheckComboBox() {
 
         setCellFactory(new Callback<>() {
             @Override
-            public ListCell<CheckBoxWrapper<T>> call(ListView<CheckBoxWrapper<T>> param) {
-
-                final ListCell<CheckBoxWrapper<T>> cell = new ListCell<>() {
+            public ListCell<T> call(ListView<T> param) {
+                final ListCell<T> cell = new ListCell<>() {
                     @Override
-                    protected void updateItem(final CheckBoxWrapper<T> item, boolean empty) {
+                    protected void updateItem(T item, boolean empty) {
                         super.updateItem(item, empty);
 
                         if (!empty) {
                             final CheckBox checkBox = new CheckBox(item.toString());
-                            checkBox.selectedProperty().bind(item.checkProperty());
+
+                            final BooleanProperty booleanProperty =
+                                    checkMap.computeIfAbsent(item, t -> new SimpleBooleanProperty(true));
+
+                            checkBox.selectedProperty().bind(booleanProperty);
                             setGraphic(checkBox);
                         }
                     }
                 };
 
+                // toggle the value
                 cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-                    cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
+                    checkMap.get(cell.getItem()).setValue(!checkMap.get(cell.getItem()).get());
                     JavaFXUtils.runLater(CheckComboBox.this::updatePromptText);
                 });
 
@@ -70,19 +76,20 @@ public class CheckComboBox<T> extends ComboBox<CheckComboBox.CheckBoxWrapper<T>>
             }
         });
 
-        getItems().addListener((ListChangeListener<CheckBoxWrapper<T>>) c -> JavaFXUtils.runLater(CheckComboBox.this::updatePromptText));
+        getItems().addListener((ListChangeListener<T>) c -> JavaFXUtils.runLater(CheckComboBox.this::updatePromptText));
     }
 
     public void add(T item, boolean check) {
-        getItems().add(new CheckBoxWrapper<>(item, check));
+        checkMap.put(item, new SimpleBooleanProperty(check));
+        getItems().add(item);
     }
 
     public List<T> getCheckedItems() {
         final List<T> checkedItems = new ArrayList<>();
 
-        for (final CheckBoxWrapper<T> checkBoxWrapper : getItems()) {
-            if (checkBoxWrapper.getCheck()) {
-                checkedItems.add(checkBoxWrapper.getItem());
+        for (final T item : getItems()) {
+            if (checkMap.getOrDefault(item, new SimpleBooleanProperty(false)).get()) {
+                checkedItems.add(item);
             }
         }
 
@@ -90,57 +97,21 @@ public class CheckComboBox<T> extends ComboBox<CheckComboBox.CheckBoxWrapper<T>>
     }
 
     public void setChecked(T item, boolean check) {
-        for (final CheckBoxWrapper<T> checkBoxWrapper : getItems()) {
-            if (checkBoxWrapper.getItem().equals(item)) {
-                checkBoxWrapper.setCheck(check);
-            }
-        }
+        checkMap.getOrDefault(item, new SimpleBooleanProperty(check)).setValue(check);
     }
 
     public void setAllChecked() {
-        for (final CheckBoxWrapper<T> checkBoxWrapper : getItems()) {
-            checkBoxWrapper.setCheck(true);
-        }
+        checkMap.forEach((t, booleanProperty) -> booleanProperty.setValue(true));
     }
 
     private void updatePromptText() {
         final StringBuilder sb = new StringBuilder();
-        getItems().filtered(CheckBoxWrapper::getCheck).forEach(p -> sb.append(", ").append(p.getItem()));
+
+        getItems().filtered(t -> checkMap.getOrDefault(t, new SimpleBooleanProperty(false)).get())
+                .forEach(t -> sb.append(", ").append(t.toString()));
 
         final String string = sb.substring(Integer.min(2, sb.length()));
         setPromptText(string);
         setTooltip(new Tooltip(string));
-    }
-
-     public static class CheckBoxWrapper<T> {
-
-        private BooleanProperty check = new SimpleBooleanProperty(false);
-        private ObjectProperty<T> item = new SimpleObjectProperty<>();
-
-        CheckBoxWrapper(final T item, final boolean check) {
-            this.item.set(item);
-            this.check.set(check);
-        }
-
-        BooleanProperty checkProperty() {
-            return check;
-        }
-
-        boolean getCheck() {
-            return check.getValue();
-        }
-
-        void setCheck(boolean value) {
-            check.set(value);
-        }
-
-        public T getItem() {
-            return item.getValue();
-        }
-
-        @Override
-        public String toString() {
-            return item.getValue().toString();
-        }
     }
 }
