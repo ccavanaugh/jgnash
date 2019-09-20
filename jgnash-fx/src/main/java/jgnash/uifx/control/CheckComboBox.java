@@ -25,13 +25,11 @@ import java.util.Map;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
 import jgnash.uifx.util.JavaFXUtils;
 
@@ -42,53 +40,40 @@ import jgnash.uifx.util.JavaFXUtils;
  */
 public class CheckComboBox<T> extends ComboBox<T> {
 
-    private Map<T, BooleanProperty> checkMap = new HashMap<>();
+    private final Map<T, BooleanProperty> itemBooleanPropertyMap = new HashMap<>();
+
+    private BooleanProperty getItemBooleanProperty(final T item) {
+        itemBooleanPropertyMap.putIfAbsent(item, new SimpleBooleanProperty());
+        return itemBooleanPropertyMap.get(item);
+    }
 
     public CheckComboBox() {
 
-        setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<T> call(ListView<T> param) {
-                final ListCell<T> cell = new ListCell<>() {
-                    @Override
-                    protected void updateItem(T item, boolean empty) {
-                        super.updateItem(item, empty);
+        setCellFactory(param -> {
+            final ListCell<T> cell = new CheckBoxListCell<>(CheckComboBox.this::getItemBooleanProperty);
 
-                        if (!empty) {
-                            final CheckBox checkBox = new CheckBox(item.toString());
+            // toggle the value
+            cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                itemBooleanPropertyMap.get(cell.getItem()).setValue(!itemBooleanPropertyMap.get(cell.getItem()).get());
+                JavaFXUtils.runLater(CheckComboBox.this::updatePromptText);
+            });
 
-                            final BooleanProperty booleanProperty =
-                                    checkMap.computeIfAbsent(item, t -> new SimpleBooleanProperty(true));
-
-                            checkBox.selectedProperty().bind(booleanProperty);
-                            setGraphic(checkBox);
-                        }
-                    }
-                };
-
-                // toggle the value
-                cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-                    checkMap.get(cell.getItem()).setValue(!checkMap.get(cell.getItem()).get());
-                    JavaFXUtils.runLater(CheckComboBox.this::updatePromptText);
-                });
-
-                return cell;
-            }
+            return cell;
         });
 
         getItems().addListener((ListChangeListener<T>) c -> JavaFXUtils.runLater(CheckComboBox.this::updatePromptText));
     }
 
     public void add(T item, boolean check) {
-        checkMap.put(item, new SimpleBooleanProperty(check));
         getItems().add(item);
+        getItemBooleanProperty(item).setValue(check);
     }
 
     public List<T> getCheckedItems() {
         final List<T> checkedItems = new ArrayList<>();
 
         for (final T item : getItems()) {
-            if (checkMap.getOrDefault(item, new SimpleBooleanProperty(false)).get()) {
+            if (itemBooleanPropertyMap.getOrDefault(item, new SimpleBooleanProperty(false)).get()) {
                 checkedItems.add(item);
             }
         }
@@ -97,17 +82,19 @@ public class CheckComboBox<T> extends ComboBox<T> {
     }
 
     public void setChecked(T item, boolean check) {
-        checkMap.getOrDefault(item, new SimpleBooleanProperty(check)).setValue(check);
+        getItemBooleanProperty(item).setValue(check);
     }
 
     public void setAllChecked() {
-        checkMap.forEach((t, booleanProperty) -> booleanProperty.setValue(true));
+        for (final T item : getItems()) {
+            getItemBooleanProperty(item).set(true);
+        }
     }
 
     private void updatePromptText() {
         final StringBuilder sb = new StringBuilder();
 
-        getItems().filtered(t -> checkMap.getOrDefault(t, new SimpleBooleanProperty(false)).get())
+        getItems().filtered(t -> itemBooleanPropertyMap.getOrDefault(t, new SimpleBooleanProperty(false)).get())
                 .forEach(t -> sb.append(", ").append(t.toString()));
 
         final String string = sb.substring(Integer.min(2, sb.length()));
