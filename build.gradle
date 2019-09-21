@@ -9,7 +9,7 @@ allprojects {
     targetCompatibility = 11
 
     group = "jgnash"
-    version = "3.2.2"
+    version = "3.3.0"
 
     project.ext {
         junitVersion = "5.5.2"              // https://junit.org/junit5/
@@ -29,10 +29,10 @@ allprojects {
 
         xstreamVersion = "1.4.11.1"         // https://github.com/x-stream/xstream
 
-        hibernateVersion = "5.4.4.Final"    // http://hibernate.org/orm/
-        hikariVersion = "3.3.1"             // https://github.com/brettwooldridge/HikariCP
+        hibernateVersion = "5.4.5.Final"    // http://hibernate.org/orm/
+        hikariVersion = "3.4.1"             // https://github.com/brettwooldridge/HikariCP
 
-        pdfBoxVersion = "2.0.16"            // https://pdfbox.apache.org/
+        pdfBoxVersion = "2.0.17"            // https://pdfbox.apache.org/
 
         nettyVersion = "4.1.41.Final"       // https://netty.io/index.html
 
