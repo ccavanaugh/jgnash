@@ -29,7 +29,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 
 import jgnash.engine.AccountType;
 import jgnash.engine.EngineFactory;
@@ -87,6 +86,9 @@ public class PortfolioReportController implements ReportController {
     private ChangeListener<Object> changeListener;
 
     @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> comboChangeListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Object> accountChangeListener;
 
     @FXML
@@ -95,8 +97,7 @@ public class PortfolioReportController implements ReportController {
 
         initColumnCombo();
 
-        // listen for combobox close and update preferences and the report
-        columnComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> JavaFXUtils.runLater(() -> {
+        comboChangeListener = (observable, oldValue, newValue) -> {
             final List<String> columns = columnComboBox.getCheckedItems();
 
             if (columns.size() > 0) {
@@ -107,7 +108,10 @@ public class PortfolioReportController implements ReportController {
             }
 
             handleReportRefresh();
-        }));
+        };
+
+        // list to changes and update preferences and the report
+        columnComboBox.addListener(new WeakChangeListener<>(comboChangeListener));
 
         // Only show visible investment accounts
         accountComboBox.setPredicate(account -> account.instanceOf(AccountType.INVEST) && account.isVisible());

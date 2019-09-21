@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -42,13 +43,18 @@ public class CheckComboBox<T> extends ComboBox<T> {
 
     private final Map<T, BooleanProperty> itemBooleanPropertyMap = new HashMap<>();
 
-    private BooleanProperty getItemBooleanProperty(final T item) {
-        itemBooleanPropertyMap.putIfAbsent(item, new SimpleBooleanProperty());
-        return itemBooleanPropertyMap.get(item);
-    }
+    private final List<ChangeListener<Boolean>> checkChangedListeners = new ArrayList<>();
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ListCell<T> buttonCell;
+
+    private final ChangeListener<Boolean> checkedChangeListener = (observable, oldValue, newValue) -> {
+        for (final ChangeListener<Boolean> listener : checkChangedListeners) {
+            listener.changed(observable, oldValue, newValue);
+        }
+    };
 
     public CheckComboBox() {
-
         setCellFactory(param -> {
             final ListCell<T> cell = new CheckBoxListCell<>(CheckComboBox.this::getItemBooleanProperty);
 
@@ -61,7 +67,26 @@ public class CheckComboBox<T> extends ComboBox<T> {
             return cell;
         });
 
+        // need to override the button cell, otherwise prompt text is replaced by the last selection
+        buttonCell = new ListCell<>() {
+            @Override
+            protected void updateItem(final T item, final boolean empty) {
+                setText(getPromptText());
+            }
+        };
+
+        setButtonCell(buttonCell);
+
         getItems().addListener((ListChangeListener<T>) c -> JavaFXUtils.runLater(CheckComboBox.this::updatePromptText));
+    }
+
+    /**
+     * Adds a ChangeListener which will be notified whenever a check changes.
+     *
+     * @param listener The listener to register
+     */
+    public void addListener(final ChangeListener<Boolean> listener) {
+        checkChangedListeners.add(listener);
     }
 
     public void add(T item, boolean check) {
@@ -73,7 +98,7 @@ public class CheckComboBox<T> extends ComboBox<T> {
         final List<T> checkedItems = new ArrayList<>();
 
         for (final T item : getItems()) {
-            if (itemBooleanPropertyMap.getOrDefault(item, new SimpleBooleanProperty(false)).get()) {
+            if (getItemBooleanProperty(item).get()) {
                 checkedItems.add(item);
             }
         }
@@ -94,11 +119,24 @@ public class CheckComboBox<T> extends ComboBox<T> {
     private void updatePromptText() {
         final StringBuilder sb = new StringBuilder();
 
-        getItems().filtered(t -> itemBooleanPropertyMap.getOrDefault(t, new SimpleBooleanProperty(false)).get())
+        getItems().filtered(t -> getItemBooleanProperty(t).get())
                 .forEach(t -> sb.append(", ").append(t.toString()));
 
+        // strip the leading space and comma
         final String string = sb.substring(Integer.min(2, sb.length()));
+
+        setPromptText(string);
         setPromptText(string);
         setTooltip(new Tooltip(string));
+    }
+
+    private BooleanProperty getItemBooleanProperty(final T item) {
+        if (itemBooleanPropertyMap.get(item) == null) {
+            SimpleBooleanProperty booleanProperty = new SimpleBooleanProperty();
+            itemBooleanPropertyMap.put(item, booleanProperty);
+            booleanProperty.addListener(checkedChangeListener);
+        }
+
+        return itemBooleanPropertyMap.get(item);
     }
 }
