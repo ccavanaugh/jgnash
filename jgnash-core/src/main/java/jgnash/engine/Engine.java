@@ -572,11 +572,10 @@ public class Engine {
         try {
             if (object instanceof StoredObject) {
                 getTrashDAO().add(new TrashObject((StoredObject) object));
-                result = true;
             } else {    // simple object with an annotated JPA entity id of type long is assumed
                 getTrashDAO().addEntityTrash(object);
-                result = true;
             }
+            result = true;
         } catch (final Exception ex) {
             logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
@@ -2146,13 +2145,12 @@ public class Engine {
 
             if (getAccountDAO().toggleAccountVisibility(account)) {
                 message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_VISIBILITY_CHANGE, this);
-                message.setObject(MessageProperty.ACCOUNT, account);
-                messageBus.fireEvent(message);
             } else {
                 message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_VISIBILITY_CHANGE_FAILED, this);
-                message.setObject(MessageProperty.ACCOUNT, account);
-                messageBus.fireEvent(message);
             }
+
+            message.setObject(MessageProperty.ACCOUNT, account);
+            messageBus.fireEvent(message);
         } finally {
             dataLock.writeLock().unlock();
         }
