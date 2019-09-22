@@ -50,6 +50,8 @@ import jgnash.util.Nullable;
  */
 public class PageFormatDialogController {
 
+    private static final String DEFAULT_MARGIN = "0.5";
+
     private static final String LAST_UNIT = "lastUnit";
 
     private static final float EPSILON = 0.5f;  // round error occur due to saved precision of the page size
@@ -123,16 +125,19 @@ public class PageFormatDialogController {
         bottomMarginField.emptyWhenZeroProperty().setValue(false);
 
         // inches
-        widthField.setDecimal(new BigDecimal(8.5));
+        widthField.setDecimal(new BigDecimal("8.5"));
         heightField.setDecimal(new BigDecimal(11));
 
         portraitRadioButton.setSelected(true);
 
         // inches
-        leftMarginField.setDecimal(new BigDecimal(0.5));
-        rightMarginField.setDecimal(new BigDecimal(0.5));
-        topMarginField.setDecimal(new BigDecimal(0.5));
-        bottomMarginField.setDecimal(new BigDecimal(0.5));
+
+        final BigDecimal margin = new BigDecimal(DEFAULT_MARGIN);
+
+        leftMarginField.setDecimal(margin);
+        rightMarginField.setDecimal(margin);
+        topMarginField.setDecimal(margin);
+        bottomMarginField.setDecimal(margin);
 
         // install the listeners
         pageSizeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> handlePageSizeChange());

@@ -82,7 +82,7 @@ public class QifUtils {
                 NumberFormat formatter = NumberFormat.getNumberInstance();
                 try {
                     Number num = formatter.parse(sMoney);
-                    BigDecimal bd = new BigDecimal(num.floatValue());
+                    BigDecimal bd = BigDecimal.valueOf(num.floatValue());
                     if (bd.scale() > 6) {
                         Logger l = Logger.getLogger(QifUtils.class.getName());
                         l.warning("-Warning-");
