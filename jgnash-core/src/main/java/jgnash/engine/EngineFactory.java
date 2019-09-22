@@ -492,7 +492,7 @@ public class EngineFactory {
         final String fileExtension = "." + FileUtils.getFileExtension(destination);
         DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
 
-        if (!fileExtension.isEmpty()) {
+        if (fileExtension.length() > 1) {   // should have more than just the period in it
             for (final DataStoreType type : DataStoreType.values()) {
                 if (type.getDataStore().getFileExt().equalsIgnoreCase(fileExtension)) {
                     newFileType = type;
@@ -597,7 +597,7 @@ public class EngineFactory {
         DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
 
         // Determine the data store type given the file extension
-        if (!fileExtension.isEmpty()) {
+        if (fileExtension.length() > 1) {   // should have more than just the period in it
             for (final DataStoreType type : DataStoreType.values()) {
                 if (type.getDataStore().getFileExt().equalsIgnoreCase(fileExtension)) {
                     newFileType = type;
