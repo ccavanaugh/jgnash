@@ -1,5 +1,5 @@
 plugins {
-  id "org.openjfx.javafxplugin" version "$javafxPluginVersion"
+  id "org.openjfx.javafxplugin"
 }
 
 description = "jGnash Test Plugin"
