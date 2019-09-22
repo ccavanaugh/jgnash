@@ -19,7 +19,7 @@
 * Reinstate archive capability
 * Add export function for the account tree balance/table.
 * Open zipped backups instead of manually unzipping.
-* Control the displayed columns of the portfolio report
+* HSQLDB 2.5.1 when released
 
 == Release 3.3.0
 * 09/21/2019 Update to the latest Hibernate, HikariCP and PDFBox dependencies.
