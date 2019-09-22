@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.ben-manes.versions" version "$versionsPluginVersion"
+    id "com.github.ben-manes.versions"
 }
 
 allprojects {
