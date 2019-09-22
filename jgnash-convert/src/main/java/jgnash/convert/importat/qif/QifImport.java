@@ -512,9 +512,9 @@ public class QifImport {
 
             for (QifSplitTransaction splitTransaction : splits) {
                 TransactionEntry split = generateSplitTransaction(splitTransaction, acc);
-                if (split != null) {
-                    tran.addTransactionEntry(split);
-                }
+
+                Objects.requireNonNull(split);  // should not be null, throw an exception
+                tran.addTransactionEntry(split);
             }
 
             ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
