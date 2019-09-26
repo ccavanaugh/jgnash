@@ -32,6 +32,8 @@ dependencies {
 
     compile group: "org.apache.commons", name: "commons-collections4", version: commonsCollectionsVersion
     compile group: "org.apache.commons", name: "commons-lang3", version: commonsLangVersion
+
+    testCompile project(":jgnash-core-test")    // pulls in abstract test class that is reused by multiple modules
 }
 
 jar {
