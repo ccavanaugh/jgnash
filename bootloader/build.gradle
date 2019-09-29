@@ -1,13 +1,15 @@
 plugins {
-    id "edu.sc.seis.launch4j"
-    id "org.openjfx.javafxplugin"
+    id("edu.sc.seis.launch4j")
+    id("org.openjfx.javafxplugin")
+    id("application")   // creates a task to run the full application
+    id("distribution")
 }
 
-apply plugin: "distribution"
-apply plugin: "application" // creates a task to run the full application
-
 description = "jGnashFx BootLoader"
-mainClassName = "jGnash"
+
+application {
+    mainClassName = "jGnash"
+}
 
 javafx {
     version = javaFXVersion
@@ -16,10 +18,10 @@ javafx {
 }
 
 dependencies {
-    compile project(":jgnash-fx")
-    compile project(":jgnash-resources")
-    compile project(":jgnash-core")
-    compile (group: "info.picocli", name: "picocli", version: picocliVersion)
+    compile(project(":jgnash-fx"))
+    compile(project(":jgnash-resources"))
+    compile(project(":jgnash-core"))
+    compile("info.picocli:picocli:$picocliVersion")
 }
 
 launch4j {
@@ -29,7 +31,8 @@ launch4j {
     dontWrapJar = true
     icon = "../../../jgnash-fx/gnome-money.ico"
     downloadUrl = "https://www.azul.com/downloads/zulu/"
-    bundledJrePath = "%JAVA_HOME%"  // work around for not being able to find installed jre, https://sourceforge.net/p/launch4j/bugs/197/
+    bundledJrePath = "%JAVA_HOME%"
+    // work around for not being able to find installed jre, https://sourceforge.net/p/launch4j/bugs/197/
     jreMinVersion = "11"
 }
 
@@ -39,12 +42,6 @@ task createStartScripts(type: CreateStartScripts) {
 
 // call launch4j prior to creating the zip file
 distZip.dependsOn(createExe)
-
-/*distZip {
-    doLast {
-        file("$destinationDir/$archiveName").renameTo("$destinationDir/"+"jGnash-"+version+".zip")
-    }
-}*/
 
 distributions {
     main {
@@ -68,7 +65,7 @@ jar {
     exclude "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.MF"
 
     manifest {
-        attributes  "Main-Class": "jGnash",
+        attributes "Main-Class": "jGnash",
                 "Class-Path": configurations.runtimeClasspath.files.collect { "lib/$it.name" }.join(" ")
     }
 }

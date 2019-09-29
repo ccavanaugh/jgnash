@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.ben-manes.versions"
+    id("com.github.ben-manes.versions")
 }
 
 allprojects {
@@ -50,13 +50,13 @@ subprojects {
     }
 
     dependencies {
-        testCompile group: "org.junit.jupiter", name: "junit-jupiter-api", version: junitVersion
-        testCompile group: "org.junit.jupiter", name: "junit-jupiter-params", version: junitVersion
-        testRuntime group: "org.junit.jupiter", name: "junit-jupiter-engine", version: junitVersion
+        testCompile("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+        testCompile("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 
-        testCompile group: "io.github.glytching", name: "junit-extensions", version: junitextensionsVersion
-        testCompile group: "org.awaitility", name: "awaitility", version: awaitilityVersion
-        testCompile group: "org.apache.commons", name: "commons-text", version: commonsTextVersion
+        testCompile("io.github.glytching:junit-extensions:$junitextensionsVersion")
+        testCompile("org.awaitility:awaitility:$awaitilityVersion")
+        testCompile("org.apache.commons:commons-text:$commonsTextVersion")
     }
 
     test {
@@ -64,7 +64,7 @@ subprojects {
 
         //we want display the following test events
         testLogging {
-            events "PASSED", "STARTED", "FAILED", "SKIPPED"
+            events("PASSED", "STARTED", "FAILED", "SKIPPED")
             showStandardStreams = true
         }
     }

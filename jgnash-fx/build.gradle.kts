@@ -5,7 +5,6 @@ val picocliVersion: String by project
 
 plugins {
     id("org.openjfx.javafxplugin")
-    //distribution
     application // creates a task to run the full application
 }
 
