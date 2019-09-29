@@ -11,11 +11,15 @@ mainClassName = "jGnash"
 
 javafx {
     version = javaFXVersion
-    modules = [ "javafx.controls"]
+    modules("javafx.base", "javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing",
+            "javafx.graphics", "javafx.media")
 }
 
 dependencies {
     compile project(":jgnash-fx")
+    compile project(":jgnash-resources")
+    compile project(":jgnash-core")
+    compile (group: "info.picocli", name: "picocli", version: picocliVersion)
 }
 
 launch4j {
