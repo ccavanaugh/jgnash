@@ -188,23 +188,22 @@ public class SqlUtils {
      *
      * @param url url to validate
      * @return {@code true} if valid
-     * @throws SQLException exception is thrown if the url is not valid.  Exception can be checked for root cause.
      */
-    static boolean isConnectionValid(final String url) throws SQLException {
+    static boolean isConnectionValid(final String url) {
+        boolean result = false;
 
         try (final Connection ignored = DriverManager.getConnection(url)) {
             logger.fine("Connection is valid");
+            result = true;
         } catch (final SQLException e) {
             if (e.toString().contains("Unknown database")) {
                 logger.severe("Unknown database");
             }
-
-            throw e;
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+        } catch (final Exception e) {
+            logger.log(Level.SEVERE, e.toString(), e);
         }
 
-        return true;
+        return result;
     }
 
     /**
