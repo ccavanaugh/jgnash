@@ -22,6 +22,7 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.3.1
+* 10/05/2019 Update to the latest Hibernate and Netty dependencies.
 * 10/01/2019 The majority of the build system was migrated to the Kotlin DSL.
 
 == Release 3.3.0
