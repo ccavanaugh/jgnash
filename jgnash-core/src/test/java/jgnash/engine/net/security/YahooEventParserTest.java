@@ -22,12 +22,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jgnash.engine.AbstractEngineTest;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
@@ -37,7 +39,10 @@ import jgnash.net.security.YahooEventParser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit test for the Yahoo security downloader.
@@ -110,7 +115,8 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
             YahooCrumbManager.clearAuthorization();     // force re-authorization to prevent failed unit test
 
-            final List<SecurityHistoryNode> events = YahooEventParser.retrieveHistoricalPrice(ibm, LocalDate.of(2016,
+            final List<SecurityHistoryNode> events = Objects.requireNonNull(QuoteSource.YAHOO.getParser())
+                                                             .retrieveHistoricalPrice(ibm, LocalDate.of(2016,
                     Month.JANUARY, 1), LocalDate.of(2016, Month.DECEMBER, 30));
 
             if (events.size() == 252) {

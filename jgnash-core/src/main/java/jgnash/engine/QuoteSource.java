@@ -18,12 +18,13 @@
 package jgnash.engine;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
+import jgnash.net.security.YahooEventParser;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.util.LogUtil;
+import jgnash.util.Nullable;
 
 /**
  * Enumeration for quote download source.
@@ -35,13 +36,18 @@ import jgnash.resource.util.ResourceUtils;
 public enum QuoteSource {
 
     NONE(ResourceUtils.getString("QuoteSource.None"), NullParser.class),
-    YAHOO(ResourceUtils.getString("QuoteSource.Yahoo"), NullParser.class),
-    YAHOO_UK(ResourceUtils.getString("QuoteSource.YahooUK"), NullParser.class),
-    YAHOO_AUS(ResourceUtils.getString("QuoteSource.YahooAus"), NullParser.class);
+    YAHOO(ResourceUtils.getString("QuoteSource.Yahoo"), YahooEventParser.class),
+    YAHOO_UK(ResourceUtils.getString("QuoteSource.YahooUK"), YahooEventParser.class),
+    YAHOO_AUS(ResourceUtils.getString("QuoteSource.YahooAus"), YahooEventParser.class);
 
     private final transient String description;
 
     private final transient Class<? extends SecurityParser> parser;
+
+    /**
+     * Cache the SecurityParser instance to improve performance
+     */
+    private transient SecurityParser securityParser;
 
     QuoteSource(String description, final Class<? extends SecurityParser> parser) {
         this.description = description;
@@ -58,12 +64,16 @@ public enum QuoteSource {
      *
      * @return a new SecurityParser instance.  Null if not able to create it
      */
+    @Nullable
     public SecurityParser getParser() {
-        try {
-            return parser.getDeclaredConstructor().newInstance();
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            Logger.getLogger(QuoteSource.class.getName()).log(Level.SEVERE, e.toString(), e);
-            return null; // unable to create object
+        if (securityParser == null) {
+            try {
+                securityParser = parser.getDeclaredConstructor().newInstance();
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                LogUtil.logSevere(QuoteSource.class, e);
+                return null; // unable to create object
+            }
         }
+        return securityParser;
     }
 }

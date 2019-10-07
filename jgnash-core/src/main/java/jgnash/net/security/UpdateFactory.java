@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -45,9 +46,9 @@ import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Fetches latest stock prices in the background.
@@ -177,8 +178,14 @@ public class UpdateFactory {
 
         List<SecurityHistoryNode> newSecurityNodes;
 
+        QuoteSource quoteSource = securityNode.getQuoteSource();
+        Objects.requireNonNull(quoteSource);
+
+        SecurityParser securityParser = quoteSource.getParser();
+        Objects.requireNonNull(securityParser);
+
         try {
-            newSecurityNodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+            newSecurityNodes = securityParser.retrieveHistoricalPrice(securityNode,
                     startDate, endDate);
 
             if (!newSecurityNodes.isEmpty()) {
@@ -212,10 +219,15 @@ public class UpdateFactory {
 
             if (e != null) {    // protect against a call in process during a shutdown
                 // check for thread interruption
-                if (securityNode.getQuoteSource() != QuoteSource.NONE && !Thread.currentThread().isInterrupted()) {
+                final QuoteSource quoteSource = securityNode.getQuoteSource();
+
+                if (quoteSource != QuoteSource.NONE && !Thread.currentThread().isInterrupted()) {
 
                     try {
-                        final List<SecurityHistoryNode> nodes = YahooEventParser.retrieveHistoricalPrice(securityNode,
+                        final SecurityParser securityParser = quoteSource.getParser();
+                        Objects.requireNonNull(securityParser);
+
+                        final List<SecurityHistoryNode> nodes = securityParser.retrieveHistoricalPrice(securityNode,
                                 LocalDate.now().minusDays(1), LocalDate.now());
 
                         for (final SecurityHistoryNode node : nodes) {

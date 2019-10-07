@@ -57,17 +57,13 @@ import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
  *
  * @author Craig Cavanaugh
  */
-public class YahooEventParser {
+public class YahooEventParser implements SecurityParser{
 
     private static final String DIV_RESPONSE_HEADER = "Date,Dividends";
 
     private static final String SPLIT_RESPONSE_HEADER = "Date,Stock Splits";
 
     private static final String HISTORY_RESPONSE_HEADER = "Date,Open,High,Low,Close,Adj Close,Volume";
-
-    private YahooEventParser() {
-        // Utility class
-    }
 
     public static Set<SecurityHistoryEvent> retrieveNew(@NotNull final SecurityNode securityNode,
                                                         final LocalDate endDate) throws IOException {
@@ -123,7 +119,8 @@ public class YahooEventParser {
                 });
     }
 
-    public static List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
+    @Override
+    public List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
                                                                     final LocalDate startDate, final LocalDate endDate) throws IOException {
 
         /*

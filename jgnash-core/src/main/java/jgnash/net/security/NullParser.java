@@ -18,51 +18,24 @@
 
 package jgnash.net.security;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 
+import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 
 /**
  * Null security history parser.
+ *
+ * Returns empty results
  *
  * @author Craig Cavanaugh
  */
 public class NullParser implements SecurityParser {
 
     @Override
-    public BigDecimal getPrice() {
-        return BigDecimal.ZERO;
+    public List<SecurityHistoryNode> retrieveHistoricalPrice(final SecurityNode securityNode, final LocalDate startDate, final LocalDate endDate) {
+        return Collections.emptyList();
     }
-
-    @Override
-    public BigDecimal getHigh() {
-        return BigDecimal.ZERO;
-    }
-
-    @Override
-    public BigDecimal getLow() {
-        return BigDecimal.ZERO;
-    }
-
-    @Override
-    public long getVolume() {
-        return 0;
-    }
-
-    @Override
-    public boolean parse(SecurityNode node) {
-        return false;
-    }
-
-    @Override
-    public boolean useISIN() {
-        return true;
-    }
-
-    @Override
-    public LocalDate getDate() {
-       return LocalDate.now();
-    }
-
 }

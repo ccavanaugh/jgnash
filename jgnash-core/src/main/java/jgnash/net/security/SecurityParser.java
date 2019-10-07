@@ -17,30 +17,23 @@
  */
 package jgnash.net.security;
 
-import java.math.BigDecimal;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
+import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.util.NotNull;
 
 /**
- * Interface for security history information.
+ * Interface for security parser.
  *
  * @author Craig Cavanaugh
  */
-public interface SecurityParser {   
+public interface SecurityParser {
 
-    BigDecimal getPrice();
+    List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
+                                                      final LocalDate startDate, final LocalDate endDate) throws IOException;
 
-    BigDecimal getHigh();
 
-    BigDecimal getLow();
-
-    long getVolume();
-        
-    LocalDate getDate();
-      
-    boolean parse(SecurityNode node);
-
-    @SuppressWarnings("UnusedDeclaration")
-    boolean useISIN();
 }
