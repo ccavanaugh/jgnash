@@ -21,9 +21,12 @@ package jgnash.net.security;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.util.NotNull;
 
 /**
  * Null security history parser.
@@ -37,5 +40,10 @@ public class NullParser implements SecurityParser {
     @Override
     public List<SecurityHistoryNode> retrieveHistoricalPrice(final SecurityNode securityNode, final LocalDate startDate, final LocalDate endDate) {
         return Collections.emptyList();
+    }
+
+    @Override
+    public Set<SecurityHistoryEvent> retrieveHistoricalEvents(@NotNull final SecurityNode securityNode, final LocalDate endDate) {
+        return Collections.emptySet();
     }
 }

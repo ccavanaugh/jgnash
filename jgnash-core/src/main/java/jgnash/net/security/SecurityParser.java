@@ -20,7 +20,9 @@ package jgnash.net.security;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.util.NotNull;
@@ -32,8 +34,28 @@ import jgnash.util.NotNull;
  */
 public interface SecurityParser {
 
+    /**
+     * Retrieves historical pricing
+     *
+     * @param securityNode SecurityNode to retrieve events for
+     * @param startDate    start date
+     * @param endDate      end date
+     * @return List of SecurityHistoryNode
+     * @throws IOException indicates if IO / Network error has occurred
+     */
+    @NotNull
     List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
                                                       final LocalDate startDate, final LocalDate endDate) throws IOException;
 
-
+    /**
+     * Retrieves historical events
+     *
+     * @param securityNode SecurityNode to retrieve events for
+     * @param endDate      end date
+     * @return Set of SecurityHistoryEvent
+     * @throws IOException indicates if IO / Network error has occurred
+     */
+    @NotNull
+    Set<SecurityHistoryEvent> retrieveHistoricalEvents(@NotNull final SecurityNode securityNode,
+                                                       final LocalDate endDate) throws IOException;
 }

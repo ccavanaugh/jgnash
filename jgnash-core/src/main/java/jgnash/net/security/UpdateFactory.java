@@ -265,11 +265,17 @@ public class UpdateFactory {
 
             final LocalDate oldest = securityNode.getHistoryNodes().get(0).getLocalDate();
 
-            if (e != null && securityNode.getQuoteSource() != QuoteSource.NONE) {
+            final QuoteSource quoteSource = securityNode.getQuoteSource();
+            Objects.requireNonNull(quoteSource);
+
+            if (e != null && quoteSource != QuoteSource.NONE) {
                 try {
                     final Set<SecurityHistoryEvent> oldHistoryEvents = new HashSet<>(securityNode.getHistoryEvents());
 
-                    for (final SecurityHistoryEvent securityHistoryEvent : YahooEventParser.retrieveNew(securityNode, LocalDate.now())) {
+                    final SecurityParser securityParser = quoteSource.getParser();
+                    Objects.requireNonNull(securityParser);
+
+                    for (final SecurityHistoryEvent securityHistoryEvent : securityParser.retrieveHistoricalEvents(securityNode, LocalDate.now())) {
                         if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
                             if (securityHistoryEvent.getDate().isAfter(oldest) || securityHistoryEvent.getDate().isEqual(oldest)) {
                                 if (!oldHistoryEvents.contains(securityHistoryEvent)) {

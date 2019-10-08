@@ -34,7 +34,7 @@ import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.YahooCrumbManager;
-import jgnash.net.security.YahooEventParser;
+import jgnash.net.security.SecurityParser;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
@@ -77,6 +77,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
             final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
             ibm.setSymbol("IBM");
             ibm.setScale((byte) 2);
+            ibm.setQuoteSource(QuoteSource.YAHOO);
 
             final SecurityHistoryNode historyNode = new SecurityHistoryNode(LocalDate.of(1962, Month.JANUARY, 1),
                     BigDecimal.TEN, 1000, BigDecimal.TEN, BigDecimal.TEN);
@@ -84,7 +85,13 @@ public class YahooEventParserTest extends AbstractEngineTest {
             e.addSecurity(ibm);
             e.addSecurityHistory(ibm, historyNode);
 
-            final Set<SecurityHistoryEvent> events = YahooEventParser.retrieveNew(ibm, LocalDate.of(2015, Month.AUGUST, 22));
+            QuoteSource quoteSource = ibm.getQuoteSource();
+            Objects.requireNonNull(quoteSource);
+
+            SecurityParser securityParser = quoteSource.getParser();
+            Objects.requireNonNull(securityParser);
+
+            final Set<SecurityHistoryEvent> events = securityParser.retrieveHistoricalEvents(ibm, LocalDate.of(2015, Month.AUGUST, 22));
 
             assertNotNull(events);
 

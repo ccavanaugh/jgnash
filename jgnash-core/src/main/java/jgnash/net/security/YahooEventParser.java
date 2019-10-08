@@ -65,8 +65,8 @@ public class YahooEventParser implements SecurityParser{
 
     private static final String HISTORY_RESPONSE_HEADER = "Date,Open,High,Low,Close,Adj Close,Volume";
 
-    public static Set<SecurityHistoryEvent> retrieveNew(@NotNull final SecurityNode securityNode,
-                                                        final LocalDate endDate) throws IOException {
+    public Set<SecurityHistoryEvent> retrieveHistoricalEvents(@NotNull final SecurityNode securityNode,
+                                                              final LocalDate endDate) throws IOException {
 
         final Set<SecurityHistoryEvent> events = new HashSet<>();
 
