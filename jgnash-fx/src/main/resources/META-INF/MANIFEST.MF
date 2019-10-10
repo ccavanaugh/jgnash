@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Application-Name: jGnashFx
 JavaFX-Application-Class: jGnashFx
-Main-Class: jGnashFx
+Main-Class: jgnash.app.jGnashFx
