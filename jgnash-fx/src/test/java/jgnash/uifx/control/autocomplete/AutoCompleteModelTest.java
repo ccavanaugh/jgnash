@@ -54,7 +54,7 @@ import static org.testfx.api.FxToolkit.registerPrimaryStage;
 class AutoCompleteModelTest {
     private static final int TRANSACTION_COUNT = 2000;
 
-    @SuppressWarnings("WeakerAccess")
+    @SuppressWarnings({"WeakerAccess", "unused"})
     @TempDir
     static Path tempDir;
 
