@@ -1,0 +1,66 @@
+OFXHEADER:100
+DATA:OFXSGML
+VERSION:102
+SECURITY:NONE
+ENCODING:USASCII
+CHARSET:1252
+COMPRESSION:NONE
+OLDFILEUID:NONE
+NEWFILEUID:NONE
+
+<OFX>
+    <SIGNONMSGSRSV1>
+        <SONRS>
+            <STATUS>
+                <CODE>0
+                <SEVERITY>INFO
+            </STATUS>
+            <DTSERVER>20071218055954.656[-5:EST]
+            <LANGUAGE>ENG
+        </SONRS>
+    </SIGNONMSGSRSV1>
+    <BANKMSGSRSV1>
+        <STMTTRNRS>
+            <TRNUID>0
+            <STATUS>
+                <CODE>0
+                <SEVERITY>INFO
+            </STATUS>
+            <STMTRS>
+                <CURDEF>USD
+                <BANKACCTFROM>
+                    <BANKID>100000009
+                    <ACCTID>555555-S02
+                    <ACCTTYPE>SAVINGS
+                </BANKACCTFROM>
+                <BANKTRANLIST>
+                    <DTSTART>20071201
+                    <DTEND>20071218
+                    <STMTTRN>
+                        <TRNTYPE>DEBIT
+                        <DTPOSTED>20071212235959
+                        <TRNAMT>-130.00
+                        <FITID>21613420071212WH
+                        <NAME>To Share xx<MEMO>Withdrawal Transfer Home Banking
+                    </STMTTRN>
+                    <STMTTRN>
+                        <TRNTYPE>CASH
+                        <DTPOSTED>20071211235959
+                        <TRNAMT>-120.00
+                        <FITID>21807820071211WC
+                        <NAME>Account Transaction
+                        <MEMO>Withdrawal by Cash
+                    </STMTTRN>
+                </BANKTRANLIST>
+                <LEDGERBAL>
+                    <BALAMT>524.10
+                    <DTASOF>20071218235959
+                </LEDGERBAL>
+                <AVAILBAL>
+                    <BALAMT>519.10
+                    <DTASOF>20071218235959
+                </AVAILBAL>
+            </STMTRS>
+        </STMTTRNRS>
+    </BANKMSGSRSV1>
+</OFX>

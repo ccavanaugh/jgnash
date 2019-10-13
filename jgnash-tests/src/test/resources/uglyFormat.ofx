@@ -1,0 +1,230 @@
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+			
+		
+		
+		
+	
+	
+	
+	
+		
+			
+			
+				
+			
+			
+		
+		OFXHEADER:100
+		DATA:OFXSGML
+		VERSION:102
+		SECURITY:NONE
+		ENCODING:USASCII
+		CHARSET:1252
+		COMPRESSION:NONE
+		OLDFILEUID:NONE
+		NEWFILEUID:NONE
+		<OFX>
+			<SIGNONMSGSRSV1>
+				<SONRS>
+					<STATUS>
+						<CODE>0</CODE>
+						<SEVERITY>INFO</SEVERITY>
+					</STATUS>
+					<DTSERVER>
+						20170403021159
+					</DTSERVER>
+					<LANGUAGE>ENG</LANGUAGE>
+					<FI>
+						<ORG>
+							DEMOBANK
+						</ORG>
+						<FID>
+							1234567
+						</FID>
+					</FI>
+				</SONRS>
+			</SIGNONMSGSRSV1>
+			<BANKMSGSRSV1>
+				<STMTTRNRS>
+					<TRNUID>
+						456789
+					</TRNUID>
+					<STATUS>
+						<CODE>0</CODE>
+						<SEVERITY>INFO</SEVERITY>
+					</STATUS>
+					<STMTRS>
+						<CURDEF>USD</CURDEF>
+						<BANKACCTFROM>
+							<BANKID>123456789</BANKID>
+							<ACCTID>123456123456</ACCTID>
+							<ACCTTYPE>MONEYMRKT</ACCTTYPE>
+						</BANKACCTFROM>
+						<BANKTRANLIST>
+							<DTSTART>
+								
+								
+								20170315234653
+							</DTSTART>
+							<DTEND>
+								
+								
+								20170331233411
+							</DTEND>
+							
+								<STMTTRN>
+									
+										
+											<TRNTYPE>CREDIT</TRNTYPE>
+											<DTPOSTED>
+												
+												
+												20170331233411
+											</DTPOSTED>
+											<TRNAMT>
+												123.45
+											</TRNAMT>
+										
+										
+									
+									<FITID>
+										123456123456
+										323
+									</FITID>
+									<NAME>Interest Paid 
+									</NAME>
+								</STMTTRN>
+							
+								<STMTTRN>
+									
+										
+											<TRNTYPE>CREDIT</TRNTYPE>
+											<DTPOSTED>
+												
+												
+												20170331235707
+											</DTPOSTED>
+											<TRNAMT>
+												1234.56
+											</TRNAMT>
+										
+										
+									
+									<FITID>
+										123456123456
+										322
+									</FITID>
+									<NAME>PAYROLL~ Future Amount: 1234.56 ~ Tran: ACHDD
+									</NAME>
+								</STMTTRN>
+							
+								<STMTTRN>
+									
+										
+										
+											<TRNTYPE>DEBIT</TRNTYPE>
+											<DTPOSTED>
+												
+												
+												20170324024401
+											</DTPOSTED>
+											<TRNAMT>
+												-1234.56
+											</TRNAMT>
+										
+									
+									<FITID>
+										123456123456
+										316
+									</FITID>
+									<NAME>Transfer to SOME BANK SAVINGS BANK DDA account ******1234
+									</NAME>
+								</STMTTRN>
+							
+								<STMTTRN>
+									
+										
+											<TRNTYPE>CREDIT</TRNTYPE>
+											<DTPOSTED>
+												
+												
+												20170315234653
+											</DTPOSTED>
+											<TRNAMT>
+												1234.56
+											</TRNAMT>
+										
+										
+									
+									<FITID>
+										123456123456
+										313
+									</FITID>
+									<NAME>PAYROLL~ Future Amount: 1234.56 ~ Tran: ACHDD
+									</NAME>
+								</STMTTRN>
+							
+								<STMTTRN>
+									
+										
+											<TRNTYPE>CREDIT</TRNTYPE>
+											<DTPOSTED>
+												
+												
+												20170315234653
+											</DTPOSTED>
+											<TRNAMT>
+												1234.56
+											</TRNAMT>
+										
+										
+									
+									<FITID>
+										123456123456
+										312
+									</FITID>
+									<NAME>PAYROLL~ Future & &amp; " ' Am'ount: 1234.56 ~ Tran: ACHDD
+									</NAME>
+								</STMTTRN>
+							
+						</BANKTRANLIST>
+						<LEDGERBAL>
+							<BALAMT>
+								123457.78
+							</BALAMT>
+							<DTASOF>
+								
+								
+								20170331233411
+							</DTASOF>
+						</LEDGERBAL>
+						<AVAILBAL>
+							<BALAMT>123457.78</BALAMT>
+							<DTASOF>20170331233411</DTASOF>
+						</AVAILBAL>
+					</STMTRS>
+				</STMTTRNRS>
+			</BANKMSGSRSV1>
+		</OFX>
+	

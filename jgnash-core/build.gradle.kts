@@ -12,21 +12,25 @@ val xstreamVersion: String by project
 val nettyVersion: String by project
 val commonsCollectionsVersion: String by project
 
+plugins {
+    `java-library`
+}
+
 dependencies {
-    compile(project(":jgnash-resources"))
+    api(project(":jgnash-resources"))
 
     // required for HikariCP, override with modular version
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
     implementation("org.slf4j:slf4j-jdk14:$slf4jVersion")
 
-    compile("org.hibernate:hibernate-entitymanager:$hibernateVersion")
-    compile("org.hibernate:hibernate-hikaricp:$hibernateVersion")
-    compile("com.zaxxer:HikariCP:$hikariVersion")
+    api("org.hibernate:hibernate-entitymanager:$hibernateVersion")
+    implementation("org.hibernate:hibernate-hikaricp:$hibernateVersion")
+    implementation("com.zaxxer:HikariCP:$hikariVersion")
 
-    compile("com.h2database:h2:$h2Version")
-    compile("org.hsqldb:hsqldb:$hsqldbVersion")
+    implementation("com.h2database:h2:$h2Version")
+    implementation("org.hsqldb:hsqldb:$hsqldbVersion")
 
-    implementation("com.thoughtworks.xstream:xstream:$xstreamVersion") {
+    api("com.thoughtworks.xstream:xstream:$xstreamVersion") {
         exclude(module = "xmlpull")
         exclude(module = "xpp3_min")
     }
@@ -36,13 +40,10 @@ dependencies {
         exclude(module = "xpp3_min")
     }
 
-    implementation("io.netty:netty-codec:$nettyVersion")
+    compile("io.netty:netty-codec:$nettyVersion")
 
     compile("org.apache.commons:commons-collections4:$commonsCollectionsVersion")
     compile("org.apache.commons:commons-lang3:$commonsLangVersion")
-
-    // pulls in abstract test class that is reused by multiple modules
-    testImplementation(project(":jgnash-core-test"))
 }
 
 tasks.jar {
