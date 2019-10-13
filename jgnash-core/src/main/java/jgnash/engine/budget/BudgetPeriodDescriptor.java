@@ -39,15 +39,15 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
      */
     private int startPeriod;
 
-    private int endPeriod;
+    private final int endPeriod;
 
-    private LocalDate startDate;
+    private final LocalDate startDate;
 
-    private LocalDate endDate;
+    private final LocalDate endDate;
 
-    final private String periodDescription;
+    private final String periodDescription;
 
-    final private Period budgetPeriod;
+    private final Period budgetPeriod;
 
     /**
      *

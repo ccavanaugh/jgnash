@@ -107,7 +107,7 @@ public class PortfolioReport extends Report {
 
         private final boolean longNames;
 
-        private String subTitle;
+        private final String subTitle;
 
         private final Function<String, Boolean> columnVisibilityFunction;
 
