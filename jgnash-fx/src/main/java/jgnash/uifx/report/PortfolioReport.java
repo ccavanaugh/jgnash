@@ -44,6 +44,8 @@ import jgnash.util.NotNull;
  */
 public class PortfolioReport extends Report {
 
+    private static final int COLUMN_COUNT = 12;
+
     PortfolioReport() {
         super();
 
@@ -51,7 +53,7 @@ public class PortfolioReport extends Report {
     }
 
     static int getColumnCount() {
-        return 12;
+        return COLUMN_COUNT;
     }
 
     static String getColumnName(final int columnIndex) {
