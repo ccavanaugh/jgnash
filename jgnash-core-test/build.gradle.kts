@@ -3,7 +3,7 @@ description = "jGnash Core Test Classes"
 val moduleName = "jgnash.core.test"
 
 val junitVersion: String by project
-val junitextensionsVersion: String by project
+val junitExtensionsVersion: String by project
 val awaitilityVersion: String by project
 val commonsTextVersion: String by project
 
@@ -14,7 +14,7 @@ dependencies {
     implementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     implementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 
-    implementation("io.github.glytching:junit-extensions:$junitextensionsVersion")
+    implementation("io.github.glytching:junit-extensions:$junitExtensionsVersion")
 
     implementation("org.awaitility:awaitility:$awaitilityVersion")
 
