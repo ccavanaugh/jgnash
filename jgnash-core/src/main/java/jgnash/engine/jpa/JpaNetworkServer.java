@@ -50,6 +50,7 @@ import jgnash.engine.message.MessageBusServer;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
+import jgnash.util.LogUtil;
 
 /**
  * JPA network server.
@@ -86,9 +87,9 @@ public class JpaNetworkServer {
 
     private static final Logger logger = Logger.getLogger(JpaNetworkServer.class.getName());
 
-    private Runnable callback = null;
+    private Runnable runningCallback = null;
 
-    public synchronized void startServer(final String fileName, final int port, final char[] password) {
+    public synchronized void startServer(final String fileName, final int port, final char[] password) throws EngineException {
 
         final Path file = Paths.get(fileName);
 
@@ -123,15 +124,22 @@ public class JpaNetworkServer {
     }
 
     public synchronized void startServer(final String fileName, final int port, final char[] password,
-                                         final Runnable callback) {
-        this.callback = callback;
+                                         final Runnable callback) throws EngineException {
+        this.runningCallback = callback;
         this.startServer(fileName, port, password);
     }
 
-    private synchronized boolean run(final DataStoreType dataStoreType, final String fileName, final int port,
-                        final char[] password) {
-
-        boolean result = false;
+    /**
+     * Starts the server and blocks until it is stopped
+     *
+     * @param dataStoreType datastore type
+     * @param fileName      database file name
+     * @param port          port
+     * @param password      password*
+     * @throws EngineException thrown if engine or buss cannot be created
+     */
+    private synchronized void run(final DataStoreType dataStoreType, final String fileName, final int port,
+                                  final char[] password) throws EngineException {
 
         final DistributedLockServer distributedLockServer = new DistributedLockServer(port + LOCK_SERVER_INCREMENT);
         final boolean lockServerStarted = distributedLockServer.startServer(password);
@@ -148,13 +156,13 @@ public class JpaNetworkServer {
 
                 // Start the message bus and pass the file name so it can be reported to the client
                 final MessageBusServer messageBusServer = new MessageBusServer(port + MESSAGE_SERVER_INCREMENT);
-                result = messageBusServer.startServer(dataStoreType, fileName, password);
 
-                if (result) { // don't continue if the server is not started successfully
+                // don't continue if the server is not started successfully
+                if (messageBusServer.startServer(dataStoreType, fileName, password)) {
                     // Start the backup thread that ensures an XML backup is created at set intervals
                     final ScheduledExecutorService backupExecutor
                             = Executors.newSingleThreadScheduledExecutor(
-                                    new DefaultDaemonThreadFactory("JPA Network Server Executor"));
+                            new DefaultDaemonThreadFactory("JPA Network Server Executor"));
 
                     // run commit every backup period after startup
                     backupExecutor.scheduleWithFixedDelay(() -> {
@@ -179,8 +187,8 @@ public class JpaNetworkServer {
                     messageBusServer.addLocalListener(listener);
 
                     // if a callback has been registered, call it
-                    if (callback != null) {
-                        callback.run();
+                    if (runningCallback != null) {
+                        runningCallback.run();
                     }
 
                     // wait here forever
@@ -214,7 +222,11 @@ public class JpaNetworkServer {
                     em.close();
 
                     factory.close();
+                } else {
+                    throw new EngineException("Failed to start the Message Bus");
                 }
+            } else {
+                throw new EngineException("Failed to create the engine");
             }
         } else {
             if (lockServerStarted) {
@@ -225,7 +237,6 @@ public class JpaNetworkServer {
                 attachmentTransferServer.stopServer();
             }
         }
-        return result;
     }
 
     private void runH2Server(final String fileName, final int port, final char[] password) {
@@ -254,8 +265,10 @@ public class JpaNetworkServer {
         }
 
         // Start the message server and engine, this should block until closed
-        if (!run(DataStoreType.H2_DATABASE, fileName, port, password)) {
-            logger.severe("Failed to start the server");
+        try {
+            run(DataStoreType.H2_DATABASE, fileName, port, password);
+        } catch (final EngineException e) {
+            LogUtil.logSevere(JpaNetworkServer.class, e);
         }
 
         if (server != null) {
@@ -273,8 +286,10 @@ public class JpaNetworkServer {
         hsqlServer.start();
 
         // Start the message server and engine, this should block until closed
-        if (!run(DataStoreType.HSQL_DATABASE, fileName, port, password)) {
-            logger.severe("Failed to start the server");
+        try {
+            run(DataStoreType.HSQL_DATABASE, fileName, port, password);
+        } catch (final EngineException e) {
+            LogUtil.logSevere(JpaNetworkServer.class, e);
         }
 
         hsqlServer.stop();
