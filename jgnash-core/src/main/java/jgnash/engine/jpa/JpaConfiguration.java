@@ -94,7 +94,7 @@ class JpaConfiguration {
                 // use the old 1.3 page storage format instead of the MVStore based on file extension.  This allows
                 // for correct handling of old files without forcing an upgrade
                 if (fileName.endsWith(JpaH2DataStore.H2_FILE_EXT)) {
-                    urlBuilder.append(";MV_STORE=FALSE;MVCC=FALSE");
+                    urlBuilder.append(";MV_STORE=FALSE");
                 } else {
                     urlBuilder.append(";COMPRESS=TRUE;FILE_LOCK=FILE");   // do not use FS locking for
                 }

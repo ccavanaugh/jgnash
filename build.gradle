@@ -24,7 +24,7 @@ allprojects {
         commonsTextVersion = "1.8"          // https://commons.apache.org/proper/commons-text/
         commonsLangVersion = "3.9"          // https://commons.apache.org/proper/commons-lang/
 
-        h2Version = "1.4.199"               // http://www.h2database.com/html/main.html
+        h2Version = "1.4.200"               // http://www.h2database.com/html/main.html
         hsqldbVersion = "2.4.1"             // http://hsqldb.org/
 
         xstreamVersion = "1.4.11.1"         // https://github.com/x-stream/xstream
