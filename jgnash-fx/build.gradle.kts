@@ -2,6 +2,8 @@ description = "jGnash JavaFx"
 
 val javaFXVersion: String by project    // extract JavaFX version from gradle.properties
 val picocliVersion: String by project
+val testFxVersion: String by project
+val monocleVersion: String by project
 
 plugins {
     id("org.openjfx.javafxplugin")
@@ -56,8 +58,8 @@ dependencies {
     // end hack
 
     // required of Unit testing JavaFX
-    testImplementation("org.testfx:testfx-junit5:4.0.16-alpha")
-    testImplementation("org.testfx:openjfx-monocle:jdk-12.0.1+2")
+    testImplementation("org.testfx:testfx-junit5:$testFxVersion")
+    testImplementation("org.testfx:openjfx-monocle:$monocleVersion")
 }
 
 javafx {

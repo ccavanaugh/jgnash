@@ -2,6 +2,9 @@
 val javafxPluginVersion: String by settings
 val launch4jVersion: String by settings
 val versionsPluginVersion: String by settings
+val testFxVersion: String by settings
+val monocleVersion: String by settings
+
 
 pluginManagement {
     plugins {
