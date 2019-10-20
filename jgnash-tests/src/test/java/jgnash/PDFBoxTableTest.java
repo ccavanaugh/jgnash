@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import jgnash.engine.CurrencyNode;
@@ -35,6 +36,7 @@ import jgnash.report.table.ColumnStyle;
 import jgnash.report.table.GroupInfo;
 import jgnash.report.ui.ReportPrintFactory;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -43,12 +45,19 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PDFBoxTableTest {
+
+    @BeforeEach
+    void setUp() {
+        Locale.setDefault(Locale.US);
+        DateUtils.setShortDateFormatPattern("MM/dd/yy");
+    }
 
     @Test
     void simpleTest() throws IOException {
@@ -168,7 +177,6 @@ class PDFBoxTableTest {
             report.setEllipsis("…");
 
             assertEquals(2, GroupInfo.getGroups(new CrossTabTestReport()).size());
-            //assertEquals(40, ((GroupInfo) GroupInfo.getGroups(new CrossTabTestReport()).toArray()[0]).rows);
 
             report.addTable(new CrossTabTestReport());
             report.addFooter();
