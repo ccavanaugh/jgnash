@@ -230,11 +230,7 @@ class PDFBoxTableTest {
                 rb.getString(COLUMN_ACCOUNT), rb.getString(COLUMN_CLR), rb.getString(COLUMN_DEPOSIT),
                 rb.getString(COLUMN_WITHDRAWAL), rb.getString(COLUMN_BALANCE)};
 
-        final CurrencyNode currencyNode;
-
-        BasicTestReport() {
-            currencyNode = DefaultCurrencies.getDefault();
-        }
+        final CurrencyNode currencyNode = DefaultCurrencies.buildCustomNode("USD");
 
         @Override
         public CurrencyNode getCurrencyNode() {
@@ -366,12 +362,7 @@ class PDFBoxTableTest {
                 rb.getString(COLUMN_ACCOUNT), rb.getString(COLUMN_CLR), rb.getString(COLUMN_DEPOSIT),
                 rb.getString(COLUMN_WITHDRAWAL), rb.getString(COLUMN_BALANCE), "group"};
 
-        final CurrencyNode currencyNode;
-
-        CrossTabTestReport() {
-            currencyNode = DefaultCurrencies.getDefault();
-        }
-
+        final CurrencyNode currencyNode = DefaultCurrencies.buildCustomNode("USD");
 
         @Override
         public CurrencyNode getCurrencyNode() {
