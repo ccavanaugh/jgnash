@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,6 +65,7 @@ public abstract class AbstractEngineTest {
 
     @BeforeEach
     public void setUp(final TemporaryFolder testFolder) throws Exception {
+        Locale.setDefault(Locale.US);
 
         this.testFolder = testFolder;
 

@@ -65,6 +65,8 @@ public abstract class EngineTest {
 
     @BeforeEach
     void setUp() throws Exception {
+        Locale.setDefault(Locale.US);
+
         e = createEngine();
         e.setCreateBackups(false);
 
