@@ -18,10 +18,10 @@ javafx {
 }
 
 dependencies {
-    compile(project(":jgnash-fx"))
-    compile(project(":jgnash-resources"))
-    compile(project(":jgnash-core"))
-    compile("info.picocli:picocli:$picocliVersion")
+    implementation(project(":jgnash-fx"))
+    implementation(project(":jgnash-resources"))
+    implementation(project(":jgnash-core"))
+    implementation("info.picocli:picocli:$picocliVersion")
 }
 
 launch4j {

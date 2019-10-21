@@ -11,15 +11,16 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":jgnash-resources"))
     implementation(project(":jgnash-core"))
 
-    api("org.apache.poi:poi-ooxml:$apachePoiVersion") {
+    implementation("org.apache.poi:poi-ooxml:$apachePoiVersion") {
         exclude(module = "stax-api")
         exclude(module = "xml-apis")
     }
 
-    api("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
-    api("org.apache.pdfbox:pdfbox-tools:$pdfBoxVersion")
+    implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
+    implementation("org.apache.pdfbox:pdfbox-tools:$pdfBoxVersion")
     implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
 }
 

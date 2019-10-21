@@ -8,8 +8,9 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":jgnash-resources"))
     implementation(project(":jgnash-core"))
-    api(project(":jgnash-bayes"))
+    implementation(project(":jgnash-bayes"))
 
     implementation("org.apache.commons:commons-csv:$commonsCsvVersion")
 }

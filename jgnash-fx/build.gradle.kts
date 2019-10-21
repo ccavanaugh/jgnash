@@ -4,10 +4,12 @@ val javaFXVersion: String by project    // extract JavaFX version from gradle.pr
 val picocliVersion: String by project
 val testFxVersion: String by project
 val monocleVersion: String by project
+val commonsLangVersion: String by project
 
 plugins {
     id("org.openjfx.javafxplugin")
     application // creates a task to run the full application
+    `java-library`
 }
 
 application {
@@ -15,46 +17,49 @@ application {
 }
 
 dependencies {
-    compile(project(":jgnash-core"))
-    compile(project(":jgnash-convert"))
-    compile(project(":jgnash-report-core"))
-    compile(project(":jgnash-plugin"))
+    implementation(project(":jgnash-resources"))
+    implementation(project(":jgnash-core"))
+    implementation(project(":jgnash-convert"))
+    implementation(project(":jgnash-report-core"))
+    implementation(project(":jgnash-plugin"))
 
-    compile("info.picocli:picocli:$picocliVersion")
+    implementation("info.picocli:picocli:$picocliVersion")
+
+    implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
 
     // Hack to include all javafx platforms in the classpath
     // The platform specific libraries are excluded when the distribution is assembled
-    compile("org.openjfx:javafx-base:$javaFXVersion")
-    compile("org.openjfx:javafx-fxml:$javaFXVersion")
-    compile("org.openjfx:javafx-controls:$javaFXVersion")
-    compile("org.openjfx:javafx-graphics:$javaFXVersion")
-    compile("org.openjfx:javafx-media:$javaFXVersion")
-    compile("org.openjfx:javafx-swing:$javaFXVersion")
-    compile("org.openjfx:javafx-web:$javaFXVersion")
+    implementation("org.openjfx:javafx-base:$javaFXVersion")
+    implementation("org.openjfx:javafx-fxml:$javaFXVersion")
+    implementation("org.openjfx:javafx-controls:$javaFXVersion")
+    implementation("org.openjfx:javafx-graphics:$javaFXVersion")
+    implementation("org.openjfx:javafx-media:$javaFXVersion")
+    implementation("org.openjfx:javafx-swing:$javaFXVersion")
+    implementation("org.openjfx:javafx-web:$javaFXVersion")
 
-    compile("org.openjfx:javafx-base:$javaFXVersion:linux")
-    compile("org.openjfx:javafx-fxml:$javaFXVersion:linux")
-    compile("org.openjfx:javafx-controls:$javaFXVersion:linux")
-    compile("org.openjfx:javafx-graphics:$javaFXVersion:linux")
-    compile("org.openjfx:javafx-media:$javaFXVersion:linux")
-    compile("org.openjfx:javafx-swing:$javaFXVersion:linux")
-    compile("org.openjfx:javafx-web:$javaFXVersion:linux")
+    runtimeOnly("org.openjfx:javafx-base:$javaFXVersion:linux")
+    runtimeOnly("org.openjfx:javafx-fxml:$javaFXVersion:linux")
+    runtimeOnly("org.openjfx:javafx-controls:$javaFXVersion:linux")
+    runtimeOnly("org.openjfx:javafx-graphics:$javaFXVersion:linux")
+    runtimeOnly("org.openjfx:javafx-media:$javaFXVersion:linux")
+    runtimeOnly("org.openjfx:javafx-swing:$javaFXVersion:linux")
+    runtimeOnly("org.openjfx:javafx-web:$javaFXVersion:linux")
 
-    compile("org.openjfx:javafx-base:$javaFXVersion:win")
-    compile("org.openjfx:javafx-fxml:$javaFXVersion:win")
-    compile("org.openjfx:javafx-controls:$javaFXVersion:win")
-    compile("org.openjfx:javafx-graphics:$javaFXVersion:win")
-    compile("org.openjfx:javafx-media:$javaFXVersion:win")
-    compile("org.openjfx:javafx-swing:$javaFXVersion:win")
-    compile("org.openjfx:javafx-web:$javaFXVersion:win")
+    runtimeOnly("org.openjfx:javafx-base:$javaFXVersion:win")
+    runtimeOnly("org.openjfx:javafx-fxml:$javaFXVersion:win")
+    runtimeOnly("org.openjfx:javafx-controls:$javaFXVersion:win")
+    runtimeOnly("org.openjfx:javafx-graphics:$javaFXVersion:win")
+    runtimeOnly("org.openjfx:javafx-media:$javaFXVersion:win")
+    runtimeOnly("org.openjfx:javafx-swing:$javaFXVersion:win")
+    runtimeOnly("org.openjfx:javafx-web:$javaFXVersion:win")
 
-    compile("org.openjfx:javafx-base:$javaFXVersion:mac")
-    compile("org.openjfx:javafx-fxml:$javaFXVersion:mac")
-    compile("org.openjfx:javafx-controls:$javaFXVersion:mac")
-    compile("org.openjfx:javafx-graphics:$javaFXVersion:mac")
-    compile("org.openjfx:javafx-media:$javaFXVersion:mac")
-    compile("org.openjfx:javafx-swing:$javaFXVersion:mac")
-    compile("org.openjfx:javafx-web:$javaFXVersion:mac")
+    runtimeOnly("org.openjfx:javafx-base:$javaFXVersion:mac")
+    runtimeOnly("org.openjfx:javafx-fxml:$javaFXVersion:mac")
+    runtimeOnly("org.openjfx:javafx-controls:$javaFXVersion:mac")
+    runtimeOnly("org.openjfx:javafx-graphics:$javaFXVersion:mac")
+    runtimeOnly("org.openjfx:javafx-media:$javaFXVersion:mac")
+    runtimeOnly("org.openjfx:javafx-swing:$javaFXVersion:mac")
+    runtimeOnly("org.openjfx:javafx-web:$javaFXVersion:mac")
     // end hack
 
     // required of Unit testing JavaFX

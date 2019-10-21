@@ -8,6 +8,7 @@ plugins {
 
 dependencies {
   implementation(project(":jgnash-core"))
+  implementation(project(":jgnash-plugin"))
   implementation(project(":jgnash-fx"))
 }
 
