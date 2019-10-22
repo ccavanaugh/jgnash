@@ -45,7 +45,7 @@ public class OptionDialogController {
     @InjectFXML
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
-    private final String INDEX = "index";
+    private static final String INDEX = "index";
 
     @FXML
     private TabPane tabPane;

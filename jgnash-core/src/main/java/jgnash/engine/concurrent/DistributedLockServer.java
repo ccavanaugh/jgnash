@@ -62,14 +62,7 @@ public class DistributedLockServer {
     private static final Logger logger = Logger.getLogger(DistributedLockServer.class.getName());
 
     // there needs to be to 2 threads to ensure order of operations and allow for unlocking without blocking
-    private final ExecutorService executorService = Executors.newFixedThreadPool(2, new ThreadFactory() {
-        private final AtomicLong counter = new AtomicLong();
-
-        @Override
-        public Thread newThread(final Runnable r) {
-            return new Thread(r, "jGnash Distributed Lock Server " + counter.incrementAndGet());
-        }
-    });
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2, new LockServerThreadFactory());
 
     private final ChannelGroup channelGroup = new DefaultChannelGroup("lock-server", GlobalEventExecutor.INSTANCE);
 
@@ -223,6 +216,15 @@ public class DistributedLockServer {
             logger.info("Distributed Lock Server Stopped");
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+    }
+
+    private static class LockServerThreadFactory implements ThreadFactory {
+        private final AtomicLong counter = new AtomicLong();
+
+        @Override
+        public Thread newThread(final Runnable r) {
+            return new Thread(r, "jGnash Distributed Lock Server " + counter.incrementAndGet());
         }
     }
 

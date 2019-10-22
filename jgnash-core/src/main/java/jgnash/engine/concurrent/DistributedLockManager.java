@@ -88,14 +88,7 @@ public class DistributedLockManager implements LockManager {
 
     private static final String EOL_DELIMITER = "\r\n";
 
-    private final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
-        private final AtomicLong counter = new AtomicLong();
-
-        @Override
-        public Thread newThread(Runnable r) {
-            return new Thread(r, "jGnash DistributedLockManager " + counter.incrementAndGet());
-        }
-    });
+    private final ExecutorService executorService = Executors.newCachedThreadPool(new LockManagerThreadFactory());
 
     private EncryptionManager encryptionManager = null;
 
@@ -272,6 +265,15 @@ public class DistributedLockManager implements LockManager {
             latchMap.remove(plainMessage);    // remove the used up latch
         } finally {
             latchLock.unlock();
+        }
+    }
+
+    private static class LockManagerThreadFactory implements ThreadFactory {
+        private final AtomicLong counter = new AtomicLong();
+
+        @Override
+        public Thread newThread(final Runnable r) {
+            return new Thread(r, "jGnash Distributed Lock Manager " + counter.incrementAndGet());
         }
     }
 

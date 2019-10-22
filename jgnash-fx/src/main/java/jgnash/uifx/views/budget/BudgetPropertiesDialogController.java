@@ -95,22 +95,7 @@ public class BudgetPropertiesDialogController {
             maxScale = Math.max(maxScale, currencyNode.getScale());
         }
 
-        roundingMethodComboBox.setCellFactory(param -> new ListCell<>() {
-
-            @Override
-            public void updateItem(final RoundMode item, final boolean empty) {
-
-                super.updateItem(item, empty);  // required
-
-                if (!empty && item != null) {
-                    setText(item.name);
-                    setTooltip(new Tooltip(item.description));
-                } else {
-                    setText("");
-                    setTooltip(null);
-                }
-            }
-        });
+        roundingMethodComboBox.setCellFactory(param -> new RoundModeListCell());
 
         scaleSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, maxScale, maxScale, 1));
 
@@ -254,6 +239,23 @@ public class BudgetPropertiesDialogController {
                     return RoundMode.UP;
                 default:
                     throw new IllegalArgumentException("argument out of range");
+            }
+        }
+    }
+
+    private static class RoundModeListCell extends ListCell<RoundMode> {
+
+        @Override
+        public void updateItem(final RoundMode item, final boolean empty) {
+
+            super.updateItem(item, empty);  // required
+
+            if (!empty && item != null) {
+                setText(item.name);
+                setTooltip(new Tooltip(item.description));
+            } else {
+                setText("");
+                setTooltip(null);
             }
         }
     }

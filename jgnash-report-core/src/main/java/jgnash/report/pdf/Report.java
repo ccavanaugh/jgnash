@@ -103,9 +103,9 @@ public abstract class Report implements AutoCloseable {
 
     final Color headerTextColor = Color.WHITE;
 
-    final float FOOTER_SCALE = 0.80f;
+    static final float FOOTER_SCALE = 0.80f;
 
-    final float DEFAULT_LINE_WIDTH = 0.20f;
+    static final float DEFAULT_LINE_WIDTH = 0.20f;
 
     final PDDocument pdfDocument;
 
