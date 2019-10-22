@@ -221,8 +221,9 @@ abstract class AbstractSlipController implements Slip {
     @FXML
     @Override
     public void handleEnterAction() {
+        Transaction newTrans = buildTransaction();
+
         if (modTrans == null) { // new transaction
-            Transaction newTrans = buildTransaction();
 
             ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
 
@@ -236,7 +237,6 @@ abstract class AbstractSlipController implements Slip {
                 }
             }
         } else {
-            Transaction newTrans = buildTransaction();
 
             // restore the reconciled state of the previous old transaction
             for (final Account a : modTrans.getAccounts()) {
@@ -245,10 +245,10 @@ abstract class AbstractSlipController implements Slip {
                 }
             }
 
-                /*
-                 * Reconcile the modified transaction for this account.
-                 * This must be performed last to ensure consistent results per the ReconcileManager rules
-                 */
+            /*
+             * Reconcile the modified transaction for this account.
+             * This must be performed last to ensure consistent results per the ReconcileManager rules
+             */
             ReconcileManager.reconcileTransaction(account.get(), newTrans, getReconciledState());
 
             newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
@@ -281,7 +281,7 @@ abstract class AbstractSlipController implements Slip {
 
                 // The auto complete model may return multiple solutions.  Choose the first solution that works
                 final List<Transaction> transactions = new ArrayList<>(payeeTextField.autoCompleteModelObjectProperty()
-                        .get().getAllExtraInfo(payeeTextField.getText()));
+                                                                               .get().getAllExtraInfo(payeeTextField.getText()));
 
                 Collections.reverse(transactions);  // reverse the transactions, most recent first
 
