@@ -1,1 +1,1 @@
-La date limite détermine la frontière entre la période pour laquelle les transactions sont archivées et la période pour laquelle les transactions sont gardées. 
+La date limite dÃ©termine la frontiÃ¨re entre la pÃ©riode pour laquelle les transactions sont archivÃ©es et la pÃ©riode pour laquelle les transactions sont gardÃ©es. 

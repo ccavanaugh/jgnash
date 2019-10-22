@@ -1,3 +1,3 @@
-Un compte de capitaux propres doit être sélectionné pour transférer les soldes initiaux.
+Un compte de capitaux propres doit Ãªtre sÃ©lectionnÃ© pour transfÃ©rer les soldes initiaux.
 
-S'il n'y a pas de compte de capitaux propres, arrêter la procédure et créer un compte de capitaux propres avant de reprendre cette procédure.
+S'il n'y a pas de compte de capitaux propres, arrÃªter la procÃ©dure et crÃ©er un compte de capitaux propres avant de reprendre cette procÃ©dure.

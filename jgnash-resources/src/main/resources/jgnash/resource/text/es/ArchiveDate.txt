@@ -1,1 +1,1 @@
-La fecha de corte determina en dónde ocurre la división entre las transacciones archivadas y las transacciones nuevas.
+La fecha de corte determina en dÃ³nde ocurre la divisiÃ³n entre las transacciones archivadas y las transacciones nuevas.
