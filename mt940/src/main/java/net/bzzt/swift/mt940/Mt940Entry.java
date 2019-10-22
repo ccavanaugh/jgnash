@@ -26,17 +26,17 @@ public class Mt940Entry {
     public enum SollHabenKennung {
         CREDIT,
         DEBIT,
-        STORNO_DEBIT,
-        STORNO_CREDIT
+        //STORNO_DEBIT,
+        //STORNO_CREDIT
     }
 
-    private LocalDate valutaDatum;
+    private LocalDate valutaDatum;  // date
 
     private SollHabenKennung sollHabenKennung;
 
-    private BigDecimal betrag;
+    private BigDecimal betrag;  // amount
 
-    private String mehrzweckfeld;
+    private String mehrzweckfeld;   // multi purpose field
 
     private String kontobezeichnung;
 
@@ -82,19 +82,19 @@ public class Mt940Entry {
         return mehrzweckfeld;
     }
 
-    public void setMehrzweckfeld(String mehrzweckfeld) {
-        this.mehrzweckfeld = mehrzweckfeld;
-    }
+//    public void setMehrzweckfeld(String mehrzweckfeld) {
+//        this.mehrzweckfeld = mehrzweckfeld;
+//    }
 
     public BigDecimal getBetrag() {
         return betrag;
     }
 
-    public void setBetrag(BigDecimal betrag) {
+    public void setBetrag(final BigDecimal betrag) {
         this.betrag = betrag;
     }
 
-    public void addToMehrzweckfeld(String string) {
+    public void addToMehrzweckfeld(final String string) {
         if (mehrzweckfeld == null || "".equals(mehrzweckfeld.trim())) {
             mehrzweckfeld = string;
         } else {
@@ -103,7 +103,7 @@ public class Mt940Entry {
         }
     }
 
-    public void setKontobezeichnung(String kontobezeichnung) {
+    public void setKontobezeichnung(final String kontobezeichnung) {
         this.kontobezeichnung = kontobezeichnung;
     }
 
