@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class CollectionUtils {
     public static <K, V extends Comparable<? super V>> Map<K, V> sortMapByValue(final Map<K, V> map) {
         final List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
 
-        list.sort(Comparator.comparing(Map.Entry::getValue));
+        list.sort(Map.Entry.comparingByValue());
 
         final Map<K, V> sortedMap = new LinkedHashMap<>();
 
