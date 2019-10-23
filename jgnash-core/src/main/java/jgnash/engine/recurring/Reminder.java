@@ -185,16 +185,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
 
     public abstract ReminderType getReminderType();
 
-    /**
-     * Overrides the super and returns the object id.
-     *
-     * @return returns the hashCode;
-     */
-    @Override
-    public final int hashCode() {
-        return getUuid().hashCode();
-    }
-
     @Override
     public boolean equals(final Object other) {
         return this == other ||

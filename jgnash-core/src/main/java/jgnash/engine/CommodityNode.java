@@ -98,11 +98,6 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
         return this == other || other instanceof CommodityNode && getUuid().equals(((CommodityNode) other).getUuid());
     }
 
-    @Override
-    public int hashCode() {
-        return getUuid().hashCode();
-    }
-
     /**
      * Determines if given node matches this node.
      * <p>

@@ -64,9 +64,7 @@ public class LocaleObject implements Comparable<LocaleObject> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 47 * hash + this.locale.hashCode();
-        return 47 * hash + this.display.hashCode();
+        return Objects.hash(locale, display);
     }
 
     private boolean equals(final LocaleObject obj) {

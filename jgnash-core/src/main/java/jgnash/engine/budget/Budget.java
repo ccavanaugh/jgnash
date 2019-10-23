@@ -182,11 +182,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
         return this == other || other instanceof Budget && getUuid().equals(((Budget) other).getUuid());
     }
 
-    @Override
-    public int hashCode() {
-        return getUuid().hashCode();
-    }
-
     /**
      * Returns the global display period for this budget.
      *

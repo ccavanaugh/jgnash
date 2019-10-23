@@ -59,6 +59,9 @@ public abstract class StoredObject implements Cloneable, Serializable {
     @Column(name = "uuid", nullable = false, updatable = false)
     private UUID uuid = UUID.randomUUID();
 
+    /** Cache the hash code for the StoredObject */
+    private transient int hash = 0;
+
     /**
      * Getter for the uuid.
      *
@@ -86,13 +89,21 @@ public abstract class StoredObject implements Cloneable, Serializable {
     }
 
     /**
-     * Override hashCode to use uuid.
+     * Override hashCode to use UUID hash code.
      *
-     * @see java.lang.String#hashCode()
+     * The hash is cached since UUID does not cache
+     *
+     * @see java.util.UUID#hashCode()
      */
     @Override
     public int hashCode() {
-        return getUuid().hashCode();    // String caches the hashcode for improved performance
+        int h = hash;
+
+        if (h == 0) {
+            hash = h = getUuid().hashCode();
+        }
+
+        return h;
     }
 
     /**
@@ -114,6 +125,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
         try {
             o = (StoredObject) super.clone();
             o.setUuid(UUID.randomUUID());   // force a new UUID
+            o.hash = 0;
             o.markedForRemoval = false;
         } catch (final CloneNotSupportedException e) {
             logSevere(StoredObject.class, e);

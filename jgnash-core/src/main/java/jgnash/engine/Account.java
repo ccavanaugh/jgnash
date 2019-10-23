@@ -1203,11 +1203,6 @@ public class Account extends StoredObject implements Comparable<Account> {
         return this == other || other instanceof Account && getUuid().equals(((Account) other).getUuid());
     }
 
-    @Override
-    public int hashCode() {
-        return getUuid().hashCode();
-    }
-
     /**
      * User definable account code.  This can be used to manage sort order
      * 

@@ -57,6 +57,11 @@ public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, S
     private LocalDate date = LocalDate.now();
 
     /**
+     * Cached hash code
+     */
+    private transient int hash = 0;
+
+    /**
      * public no-argument constructor for reflection.
      */
     @SuppressWarnings("unused")
@@ -99,7 +104,12 @@ public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, S
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, date);
+        int h = hash;
+
+        if (h == 0) {
+            hash = h = Objects.hash(type, date);
+        }
+        return h;
     }
 
     @Override

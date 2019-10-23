@@ -51,10 +51,8 @@ import java.util.Objects;
 @SequenceGenerator(name = "sequence", allocationSize = 10)
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
 
-    /**
-     * Cached hashcode.
-     */
-    private transient volatile int hashCode = 0;
+    /** Cache the hash code for the TransactionEntry*/
+    private transient int hash = 0;
 
     @SuppressWarnings("unused")
     @Id
@@ -393,13 +391,14 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     @Override
     public int hashCode() {
-        int hashResult = hashCode;
-        if (hashResult == 0) {
-            hashResult = Objects.hash(transactionTag, debitAccount, creditAccount, creditAmount, debitAmount,
+        int h = hash;
+
+        if (h == 0) {
+            h = Objects.hash(transactionTag, debitAccount, creditAccount, creditAmount, debitAmount,
                     creditReconciled, debitReconciled, memo, customTags);
-            hashCode = hashResult;
+            hash = h;
         }
-        return hashResult;
+        return h;
     }
 
     @Override
