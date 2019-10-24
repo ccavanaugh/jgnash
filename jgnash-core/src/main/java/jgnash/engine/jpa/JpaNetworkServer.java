@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -67,7 +68,7 @@ public class JpaNetworkServer {
 
     static final int TRANSFER_SERVER_INCREMENT = 3;
 
-    private volatile boolean stop = false;
+    private final CountDownLatch stopLatch = new CountDownLatch(1);
 
     private static final int BACKUP_PERIOD = 2;
 
@@ -193,8 +194,8 @@ public class JpaNetworkServer {
 
                     // wait here forever
                     try {
-                        while (!stop) { // check for condition, handle a spurious wake up
-                            wait(); // wait forever for notify() from stopServer()
+                        while (stopLatch.getCount() != 0) { // check for condition, handle a spurious wake up
+                            stopLatch.await();   // wait forever from stopServer()
                         }
                     } catch (final InterruptedException ex) {
                         logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
@@ -241,8 +242,6 @@ public class JpaNetworkServer {
 
     private void runH2Server(final String fileName, final int port, final char[] password) {
         org.h2.tools.Server server = null;
-
-        stop = false;
 
         try {
             final List<String> serverArgs = new ArrayList<>();
@@ -299,8 +298,7 @@ public class JpaNetworkServer {
      * stops this server.
      */
     private synchronized void stopServer() {
-        stop = true;
-        this.notifyAll();
+        stopLatch.countDown();  // will result in zero which will trigger a stop
     }
 
     private Engine createEngine(final DataStoreType dataStoreType, final String fileName, final int port,
