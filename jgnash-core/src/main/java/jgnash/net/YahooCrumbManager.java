@@ -99,9 +99,9 @@ public class YahooCrumbManager {
 
             final Map<String, List<String>> headerFields = connection.getHeaderFields();
 
-            for (final String key : headerFields.keySet()) {
-                if (SET_COOKIE_KEY.equalsIgnoreCase(key)) {
-                    final List<String> cookieValue = headerFields.get(key);
+            for (final Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
+                if (SET_COOKIE_KEY.equalsIgnoreCase(entry.getKey())) {
+                    final List<String> cookieValue = entry.getValue();
 
                     if (cookieValue != null) {
 
