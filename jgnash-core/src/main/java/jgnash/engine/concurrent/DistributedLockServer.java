@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.net.ConnectionFactory;
 import jgnash.util.EncodeDecode;
 import jgnash.util.EncryptionManager;
 
@@ -51,6 +52,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+
+import static jgnash.net.ConnectionFactory.MILLIS_PER_SECOND;
 
 /**
  * Distributed Lock Server.
@@ -359,7 +362,8 @@ public class DistributedLockServer {
         synchronized void lockForRead(final String remoteThread) throws InterruptedException {
 
             while (!canGrantReadAccess(remoteThread)) {
-                wait();
+                // wait for a maximum of 2X the network timout
+                wait(ConnectionFactory.getConnectionTimeout() * MILLIS_PER_SECOND * 2);
             }
 
             readingThreads.put(remoteThread, (getReadHoldCount(remoteThread) + 1));
@@ -369,7 +373,8 @@ public class DistributedLockServer {
             writeRequests++;
 
             while (!canGrantWriteAccess(remoteThread)) {
-                wait();
+                // wait for a maximum of 2X the network timout
+                wait(ConnectionFactory.getConnectionTimeout() * MILLIS_PER_SECOND * 2);
             }
 
             writeRequests--;

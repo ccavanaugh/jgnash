@@ -42,6 +42,8 @@ public class ConnectionFactory {
 
     public static final int MIN_TIMEOUT = 1;
 
+    public static final int MILLIS_PER_SECOND = 1000;
+
     private ConnectionFactory() {
     }
 
