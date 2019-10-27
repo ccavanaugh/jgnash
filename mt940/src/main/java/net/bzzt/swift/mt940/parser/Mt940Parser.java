@@ -51,7 +51,7 @@ public class Mt940Parser {
      * @throws IOException    An IO exception occurred
      * @throws DateTimeParseException parse error occurred reading text
      */
-    public Mt940File parse(final LineNumberReader reader) throws IOException, DateTimeParseException {
+    public static Mt940File parse(final LineNumberReader reader) throws IOException, DateTimeParseException {
         final Mt940File mt940File = new Mt940File();
 
         List<String> recordLines = new ArrayList<>();

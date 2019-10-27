@@ -36,7 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -51,8 +50,6 @@ public class FontRegistry {
      */
     private static final Map<String, String> registeredFontMap = new ConcurrentHashMap<>();
 
-    private static FontRegistry registry;
-
     private static final AtomicBoolean registrationComplete = new AtomicBoolean(false);
 
     private static final AtomicBoolean registrationStarted = new AtomicBoolean(false);
@@ -60,10 +57,6 @@ public class FontRegistry {
     private static final Lock lock = new ReentrantLock();
 
     private static final Condition isComplete = lock.newCondition();
-
-    static {
-        Logger.getLogger("org.apache.pdfbox").setLevel(Level.WARNING);  // reduce messages about font Layout tables use
-    }
 
     private FontRegistry() {
     }
@@ -114,8 +107,7 @@ public class FontRegistry {
                 lock.lock();
 
                 try {
-                    registry = new FontRegistry();
-                    registry.registerFontDirectories();
+                    FontRegistry.registerFontDirectories();
 
                     registrationComplete.set(true);
                     isComplete.signal();
@@ -131,7 +123,7 @@ public class FontRegistry {
         }
     }
 
-    private void registerFont(final String path) {
+    private static void registerFont(final String path) {
         try {
             if (path.toLowerCase(Locale.ROOT).endsWith(".ttf") || path.toLowerCase(Locale.ROOT).endsWith(".otf")
                     || path.toLowerCase(Locale.ROOT).indexOf(".ttc,") > 0) {
@@ -157,8 +149,8 @@ public class FontRegistry {
     /**
      * Register fonts in known directories.
      */
-    private void registerFontDirectories() {
+    private static void registerFontDirectories() {
         new FontFileFinder().find().stream().map(uri
-                -> new File(uri).getAbsolutePath()).forEach(this::registerFont);
+                -> new File(uri).getAbsolutePath()).forEach(FontRegistry::registerFont);
     }
 }

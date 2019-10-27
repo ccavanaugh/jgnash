@@ -109,10 +109,8 @@ class ImportMt940FxAction {
 
         @Override
         protected ImportBank<ImportTransaction> call() throws Exception {
-            Mt940Parser parser = new Mt940Parser();
-
             try (final LineNumberReader reader = new LineNumberReader(Files.newBufferedReader(file.toPath(), StandardCharsets.ISO_8859_1))) {
-                Mt940File parsedFile = parser.parse(reader);
+                final Mt940File parsedFile = Mt940Parser.parse(reader);
                 return Mt940Exporter.convert(parsedFile);
             }
         }

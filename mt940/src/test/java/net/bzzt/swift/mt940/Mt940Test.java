@@ -58,7 +58,7 @@ class Mt940Test {
 
 		try (LineNumberReader reader = new LineNumberReader(
 				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
-			Mt940File file = parser.parse(reader);
+			Mt940File file = Mt940Parser.parse(reader);
 
 			assertEquals(nTransactions, file.getEntries().size());
 
@@ -78,7 +78,7 @@ class Mt940Test {
 		InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
 		try (LineNumberReader reader = new LineNumberReader(
 				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
-			Mt940File file = parser.parse(reader);
+			Mt940File file = Mt940Parser.parse(reader);
 			List<Mt940Entry> entries = file.getEntries();
 			assertFalse(entries.isEmpty());
 			for (Mt940Entry mt940Entry : entries) {
@@ -99,7 +99,7 @@ class Mt940Test {
 
 		try (LineNumberReader reader = new LineNumberReader(
 				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
-			Mt940File file = parser.parse(reader);
+			Mt940File file = Mt940Parser.parse(reader);
 			List<Mt940Entry> entries = file.getEntries();
 			assertFalse(entries.isEmpty());
 			for (Mt940Entry mt940Entry : entries) {
@@ -119,7 +119,7 @@ class Mt940Test {
 		InputStream inputStream = this.getClass().getResourceAsStream("/multiaccounts.sta");
 		try (LineNumberReader reader = new LineNumberReader(
 				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
-			Mt940File file = parser.parse(reader);
+			Mt940File file = Mt940Parser.parse(reader);
 			List<Mt940Entry> entries = file.getEntries();
 			assertEquals(2, entries.size());
 			assertEquals("531848396", entries.get(0).getKontobezeichnung());
@@ -143,7 +143,7 @@ class Mt940Test {
 
 		try (LineNumberReader reader = new LineNumberReader(
 				new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-			Mt940File file = parser.parse(reader);
+			Mt940File file = Mt940Parser.parse(reader);
 			assertEquals(nTransactions, file.getEntries().size());
 
 			ImportBank<ImportTransaction> bank = Mt940Exporter.convert(file);
