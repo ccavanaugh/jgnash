@@ -133,7 +133,7 @@ public class CashFlow {
 
         for (final CashFlowItem item : cashFlows) {
             double timeDifference = referenceDate.until(item.date, DAYS) / DAYS_PER_YEAR;
-            npv += item.amount.doubleValue() / Math.pow(1 + rate, timeDifference);
+            npv += item.amount.doubleValue() / StrictMath.pow(1 + rate, timeDifference);
         }
 
         return npv;
