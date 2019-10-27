@@ -133,7 +133,7 @@ public abstract class Report implements AutoCloseable {
         }
     }
 
-    private PDFont loadFont(final String name, final PDDocument document) {
+    private static PDFont loadFont(final String name, final PDDocument document) {
 
         final String path = FontRegistry.getRegisteredFontPath(name);
 
@@ -644,7 +644,7 @@ public abstract class Report implements AutoCloseable {
         //return yDoc;
     }
 
-    private String formatValue(final Object value, final int column, final AbstractReportTableModel reportModel) {
+    private static String formatValue(final Object value, final int column, final AbstractReportTableModel reportModel) {
         if (value == null) {
             return " ";
         }
@@ -678,7 +678,7 @@ public abstract class Report implements AutoCloseable {
         }
     }
 
-    private boolean rightAlign(final int column, final AbstractReportTableModel reportModel) {
+    private static boolean rightAlign(final int column, final AbstractReportTableModel reportModel) {
         final ColumnStyle columnStyle = reportModel.getColumnStyle(column);
 
         switch (columnStyle) {
@@ -695,8 +695,8 @@ public abstract class Report implements AutoCloseable {
         }
     }
 
-    private void drawText(final PDPageContentStream contentStream, final float xStart, final float yStart,
-                          final String text) throws IOException {
+    private static void drawText(final PDPageContentStream contentStream, final float xStart, final float yStart,
+                                 final String text) throws IOException {
         contentStream.beginText();
         contentStream.newLineAtOffset(xStart, yStart);
         contentStream.showText(text);
@@ -704,16 +704,16 @@ public abstract class Report implements AutoCloseable {
     }
 
 
-    private void drawLine(final PDPageContentStream contentStream, final float xStart, final float yStart,
-                          final float xEnd, final float yEnd) throws IOException {
+    private static void drawLine(final PDPageContentStream contentStream, final float xStart, final float yStart,
+                                 final float xEnd, final float yEnd) throws IOException {
         contentStream.setLineWidth(DEFAULT_LINE_WIDTH);
         contentStream.moveTo(xStart, yStart);
         contentStream.lineTo(xEnd, yEnd);
         contentStream.stroke();
     }
 
-    private void fillRect(final PDPageContentStream contentStream, final float x, final float y, final float width,
-                          final float height) throws IOException {
+    private static void fillRect(final PDPageContentStream contentStream, final float x, final float y, final float width,
+                                 final float height) throws IOException {
         contentStream.addRect(x, y, width, height);
         contentStream.fill();
     }
