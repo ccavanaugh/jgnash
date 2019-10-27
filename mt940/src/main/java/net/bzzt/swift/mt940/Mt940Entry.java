@@ -95,7 +95,7 @@ public class Mt940Entry {
     }
 
     public void addToMehrzweckfeld(final String string) {
-        if (mehrzweckfeld == null || "".equals(mehrzweckfeld.trim())) {
+        if (mehrzweckfeld == null || mehrzweckfeld.trim().isEmpty()) {
             mehrzweckfeld = string;
         } else {
             mehrzweckfeld += " ";

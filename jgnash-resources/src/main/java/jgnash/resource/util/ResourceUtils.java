@@ -103,10 +103,10 @@ public class ResourceUtils {
         final StringBuilder buf = new StringBuilder();
 
         buf.append(locale.getLanguage());
-        if (!locale.getCountry().equals("")) {
+        if (!locale.getCountry().isEmpty()) {
             buf.append('.');
             buf.append(locale.getCountry());
-            if (!locale.getVariant().equals("")) {
+            if (!locale.getVariant().isEmpty()) {
                 buf.append('.');
                 buf.append(locale.getVariant());
             }
@@ -115,7 +115,7 @@ public class ResourceUtils {
     }
 
     private static Locale decodeLocale(final String locale) {
-        if (locale == null || locale.equals("") || locale.equals("null")) {
+        if (locale == null || locale.isEmpty() || locale.equals("null")) {
             return Locale.getDefault();
         } else if (locale.indexOf('.') == -1) {
             return new Locale(locale);
