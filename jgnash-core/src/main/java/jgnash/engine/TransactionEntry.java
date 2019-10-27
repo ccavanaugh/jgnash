@@ -318,7 +318,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @return {@code true} if this is a single entry TransactionEntry
      */
     boolean isSingleEntry() {
-        return creditAccount.equals(debitAccount) && creditAmount.equals(debitAmount);
+        return creditAccount.equals(debitAccount) && creditAmount.compareTo(debitAmount) == 0;
     }
 
     /**
@@ -367,6 +367,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return e;
     }
 
+    @SuppressWarnings("BigDecimalEquals")
     @Override
     public boolean equals(Object o) {
         if (this == o) {

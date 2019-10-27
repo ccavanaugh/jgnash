@@ -155,9 +155,9 @@ public class OfxV2Parser implements OfxTags {
             while (iterator.hasNext()) {
                 final ImportTransaction otherTran = iterator.next();
 
-                // if this was OFX income and the securites match and the amount match, remove the transaction
+                // if this was OFX income and the securities match and the amount match, remove the transaction
                 if (reinvestDividend != otherTran && OfxTags.INCOME.equals(otherTran.getTransactionTypeDescription())) {
-                    if (otherTran.getAmount().equals(reinvestDividend.getAmount().abs())) {
+                    if (otherTran.getAmount().compareTo(reinvestDividend.getAmount().abs()) == 0) {
                         if (otherTran.getSecurityId().equals(reinvestDividend.getSecurityId())) {
                             iterator.remove();  // remove it
                             // reverse sign
@@ -179,7 +179,6 @@ public class OfxV2Parser implements OfxTags {
      * @param date String form of the date
      * @return parsed date
      */
-    @SuppressWarnings("MagicConstant")
     private static LocalDate parseDate(final String date) {
         int year = Integer.parseInt(date.substring(0, 4)); // year
         int month = Integer.parseInt(date.substring(4, 6)); // month

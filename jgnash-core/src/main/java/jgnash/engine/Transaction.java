@@ -376,7 +376,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
             return false;
         }
 
-        if (!getAmount(getCommonAccount()).equals(tran.getAmount(tran.getCommonAccount()))) {
+        if (getAmount(getCommonAccount()).compareTo(tran.getAmount(tran.getCommonAccount())) != 0) {
             return false;
         }
 

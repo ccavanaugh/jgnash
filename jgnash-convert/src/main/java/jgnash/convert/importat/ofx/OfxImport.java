@@ -130,13 +130,13 @@ public class OfxImport {
         final List<TransactionEntry> fees = new ArrayList<>();
         final List<TransactionEntry> gains = new ArrayList<>();
 
-        if (!ofxTransaction.getCommission().equals(BigDecimal.ZERO)) {
+        if (ofxTransaction.getCommission().compareTo(BigDecimal.ZERO) != 0) {
             final TransactionEntry transactionEntry = new TransactionEntry(fessAccount, ofxTransaction.getCommission().negate());
             transactionEntry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
             fees.add(transactionEntry);
         }
 
-        if (!ofxTransaction.getFees().equals(BigDecimal.ZERO)) {
+        if (ofxTransaction.getFees().compareTo(BigDecimal.ZERO) != 0) {
             final TransactionEntry transactionEntry = new TransactionEntry(fessAccount, ofxTransaction.getFees().negate());
             transactionEntry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
             fees.add(transactionEntry);

@@ -2523,9 +2523,10 @@ public class Engine {
                                 final ExchangeRate rate = getExchangeRate(entry.getDebitAccount().getCurrencyNode(),
                                         entry.getCreditAccount().getCurrencyNode());
 
-                                if (rate.getRate(transaction.getLocalDate()).equals(BigDecimal.ZERO)) { // no rate for the date has been set
-                                    final BigDecimal exchangeRate = entry.getDebitAmount()
-                                                                            .abs().divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
+                                if (rate.getRate(transaction.getLocalDate()).compareTo(BigDecimal.ZERO) == 0) { // no rate for the date has been set
+                                    final BigDecimal exchangeRate = entry.getDebitAmount().abs()
+                                                                            .divide(entry.getCreditAmount().abs(),
+                                                                                    MathConstants.mathContext);
 
                                     setExchangeRate(entry.getCreditAccount().getCurrencyNode(),
                                             entry.getDebitAccount().getCurrencyNode(), exchangeRate, transaction.getLocalDate());
