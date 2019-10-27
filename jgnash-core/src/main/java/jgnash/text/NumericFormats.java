@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.message.Message;
@@ -88,13 +89,14 @@ public final class NumericFormats {
 
     public static Set<String> getKnownShortPatterns() {
 
-        Set<String> patternSet = new TreeSet<>();
+        final Pattern currencyReplacementPattern = Pattern.compile(CURRENCY_SYMBOL);
+        final Set<String> patternSet = new TreeSet<>();
 
         for (final Locale locale : Locale.getAvailableLocales()) {
             final DecimalFormat df = (DecimalFormat)NumberFormat.getCurrencyInstance(locale);
             final String pattern = df.toPattern();
 
-            patternSet.add(pattern.replaceAll(CURRENCY_SYMBOL, "").stripLeading());
+            patternSet.add(currencyReplacementPattern.matcher(pattern).replaceAll("").stripLeading());
         }
 
         patternSet.add("#,##0.00;(#,##0.00)");

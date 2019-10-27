@@ -40,6 +40,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
@@ -88,6 +89,8 @@ public class OfxV2Parser implements OfxTags {
      * Status message from sign-on process
      */
     private String statusMessage;
+
+    private final Pattern extraSpaceRegex = Pattern.compile(EXTRA_SPACE_REGEX);
 
     /**
      * Support class
@@ -144,8 +147,8 @@ public class OfxV2Parser implements OfxTags {
 
         // Create a list of Reinvested dividends
         final List<ImportTransaction> reinvestedDividends = importTransactions.stream()
-                .filter(importTransaction -> importTransaction.getTransactionType() == TransactionType.REINVESTDIV)
-                .collect(Collectors.toList());
+                                                                    .filter(importTransaction -> importTransaction.getTransactionType() == TransactionType.REINVESTDIV)
+                                                                    .collect(Collectors.toList());
 
         // Search through the list and remove matching income transactions
         for (final ImportTransaction reinvestDividend : reinvestedDividends) {
@@ -220,7 +223,7 @@ public class OfxV2Parser implements OfxTags {
 
     /**
      * Parses an InputStream and assumes UTF-8 encoding
-     *
+     * <p>
      * Illegal characters are corrected automatically if found
      *
      * @param stream InputStream to parse
@@ -342,7 +345,7 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case INVSTMTRS:     // consume the statement download
                             break;
-                        case INVPOSLIST:    // consume the securites position list; TODO: Use for reconcile
+                        case INVPOSLIST:    // consume the securities position list; TODO: Use for reconcile
                         case INV401KBAL:    // consume 401k balance aggregate
                         case INV401K:       // consume 401k account info aggregate
                         case INVBAL:        // consume the investment account balance; TODO: Use for reconcile
@@ -806,10 +809,10 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case NAME:
                         case PAYEE: // either PAYEE or NAME will be used
-                            tran.setPayee(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
+                            tran.setPayee(removeExtraWhiteSpace(reader.getElementText()));
                             break;
                         case MEMO:
-                            tran.setMemo(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
+                            tran.setMemo(removeExtraWhiteSpace(reader.getElementText()));
                             break;
                         case CATEGORY:  // Chase bank mucking up the OFX standard
                             break;
@@ -820,7 +823,7 @@ public class OfxV2Parser implements OfxTags {
                             tran.setRefNum(reader.getElementText());
                             break;
                         case PAYEEID:
-                            tran.setPayeeId(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
+                            tran.setPayeeId(removeExtraWhiteSpace(reader.getElementText()));
                             break;
                         case CURRENCY:  // currency used for the transaction
                             //tran.currency = reader.getElementText();
@@ -866,6 +869,10 @@ public class OfxV2Parser implements OfxTags {
         logger.exiting(OfxV2Parser.class.getName(), "parseInvestmentTransaction");
     }
 
+    private String removeExtraWhiteSpace(final String string) {
+        return extraSpaceRegex.matcher(string).replaceAll(" ").trim();
+    }
+
     /**
      * Parses a STMTTRN element
      *
@@ -906,10 +913,10 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case NAME:
                         case PAYEE: // either PAYEE or NAME will be used
-                            tran.setPayee(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
+                            tran.setPayee(removeExtraWhiteSpace(reader.getElementText()));
                             break;
                         case MEMO:
-                            tran.setMemo(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
+                            tran.setMemo(removeExtraWhiteSpace(reader.getElementText()));
                             break;
                         case CATEGORY:  // Chase bank mucking up the OFX standard
                             break;
@@ -920,7 +927,7 @@ public class OfxV2Parser implements OfxTags {
                             tran.setRefNum(reader.getElementText());
                             break;
                         case PAYEEID:
-                            tran.setPayeeId(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
+                            tran.setPayeeId(removeExtraWhiteSpace(reader.getElementText()));
                             break;
                         case CURRENCY:
                         case ORIGCURRENCY:

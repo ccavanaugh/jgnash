@@ -17,8 +17,13 @@
  */
 package jgnash.bayes;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 /**
  * Naive Bayes BayesClassifier.
@@ -43,6 +48,7 @@ public class BayesClassifier<E> {
 
     private final Map<String, Map<E, Integer>> featureCounter = new HashMap<>();
     private final Map<E, Integer> classCounter = new HashMap<>();
+    private final Pattern whiteSpacePattern;
 
     /**
      * Constructor
@@ -51,6 +57,7 @@ public class BayesClassifier<E> {
      */
     public BayesClassifier(final E defaultClass) {
         this.defaultClass = defaultClass;
+        whiteSpacePattern = Pattern.compile(WHITE_SPACE_REGEX);
     }
 
     private void incrementFeature(final String feature, final E classification) {
@@ -132,7 +139,7 @@ public class BayesClassifier<E> {
     private double getClassProbability(final String item, final E classification) {
         double probability = 1;
 
-        for (String feature : item.split(WHITE_SPACE_REGEX)) {
+        for (final String feature : whiteSpacePattern.split(item)) {
             probability *= getWeightedProbability(feature, classification);
         }
 
@@ -153,7 +160,7 @@ public class BayesClassifier<E> {
      * @param classification object being classified
      */
     public void train(final String item, final E classification) {
-        train(Arrays.asList(item.toLowerCase(Locale.getDefault()).split(WHITE_SPACE_REGEX)), classification);               
+        train(Arrays.asList(whiteSpacePattern.split(item.toLowerCase(Locale.getDefault()))), classification);
     }
 
     /**

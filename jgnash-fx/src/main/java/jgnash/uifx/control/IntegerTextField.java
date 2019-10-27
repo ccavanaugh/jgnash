@@ -17,12 +17,18 @@
  */
 package jgnash.uifx.control;
 
+import java.util.regex.Pattern;
+
 /**
  * Text field for entering integer values.
  *
  * @author Craig Cavanaugh
  */
 public class IntegerTextField extends TextFieldEx {
+
+    private static final String DIGITS_ONLY_REGEX = "\\b\\d+\\b";
+
+    private final Pattern digitOnlyPattern = Pattern.compile(DIGITS_ONLY_REGEX);
 
     public IntegerTextField() {
     }
@@ -89,14 +95,14 @@ public class IntegerTextField extends TextFieldEx {
         // If the replaced text would end up being invalid, then simply
         // ignore this call!
 
-        if (text.matches("\\b\\d+\\b")) {
+        if (digitOnlyPattern.matcher(text).matches()) {
             super.replaceText(start, end, text);
         }
     }
 
     @Override
-    public void replaceSelection(String text) {
-        if (text.matches("\\b\\d+\\b")) {
+    public void replaceSelection(final String text) {
+        if (digitOnlyPattern.matcher(text).matches()) {
             super.replaceSelection(text);
         }
     }
