@@ -17,24 +17,8 @@
  */
 package jgnash.uifx.report.pdf;
 
-import jgnash.report.pdf.Report;
-import jgnash.report.poi.Workbook;
-import jgnash.report.table.AbstractReportTableModel;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.control.BusyPane;
-import jgnash.uifx.report.ReportActions;
-import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.JavaFXUtils;
-import jgnash.uifx.util.StageUtils;
-import jgnash.uifx.views.main.MainView;
-import jgnash.util.DefaultDaemonThreadFactory;
-import jgnash.util.FileUtils;
-
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -82,6 +66,23 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import jgnash.report.pdf.Report;
+import jgnash.report.poi.Workbook;
+import jgnash.report.table.AbstractReportTableModel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.BusyPane;
+import jgnash.uifx.report.ReportActions;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.MainView;
+import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.FileUtils;
+
+import org.apache.commons.math3.util.Precision;
+
 /**
  * Viewer controller for PDFBox Reports.
  *
@@ -106,6 +107,8 @@ public class ReportViewerDialogController {
     private static final int PAGE_BORDER = 8;
 
     private static final int UPDATE_PERIOD = 1500; // update period in milliseconds
+
+    private static final double ZOOM_EPSILON = .001;
 
     private final DoubleProperty zoomProperty = new SimpleDoubleProperty(1.0);
 
@@ -367,9 +370,13 @@ public class ReportViewerDialogController {
 
     private void setZoomRatio(final double newZoom) {
         if (newZoom > 0) {
+            fitPageButton.setSelected(false);
+            fitHeightButton.setSelected(false);
+            fitWidthButton.setSelected(false);
+
             zoomComboBox.getEditor().setText(zoomDecimalFormat.format(newZoom * 100) + "%");
 
-            if (zoomProperty.doubleValue() != newZoom) {
+            if (!Precision.equals(zoomProperty.doubleValue(), newZoom, ZOOM_EPSILON)) {
                 zoomProperty.setValue(newZoom);
             }
         }
