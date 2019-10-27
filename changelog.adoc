@@ -22,6 +22,9 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.3.1
+* 10/27/2019 Updated to the latest JavaFX, POI, Hibernate and Netty dependencies.
+* 10/24/2019 Internal cleanup to improve handling of Client/Server network failures.
+* 10/23/2019 Fixed a regression that prevented caching of hash codes.
 * 10/19/2019 Updated to the latest H2 dependency.
 * 10/05/2019 Update to the latest Hibernate and Netty dependencies.
 * 10/01/2019 The majority of the build system was migrated to the Kotlin DSL.
