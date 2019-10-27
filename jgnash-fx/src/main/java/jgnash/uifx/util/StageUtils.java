@@ -35,6 +35,8 @@ import javafx.stage.Window;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Nullable;
 
+import org.apache.commons.math3.util.Precision;
+
 /**
  * Saves and restores Stage sizes.
  *
@@ -99,7 +101,7 @@ public class StageUtils {
                 stage.setY(rectangle.getMinY());
 
                 if (resizable) { // don't resize if originally false
-                    if (stage.getMinWidth() != stage.getMaxWidth()) {   // width may be locked
+                    if (!Precision.equals(stage.getMinWidth(), stage.getMaxWidth())) {   // width may be locked
                         final double width = rectangle.getWidth();
 
                         if (stage.isShowing()) {
@@ -110,7 +112,7 @@ public class StageUtils {
 
                     }
 
-                    if (stage.getMinHeight() != stage.getMaxHeight()) { // height may be locked
+                    if (!Precision.equals(stage.getMinHeight(), stage.getMaxHeight())) { // height may be locked
                         final double height = rectangle.getHeight();
 
                         if (stage.isShowing()) {

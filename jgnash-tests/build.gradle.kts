@@ -5,6 +5,7 @@ var moduleName = "jgnash.tests"
 val nettyVersion: String by project
 val pdfBoxVersion: String by project
 val xstreamVersion: String by project
+val commonsMathVersion: String by project
 
 dependencies {
     testImplementation(project(":jgnash-resources"))
@@ -16,6 +17,7 @@ dependencies {
     testImplementation("io.netty:netty-codec:$nettyVersion")
     testImplementation("com.thoughtworks.xstream:xstream:$xstreamVersion")
 
+    testImplementation("org.apache.commons:commons-math3:$commonsMathVersion")
     testImplementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
     testImplementation("org.apache.pdfbox:pdfbox-tools:$pdfBoxVersion")
 }

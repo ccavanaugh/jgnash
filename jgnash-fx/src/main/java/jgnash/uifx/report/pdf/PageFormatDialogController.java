@@ -43,6 +43,8 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.Nullable;
 
+import org.apache.commons.math3.util.Precision;
+
 /**
  * Page Format Dialog Controller
  *
@@ -214,7 +216,7 @@ public class PageFormatDialogController {
     }
 
     private boolean compare(float num1, float num2) {
-        return Math.abs(num1 - num2) <= EPSILON;
+        return Precision.equals(num1, num2, EPSILON);
     }
 
     @Nullable
@@ -288,13 +290,13 @@ public class PageFormatDialogController {
      * @param newUnit          unit of measure
      */
     private void handleUnitChange(final DecimalTextField decimalTextField, final float newValue, final Unit newUnit) {
-        if (!decimalTextField.getDecimal().equals(BigDecimal.ZERO)) {
+        if (decimalTextField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
             JavaFXUtils.runLater(() -> decimalTextField.setDecimal(new BigDecimal(newValue / newUnit.scale)));
         }
     }
 
     private void handleUnitChange(final DecimalTextField decimalTextField, final Unit oldUnit, final Unit newUnit) {
-        if (!decimalTextField.getDecimal().equals(BigDecimal.ZERO)) {
+        if (decimalTextField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
             float oldValue = decimalTextField.getDecimal().floatValue() * oldUnit.scale;
             JavaFXUtils.runLater(() -> decimalTextField.setDecimal(new BigDecimal(oldValue / newUnit.scale)));
         }

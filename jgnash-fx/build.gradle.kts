@@ -5,6 +5,7 @@ val picocliVersion: String by project
 val testFxVersion: String by project
 val monocleVersion: String by project
 val commonsLangVersion: String by project
+val commonsMathVersion: String by project
 
 plugins {
     id("org.openjfx.javafxplugin")
@@ -26,6 +27,7 @@ dependencies {
     implementation("info.picocli:picocli:$picocliVersion")
 
     implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
+    implementation("org.apache.commons:commons-math3:$commonsMathVersion")
 
     // Hack to include all javafx platforms in the classpath
     // The platform specific libraries are excluded when the distribution is assembled

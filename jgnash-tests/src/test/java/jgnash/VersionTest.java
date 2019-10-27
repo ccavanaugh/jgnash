@@ -2,11 +2,16 @@ package jgnash;
 
 import jgnash.resource.util.OS;
 import jgnash.resource.util.Version;
+
+import org.apache.commons.math3.util.Precision;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static jgnash.resource.util.OS.JAVA_VERSION;
 import static jgnash.resource.util.Version.getAppVersion;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test methods
@@ -42,7 +47,7 @@ class VersionTest {
 
         System.out.println("Java Version: " + OS.getJavaVersion());
 
-        if (OS.getJavaVersion() == 1.8f) {  // don't test if not on Java 8
+        if (Precision.equals(OS.getJavaVersion(), 1.8f)) {  // don't test if not on Java 8
             System.out.println("Java Release: " + OS.getJavaRelease());
             assertTrue(OS.getJavaRelease() > 0);
 

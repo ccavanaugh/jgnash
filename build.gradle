@@ -23,6 +23,7 @@ allprojects {
         commonsCollectionsVersion = "4.4"   // https://commons.apache.org/proper/commons-collections/
         commonsTextVersion = "1.8"          // https://commons.apache.org/proper/commons-text/
         commonsLangVersion = "3.9"          // https://commons.apache.org/proper/commons-lang/
+        commonsMathVersion = "3.6.1"          // https://commons.apache.org/proper/commons-lang/
 
         h2Version = "1.4.200"               // http://www.h2database.com/html/main.html
         hsqldbVersion = "2.4.1"             // http://hsqldb.org/
