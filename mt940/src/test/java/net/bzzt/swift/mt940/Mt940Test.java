@@ -52,8 +52,6 @@ class Mt940Test {
 	void testMt940() throws Exception {
 		int nTransactions = 18;
 
-		Mt940Parser parser = new Mt940Parser();
-
 		InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
 
 		try (LineNumberReader reader = new LineNumberReader(
@@ -74,8 +72,9 @@ class Mt940Test {
 	 */
 	@Test
 	void testMt940Kontobezeichnung() throws Exception {
-		Mt940Parser parser = new Mt940Parser();
+
 		InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
+
 		try (LineNumberReader reader = new LineNumberReader(
 				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
 			Mt940File file = Mt940Parser.parse(reader);
@@ -94,7 +93,7 @@ class Mt940Test {
 	 */
 	@Test
 	void testMt940KontobezeichnungRabobank() throws Exception {
-		Mt940Parser parser = new Mt940Parser();
+
 		InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
 
 		try (LineNumberReader reader = new LineNumberReader(
@@ -115,7 +114,7 @@ class Mt940Test {
 	 */
 	@Test
 	void testMt940KontobezeichnungMulticash() throws Exception {
-		Mt940Parser parser = new Mt940Parser();
+
 		InputStream inputStream = this.getClass().getResourceAsStream("/multiaccounts.sta");
 		try (LineNumberReader reader = new LineNumberReader(
 				new InputStreamReader(inputStream, StandardCharsets.ISO_8859_1))) {
@@ -136,8 +135,6 @@ class Mt940Test {
 	@Test
 	void testMt940Rabobank() throws IOException {
 		int nTransactions = 6;
-
-		Mt940Parser parser = new Mt940Parser();
 
 		InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");
 
