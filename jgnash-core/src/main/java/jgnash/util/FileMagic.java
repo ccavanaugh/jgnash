@@ -378,10 +378,10 @@ public class FileMagic {
         return version;
     }
 
-    private static boolean detectCharset(final Path path, final Charset charset) {
+    private static boolean detectCharset(final InputStream inputStream, final Charset charset) {
         boolean identified;
 
-        try (final BufferedInputStream input = new BufferedInputStream(Files.newInputStream(path))) {
+        try (final BufferedInputStream input = new BufferedInputStream(inputStream)) {
             final CharsetDecoder decoder = charset.newDecoder();
             final byte[] buffer = new byte[BUFFER_SIZE];
 
@@ -402,6 +402,14 @@ public class FileMagic {
         return identified;
     }
 
+    private static boolean detectCharset(final Path path, final Charset charset) {
+        try {
+            return detectCharset(Files.newInputStream(path), charset);
+        } catch (final IOException e) {
+            return false;
+        }
+    }
+
     private static Charset detectCharset(final Path path) {
         for (final Charset charset : CHARSETS) {
             if (detectCharset(path, charset)) {
@@ -412,6 +420,29 @@ public class FileMagic {
         return UTF_8;   // default
     }
 
+    /**
+     * Determines the Charset of an input stream.
+     *
+     * The stream will be closed after detection
+     * @param inputStream stream to check
+     * @return detected Charset
+     */
+    public static Charset detectCharset(final InputStream inputStream) {
+        for (final Charset charset : CHARSETS) {
+            if (detectCharset(inputStream, charset)) {
+                return charset;
+            }
+        }
+
+        return UTF_8;   // default
+    }
+
+    /**
+     * Determines the Charset of an input file
+     * The stream will be closed after detection
+     * @param fileName file to check
+     * @return detected Charset
+     */
     public static Charset detectCharset(final String fileName) {
         Charset charset = StandardCharsets.UTF_8;
 

@@ -19,7 +19,7 @@ package net.bzzt.swift.mt940;
 
 import java.io.File;
 import java.io.LineNumberReader;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,11 +34,12 @@ import jgnash.convert.importat.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.wizard.imports.ImportWizard;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.util.FileMagic;
 
 import net.bzzt.swift.mt940.exporter.Mt940Exporter;
 import net.bzzt.swift.mt940.parser.Mt940Parser;
@@ -109,7 +110,9 @@ class ImportMt940FxAction {
 
         @Override
         protected ImportBank<ImportTransaction> call() throws Exception {
-            try (final LineNumberReader reader = new LineNumberReader(Files.newBufferedReader(file.toPath(), StandardCharsets.ISO_8859_1))) {
+            final Charset charset = FileMagic.detectCharset(file.getAbsolutePath());
+
+            try (final LineNumberReader reader = new LineNumberReader(Files.newBufferedReader(file.toPath(), charset))) {
                 final Mt940File parsedFile = Mt940Parser.parse(reader);
                 return Mt940Exporter.convert(parsedFile);
             }
