@@ -17,16 +17,20 @@
  */
 package jgnash.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Objects;
@@ -41,6 +45,12 @@ import javax.xml.stream.XMLStreamReader;
 
 import jgnash.engine.Engine;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.US_ASCII;
+import static java.nio.charset.StandardCharsets.UTF_16;
+import static java.nio.charset.StandardCharsets.UTF_16BE;
+import static java.nio.charset.StandardCharsets.UTF_16LE;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.READ;
 
 /**
@@ -68,6 +78,10 @@ public class FileMagic {
 
     private static final String WINDOWS_1252 = "windows-1252";
 
+    private static final Charset[] CHARSETS = {UTF_8, US_ASCII, ISO_8859_1, UTF_16, UTF_16BE, UTF_16LE};
+
+    private static final int BUFFER_SIZE = 8192;
+
     private FileMagic() {
     }
 
@@ -89,7 +103,7 @@ public class FileMagic {
             return FileType.h2mv;
         } else if (isHsqlFile(path)) {
             return FileType.hsql;
-        }  else if (isOfxV1(path)) {
+        } else if (isOfxV1(path)) {
             return FileType.OfxV1;
         } else if (isOfxV2(path)) {
             return FileType.OfxV2;
@@ -111,10 +125,10 @@ public class FileMagic {
             return getOfxV1Encoding(path, StandardCharsets.UTF_8);
         } catch (final MalformedInputException e) {
             try {
-                return getOfxV1Encoding(path, StandardCharsets.ISO_8859_1);
+                return getOfxV1Encoding(path, ISO_8859_1);
             } catch (final MalformedInputException ex) {
                 try {
-                    return getOfxV1Encoding(path, StandardCharsets.US_ASCII);
+                    return getOfxV1Encoding(path, US_ASCII);
                 } catch (final MalformedInputException exx) {
                     return WINDOWS_1252;
                 }
@@ -169,7 +183,7 @@ public class FileMagic {
 
         if (encoding != null && characterSet != null) {
             if (encoding.equals(StandardCharsets.UTF_8.name()) && characterSet.equals("CSUNICODE")) {
-                return StandardCharsets.ISO_8859_1.name();
+                return ISO_8859_1.name();
             } else if (encoding.equals(StandardCharsets.UTF_8.name())) {
                 return StandardCharsets.UTF_8.name();
             } else if (encoding.equals(USASCII) && characterSet.equals("1252")) {
@@ -296,7 +310,7 @@ public class FileMagic {
 
     /**
      * Determines if this is a valid jGnash XML file.
-     *
+     * <p>
      * This will fail if the file was created by a future version of the file with a greater major version.
      *
      * @param path path to verify*
@@ -312,9 +326,9 @@ public class FileMagic {
 
         if (isFile(path, XML_HEADER)) {
             try {
-                result = (int)Math.floor(Float.parseFloat(getXMLVersion(path))) <= Engine.CURRENT_MAJOR_VERSION;
+                result = (int) Math.floor(Float.parseFloat(getXMLVersion(path))) <= Engine.CURRENT_MAJOR_VERSION;
             } catch (final NumberFormatException nfe) {
-               Logger.getLogger(FileMagic.class.getName()).info("Invalid version string");
+                Logger.getLogger(FileMagic.class.getName()).info("Invalid version string");
             }
         }
 
@@ -362,6 +376,53 @@ public class FileMagic {
         }
 
         return version;
+    }
+
+    private static boolean detectCharset(final Path path, final Charset charset) {
+        boolean identified;
+
+        try (final BufferedInputStream input = new BufferedInputStream(Files.newInputStream(path))) {
+            final CharsetDecoder decoder = charset.newDecoder();
+            final byte[] buffer = new byte[BUFFER_SIZE];
+
+            identified = false;
+
+            while ((input.read(buffer) != -1) && (!identified)) {
+                try {
+                    decoder.decode(ByteBuffer.wrap(buffer));
+                    identified = true;
+                } catch (final CharacterCodingException e) {
+                    return false;
+                }
+            }
+        } catch (final IOException e) {
+            return false;
+        }
+
+        return identified;
+    }
+
+    private static Charset detectCharset(final Path path) {
+        for (final Charset charset : CHARSETS) {
+            if (detectCharset(path, charset)) {
+                return charset;
+            }
+        }
+
+        return UTF_8;   // default
+    }
+
+    public static Charset detectCharset(final String fileName) {
+        Charset charset = StandardCharsets.UTF_8;
+
+        final Path path = Paths.get(fileName);
+
+        if (Files.exists(path)) {
+            charset = FileMagic.detectCharset(path);
+            Logger.getLogger(FileMagic.class.getName()).info(fileName + " was encoded as " + charset);
+        }
+
+        return charset;
     }
 
     public enum FileType {

@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import jgnash.engine.MathConstants;
+import jgnash.util.FileMagic;
 
 /**
  * Various helper methods for importing QIF files
@@ -106,7 +107,9 @@ public class QifUtils {
 
         boolean result = false;
 
-        try (final QifReader in = new QifReader(Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8))) {
+        final Charset charset = FileMagic.detectCharset(file.getPath());
+
+        try (final QifReader in = new QifReader(Files.newBufferedReader(file.toPath(), charset))) {
             String line = in.readLine();
 
             while (line != null) {

@@ -18,6 +18,7 @@
 package jgnash.convert.importat.qif;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,7 +85,7 @@ public class QifImport {
         return parser;
     }
 
-    public void doFullParse(final File file, final DateFormat dateFormat) throws NoAccountException {
+    public void doFullParse(final File file, final DateFormat dateFormat) throws IOException {
         if (file != null) {
             parser = new QifParser(dateFormat);
             parser.parseFullFile(file);

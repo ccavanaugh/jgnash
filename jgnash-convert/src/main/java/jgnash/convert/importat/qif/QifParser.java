@@ -20,7 +20,7 @@ package jgnash.convert.importat.qif;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.convert.importat.DateFormat;
+import jgnash.util.FileMagic;
 import jgnash.util.NotNull;
 
 /**
@@ -90,7 +91,7 @@ public final class QifParser {
         this.dateFormat = dateFormat;
     }
 
-    void parseFullFile(final File file) throws NoAccountException {
+    void parseFullFile(final File file) throws IOException {
         parseFullFile(file.getAbsolutePath());
     }
 
@@ -98,11 +99,13 @@ public final class QifParser {
         return parsePartialFile(file.getAbsolutePath());
     }
 
-    private void parseFullFile(final String fileName) throws NoAccountException {
+    private void parseFullFile(final String fileName) throws IOException {
 
         boolean accountFound = true;
 
-        try (final QifReader in = new QifReader(Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8))) {
+        final Charset charset = FileMagic.detectCharset(fileName);
+
+        try (final QifReader in = new QifReader(Files.newBufferedReader(Paths.get(fileName), charset))) {
 
             String line = in.readLine();
 
@@ -147,10 +150,10 @@ public final class QifParser {
         }
 
         if (!accountFound) {
-            throw new NoAccountException("The account was not found");
+            throw new IOException("The account was not found");
         }
 
-        // reparse the dates
+        // re-parse the dates
         for (final QifAccount account : accountList) {
             account.reparseDates(QifTransaction.determineDateFormat(account.getTransactions()));
         }
@@ -158,7 +161,9 @@ public final class QifParser {
 
     private boolean parsePartialFile(final String fileName) {
 
-        try (QifReader in = new QifReader(Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8))) {
+        final Charset charset = FileMagic.detectCharset(fileName);
+
+        try (QifReader in = new QifReader(Files.newBufferedReader(Paths.get(fileName), charset))) {
             String peek = in.peekLine();
             if (startsWith(peek, "!Type:")) {
                 final QifAccount acc = new QifAccount(); // "unknown" holding account
@@ -167,7 +172,7 @@ public final class QifParser {
 
                     logger.finest("*** Added account ***");
 
-                    // reparse the dates
+                    // re-parse the dates
                     acc.reparseDates(QifTransaction.determineDateFormat(acc.getTransactions()));
 
                     return true; // only look for transactions for one account
@@ -387,7 +392,7 @@ public final class QifParser {
                     in.reset();
                     return true;
                 } else if (line.charAt(0) == 'S' || line.charAt(0) == 'E' || line.charAt(0) == '$'
-                        || line.charAt(0) == '%') {
+                                   || line.charAt(0) == '%') {
                     // doing a split transaction
                     in.reset();
                     QifSplitTransaction split = parseSplitTransaction(in);
@@ -467,7 +472,7 @@ public final class QifParser {
                     result = true;
                     break;
                 } else if (line.charAt(0) == 'S' || line.charAt(0) == 'E' || line.charAt(0) == '$'
-                        || line.charAt(0) == '%') {
+                                   || line.charAt(0) == '%') {
                     // doing a split transaction
                     in.reset();
                     QifSplitTransaction split = parseSplitTransaction(in);
@@ -618,33 +623,29 @@ public final class QifParser {
         }
     }
 
-    private boolean parseClassList(final QifReader in) {
+    private void parseClassList(final QifReader in) throws IOException {
         String line;
         QifClassItem classItem = new QifClassItem();
-        try {
-            line = in.readLine();
-            while (line != null) {
-                if (line.startsWith("N")) {
-                    classItem.name = line.substring(1);
-                } else if (line.startsWith("D")) {
-                    classItem.description = line.substring(1);
-                } else if (line.startsWith("^")) { // end of a class item
-                    classes.add(classItem); // add it to the list
-                    classItem = new QifClassItem(); // start a new one
-                    in.mark(); // next line might be end of the list
-                } else if (line.startsWith("!")) { // done with the class list
-                    in.reset(); // give the line back
-                    return true; // a good return
-                } else {
-                    System.out.println("Error: " + line);
-                    return false;
-                }
-                line = in.readLine();
+
+        line = in.readLine();
+        while (line != null) {
+            if (line.startsWith("N")) {
+                classItem.name = line.substring(1);
+            } else if (line.startsWith("D")) {
+                classItem.description = line.substring(1);
+            } else if (line.startsWith("^")) { // end of a class item
+                classes.add(classItem); // add it to the list
+                classItem = new QifClassItem(); // start a new one
+                in.mark(); // next line might be end of the list
+            } else if (line.startsWith("!")) { // done with the class list
+                in.reset(); // give the line back
+                return;
+            } else {
+                throw new IOException("Error: " + line);
             }
-            return true; // reached the end of the file, a good return
-        } catch (IOException e) {
-            return false;
+            line = in.readLine();
         }
+
     }
 
     /**
