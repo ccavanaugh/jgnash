@@ -105,32 +105,13 @@ public class QifImport {
 
     public boolean doPartialParse(final File file) {
         if (file != null) {
+            partialImport = true;
+
             parser = new QifParser(DateFormat.US);
             return parser.parsePartialFile(file);
         }
 
         return false;
-    }
-
-    public void doPartialImport(final Account account) {
-        if (parser != null) {
-            if (account != null) {
-
-                partialImport = true;
-
-                List<QifAccount> list = parser.accountList;
-                if (list.size() == 1) {
-                    QifAccount qAcc = list.get(0);
-                    addTransactions(qAcc, account);
-                } else {
-                    logger.severe("Only one account expected");
-                    logger.log(Level.SEVERE, "Size: {0}", list.size());
-                }
-            } else {
-                logger.severe("Import failed");
-            }
-
-        }
     }
 
     public void dumpStats() {
@@ -282,24 +263,6 @@ public class QifImport {
         }
 
         return false;
-    }
-
-    /**
-     * Returns the number of duplicate transactions that were stripped during the import
-     *
-     * @return number of duplicates found
-     */
-    public int getDuplicateCount() {
-        return duplicates.size();
-    }
-
-    /**
-     * Return an array of duplicate transactions that were found
-     *
-     * @return duplicate transactions if found
-     */
-    public Transaction[] getDuplicates() {
-        return duplicates.toArray(new Transaction[0]);
     }
 
     private void addCategories() {

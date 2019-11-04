@@ -22,6 +22,7 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.3.1
+* 11/04/2019 Errors and warnings from a failed QIF import were not being displayed.
 * 11/03/2019 Mt940 import now correctly handles files not encoded using ISO_8859_1.
 * 11/03/2019 QIF import now correctly handles files not encoded using UTF8.
 * 10/27/2019 Improve behavior of the Report dialog when manually changing the scale.  The auto fit size toggles will be

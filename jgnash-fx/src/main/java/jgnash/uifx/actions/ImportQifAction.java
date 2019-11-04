@@ -32,11 +32,12 @@ import jgnash.convert.importat.qif.QifImport;
 import jgnash.convert.importat.qif.QifParser;
 import jgnash.convert.importat.qif.QifUtils;
 import jgnash.engine.Account;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.wizard.imports.ImportWizard;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Utility class to import an OFX file.
@@ -97,7 +98,8 @@ public class ImportQifAction {
         @Override
         protected QifImport call() {
             if (QifUtils.isFullFile(file)) {
-                StaticUIMethods.displayError("Only bank statement based QIF file are supported at this time");
+                JavaFXUtils.runLater(() -> StaticUIMethods.displayError("Only bank statement based QIF file are " +
+                                                                                "supported at this time"));
                 cancel();
                 return null;
             }
@@ -105,7 +107,9 @@ public class ImportQifAction {
             final QifImport qifImport = new QifImport();
 
             if (!qifImport.doPartialParse(file)) {
-                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ParseTransactions"));
+                JavaFXUtils.runLater(() -> StaticUIMethods.displayError(
+                        ResourceUtils.getString("Message.Error.ParseTransactions")));
+
                 cancel();
                 return null;
             }
@@ -113,7 +117,8 @@ public class ImportQifAction {
             qifImport.dumpStats();
 
             if (qifImport.getParser().accountList.isEmpty()) {
-                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ParseTransactions"));
+                JavaFXUtils.runLater(() -> StaticUIMethods.displayError(
+                        ResourceUtils.getString("Message.Error.ParseTransactions")));
                 cancel();
                 return null;
             }
@@ -141,8 +146,7 @@ public class ImportQifAction {
             if (wizardDialogController.validProperty().get()) {
                 final Account account = (Account) wizardDialogController.getSetting(ImportWizard.Settings.ACCOUNT);
 
-                @SuppressWarnings("unchecked")
-                final List<ImportTransaction> transactions = (List<ImportTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
+                @SuppressWarnings("unchecked") final List<ImportTransaction> transactions = (List<ImportTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
 
                 // import threads in the background
                 ImportTransactionsTask importTransactionsTask = new ImportTransactionsTask(account, transactions);
@@ -169,7 +173,7 @@ public class ImportQifAction {
             updateMessage(ResourceUtils.getString("Message.PleaseWait"));
             updateProgress(-1, Long.MAX_VALUE);
 
-                /* Import the transactions */
+            /* Import the transactions */
             GenericImport.importTransactions(transactions, account);
 
             return null;
