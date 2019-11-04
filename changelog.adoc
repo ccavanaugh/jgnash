@@ -22,6 +22,7 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.3.1
+* 11/04/2019 Updated to the latest Hibernate dependency.
 * 11/04/2019 Errors and warnings from a failed QIF import were not being displayed.
 * 11/03/2019 Mt940 import now correctly handles files not encoded using ISO_8859_1.
 * 11/03/2019 QIF import now correctly handles files not encoded using UTF8.
@@ -35,7 +36,7 @@
 * 10/01/2019 The majority of the build system was migrated to the Kotlin DSL.
 
 == Release 3.3.0
-* 09/21/2019 Update to the latest Hibernate, HikariCP and PDFBox dependencies.
+* 09/21/2019 Updated to the latest Hibernate, HikariCP and PDFBox dependencies.
 * 09/18/2019 The displayed columns for the Portfolio report can now be changed.
 * 09/16/2019 Don't display an exception if tabular report generation is interrupted.
 * 09/15/2019 The Date range of a Portfolio report can now be changed.
