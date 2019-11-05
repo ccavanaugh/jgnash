@@ -19,7 +19,6 @@ package jgnash.convert.importat.qif;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -69,11 +68,6 @@ public class QifImport {
     private final HashMap<String, Account> accountMap = new HashMap<>();
 
     private boolean partialImport = false;
-
-    /**
-     * A holder for duplicate transactions
-     */
-    private final ArrayList<Transaction> duplicates = new ArrayList<>();
 
     private static final Logger logger = Logger.getLogger("qifimport");
 
@@ -238,11 +232,6 @@ public class QifImport {
 
             tran = generateTransaction(aList, acc);
 
-            if (tran != null && isDuplicate(tran, acc)) { // strip and prevent NPE
-                logger.fine("duplicate found");
-                duplicates.add(tran);
-                continue;
-            }
             if (tran != null) {
                 if (partialImport) {
                     tran.setFitid(FITID);   // importing a bank statement, flag as imported
@@ -252,17 +241,6 @@ public class QifImport {
                 logger.warning("Null Transaction!");
             }
         }
-    }
-
-    private static boolean isDuplicate(final Transaction t, final Account a) {
-
-        for (final Transaction tran : a.getSortedTransactionList()) {
-            if (tran.equalsIgnoreDate(t)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void addCategories() {
