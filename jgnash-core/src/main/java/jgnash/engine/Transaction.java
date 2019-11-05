@@ -353,38 +353,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Compares this transaction against another for equality. The date the transaction is created is ignored. The
-     * voucher date is still tested.
-     *
-     * @param tran Transaction to compare against
-     * @return {@code true} if Transactions are equal
-     */
-    public boolean equalsIgnoreDate(final Transaction tran) {
-        if (tran == this) {
-            return true;
-        }
-
-        if (getTransactionType() != tran.getTransactionType()) {
-            return false;
-        }
-
-        if (!date.equals(tran.date)) {
-            return false;
-        }
-
-        if (!getPayee().equalsIgnoreCase(tran.getPayee())) {
-            return false;
-        }
-
-        if (getAmount(getCommonAccount()).compareTo(tran.getAmount(tran.getCommonAccount())) != 0) {
-            return false;
-        }
-
-        return getNumber().equalsIgnoreCase(tran.getNumber());
-
-    }
-
-    /**
      * Returns a sorted defensive copy of the transaction entries.
      *
      * @return list of transaction entries
