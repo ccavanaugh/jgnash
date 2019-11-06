@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,6 +118,16 @@ public class YahooEventParser implements SecurityParser{
                     }
                     return null;
                 });
+    }
+
+    /**
+     * Sets a {@code Supplier} that can provide an API token when requested.
+     *
+     * @param supplier token {@code Supplier}
+     */
+    @Override
+    public void setTokenSupplier(final Supplier<String> supplier) {
+        // no nothing, API not required for access to Yahoo
     }
 
     @Override

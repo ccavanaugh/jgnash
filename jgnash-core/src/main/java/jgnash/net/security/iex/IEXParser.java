@@ -15,32 +15,49 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.net.security;
+package jgnash.net.security.iex;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
-import jgnash.util.NotNull;
+import jgnash.net.security.SecurityParser;
 
 /**
- * Interface for security parser.
- *
- * @author Craig Cavanaugh
+ * SecurityParser for querying iexcloud.io for stock price history and events
  */
-public interface SecurityParser {
+public class IEXParser implements SecurityParser {
+
+    private static final String BASE_URL = "https://cloud.iexapis.com";
+
+    /**
+     * Required IEX Token
+     */
+    private Supplier<String> tokenSupplier = new Supplier<String>() {
+        @Override
+        public String get() {
+            return "";
+        }
+    };
+
 
     /**
      * Sets a {@code Supplier} that can provide an API token when requested.
      *
      * @param supplier token {@code Supplier}
      */
-    void setTokenSupplier(@NotNull final Supplier<String> supplier);
+    @Override
+    public void setTokenSupplier(final Supplier<String> supplier) {
+        Objects.requireNonNull(supplier);
+        tokenSupplier = supplier;
+    }
 
     /**
      * Retrieves historical pricing
@@ -51,9 +68,11 @@ public interface SecurityParser {
      * @return List of SecurityHistoryNode
      * @throws IOException indicates if IO / Network error has occurred
      */
-    @NotNull
-    List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
-                                                      final LocalDate startDate, final LocalDate endDate) throws IOException;
+    @Override
+    public List<SecurityHistoryNode> retrieveHistoricalPrice(final SecurityNode securityNode, final LocalDate startDate,
+                                                             final LocalDate endDate) throws IOException {
+        return Collections.emptyList();
+    }
 
     /**
      * Retrieves historical events
@@ -63,7 +82,9 @@ public interface SecurityParser {
      * @return Set of SecurityHistoryEvent
      * @throws IOException indicates if IO / Network error has occurred
      */
-    @NotNull
-    Set<SecurityHistoryEvent> retrieveHistoricalEvents(@NotNull final SecurityNode securityNode,
-                                                       final LocalDate endDate) throws IOException;
+    @Override
+    public Set<SecurityHistoryEvent> retrieveHistoricalEvents(final SecurityNode securityNode,
+                                                              final LocalDate endDate) throws IOException {
+        return Collections.emptySet();
+    }
 }

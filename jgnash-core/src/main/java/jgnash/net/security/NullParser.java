@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
@@ -36,6 +37,16 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  */
 public class NullParser implements SecurityParser {
+
+    /**
+     * Sets a {@code Supplier} that can provide an API token when requested.
+     *
+     * @param supplier token {@code Supplier}
+     */
+    @Override
+    public void setTokenSupplier(Supplier<String> supplier) {
+        // do nothing...
+    }
 
     @Override
     public List<SecurityHistoryNode> retrieveHistoricalPrice(final SecurityNode securityNode, final LocalDate startDate, final LocalDate endDate) {
