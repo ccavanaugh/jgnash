@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class YahooEventParserTest extends AbstractEngineTest {
 
     private static final int ATTEMPTS = 3;
-    private static final String GITHUB_ACTION = "GITHUB_ACTION";
+    public static final String GITHUB_ACTION = "GITHUB_ACTION";
 
     @Override
     protected Engine createEngine() throws IOException {

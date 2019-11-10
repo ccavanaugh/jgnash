@@ -17,8 +17,16 @@
  */
 package jgnash.net.security.iex;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -28,25 +36,66 @@ import java.util.function.Supplier;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.net.ConnectionFactory;
 import jgnash.net.security.SecurityParser;
+import jgnash.time.DateUtils;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * SecurityParser for querying iexcloud.io for stock price history and events
+ *
+ * @author Craig Cavanaugh
  */
 public class IEXParser implements SecurityParser {
 
     private static final String BASE_URL = "https://cloud.iexapis.com";
+    private static final String SANDBOX_URL = "https://sandbox.iexapis.com/stable";
+
+    private enum IEXChartPeriod {
+        OneDay("1d", 5),
+        FiveDay("5d", 5),
+        OneMonth("1m", 30),
+        ThreeMonth("3m", 30 * 3),
+        SixMonth("6m", 30 * 6),
+        OneYear("1y", 365),
+        TwoYear("2y", 365 * 2),
+        FiveYear ("5y", 365 * 5),
+        max ("max", Integer.MAX_VALUE);
+
+        final private int days;
+        final private String path;
+
+        IEXChartPeriod(final String api, final int days) {
+            this.days = days;
+            this.path = api;
+        }
+
+        public static String getPath(final int days) {
+            for (IEXChartPeriod period : IEXChartPeriod.values()) {
+                if (period.days > days) {
+                    return period.path;
+                }
+            }
+
+            return IEXChartPeriod.max.path;
+        }
+    }
 
     /**
      * Required IEX Token
      */
-    private Supplier<String> tokenSupplier = new Supplier<String>() {
-        @Override
-        public String get() {
-            return "";
-        }
-    };
+    private Supplier<String> tokenSupplier = () -> "";
 
+    private String baseURL = BASE_URL;
+
+    public void setUseSandbox() {
+        baseURL = SANDBOX_URL;
+    }
 
     /**
      * Sets a {@code Supplier} that can provide an API token when requested.
@@ -60,7 +109,10 @@ public class IEXParser implements SecurityParser {
     }
 
     /**
-     * Retrieves historical pricing
+     * Retrieves historical pricing.
+     *
+     * The IEX API allows query of a period of time starting with the current date.  The startDate is ignored for REST
+     * but is used for filter of the returned data
      *
      * @param securityNode SecurityNode to retrieve events for
      * @param startDate    start date
@@ -71,7 +123,40 @@ public class IEXParser implements SecurityParser {
     @Override
     public List<SecurityHistoryNode> retrieveHistoricalPrice(final SecurityNode securityNode, final LocalDate startDate,
                                                              final LocalDate endDate) throws IOException {
-        return Collections.emptyList();
+
+        final String range = IEXChartPeriod.getPath((int) DAYS.between(endDate, LocalDate.now()));
+
+        final String restURL = baseURL + "/stock/" + securityNode.getSymbol() + "/chart/" + range +
+                                 "?token=" + tokenSupplier.get() + "&format=csv";
+
+        final List<SecurityHistoryNode> historyNodes = new ArrayList<>();
+
+        final URL url = new URL(restURL);
+        final URLConnection connection = url.openConnection();
+        connection.setConnectTimeout(ConnectionFactory.getConnectionTimeout() * 1000);
+
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
+                StandardCharsets.UTF_8))) {
+
+            try (final CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())) {
+                for (final CSVRecord record : csvParser) {
+                    final LocalDate date = LocalDate.parse(record.get("date"), DateTimeFormatter.ISO_DATE);
+
+                    if (DateUtils.between(date, startDate, endDate)) {
+                        final BigDecimal price = new BigDecimal(record.get("uClose"));
+                        final long volume = Long.parseLong(record.get("uVolume"));
+                        final BigDecimal high = new BigDecimal(record.get("uHigh"));
+                        final BigDecimal low = new BigDecimal(record.get("uLow"));
+
+                        final SecurityHistoryNode historyNode = new SecurityHistoryNode(date, price, volume, high, low);
+
+                        historyNodes.add(historyNode);
+                    }
+                }
+            }
+        }
+
+        return historyNodes;
     }
 
     /**

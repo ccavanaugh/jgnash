@@ -2,7 +2,10 @@ description = "jGnash Core"
 
 var moduleName = "jgnash.core"
 
+val commonsCollectionsVersion: String by project
+val commonsCsvVersion: String by project
 val commonsLangVersion: String by project
+
 val slf4jVersion: String by project
 val hibernateVersion: String by project
 val hikariVersion: String by project
@@ -10,7 +13,6 @@ val h2Version: String by project
 val hsqldbVersion: String by project
 val xstreamVersion: String by project
 val nettyVersion: String by project
-val commonsCollectionsVersion: String by project
 
 plugins {
     `java-library`
@@ -43,6 +45,7 @@ dependencies {
     implementation("io.netty:netty-codec:$nettyVersion")
 
     implementation("org.apache.commons:commons-collections4:$commonsCollectionsVersion")
+    implementation("org.apache.commons:commons-csv:$commonsCsvVersion")
     implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
 }
 

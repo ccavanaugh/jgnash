@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
 import jgnash.net.security.YahooEventParser;
+import jgnash.net.security.iex.IEXParser;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.Nullable;
@@ -38,7 +39,8 @@ public enum QuoteSource {
     NONE(ResourceUtils.getString("QuoteSource.None"), NullParser.class),
     YAHOO(ResourceUtils.getString("QuoteSource.Yahoo"), YahooEventParser.class),
     YAHOO_UK(ResourceUtils.getString("QuoteSource.YahooUK"), YahooEventParser.class),
-    YAHOO_AUS(ResourceUtils.getString("QuoteSource.YahooAus"), YahooEventParser.class);
+    YAHOO_AUS(ResourceUtils.getString("QuoteSource.YahooAus"), YahooEventParser.class),
+    IEX_CLOUD("IEX Cloud", IEXParser.class);
 
     private final transient String description;
 
