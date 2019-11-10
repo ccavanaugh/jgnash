@@ -285,6 +285,19 @@ public class DateUtils {
     }
 
     /**
+     * Determines if {@code LocalDate} d1 occurs after {@code LocalDate} d2 and before {@code LocalDate} d3.
+     * The specified dates are inclusive.
+     *
+     * @param d1 {@code LocalDate} 1
+     * @param d2    {@code LocalDate} 2
+     * @param d3    {@code LocalDate} 3
+     * @return {@code true} if d1 occurs between d2 and d3
+     */
+    public static boolean between(final LocalDate d1, final LocalDate d2, final LocalDate d3) {
+        return after(d1, d2) && before(d1, d3);
+    }
+
+    /**
      * Returns the number of days in the year.
      *
      * @param year calendar year
