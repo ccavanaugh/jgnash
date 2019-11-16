@@ -63,7 +63,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -738,10 +737,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        budgetedColumn.minWidthProperty().bind(minSummaryColumnWidth);
-        budgetedColumn.maxWidthProperty().bind(minSummaryColumnWidth);
-        budgetedColumn.setSortable(false);
-        budgetedColumn.resizableProperty().set(false);
+        lockColumnBehavior(budgetedColumn, minSummaryColumnWidth);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -753,10 +749,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        actualColumn.minWidthProperty().bind(minSummaryColumnWidth);
-        actualColumn.maxWidthProperty().bind(minSummaryColumnWidth);
-        actualColumn.setSortable(false);
-        actualColumn.resizableProperty().set(false);
+        lockColumnBehavior(actualColumn, minSummaryColumnWidth);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -770,10 +763,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        remainingColumn.minWidthProperty().bind(minSummaryColumnWidth);
-        remainingColumn.maxWidthProperty().bind(minSummaryColumnWidth);
-        remainingColumn.setSortable(false);
-        remainingColumn.resizableProperty().set(false);
+        lockColumnBehavior(remainingColumn, minSummaryColumnWidth);
 
         headerColumn.getColumns().add(remainingColumn);
         headerColumn.resizableProperty().set(false);
@@ -803,10 +793,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        budgetedColumn.minWidthProperty().bind(columnWidth);
-        budgetedColumn.maxWidthProperty().bind(columnWidth);
-        budgetedColumn.setSortable(false);
-        budgetedColumn.resizableProperty().set(false);
+        lockColumnBehavior(budgetedColumn, columnWidth);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -821,10 +808,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        actualColumn.minWidthProperty().bind(columnWidth);
-        actualColumn.maxWidthProperty().bind(columnWidth);
-        actualColumn.setSortable(false);
-        actualColumn.resizableProperty().set(false);
+        lockColumnBehavior(actualColumn, columnWidth);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -840,12 +824,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-
-        // the max width is not bound to allow last column to grow and fill any voids
-        remainingColumn.minWidthProperty().bind(remainingColumnWidth);
-        remainingColumn.maxWidthProperty().bind(remainingColumnWidth);
-        remainingColumn.setSortable(false);
-        remainingColumn.resizableProperty().set(false);
+        lockColumnBehavior(remainingColumn, remainingColumnWidth);
 
         headerColumn.getColumns().add(remainingColumn);
 
@@ -876,8 +855,6 @@ public class BudgetTableController implements MessageListener {
         periodTable.fixedCellSizeProperty().bind(rowHeight);
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
-        // TODO: disable reordering...
-
         // index exceeds allowed value because the user reduced the period count, reset to the maximum allowed value
         if (index > budgetResultsModel.getDescriptorList().size() - visibleColumnCount.get()) {
             index = budgetResultsModel.getDescriptorList().size() - visibleColumnCount.get();
@@ -895,12 +872,6 @@ public class BudgetTableController implements MessageListener {
         periodTable.setOnMouseMoved(this::handleMouseMove);         // cursor
         periodTable.setOnMouseDragged(this::handleDividerDrag);     // drag
         periodTable.setOnMousePressed(this::handleMouseClicked);    // drag
-
-        // hack to disable reordering of the table columns
-        periodTable.widthProperty().addListener((source, oldWidth, newWidth) -> {
-            TableHeaderRow header = (TableHeaderRow) periodTable.lookup("TableHeaderRow");
-            header.reorderingProperty().addListener((observable, oldValue, newValue) -> header.setReordering(false));
-        });
     }
 
     private TableColumn<AccountGroup, BigDecimal> buildAccountPeriodSummaryColumn(final int index) {
@@ -924,10 +895,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
-        budgetedColumn.minWidthProperty().bind(columnWidth);
-        budgetedColumn.maxWidthProperty().bind(columnWidth);
-        budgetedColumn.setSortable(false);
-        budgetedColumn.resizableProperty().set(false);
+        lockColumnBehavior(budgetedColumn, columnWidth);
 
         headerColumn.getColumns().add(budgetedColumn);
 
@@ -942,10 +910,7 @@ public class BudgetTableController implements MessageListener {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountGroupTableCell());
-        actualColumn.minWidthProperty().bind(columnWidth);
-        actualColumn.maxWidthProperty().bind(columnWidth);
-        actualColumn.setSortable(false);
-        actualColumn.resizableProperty().set(false);
+        lockColumnBehavior(actualColumn, columnWidth);
 
         headerColumn.getColumns().add(actualColumn);
 
@@ -963,14 +928,19 @@ public class BudgetTableController implements MessageListener {
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
 
         // the max width is not bound to allow last column to grow and fill any voids
-        remainingColumn.minWidthProperty().bind(remainingColumnWidth);
-        remainingColumn.maxWidthProperty().bind(remainingColumnWidth);
-        remainingColumn.setSortable(false);
-        remainingColumn.resizableProperty().set(false);
+        lockColumnBehavior(remainingColumn, remainingColumnWidth);
 
         headerColumn.getColumns().add(remainingColumn);
 
         return headerColumn;
+    }
+
+    private void lockColumnBehavior(final TableColumn<?, ?> column, final DoubleProperty columnWidth) {
+        column.minWidthProperty().bind(columnWidth);
+        column.maxWidthProperty().bind(columnWidth);
+        column.setSortable(false);
+        column.resizableProperty().set(false);
+        column.setReorderable(false);
     }
 
     /**
