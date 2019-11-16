@@ -21,19 +21,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
 import jgnash.engine.SecurityHistoryEvent;
+import jgnash.engine.SecurityHistoryEventType;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
@@ -76,7 +78,7 @@ public class IEXParser implements SecurityParser {
         }
 
         public static String getPath(final int days) {
-            for (IEXChartPeriod period : IEXChartPeriod.values()) {
+            for (final IEXChartPeriod period : IEXChartPeriod.values()) {
                 if (period.days > days) {
                     return period.path;
                 }
@@ -170,6 +172,43 @@ public class IEXParser implements SecurityParser {
     @Override
     public Set<SecurityHistoryEvent> retrieveHistoricalEvents(final SecurityNode securityNode,
                                                               final LocalDate endDate) throws IOException {
-        return Collections.emptySet();
+
+        // GET /stock/{symbol}/splits/{range}
+
+        final String range = IEXChartPeriod.getPath((int) DAYS.between(endDate, LocalDate.now()));
+
+        final String restURL = baseURL + "/stock/" + securityNode.getSymbol() + "/splits/" + range +
+                                       "?token=" + tokenSupplier.get() + "&format=csv";
+
+        final Set<SecurityHistoryEvent> historyEvents = new HashSet<>();
+
+        final URL url = new URL(restURL);
+        final URLConnection connection = url.openConnection();
+        connection.setConnectTimeout(ConnectionFactory.getConnectionTimeout() * 1000);
+
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
+                StandardCharsets.UTF_8))) {
+
+            try (final CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())) {
+
+                LocalDate startDate = LocalDate.now().minusDays(1);
+
+                for (final CSVRecord record : csvParser) {
+                    final LocalDate date = LocalDate.parse(record.get("exDate"), DateTimeFormatter.ISO_DATE);
+
+                    if (DateUtils.between(date, startDate, endDate)) {
+                        final BigDecimal toFactor = new BigDecimal(record.get("toFactor"));
+                        final BigDecimal fromFactor = new BigDecimal(record.get("fromFactor"));
+                        final BigDecimal ratio = fromFactor.divide(toFactor, MathContext.DECIMAL64);
+
+                        final SecurityHistoryEvent event = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date, ratio);
+                        
+                        historyEvents.add(event);
+                    }
+                }
+            }
+        }
+
+        return historyEvents;
     }
 }
