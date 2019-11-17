@@ -21,8 +21,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -136,11 +136,20 @@ public class IEXParser implements SecurityParser {
         final List<SecurityHistoryNode> historyNodes = new ArrayList<>();
 
         final URL url = new URL(restURL);
-        final URLConnection connection = url.openConnection();
+
+       final HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setConnectTimeout(ConnectionFactory.getConnectionTimeout() * 1000);
+
+        // return an empty list if the response is bad
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            connection.disconnect();
+            return historyNodes;
+        }
 
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
                 StandardCharsets.UTF_8))) {
+
+           // connection.getR
 
             reader.mark(READ_AHEAD_LIMIT);
 
@@ -191,8 +200,14 @@ public class IEXParser implements SecurityParser {
         final Set<SecurityHistoryEvent> historyEvents = new HashSet<>();
 
         final URL url = new URL(restURL);
-        final URLConnection connection = url.openConnection();
+        final HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setConnectTimeout(ConnectionFactory.getConnectionTimeout() * 1000);
+
+        // return an empty list if the response is bad
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            connection.disconnect();
+            return historyEvents;
+        }
 
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
                 StandardCharsets.UTF_8))) {
