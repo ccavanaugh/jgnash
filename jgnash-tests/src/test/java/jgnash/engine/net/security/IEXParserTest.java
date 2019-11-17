@@ -21,28 +21,30 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Set;
 
 import jgnash.engine.AbstractEngineTest;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.security.SecurityParser;
 import jgnash.net.security.iex.IEXParser;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
+import static jgnash.engine.net.security.YahooEventParserTest.GITHUB_ACTION;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import static jgnash.engine.net.security.YahooEventParserTest.GITHUB_ACTION;
-
-
+/**
+ * For these tests to work, the environment variable TEST_TOKEN must be set to the sandbox key
+ */
 public class IEXParserTest  extends AbstractEngineTest {
 
     private static final String TEST_TOKEN = "TEST_TOKEN";
@@ -88,13 +90,49 @@ public class IEXParserTest  extends AbstractEngineTest {
         ((IEXParser)securityParser).setUseSandbox();
         securityParser.setTokenSupplier(() -> System.getenv(TEST_TOKEN));
 
-        //final Set<SecurityHistoryEvent> events = securityParser.retrieveHistoricalEvents(ibm, LocalDate.of(2015, Month.AUGUST, 22));
-
         final List<SecurityHistoryNode> events =  securityParser.retrieveHistoricalPrice(ibm, LocalDate.of(2019,
                                                                  Month.JANUARY, 2), LocalDate.of(2019,
                                                                  Month.MARCH, 1));
 
         assertNotNull(events);
         assertEquals(41, events.size());
+    }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
+    void testHistoricalSplitsDownload() throws IOException {
+
+        if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions
+            return;
+        }
+
+        // test env must be configured with a valid token
+       if (System.getenv(TEST_TOKEN) == null) {   // don't test with Github actions
+            return;
+        }
+
+        final SecurityNode pstv = new SecurityNode(e.getDefaultCurrency());
+        pstv.setSymbol("PSTV");
+        pstv.setScale((byte) 2);
+        pstv.setQuoteSource(QuoteSource.IEX_CLOUD);
+
+        e.addSecurity(pstv);
+
+        final QuoteSource quoteSource = pstv.getQuoteSource();
+        assertNotNull(quoteSource);
+
+        final SecurityParser securityParser = quoteSource.getParser();
+        assertNotNull(securityParser);
+
+        assertThat(securityParser, instanceOf(IEXParser.class));
+
+        ((IEXParser)securityParser).setUseSandbox();
+        securityParser.setTokenSupplier(() -> System.getenv(TEST_TOKEN));
+
+        final Set<SecurityHistoryEvent> historicalEvents = securityParser.retrieveHistoricalEvents(pstv,
+                LocalDate.of(2015, Month.JANUARY, 1));
+
+        assertNotNull(historicalEvents);
+        assertEquals(1, historicalEvents.size());
     }
 }

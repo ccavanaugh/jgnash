@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +33,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import jgnash.engine.MathConstants;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryEventType;
 import jgnash.engine.SecurityHistoryNode;
@@ -45,6 +45,7 @@ import jgnash.time.DateUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -55,8 +56,9 @@ import static java.time.temporal.ChronoUnit.DAYS;
  */
 public class IEXParser implements SecurityParser {
 
-    private static final String BASE_URL = "https://cloud.iexapis.com";
+    private static final String BASE_URL = "https://cloud.iexapis.com/v1";
     private static final String SANDBOX_URL = "https://sandbox.iexapis.com/stable";
+    private static final int READ_AHEAD_LIMIT = 512;
 
     private enum IEXChartPeriod {
         OneDay("1d", 5),
@@ -66,8 +68,8 @@ public class IEXParser implements SecurityParser {
         SixMonth("6m", 30 * 6),
         OneYear("1y", 365),
         TwoYear("2y", 365 * 2),
-        FiveYear ("5y", 365 * 5),
-        max ("max", Integer.MAX_VALUE);
+        FiveYear("5y", 365 * 5),
+        max("max", Integer.MAX_VALUE);
 
         final private int days;
         final private String path;
@@ -112,7 +114,7 @@ public class IEXParser implements SecurityParser {
 
     /**
      * Retrieves historical pricing.
-     *
+     * <p>
      * The IEX API allows query of a period of time starting with the current date.  The startDate is ignored for REST
      * but is used for filter of the returned data
      *
@@ -129,7 +131,7 @@ public class IEXParser implements SecurityParser {
         final String range = IEXChartPeriod.getPath((int) DAYS.between(endDate, LocalDate.now()));
 
         final String restURL = baseURL + "/stock/" + securityNode.getSymbol() + "/chart/" + range +
-                                 "?token=" + tokenSupplier.get() + "&format=csv";
+                "?token=" + tokenSupplier.get() + "&format=csv";
 
         final List<SecurityHistoryNode> historyNodes = new ArrayList<>();
 
@@ -140,19 +142,25 @@ public class IEXParser implements SecurityParser {
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
                 StandardCharsets.UTF_8))) {
 
-            try (final CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())) {
-                for (final CSVRecord record : csvParser) {
-                    final LocalDate date = LocalDate.parse(record.get("date"), DateTimeFormatter.ISO_DATE);
+            reader.mark(READ_AHEAD_LIMIT);
 
-                    if (DateUtils.between(date, startDate, endDate)) {
-                        final BigDecimal price = new BigDecimal(record.get("uClose"));
-                        final long volume = Long.parseLong(record.get("uVolume"));
-                        final BigDecimal high = new BigDecimal(record.get("uHigh"));
-                        final BigDecimal low = new BigDecimal(record.get("uLow"));
+            if (isDataOkay(reader.readLine())) {
+                reader.reset();
 
-                        final SecurityHistoryNode historyNode = new SecurityHistoryNode(date, price, volume, high, low);
+                try (final CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())) {
+                    for (final CSVRecord record : csvParser) {
+                        final LocalDate date = LocalDate.parse(record.get("date"), DateTimeFormatter.ISO_DATE);
 
-                        historyNodes.add(historyNode);
+                        if (DateUtils.between(date, startDate, endDate)) {
+                            final BigDecimal price = new BigDecimal(record.get("uClose"));
+                            final long volume = Long.parseLong(record.get("uVolume"));
+                            final BigDecimal high = new BigDecimal(record.get("uHigh"));
+                            final BigDecimal low = new BigDecimal(record.get("uLow"));
+
+                            final SecurityHistoryNode historyNode = new SecurityHistoryNode(date, price, volume, high, low);
+
+                            historyNodes.add(historyNode);
+                        }
                     }
                 }
             }
@@ -178,7 +186,7 @@ public class IEXParser implements SecurityParser {
         final String range = IEXChartPeriod.getPath((int) DAYS.between(endDate, LocalDate.now()));
 
         final String restURL = baseURL + "/stock/" + securityNode.getSymbol() + "/splits/" + range +
-                                       "?token=" + tokenSupplier.get() + "&format=csv";
+                "?token=" + tokenSupplier.get() + "&format=csv";
 
         final Set<SecurityHistoryEvent> historyEvents = new HashSet<>();
 
@@ -189,26 +197,46 @@ public class IEXParser implements SecurityParser {
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
                 StandardCharsets.UTF_8))) {
 
-            try (final CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())) {
+            reader.mark(READ_AHEAD_LIMIT);
 
-                LocalDate startDate = LocalDate.now().minusDays(1);
+            if (isDataOkay(reader.readLine())) {
+                reader.reset();
 
-                for (final CSVRecord record : csvParser) {
-                    final LocalDate date = LocalDate.parse(record.get("exDate"), DateTimeFormatter.ISO_DATE);
+                try (final CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())) {
+                    LocalDate startDate = LocalDate.now().minusDays(1);
 
-                    if (DateUtils.between(date, startDate, endDate)) {
-                        final BigDecimal toFactor = new BigDecimal(record.get("toFactor"));
-                        final BigDecimal fromFactor = new BigDecimal(record.get("fromFactor"));
-                        final BigDecimal ratio = fromFactor.divide(toFactor, MathContext.DECIMAL64);
+                    for (final CSVRecord record : csvParser) {
+                        final LocalDate date = LocalDate.parse(record.get("exDate"), DateTimeFormatter.ISO_DATE);
 
-                        final SecurityHistoryEvent event = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date, ratio);
-                        
-                        historyEvents.add(event);
+                        if (DateUtils.between(date, endDate, startDate)) {
+                            final BigDecimal toFactor = new BigDecimal(record.get("toFactor"));
+                            final BigDecimal fromFactor = new BigDecimal(record.get("fromFactor"));
+                            final BigDecimal ratio = fromFactor.divide(toFactor, MathConstants.mathContext);
+
+                            final SecurityHistoryEvent event = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date, ratio);
+
+                            historyEvents.add(event);
+                        }
                     }
                 }
             }
         }
 
         return historyEvents;
+    }
+
+    /**
+     * Determines if data appears to be okay.... no immediate errors.
+     *
+     * @param line 1st line returned
+     * @return true if data appears to be okay
+     */
+    private static boolean isDataOkay(final String line) {
+
+        if (line != null && !line.isEmpty()) {
+            return !(StringUtils.startsWithIgnoreCase(line, "Not Found")
+                    || StringUtils.startsWithIgnoreCase(line, "Unknown symbol"));
+        }
+        return false;
     }
 }
