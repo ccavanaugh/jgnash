@@ -137,7 +137,7 @@ public class IEXParser implements SecurityParser {
 
         final URL url = new URL(restURL);
 
-       final HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(ConnectionFactory.getConnectionTimeout() * 1000);
 
         // return an empty list if the response is bad
@@ -148,8 +148,6 @@ public class IEXParser implements SecurityParser {
 
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
                 StandardCharsets.UTF_8))) {
-
-           // connection.getR
 
             reader.mark(READ_AHEAD_LIMIT);
 
@@ -190,7 +188,16 @@ public class IEXParser implements SecurityParser {
     public Set<SecurityHistoryEvent> retrieveHistoricalEvents(final SecurityNode securityNode,
                                                               final LocalDate endDate) throws IOException {
 
-        // GET /stock/{symbol}/splits/{range}
+        final Set<SecurityHistoryEvent> historyEvents = new HashSet<>();
+
+        historyEvents.addAll(retrieveSplitEvents(securityNode, endDate));
+        historyEvents.addAll(retrieveDividendEvents(securityNode, endDate));
+
+        return historyEvents;
+    }
+
+    private Set<SecurityHistoryEvent> retrieveSplitEvents(final SecurityNode securityNode,
+                                                              final LocalDate endDate) throws IOException {
 
         final String range = IEXChartPeriod.getPath((int) DAYS.between(endDate, LocalDate.now()));
 
@@ -200,7 +207,7 @@ public class IEXParser implements SecurityParser {
         final Set<SecurityHistoryEvent> historyEvents = new HashSet<>();
 
         final URL url = new URL(restURL);
-        final HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(ConnectionFactory.getConnectionTimeout() * 1000);
 
         // return an empty list if the response is bad
@@ -228,7 +235,58 @@ public class IEXParser implements SecurityParser {
                             final BigDecimal fromFactor = new BigDecimal(record.get("fromFactor"));
                             final BigDecimal ratio = fromFactor.divide(toFactor, MathConstants.mathContext);
 
-                            final SecurityHistoryEvent event = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date, ratio);
+                            final SecurityHistoryEvent event = new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, date, ratio);
+
+                            historyEvents.add(event);
+                        }
+                    }
+                }
+            }
+        }
+
+        return historyEvents;
+    }
+
+    private Set<SecurityHistoryEvent> retrieveDividendEvents(final SecurityNode securityNode,
+                                                          final LocalDate endDate) throws IOException {
+
+        final String range = IEXChartPeriod.getPath((int) DAYS.between(endDate, LocalDate.now()));
+
+        final String restURL = baseURL + "/stock/" + securityNode.getSymbol() + "/dividends/" + range +
+                "?token=" + tokenSupplier.get() + "&format=csv";
+
+        //System.out.println(restURL);
+
+        final Set<SecurityHistoryEvent> historyEvents = new HashSet<>();
+
+        final URL url = new URL(restURL);
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setConnectTimeout(ConnectionFactory.getConnectionTimeout() * 1000);
+
+        // return an empty list if the response is bad
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            connection.disconnect();
+            return historyEvents;
+        }
+
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
+                StandardCharsets.UTF_8))) {
+
+            reader.mark(READ_AHEAD_LIMIT);
+
+            if (isDataOkay(reader.readLine())) {
+                reader.reset();
+
+                try (final CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())) {
+                    LocalDate startDate = LocalDate.now().minusDays(1);
+
+                    for (final CSVRecord record : csvParser) {
+                        final LocalDate date = LocalDate.parse(record.get("paymentDate"), DateTimeFormatter.ISO_DATE);
+
+                        if (DateUtils.between(date, endDate, startDate)) {
+                            final BigDecimal amount = new BigDecimal(record.get("amount"));
+
+                            final SecurityHistoryEvent event = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date, amount);
 
                             historyEvents.add(event);
                         }
@@ -250,7 +308,9 @@ public class IEXParser implements SecurityParser {
 
         if (line != null && !line.isEmpty()) {
             return !(StringUtils.startsWithIgnoreCase(line, "Not Found")
-                    || StringUtils.startsWithIgnoreCase(line, "Unknown symbol"));
+                    || StringUtils.startsWithIgnoreCase(line, "Unknown symbol")
+                    || StringUtils.startsWithIgnoreCase(line, "An API key is required")
+                    || StringUtils.startsWithIgnoreCase(line, "Test tokens may only be used"));
         }
         return false;
     }

@@ -135,4 +135,42 @@ public class IEXParserTest  extends AbstractEngineTest {
         assertNotNull(historicalEvents);
         assertEquals(1, historicalEvents.size());
     }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
+    void testHistoricalDividendsDownload() throws IOException {
+
+        if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions
+            return;
+        }
+
+        // test env must be configured with a valid token
+        if (System.getenv(TEST_TOKEN) == null) {   // don't test with Github actions
+            return;
+        }
+
+        final SecurityNode spy = new SecurityNode(e.getDefaultCurrency());
+        spy.setSymbol("SPY");
+        spy.setScale((byte) 2);
+        spy.setQuoteSource(QuoteSource.IEX_CLOUD);
+
+        e.addSecurity(spy);
+
+        final QuoteSource quoteSource = spy.getQuoteSource();
+        assertNotNull(quoteSource);
+
+        final SecurityParser securityParser = quoteSource.getParser();
+        assertNotNull(securityParser);
+
+        assertThat(securityParser, instanceOf(IEXParser.class));
+
+        ((IEXParser)securityParser).setUseSandbox();
+        securityParser.setTokenSupplier(() -> System.getenv(TEST_TOKEN));
+
+        final Set<SecurityHistoryEvent> historicalEvents = securityParser.retrieveHistoricalEvents(spy,
+                LocalDate.of(2015, Month.JANUARY, 1));
+
+        assertNotNull(historicalEvents);
+        assertEquals(1, historicalEvents.size());
+    }
 }
