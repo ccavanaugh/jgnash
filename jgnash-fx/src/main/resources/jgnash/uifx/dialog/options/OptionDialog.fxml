@@ -44,6 +44,9 @@
         <Tab text="%Tab.Network">
             <fx:include source="NetworkTab.fxml"/>
         </Tab>
+        <Tab text="%Tab.DataProviders">
+            <fx:include source="DataProviderTab.fxml"/>
+        </Tab>
     </TabPane>
 
     <ButtonBar GridPane.rowIndex="1">

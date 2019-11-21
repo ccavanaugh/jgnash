@@ -56,6 +56,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
  */
 public class IEXParser implements SecurityParser {
 
+    public static final String IEX_SECRET_KEY = "IEXSecretKey";
+
     private static final String BASE_URL = "https://cloud.iexapis.com/v1";
     private static final String SANDBOX_URL = "https://sandbox.iexapis.com/stable";
     private static final int READ_AHEAD_LIMIT = 512;

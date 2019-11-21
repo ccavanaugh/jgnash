@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import jgnash.uifx.control.TextFieldEx?>
+
+<VBox fx:controller="jgnash.uifx.dialog.options.DataProviderTabController" minHeight="-Infinity"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="dialog, form">
+
+    <TitledPane text="%Title.IEXCloud" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <Label text="%Label.IEXCloudSecretKey" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextFieldEx fx:id="iexPrivateKeyTextField" onAction="#handleIexCloudKey" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Hyperlink text = "%Label.IEXCloudAttribution"  onAction="#handleHyperLink" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+        </GridPane>
+    </TitledPane>
+</VBox>
