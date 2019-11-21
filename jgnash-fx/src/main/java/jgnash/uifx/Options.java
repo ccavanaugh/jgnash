@@ -38,6 +38,7 @@ import jgnash.uifx.control.TimePeriodComboBox;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("SameParameterValue")
 public class Options {
 
     private static final Preferences p = Preferences.userNodeForPackage(Options.class);
