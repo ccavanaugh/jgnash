@@ -41,6 +41,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
 import jgnash.net.security.SecurityParser;
 import jgnash.time.DateUtils;
+import jgnash.util.LogUtil;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -63,7 +64,6 @@ public class IEXParser implements SecurityParser {
     private static final int READ_AHEAD_LIMIT = 512;
 
     private enum IEXChartPeriod {
-        OneDay("1d", 5),
         FiveDay("5d", 5),
         OneMonth("1m", 30),
         ThreeMonth("3m", 30 * 3),
@@ -130,7 +130,7 @@ public class IEXParser implements SecurityParser {
     public List<SecurityHistoryNode> retrieveHistoricalPrice(final SecurityNode securityNode, final LocalDate startDate,
                                                              final LocalDate endDate) throws IOException {
 
-        final String range = IEXChartPeriod.getPath((int) DAYS.between(endDate, LocalDate.now()));
+        final String range = IEXChartPeriod.getPath((int) DAYS.between(startDate, LocalDate.now()));
 
         final String restURL = baseURL + "/stock/" + securityNode.getSymbol() + "/chart/" + range +
                 "?token=" + tokenSupplier.get() + "&format=csv";
@@ -171,6 +171,8 @@ public class IEXParser implements SecurityParser {
                             historyNodes.add(historyNode);
                         }
                     }
+                } catch (final IllegalArgumentException iae) {
+                    LogUtil.logSevere(IEXParser.class, iae);
                 }
             }
         }
@@ -243,6 +245,9 @@ public class IEXParser implements SecurityParser {
                         }
                     }
                 }
+                catch (final IllegalArgumentException iae) {
+                    LogUtil.logSevere(IEXParser.class, iae);
+                }
             }
         }
 
@@ -293,6 +298,9 @@ public class IEXParser implements SecurityParser {
                             historyEvents.add(event);
                         }
                     }
+                }
+                catch (final IllegalArgumentException iae) {
+                    LogUtil.logSevere(IEXParser.class, iae);
                 }
             }
         }
