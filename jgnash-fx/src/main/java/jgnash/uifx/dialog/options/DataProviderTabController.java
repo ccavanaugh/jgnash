@@ -75,12 +75,13 @@ public class DataProviderTabController {
     @FXML
     private void handleHyperLink() {
         if (Desktop.isDesktopSupported()) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://iexcloud.io"));
-            } catch (IOException | URISyntaxException ioe) {
-                LogUtil.logSevere(DataProviderTabController.class, ioe);
-            }
+            new Thread(() -> {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://iexcloud.io"));
+                } catch (IOException | URISyntaxException ioe) {
+                    LogUtil.logSevere(DataProviderTabController.class, ioe);
+                }
+            }).start();
         }
-
     }
 }
