@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +47,7 @@ import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.net.security.iex.IEXParser;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
@@ -184,6 +186,8 @@ public class UpdateFactory {
         SecurityParser securityParser = quoteSource.getParser();
         Objects.requireNonNull(securityParser);
 
+        securityParser.setTokenSupplier(getTokenSupplier(securityParser));
+
         try {
             newSecurityNodes = securityParser.retrieveHistoricalPrice(securityNode,
                     startDate, endDate);
@@ -226,6 +230,8 @@ public class UpdateFactory {
                     try {
                         final SecurityParser securityParser = quoteSource.getParser();
                         Objects.requireNonNull(securityParser);
+
+                        securityParser.setTokenSupplier(getTokenSupplier(securityParser));
 
                         final List<SecurityHistoryNode> nodes = securityParser.retrieveHistoricalPrice(securityNode,
                                 LocalDate.now().minusDays(1), LocalDate.now());
@@ -275,6 +281,8 @@ public class UpdateFactory {
                     final SecurityParser securityParser = quoteSource.getParser();
                     Objects.requireNonNull(securityParser);
 
+                    securityParser.setTokenSupplier(getTokenSupplier(securityParser));
+
                     for (final SecurityHistoryEvent securityHistoryEvent : securityParser.retrieveHistoricalEvents(securityNode, LocalDate.now())) {
                         if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
                             if (securityHistoryEvent.getDate().isAfter(oldest) || securityHistoryEvent.getDate().isEqual(oldest)) {
@@ -296,6 +304,23 @@ public class UpdateFactory {
 
             return result;
         }
+    }
+
+    /**
+     * Returns a token Supplier
+     * @param parser parser we need a token supplier for
+     * @return Supplier
+     */
+    private static Supplier<String> getTokenSupplier(final SecurityParser parser) {
+        if (parser instanceof IEXParser) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            if (engine != null) {
+                return () -> engine.getPreference(IEXParser.IEX_SECRET_KEY);
+            }
+        }
+
+        return () -> "";
     }
 
     private UpdateFactory() {
