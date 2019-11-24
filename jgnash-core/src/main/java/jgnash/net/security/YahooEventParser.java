@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +41,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.MathConstants;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryEventType;
 import jgnash.engine.SecurityHistoryNode;
@@ -58,7 +58,7 @@ import static jgnash.util.EncodeDecode.COMMA_DELIMITER_PATTERN;
  *
  * @author Craig Cavanaugh
  */
-public class YahooEventParser implements SecurityParser{
+public class YahooEventParser implements SecurityParser {
 
     private static final String DIV_RESPONSE_HEADER = "Date,Dividends";
 
@@ -132,7 +132,7 @@ public class YahooEventParser implements SecurityParser{
 
     @Override
     public List<SecurityHistoryNode> retrieveHistoricalPrice(@NotNull final SecurityNode securityNode,
-                                                                    final LocalDate startDate, final LocalDate endDate) throws IOException {
+                                                             final LocalDate startDate, final LocalDate endDate) throws IOException {
 
         /*
          Date,Open,High,Low,Close,Adj Close,Volume
@@ -191,7 +191,7 @@ public class YahooEventParser implements SecurityParser{
                             final String[] fraction = fields[1].split("/");
 
                             final BigDecimal value = new BigDecimal(fraction[0])
-                                    .divide(new BigDecimal(fraction[1]), MathContext.DECIMAL32);
+                                                             .divide(new BigDecimal(fraction[1]), MathConstants.mathContext);
 
                             return new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, parseYahooDate(fields[0]),
                                     value);
@@ -230,7 +230,7 @@ public class YahooEventParser implements SecurityParser{
                 // required by Yahoo
                 connection.setRequestProperty("Cookie", YahooCrumbManager.getCookie());
 
-                int responseCode = ((HttpURLConnection)connection).getResponseCode();
+                int responseCode = ((HttpURLConnection) connection).getResponseCode();
 
                 if (responseCode == 401) {
                     YahooCrumbManager.clearAuthorization();
