@@ -50,11 +50,11 @@ import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.security.UpdateFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.time.DateUtils;
 import jgnash.uifx.control.CheckListView;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Historical import controller.
@@ -172,14 +172,21 @@ public class HistoricalImportController {
                 for (final SecurityNode securityNode : securityNodes) {
                     updateMessage(ResourceUtils.getString("Message.DownloadingX", securityNode.getSymbol()));
 
-                    final List<SecurityHistoryNode> historyNodes =
-                            UpdateFactory.downloadHistory(securityNode, startDate, endDate);
+                    try {
+                        final List<SecurityHistoryNode> historyNodes =
+                                UpdateFactory.downloadHistory(securityNode, startDate, endDate);
 
-                    Collections.reverse(historyNodes);  // reverse the sort order
+                        Collections.reverse(historyNodes);  // reverse the sort order
 
-                    historyCount += historyNodes.size();
+                        historyCount += historyNodes.size();
 
-                    historyMap.put(securityNode, historyNodes);
+                        historyMap.put(securityNode, historyNodes);
+                    } catch (final IllegalArgumentException iae) {
+                        updateMessage(ResourceUtils.getString("Message.Error.DataSupplierToken",
+                                securityNode.getSymbol()));
+
+                        this.cancel();
+                    }
                 }
 
                 // need to track the total processed count

@@ -40,6 +40,7 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
 import jgnash.net.security.SecurityParser;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.time.DateUtils;
 import jgnash.util.LogUtil;
 
@@ -128,12 +129,18 @@ public class IEXParser implements SecurityParser {
      */
     @Override
     public List<SecurityHistoryNode> retrieveHistoricalPrice(final SecurityNode securityNode, final LocalDate startDate,
-                                                             final LocalDate endDate) throws IOException {
+                                                             final LocalDate endDate) throws IOException, IllegalArgumentException {
+        final String token = tokenSupplier.get();
+
+        if (StringUtils.isBlank(token)) {
+            throw new IllegalArgumentException(ResourceUtils.getString("Message.Error.DataSupplierToken",
+                    securityNode.getSymbol()));
+        }
 
         final String range = IEXChartPeriod.getPath((int) DAYS.between(startDate, LocalDate.now()));
 
         final String restURL = baseURL + "/stock/" + securityNode.getSymbol() + "/chart/" + range +
-                "?token=" + tokenSupplier.get() + "&format=csv";
+                "?token=" + token + "&format=csv";
 
         final List<SecurityHistoryNode> historyNodes = new ArrayList<>();
 
@@ -190,7 +197,14 @@ public class IEXParser implements SecurityParser {
      */
     @Override
     public Set<SecurityHistoryEvent> retrieveHistoricalEvents(final SecurityNode securityNode,
-                                                              final LocalDate endDate) throws IOException {
+                                                              final LocalDate endDate) throws IOException, IllegalArgumentException {
+
+        final String token = tokenSupplier.get();
+
+        if (StringUtils.isBlank(token)) {
+            throw new IllegalArgumentException(ResourceUtils.getString("Message.Error.DataSupplierToken",
+                    securityNode.getSymbol()));
+        }
 
         final Set<SecurityHistoryEvent> historyEvents = new HashSet<>();
 

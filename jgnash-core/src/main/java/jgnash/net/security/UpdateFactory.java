@@ -176,9 +176,9 @@ public class UpdateFactory {
     }
 
     public static List<SecurityHistoryNode> downloadHistory(final SecurityNode securityNode, final LocalDate startDate,
-                                                            final LocalDate endDate) {
+                                                            final LocalDate endDate) throws IllegalArgumentException {
 
-        List<SecurityHistoryNode> newSecurityNodes;
+        List<SecurityHistoryNode> newSecurityNodes = Collections.emptyList();
 
         QuoteSource quoteSource = securityNode.getQuoteSource();
         Objects.requireNonNull(quoteSource);
@@ -197,8 +197,10 @@ public class UpdateFactory {
             }
 
         } catch (final IOException ex) {
-            newSecurityNodes = Collections.emptyList();
             LogUtil.logSevere(UpdateFactory.class, ex);
+        } catch (final IllegalArgumentException iae) {
+            LogUtil.logSevere(UpdateFactory.class, iae);
+            throw new IllegalArgumentException(iae);
         }
 
         return newSecurityNodes;
@@ -243,7 +245,7 @@ public class UpdateFactory {
                                 }
                             }
                         }
-                    } catch (final IOException ex) {
+                    } catch (final IOException | IllegalArgumentException ex) {
                         result = false;
                         LogUtil.logSevere(UpdateFactory.class, ex);
                     }
@@ -296,7 +298,7 @@ public class UpdateFactory {
                             }
                         }
                     }
-                } catch (final IOException ex) {
+                } catch (final IOException | IllegalArgumentException ex) {
                     result = false;
                     LogUtil.logSevere(UpdateFactory.class, ex);
                 }
