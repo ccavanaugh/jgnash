@@ -16,21 +16,21 @@ allprojects {
         junitExtensionsVersion = "2.3.0"    // https://github.com/glytching/junit-extensions
         awaitilityVersion = "4.0.1"         // https://github.com/awaitility/awaitility
 
-        picocliVersion = "4.0.4"            // https://github.com/remkop/picocli
+        picocliVersion = "4.1.1"            // https://github.com/remkop/picocli
 
         apachePoiVersion = "4.1.1"          // https://poi.apache.org/
         commonsCsvVersion = "1.7"           // https://commons.apache.org/proper/commons-csv/
         commonsCollectionsVersion = "4.4"   // https://commons.apache.org/proper/commons-collections/
         commonsTextVersion = "1.8"          // https://commons.apache.org/proper/commons-text/
         commonsLangVersion = "3.9"          // https://commons.apache.org/proper/commons-lang/
-        commonsMathVersion = "3.6.1"          // https://commons.apache.org/proper/commons-lang/
+        commonsMathVersion = "3.6.1"        // https://commons.apache.org/proper/commons-math/
 
         h2Version = "1.4.200"               // http://www.h2database.com/html/main.html
         hsqldbVersion = "2.4.1"             // http://hsqldb.org/
 
         xstreamVersion = "1.4.11.1"         // https://github.com/x-stream/xstream
 
-        hibernateVersion = "5.4.8.Final"    // http://hibernate.org/orm/
+        hibernateVersion = "5.4.9.Final"    // http://hibernate.org/orm/
         hikariVersion = "3.4.1"             // https://github.com/brettwooldridge/HikariCP
 
         pdfBoxVersion = "2.0.17"            // https://pdfbox.apache.org/

@@ -22,19 +22,18 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.4.0
+* 10/28/2019 Updated to the latest Picocli and Hibernate dependencies.
 * 11/27/2019 Added support for IEXCloud as a data provider for Securities history.
 * 11/16/2019 Switched to a public API introduced in JavaFX 9 to prevent table column reordering in the Budget View.
-* 11/04/2019 Updated to the latest Hibernate dependency.
 * 11/04/2019 Errors and warnings from a failed QIF import were not being displayed.
 * 11/03/2019 Mt940 import now correctly handles files not encoded using ISO_8859_1.
 * 11/03/2019 QIF import now correctly handles files not encoded using UTF8.
 * 10/27/2019 Improve behavior of the Report dialog when manually changing the scale.  The auto fit size toggles will be
              cleared automatically.
-* 10/27/2019 Updated to the latest JavaFX, POI, Hibernate and Netty dependencies.
+
 * 10/24/2019 Internal cleanup to improve handling of Client/Server network failures.
 * 10/23/2019 Fixed a regression that prevented caching of hash codes.
 * 10/19/2019 Updated to the latest H2 dependency.
-* 10/05/2019 Update to the latest Hibernate and Netty dependencies.
 * 10/01/2019 The majority of the build system was migrated to the Kotlin DSL.
 
 == Release 3.3.0
