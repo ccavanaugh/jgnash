@@ -45,7 +45,8 @@ distZip.dependsOn(createExe)
 
 distributions {
     main {
-        baseName = "jGnash"
+        distributionBaseName = "jGnash"
+
         contents {
             from { "../jgnash-manual/src/Manual.pdf" }
             from { "../changelog.adoc" }

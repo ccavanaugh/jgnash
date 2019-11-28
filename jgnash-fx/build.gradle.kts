@@ -99,7 +99,7 @@ tasks.distZip {
 
 distributions {
     main {
-        baseName = "jGnash"
+        distributionBaseName.set("jGnash")
 
         contents {
             exclude("**/*-linux*")  // excludes linux specific JavaFx modules from cross platform zip
