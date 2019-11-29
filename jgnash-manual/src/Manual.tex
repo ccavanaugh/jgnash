@@ -103,7 +103,7 @@ morestring=[b]"
 
 \pagenumbering{roman}
 
-\title{\textbf{jGnash 3.2.x Manual} }
+\title{\textbf{jGnash 3.4.x Manual} }
 \author{Craig Cavanaugh}
 \date{\today}
 
@@ -117,7 +117,7 @@ morestring=[b]"
         \hspace{0.08\textwidth} % White space between the vertical line and title page text
         \parbox[b]{0.75\textwidth}{ % Paragraph box for holding the title page text, adjust the width to move the title page left or right on the page
 
-        {\Huge\bfseries jGnash 3.2.x Manual}\\[2\baselineskip] % Title
+        {\Huge\bfseries jGnash 3.4.x Manual}\\[2\baselineskip] % Title
         {\Large\textsc{craig cavanaugh}}
 
         \vspace{0.5\textheight} % White space between the title block and the publisher
@@ -221,7 +221,9 @@ morestring=[b]"
     jGnash is not currently distributed with an automatic installation tool.
     You will be required to perform a couple of manual operations that are easily performed for those with a basic
     understanding of how to use a zip file.
-    Also, Java\texttrademark~11 or newer must be installed on your computer.
+    
+    Java\texttrademark~11 or newer must be installed on your computer. jGnash has been tested with Java\texttrademark~12
+    and Java\texttrademark~13 if you have a need for a newer release.
 
     \textit{\textbf{Use of an OpenJDK package is recommended over use of Oracle JDK due to licensing requirements}}
 
@@ -1312,24 +1314,28 @@ morestring=[b]"
 
     \chapter{Securities}
     \label{ch:securities}
-    Securities management is required when entering Investment Transactions within jGnash.  
-    
-    Securities are typically traded through a financial institution with fluctuating prices and 
-    depending, fees may be charged to conduct trades.
-        
-    At a minimum, a Security is assigned a unique Symbol, a base currency and a Scale \textit{(the number of decimal places 
+    Securities must be managed when entering Investment Transactions within jGnash.  
+                    
+    At a minimum, a Security is assigned a unique Symbol, a Reported Currency and a Scale \textit{(the number of decimal places 
     for entering and reporting prices)}.  
 
-    Tracking of prices and historical information is optional and not required to enter
-    investment transactions.  However, price data will be used for updating the current \textbf{Market Balance} of an account.
+    Tracking of prices and historical information for the Security is optional and not required to enter
+    investment transactions.  However, the reported \textbf{Market Balance} of an account will more accurate if prices are entered.
+    
+    The same Security may be used for multiple accounts.
+    
+    \tipbox{
+        The term Securities is used within jGnash generically for Stocks, Mutual Funds, Bonds and when trading commidities
+        such as gold and oil.
+    }
     
     
     \section{Create and Modify Securities}
     
-    Securities may be created or modified using \menu{Tools > Securities > Create / Modify\ldots}.  All fields are
+    Securities may be created or modified using \menu{Tools > Securities > Create / Modify}.  All of the properties are
     accessible when modifying an existing Security.
     
-    To create a new Security, fill out the form and click the \keys{Apply} button to save.
+    To create a new Security, simply fill out the form with the required properties and click the \keys{Apply} button to save.
     
     You can modify an existing Security by selecting it in the list to the left and click 
     the \keys{Apply} button to save the changes.
@@ -1347,7 +1353,7 @@ morestring=[b]"
         A internationally unique identifier for a Security.  Some Quote Sources may require use of this field
         instead of using the Symbol.  At this time, it is not required. 
         \item[Quote Source \textit{(required)}]
-        The Quote Source is the online source chosen to download prices and events.  This is discussed later 
+        The Quote Source is the online data source chosen to download prices and events.  This is discussed later 
         in the chapter.
         \item[Description]
         A general description for the Security.  This value may be left empty.
@@ -1361,7 +1367,7 @@ morestring=[b]"
     
     \subsection{Quote Sources}
        
-    jGnash currently supports use of Yahoo and IEX Cloud as online data providers.
+    jGnash currently supports use of Yahoo and IEX Cloud as online data providers.  
     
     \subsubsection{None}
     The default quote source is \textbf{None}.  If used, all pricing, stock splits and dividends will
@@ -1372,14 +1378,15 @@ morestring=[b]"
     subscription depending on the amount of data being consumed. 
     
     An account can be created at \href{https://iexcloud.io/}{IEX Cloud} \texttt{[https://iexcloud.io/]}.
-    After creating your account, the \textit{Secret Key} must be entered into the Data Providers Options Tab
-    as shown below.  
+    After creating your account, the \textit{Secret Key} provided by IEX Cloud must be entered into the 
+    Data Providers Options Tab as shown in Figure \ref{fig:dataproviders}.  
     
     The \textit{Secret Key} is stored within your jGnash file.  If the key is not entered,
     jGnash will report an error when attempting to download information.
     
     \begin{figure}[h]
         \caption{Data Providers}
+        \label{fig:dataproviders}
         \includegraphics[width=0.6\linewidth]{images/dataProvidersTab}
     \end{figure}
     
@@ -1391,7 +1398,7 @@ morestring=[b]"
     
     \subsection{Security Price History}
     
-    Securities history is managed using \menu{Tools > Securities > History\ldots}.
+    Securities history is managed using \menu{Tools > Securities > History}.
     
     The \textbf{Security} of interest is selected at the top of the form.
     A chart is displayed using on the historical closing price.  
@@ -1408,7 +1415,7 @@ morestring=[b]"
         
     The closing price as well as the daily high, low and trade volume can be filled in and added by clicking
     on the \keys{Add} button.  The \keys{Clear} button will reset the entry form.  Selecting a date in the list
-    and clicking the the \keys{Delete} button will permanently remove the entry.
+    and clicking the \keys{Delete} button will permanently remove the entry.
     
     At the bottom of the \textbf{Price History Panel} are some convenience buttons to help pare down the amount of data
     that can accumulate over time.  
@@ -1435,15 +1442,15 @@ morestring=[b]"
     
     \tipbox{
         When entering splits, the value is typicaly greater than 1.  For example, a 2:1 split is recorded as 2.0.
-        However, if a 1:2 split occurs (known as a reverse split), a value of 0.5 would be entered.
+        However, if a 1:2 split or similar occurs (known as a reverse split), a value of 0.5 would be entered.
     }
         
            
     \subsection{Security Price Historical Download}
     
-    Historical price information for Securities may be downloaded using \menu{Tools > Securities > Historical Import\ldots}.
+    Historical price information for Securities may be downloaded using \menu{Tools > Securities > Historical Import}.
     
-    Shown below, you need to specify the start and end dates as well as check the boxes of the Securities you
+    Shown below Figure \ref{fig:historicalImport}, you need to specify the start and end dates as well as check the boxes of the Securities you
     want to download the historical information for.
     
     Click the \keys{Start} button at the bottom of the form.  The download and import process can take awhile 
@@ -1454,9 +1461,11 @@ morestring=[b]"
     
     \begin{figure}[h]
         \caption{Historical Import}
-        \includegraphics[width=1.0\linewidth]{images/securityHistoryImport}
+        \label{fig:historicalImport}
+        \includegraphics[width=0.6\linewidth]{images/securityHistoryImport}
     \end{figure}
-          
+       
+    \newpage   
     \subsection{Price Lookup and Reporting}
     \label{sec:pricelookup}
            

@@ -22,6 +22,7 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.4.0
+* 11/29/2019 Added a Securities chapter to the Manual.
 * 11/29/2019 Prevent a NPE when changing the Symbol of a Security shortly after viewing it's chart.
 * 11/28/2019 Updated to the latest Picocli and Hibernate dependencies.
 * 11/27/2019 Added support for IEXCloud as a data provider for Securities history.
