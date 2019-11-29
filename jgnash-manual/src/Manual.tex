@@ -17,6 +17,7 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{enumitem}
+\usepackage{needspace}
 \usepackage{xcolor}
 \usepackage{textcomp}
 \usepackage{tocloft}
@@ -665,8 +666,10 @@ morestring=[b]"
     Income accounts are used to record income such as salary, dividends, investment income, etc.
 
     \subsection{Investment}
+    \label{sub:investaccount}
     Investment accounts are used to buy and sell Securities.
     Investment accounts can be used to track 401k, IRA's, etc.
+    Please see \hyperref[ch:securities]{Securities} for details specific to setting up Securities.       
 
     \begin{itemize}
         \item Investment Accounts have a cash balance if you buy or sell transactions against the account.
@@ -686,10 +689,12 @@ morestring=[b]"
     \subsection{Money Market}
     Money Market accounts are typically a high interest yield account with withdrawal rules or limitations.
     They are generally used for long term savings accounts with the intent of keeping your cash readily accessible.
+    Please see \hyperref[ch:securities]{Securities} for details specific to setting up Securities.
 
     \subsection{Mutual Fund}
     Mutual fund accounts are a specialized version of an Investment account and generally used to track mutual fund type
     investments.
+    Please see \hyperref[ch:securities]{Securities} for details specific to setting up Securities.
 
     \subsection{Simple Investment}
     Simple investment accounts are for investments where you do not actively manage or are able to track purchases and
@@ -871,6 +876,8 @@ morestring=[b]"
         \item Cash balances should be transfers from the "Opening Balance" Equity account.
         \item Dividends, sells, etc.\ should occur after opening securities and cash balances are established.
     \end{itemize}
+
+    Please see the \hyperref[ch:securities]{Securities} chapter for details specific to setting up Securities.
 
     \chapter{Reminders}
     If you find yourself recreating the same transaction on a regular basis, Reminders can be created to automate the process.
@@ -1303,8 +1310,169 @@ morestring=[b]"
     This makes it easy to restart the process with transaction you have already marked as reconcilable identified.
     You will still need to re-select those transactions when you restart the process.
 
-    \chapter{Importing Transactions}
+    \chapter{Securities}
+    \label{ch:securities}
+    Securities management is required when entering Investment Transactions within jGnash.  
+    
+    Securities are typically traded through a financial institution with fluctuating prices and 
+    depending, fees may be charged to conduct trades.
+        
+    At a minimum, a Security is assigned a unique Symbol, a base currency and a Scale \textit{(the number of decimal places 
+    for entering and reporting prices)}.  
 
+    Tracking of prices and historical information is optional and not required to enter
+    investment transactions.  However, price data will be used for updating the current \textbf{Market Balance} of an account.
+    
+    
+    \section{Create and Modify Securities}
+    
+    Securities may be created or modified using \menu{Tools > Securities > Create / Modify\ldots}.  All fields are
+    accessible when modifying an existing Security.
+    
+    To create a new Security, fill out the form and click the \keys{Apply} button to save.
+    
+    You can modify an existing Security by selecting it in the list to the left and click 
+    the \keys{Apply} button to save the changes.
+    
+    \begin{figure}[h]
+        \caption{Create / Modify Securities}
+        \includegraphics[width=0.6\linewidth]{images/createModifySecurities}
+    \end{figure}
+
+    \begin{description}[style=nextline]
+        \item[Symbol \textit{(required)}]
+        The Symbol is typically the Ticker symbol assigned to the Security.  Depending on the Quote Source used,
+        the Symbol my be appended with a market or region code. This value may be left empty.
+        \item[CUSIP / ISIN]
+        A internationally unique identifier for a Security.  Some Quote Sources may require use of this field
+        instead of using the Symbol.  At this time, it is not required. 
+        \item[Quote Source \textit{(required)}]
+        The Quote Source is the online source chosen to download prices and events.  This is discussed later 
+        in the chapter.
+        \item[Description]
+        A general description for the Security.  This value may be left empty.
+        \item[Scale \textit{(required)}]
+        This is the number of decimal places used for entry of security prices.  Mutual funds will typically
+        be traded at fractional prices.  This allows you to override the number of decimal places used by the
+        Reported Currency.
+        \item[Reported Currency \textit{(required)}]
+        Sometimes called the Base Currency, this is the currency the Security is being traded with.        
+    \end{description}        
+    
+    \subsection{Quote Sources}
+       
+    jGnash currently supports use of Yahoo and IEX Cloud as online data providers.
+    
+    \subsubsection{None}
+    The default quote source is \textbf{None}.  If used, all pricing, stock splits and dividends will
+    need to be entered manually.
+    
+    \subsubsection{IEX Cloud}
+    Using IEX Cloud as a Data Provider requires opening an account which may be free for use or a paid
+    subscription depending on the amount of data being consumed. 
+    
+    An account can be created at \href{https://iexcloud.io/}{IEX Cloud} \texttt{[https://iexcloud.io/]}.
+    After creating your account, the \textit{Secret Key} must be entered into the Data Providers Options Tab
+    as shown below.  
+    
+    The \textit{Secret Key} is stored within your jGnash file.  If the key is not entered,
+    jGnash will report an error when attempting to download information.
+    
+    \begin{figure}[h]
+        \caption{Data Providers}
+        \includegraphics[width=0.6\linewidth]{images/dataProvidersTab}
+    \end{figure}
+    
+    \subsubsection{Yahoo}
+    Prices and historical events are downloaded from \href{https://finance.yahoo.com/}{Yahoo Finance} \texttt{[https://finance.yahoo.com/]}.
+    Usage is subject to the conditions and terms of the Yahoo website.
+    
+    Yahoo does not make all Securities available, and it is not uncommon to experience periods of inaccessibility.
+    
+    \subsection{Security Price History}
+    
+    Securities history is managed using \menu{Tools > Securities > History\ldots}.
+    
+    The \textbf{Security} of interest is selected at the top of the form.
+    A chart is displayed using on the historical closing price.  
+    As shown in Figure \ref{fig:securitieshistorydialog}, periods divided by a stock split 
+    are shown using a different color.
+    
+     \begin{figure}[h]                          
+        \caption{Modify Securities History}                  
+        \label{fig:securitieshistorydialog}   
+        \includegraphics[width=1.0\linewidth]{images/modifySecurityHistory}
+    \end{figure}
+    
+    \subsubsection{Price History Panel}
+        
+    The closing price as well as the daily high, low and trade volume can be filled in and added by clicking
+    on the \keys{Add} button.  The \keys{Clear} button will reset the entry form.  Selecting a date in the list
+    and clicking the the \keys{Delete} button will permanently remove the entry.
+    
+    At the bottom of the \textbf{Price History Panel} are some convenience buttons to help pare down the amount of data
+    that can accumulate over time.  
+    
+    Thinning out the data can significantly reduce the size of your file and improve application performance.
+    
+    Please see \hyperref[sec:pricelookup]{Price Lookup and Reporting} Section for specifics of how jGnash uses
+    the Price History for reporting and estimating Investment Account balances.
+    
+    \subsubsection{Event History Panel}
+    
+    Similar to the \textbf{Price History Panel}, Dividends and Splits may be entered.
+    
+    Dividends can be added for informational purposes but are not required.
+    
+    Split entries help to correctly manage the visual trend of the chart.  They are not used or required
+    to correctly calculate the value of your Investment Account.
+    
+    \warningbox{
+       When Splits or Diviends do occur, it's important
+       to remember to create a Split Transaction within the Investment Account register.  
+       Splits and Dividend chart events do not automatically register has transaction events.
+    }
+    
+    \tipbox{
+        When entering splits, the value is typicaly greater than 1.  For example, a 2:1 split is recorded as 2.0.
+        However, if a 1:2 split occurs (known as a reverse split), a value of 0.5 would be entered.
+    }
+        
+           
+    \subsection{Security Price Historical Download}
+    
+    Historical price information for Securities may be downloaded using \menu{Tools > Securities > Historical Import\ldots}.
+    
+    Shown below, you need to specify the start and end dates as well as check the boxes of the Securities you
+    want to download the historical information for.
+    
+    Click the \keys{Start} button at the bottom of the form.  The download and import process can take awhile 
+    depending on the file type you are using.  
+    
+    If desired, you can click the \keys{Stop} button to interrupt the process.  Interrupting the process will not
+    undo what has already been downloaded and imported prior to stopping.
+    
+    \begin{figure}[h]
+        \caption{Historical Import}
+        \includegraphics[width=1.0\linewidth]{images/securityHistoryImport}
+    \end{figure}
+          
+    \subsection{Price Lookup and Reporting}
+    \label{sec:pricelookup}
+           
+    When reporting balances for \hyperref[sub:investaccount]{Investment Accounts}, jGnash will perform a search
+    for the most recent or closet price.
+        
+    \begin{itemize}
+        \item If an Investment Transaction occurs on the same day as a price record, the Transaction price will be used.
+        \item For reporting periods such as Months or Quarters, the closest or exact match to the end of the period is used.
+        \item  In all cases, the latest price if it's a Transaction or a Historical record is used for the last period 
+        of a Report and as well as the reported \textbf{Market Value} of the account shown in the Register.      
+    \end{itemize}
+      
+    Deleting price records near the end of a reporting period can skew the reported interim values.
+
+    \chapter{Importing Transactions}
     Importing of OFX, QFX, MT940, and QIF transaction files is supported within jGnash.
     The files are downloaded manually from your financial institution and then imported.
     jGnash does not currently support an automatic download process.
