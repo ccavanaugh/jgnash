@@ -45,7 +45,7 @@
                           GridPane.hgrow="ALWAYS"/>
     </GridPane>
 
-    <StackPane fx:id="chartPane" GridPane.rowIndex="1" GridPane.columnSpan="2" minHeight="120"/>
+    <StackPane fx:id="chartPane" GridPane.rowIndex="1" GridPane.columnSpan="2" minHeight="140"/>
 
     <TitledPane text="%Title.PriceHistory" collapsible="false" GridPane.rowIndex="2" >
         <GridPane styleClass="form, dialog">
