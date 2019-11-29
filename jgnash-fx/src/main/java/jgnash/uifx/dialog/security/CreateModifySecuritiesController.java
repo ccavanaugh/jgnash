@@ -142,7 +142,7 @@ public class CreateModifySecuritiesController implements MessageListener {
         symbolTextField.setText("");
         cusipTextField.setText("");
         descriptionTextField.setText("");
-        quoteSourceComboBox.setValue(QuoteSource.YAHOO);
+        quoteSourceComboBox.setValue(QuoteSource.NONE);
         reportedCurrencyComboBox.setValue(engine.getDefaultCurrency());
 
         if (reportedCurrencyComboBox.getValue() != null) {  // null value is a miss configured file
