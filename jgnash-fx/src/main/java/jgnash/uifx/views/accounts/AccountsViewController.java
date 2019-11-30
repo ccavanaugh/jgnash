@@ -392,4 +392,9 @@ public class AccountsViewController implements MessageListener {
     private void handleReconcileAction() {
         RegisterActions.reconcileAccountAction(selectedAccount.get());
     }
+
+    @FXML
+    private void handleExport() {
+        StaticAccountsMethods.exportAccountTree();
+    }
 }

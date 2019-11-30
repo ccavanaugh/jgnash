@@ -33,6 +33,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.resource.util.ResourceUtils;
@@ -50,8 +53,53 @@ import org.apache.commons.csv.QuoteMode;
  * @author Craig Cavanaugh
  */
 public class CsvExport {
+    private static final char BYTE_ORDER_MARK = '\ufeff';
+
+    private static final String SPACE = " ";
+
+    private static final int INDENT = 4;
 
     private CsvExport() {
+    }
+
+    public static void exportAccountTree(@NotNull final Engine engine, @NotNull final Path path) {
+        Objects.requireNonNull(engine);
+        Objects.requireNonNull(path);
+
+        // force a correct file extension
+        final String fileName = FileUtils.stripFileExtension(path.toString()) + ".csv";
+
+        final CSVFormat csvFormat = CSVFormat.EXCEL.withQuoteMode(QuoteMode.ALL);
+
+        try (final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(Files.newOutputStream(Paths.get(fileName)),
+                StandardCharsets.UTF_8);
+             final CSVPrinter writer = new CSVPrinter(new BufferedWriter(outputStreamWriter), csvFormat)) {
+
+            outputStreamWriter.write(BYTE_ORDER_MARK); // write UTF-8 byte order mark to the file for easier imports
+
+            writer.printRecord(ResourceUtils.getString("Column.Account"), ResourceUtils.getString("Column.Code"),
+                    ResourceUtils.getString("Column.Entries"), ResourceUtils.getString("Column.Balance"),
+                    ResourceUtils.getString("Column.ReconciledBalance"), ResourceUtils.getString("Column.Currency"),
+                    ResourceUtils.getString("Column.Type"));
+
+            // Create a list sorted by depth and account code and then name if code is not specified
+            final List<Account> accountList = engine.getAccountList();
+            accountList.sort(Comparators.getAccountByTreePosition(Comparators.getAccountByCode()));
+
+            final CurrencyNode currencyNode = engine.getDefaultCurrency();
+            final LocalDate today = LocalDate.now();
+
+            for (final Account account : accountList) {
+                final String indentedName = SPACE.repeat(account.getDepth() * INDENT) + account.getName();
+                final String balance = account.getTreeBalance(today, currencyNode).toPlainString();
+                final String reconcileBalance = account.getReconciledTreeBalance().toPlainString();
+
+                writer.printRecord(indentedName, String.valueOf(account.getAccountCode()), String.valueOf(account.getTransactionCount()),
+                        balance, reconcileBalance, account.getCurrencyNode().getSymbol(), account.getAccountType().toString());
+            }
+        } catch (final IOException e) {
+            Logger.getLogger(CsvExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 
     public static void exportAccount(@NotNull final Account account, @NotNull final LocalDate startDate,
@@ -70,7 +118,7 @@ public class CsvExport {
                 StandardCharsets.UTF_8);
              final CSVPrinter writer = new CSVPrinter(new BufferedWriter(outputStreamWriter), csvFormat)) {
 
-            outputStreamWriter.write('\ufeff'); // write UTF-8 byte order mark to the file for easier imports
+            outputStreamWriter.write(BYTE_ORDER_MARK); // write UTF-8 byte order mark to the file for easier imports
 
             writer.printRecord(ResourceUtils.getString("Column.Account"), ResourceUtils.getString("Column.Num"),
                     ResourceUtils.getString("Column.Debit"), ResourceUtils.getString("Column.Credit"),
@@ -91,15 +139,15 @@ public class CsvExport {
                 final String timeStamp = timestampFormatter.format(transaction.getTimestamp());
 
                 final String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) < 0 ? ""
-                        : transaction.getAmount(account).abs().toPlainString();
+                                              : transaction.getAmount(account).abs().toPlainString();
 
                 final String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) > 0 ? ""
-                        : transaction.getAmount(account).abs().toPlainString();
+                                             : transaction.getAmount(account).abs().toPlainString();
 
                 final String balance = account.getBalanceAt(transaction).toPlainString();
 
                 final String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED
-                        ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
+                                                  ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
                 writer.printRecord(account.getName(), transaction.getNumber(), debit, credit, balance, date, timeStamp,
                         transaction.getMemo(), transaction.getPayee(), reconciled);

@@ -17,15 +17,21 @@
  */
 package jgnash.uifx.views.accounts;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
+import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import jgnash.convert.exportantur.csv.CsvExport;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
@@ -37,6 +43,7 @@ import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
+import jgnash.util.FileUtils;
 import jgnash.util.Nullable;
 
 /**
@@ -45,6 +52,8 @@ import jgnash.util.Nullable;
  * @author Craig Cavanaugh
  */
 public final class StaticAccountsMethods {
+
+    private static final String EXPORT_DIR = "exportDir";
 
     private StaticAccountsMethods() {
         // Utility class
@@ -159,5 +168,57 @@ public final class StaticAccountsMethods {
         pair.getStage().showAndWait();
 
         return pair.getController().getSelectedAccount();
+    }
+
+    static void exportAccountTree() {
+        final ResourceBundle resources = ResourceUtils.getBundle();
+
+        final Preferences pref = Preferences.userNodeForPackage(StaticAccountsMethods.class);
+        final FileChooser fileChooser = new FileChooser();
+
+        final File initialDirectory = new File(pref.get(EXPORT_DIR, System.getProperty("user.home")));
+
+        // Protect against an IllegalArgumentException
+        if (initialDirectory.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(resources.getString("Label.CsvFiles") + " (*.csv)", "*.csv")
+                 /*new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls)",
+                         "*.xls"),
+                 new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xlsx)",
+                         "*.xlsx")*/
+        );
+
+        final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
+        final File exportFile;
+
+        if (file != null) {
+            if (!FileUtils.fileHasExtension(file.getName())) {  // fix up the file name if the user did not specify it
+                final String fileExtension = fileChooser.getSelectedExtensionFilter().getExtensions().get(0).substring(1);
+                exportFile = new File(FileUtils.stripFileExtension(file.getAbsolutePath()) + fileExtension);
+            } else {
+                exportFile = file;
+            }
+
+            pref.put(EXPORT_DIR, exportFile.getParentFile().getAbsolutePath());
+
+            final Task<Void> exportTask = new Task<>() {
+                @Override
+                protected Void call() {
+                    updateMessage(resources.getString("Message.PleaseWait"));
+                    updateProgress(-1, Long.MAX_VALUE);
+
+                    CsvExport.exportAccountTree(EngineFactory.getEngine(EngineFactory.DEFAULT), exportFile.toPath());
+                    return null;
+                }
+            };
+
+            new Thread(exportTask).start();
+
+            StaticUIMethods.displayTaskProgress(exportTask);
+        }
+
     }
 }
