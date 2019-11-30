@@ -204,7 +204,7 @@ public class PortfolioReport extends Report {
                 case 11:
                     return pd.getPercentPortfolio();
                 case 12:
-                    return "group";
+                    return AbstractReportTableModel.DEFAULT_GROUP;
                 default:
                     return "ERR";
             }
