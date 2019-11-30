@@ -36,8 +36,11 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.report.poi.Workbook;
+import jgnash.report.table.AbstractReportTableModel;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.report.pdf.AccountTreeReport;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
@@ -54,6 +57,8 @@ import jgnash.util.Nullable;
 public final class StaticAccountsMethods {
 
     private static final String EXPORT_DIR = "exportDir";
+
+    private static final String XLS = "xls";
 
     private StaticAccountsMethods() {
         // Utility class
@@ -184,11 +189,11 @@ public final class StaticAccountsMethods {
         }
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(resources.getString("Label.CsvFiles") + " (*.csv)", "*.csv")
-                 /*new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls)",
-                         "*.xls"),
-                 new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xlsx)",
-                         "*.xlsx")*/
+                new FileChooser.ExtensionFilter(resources.getString("Label.CsvFiles") + " (*.csv)", "*.csv"),
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls)",
+                        "*.xls"),
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xlsx)",
+                        "*.xlsx")
         );
 
         final File file = fileChooser.showSaveDialog(MainView.getPrimaryStage());
@@ -210,7 +215,19 @@ public final class StaticAccountsMethods {
                     updateMessage(resources.getString("Message.PleaseWait"));
                     updateProgress(-1, Long.MAX_VALUE);
 
-                    CsvExport.exportAccountTree(EngineFactory.getEngine(EngineFactory.DEFAULT), exportFile.toPath());
+                    if (FileUtils.getFileExtension(exportFile.getName()).contains(XLS)) {
+
+                        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                        Objects.requireNonNull(engine);
+
+                        final AbstractReportTableModel reportTableModel =
+                                new AccountTreeReport.AccountTreeModel(engine.getAccountList(), engine.getDefaultCurrency());
+
+                        Workbook.export(reportTableModel, exportFile);
+                    } else {
+                        CsvExport.exportAccountTree(EngineFactory.getEngine(EngineFactory.DEFAULT), exportFile.toPath());
+                    }
                     return null;
                 }
             };
