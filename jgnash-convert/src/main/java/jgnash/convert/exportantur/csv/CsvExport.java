@@ -90,7 +90,7 @@ public class CsvExport {
             final LocalDate today = LocalDate.now();
 
             for (final Account account : accountList) {
-                final String indentedName = SPACE.repeat(account.getDepth() * INDENT) + account.getName();
+                final String indentedName = SPACE.repeat((account.getDepth() - 1) * INDENT) + account.getName();
                 final String balance = account.getTreeBalance(today, currencyNode).toPlainString();
                 final String reconcileBalance = account.getReconciledTreeBalance().toPlainString();
 
