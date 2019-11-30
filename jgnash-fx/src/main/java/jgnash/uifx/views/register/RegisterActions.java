@@ -205,7 +205,7 @@ public final class RegisterActions {
 
                         Workbook.export(reportTableModel, exportFile);
                     } else {
-                        CsvExport.exportAccount(account, startDate, endDate, exportFile);
+                        CsvExport.exportAccount(account, startDate, endDate, exportFile.toPath());
                     }
                     return null;
                 }

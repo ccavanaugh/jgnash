@@ -18,12 +18,12 @@
 package jgnash.convert.exportantur.csv;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -52,14 +52,14 @@ public class CsvExport {
     private CsvExport() {
     }
 
-    public static void exportAccount(final Account account, final LocalDate startDate, final LocalDate endDate, final File file) {
+    public static void exportAccount(final Account account, final LocalDate startDate, final LocalDate endDate, final Path file) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(startDate);
         Objects.requireNonNull(endDate);
         Objects.requireNonNull(file);
 
         // force a correct file extension
-        final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
+        final String fileName = FileUtils.stripFileExtension(file.toString()) + ".csv";
 
         final CSVFormat csvFormat = CSVFormat.EXCEL.withQuoteMode(QuoteMode.ALL);
 
