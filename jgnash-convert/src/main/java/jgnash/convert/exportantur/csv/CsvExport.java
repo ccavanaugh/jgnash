@@ -35,8 +35,10 @@ import java.util.logging.Logger;
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.time.DateUtils;
 import jgnash.util.FileUtils;
+import jgnash.util.NotNull;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -52,14 +54,15 @@ public class CsvExport {
     private CsvExport() {
     }
 
-    public static void exportAccount(final Account account, final LocalDate startDate, final LocalDate endDate, final Path file) {
+    public static void exportAccount(@NotNull final Account account, @NotNull final LocalDate startDate,
+                                     @NotNull final LocalDate endDate, @NotNull final Path path) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(startDate);
         Objects.requireNonNull(endDate);
-        Objects.requireNonNull(file);
+        Objects.requireNonNull(path);
 
         // force a correct file extension
-        final String fileName = FileUtils.stripFileExtension(file.toString()) + ".csv";
+        final String fileName = FileUtils.stripFileExtension(path.toString()) + ".csv";
 
         final CSVFormat csvFormat = CSVFormat.EXCEL.withQuoteMode(QuoteMode.ALL);
 
@@ -69,8 +72,11 @@ public class CsvExport {
 
             outputStreamWriter.write('\ufeff'); // write UTF-8 byte order mark to the file for easier imports
 
-            writer.printRecord("Account", "Number", "Debit", "Credit", "Balance", "Date", "Timestamp",
-                    "Memo", "Payee", "Reconciled");
+            writer.printRecord(ResourceUtils.getString("Column.Account"), ResourceUtils.getString("Column.Num"),
+                    ResourceUtils.getString("Column.Debit"), ResourceUtils.getString("Column.Credit"),
+                    ResourceUtils.getString("Column.Balance"), ResourceUtils.getString("Column.Date"),
+                    ResourceUtils.getString("Column.Timestamp"), ResourceUtils.getString("Column.Memo"),
+                    ResourceUtils.getString("Column.Payee"), ResourceUtils.getString("Column.Clr"));
 
             // write the transactions
             final List<Transaction> transactions = account.getTransactions(startDate, endDate);
