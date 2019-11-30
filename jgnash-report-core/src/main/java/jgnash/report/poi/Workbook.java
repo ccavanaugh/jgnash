@@ -185,15 +185,21 @@ public class Workbook {
 
         int col = 0; // reusable col tracker
 
-        // Add group title
-        Row row = s.createRow(sheetRow);
-        Cell cell = row.createCell(col);
-        cell.setCellStyle(styleMap.get(Style.GROUP));
-        cell.setCellValue(createHelper.createRichTextString(group));
-        s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
-        row.setHeightInPoints(GROUP_HEIGHT + MARGIN);
+        Row row;
 
-        sheetRow++;
+        Cell cell;
+
+        // Add group title
+        if (!group.equals(AbstractReportTableModel.DEFAULT_GROUP) ) {
+            row = s.createRow(sheetRow);
+            cell = row.createCell(col);
+            cell.setCellStyle(styleMap.get(Style.GROUP));
+            cell.setCellValue(createHelper.createRichTextString(group));
+            s.addMergedRegion(new CellRangeAddress(sheetRow, sheetRow, 0, reportModel.getVisibleColumnCount() - 1));
+            row.setHeightInPoints(GROUP_HEIGHT + MARGIN);
+
+            sheetRow++;
+        }
 
         // Create headers
         row = s.createRow(sheetRow);
