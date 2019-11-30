@@ -46,7 +46,7 @@ public abstract class AbstractReportTableModel {
     /**
      * Default group for unassigned rows.
      */
-    static final String DEFAULT_GROUP = "_default_";
+    public static final String DEFAULT_GROUP = "_default_";
 
     public abstract CurrencyNode getCurrencyNode();
 
