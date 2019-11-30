@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.util.StringConverter;
@@ -32,7 +31,6 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
-import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
 
 /**
@@ -43,7 +41,6 @@ import jgnash.uifx.util.JavaFXUtils;
 public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
 
     private static final int TICK_MARKS = 14;
-    private static final int MARGIN = 12;
 
     private final SimpleObjectProperty<SecurityNode> securityNodeProperty = new SimpleObjectProperty<>();
 
@@ -55,10 +52,6 @@ public class SecurityNodeAreaChart extends AreaChart<Number, Number> {
         setCreateSymbols(false);
         setLegendVisible(false);
         animatedProperty().bind(Options.animationsEnabledProperty());
-
-        // add a little extra margin at the top and bottom
-        final double margin = MARGIN * ThemeManager.fontScaleProperty().doubleValue();
-        setPadding(new Insets(margin,0,margin,0));
 
         xAxis = (NumberAxis) getXAxis();
 

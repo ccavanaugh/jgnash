@@ -38,11 +38,13 @@
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
         <Label text="%Label.Security"/>
         <SecurityComboBox fx:id="securityComboBox" maxWidth="Infinity" GridPane.columnIndex="1"
                           GridPane.hgrow="ALWAYS"/>
+        <Separator GridPane.columnSpan="2" GridPane.rowIndex="1"/>
     </GridPane>
 
     <StackPane fx:id="chartPane" GridPane.rowIndex="1" GridPane.columnSpan="2" minHeight="140"/>
