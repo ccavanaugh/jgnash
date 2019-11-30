@@ -17,16 +17,6 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.recurring.DailyReminder;
-import jgnash.engine.recurring.Reminder;
-import jgnash.time.Period;
-import jgnash.util.FileUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -36,13 +26,35 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetGoal;
+import jgnash.engine.recurring.DailyReminder;
+import jgnash.engine.recurring.Reminder;
+import jgnash.time.Period;
+import jgnash.util.FileUtils;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Abstract base class for testing the Engine API.
@@ -167,6 +179,48 @@ public abstract class EngineTest {
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
         assertEquals(0, e.getReminders().size());
         assertEquals(0, e.getPendingReminders().size());
+    }
+
+    @Test
+    void testTags() {
+        final Account a = new Account(AccountType.BANK, e.getDefaultCurrency());
+        a.setName("Tag Test Account");
+
+        e.addAccount(e.getRootAccount(), a);
+
+        final List<String> tags = Arrays.asList("tag1", "tag2", "tag3");
+
+        final Transaction singleEntryTransaction = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(),
+                "tagTest", "tag test payee", "1001");
+
+        TransactionEntry entry = singleEntryTransaction.getTransactionEntries().get(0);
+
+        entry.setCustomTags(tags);
+
+        final UUID uuid = singleEntryTransaction.getUuid(); // get uuid for easy lookup
+
+        assertTrue(e.addTransaction(singleEntryTransaction));
+
+        Transaction transaction = e.getTransactionByUuid(uuid);
+        assertNotNull(transaction);
+
+        Collection<String> reTags = transaction.getTransactionEntries().get(0).getCustomTags();
+
+        assertTrue(CollectionUtils.isEqualCollection(tags, reTags));
+
+        // close and reopen to force check for persistence
+        closeEngine();
+
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
+
+        assertNotNull(e);
+
+        transaction = e.getTransactionByUuid(uuid);
+        assertNotNull(transaction);
+
+        reTags = transaction.getTransactionEntries().get(0).getCustomTags();
+
+        assertTrue(CollectionUtils.isEqualCollection(tags, reTags));
     }
 
     @Test
@@ -482,11 +536,7 @@ public abstract class EngineTest {
 
         assertNotNull(nodes);
 
-        if (!e.getTransactions().isEmpty()) {
-            assertFalse(nodes.isEmpty());
-        } else {
-            assertFalse(nodes.isEmpty());
-        }
+        assertFalse(nodes.isEmpty());
 
         System.out.println("Node count is " + nodes.size());
     }

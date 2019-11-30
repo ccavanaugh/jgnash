@@ -29,6 +29,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -51,8 +52,15 @@ import java.util.Objects;
 @SequenceGenerator(name = "sequence", allocationSize = 10)
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
 
-    /** Cache the hash code for the TransactionEntry*/
+    /**
+     * Cache the hash code for the TransactionEntry
+     */
     private transient int hash = 0;
+
+    /**
+     * Use a specialized delimiter that should not show up in normal text
+     */
+    private static final char TAG_DELIMITER = 0x25FC;
 
     @SuppressWarnings("unused")
     @Id
@@ -349,14 +357,12 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      *
      * @return custom tags or an empty collection if not set
      */
-    @SuppressWarnings("unused")
     public Collection<String> getCustomTags() {
-        return EncodeDecode.decodeStringCollection(customTags);
+        return EncodeDecode.decodeStringCollection(customTags, TAG_DELIMITER);
     }
 
-    @SuppressWarnings("unused")
     public void setCustomTags(final Collection<String> strings) {
-        customTags = EncodeDecode.encodeStringCollection(strings);
+        customTags = EncodeDecode.encodeStringCollection(strings, TAG_DELIMITER);
     }
 
     @Override
@@ -380,14 +386,14 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
         TransactionEntry that = (TransactionEntry) o;
         return Objects.equals(transactionTag, that.transactionTag) &&
-                Objects.equals(debitAccount, that.debitAccount) &&
-                Objects.equals(creditAccount, that.creditAccount) &&
-                Objects.equals(creditAmount, that.creditAmount) &&
-                Objects.equals(debitAmount, that.debitAmount) &&
-                Objects.equals(creditReconciled, that.creditReconciled) &&
-                Objects.equals(debitReconciled, that.debitReconciled) &&
-                Objects.equals(memo, that.memo) &&
-                Objects.equals(customTags, that.customTags);
+                       Objects.equals(debitAccount, that.debitAccount) &&
+                       Objects.equals(creditAccount, that.creditAccount) &&
+                       Objects.equals(creditAmount, that.creditAmount) &&
+                       Objects.equals(debitAmount, that.debitAmount) &&
+                       Objects.equals(creditReconciled, that.creditReconciled) &&
+                       Objects.equals(debitReconciled, that.debitReconciled) &&
+                       Objects.equals(memo, that.memo) &&
+                       Objects.equals(customTags, that.customTags);
     }
 
     @Override

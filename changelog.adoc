@@ -22,6 +22,7 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.4.0
+* 11/30/2019 Changed the internal delimiter for transaction tags to allow use of commas (currently not user accessible).
 * 11/29/2019 Added a Securities chapter to the Manual.
 * 11/29/2019 Prevent a NPE when changing the Symbol of a Security shortly after viewing it's chart.
 * 11/28/2019 Updated to the latest Picocli and Hibernate dependencies.
@@ -30,8 +31,8 @@
 * 11/04/2019 Errors and warnings from a failed QIF import were not being displayed.
 * 11/03/2019 Mt940 import now correctly handles files not encoded using ISO_8859_1.
 * 11/03/2019 QIF import now correctly handles files not encoded using UTF8.
-* 10/27/2019 Improve behavior of the Report dialog when manually changing the scale.  The auto fit size toggles will be
-             cleared automatically.
+* 10/27/2019 Improved the behavior of the Report dialog when manually changing the scale.  The auto fit size toggles
+             will be cleared automatically.
 * 10/24/2019 Internal cleanup to improve handling of Client/Server network failures.
 * 10/23/2019 Fixed a regression that prevented caching of hash codes.
 * 10/19/2019 Updated to the latest H2 dependency.
