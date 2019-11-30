@@ -1128,4 +1128,54 @@ public abstract class EngineTest {
 
         assertEquals((size + 2), numbers2.size());
     }
+
+    @Test
+    void testAccountDepthAndComparator() {
+        CurrencyNode defaultCurrency = e.getDefaultCurrency();
+
+        final RootAccount root = e.getRootAccount();
+
+        final Account a = new Account(AccountType.BANK, defaultCurrency);
+        a.setName("a");
+        e.addAccount(root, a);
+
+        final Account b = new Account(AccountType.BANK, defaultCurrency);
+        b.setName("b");
+        e.addAccount(a, b);
+
+        final Account c2 = new Account(AccountType.BANK, defaultCurrency);
+        c2.setName("c2");
+        e.addAccount(b, c2);
+
+        final Account c1 = new Account(AccountType.BANK, defaultCurrency);
+        c1.setName("c1");
+        e.addAccount(b, c1);
+
+        final Account d = new Account(AccountType.BANK, defaultCurrency);
+        d.setName("d");
+        e.addAccount(c1, d);
+
+        assertEquals(0, root.getDepth());
+        assertEquals(1, a.getDepth());
+        assertEquals(2, b.getDepth());
+        assertEquals(3, c1.getDepth());
+        assertEquals(3, c2.getDepth());
+        assertEquals(4, d.getDepth());
+
+        assertNotNull(AccountUtils.searchTree(root, "d", AccountType.BANK, 4));
+        assertNull(AccountUtils.searchTree(root, "d", AccountType.BANK, 3));
+
+        // checks the custom Comparator sort order function
+        final List<Account> accountList = e.getAccountList();
+
+        accountList.sort(Comparators.getAccountByTreePosition(Comparators.getAccountByCode()));
+
+        for (final Account account : accountList) {
+            System.out.println(account.getPathName());
+        }
+
+        assertEquals(a, accountList.get(0));
+        assertEquals(d, accountList.get(3));
+        assertEquals(c2, accountList.get(4));
+    }
 }
