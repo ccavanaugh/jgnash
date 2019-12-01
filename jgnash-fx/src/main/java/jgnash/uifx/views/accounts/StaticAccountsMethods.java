@@ -40,7 +40,7 @@ import jgnash.report.poi.Workbook;
 import jgnash.report.table.AbstractReportTableModel;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.report.pdf.AccountTreeReport;
+import jgnash.uifx.report.ListOfAccountsReport;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
@@ -222,7 +222,7 @@ public final class StaticAccountsMethods {
                         Objects.requireNonNull(engine);
 
                         final AbstractReportTableModel reportTableModel =
-                                new AccountTreeReport.AccountTreeModel(engine.getAccountList(), engine.getDefaultCurrency());
+                                new ListOfAccountsReport.AccountListModel(engine.getAccountList(), engine.getDefaultCurrency());
 
                         Workbook.export(reportTableModel, exportFile);
                     } else {

@@ -1,4 +1,4 @@
-package jgnash.uifx.report.pdf;
+package jgnash.uifx.report;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -17,17 +17,17 @@ import jgnash.time.DateUtils;
 import jgnash.util.NotNull;
 
 /**
- * Account Tree Report Model
+ * Account List/Tree Report Model
  *
  * @author Craig Cavanaugh
  */
-public class AccountTreeReport extends Report {
+public class ListOfAccountsReport extends Report {
 
     private static final String SPACE = " ";
 
-    private static final int INDENT = 4;
+    private static final int INDENT = 2;
 
-    public static class AccountTreeModel extends AbstractReportTableModel {
+    public static class AccountListModel extends AbstractReportTableModel {
 
         final CurrencyNode currencyNode;
 
@@ -41,7 +41,7 @@ public class AccountTreeReport extends Report {
         private final ColumnStyle[] columnStyles = new ColumnStyle[]{ColumnStyle.STRING, ColumnStyle.STRING,
                 ColumnStyle.STRING, ColumnStyle.BALANCE, ColumnStyle.BALANCE, ColumnStyle.STRING, ColumnStyle.STRING};
 
-        public AccountTreeModel(@NotNull final List<Account> accountList, @NotNull final CurrencyNode currencyNode) {
+        public AccountListModel(@NotNull final List<Account> accountList, @NotNull final CurrencyNode currencyNode) {
             this.accountList = new ArrayList<>(accountList);
             this.currencyNode = currencyNode;
 
@@ -144,6 +144,11 @@ public class AccountTreeReport extends Report {
             }
         }
 
+        @Override
+        public boolean isColumnFixedWidth(final int columnIndex) {
+            return columnIndex != 0;
+        }
+
         /**
          * Returns the title for the Report
          *
@@ -151,7 +156,7 @@ public class AccountTreeReport extends Report {
          */
         @Override
         public String getTitle() {
-            return ResourceUtils.getString("Tab.Accounts");
+            return ResourceUtils.getString("Title.ListOfAccounts");
         }
 
         /**

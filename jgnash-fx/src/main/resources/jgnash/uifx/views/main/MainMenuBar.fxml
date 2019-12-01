@@ -90,10 +90,11 @@
         </Menu>
         <Menu text="%Menu.Account.Name">
             <MenuItem text="%Menu.AccountRegister.Name" onAction="#handleDisplayAccountRegisterReport"/>
-            <MenuItem text="%Menu.NetWorth.Name" onAction="#handleDisplayNetWorthReport"/>
             <MenuItem text="%Menu.BalanceSheet.Name" onAction="#handleDisplayBalanceSheetReport"/>
-            <MenuItem text="%Menu.ProfitLoss.Name" onAction="#handleDisplayProfitLossReport"/>
+            <MenuItem text="%Menu.ListOfAccounts.Name" onAction="#handleDisplayListOfAccountsReport"/>
+            <MenuItem text="%Menu.NetWorth.Name" onAction="#handleDisplayNetWorthReport"/>
             <MenuItem text="%Menu.Portfolio.Name" fx:id="portfolioReportMenuItem" onAction="#handleDisplayPortfolioReport"/>
+            <MenuItem text="%Menu.ProfitLoss.Name" onAction="#handleDisplayProfitLossReport"/>
         </Menu>
     </Menu>
 

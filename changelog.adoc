@@ -21,7 +21,8 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.4.0
-* 11/30/2019 Added a CSV Export function for the account tree.
+* 12/01/2019 Added a List of Accounts report.
+* 11/30/2019 Added an Export function for the account tree.
 * 11/30/2019 The headers in the CSV export of an account are now localized.
 * 11/30/2019 Changed the internal delimiter for transaction tags to allow use of commas (currently not user accessible).
 * 11/29/2019 Added a Securities chapter to the Manual.

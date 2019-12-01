@@ -31,6 +31,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.BalanceByMonthCSVReport;
 import jgnash.report.ProfitLossTextReport;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.control.DateRangeDialogController;
 import jgnash.uifx.report.pdf.ReportViewerDialogController;
 import jgnash.uifx.util.FXMLUtils;
@@ -38,7 +39,6 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Utility class for loading and displaying reports.
@@ -56,6 +56,19 @@ public class ReportActions {
                         ResourceUtils.getString("Title.AccountBalance"));
 
         pair.getStage().show();
+    }
+
+    public static void displayListOfAccountsReport() {
+        final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
+                FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),
+                        ResourceUtils.getString("Title.ListOfAccounts"));
+
+        reportPair.getController().loadReportController("ListOfAccountsReport.fxml");
+
+        // Preserve size and location
+        StageUtils.addBoundsListener(reportPair.getStage(), ListOfAccountsReportController.class, MainView.getPrimaryStage());
+
+        reportPair.getStage().show();
     }
 
     public static void displayAccountRegisterReport(@Nullable final Account account) {
