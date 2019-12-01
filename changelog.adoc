@@ -21,6 +21,7 @@
 * HSQLDB 2.5.1 when released
 
 == Release 3.4.0
+* 12/01/2019 Switching the recommended Windows JVM to AdoptOpenJDK.
 * 12/01/2019 Removed old jGnash 2.35.1 workaround for bad UUID values.
 * 12/01/2019 Added a List of Accounts report.
 * 11/30/2019 Added an Export function for the account tree.
