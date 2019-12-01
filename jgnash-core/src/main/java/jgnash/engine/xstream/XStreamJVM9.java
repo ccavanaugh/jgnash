@@ -48,9 +48,7 @@ import com.thoughtworks.xstream.converters.time.LocalDateTimeConverter;
 import com.thoughtworks.xstream.converters.time.LocalTimeConverter;
 import com.thoughtworks.xstream.core.util.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-
-// TODO, stock XStream UUID converter can be used in jGnash 3.x
-// import com.thoughtworks.xstream.converters.basic.UUIDConverter;
+import com.thoughtworks.xstream.converters.basic.UUIDConverter;
 
 /**
  * This Replaces the default XStream constructor to prevent the loading of converters that trigger an illegal reflective 
@@ -94,7 +92,7 @@ public class XStreamJVM9 extends XStream {
 		registerConverter(new LocalDateConverter(), PRIORITY_NORMAL);
 		registerConverter(new LocalDateTimeConverter(), PRIORITY_NORMAL);
 		registerConverter(new LocalTimeConverter(), PRIORITY_NORMAL);
-		registerConverter(new UUIDConverter(), PRIORITY_NORMAL);	// TODO, stock XStream UUID converter can be used in jGnash 3.x
+		registerConverter(new UUIDConverter(), PRIORITY_NORMAL);
 
 		registerConverter(new SelfStreamingInstanceChecker(getConverterLookup(), this), PRIORITY_NORMAL);				
 	}

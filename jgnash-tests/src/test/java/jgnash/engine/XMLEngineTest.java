@@ -17,19 +17,13 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.xstream.UUIDConverter;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.AfterAll;
 
 /**
  * JUnit test for XML storage with the Engine API.
@@ -59,18 +53,5 @@ public class XMLEngineTest extends EngineTest {
     @AfterAll
     static void cleanup() throws IOException {
         Files.deleteIfExists(Paths.get(tempFile));
-    }
-
-    /**
-     * Test UUID fix here
-     */
-    @Test
-    void testUUIFix() {
-        String badUUID = "c93972f6fdd5402eb314fc8402d2c51f";
-        String goodUUID = "c93972f6-fdd5-402e-b314-fc8402d2c51f";
-
-        assertEquals(goodUUID, UUIDConverter.fixUUID(badUUID));
-
-        assertNotNull(UUID.fromString(goodUUID));
     }
 }
