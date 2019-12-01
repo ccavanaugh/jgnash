@@ -82,7 +82,6 @@ public class PortfolioReportController implements ReportController {
 
     private final Report report = new PortfolioReport();
 
-    @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Object> changeListener;
 
     @SuppressWarnings("FieldCanBeLocal")

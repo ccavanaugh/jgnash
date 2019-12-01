@@ -41,7 +41,6 @@ final class StoredObjectReflectionProvider extends PureJavaReflectionProvider {
         this.objects = objects;
     }
 
-    @SuppressWarnings({"rawtypes"})
     @Override
     public Object newInstance(final Class type) {
         Object o = super.newInstance(type);
