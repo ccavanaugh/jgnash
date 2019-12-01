@@ -232,12 +232,12 @@ morestring=[b]"
     automated installer.
 
     \begin{description}
-        \item[\href{https://www.azul.com/downloads/zulu/}{Azul OpenJDK 11}]
-        A branded release that will be easiest to install for most users and is free to use. \\
-        \texttt{[https://www.azul.com/downloads/zulu/]}
         \item[\href{https://adoptopenjdk.net/index.html?variant=openjdk11&jvmVariant=hotspot}{AdoptOpenJDK}]
-        Will require manual installation but allows more flexibility and is free to use. \\
+        Easy to install and recommended for Windows users. See Section \ref{sec:wininstall} for specifics. \\
         \texttt{[https://adoptopenjdk.net/index.html?variant=openjdk11\&jvmVariant=hotspot]}
+        \item[\href{https://www.azul.com/downloads/zulu/}{Azul OpenJDK 11}]
+        A branded release that is easy to install for most users and is free to use. \\
+        \texttt{[https://www.azul.com/downloads/zulu/]}        
         \item [\href{https://jdk.java.net/11/}{OpenJDK}]
         Will require manual installation and is free to use. \\
         \texttt{[https://jdk.java.net/11]}
@@ -264,7 +264,18 @@ morestring=[b]"
     the \directory{jGnash} directory in it to better organize my computer.
     When upgrading between versions of jGnash, do not unzip to the same location and overwrite the existing files.
     Use a new location or delete the existing files first.
-
+    
+    \subsection{Windows Installation} \label{sec:wininstall}
+    
+    Adopt OpenJDK works very well for jGnash primarily because it offers options to update the correct
+    registry keys so that jGnash.exe can find Java.  When installing, make sure the \textbf{Set JAVA\_HOME variable}
+    and the \textbf{JavaSoft (Oracle) registry entries} options are selected for proper jGnash operation.
+        
+    \begin{figure}[h]
+        \caption{Adopt OpenJDK Install Options}
+        \includegraphics[width=0.8\linewidth]{images/adopt-open-jdk-install}
+    \end{figure}
+   
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \section{Starting jGnash}\label{sec:starting-jgnash}
 
@@ -1038,8 +1049,11 @@ morestring=[b]"
 
     Regardless of the \textbf{Start Month} selected, jGnash will use a rolling 12 month period based upon the \textbf{Start Month} you
     have selected.
-
-    \includegraphics[width=0.5\linewidth]{images/budget-properties}
+       
+    \begin{figure}[h]
+        \caption{Budget Properties}
+        \includegraphics[width=0.45\linewidth]{images/budget-properties}
+    \end{figure}
 
     The rounding method and number of decimals used to report budget results may be changed.
     The default Rounding Mode is \textit{Floor} which will round up expenses and round down income values which is a conservative
