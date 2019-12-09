@@ -1,0 +1,25 @@
+[package]
+name = "rust-launcher"
+version = "0.1.0"
+authors = ["Craig Cavanaugh <jgnash.devel@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1.11"
+
+[dependencies]
+msgbox = "0.4.0"
+java-locator = "0.1.1"
+
+[profile.release]
+opt-level = 'z'
+debug = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+
+[[bin]]
+name = "jGnash"
+path = "src/main.rs"
