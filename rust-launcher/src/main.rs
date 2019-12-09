@@ -48,7 +48,7 @@ fn launch_jgnash(s: String) {
 
 #[cfg(target_family = "unix")]
 fn launch_jgnash(s: String) {
-    let java_exe = s.add("\\bin\\javaw");
+    let java_exe = s.add("\\bin\\java");
 
     let class_path = get_execution_path()
         .as_os_str()

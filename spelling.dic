@@ -313,3 +313,5 @@ nop
 pdfbox
 bootloader
 winres
+javaw
+msgbox
