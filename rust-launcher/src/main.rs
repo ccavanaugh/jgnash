@@ -4,11 +4,12 @@ extern crate java_locator;
 extern crate msgbox;
 
 use std::env;
+use std::ops::Add;
 use std::path::PathBuf;
+use std::process;
 use std::process::Command;
 
 use msgbox::IconType;
-use std::ops::Add;
 
 fn main() {
     let java_home = java_locator::locate_java_home();
@@ -26,7 +27,12 @@ fn main() {
 
 #[cfg(target_family = "windows")]
 fn launch_jgnash(s: String) {
-    // java executable
+
+    // collect environment variables; the fist is the path that launched the program
+    let mut args: Vec<String> = env::args().collect();
+    args.remove(0);
+
+    // the java executable
     let java_exe = s.add("\\bin\\javaw.exe");
 
     //let class_path = "c:\\temp\\jGnash-3.4.0\\lib\\*";
@@ -38,31 +44,43 @@ fn launch_jgnash(s: String) {
         .to_string()
         .add("\\lib\\*");
 
-    Command::new(&java_exe)
+    let status = Command::new(&java_exe)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
-        .spawn()
+        .arg(args.join(" "))
+        .status()
         .expect("command failed to start");
+
+    process::exit(status.code().unwrap());
 }
 
 #[cfg(target_family = "unix")]
 fn launch_jgnash(s: String) {
-    let java_exe = s.add("\\bin\\java");
+
+    // collect environment variables; the fist is the path that launched the program
+    let mut args: Vec<String> = env::args().collect();
+    args.remove(0);
+
+    // the java executable
+    let java_exe = s.add("/bin/java");
 
     let class_path = get_execution_path()
         .as_os_str()
         .to_str()
         .unwrap()
         .to_string()
-        .add("\\lib\\*");
+        .add("/lib/*");
 
-    Command::new(&java_exe)
+    let status = Command::new(&java_exe)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
-        .spawn()
+        .arg(args.join(" "))
+        .status()
         .expect("command failed to start");
+
+    process::exit(status.code().unwrap());
 }
 
 fn get_execution_path() -> PathBuf {
