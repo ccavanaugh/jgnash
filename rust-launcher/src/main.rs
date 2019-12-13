@@ -34,7 +34,7 @@ use msgbox::IconType;
 /// The Minimum version of Java required
 const MIN_JAVA_VERSION: f32 = 11.0 - (2.0 * f32::EPSILON);
 
-/// locate_java_home() is time consuming; Execute only once and save as a static
+// locate_java_home() is time consuming; Execute only once and save as a static
 lazy_static! {
     static ref JAVA_HOME: Result<String, JavaLocatorError> = { java_locator::locate_java_home() };
 }
