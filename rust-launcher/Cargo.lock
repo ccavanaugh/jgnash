@@ -354,6 +354,7 @@ name = "rust-launcher"
 version = "0.1.0"
 dependencies = [
  "java-locator 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "msgbox 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "winres 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

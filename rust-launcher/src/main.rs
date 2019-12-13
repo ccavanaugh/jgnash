@@ -1,6 +1,23 @@
 #![windows_subsystem = "windows"]
-
+/*
+ * jGnash, a personal finance application
+ * Copyright (C) 2001-2019 Craig Cavanaugh
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 extern crate java_locator;
+extern crate lazy_static;
 extern crate msgbox;
 
 use std::env;
@@ -10,17 +27,33 @@ use std::path::PathBuf;
 use std::process;
 use std::process::Command;
 
+use java_locator::errors::JavaLocatorError;
+use lazy_static::lazy_static;
 use msgbox::IconType;
 
+/// The Minimum version of Java required
 const MIN_JAVA_VERSION: f32 = 11.0 - (2.0 * f32::EPSILON);
+
+/// locate_java_home() is time consuming; Execute only once and save as a static
+lazy_static! {
+    static ref JAVA_HOME: Result<String, JavaLocatorError> = { java_locator::locate_java_home() };
+}
+
+#[cfg(target_family = "unix")]
+lazy_static! {
+    static ref JAVA_EXE: String = { JAVA_HOME.as_ref().unwrap().clone().add("/bin/java") };
+}
+
+#[cfg(target_family = "windows")]
+lazy_static! {
+    static ref JAVA_EXE: String = { JAVA_HOME.as_ref().unwrap().clone().add("\\bin\\javaw.exe") };
+}
 
 fn main() {
     let v = get_java_version();
 
     if v >= MIN_JAVA_VERSION {
-        let java_home = java_locator::locate_java_home();
-
-        match java_home {
+        match JAVA_HOME.as_ref() {
             Ok(_s) => launch_jgnash(),
             Err(_e) => msgbox::create(
                 "Error",
@@ -54,7 +87,7 @@ fn launch_jgnash() {
         .to_string()
         .add("\\lib\\*");
 
-    let status = Command::new(get_java_exe())
+    let status = Command::new(&*JAVA_EXE)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
@@ -78,7 +111,7 @@ fn launch_jgnash() {
         .to_string()
         .add("/lib/*");
 
-    let status = Command::new(get_java_exe())
+    let status = Command::new(&*JAVA_EXE)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
@@ -103,7 +136,7 @@ fn get_execution_path() -> PathBuf {
 fn get_java_version() -> f32 {
     let mut version = -1.0_f32;
 
-    let output = Command::new(get_java_exe())
+    let output = Command::new(&*JAVA_EXE)
         .arg("--version")
         .output()
         .expect("failed to execute command");
@@ -149,14 +182,4 @@ fn get_java_version() -> f32 {
     }
 
     return version;
-}
-
-#[cfg(target_family = "unix")]
-fn get_java_exe() -> String {
-    java_locator::locate_java_home().unwrap().add("/bin/java")
-}
-
-#[cfg(target_family = "windows")]
-fn get_java_exe() -> String {
-    java_locator::locate_java_home().unwrap().add("\\bin\\javaw.exe")
 }

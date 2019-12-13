@@ -11,6 +11,7 @@ winres = "0.1.11"
 
 [dependencies]
 java-locator = "0.1.1"
+lazy_static = "1.4.0"
 msgbox = "0.4.0"
 
 [profile.release]
