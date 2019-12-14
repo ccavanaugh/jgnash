@@ -58,7 +58,7 @@ fn main() {
             Err(_e) => msgbox::create(
                 "Error",
                 "Unable to locate a valid Java installation.\n\n
-                 Please check your download a JVM from https://adoptopenjdk.net.",
+                 Please check your configuration or download a JVM from https://adoptopenjdk.net.",
                 IconType::Error,
             ),
         }
