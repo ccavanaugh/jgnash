@@ -25,7 +25,7 @@ use std::f32;
 use std::ops::Add;
 use std::path::PathBuf;
 use std::process;
-use std::process::Command;
+use std::process::{Command, ExitStatus};
 
 use java_locator::errors::JavaLocatorError;
 use lazy_static::lazy_static;
@@ -33,6 +33,9 @@ use msgbox::IconType;
 
 /// The Minimum version of Java required
 const MIN_JAVA_VERSION: f32 = 11.0 - (2.0 * f32::EPSILON);
+
+/// return value when jGnash exits with a reboot request
+const REBOOT_EXIT: i32 = 100;
 
 // locate_java_home() is time consuming; Execute only once and save as a static
 lazy_static! {
@@ -54,7 +57,14 @@ fn main() {
 
     if v >= MIN_JAVA_VERSION {
         match JAVA_HOME.as_ref() {
-            Ok(_s) => launch_jgnash(),
+            Ok(_s) => {
+                let exit_status = launch_jgnash().code().unwrap();
+
+                if exit_status == REBOOT_EXIT { // relaunch jGnash after fx libs have downloaded
+                    process::exit(launch_jgnash().code().unwrap());
+                }
+                process::exit(exit_status);
+            },
             Err(_e) => msgbox::create(
                 "Error",
                 "Unable to locate a valid Java installation.\n\n
@@ -73,7 +83,7 @@ fn main() {
 }
 
 #[cfg(target_family = "windows")]
-fn launch_jgnash() {
+fn launch_jgnash() -> ExitStatus {
     // collect environment variables; the fist is the path that launched the program
     let mut args: Vec<String> = env::args().collect();
     args.remove(0);
@@ -87,19 +97,17 @@ fn launch_jgnash() {
         .to_string()
         .add("\\lib\\*");
 
-    let status = Command::new(&*JAVA_EXE)
+   Command::new(&*JAVA_EXE)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
         .arg(args.join(" "))
         .status()
-        .expect("command failed to start");
-
-    process::exit(status.code().unwrap());
+        .expect("command failed to start")
 }
 
 #[cfg(target_family = "unix")]
-fn launch_jgnash() {
+fn launch_jgnash() -> ExitStatus {
     // collect environment variables; the fist is the path that launched the program
     let mut args: Vec<String> = env::args().collect();
     args.remove(0);
@@ -111,15 +119,13 @@ fn launch_jgnash() {
         .to_string()
         .add("/lib/*");
 
-    let status = Command::new(&*JAVA_EXE)
+    Command::new(&*JAVA_EXE)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
         .arg(args.join(" "))
         .status()
-        .expect("command failed to start");
-
-    process::exit(status.code().unwrap());
+        .expect("command failed to start")
 }
 
 fn get_execution_path() -> PathBuf {
