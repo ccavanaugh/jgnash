@@ -20,6 +20,9 @@ extern crate java_locator;
 extern crate lazy_static;
 extern crate msgbox;
 
+#[cfg(target_family = "windows")]
+extern crate winreg;
+
 use std::env;
 use std::f32;
 use std::ops::Add;
@@ -27,9 +30,12 @@ use std::path::PathBuf;
 use std::process;
 use std::process::{Command, ExitStatus};
 
-use java_locator::errors::JavaLocatorError;
 use lazy_static::lazy_static;
 use msgbox::IconType;
+
+#[cfg(target_family = "windows")]
+use winreg::enums::*;
+use winreg::RegKey;
 
 /// The Minimum version of Java required
 const MIN_JAVA_VERSION: f32 = 11.0 - (2.0 * f32::EPSILON);
@@ -45,7 +51,7 @@ static LIB: &str = "/lib/";
 
 // locate_java_home() is time consuming; Execute only once and save as a static
 lazy_static! {
-    static ref JAVA_HOME: Result<String, JavaLocatorError> = { java_locator::locate_java_home() };
+    static ref JAVA_HOME: Option<String> = { get_java_home() };
 }
 
 #[cfg(target_family = "unix")]
@@ -63,15 +69,16 @@ fn main() {
 
     if v >= MIN_JAVA_VERSION {
         match JAVA_HOME.as_ref() {
-            Ok(_s) => {
+            Some(_) => {
                 let exit_status = launch_jgnash().code().unwrap();
 
-                if exit_status == REBOOT_EXIT { // relaunch jGnash after fx libs have downloaded
+                if exit_status == REBOOT_EXIT {
+                    // relaunch jGnash after fx libs have downloaded
                     process::exit(launch_jgnash().code().unwrap());
                 }
                 process::exit(exit_status);
-            },
-            Err(_e) => msgbox::create(
+            }
+            None => msgbox::create(
                 "Error",
                 "Unable to locate a valid Java installation.\n\n
                  Please check your configuration or download a JVM from https://adoptopenjdk.net.",
@@ -101,7 +108,7 @@ fn launch_jgnash() -> ExitStatus {
         .add(LIB)
         .add("*");
 
-   Command::new(&*JAVA_EXE)
+    Command::new(&*JAVA_EXE)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
@@ -170,4 +177,63 @@ fn get_java_version() -> f32 {
     }
 
     return version;
+}
+
+fn get_java_home() -> Option<String> {
+    match &env::var("JAVA_HOME") {
+        Ok(s) => {
+            if s.is_empty() {
+                // do more
+            } else {
+                return Some(s.clone());
+            }
+        }
+        Err(_) => {} // do nothing
+    }
+
+    // if an env variable is not found, check registry if compiled for windows
+    #[cfg(target_family = "windows")]
+    match &RegKey::predef(HKEY_LOCAL_MACHINE).open_subkey("SOFTWARE\\JavaSoft\\JDK") {
+        Ok(m_reg_key) => {
+            let version_string: String = m_reg_key.get_value("CurrentVersion").unwrap();
+
+            let version = match version_string.parse::<f32>() {
+                Ok(f) => f,
+                Err(_e) => {
+                    eprintln!(
+                        "failed to parse version string for registry: {}",
+                        version_string
+                    );
+                    return Some(String::new());
+                }
+            };
+
+            if version >= MIN_JAVA_VERSION {
+                let meta_data = m_reg_key.query_info().unwrap();
+
+                // if there are sub keys, then we have found a java installation
+                if meta_data.sub_keys > 0 {
+                    for k in m_reg_key.enum_keys() {
+                        match m_reg_key.open_subkey(&k.unwrap()) {
+                            Ok(sub_key) => {
+                                let s_val = sub_key.get_value("JavaHome");
+
+                                if s_val.is_ok() {
+                                    let mut jvm_path: String = s_val.unwrap();
+                                    jvm_path.pop(); // strip the last path separator
+
+                                    return Some(jvm_path);  // return the path
+                                }
+                            }
+                            Err(_) => {} // do nothing, pass through
+                        }
+                    }
+                }
+            }
+        }
+        Err(_) => {} // do nothing, pass through
+    }
+
+    // pass through to java_locator, it will search known directories
+    Some(java_locator::locate_java_home().unwrap())
 }

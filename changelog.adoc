@@ -21,6 +21,9 @@
 * HSQLDB 2.5.1 when released
 * Add manual warning about place jGnash in Program Files.
 
+== Release 3.4.1
+* 12/14/2019 The Windows exe wrapper will now look in the registry if JAVA_HOME has not been set.
+
 == Release 3.4.0
 * 12/14/2019 jGnash now uses a Rust based exe launcher for Windows users that replaces Launch4j.
 * 12/14/2019 Updated to the latest Picocli and Hibernate dependencies.
