@@ -37,6 +37,12 @@ const MIN_JAVA_VERSION: f32 = 11.0 - (2.0 * f32::EPSILON);
 /// return value when jGnash exits with a reboot request
 const REBOOT_EXIT: i32 = 100;
 
+// lib path
+#[cfg(target_family = "windows")]
+static LIB: &str = "\\lib\\";
+#[cfg(target_family = "unix")]
+static LIB: &str = "/lib/";
+
 // locate_java_home() is time consuming; Execute only once and save as a static
 lazy_static! {
     static ref JAVA_HOME: Result<String, JavaLocatorError> = { java_locator::locate_java_home() };
@@ -82,44 +88,20 @@ fn main() {
     }
 }
 
-#[cfg(target_family = "windows")]
 fn launch_jgnash() -> ExitStatus {
     // collect environment variables; the fist is the path that launched the program
     let mut args: Vec<String> = env::args().collect();
     args.remove(0);
-
-    //let class_path = "c:\\temp\\jGnash-3.4.0\\lib\\*";
 
     let class_path = get_execution_path()
         .as_os_str()
         .to_str()
         .unwrap()
         .to_string()
-        .add("\\lib\\*");
+        .add(LIB)
+        .add("*");
 
    Command::new(&*JAVA_EXE)
-        .arg("-classpath")
-        .arg(&class_path)
-        .arg("jGnash")
-        .arg(args.join(" "))
-        .status()
-        .expect("command failed to start")
-}
-
-#[cfg(target_family = "unix")]
-fn launch_jgnash() -> ExitStatus {
-    // collect environment variables; the fist is the path that launched the program
-    let mut args: Vec<String> = env::args().collect();
-    args.remove(0);
-
-    let class_path = get_execution_path()
-        .as_os_str()
-        .to_str()
-        .unwrap()
-        .to_string()
-        .add("/lib/*");
-
-    Command::new(&*JAVA_EXE)
         .arg("-classpath")
         .arg(&class_path)
         .arg("jGnash")
