@@ -22,6 +22,7 @@
 
 == Release 3.4.0
 * 12/14/2019 jGnash now uses a Rust based exe launcher for Windows users that replaces Launch4j.
+* 12/14/2019 Updated to the latest Picocli and Hibernate dependencies.
 * 12/01/2019 Switching the recommended Windows JVM to AdoptOpenJDK.
 * 12/01/2019 Removed old jGnash 2.35.1 workaround for bad UUID values.
 * 12/01/2019 Added a List of Accounts report.
@@ -30,7 +31,6 @@
 * 11/30/2019 Changed the internal delimiter for transaction tags to allow use of commas (currently not user accessible).
 * 11/29/2019 Added a Securities chapter to the Manual.
 * 11/29/2019 Prevent a NPE when changing the Symbol of a Security shortly after viewing it's chart.
-* 11/28/2019 Updated to the latest Picocli and Hibernate dependencies.
 * 11/27/2019 Added support for IEXCloud as a data provider for Securities history.
 * 11/16/2019 Switched to a public API introduced in JavaFX 9 to prevent table column reordering in the Budget View.
 * 11/04/2019 Errors and warnings from a failed QIF import were not being displayed.
