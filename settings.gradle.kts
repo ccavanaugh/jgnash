@@ -4,12 +4,10 @@ val monocleVersion: String by settings
 
 pluginManagement {
     val javafxPluginVersion: String by settings
-    val launch4jVersion: String by settings
     val versionsPluginVersion: String by settings
 
     plugins {
         id("org.openjfx.javafxplugin") version javafxPluginVersion
-        id ("edu.sc.seis.launch4j") version launch4jVersion
         id ("com.github.ben-manes.versions") version versionsPluginVersion
     }
 }

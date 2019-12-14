@@ -1,5 +1,4 @@
 plugins {
-    id("edu.sc.seis.launch4j")
     id("org.openjfx.javafxplugin")
     id("application")   // creates a task to run the full application
     id("distribution")
@@ -24,22 +23,9 @@ dependencies {
     implementation("info.picocli:picocli:$picocliVersion")
 }
 
-launch4j {
-    copyright = "Copyright (C) 2001-2019 Craig Cavanaugh"
-    mainClassName = "jGnash"
-    outfile = "jGnash.exe"
-    dontWrapJar = true
-    icon = "../../../jgnash-fx/gnome-money.ico"
-    downloadUrl = "https://adoptopenjdk.net/"
-    jreMinVersion = "11"
-}
-
 task createStartScripts(type: CreateStartScripts) {
     outputDir = file("../../")
 }
-
-// call launch4j prior to creating the zip file
-distZip.dependsOn(createExe)
 
 distributions {
     main {
@@ -48,7 +34,7 @@ distributions {
         contents {
             from { "../jgnash-manual/src/Manual.pdf" }
             from { "../changelog.adoc" }
-            from { "build/launch4j/jGnash.exe" }
+            from { "../rust-launcher/target/release/jGnash.exe" }
             from { "../README.html" }
             from { "../README.adoc" }
             from { "../jGnash" }
