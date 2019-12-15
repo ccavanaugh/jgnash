@@ -33,6 +33,7 @@ import jgnash.engine.dao.CommodityDAO;
 import jgnash.engine.dao.ConfigDAO;
 import jgnash.engine.dao.EngineDAO;
 import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TagDAO;
 import jgnash.engine.dao.TransactionDAO;
 import jgnash.engine.dao.TrashDAO;
 
@@ -52,6 +53,8 @@ class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
     private ConfigDAO configDAO;
 
     private RecurringDAO recurringDAO;
+
+    private TagDAO tagDAO;
 
     private TransactionDAO transactionDAO;
 
@@ -144,6 +147,14 @@ class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
             transactionDAO = new XStreamTransactionDAO(container);
         }
         return transactionDAO;
+    }
+
+    @Override
+    public TagDAO getTagDAO() {
+        if (tagDAO == null) {
+            tagDAO = new XStreamTagDAO(container);
+        }
+        return tagDAO;
     }
 
     @Override

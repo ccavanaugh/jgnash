@@ -15,20 +15,39 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.engine.message;
+package jgnash.engine.jpa;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+
+import jgnash.engine.Tag;
+import jgnash.engine.dao.TagDAO;
 
 /**
- * Message property Enums.
+ * Tag DAO.
  *
  * @author Craig Cavanaugh
  */
-public enum MessageProperty {
-    ACCOUNT,
-    BUDGET,
-    COMMODITY,
-    CONFIG,
-    EXCHANGE_RATE,
-    REMINDER,
-    TAG,
-    TRANSACTION
+class JpaTagDAO extends AbstractJpaDAO implements TagDAO {
+
+    JpaTagDAO(final EntityManager entityManager, final boolean isRemote) {
+        super(entityManager, isRemote);
+    }
+
+    @Override
+    public boolean add(final Tag tag) {
+        return persist(tag);
+    }
+
+    @Override
+    public boolean update(final Tag tag) {
+        return merge(tag) != null;
+    }
+
+    @Override
+    public Set<Tag> getTags() {
+        return new HashSet<>(query(Tag.class));
+    }
 }

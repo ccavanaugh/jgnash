@@ -17,23 +17,30 @@
  */
 package jgnash.engine;
 
-import jgnash.util.EncodeDecode;
-import jgnash.util.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Objects;
+import jgnash.util.NotNull;
 
 /**
  * Transaction Entry
@@ -56,11 +63,6 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * Cache the hash code for the TransactionEntry
      */
     private transient int hash = 0;
-
-    /**
-     * Use a specialized delimiter that should not show up in normal text
-     */
-    private static final char TAG_DELIMITER = 0x25FC;
 
     @SuppressWarnings("unused")
     @Id
@@ -106,11 +108,10 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     @Column(columnDefinition = "VARCHAR(1024)")
     private String memo = "";
 
-    /**
-     * Field for user defined tags.
-     */
-    @Column(columnDefinition = "VARCHAR(2048)")
-    private String customTags;
+    @JoinTable
+    @OrderBy("name")
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private Set<Tag> tags = new HashSet<>();
 
     /**
      * Public constructor.
@@ -295,6 +296,18 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         this.debitAmount = debitAmount;
     }
 
+    public void setTags(final Collection<Tag> tags) {
+        this.tags.clear();
+        this.tags.addAll(tags);
+    }
+
+    public Set<Tag> getTags() {
+        if (tags != null) {
+            return Collections.unmodifiableSet(tags);
+        }
+        return Collections.emptySet();
+    }
+
     @Override
     public int compareTo(@NotNull final TransactionEntry entry) {
 
@@ -352,23 +365,16 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return transactionTag;
     }
 
-    /**
-     * Returns a delimited string of user defined customTags applied to the transaction.
-     *
-     * @return custom tags or an empty collection if not set
-     */
-    public Collection<String> getCustomTags() {
-        return EncodeDecode.decodeStringCollection(customTags, TAG_DELIMITER);
-    }
-
-    public void setCustomTags(final Collection<String> strings) {
-        customTags = EncodeDecode.encodeStringCollection(strings, TAG_DELIMITER);
-    }
-
     @Override
     public Object clone() throws CloneNotSupportedException {
         final TransactionEntry e = (TransactionEntry) super.clone();
-        e.id = 0; // clones id must be reset
+
+        // a deep clone for tags is needed for JPA persistence
+        e.tags = new HashSet<>();
+        e.tags.addAll(tags);
+
+        // clones id must be reset
+        e.id = 0;
 
         return e;
     }
@@ -393,7 +399,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
                        Objects.equals(creditReconciled, that.creditReconciled) &&
                        Objects.equals(debitReconciled, that.debitReconciled) &&
                        Objects.equals(memo, that.memo) &&
-                       Objects.equals(customTags, that.customTags);
+                       Objects.equals(tags, that.tags);
     }
 
     @Override
@@ -402,7 +408,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
         if (h == 0) {
             h = Objects.hash(transactionTag, debitAccount, creditAccount, creditAmount, debitAmount,
-                    creditReconciled, debitReconciled, memo, customTags);
+                    creditReconciled, debitReconciled, memo, tags);
             hash = h;
         }
         return h;

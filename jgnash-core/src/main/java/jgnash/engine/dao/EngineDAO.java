@@ -38,6 +38,8 @@ public interface EngineDAO extends DAO {
 
     RecurringDAO getRecurringDAO();
 
+    TagDAO getTagDAO();
+
     TransactionDAO getTransactionDAO();
 
     TrashDAO getTrashDAO();

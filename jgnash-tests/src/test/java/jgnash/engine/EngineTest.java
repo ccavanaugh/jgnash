@@ -26,8 +26,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +39,6 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.time.Period;
 import jgnash.util.FileUtils;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -126,7 +123,7 @@ public abstract class EngineTest {
         Files.deleteIfExists(Paths.get(testFile));
 
         final String attachmentDir = System.getProperty("java.io.tmpdir") + System.getProperty("path.SEPARATOR")
-                + "attachments";
+                                             + "attachments";
         final Path directory = Paths.get(attachmentDir);
 
         FileUtils.deletePathAndContents(directory);
@@ -163,7 +160,7 @@ public abstract class EngineTest {
         // Clone reminders
         r = e.getReminders().get(0);
         assertNotNull(r);
-        Reminder clone = (Reminder)r.clone();
+        Reminder clone = (Reminder) r.clone();
         assertNotNull(clone);
 
         assertNotEquals(clone, r);
@@ -188,14 +185,24 @@ public abstract class EngineTest {
 
         e.addAccount(e.getRootAccount(), a);
 
-        final List<String> tags = Arrays.asList("tag1", "tag2", "tag3");
+        final Tag tag1 = new Tag();
+        tag1.setName("tag1");
+        assertTrue(e.addTag(tag1));
+
+        final Tag tag2 = new Tag();
+        tag2.setName("tag2");
+        assertTrue(e.addTag(tag2));
+
+        final Tag tag3 = new Tag();
+        tag3.setName("tag3");
+        assertTrue(e.addTag(tag3));
 
         final Transaction singleEntryTransaction = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(),
                 "tagTest", "tag test payee", "1001");
 
         TransactionEntry entry = singleEntryTransaction.getTransactionEntries().get(0);
 
-        entry.setCustomTags(tags);
+        entry.setTags(e.getTags());
 
         final UUID uuid = singleEntryTransaction.getUuid(); // get uuid for easy lookup
 
@@ -204,23 +211,55 @@ public abstract class EngineTest {
         Transaction transaction = e.getTransactionByUuid(uuid);
         assertNotNull(transaction);
 
-        Collection<String> reTags = transaction.getTransactionEntries().get(0).getCustomTags();
+        Set<Tag> reTags = transaction.getTransactionEntries().get(0).getTags();
+        assertEquals(3, reTags.size());
 
-        assertTrue(CollectionUtils.isEqualCollection(tags, reTags));
+        for (final Tag tag : e.getTags()) {
+            if (tag.getName().equals("tag1")) {
+                tag.setDescription("description 1");
+                assertTrue(e.updateTag(tag));
+            }
+        }
+
+        for (final Tag tag : e.getTags()) {
+            if (tag.getName().equals("tag1")) {
+                assertEquals("description 1", tag.getDescription());
+            }
+        }
+
+        final Tag tag4 = new Tag();
+        tag4.setName("tag4");
+        assertTrue(e.addTag(tag4));
 
         // close and reopen to force check for persistence
         closeEngine();
-
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, EngineFactory.EMPTY_PASSWORD);
-
         assertNotNull(e);
+
+        assertEquals(4, e.getTags().size());
+        assertEquals(3, e.getTagsInUse().size());
 
         transaction = e.getTransactionByUuid(uuid);
         assertNotNull(transaction);
 
-        reTags = transaction.getTransactionEntries().get(0).getCustomTags();
+        reTags = transaction.getTransactionEntries().get(0).getTags();
+        assertEquals(3, reTags.size());
 
-        assertTrue(CollectionUtils.isEqualCollection(tags, reTags));
+        for (final Tag tag : e.getTags()) {
+            if (tag.getName().equals("tag1")) {
+                assertEquals("description 1", tag.getDescription());
+            }
+        }
+
+        assertEquals(3, transaction.getTags().size());
+
+        for (final Tag tag : e.getTags()) {
+            if (tag.getName().equals("tag4")) {
+                assertTrue(e.removeTag(tag));
+            } else {
+                assertFalse(e.removeTag(tag));
+            }
+        }
     }
 
     @Test
@@ -715,7 +754,7 @@ public abstract class EngineTest {
         testNode = e.getCurrency("CAD");
         assertNotNull(testNode);
 
-        final CurrencyNode clone = (CurrencyNode)testNode.clone();
+        final CurrencyNode clone = (CurrencyNode) testNode.clone();
         clone.setDescription("changed");
         e.updateCommodity(testNode, clone);
 

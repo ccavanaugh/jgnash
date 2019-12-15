@@ -507,6 +507,21 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
     }
 
+    /**
+     * Returns a set of all tags associated with the transaction
+     *
+     * @return Set of all Tags
+     */
+    public Set<Tag> getTags() {
+        final Set<Tag> tags = new HashSet<>();
+
+        for (final TransactionEntry entry : transactionEntries) {
+            tags.addAll(entry.getTags());
+        }
+
+        return tags;
+    }
+
     @Nullable
     public String getFitid() {
         return fitid;

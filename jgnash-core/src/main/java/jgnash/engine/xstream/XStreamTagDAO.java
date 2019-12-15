@@ -15,20 +15,44 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.engine.message;
+package jgnash.engine.xstream;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import jgnash.engine.Tag;
+import jgnash.engine.dao.TagDAO;
 
 /**
- * Message property Enums.
+ * XML Tag DAO.
  *
  * @author Craig Cavanaugh
  */
-public enum MessageProperty {
-    ACCOUNT,
-    BUDGET,
-    COMMODITY,
-    CONFIG,
-    EXCHANGE_RATE,
-    REMINDER,
-    TAG,
-    TRANSACTION
+class XStreamTagDAO extends AbstractXStreamDAO implements TagDAO {
+
+    XStreamTagDAO(final AbstractXStreamContainer container) {
+        super(container);
+    }
+
+    @Override
+    public boolean add(final Tag tag) {
+        container.set(tag);
+        commit();
+
+        return true;
+    }
+
+    @Override
+    public boolean update(final Tag tag) {
+        container.set(tag);
+        commit();
+
+        return true;
+    }
+
+    @Override
+    public Set<Tag> getTags() {
+        return new HashSet<>(stripMarkedForRemoval(container.query(Tag.class)));
+    }
+
 }

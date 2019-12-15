@@ -27,6 +27,7 @@
         <class>jgnash.engine.SecurityHistoryEvent</class>
         <class>jgnash.engine.SecurityHistoryNode</class>
         <class>jgnash.engine.SecurityNode</class>
+        <class>jgnash.engine.Tag</class>
         <class>jgnash.engine.Transaction</class>
         <class>jgnash.engine.TransactionEntry</class>
         <class>jgnash.engine.TransactionEntryAddX</class>

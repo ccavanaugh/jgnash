@@ -20,11 +20,9 @@ package jgnash.engine;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -35,9 +33,9 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
 
+import jgnash.resource.util.ResourceUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * A general configuration class so that global configuration information may be stored inside the database.
@@ -74,13 +72,6 @@ public class Config extends StoredObject {
      */
     @ElementCollection
     private final List<String> transactionNumberItems = new ArrayList<>();
-
-    /**
-     * Contains a list of custom transaction tags a user may apply.
-     */
-    @ElementCollection
-    @SuppressWarnings("unused")
-    private Set<String> customTransactionTags = new HashSet<>();
 
     /**
      * {@code Map} for file based operation preferences.

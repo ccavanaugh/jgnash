@@ -96,7 +96,7 @@ public class Engine {
      */
     public static final int CURRENT_MAJOR_VERSION = 3;
 
-    public static final int CURRENT_MINOR_VERSION = 1;
+    public static final int CURRENT_MINOR_VERSION = 5;
 
     // Lock name
     private static final String BIG_LOCK = "bigLock";
@@ -2683,6 +2683,125 @@ public class Engine {
             message.setObject(MessageProperty.TRANSACTION, transaction);
 
             messageBus.fireEvent(message);
+        }
+    }
+
+    /**
+     * Adds a new Tag
+     *
+     * @param tag Tag to add
+     * @return true is successful
+     */
+    public boolean addTag(@NotNull Tag tag) {
+        Objects.requireNonNull(tag);
+
+        dataLock.writeLock().lock();
+
+        try {
+            boolean result = eDAO.getTagDAO().add(tag);
+
+            final Message message = new Message(MessageChannel.TAG, result ? ChannelEvent.TAG_ADD
+                                                                            : ChannelEvent.TAG_ADD_FAILED, this);
+            message.setObject(MessageProperty.TAG, tag);
+            messageBus.fireEvent(message);
+
+            return result;
+        } finally {
+            dataLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Updates an existing Tag
+     *
+     * @param tag Tag to update
+     * @return true is successful
+     */
+    public boolean updateTag(@NotNull Tag tag) {
+        Objects.requireNonNull(tag);
+
+        dataLock.writeLock().lock();
+
+        try {
+            boolean result = eDAO.getTagDAO().update(tag);
+
+            final Message message = new Message(MessageChannel.TAG, result ? ChannelEvent.TAG_MODIFY
+                                                                            : ChannelEvent.TAG_MODIFY_FAILED, this);
+            message.setObject(MessageProperty.TAG, tag);
+            messageBus.fireEvent(message);
+
+            return result;
+        } finally {
+            dataLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Retrieves all Tags
+     *
+     * @return a Set of Tags.
+     */
+    @NotNull
+    public Set<Tag> getTags() {
+        dataLock.readLock().lock();
+
+        try {
+            return eDAO.getTagDAO().getTags();
+        } finally {
+            dataLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Retrieves the Tags that are in use
+     *
+     * @return a Set of Tags.
+     */
+    @NotNull
+    public Set<Tag> getTagsInUse() {
+        final Set<Tag> usedTags = new HashSet<>();
+
+        dataLock.readLock().lock();
+
+        try {
+            for (final Transaction transaction : getTransactions()) {
+                usedTags.addAll(transaction.getTags());
+            }
+
+            return usedTags;
+        } finally {
+            dataLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Removes a Tag from the database.
+     * <p>
+     * The removal will fail if the Tag is in use.
+     *
+     * @param tag Tag to remove
+     * @return true if successful
+     */
+    public boolean removeTag(@NotNull Tag tag) {
+        Objects.requireNonNull(tag);
+
+        dataLock.writeLock().lock();
+
+        try {
+            boolean result = !getTagsInUse().contains(tag);  // make sure the tag is not used
+
+            if (result) {
+                result = moveObjectToTrash(tag);
+            }
+
+            final Message message = new Message(MessageChannel.TAG, result ? ChannelEvent.TAG_REMOVE
+                                                                            : ChannelEvent.TAG_REMOVE_FAILED, this);
+            message.setObject(MessageProperty.TAG, tag);
+            messageBus.fireEvent(message);
+
+            return result;
+        } finally {
+            dataLock.writeLock().unlock();
         }
     }
 

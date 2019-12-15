@@ -30,6 +30,7 @@ import jgnash.engine.dao.CommodityDAO;
 import jgnash.engine.dao.ConfigDAO;
 import jgnash.engine.dao.EngineDAO;
 import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TagDAO;
 import jgnash.engine.dao.TransactionDAO;
 import jgnash.engine.dao.TrashDAO;
 
@@ -51,6 +52,8 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     private ConfigDAO configDAO;
 
     private RecurringDAO recurringDAO;
+
+    private TagDAO tagDAO;
 
     private TransactionDAO transactionDAO;
 
@@ -114,6 +117,14 @@ class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
             recurringDAO = new JpaRecurringDAO(em, isRemote);
         }
         return recurringDAO;
+    }
+
+    @Override
+    public TagDAO getTagDAO() {
+        if (tagDAO == null) {
+            tagDAO = new JpaTagDAO(em, isRemote);
+        }
+        return tagDAO;
     }
 
     @Override

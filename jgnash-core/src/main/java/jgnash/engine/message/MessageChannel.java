@@ -23,5 +23,5 @@ package jgnash.engine.message;
  * @author Craig Cavanaugh
  */
 public enum MessageChannel {
-    ACCOUNT, BUDGET, COMMODITY, CONFIG, REMINDER, SYSTEM, TRANSACTION
+    ACCOUNT, BUDGET, COMMODITY, CONFIG, REMINDER, SYSTEM, TAG, TRANSACTION
 }

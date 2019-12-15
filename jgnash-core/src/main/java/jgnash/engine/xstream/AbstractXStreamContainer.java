@@ -47,6 +47,7 @@ import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.StoredObject;
+import jgnash.engine.Tag;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionEntryAddX;
@@ -164,6 +165,7 @@ abstract class AbstractXStreamContainer {
         xstream.alias("SecurityNode", SecurityNode.class);
         xstream.alias("SecurityHistoryNode", SecurityHistoryNode.class);
         xstream.alias("SecurityHistoryEvent", SecurityHistoryEvent.class);
+        xstream.alias("Tag", Tag.class);
         xstream.alias("Transaction", Transaction.class);
         xstream.alias("TransactionEntry", TransactionEntry.class);
         xstream.alias("TransactionEntryAddX", TransactionEntryAddX.class);
@@ -204,6 +206,10 @@ abstract class AbstractXStreamContainer {
         xstream.useAttributeFor(SecurityHistoryEvent.class, "value");
 
         xstream.useAttributeFor(StoredObject.class, "uuid");
+
+        xstream.useAttributeFor(Tag.class, "name");
+        xstream.useAttributeFor(Tag.class, "color");
+        xstream.useAttributeFor(Tag.class, "shape");
 
         xstream.omitField(StoredObject.class, "markedForRemoval");
 

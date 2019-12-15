@@ -141,4 +141,21 @@ public class EncodeDecode {
         return java.util.Arrays.asList(pattern.split(string));
     }
 
+    /**
+     * Converts a hex based color into an integer for compact storage
+     * @param color # based hex color
+     * @return int value
+     */
+    public static int colorStringToInt(final String color) {
+        return Integer.parseInt(color.replaceAll("#",""), 16);
+    }
+
+    /**
+     * Converts a int based color into a hex format used by UI classes
+     * @param color int value
+     * @return hex based color string
+     */
+    public static String intToColorString(final int color) {
+        return String.format("#%06X", (0xFFFFFF & color));
+    }
 }

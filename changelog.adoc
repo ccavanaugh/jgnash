@@ -20,9 +20,10 @@
 * Open zipped backups instead of manually unzipping.
 * HSQLDB 2.5.1 when released
 
-* Add manual warning about place jGnash in Program Files. (%AppData%\jGnash)
+* Add manual warning about placing jGnash in Program Files. (%AppData%\jGnash)
 
-== Release 3.4.1
+== Release 3.5.0 __(File format change)__
+* 12/15/2019 Reworked the Engine API for advanced transaction tags.
 * 12/14/2019 The Windows exe wrapper will now look in the registry if JAVA_HOME has not been set.
 
 == Release 3.4.0

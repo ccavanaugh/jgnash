@@ -53,6 +53,14 @@ class EncodeDecodeTest {
         List<String> items = Arrays.asList("apple", "pear", "peach", "grapes");
 
         assertEquals("apple,pear,peach,grapes", EncodeDecode.encodeStringCollection(items));
+    }
 
+    @Test
+    void testHexDecode() {
+        assertEquals("#000000", EncodeDecode.intToColorString(0));
+        assertEquals(0, EncodeDecode.colorStringToInt("#000000"));
+
+        assertEquals("#FFFFFF", EncodeDecode.intToColorString(16777215));
+        assertEquals(16777215, EncodeDecode.colorStringToInt("#FFFFFF"));
     }
 }

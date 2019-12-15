@@ -39,6 +39,7 @@ import jgnash.engine.ExchangeRate;
 import jgnash.engine.RootAccount;
 import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
+import jgnash.engine.Tag;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
 
@@ -93,6 +94,7 @@ class XMLContainer extends AbstractXStreamContainer {
         list.addAll(query(objects, ExchangeRate.class));
         list.addAll(query(objects, RootAccount.class));
         list.addAll(query(objects, Reminder.class));
+        list.addAll(query(objects, Tag.class));
 
         percentCompleteConsumer.accept(0.25);
 
