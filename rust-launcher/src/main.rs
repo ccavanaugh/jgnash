@@ -35,6 +35,8 @@ use msgbox::IconType;
 
 #[cfg(target_family = "windows")]
 use winreg::enums::*;
+
+#[cfg(target_family = "windows")]
 use winreg::RegKey;
 
 /// The Minimum version of Java required
@@ -176,7 +178,7 @@ fn get_java_version() -> f32 {
         }
     }
 
-    return version;
+    version
 }
 
 fn get_java_home() -> Option<String> {
@@ -222,7 +224,7 @@ fn get_java_home() -> Option<String> {
                                     let mut jvm_path: String = s_val.unwrap();
                                     jvm_path.pop(); // strip the last path separator
 
-                                    return Some(jvm_path);  // return the path
+                                    return Some(jvm_path); // return the path
                                 }
                             }
                             Err(_) => {} // do nothing, pass through
