@@ -17,15 +17,25 @@
  */
 package jgnash.uifx.dialog;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
 
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.Tag;
+import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -33,6 +43,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Tag Manager dialog controller
@@ -58,11 +69,25 @@ public class TagManagerDialogController implements MessageListener {
 
     @FXML
     private void initialize() {
+        deleteButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
+        duplicateButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
+        renameButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
+
+        tagListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         MessageBus.getInstance().registerListener(this, MessageChannel.TAG);
+
+        JavaFXUtils.runLater(this::loadTagListView);
     }
 
     @FXML
     private void handleNewAction() {
+        final Tag tag = new Tag();
+        tag.setName("New Tag");
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+        engine.addTag(tag);
     }
 
     @FXML
@@ -75,12 +100,44 @@ public class TagManagerDialogController implements MessageListener {
 
     @FXML
     private void handleDeleteAction() {
+        final List<Tag> selected = new ArrayList<>(tagListView.getSelectionModel().getSelectedItems());
+
+        if (selected.size() > 0) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            final Set<Tag> usedTags = engine.getTagsInUse();
+
+            for (final Tag tag : selected) {
+                if (!usedTags.contains(tag)) {
+                    engine.removeTag(tag);
+                }
+            }
+        }
     }
 
     @FXML
     private void handleCloseAction() {
         MessageBus.getInstance().unregisterListener(this, MessageChannel.TAG);
         ((Stage)parent.get().getWindow()).close();
+    }
+
+    @Override
+    public void messagePosted(final Message message) {
+        if (message.getEvent() == ChannelEvent.TAG_ADD || message.getEvent() == ChannelEvent.TAG_REMOVE
+                    || message.getEvent() == ChannelEvent.TAG_MODIFY) {
+            JavaFXUtils.runLater(this::loadTagListView);
+        }
+    }
+
+    private void loadTagListView() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final List<Tag> tagList = new ArrayList<>(engine.getTags());
+        Collections.sort(tagList);
+
+        tagListView.getItems().setAll(tagList);
     }
 
     public static void showTagManager() {
@@ -90,10 +147,5 @@ public class TagManagerDialogController implements MessageListener {
 
         pair.getStage().show();
         pair.getStage().setResizable(false);
-    }
-
-    @Override
-    public void messagePosted(Message message) {
-
     }
 }
