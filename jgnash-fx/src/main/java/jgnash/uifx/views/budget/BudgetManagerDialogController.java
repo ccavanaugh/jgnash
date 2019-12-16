@@ -27,7 +27,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ListView;
@@ -46,13 +49,17 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.TextInputDialog;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.InjectFXML;
 
 /**
  * Controller for budget management.
  *
  * @author Craig Cavanaugh
  */
-public class BudgetManagerDialogController implements MessageListener{
+public class BudgetManagerDialogController implements MessageListener {
+
+    @InjectFXML
+    private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
     private Button duplicateButton;
@@ -95,7 +102,8 @@ public class BudgetManagerDialogController implements MessageListener{
 
     @FXML
     private void handleCloseAction() {
-        ((Stage) budgetListView.getScene().getWindow()).close();
+        MessageBus.getInstance().unregisterListener(this, MessageChannel.BUDGET);
+        ((Stage)parent.get().getWindow()).close();
     }
 
     @FXML
@@ -191,12 +199,12 @@ public class BudgetManagerDialogController implements MessageListener{
 
         if (!selected.isEmpty()) {
             final String message = selected.size() == 1 ? resources.getString("Message.ConfirmBudgetDelete") :
-                    resources.getString("Message.ConfirmMultipleBudgetDelete");
+                                           resources.getString("Message.ConfirmMultipleBudgetDelete");
 
             if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"), message).getButtonData()
-                    == ButtonBar.ButtonData.YES) {
+                        == ButtonBar.ButtonData.YES) {
                 selected.stream().filter(value -> !engine.removeBudget(value)).forEach(value
-                        -> StaticUIMethods.displayError(resources.getString("Message.Error.BudgetRemove")));
+                                                                                               -> StaticUIMethods.displayError(resources.getString("Message.Error.BudgetRemove")));
             }
         }
     }
@@ -204,7 +212,7 @@ public class BudgetManagerDialogController implements MessageListener{
     @Override
     public void messagePosted(final Message message) {
         if (message.getEvent() == ChannelEvent.BUDGET_ADD || message.getEvent() == ChannelEvent.BUDGET_REMOVE
-                || message.getEvent() == ChannelEvent.BUDGET_UPDATE) {
+                    || message.getEvent() == ChannelEvent.BUDGET_UPDATE) {
             Platform.runLater(this::loadBudgetListView);
         }
     }
