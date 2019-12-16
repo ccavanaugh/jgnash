@@ -81,6 +81,11 @@ public class Tag extends StoredObject implements Comparable<Tag> {
         return color;
     }
 
+    @Override
+    public java.lang.String toString() {
+        return getName();
+    }
+
     /**
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
