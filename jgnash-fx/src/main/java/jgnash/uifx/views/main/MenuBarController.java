@@ -54,6 +54,7 @@ import jgnash.uifx.dialog.ChangeDatabasePasswordDialogController;
 import jgnash.uifx.dialog.ImportScriptsDialogController;
 import jgnash.uifx.dialog.PackDatabaseDialogController;
 import jgnash.uifx.dialog.RemoteConnectionDialogController;
+import jgnash.uifx.dialog.TagManagerDialogController;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
@@ -86,6 +87,9 @@ public class MenuBarController implements MessageListener {
     private final BooleanProperty disabled = new SimpleBooleanProperty(true);
     
     private final BooleanProperty investDisabled = new SimpleBooleanProperty(false);
+
+    @FXML
+    private MenuItem tagManagerMenuItem;
 
     @FXML
     private MenuItem configureTranImportFiltersMenuItem;
@@ -163,19 +167,20 @@ public class MenuBarController implements MessageListener {
     private void initialize() {
         budgetManagerMenuItem.disableProperty().bind(disabled);
         changePasswordMenuItem.disableProperty().bind(disabled.not());
-        securitiesMenu.disableProperty().bind(disabled);
-        currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
         configureTranImportFiltersMenuItem.disableProperty().bind(disabled);
-        reportMenu.disableProperty().bind(disabled);
-        transNumberListMenuItem.disableProperty().bind(disabled);
+        currenciesMenu.disableProperty().bind(disabled);
+        exportAccountsMenuItem.disableProperty().bind(disabled);
+        importAccountsMenuItem.disableProperty().bind(disabled);
         importOfxMenuItem.disableProperty().bind(disabled);
         importQifMenuItem.disableProperty().bind(disabled);
-        importAccountsMenuItem.disableProperty().bind(disabled);
-        exportAccountsMenuItem.disableProperty().bind(disabled);
         recurringTransactionsMenuItem.disableProperty().bind(disabled);
+        reportMenu.disableProperty().bind(disabled);
         saveAsMenuItem.disableProperty().bind(disabled);
+        securitiesMenu.disableProperty().bind(disabled);
         shutdownServerMenuItem.disableProperty().bind(disabled.not());
+        tagManagerMenuItem.disableProperty().bind(disabled);
+        transNumberListMenuItem.disableProperty().bind(disabled);
         packDatabaseMenuItem.disableProperty().bind(disabled.not());
         portfolioReportMenuItem.disableProperty().bind(Bindings.or(disabled, investDisabled));
 
@@ -536,6 +541,11 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleBudgetManagerAction() {
         BudgetManagerDialogController.showBudgetManager();
+    }
+
+    @FXML
+    private void handleTagManagerAction() {
+        TagManagerDialogController.showTagManager();
     }
 
     @FXML
