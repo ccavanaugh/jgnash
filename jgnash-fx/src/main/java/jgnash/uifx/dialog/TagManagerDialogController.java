@@ -21,7 +21,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -41,6 +45,8 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.TextInputDialog;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
@@ -68,6 +74,9 @@ public class TagManagerDialogController implements MessageListener {
     private ListView<Tag> tagListView;
 
     @FXML
+    private ResourceBundle resources;
+
+    @FXML
     private void initialize() {
         deleteButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
         duplicateButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
@@ -83,7 +92,7 @@ public class TagManagerDialogController implements MessageListener {
     @FXML
     private void handleNewAction() {
         final Tag tag = new Tag();
-        tag.setName("New Tag");
+        tag.setName(resources.getString("Word.NewTag"));
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -92,10 +101,41 @@ public class TagManagerDialogController implements MessageListener {
 
     @FXML
     private void handleDuplicateAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        for (final Tag tag : tagListView.getSelectionModel().getSelectedItems()) {
+            try {
+                final Tag newTag = (Tag) tag.clone();
+                if (!engine.addTag(newTag)) {
+                    StaticUIMethods.displayError(resources.getString("Message.Error.TagDuplicate"));
+                }
+            } catch (final CloneNotSupportedException e) {
+                Logger.getLogger(TagManagerDialogController.class.getName()).log(Level.SEVERE, e.toString(), e);
+            }
+        }
     }
 
     @FXML
     private void handleRenameAction() {
+        for (final Tag tag : tagListView.getSelectionModel().getSelectedItems()) {
+
+            final TextInputDialog textInputDialog = new TextInputDialog(tag.getName());
+            textInputDialog.setTitle(resources.getString("Title.RenameTag"));
+            textInputDialog.setContentText(resources.getString("Label.RenameTag"));
+
+            final Optional<String> optional = textInputDialog.showAndWait();
+
+            optional.ifPresent(s -> {
+                if (!s.isEmpty()) {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    tag.setName(s);
+                    engine.updateTag(tag);
+                }
+            });
+        }
     }
 
     @FXML
