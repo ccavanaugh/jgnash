@@ -41,13 +41,17 @@ public class Tag extends StoredObject implements Comparable<Tag> {
 
     /**
      * Tag color
+     * <p>
+     * Default value is black
      */
     private int color = 0;
 
     /**
-     * Tag shape
+     * The Tag shape
+     * <p>
+     * Store a unicode integer here and use a font to generate shapes
      */
-    private byte shape = 0;
+    private int shape = 0;
 
     public Tag() {
         // zero arg constructor required for persistence
@@ -114,7 +118,7 @@ public class Tag extends StoredObject implements Comparable<Tag> {
             return result;
         }
 
-        result = Byte.compare(shape, o.shape);
+        result = Integer.compare(shape, o.shape);
         if (result != 0) {
             return result;
         }
