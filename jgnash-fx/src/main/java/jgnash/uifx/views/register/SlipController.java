@@ -56,6 +56,9 @@ public class SlipController extends AbstractSlipController {
     private final BooleanProperty concatenated = new SimpleBooleanProperty();
 
     @FXML
+    protected TagPane tagPane;
+
+    @FXML
     protected Button cancelButton;
 
     @FXML
@@ -93,6 +96,8 @@ public class SlipController extends AbstractSlipController {
                 .or(modEntry.isNotNull()));
 
         memoTextField.disableProperty().bind(concatenated);
+
+        tagPane.setTransactionEntries(transactionEntries.get());
     }
 
     void setSlipType(final SlipType slipType) {
