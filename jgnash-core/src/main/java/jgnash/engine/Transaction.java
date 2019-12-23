@@ -522,6 +522,18 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         return tags;
     }
 
+    /**
+     * Assigns the specified Tag(s) to all entries
+     *
+     * @see TransactionEntry#setTags(Collection) 
+     * @param tags Set of tags to assign
+     */
+    public void setTags(final Collection<Tag> tags) {
+        for (final TransactionEntry entry : transactionEntries) {
+            entry.setTags(tags);
+        }
+    }
+
     @Nullable
     public String getFitid() {
         return fitid;
