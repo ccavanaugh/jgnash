@@ -51,7 +51,7 @@ public class Tag extends StoredObject implements Comparable<Tag> {
      * <p>
      * Store a unicode integer here and use a font to generate shapes
      */
-    private int shape = 0;
+    private int shape = 61713;  // fontawesome circle
 
     public Tag() {
         // zero arg constructor required for persistence
@@ -77,12 +77,42 @@ public class Tag extends StoredObject implements Comparable<Tag> {
         return name;
     }
 
+    /**
+     * Sets the Tag color
+     *
+     * @see jgnash.util.EncodeDecode#intToColorString(int)
+     * @param color integer equivalent of a web based color string
+     */
     public void setColor(final int color) {
         this.color = color;
     }
 
+    /**
+     * Returns the Tag color
+     *
+     * @see jgnash.util.EncodeDecode#colorStringToInt(String)
+     * @return integer value encoded from a web based color string
+     */
     public int getColor() {
         return color;
+    }
+
+    /**
+     * Returns the Tag shape
+     *
+     * @return integer value equal to a unicode font character
+     */
+    public int getShape() {
+        return shape;
+    }
+
+    /**
+     * Sets the Tag shape
+     *
+     * @param shape integer value equal to a unicode font character
+     */
+    public void setShape(final int shape) {
+        this.shape = shape;
     }
 
     @Override
