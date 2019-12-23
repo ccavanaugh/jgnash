@@ -13,8 +13,8 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AccountExchangePane?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
+<?import jgnash.uifx.views.register.TagPaneController?>
 
-<?import jgnash.uifx.views.register.TagPane?>
 <GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.views.register.SlipController" styleClass="form, dialog">
     <columnConstraints>
@@ -62,7 +62,7 @@
 
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
         <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2"/>
-        <TagPane fx:id="tagPane"  GridPane.columnIndex="4"/>
+        <TagPaneController fx:id="tagPane" GridPane.columnIndex="4"/>
     </GridPane>
     <ButtonBar fx:id="buttonBar" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3">
         <buttons>

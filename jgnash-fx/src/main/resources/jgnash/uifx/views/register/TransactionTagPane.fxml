@@ -7,8 +7,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
-<fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity"
-         minWidth="-Infinity"
+
+<fx:root type="GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
          xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="form">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER"/>
@@ -19,12 +19,13 @@
     </rowConstraints>
     <Button fx:id="selectTagsButton" mnemonicParsing="false">
         <graphic>
-            <FontAwesomeLabel glyphName="CLIPBOARD"/>
+            <FontAwesomeLabel glyphName="HASH_TAG"/>
         </graphic>
         <tooltip>
             <Tooltip text="%ToolTip.SelectTags"/>
         </tooltip>
     </Button>
-    <HBox fx:id="tagBox" GridPane.columnIndex="1"/>
+
+    <HBox fx:id="tagBox" GridPane.columnIndex="1" alignment="CENTER"/>
 
 </fx:root>

@@ -168,6 +168,16 @@
     -fx-font-weight: normal;
 }
 
+#tag-box {
+    -fx-hgap: 1.0em;
+    -fx-vgap: 0.666666em;
+    -fx-padding: 1.2em;
+}
+
+#tag-pane {
+    -fx-spacing: 1.0em;
+}
+
 #italic-label {
     -fx-font-style: italic;
 }

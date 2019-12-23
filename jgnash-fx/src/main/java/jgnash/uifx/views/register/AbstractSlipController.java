@@ -83,6 +83,9 @@ abstract class AbstractSlipController implements Slip {
     protected AutoCompleteTextField<Transaction> payeeTextField;
 
     @FXML
+    protected TagPaneController tagPane;
+
+    @FXML
     private CheckBox reconciledButton;
 
     @FXML

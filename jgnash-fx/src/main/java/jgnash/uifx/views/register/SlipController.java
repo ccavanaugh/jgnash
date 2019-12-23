@@ -56,9 +56,6 @@ public class SlipController extends AbstractSlipController {
     private final BooleanProperty concatenated = new SimpleBooleanProperty();
 
     @FXML
-    protected TagPane tagPane;
-
-    @FXML
     protected Button cancelButton;
 
     @FXML
@@ -96,8 +93,6 @@ public class SlipController extends AbstractSlipController {
                 .or(modEntry.isNotNull()));
 
         memoTextField.disableProperty().bind(concatenated);
-
-        tagPane.setTransactionEntries(transactionEntries.get());
     }
 
     void setSlipType(final SlipType slipType) {
@@ -116,6 +111,8 @@ public class SlipController extends AbstractSlipController {
 
         modTrans = transaction; // save reference to old transaction
         modTrans = attachmentPane.modifyTransaction(modTrans);
+
+        tagPane.setSelectedTags(transaction.getTags());
 
         // Set state of memo concatenation
         concatenated.setValue(modTrans.isMemoConcatenated());
@@ -191,6 +188,8 @@ public class SlipController extends AbstractSlipController {
             }
         }
 
+        transaction.setTags(tagPane.getSelectedTags());
+
         ReconcileManager.reconcileTransaction(account.get(), transaction, getReconciledState());
 
         return transaction;
@@ -221,6 +220,8 @@ public class SlipController extends AbstractSlipController {
                 entry.setCreditAmount(accountExchangePane.exchangeAmountProperty().get().abs());
             }
         }
+
+        entry.setTags(tagPane.getSelectedTags());
 
         entry.setReconciled(account.get(), getReconciledState());
 
@@ -268,6 +269,8 @@ public class SlipController extends AbstractSlipController {
                     }
                 }
 
+                tagPane.setSelectedTags(t.getTags());
+
                 amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
             } else { // not the same common account, can only modify the entry
                 splitsButton.setDisable(true);
@@ -282,9 +285,11 @@ public class SlipController extends AbstractSlipController {
                 for (final TransactionEntry entry : t.getTransactionEntries()) {
                     if (entry.getCreditAccount() == accountProperty().get()) {
                         accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
+                        tagPane.setSelectedTags(entry.getTags());
                         break;
                     } else if (entry.getDebitAccount() == accountProperty().get()) {
                         accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+                        tagPane.setSelectedTags(entry.getTags());
                         break;
                     }
                 }
@@ -292,8 +297,10 @@ public class SlipController extends AbstractSlipController {
         } else if (t instanceof InvestmentTransaction) {
             Logger logger = Logger.getLogger(SlipController.class.getName());
             logger.warning("unsupported transaction type");
+
         } else { // DoubleEntryTransaction
             datePicker.setEditable(true);
+            tagPane.setSelectedTags(t.getTags());
         }
 
         // setup the accountCombo correctly
@@ -324,6 +331,8 @@ public class SlipController extends AbstractSlipController {
         accountExchangePane.setExchangedAmount(null);
 
         splitsButton.setDisable(false);
+
+        tagPane.clearSelectedTags();
     }
 
     @Override
