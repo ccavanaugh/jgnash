@@ -26,10 +26,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.util.EncodeDecode;
 import jgnash.util.NotNull;
 
 /**
@@ -42,7 +44,7 @@ public class FontAwesomeLabel extends Label {
 
     private static final String TTF_PATH = "/jgnash/fonts/fontawesome-webfont.ttf";
 
-    private static final double DEFAULT_SIZE = 16.0;
+    public static final double DEFAULT_SIZE = 16.0;
 
     static {
         Font.loadFont(FontAwesomeLabel.class.getResource(TTF_PATH).toExternalForm(),
@@ -56,6 +58,20 @@ public class FontAwesomeLabel extends Label {
     @SuppressWarnings("unused")
     public FontAwesomeLabel() {
         this(FAIcon.BUG);
+    }
+
+    public static FontAwesomeLabel fromInteger(final int value, final double size, final int color) {
+        final String unicode = Character.toString((char)value);
+
+        final Color c = Color.web(EncodeDecode.intToColorString(color));
+
+        for (final FAIcon faIcon : FAIcon.values()) {
+            if (faIcon.unicode.equals(unicode)) {
+                return new FontAwesomeLabel(faIcon, size, c);
+            }
+        }
+
+        return new FontAwesomeLabel(FAIcon.BUG);
     }
 
     public FontAwesomeLabel(final FAIcon glyphValue) {
@@ -148,11 +164,15 @@ public class FontAwesomeLabel extends Label {
         ARROWS_V("\uf07d"),
         BANK("\uf19c"),
         BELL("\uf0f3"),
+        BOLT("\uf0e7"),
         BOOKMARK("\uf02e"),
         BUG("\uf188"),
         CALENDAR("\uf073"),
         CHEVRON_LEFT("\uf053"),
         CHEVRON_RIGHT("\uf054"),
+        CIRCLE("\uf111"),
+        CIRCLE_OPEN("\uf10c"),
+        CIRCLE_OPEN_NOTCH("\uf1ce"),
         CLIPBOARD("\uf0ea"),
         CLOCK("\uf017"),
         CLOSE("\uf00d"),
@@ -180,6 +200,7 @@ public class FontAwesomeLabel extends Label {
         FILE_IMAGE_O("\uf1c5"),
         FILTER("\uf0b0"),
         FLAG("\uf024"),
+        HASH_TAG("\uf292"),
         INFO("\uf129"),
         INFO_CIRCLE("\uf05a"),
         KEY("\uf084"),
