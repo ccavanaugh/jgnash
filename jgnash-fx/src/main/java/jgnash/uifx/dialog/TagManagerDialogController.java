@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
@@ -32,9 +31,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -46,10 +51,13 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.control.TextInputDialog;
+import jgnash.uifx.control.TextFieldEx;
+import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
+
+import static jgnash.uifx.resource.font.FontAwesomeLabel.FAIcon;
 
 /**
  * Tag Manager dialog controller
@@ -62,10 +70,19 @@ public class TagManagerDialogController implements MessageListener {
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
 
     @FXML
-    private Button duplicateButton;
+    private Button saveButton;
 
     @FXML
-    private Button renameButton;
+    private TextArea descriptionTextArea;
+
+    @FXML
+    private TextFieldEx nameField;
+
+    @FXML
+    private ComboBox<FAIcon> iconCombo;
+
+    @FXML
+    private Button duplicateButton;
 
     @FXML
     private Button deleteButton;
@@ -80,13 +97,40 @@ public class TagManagerDialogController implements MessageListener {
     private void initialize() {
         deleteButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
         duplicateButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
-        renameButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
-
-        tagListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        nameField.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
+        saveButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
+        tagListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        iconCombo.setEditable(false);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.TAG);
 
         JavaFXUtils.runLater(this::loadTagListView);
+
+        JavaFXUtils.runLater(() -> tagListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                loadForm(newValue);
+            }
+        }));
+
+        iconCombo.setCellFactory(new ListViewListCellCallback());
+        iconCombo.setButtonCell(new FAIconListCell());
+
+        JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(FAIcon.values()));
+
+        JavaFXUtils.runLater(() -> JavaFXUtils.runLater(() -> iconCombo.setValue(iconCombo.getItems().get(0))));
+    }
+
+    private void loadForm(final Tag tag) {
+        nameField.setText(tag.getName());
+
+        final String unicode = Character.toString(tag.getShape());
+        for (FAIcon faIcon : FAIcon.values()) {
+            if (unicode.equals(faIcon.getUnicode())) {
+                JavaFXUtils.runLater(() -> iconCombo.setValue(faIcon));
+            }
+        }
+
+        descriptionTextArea.setText(tag.getDescription());
     }
 
     @FXML
@@ -117,28 +161,6 @@ public class TagManagerDialogController implements MessageListener {
     }
 
     @FXML
-    private void handleRenameAction() {
-        for (final Tag tag : tagListView.getSelectionModel().getSelectedItems()) {
-
-            final TextInputDialog textInputDialog = new TextInputDialog(tag.getName());
-            textInputDialog.setTitle(resources.getString("Title.RenameTag"));
-            textInputDialog.setContentText(resources.getString("Label.RenameTag"));
-
-            final Optional<String> optional = textInputDialog.showAndWait();
-
-            optional.ifPresent(s -> {
-                if (!s.isEmpty()) {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
-
-                    tag.setName(s);
-                    engine.updateTag(tag);
-                }
-            });
-        }
-    }
-
-    @FXML
     private void handleDeleteAction() {
         final List<Tag> selected = new ArrayList<>(tagListView.getSelectionModel().getSelectedItems());
 
@@ -159,7 +181,7 @@ public class TagManagerDialogController implements MessageListener {
     @FXML
     private void handleCloseAction() {
         MessageBus.getInstance().unregisterListener(this, MessageChannel.TAG);
-        ((Stage)parent.get().getWindow()).close();
+        ((Stage) parent.get().getWindow()).close();
     }
 
     @Override
@@ -186,6 +208,55 @@ public class TagManagerDialogController implements MessageListener {
                         ResourceUtils.getString("Title.TagManager"));
 
         pair.getStage().show();
-        pair.getStage().setResizable(false);
+    }
+
+    @FXML
+    private void handleSaveAction() {
+        final Tag tag = tagListView.getSelectionModel().getSelectedItem();
+
+        if (tag != null) {
+            tag.setName(nameField.getText());
+            tag.setDescription(descriptionTextArea.getText());
+            tag.setShape(iconCombo.getValue().getUnicode().codePointAt(0));
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+            engine.updateTag(tag);
+        }
+    }
+
+    @FXML
+    private void handleCancelAction() {
+        JavaFXUtils.runLater(() -> {
+            nameField.setText("");
+            descriptionTextArea.setText("");
+        });
+    }
+
+    private static class ListViewListCellCallback implements Callback<ListView<FAIcon>, ListCell<FAIcon>> {
+        @Override
+        public ListCell<FontAwesomeLabel.FAIcon> call(ListView<FAIcon> param) {
+            return new FAIconListCell();
+        }
+    }
+
+    private static class FAIconListCell extends ListCell<FAIcon> {
+        private final Label label = new Label();
+
+        {
+            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        }
+
+        @Override
+        protected void updateItem(final FAIcon item, final boolean empty) {
+            super.updateItem(item, empty);
+
+            if (item == null || empty) {
+                setGraphic(null);
+            } else {
+                label.setGraphic(new FontAwesomeLabel(item, FontAwesomeLabel.DEFAULT_SIZE));
+                setGraphic(label);
+            }
+        }
     }
 }

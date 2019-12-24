@@ -61,7 +61,7 @@ public class FontAwesomeLabel extends Label {
     }
 
     public static FontAwesomeLabel fromInteger(final int value, final double size, final int color) {
-        final String unicode = Character.toString((char)value);
+        final String unicode = Character.toString(value);
 
         final Color c = Color.web(EncodeDecode.intToColorString(color));
 
@@ -99,6 +99,8 @@ public class FontAwesomeLabel extends Label {
         } else {
             textFillProperty().bind(ThemeManager.controlTextFillProperty());
         }
+
+        setUserData(glyphValue);
 
         setCache(true); // enable caching
     }
@@ -155,6 +157,19 @@ public class FontAwesomeLabel extends Label {
     private static String getUnicode(final String string) {
         return FAIcon.valueOf(string).getUnicode();
     }
+
+    /*@Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        return getText().equals(((FontAwesomeLabel) o).getText());
+    }*/
 
     @SuppressWarnings("unused")
     public enum FAIcon {

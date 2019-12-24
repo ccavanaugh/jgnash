@@ -7,13 +7,22 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ListView?>
 
-<GridPane fx:controller="jgnash.uifx.dialog.TagManagerDialogController" minHeight="300" minWidth="280"
+<?import javafx.scene.control.Label?>
+<?import jgnash.uifx.control.TextFieldEx?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+
+<GridPane fx:controller="jgnash.uifx.dialog.TagManagerDialogController" minHeight="300" minWidth="-Infinity"
           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="form, dialog">
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="SOMETIMES" prefWidth="120"/>
+        <ColumnConstraints hgrow="NEVER"/>
         <ColumnConstraints hgrow="NEVER"/>
     </columnConstraints>
     <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="NEVER"/>
@@ -21,21 +30,42 @@
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
-    <ListView fx:id="tagListView" GridPane.rowSpan="4" prefHeight="200"/>
+    <ButtonBar GridPane.halignment="LEFT">
+        <buttons>
+            <Button text="%Button.New" onAction="#handleNewAction"/>
+            <Button fx:id="duplicateButton" text="%Button.Duplicate" onAction="#handleDuplicateAction"/>
+            <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAction"/>
+        </buttons>
+    </ButtonBar>
 
-    <Button text="%Button.New" onAction="#handleNewAction" maxWidth="Infinity"
-            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-    <Button fx:id="duplicateButton" text="%Button.Duplicate" onAction="#handleDuplicateAction" maxWidth="Infinity"
-            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-    <Button fx:id="renameButton" text="%Button.Rename" onAction="#handleRenameAction" maxWidth="Infinity"
-            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-    <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAction" maxWidth="Infinity"
-            GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <ListView fx:id="tagListView" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.rowSpan="5"
+              prefHeight="280" minWidth="-Infinity"/>
 
-    <ButtonBar GridPane.rowIndex="4" GridPane.columnSpan="2">
+    <Label text="%Label.Name" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <TextFieldEx fx:id="nameField" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+    <Label text="%Label.Color" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextFieldEx GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+    <Label text="%Label.Icon" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <ComboBox fx:id="iconCombo" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.fillWidth="true" maxWidth="Infinity"/>
+
+    <Label text="%Label.Description" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <TextArea fx:id="descriptionTextArea" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4"/>
+
+    <ButtonBar GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+        <buttons>
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveAction" text="%Button.Save"
+                    ButtonBar.buttonData="APPLY" maxWidth="Infinity"/>
+            <Button mnemonicParsing="false" onAction="#handleCancelAction" text="%Button.Cancel"
+                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+        </buttons>
+    </ButtonBar>
+
+    <ButtonBar GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="3">
         <buttons>
             <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
-                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+                    ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>
