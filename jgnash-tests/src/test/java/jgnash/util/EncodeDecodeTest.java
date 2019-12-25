@@ -57,10 +57,10 @@ class EncodeDecodeTest {
 
     @Test
     void testHexDecode() {
-        assertEquals("#000000", EncodeDecode.intToColorString(0));
-        assertEquals(0, EncodeDecode.colorStringToInt("#000000"));
+        assertEquals("0x00000000", EncodeDecode.longToColorString(0));
+        assertEquals(0, EncodeDecode.colorStringToLong("0x00000000"));
 
-        assertEquals("#FFFFFF", EncodeDecode.intToColorString(16777215));
-        assertEquals(16777215, EncodeDecode.colorStringToInt("#FFFFFF"));
+        assertEquals("0x00FFFFFF", EncodeDecode.longToColorString(16777215));
+        assertEquals(16777215, EncodeDecode.colorStringToLong("0x00FFFFFF"));
     }
 }

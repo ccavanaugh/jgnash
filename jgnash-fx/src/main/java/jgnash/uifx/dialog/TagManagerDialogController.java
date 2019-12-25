@@ -31,6 +31,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -38,6 +39,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -56,6 +58,7 @@ import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.util.EncodeDecode;
 
 import static jgnash.uifx.resource.font.FontAwesomeLabel.FAIcon;
 
@@ -68,6 +71,9 @@ public class TagManagerDialogController implements MessageListener {
 
     @InjectFXML
     private final ObjectProperty<Scene> parent = new SimpleObjectProperty<>();
+
+    @FXML
+    private ColorPicker colorPicker;
 
     @FXML
     private Button saveButton;
@@ -108,7 +114,7 @@ public class TagManagerDialogController implements MessageListener {
 
         JavaFXUtils.runLater(() -> tagListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                loadForm(newValue);
+                JavaFXUtils.runLater(() -> loadForm(newValue));
             }
         }));
 
@@ -117,20 +123,23 @@ public class TagManagerDialogController implements MessageListener {
 
         JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(FAIcon.values()));
 
-        JavaFXUtils.runLater(() -> JavaFXUtils.runLater(() -> iconCombo.setValue(iconCombo.getItems().get(0))));
+        // reset to default values
+        handleResetAction();
     }
 
     private void loadForm(final Tag tag) {
         nameField.setText(tag.getName());
-
-        final String unicode = Character.toString(tag.getShape());
-        for (FAIcon faIcon : FAIcon.values()) {
-            if (unicode.equals(faIcon.getUnicode())) {
-                JavaFXUtils.runLater(() -> iconCombo.setValue(faIcon));
-            }
-        }
-
         descriptionTextArea.setText(tag.getDescription());
+        colorPicker.setValue(Color.valueOf(EncodeDecode.longToColorString(tag.getColor())));
+
+        new Thread(() -> {
+            final String unicode = Character.toString(tag.getShape());
+            for (FAIcon faIcon : FAIcon.values()) {
+                if (unicode.equals(faIcon.getUnicode())) {
+                    JavaFXUtils.runLater(() -> iconCombo.setValue(faIcon));
+                }
+            }
+        }).start();
     }
 
     @FXML
@@ -212,24 +221,28 @@ public class TagManagerDialogController implements MessageListener {
 
     @FXML
     private void handleSaveAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         final Tag tag = tagListView.getSelectionModel().getSelectedItem();
 
         if (tag != null) {
             tag.setName(nameField.getText());
             tag.setDescription(descriptionTextArea.getText());
             tag.setShape(iconCombo.getValue().getUnicode().codePointAt(0));
+            tag.setColor(EncodeDecode.colorStringToLong(colorPicker.getValue().toString()));
 
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
             engine.updateTag(tag);
         }
     }
 
     @FXML
-    private void handleCancelAction() {
+    private void handleResetAction() {
         JavaFXUtils.runLater(() -> {
             nameField.setText("");
             descriptionTextArea.setText("");
+            colorPicker.setValue(Color.BLACK);
+            iconCombo.setValue(FAIcon.CIRCLE);
         });
     }
 

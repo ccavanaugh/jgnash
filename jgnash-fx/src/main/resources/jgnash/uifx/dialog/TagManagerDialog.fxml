@@ -2,20 +2,20 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.control.ListView?>
-
-<?import javafx.scene.control.Label?>
 <?import jgnash.uifx.control.TextFieldEx?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.TextArea?>
 
 <GridPane fx:controller="jgnash.uifx.dialog.TagManagerDialogController" minHeight="300" minWidth="-Infinity"
           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="form, dialog">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="120"/>
+        <ColumnConstraints hgrow="SOMETIMES" prefWidth="110"/>
         <ColumnConstraints hgrow="NEVER"/>
         <ColumnConstraints hgrow="NEVER"/>
     </columnConstraints>
@@ -45,7 +45,7 @@
     <TextFieldEx fx:id="nameField" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
     <Label text="%Label.Color" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-    <TextFieldEx GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <ColorPicker fx:id="colorPicker" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
     <Label text="%Label.Icon" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     <ComboBox fx:id="iconCombo" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.fillWidth="true" maxWidth="Infinity"/>
@@ -57,7 +57,7 @@
         <buttons>
             <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveAction" text="%Button.Save"
                     ButtonBar.buttonData="APPLY" maxWidth="Infinity"/>
-            <Button mnemonicParsing="false" onAction="#handleCancelAction" text="%Button.Cancel"
+            <Button mnemonicParsing="false" onAction="#handleResetAction" text="%Button.Cancel"
                     ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
         </buttons>
     </ButtonBar>

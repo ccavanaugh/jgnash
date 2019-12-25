@@ -60,10 +60,10 @@ public class FontAwesomeLabel extends Label {
         this(FAIcon.BUG);
     }
 
-    public static FontAwesomeLabel fromInteger(final int value, final double size, final int color) {
+    public static FontAwesomeLabel fromInteger(final int value, final double size, final long color) {
         final String unicode = Character.toString(value);
 
-        final Color c = Color.web(EncodeDecode.intToColorString(color));
+        final Color c = Color.web(EncodeDecode.longToColorString(color));
 
         for (final FAIcon faIcon : FAIcon.values()) {
             if (faIcon.unicode.equals(unicode)) {

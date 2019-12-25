@@ -44,7 +44,7 @@ public class Tag extends StoredObject implements Comparable<Tag> {
      * <p>
      * Default value is black
      */
-    private int color = 0;
+    private long color = 255;
 
     /**
      * The Tag shape
@@ -80,20 +80,20 @@ public class Tag extends StoredObject implements Comparable<Tag> {
     /**
      * Sets the Tag color
      *
-     * @see jgnash.util.EncodeDecode#intToColorString(int)
+     * @see jgnash.util.EncodeDecode#longToColorString(long)
      * @param color integer equivalent of a web based color string
      */
-    public void setColor(final int color) {
+    public void setColor(final long color) {
         this.color = color;
     }
 
     /**
      * Returns the Tag color
      *
-     * @see jgnash.util.EncodeDecode#colorStringToInt(String)
+     * @see jgnash.util.EncodeDecode#colorStringToLong(String)
      * @return integer value encoded from a web based color string
      */
-    public int getColor() {
+    public long getColor() {
         return color;
     }
 
@@ -143,7 +143,7 @@ public class Tag extends StoredObject implements Comparable<Tag> {
             return result;
         }
 
-        result = Integer.compare(color, o.color);
+        result = Long.compare(color, o.color);
         if (result != 0) {
             return result;
         }

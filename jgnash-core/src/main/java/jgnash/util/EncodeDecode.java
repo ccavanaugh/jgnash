@@ -146,8 +146,8 @@ public class EncodeDecode {
      * @param color # based hex color
      * @return int value
      */
-    public static int colorStringToInt(final String color) {
-        return Integer.parseInt(color.replaceAll("#",""), 16);
+    public static long colorStringToLong(final String color) {
+        return Long.parseUnsignedLong(color.replaceAll("0x",""), 16);
     }
 
     /**
@@ -155,7 +155,7 @@ public class EncodeDecode {
      * @param color int value
      * @return hex based color string
      */
-    public static String intToColorString(final int color) {
-        return String.format("#%06X", (0xFFFFFF & color));
+    public static String longToColorString(final long color) {
+        return String.format("0x%08X", color);
     }
 }
