@@ -33,6 +33,10 @@ import javafx.scene.layout.HBox;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Tag;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.util.FXMLUtils;
@@ -43,7 +47,7 @@ import jgnash.uifx.util.JavaFXUtils;
  *
  * @author Craig Cavanaugh
  */
-public class TagPaneController extends GridPane {
+public class TagPaneController extends GridPane implements MessageListener {
 
     public static final double ICON_SCALE = 1.2;
 
@@ -75,17 +79,9 @@ public class TagPaneController extends GridPane {
 
         selectTagsButton.setOnAction(event -> showPopup());
 
-        // disable the button if there are not any tags
-        new Thread(() -> {
-            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            if (engine != null) {
-                Set<Tag> tags = engine.getTags();
+        updateVisibility();
 
-                if (!tags.isEmpty()) {  // enable if tags are visible
-                    JavaFXUtils.runLater(() -> selectTagsButton.setVisible(true));
-                }
-            }
-        }).start();
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.TAG);
     }
 
     void clearSelectedTags() {
@@ -130,6 +126,31 @@ public class TagPaneController extends GridPane {
                     FontAwesomeLabel.DEFAULT_SIZE * ICON_SCALE, tag.getColor()));
             label.setTooltip(new Tooltip(tag.getName()));
             tagBox.getChildren().add(label);
+        }
+    }
+
+    private void updateVisibility() {
+        new Thread(() -> {
+            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            if (engine != null) {
+                JavaFXUtils.runLater(() -> selectTagsButton.setVisible(!engine.getTags().isEmpty()));
+            }
+        }).start();
+    }
+
+    @Override
+    public void messagePosted(final Message message) {
+        switch (message.getEvent()) {
+            case TAG_ADD:
+            case TAG_REMOVE:
+                updateVisibility();
+                break;
+            case TAG_MODIFY:
+                JavaFXUtils.runLater(this::refreshTagView);
+                break;
+            case FILE_CLOSING:
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.TAG);
+            default:
         }
     }
 }
