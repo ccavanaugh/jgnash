@@ -54,15 +54,11 @@
                 <FontAwesomeLabel glyphName="COMPRESS"/>
             </graphic>
         </MenuItem>
-        <MenuItem fx:id="shutdownServerMenuItem" onAction="#handleShutDownServerAction" text="%Menu.ShutdownServer.Name">
-            <graphic>
-                <FontAwesomeLabel glyphName="POWER_OFF"/>
-            </graphic>
-        </MenuItem>
+        <MenuItem fx:id="shutdownServerMenuItem" onAction="#handleShutDownServerAction" text="%Menu.ShutdownServer.Name"/>
         <SeparatorMenuItem/>
         <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">
             <graphic>
-                <FontAwesomeLabel glyphName="CLOSE"/>
+                <FontAwesomeLabel glyphName="TIMES_CIRCLE"/>
             </graphic>
         </MenuItem>
         <MenuItem fx:id="exitMenuItem" onAction="#handleExitAction" text="%Menu.Exit.Name">
@@ -160,7 +156,7 @@
         <MenuItem text="%Menu.ConfigImportFilters.Name" fx:id="configureTranImportFiltersMenuItem"
                   onAction="#handleShowTranImportFilterDialog">
             <graphic>
-                <FontAwesomeLabel glyphName="COG"/>
+                <FontAwesomeLabel glyphName="COGS"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>

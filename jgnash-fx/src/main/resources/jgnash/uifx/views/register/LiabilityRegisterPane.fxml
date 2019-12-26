@@ -52,7 +52,7 @@
                         <Button text="%Button.Amortize" onAction="#handleAmortizeAction"
                                 ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="RIGHT">
                             <graphic>
-                                <FontAwesomeLabel glyphName="BANK"/>
+                                <FontAwesomeLabel glyphName="UNIVERSITY"/>
                             </graphic>
                         </Button>
                     </buttons>

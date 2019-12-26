@@ -444,7 +444,7 @@ public class MainView implements MessageListener {
 
         StatusBarLogHandler() {
             info = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO, GRAPHIC_SIZE);
-            warning = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.FLAG, GRAPHIC_SIZE);
+            warning = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_TRIANGLE, GRAPHIC_SIZE);
             severe = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
         }
 

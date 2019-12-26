@@ -69,7 +69,7 @@
                 <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop"
                         ButtonBar.buttonData="RIGHT">
                     <graphic>
-                        <FontAwesomeLabel glyphName="TIMES"/>
+                        <FontAwesomeLabel glyphName="STOP_CIRCLE"/>
                     </graphic>
                 </Button>
             </buttons>

@@ -40,7 +40,7 @@
                         <Button mnemonicParsing="false" onAction="#handleSecuritiesAction"
                                 text="%Button.AvailSecurities" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeLabel glyphName="BOOKMARK"/>
+                                <FontAwesomeLabel glyphName="LIST"/>
                             </graphic>
                         </Button>
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction"

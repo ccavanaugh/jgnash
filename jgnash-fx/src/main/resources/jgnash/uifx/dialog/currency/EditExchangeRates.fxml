@@ -96,7 +96,7 @@
         <ProgressBar fx:id="progressBar" maxWidth="Infinity" progress="0.0" GridPane.columnIndex="1"/>
         <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop" GridPane.columnIndex="2">
             <graphic>
-                <FontAwesomeLabel glyphName="TIMES"/>
+                <FontAwesomeLabel glyphName="STOP_CIRCLE"/>
             </graphic>
         </Button>
     </GridPane>

@@ -23,6 +23,7 @@
 * Add manual warning about placing jGnash in Program Files. (%AppData%\jGnash)
 
 == Release 3.5.0 __(File format change)__
+* 12/26/2019 FontAwesome icons were updated resulting in some icon changes
 * 12/15/2019 Reworked the Engine API for advanced transaction tags.
 * 12/14/2019 The Windows exe wrapper will now look in the registry if JAVA_HOME has not been set.
 

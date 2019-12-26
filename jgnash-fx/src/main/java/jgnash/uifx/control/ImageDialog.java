@@ -79,8 +79,7 @@ public class ImageDialog {
         final BorderPane borderPane = new BorderPane();
         final ToolBar toolBar = new ToolBar();
 
-        final Button printButton = new Button(resources.getString("Button.Print"),
-                new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PRINT));
+        final Button printButton = new Button(resources.getString("Button.Print"));
 
         printButton.setOnAction(event -> JavaFXUtils.printImageView(imageView));
 

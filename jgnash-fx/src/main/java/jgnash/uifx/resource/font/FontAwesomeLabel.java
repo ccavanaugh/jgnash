@@ -42,7 +42,7 @@ import jgnash.util.NotNull;
  */
 public class FontAwesomeLabel extends Label {
 
-    private static final String TTF_PATH = "/jgnash/fonts/fontawesome-webfont.ttf";
+    private static final String TTF_PATH = "/jgnash/fonts/fa-solid-900.ttf";
 
     public static final double DEFAULT_SIZE = 16.0;
 
@@ -87,7 +87,7 @@ public class FontAwesomeLabel extends Label {
         sizeProperty.set(sizeValue);
 
         final StringExpression iconStyleProperty = Bindings.format(Locale.US,
-                "-fx-font-family: FontAwesome; -fx-font-size: %1$.6f;",
+                "-fx-font-family: Font Awesome 5 Free; -fx-font-weight: 900; -fx-font-size: %1$.6f;",
                 ThemeManager.fontScaleProperty().multiply(sizeProperty));
 
         setGlyphName(glyphValue);
@@ -158,54 +158,41 @@ public class FontAwesomeLabel extends Label {
         return FAIcon.valueOf(string).getUnicode();
     }
 
-    /*@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return getText().equals(((FontAwesomeLabel) o).getText());
-    }*/
-
     @SuppressWarnings("unused")
     public enum FAIcon {
         ADJUST("\uf042"),
-        ARROWS("\uf047"),
-        ARROWS_H("\uf07e"),
-        ARROWS_V("\uf07d"),
-        BANK("\uf19c"),
+        ARROWS("\uf0b2"),
+        ARROWS_H("\uf337"),
+        ARROWS_V("\uf338"),
         BELL("\uf0f3"),
         BOLT("\uf0e7"),
-        BOOKMARK("\uf02e"),
         BUG("\uf188"),
         CALENDAR("\uf073"),
+        CALENDAR_CHECK("\uf274"),
         CHEVRON_LEFT("\uf053"),
         CHEVRON_RIGHT("\uf054"),
         CIRCLE("\uf111"),
-        CIRCLE_OPEN("\uf10c"),
-        CIRCLE_OPEN_NOTCH("\uf1ce"),
+        CIRCLE_NOTCH("\uf1ce"),
+        CLINIC_MEDICAL("\uf7f2"),
         CLIPBOARD("\uf0ea"),
-        CLOCK("\uf017"),
-        CLOSE("\uf00d"),
-        CLOUD_DOWNLOAD("\uf0ed"),
+        CLOUD_DOWNLOAD("\uf381"),
         CODE("\uf121"),
-        COG("\uf013"),
+        COFFEE("\uf0f4"),
         COGS("\uf085"),
+        COMPACT_DISC("\uf51f"),
         COMPRESS("\uf066"),
         COPY("\uf0c5"),
+        CROSS("\uf654"),
+        CROWN("\uf521"),
         EDIT("\uf044"),
         ELLIPSIS_H("\uf141"),
         EXCLAMATION("\uf12a"),
         EXCLAMATION_CIRCLE("\uf06a"),
         EXCLAMATION_TRIANGLE("\uf071"),
-        EXCHANGE("\uf0ec"),
+        EXCHANGE("\uf362"),
         EXPAND("\uf065"),
-        EXTERNAL_LINK("\uf08e"),
-        EXTERNAL_LINK_SQUARE("\uf14c"),
+        EXTERNAL_LINK("\uf35d"),
+        EXTERNAL_LINK_SQUARE("\uf360"),
         EYE("\uf06e"),
         FAST_BACKWARD("\uf049"),
         FAST_FORWARD("\uf050"),
@@ -214,38 +201,54 @@ public class FontAwesomeLabel extends Label {
         FILE_EXCEL_O("\uf1c3"),
         FILE_IMAGE_O("\uf1c5"),
         FILTER("\uf0b0"),
-        FLAG("\uf024"),
+        FOLDER_OPEN("\uf07c"),
+        FROG("\uf52e"),
+        FROWN("\uf119"),
+        FROWN_OPEN("\uf57a"),
+        FUT_BOL("\uf1e3"),
+        GAS_PUMP("\uf52f"),
+        GEM("\uf3a5"),
+        GIFT("\uf06b"),
+        GIFTS("\uf79c"),
         HASH_TAG("\uf292"),
+        HOSPITAL("\uf0f8"),
+        HOTEL("\uf594"),
         INFO("\uf129"),
         INFO_CIRCLE("\uf05a"),
         KEY("\uf084"),
         LANGUAGE("\uf1ab"),
-        LEVEL_DOWN("\uf149"),
-        LEVEL_UP("\uf148"),
+        LEVEL_DOWN("\uf3be"),
+        LEVEL_UP("\uf3bf"),
         LINK("\uf0c1"),
         LIST("\uf03a"),
-        LONG_ARROW_RIGHT("\uf178"),
-        FOLDER_OPEN("\uf07c"),
+        LONG_ARROW_RIGHT("\uf30b"),
         MINUS_CIRCLE("\uf056"),
         MONEY("\uf0d6"),
-        PENCIL("\uf040"),
+        PENCIL("\uf303"),
         PLUS("\uf067"),
         PLUS_CIRCLE("\uf055"),
-        POWER_OFF("\uf011"),
-        PRINT("\uf02f"),
+        PLUS_SQUARE("\uf0fe"),
+        PRAY("\uf683"),
+        PRAY_HANDS("\uf684"),
+        PRESCRIPTION("\uf5b1"),
+        PRINT("\uf02f"),        // broken in fontawesome
+        PROCEDURES("\uf487"),
         QUESTION_CIRCLE("\uf059"),
-        REFRESH("\uf021"),
         SAVE("\uf0c7"),
-        SEARCH_MINUS("\uf010"),
-        SEARCH_PLUS("\uf00e"),
-        SIGN_OUT("\uf08b"),
+        SIGN_OUT("\uf2f5"),
         STEP_BACKWARD("\uf048"),
         STEP_FORWARD("\uf051"),
+        STOP_CIRCLE("\uf28d"),
+        SYNC_ALT("\uf2f1"),
         TABLE("\uf0ce"),
+        // TAG("\uf02b"),               // broken in fontawesome
+        // TAGS("\uf02c"),              // broken in fontawesome
         TERMINAL("\uf120"),
         TEXT_HEIGHT("\uf034"),
-        TIMES("\uf00d"),
-        TRASH_O("\uf014"),
+        TIMES_CIRCLE("\uf057"),
+        TOOTH("\uf5c9"),
+        TRASH_O("\uf1f8"),
+        UNIVERSITY("\uf19c"),
         UNLINK("\uf127"),
         WRENCH("\uf0ad");
 

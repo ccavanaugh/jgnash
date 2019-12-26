@@ -121,7 +121,10 @@ public class TagManagerDialogController implements MessageListener {
         iconCombo.setCellFactory(new ListViewListCellCallback());
         iconCombo.setButtonCell(new FAIconListCell());
 
-        JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(FAIcon.values()));
+        JavaFXUtils.runLater(() -> {
+            iconCombo.getItems().addAll(FAIcon.values());
+            iconCombo.getItems().remove(FAIcon.PRINT);      // print icon broken in fontawesome 5.12.0
+        });
 
         // reset to default values
         handleResetAction();

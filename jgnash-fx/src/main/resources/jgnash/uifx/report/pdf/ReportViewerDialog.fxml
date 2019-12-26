@@ -70,7 +70,7 @@
                         <Button fx:id="zoomOutButton" onAction="#handleZoomOutAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="SEARCH_MINUS"/>
+                                <FontAwesomeLabel glyphName="MINUS_CIRCLE"/>
                             </graphic>
                         </Button>
                         <ComboBox fx:id="zoomComboBox" editable="true" focusTraversable="false"
@@ -79,7 +79,7 @@
                         <Button fx:id="zoomInButton" onAction="#handleZoomInAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="SEARCH_PLUS"/>
+                                <FontAwesomeLabel glyphName="PLUS_CIRCLE"/>
                             </graphic>
                         </Button>
                         <Separator/>

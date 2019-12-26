@@ -20,7 +20,7 @@
     <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
             disable="true">
         <graphic>
-            <FontAwesomeLabel glyphName="CLOSE"/>
+            <FontAwesomeLabel glyphName="TIMES_CIRCLE"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.Close.Tooltip"/>
