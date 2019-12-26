@@ -19,14 +19,18 @@ package jgnash.uifx.dialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -61,6 +65,7 @@ import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.EncodeDecode;
 
 import static jgnash.uifx.resource.font.FontAwesomeLabel.FAIcon;
+import static jgnash.uifx.views.register.TagPaneController.ICON_SCALE;
 
 /**
  * Tag Manager dialog controller
@@ -99,9 +104,12 @@ public class TagManagerDialogController implements MessageListener {
     @FXML
     private ResourceBundle resources;
 
+    private final Map<Tag, Boolean> lockedMap = new HashMap<>();
+    private final BooleanProperty tagLocked = new SimpleBooleanProperty();
+
     @FXML
     private void initialize() {
-        deleteButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
+        deleteButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull().or(tagLocked));
         duplicateButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
         nameField.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
         saveButton.disableProperty().bind(tagListView.getSelectionModel().selectedItemProperty().isNull());
@@ -126,6 +134,8 @@ public class TagManagerDialogController implements MessageListener {
             iconCombo.getItems().remove(FAIcon.PRINT);      // print icon broken in fontawesome 5.12.0
         });
 
+        tagListView.setCellFactory(new TagListViewListCellCallback());
+
         // reset to default values
         handleResetAction();
     }
@@ -134,6 +144,9 @@ public class TagManagerDialogController implements MessageListener {
         nameField.setText(tag.getName());
         descriptionTextArea.setText(tag.getDescription());
         colorPicker.setValue(Color.valueOf(EncodeDecode.longToColorString(tag.getColor())));
+
+        // updates delete lock
+        tagLocked.setValue(lockedMap.getOrDefault(tag, Boolean.FALSE));
 
         new Thread(() -> {
             final String unicode = Character.toString(tag.getShape());
@@ -174,20 +187,10 @@ public class TagManagerDialogController implements MessageListener {
 
     @FXML
     private void handleDeleteAction() {
-        final List<Tag> selected = new ArrayList<>(tagListView.getSelectionModel().getSelectedItems());
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-        if (selected.size() > 0) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
-
-            final Set<Tag> usedTags = engine.getTagsInUse();
-
-            for (final Tag tag : selected) {
-                if (!usedTags.contains(tag)) {
-                    engine.removeTag(tag);
-                }
-            }
-        }
+        engine.removeTag(tagListView.getSelectionModel().getSelectedItem());
     }
 
     @FXML
@@ -208,10 +211,17 @@ public class TagManagerDialogController implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
+        lockedMap.clear();
+
         final List<Tag> tagList = new ArrayList<>(engine.getTags());
         Collections.sort(tagList);
 
         tagListView.getItems().setAll(tagList);
+
+        final Set<Tag> usedTags = engine.getTagsInUse();
+        for (final Tag tag : tagList) {
+            lockedMap.put(tag, usedTags.contains(tag));
+        }
     }
 
     public static void showTagManager() {
@@ -272,6 +282,32 @@ public class TagManagerDialogController implements MessageListener {
             } else {
                 label.setGraphic(new FontAwesomeLabel(item, FontAwesomeLabel.DEFAULT_SIZE));
                 setGraphic(label);
+            }
+        }
+    }
+
+    private static class TagListViewListCellCallback implements Callback<ListView<Tag>, ListCell<Tag>> {
+        @Override
+        public ListCell<Tag> call(ListView<Tag> param) {
+            return new TagListCell();
+        }
+
+        private static class TagListCell extends ListCell<Tag> {
+            private final Label label = new Label();
+
+            @Override
+            protected void updateItem(final Tag item, final boolean empty) {
+                super.updateItem(item, empty);  // required
+
+                if (item == null || empty) {
+                    setGraphic(null);
+                    setText("");
+                } else {
+                    label.setGraphic(FontAwesomeLabel.fromInteger(item.getShape(),
+                            FontAwesomeLabel.DEFAULT_SIZE * ICON_SCALE, item.getColor()));
+                    label.setText(item.toString());
+                    setGraphic(label);
+                }
             }
         }
     }
