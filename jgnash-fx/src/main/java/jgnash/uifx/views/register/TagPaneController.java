@@ -81,8 +81,8 @@ public class TagPaneController extends GridPane {
             if (engine != null) {
                 Set<Tag> tags = engine.getTags();
 
-                if (tags.isEmpty()) {
-                    JavaFXUtils.runLater(() -> selectTagsButton.setDisable(true));
+                if (!tags.isEmpty()) {  // enable if tags are visible
+                    JavaFXUtils.runLater(() -> selectTagsButton.setVisible(true));
                 }
             }
         }).start();

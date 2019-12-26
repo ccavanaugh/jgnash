@@ -17,7 +17,7 @@
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
-    <Button fx:id="selectTagsButton" mnemonicParsing="false">
+    <Button fx:id="selectTagsButton" visible="false" mnemonicParsing="false">
         <graphic>
             <FontAwesomeLabel glyphName="HASH_TAG"/>
         </graphic>
