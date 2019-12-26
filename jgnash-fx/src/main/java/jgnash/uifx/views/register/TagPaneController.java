@@ -26,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
@@ -125,8 +126,10 @@ public class TagPaneController extends GridPane {
 
         // the the icons / labels
         for (final Tag tag : selectedTags) {
-            tagBox.getChildren().add(new Label(tag.getName(), FontAwesomeLabel.fromInteger(tag.getShape(),
-                    FontAwesomeLabel.DEFAULT_SIZE * ICON_SCALE, tag.getColor())));
+            final Label label  = new Label("", FontAwesomeLabel.fromInteger(tag.getShape(),
+                    FontAwesomeLabel.DEFAULT_SIZE * ICON_SCALE, tag.getColor()));
+            label.setTooltip(new Tooltip(tag.getName()));
+            tagBox.getChildren().add(label);
         }
     }
 }
