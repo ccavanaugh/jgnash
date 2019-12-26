@@ -77,12 +77,28 @@
             <MenuItem text="%Menu.MonthEndBalanceCSV.Name" onAction="#handleExportBalanceByMonthCSVReport"/>
         </Menu>
         <Menu text="%Menu.Charts.Name">
-            <MenuItem text="%Menu.IEBarChart.Name" onAction="#handleIncomeExpenseBarChart"/>
-            <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart"/>
+            <MenuItem text="%Menu.IEBarChart.Name" onAction="#handleIncomeExpenseBarChart">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CHART_BAR"/>
+                </graphic>
+            </MenuItem>
+            <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CHART_PIE"/>
+                </graphic>
+            </MenuItem>
             <SeparatorMenuItem/>
-            <MenuItem text="%Menu.PayeePieChart.Name" onAction="#handleIncomeExpensePayeePieChart"/>
+            <MenuItem text="%Menu.PayeePieChart.Name" onAction="#handleIncomeExpensePayeePieChart">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CHART_PIE"/>
+                </graphic>
+            </MenuItem>
             <SeparatorMenuItem/>
-            <MenuItem text="%Menu.PeriodicAccountBalance.Name" onAction="#handleDisplayAccountBalanceChart"/>
+            <MenuItem text="%Menu.PeriodicAccountBalance.Name" onAction="#handleDisplayAccountBalanceChart">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CHART_BAR"/>
+                </graphic>
+            </MenuItem>
         </Menu>
         <Menu text="%Menu.Account.Name">
             <MenuItem text="%Menu.AccountRegister.Name" onAction="#handleDisplayAccountRegisterReport"/>

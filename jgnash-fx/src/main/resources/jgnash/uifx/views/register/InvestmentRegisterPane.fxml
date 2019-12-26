@@ -28,7 +28,7 @@
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"
                                 ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeLabel glyphName="MONEY"/>
+                                <FontAwesomeLabel glyphName="MONEY_BILL"/>
                             </graphic>
                         </Button>
                         <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction"

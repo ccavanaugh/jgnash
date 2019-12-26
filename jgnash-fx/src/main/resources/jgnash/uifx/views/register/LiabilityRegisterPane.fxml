@@ -22,7 +22,7 @@
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"
                                 ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="LEFT">
                             <graphic>
-                                <FontAwesomeLabel glyphName="MONEY"/>
+                                <FontAwesomeLabel glyphName="MONEY_BILL"/>
                             </graphic>
                         </Button>
                         <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction"
@@ -46,7 +46,7 @@
                         <Button text="%Button.NewPayment" onAction="#handleNewPaymentAction"
                                 ButtonBar.buttonUniformSize="false" ButtonBar.buttonData="RIGHT">
                             <graphic>
-                                <FontAwesomeLabel glyphName="MONEY"/>
+                                <FontAwesomeLabel glyphName="MONEY_BILL"/>
                             </graphic>
                         </Button>
                         <Button text="%Button.Amortize" onAction="#handleAmortizeAction"
