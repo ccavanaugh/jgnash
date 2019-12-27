@@ -32,9 +32,13 @@
 
     <ButtonBar GridPane.halignment="LEFT">
         <buttons>
-            <Button text="%Button.New" onAction="#handleNewAction"/>
-            <Button fx:id="duplicateButton" text="%Button.Duplicate" onAction="#handleDuplicateAction"/>
-            <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAction"/>
+            <Button text="%Button.New" onAction="#handleNewAction" ButtonBar.buttonData="LEFT"
+                    ButtonBar.buttonUniformSize="true"/>
+            <Button fx:id="duplicateButton" text="%Button.Duplicate" onAction="#handleDuplicateAction"
+                    ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="true"/>
+            <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAction"
+                    ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="true"/>
+            <Button ButtonBar.buttonData="SMALL_GAP" visible="false"/>
         </buttons>
     </ButtonBar>
 
