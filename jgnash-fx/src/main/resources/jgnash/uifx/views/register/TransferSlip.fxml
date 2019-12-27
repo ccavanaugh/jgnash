@@ -13,8 +13,9 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AccountExchangePane?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
+<?import jgnash.uifx.views.register.TagPaneController?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.views.register.TransferSlipController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
@@ -45,6 +46,8 @@
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints minWidth="8" maxWidth="8"/>
             <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints minWidth="8" maxWidth="8"/>
+            <ColumnConstraints hgrow="NEVER"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
@@ -52,6 +55,7 @@
 
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
         <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2"/>
+        <TagPaneController fx:id="tagPane" GridPane.columnIndex="4"/>
     </GridPane>
     <Label text="%Label.Amount" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
     <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>

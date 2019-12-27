@@ -94,6 +94,8 @@ public class TransferSlipController extends AbstractSlipController {
             }
         }
 
+        transaction.setTags(tagPane.getSelectedTags());
+
         ReconcileManager.reconcileTransaction(accountProperty().get(), transaction, getReconciledState());
 
         return transaction;
