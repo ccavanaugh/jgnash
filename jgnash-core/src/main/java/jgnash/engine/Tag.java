@@ -53,6 +53,12 @@ public class Tag extends StoredObject implements Comparable<Tag> {
      */
     private char shape = '\uf111';  // fontawesome circle
 
+    /**
+     * Holder to support multiple icon sets
+     */
+    @SuppressWarnings("unused")
+    private byte iconSet = 0;
+
     public Tag() {
         // zero arg constructor required for persistence
     }
