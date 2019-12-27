@@ -15,16 +15,28 @@
         <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
     <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="ALWAYS" valignment="TOP"/>
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
-    <TilePane fx:id="tilePane"/>
-
-    <ButtonBar GridPane.rowIndex="1">
+    <ButtonBar>
         <buttons>
-            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
-                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+            <Button onAction="#handleClearAllAction" text="%Button.ClearAll"
+                    ButtonBar.buttonData="LEFT"
+                    ButtonBar.buttonUniformSize="true"/>
+            <Button ButtonBar.buttonData="SMALL_GAP" visible="false"/>
+        </buttons>
+    </ButtonBar>
+
+    <TilePane fx:id="tilePane"  GridPane.rowIndex="1"/>
+
+    <ButtonBar GridPane.rowIndex="2">
+        <buttons>
+            <Button mnemonicParsing="false" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"
+                    onAction="#handleOkAction"/>
+            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Cancel"
+                    ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>

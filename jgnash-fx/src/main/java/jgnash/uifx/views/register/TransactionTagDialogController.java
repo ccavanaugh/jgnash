@@ -58,6 +58,10 @@ public class TransactionTagDialogController {
 
     private final AtomicBoolean tagsLoaded = new AtomicBoolean(false);
 
+    private final Set<Tag> originalTagSelection = new HashSet<>();
+
+    private boolean okay = false;
+
     @FXML
     private void initialize() {
         tilePane.setId("tag-box");
@@ -67,6 +71,19 @@ public class TransactionTagDialogController {
     @FXML
     private void handleCloseAction() {
         ((Stage)parent.get().getWindow()).close();
+    }
+
+    @FXML
+    private void handleClearAllAction() {
+        for (final Node node : tilePane.getChildren()) {
+            ((CheckBox)node).setSelected(false);
+        }
+    }
+
+    @FXML
+    private void handleOkAction() {
+        okay = true;
+        handleCloseAction();
     }
 
     private void loadTags() {
@@ -91,6 +108,9 @@ public class TransactionTagDialogController {
     }
 
     void setSelectedTags(final Collection<Tag> tags) {
+
+        originalTagSelection.addAll(tags);  // create a copy of the old selection
+
         JavaFXUtils.runLater(() -> {
             while (!tagsLoaded.get()) {
                 Thread.onSpinWait();
@@ -107,6 +127,10 @@ public class TransactionTagDialogController {
     }
 
     Set<Tag> getSelectedTags() {
+        if (!okay) {
+            return originalTagSelection;
+        }
+
         final Set<Tag> tagSet = new HashSet<>();
 
         for (final Node node : tilePane.getChildren()) {
