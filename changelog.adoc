@@ -10,7 +10,6 @@
 * Moving option for a Transaction from one Register to other Register.
 * Hyperlink option from the results in the Reports and Graphs to the concerned Transactions of the Registers.
 * Drill down of split entries in Split Transactions by right clicking on ledger view.
-* Class/Tag option to Transaction entries. ( to categorize the Expense & Income further in more categorized way )
 ** Flag budget exceptions?
 * Direct Transaction entry option in the Ledger to avoid Transaction form.
 * Formal Trial Balance report
@@ -23,7 +22,8 @@
 * Add manual warning about placing jGnash in Program Files. (%AppData%\jGnash)
 
 == Release 3.5.0 __(File format change)__
-* 12/26/2019 FontAwesome icons were updated resulting in some icon changes
+* 12/27/2019 Reduced overhead for icon management.
+* 12/26/2019 FontAwesome icons were updated resulting in some icon changes.
 * 12/15/2019 Reworked the Engine API for advanced transaction tags.
 * 12/14/2019 The Windows exe wrapper will now look in the registry if JAVA_HOME has not been set.
 

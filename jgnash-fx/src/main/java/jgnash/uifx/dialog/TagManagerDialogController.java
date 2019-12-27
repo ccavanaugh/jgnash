@@ -149,9 +149,9 @@ public class TagManagerDialogController implements MessageListener {
         tagLocked.setValue(lockedMap.getOrDefault(tag, Boolean.FALSE));
 
         new Thread(() -> {
-            final String unicode = Character.toString(tag.getShape());
-            for (FAIcon faIcon : FAIcon.values()) {
-                if (unicode.equals(faIcon.getUnicode())) {
+            final char unicode = tag.getShape();
+            for (final FAIcon faIcon : FAIcon.values()) {
+                if (unicode == faIcon.getUnicode()) {
                     JavaFXUtils.runLater(() -> iconCombo.setValue(faIcon));
                 }
             }
@@ -242,7 +242,7 @@ public class TagManagerDialogController implements MessageListener {
         if (tag != null) {
             tag.setName(nameField.getText());
             tag.setDescription(descriptionTextArea.getText());
-            tag.setShape(iconCombo.getValue().getUnicode().codePointAt(0));
+            tag.setShape(iconCombo.getValue().getUnicode());
             tag.setColor(EncodeDecode.colorStringToLong(colorPicker.getValue().toString()));
 
             engine.updateTag(tag);
