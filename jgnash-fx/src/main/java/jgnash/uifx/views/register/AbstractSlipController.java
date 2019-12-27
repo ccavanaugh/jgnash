@@ -197,6 +197,10 @@ abstract class AbstractSlipController implements Slip {
             payeeTextField.clear();
         }
 
+        if (tagPane != null) {
+            tagPane.clearSelectedTags();
+        }
+
         datePicker.setEditable(true);
         if (!Options.rememberLastDateProperty().get()) {
             datePicker.setValue(LocalDate.now());

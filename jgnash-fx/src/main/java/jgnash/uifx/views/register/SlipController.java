@@ -331,8 +331,6 @@ public class SlipController extends AbstractSlipController {
         accountExchangePane.setExchangedAmount(null);
 
         splitsButton.setDisable(false);
-
-        tagPane.clearSelectedTags();
     }
 
     @Override
