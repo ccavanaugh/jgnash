@@ -19,7 +19,7 @@
     </rowConstraints>
     <Button fx:id="selectTagsButton" visible="false" mnemonicParsing="false">
         <graphic>
-            <FontAwesomeLabel glyphName="HASH_TAG"/>
+            <FontAwesomeLabel glyphName="USER_TAG"/>
         </graphic>
         <tooltip>
             <Tooltip text="%ToolTip.SelectTags"/>

@@ -351,6 +351,7 @@ public class FontAwesomeLabel extends Label {
         TRASH_O("\uf1f8"),
         UNIVERSITY("\uf19c"),
         UNLINK("\uf127"),
+        USER_TAG("\uf507"),
         UTENSILS("\uf2e7"),
         WALKING("\uf554"),
         WAREHOUSE("\uf494"),
