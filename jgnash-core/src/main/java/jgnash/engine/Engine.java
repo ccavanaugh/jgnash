@@ -45,10 +45,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jgnash.engine.attachment.AttachmentManager;
 import jgnash.engine.budget.Budget;
@@ -781,7 +783,7 @@ public class Engine {
             List<StoredObject> objects = eDAO.getStoredObjects();
 
             // Filter out objects to be removed
-            objects.removeIf(o -> o instanceof TrashObject);
+            objects.removeIf(TrashObject.class::isInstance);
 
             objects.sort(new StoredObjectComparator());
 
@@ -2759,16 +2761,13 @@ public class Engine {
      */
     @NotNull
     public Set<Tag> getTagsInUse() {
-        final Set<Tag> usedTags = new HashSet<>();
-
         dataLock.readLock().lock();
 
         try {
-            for (final Transaction transaction : getTransactions()) {
-                usedTags.addAll(transaction.getTags());
-            }
-
-            return usedTags;
+            return getTransactions()
+                           .parallelStream()
+                           .flatMap((Function<Transaction, Stream<Tag>>) transaction -> transaction.getTags().stream())
+                           .collect(Collectors.toSet());
         } finally {
             dataLock.readLock().unlock();
         }
