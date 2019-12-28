@@ -30,6 +30,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconcileManager;
+import jgnash.engine.Tag;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
@@ -39,8 +40,11 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.util.LogUtil;
 import jgnash.util.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -52,7 +56,9 @@ public class SlipController extends AbstractSlipController {
 
     private final SimpleListProperty<TransactionEntry> transactionEntries =
             new SimpleListProperty<>(FXCollections.observableArrayList());
+
     private final SimpleObjectProperty<TransactionEntry> modEntry = new SimpleObjectProperty<>();
+
     private final BooleanProperty concatenated = new SimpleBooleanProperty();
 
     @FXML
@@ -112,7 +118,7 @@ public class SlipController extends AbstractSlipController {
         modTrans = transaction; // save reference to old transaction
         modTrans = attachmentPane.modifyTransaction(modTrans);
 
-        tagPane.setSelectedTags(transaction.getTags());
+        tagPane.setSelectedTags(transaction.getTags(account.get()));
 
         // Set state of memo concatenation
         concatenated.setValue(modTrans.isMemoConcatenated());
@@ -186,9 +192,9 @@ public class SlipController extends AbstractSlipController {
                             memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
                 }
             }
-        }
 
-        transaction.setTags(tagPane.getSelectedTags());
+            transaction.setTags(tagPane.getSelectedTags());
+        }
 
         ReconcileManager.reconcileTransaction(account.get(), transaction, getReconciledState());
 
@@ -270,6 +276,7 @@ public class SlipController extends AbstractSlipController {
                 }
 
                 tagPane.setSelectedTags(t.getTags());
+                tagPane.setReadOnly(true);
 
                 amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
             } else { // not the same common account, can only modify the entry
@@ -293,6 +300,9 @@ public class SlipController extends AbstractSlipController {
                         break;
                     }
                 }
+
+                tagPane.setSelectedTags(t.getTags(account.get()));
+                tagPane.setReadOnly(false);
             }
         } else if (t instanceof InvestmentTransaction) {
             Logger logger = Logger.getLogger(SlipController.class.getName());
@@ -300,7 +310,8 @@ public class SlipController extends AbstractSlipController {
 
         } else { // DoubleEntryTransaction
             datePicker.setEditable(true);
-            tagPane.setSelectedTags(t.getTags());
+            tagPane.setSelectedTags(t.getTags(account.get()));
+            tagPane.setReadOnly(false);
         }
 
         // setup the accountCombo correctly
@@ -407,10 +418,17 @@ public class SlipController extends AbstractSlipController {
         splitsDialog.accountProperty().setValue(accountProperty().get());
         splitsDialog.getTransactionEntries().setAll(transactionEntries);
 
+        final boolean wasSplit = transactionEntries.get().size() > 0;
+
         // Show the dialog and process the transactions when it closes
         splitsDialog.show(slipType, () -> {
             transactionEntries.setAll(splitsDialog.getTransactionEntries());
-            amountField.setDecimal(splitsDialog.getBalance().abs());
+
+            if (transactionEntries.get().size() > 0) {
+                amountField.setDecimal(splitsDialog.getBalance().abs());
+            } else if (wasSplit) {
+                amountField.setDecimal(BigDecimal.ZERO);    // spits were cleared out
+            }
 
             // If valid splits exist and the user has requested concatenation, show a preview of what will happen
             concatenated.setValue(Options.concatenateMemosProperty().get()
@@ -418,6 +436,19 @@ public class SlipController extends AbstractSlipController {
 
             if (concatenated.get()) {
                 memoTextField.setText(Transaction.getMemo(transactionEntries));
+            }
+
+            if (transactionEntries.get().size() > 0) {  // process the tags from the split transaction
+                final Set<Tag> tags = new HashSet<>();
+
+                for (final TransactionEntry entry : transactionEntries.get()) {
+                    tags.addAll(entry.getTags());
+                }
+
+                tagPane.setSelectedTags(tags);
+                tagPane.refreshTagView();
+            } else if (wasSplit) {  // clear out all the prior split entries
+                tagPane.clearSelectedTags();
             }
         });
     }

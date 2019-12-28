@@ -22,6 +22,7 @@
 * Add manual warning about placing jGnash in Program Files. (%AppData%\jGnash)
 
 == Release 3.5.0 __(File format change)__
+* 12/28/2019 Fixed poor transaction form behavior caused by opening a splits dialog and closing before adding entries.
 * 12/27/2019 Reduced overhead for icon management.
 * 12/26/2019 FontAwesome icons were updated resulting in some icon changes.
 * 12/15/2019 Reworked the Engine API for advanced transaction tags.

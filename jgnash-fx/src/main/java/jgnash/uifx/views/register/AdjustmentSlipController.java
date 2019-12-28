@@ -102,7 +102,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
         datePicker.setValue(t.getLocalDate());
         setReconciledState(t.getReconciled(accountProperty().get()));
 
-        tagPane.setSelectedTags(t.getTags());
+        tagPane.setSelectedTags(t.getTags(account.get()));
     }
 
     @Override

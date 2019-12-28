@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?><?import javafx.scene.control.Button?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
 <?import jgnash.uifx.control.AutoCompleteTextField?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.views.register.AccountExchangePane?>
+<?import jgnash.uifx.views.register.TagPaneController?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.views.register.SplitTransactionSlipController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER"/>
@@ -36,6 +38,7 @@
               styleClass="form">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
@@ -43,7 +46,8 @@
         </rowConstraints>
 
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
-        <ButtonBar GridPane.columnIndex="1">
+        <TagPaneController fx:id="tagPane" GridPane.columnIndex="1"/>
+        <ButtonBar GridPane.columnIndex="2">
             <buttons>
                 <Button text="%Button.Enter" fx:id="enterButton" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
                 <Button text="%Button.Clear" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>

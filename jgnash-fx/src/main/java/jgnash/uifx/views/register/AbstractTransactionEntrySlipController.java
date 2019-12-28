@@ -65,6 +65,9 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
     private CheckBox reconciledButton;
 
     @FXML
+    TagPaneController tagPane;
+
+    @FXML
     AttachmentPane attachmentPane;
 
     @FXML
@@ -144,6 +147,10 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
         memoField.setText(null);
         amountField.setDecimal(BigDecimal.ZERO);
         accountExchangePane.setExchangedAmount(null);
+
+        if (tagPane != null) {
+            tagPane.clearSelectedTags();
+        }
     }
 
     @FXML

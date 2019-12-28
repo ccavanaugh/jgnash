@@ -84,6 +84,10 @@ public class TagPaneController extends GridPane implements MessageListener {
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.TAG);
     }
 
+    void setReadOnly(boolean readOnly) {
+        selectTagsButton.setDisable(readOnly);
+    }
+
     void clearSelectedTags() {
         selectedTags.clear();
         JavaFXUtils.runLater(this::refreshTagView);

@@ -75,6 +75,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
         }
 
         entry.setReconciled(account.get(), getReconciledState());
+        entry.setTags(tagPane.getSelectedTags());
 
         return entry;
     }
@@ -97,5 +98,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
         }
 
         setReconciledState(entry.getReconciled(account.get()));
+
+        tagPane.setSelectedTags(entry.getTags());
     }
 }
