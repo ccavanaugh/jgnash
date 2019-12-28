@@ -303,7 +303,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Calculates the amount of the transaction relative to the supplied account.
-     *
+     * <p>
      * This method is synchronized to protect against concurrency issues
      *
      * @param account reference account
@@ -402,7 +402,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     public LocalDateTime getTimestamp() {
         if (timeStampDate == null) {
-            timeStampDate =  LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+            timeStampDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
         }
 
         return timeStampDate;
@@ -523,10 +523,26 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
+     * Returns a set of all tags associated with the specified Account in common.
+     *
+     * @param account common Account
+     * @return Set of all Tags
+     */
+    public Set<Tag> getTags(final Account account) {
+        final Set<Tag> tags = new HashSet<>();
+
+        for (final TransactionEntry entry : getTransactionEntries(account)) {
+            tags.addAll(entry.getTags());
+        }
+
+        return tags;
+    }
+
+    /**
      * Assigns the specified Tag(s) to all entries
      *
-     * @see TransactionEntry#setTags(Collection) 
      * @param tags Set of tags to assign
+     * @see TransactionEntry#setTags(Collection)
      */
     public void setTags(final Collection<Tag> tags) {
         for (final TransactionEntry entry : transactionEntries) {
