@@ -10,7 +10,9 @@
 <?import jgnash.uifx.control.AutoCompleteTextField?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.views.register.AccountExchangePane?>
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import jgnash.uifx.views.register.TagPaneController?>
+
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.views.register.GainLossTransactionEntrySlipController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER"/>
@@ -35,13 +37,16 @@
               styleClass="form">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="8" maxWidth="8"/>
             <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
-        <ButtonBar fx:id="buttonBar" GridPane.columnIndex="1">
+        <TagPaneController fx:id="tagPane" GridPane.columnIndex="2"/>
+        <ButtonBar fx:id="buttonBar" GridPane.columnIndex="3">
             <buttons>
                 <Button text="%Button.Enter" fx:id="enterButton" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
                 <Button text="%Button.Clear" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
