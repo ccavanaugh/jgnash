@@ -46,7 +46,9 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.SetChangeListener;
 import javafx.collections.WeakListChangeListener;
+import javafx.collections.WeakSetChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -69,6 +71,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconciledState;
+import jgnash.engine.Tag;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
 import jgnash.engine.message.Message;
@@ -92,6 +95,7 @@ import jgnash.uifx.views.recurring.RecurringEntryDialog;
 import jgnash.util.function.MemoPredicate;
 import jgnash.util.function.PayeePredicate;
 import jgnash.util.function.ReconciledPredicate;
+import jgnash.util.function.TagPredicate;
 import jgnash.util.function.TransactionAgePredicate;
 
 /**
@@ -166,6 +170,9 @@ abstract class RegisterTableController {
     @FXML
     protected TextField payeeFilterTextField;
 
+    @FXML
+    private TagPaneController tagPane;
+
     TableViewManager<Transaction> tableViewManager;
 
     // Used for formatting of the selection summary tooltip
@@ -176,6 +183,9 @@ abstract class RegisterTableController {
 
     @SuppressWarnings("FieldCanBeLocal")
     private ChangeListener<Number> selectionSizeListener;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private SetChangeListener<Tag> tagSetChangeListener;
 
     @SuppressWarnings("FieldCanBeLocal")
     private ListChangeListener<Transaction> selectedItemsListener;
@@ -261,6 +271,7 @@ abstract class RegisterTableController {
         transactionAgeFilterComboBox.setValue(AgeEnum.ALL);
 
         filterChangeListener = (observable, oldValue, newValue) -> handleFilterChange();
+        tagSetChangeListener = change -> handleFilterChange();
 
         reconciledStateFilterComboBox.valueProperty().addListener(new WeakChangeListener<>(filterChangeListener));
         transactionAgeFilterComboBox.valueProperty().addListener(new WeakChangeListener<>(filterChangeListener));
@@ -275,6 +286,8 @@ abstract class RegisterTableController {
         if (payeeFilterTextField != null) { // payee filter may not have been initialized for all register types
             payeeFilterTextField.textProperty().addListener(new WeakChangeListener<>(filterChangeListener));
         }
+
+        tagPane.getSelectedTags().addListener(new WeakSetChangeListener<>(tagSetChangeListener));
 
         // Repack the table if the font scale changes, must use a weak listener to prevent memory leaks
         fontScaleListener = (observable, oldValue, newValue) -> tableViewManager.packTable();
@@ -309,6 +322,8 @@ abstract class RegisterTableController {
             predicate = predicate
                                 .and(new PayeePredicate(payeeFilterTextField.getText(), Options.regexForFiltersProperty().get()));
         }
+
+        predicate = predicate.and(new TagPredicate(tagPane.getSelectedTags()));
 
         filteredTransactionList.setPredicate(predicate);
     }
@@ -526,6 +541,8 @@ abstract class RegisterTableController {
             if (payeeFilterTextField != null) {
                 payeeFilterTextField.setText("");
             }
+
+            tagPane.clearSelectedTags();
         });
     }
 
