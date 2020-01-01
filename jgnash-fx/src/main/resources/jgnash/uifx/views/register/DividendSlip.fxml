@@ -12,7 +12,9 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AccountExchangePane?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import jgnash.uifx.views.register.TagPaneController?>
+
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.views.register.DividendSlipController" styleClass="form">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
@@ -56,13 +58,16 @@
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints minWidth="8" maxWidth="8"/>
             <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints minWidth="8" maxWidth="8"/>
+            <ColumnConstraints hgrow="NEVER"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
         <AccountExchangePane fx:id="accountExchangePane" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"/>
-        <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="1"/>
-        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" GridPane.columnIndex="3"/>
+        <TagPaneController fx:id="tagPane" GridPane.columnIndex="1"/>
+        <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="3"/>
+        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" GridPane.columnIndex="5"/>
     </GridPane>
 </GridPane>

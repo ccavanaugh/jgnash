@@ -24,6 +24,8 @@ import javafx.fxml.FXML;
 
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntryMergeX;
+import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
@@ -73,10 +75,14 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
         quantityField.setDecimal(((InvestmentTransaction)transaction).getQuantity());
         securityComboBox.setSecurityNode(((InvestmentTransaction)transaction).getSecurityNode());
 
-        setReconciledState(transaction.getReconciled(accountProperty().get()));
+        tagPane.setSelectedTags(transaction.getTags(tranType == TransactionType.SPLITSHARE
+                                                            ? TransactionEntrySplitX.class
+                                                            : TransactionEntryMergeX.class));
 
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
+
+        setReconciledState(transaction.getReconciled(accountProperty().get()));
     }
 
     private void updateTotalField() {
@@ -98,6 +104,10 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
         }
 
         transaction.setNumber(numberComboBox.getValue());
+
+        transaction.setTags(tranType == TransactionType.SPLITSHARE
+                                    ? TransactionEntrySplitX.class
+                                    : TransactionEntryMergeX.class, tagPane.getSelectedTags());
 
         return attachmentPane.buildTransaction(transaction);
     }

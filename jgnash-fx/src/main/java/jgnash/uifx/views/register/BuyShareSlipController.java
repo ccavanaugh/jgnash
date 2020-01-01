@@ -81,11 +81,9 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         datePicker.setValue(transaction.getLocalDate());
         numberComboBox.setValue(transaction.getNumber());
 
-        List<TransactionEntry> entries = transaction.getTransactionEntries();
-
         feePane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentFeeEntries());
 
-        entries.stream().filter(e -> e instanceof TransactionEntryBuyX).forEach(e -> {
+        transaction.getTransactionEntries().stream().filter(TransactionEntryBuyX.class::isInstance).forEach(e -> {
             final AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
             memoTextField.setText(e.getMemo());
@@ -104,6 +102,8 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
                 accountExchangePane.setExchangedAmount(entry.getCreditAmount());
             }
         });
+
+        tagPane.setSelectedTags(transaction.getTags(TransactionEntryBuyX.class));
 
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
@@ -127,6 +127,8 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
                 quantityField.getDecimal(), exchangeRate, datePicker.getValue(), memoTextField.getText(), fees);
 
         transaction.setNumber(numberComboBox.getValue());
+
+        transaction.setTags(TransactionEntryBuyX.class, tagPane.getSelectedTags());
 
         return attachmentPane.buildTransaction(transaction);
     }

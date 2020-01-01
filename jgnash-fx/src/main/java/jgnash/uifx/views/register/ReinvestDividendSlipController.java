@@ -81,7 +81,7 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
         feePane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentFeeEntries());
         gainLossPane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentGainLossEntries());
 
-        transaction.getTransactionEntries().stream().filter(e -> e instanceof TransactionEntryReinvestDivX).forEach(e -> {
+        transaction.getTransactionEntries().stream().filter(TransactionEntryReinvestDivX.class::isInstance).forEach(e -> {
             final AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
             memoTextField.setText(e.getMemo());
@@ -89,6 +89,8 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
             quantityField.setDecimal(entry.getQuantity());
             securityComboBox.setSecurityNode(entry.getSecurityNode());
         });
+
+        tagPane.setSelectedTags(transaction.getTags(TransactionEntryReinvestDivX.class));
 
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
@@ -111,6 +113,8 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
                 memoTextField.getText(), fees, gains);
 
         transaction.setNumber(numberComboBox.getValue());
+
+        transaction.setTags(TransactionEntryReinvestDivX.class, tagPane.getSelectedTags());
 
         return attachmentPane.buildTransaction(transaction);
     }

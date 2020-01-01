@@ -40,7 +40,7 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
 
 /**
- * Base Slip controller.
+ * Base Slip controller for investment transactions
  *
  * @author Craig Cavanaugh
  */
@@ -57,6 +57,9 @@ abstract class AbstractInvSlipController implements Slip {
 
     @FXML
     DatePickerEx datePicker;
+
+    @FXML
+    TagPaneController tagPane;
 
     @FXML
     protected ColumnConstraints dateColumnConstraint;
@@ -152,6 +155,8 @@ abstract class AbstractInvSlipController implements Slip {
         reconciledButton.setDisable(false);
         reconciledButton.setSelected(false);
         reconciledButton.setIndeterminate(false);
+
+        tagPane.clearSelectedTags();
     }
 
     protected abstract void focusFirstComponent();

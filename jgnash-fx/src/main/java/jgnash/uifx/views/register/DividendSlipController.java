@@ -20,6 +20,7 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntryDividendX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
@@ -53,7 +54,16 @@ public class DividendSlipController extends AbstractInvIncomeSlipController {
 
         transaction.setNumber(numberComboBox.getValue());
 
+        transaction.setTags(TransactionEntryDividendX.class, tagPane.getSelectedTags());
+
         return transaction;
+    }
+
+    @Override
+    public void modifyTransaction(@NotNull Transaction transaction) {
+        super.modifyTransaction(transaction);
+
+        tagPane.setSelectedTags(transaction.getTags(TransactionEntryDividendX.class));
     }
 
     @Override

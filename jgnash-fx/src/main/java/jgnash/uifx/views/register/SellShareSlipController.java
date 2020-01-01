@@ -93,7 +93,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         feePane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentFeeEntries());
         gainLossPane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentGainLossEntries());
 
-        transaction.getTransactionEntries().stream().filter(e -> e instanceof TransactionEntrySellX).forEach(e -> {
+        transaction.getTransactionEntries().stream().filter(TransactionEntrySellX.class::isInstance).forEach(e -> {
             final AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
             memoTextField.setText(e.getMemo());
@@ -110,6 +110,8 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
                 Logger.getLogger(SellShareSlipController.class.getName()).warning("was not expected");
             }
         });
+
+        tagPane.setSelectedTags(transaction.getTags(TransactionEntrySellX.class));
 
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
@@ -133,6 +135,8 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
                 quantityField.getDecimal(), exchangeRate, datePicker.getValue(), memoTextField.getText(), fees, gains);
 
         transaction.setNumber(numberComboBox.getValue());
+
+        transaction.setTags(TransactionEntrySellX.class, tagPane.getSelectedTags());
 
         return attachmentPane.buildTransaction(transaction);
     }

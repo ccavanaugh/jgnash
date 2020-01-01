@@ -20,6 +20,7 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntryRocX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
@@ -53,7 +54,16 @@ public class ReturnOfCapitalSlipController extends AbstractInvIncomeSlipControll
 
         transaction.setNumber(numberComboBox.getValue());
 
+        transaction.setTags(TransactionEntryRocX.class, tagPane.getSelectedTags());
+
         return transaction;
+    }
+
+    @Override
+    public void modifyTransaction(@NotNull Transaction transaction) {
+        super.modifyTransaction(transaction);
+
+        tagPane.setSelectedTags(transaction.getTags(TransactionEntryRocX.class));
     }
 
     @Override
