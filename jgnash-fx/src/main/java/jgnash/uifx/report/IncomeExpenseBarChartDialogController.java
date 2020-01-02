@@ -58,6 +58,7 @@ import jgnash.resource.util.ResourceUtils;
  * Income and Expense Bar Chart.
  *
  * @author Craig Cavanaugh
+ * @author Pranay Kumar
  */
 public class IncomeExpenseBarChartDialogController {
 

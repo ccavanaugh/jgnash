@@ -230,9 +230,9 @@ public class IncomeExpensePayeePieChartDialogController {
 
     private void trimAuxPayeeTextFields() {
 
-        final List<TextField> empty = filtersPane.getChildren().stream().filter(node -> node instanceof TextField)
-                .filter(node -> ((TextField) node).getText().isEmpty())
-                .map(node -> (TextField) node).collect(Collectors.toList());
+        final List<TextField> empty = filtersPane.getChildren().stream().filter(TextField.class::isInstance)
+                                                 .filter(node -> ((TextField) node).getText().isEmpty())
+                                                 .map(TextField.class::cast).collect(Collectors.toList());
 
         // Reverse order so we leave the last empty at the bottom
         Collections.reverse(empty);
@@ -260,7 +260,8 @@ public class IncomeExpensePayeePieChartDialogController {
 
     private List<TextField> getPayeeTextFields() {
         return filtersPane.getChildren().stream()
-                .filter(node -> node instanceof TextField).map(node -> (TextField) node).collect(Collectors.toList());
+                          .filter(TextField.class::isInstance).map(TextField.class::cast)
+                          .collect(Collectors.toList());
     }
 
     private void updateCharts() {

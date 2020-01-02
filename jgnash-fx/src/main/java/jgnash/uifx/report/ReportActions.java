@@ -98,8 +98,8 @@ public class ReportActions {
     }
 
     public static void displayIncomeExpensePayeePieChart() {
-        final FXMLUtils.Pair<IncomeExpensePieChartDialogController> pair =
-                FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePayeePieChartDialog.fxml"),
+        final FXMLUtils.Pair<IncomeExpensePayeePieChartDialogController> pair =
+                FXMLUtils.load(IncomeExpensePayeePieChartDialogController.class.getResource("IncomeExpensePayeePieChartDialog.fxml"),
                         ResourceUtils.getString("Title.IncomeExpenseChart"));
 
         pair.getStage().show();
