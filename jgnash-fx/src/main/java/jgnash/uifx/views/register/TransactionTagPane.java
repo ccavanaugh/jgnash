@@ -47,7 +47,7 @@ import jgnash.uifx.util.JavaFXUtils;
  *
  * @author Craig Cavanaugh
  */
-public class TagPaneController extends GridPane implements MessageListener {
+public class TransactionTagPane extends GridPane implements MessageListener {
 
     public static final double ICON_SCALE = 1.2;
 
@@ -59,7 +59,7 @@ public class TagPaneController extends GridPane implements MessageListener {
     @FXML
     private HBox tagBox;
 
-    public TagPaneController() {
+    public TransactionTagPane() {
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionTagPane.fxml"),
                 ResourceUtils.getBundle());
 

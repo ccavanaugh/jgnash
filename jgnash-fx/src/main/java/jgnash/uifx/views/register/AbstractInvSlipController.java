@@ -59,7 +59,7 @@ abstract class AbstractInvSlipController implements Slip {
     DatePickerEx datePicker;
 
     @FXML
-    TagPaneController tagPane;
+    TransactionTagPane tagPane;
 
     @FXML
     protected ColumnConstraints dateColumnConstraint;

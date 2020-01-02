@@ -65,7 +65,7 @@ abstract class AbstractTransactionEntrySlipController implements BaseSlip {
     private CheckBox reconciledButton;
 
     @FXML
-    TagPaneController tagPane;
+    TransactionTagPane tagPane;
 
     @FXML
     AttachmentPane attachmentPane;

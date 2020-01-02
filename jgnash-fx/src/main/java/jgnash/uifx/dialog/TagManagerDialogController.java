@@ -65,7 +65,7 @@ import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.EncodeDecode;
 
 import static jgnash.uifx.resource.font.FontAwesomeLabel.FAIcon;
-import static jgnash.uifx.views.register.TagPaneController.ICON_SCALE;
+import static jgnash.uifx.views.register.TransactionTagPane.ICON_SCALE;
 
 /**
  * Tag Manager dialog controller

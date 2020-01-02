@@ -97,7 +97,7 @@ public class TransactionTagDialogController {
             final CheckBox checkBox = new CheckBox(tag.getName());
 
             checkBox.setGraphic(FontAwesomeLabel.fromInteger(tag.getShape(),
-                    FontAwesomeLabel.DEFAULT_SIZE * TagPaneController.ICON_SCALE, tag.getColor()));
+                    FontAwesomeLabel.DEFAULT_SIZE * TransactionTagPane.ICON_SCALE, tag.getColor()));
 
             checkBox.setUserData(tag);
             TilePane.setAlignment(checkBox, Pos.BASELINE_LEFT);

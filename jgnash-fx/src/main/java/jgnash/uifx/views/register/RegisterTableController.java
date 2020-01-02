@@ -171,7 +171,7 @@ abstract class RegisterTableController {
     protected TextField payeeFilterTextField;
 
     @FXML
-    private TagPaneController tagPane;
+    private TransactionTagPane tagPane;
 
     TableViewManager<Transaction> tableViewManager;
 
