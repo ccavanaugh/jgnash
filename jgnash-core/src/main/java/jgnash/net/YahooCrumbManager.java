@@ -104,18 +104,24 @@ public class YahooCrumbManager {
                     final List<String> cookieValue = entry.getValue();
 
                     if (cookieValue != null) {
-
-                        String[] values = cookieValue.get(0).split(";");
+                        final String[] values = cookieValue.get(0).split(";");
                         cookie = values[0];
 
                         preferences.put(COOKIE, cookie);
 
-                        String expires = values[1];
+                        final String expires = values[1].trim();
 
-                        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-                        final TemporalAccessor accessor = formatter.parse(expires.split(",")[1].trim());
-
-                        preferences.put(EXPIRES, ZonedDateTime.from(accessor).toString());
+                        if (expires.startsWith("expires")) {    // old, left should Yahoo switch back
+                            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+                            final TemporalAccessor accessor = formatter.parse(expires.split(",")[1].trim());
+                            preferences.put(EXPIRES, ZonedDateTime.from(accessor).toString());
+                        } else if (expires.startsWith("Max-Age")) {
+                            final long seconds = Long.parseLong(expires.split("=")[1].trim());
+                            ZonedDateTime expireDate = ZonedDateTime.now().plusSeconds(seconds);
+                            preferences.put(EXPIRES, expireDate.toString());
+                        } else {
+                            preferences.put(EXPIRES, null);
+                        }
 
                         final Pattern pattern = Pattern.compile(CRUMB_REGEX);
 
@@ -126,7 +132,7 @@ public class YahooCrumbManager {
                             String line;
 
                             while ((line = reader.readLine()) != null) {
-                                Matcher matcher = pattern.matcher(line);
+                                final Matcher matcher = pattern.matcher(line);
 
                                 if (matcher.matches()) {
                                     crumb = matcher.group(1);
