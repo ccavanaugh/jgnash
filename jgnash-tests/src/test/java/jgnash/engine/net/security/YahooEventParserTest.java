@@ -109,6 +109,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
     @Test
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
+    @Disabled
     void testHistoricalDownload() throws IOException {
 
         if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions
