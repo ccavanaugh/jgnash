@@ -36,6 +36,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.net.YahooCrumbManager;
 import jgnash.net.security.SecurityParser;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
@@ -67,6 +68,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
+    @Disabled
     void testParser() throws IOException {
 
         if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions
