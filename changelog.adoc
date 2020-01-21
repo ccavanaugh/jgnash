@@ -20,8 +20,10 @@
 * HSQLDB 2.5.1 when released
 
 * Add manual warning about placing jGnash in Program Files. (%AppData%\jGnash)
+* Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.5.0 __(File format change)__
+* 01/21/2020 Updated to JavaFx 14-ea+7.
 * 01/19/2020 Correctly handle a change to the Yahoo finance cookie expiration date.
 * 01/01/2020 Transactions may now be filtered by user managed Tags.
 * 01/01/2020 Transactions may now be tagged with user managed Tags.
