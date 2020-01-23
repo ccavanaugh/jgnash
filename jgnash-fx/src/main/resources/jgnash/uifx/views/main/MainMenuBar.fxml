@@ -87,7 +87,6 @@
                     <FontAwesomeLabel glyphName="CHART_PIE"/>
                 </graphic>
             </MenuItem>
-            <SeparatorMenuItem/>
             <MenuItem text="%Menu.PayeePieChart.Name" onAction="#handleIncomeExpensePayeePieChart">
                 <graphic>
                     <FontAwesomeLabel glyphName="CHART_PIE"/>
@@ -97,6 +96,12 @@
             <MenuItem text="%Menu.PeriodicAccountBalance.Name" onAction="#handleDisplayAccountBalanceChart">
                 <graphic>
                     <FontAwesomeLabel glyphName="CHART_BAR"/>
+                </graphic>
+            </MenuItem>
+            <SeparatorMenuItem/>
+            <MenuItem text="%Menu.TransactionTagPieChart.Name" onAction="#handleDisplayTransactionTagPieChart">
+                <graphic>
+                    <FontAwesomeLabel glyphName="CHART_PIE"/>
                 </graphic>
             </MenuItem>
         </Menu>

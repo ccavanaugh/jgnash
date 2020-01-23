@@ -113,6 +113,14 @@ public class ReportActions {
         pair.getStage().show();
     }
 
+    public static void displayTransactionTagPieChart() {
+        final FXMLUtils.Pair<TransactionTagPieChartDialogController> pair =
+                FXMLUtils.load(TransactionTagPieChartDialogController.class.getResource("TransactionTagPieChartDialog.fxml"),
+                        ResourceUtils.getString("Title.TransactionTagPieChart"));
+
+        pair.getStage().show();
+    }
+
     public static void displayPortfolioReport() {
         final FXMLUtils.Pair<ReportViewerDialogController> reportPair =
                 FXMLUtils.load(ReportViewerDialogController.class.getResource("ReportViewerDialog.fxml"),

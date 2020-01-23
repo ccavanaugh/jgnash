@@ -468,6 +468,11 @@ public class MenuBarController implements MessageListener {
     }
 
     @FXML
+    private void handleDisplayTransactionTagPieChart() {
+        ReportActions.displayTransactionTagPieChart();
+    }
+
+    @FXML
     private void handleDisplayAccountBalanceChart() {
         ReportActions.displayAccountBalanceChart();
     }
