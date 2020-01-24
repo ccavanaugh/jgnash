@@ -69,12 +69,14 @@ public class NewFileTwoController extends AbstractWizardPaneController<NewFileWi
         final String symbol = DefaultCurrencies.getDefault().getSymbol();
 
         // set the default currency by matching the default locale
+        // if the default locale's currency is unknown, the currency symbol is "XXX" and this Optional will be empty
         Optional<CurrencyNode> matchingCurrency = currencyNodes.stream()
             .filter(node -> symbol.equals(node.getSymbol()))
             .findAny();
 
-        defaultCurrencyComboBox.setValue(matchingCurrency.orElseThrow(() ->
-            new RuntimeException("Could not match currency")));
+        defaultCurrencyComboBox.setValue(matchingCurrency.orElse(
+            currencyNodes.stream().findFirst().orElseThrow(() ->
+                new RuntimeException("Could not find any currency"))));
 
         updateDescriptor();
     }
