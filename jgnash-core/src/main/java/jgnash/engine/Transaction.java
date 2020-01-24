@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -548,6 +548,28 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         for (final TransactionEntry entry : transactionEntries) {
             entry.setTags(tags);
         }
+    }
+
+    /**
+     * Assigns the specified Tag(s) to all entries of the specified class
+     * @param clazz class to filter by
+     * @param tags Tags to assign
+     * @see TransactionEntry#setTags(Collection)
+     */
+    public void setTags(@NotNull final Class<? extends TransactionEntry> clazz, @NotNull final Collection<Tag> tags) {
+        transactionEntries.stream().filter(clazz::isInstance).forEach(e-> e.setTags(tags));
+    }
+
+    /**
+     * Returns all tags associated with with entries of the specified class
+     * @param clazz class to filter by
+     * @return Set of Tags
+     */
+    public Set<Tag> getTags(@NotNull final Class<? extends TransactionEntry> clazz) {
+        final Set<Tag> tags = new HashSet<>();
+        transactionEntries.stream().filter(clazz::isInstance)
+                          .forEach(transactionEntry -> tags.addAll(transactionEntry.getTags()));
+        return tags;
     }
 
     @Nullable

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ abstract class AbstractSlipController implements Slip {
     protected AutoCompleteTextField<Transaction> payeeTextField;
 
     @FXML
-    protected TagPaneController tagPane;
+    protected TransactionTagPane tagPane;
 
     @FXML
     private CheckBox reconciledButton;

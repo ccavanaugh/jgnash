@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@ import javafx.fxml.FXML;
 
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntryAddX;
+import jgnash.engine.TransactionEntryRemoveX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
@@ -73,10 +75,14 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
         quantityField.setDecimal(((InvestmentTransaction)transaction).getQuantity());
         securityComboBox.setSecurityNode(((InvestmentTransaction) transaction).getSecurityNode());
 
-        setReconciledState(transaction.getReconciled(accountProperty().get()));
+        tagPane.setSelectedTags(transaction.getTags(tranType == TransactionType.ADDSHARE
+                                                            ? TransactionEntryAddX.class
+                                                            : TransactionEntryRemoveX.class));
 
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
+
+        setReconciledState(transaction.getReconciled(accountProperty().get()));
     }
 
     private void updateTotalField() {
@@ -98,6 +104,10 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
         }
 
         transaction.setNumber(numberComboBox.getValue());
+
+        transaction.setTags(tranType == TransactionType.ADDSHARE
+                                    ? TransactionEntryAddX.class
+                                    : TransactionEntryRemoveX.class, tagPane.getSelectedTags());
 
         return attachmentPane.buildTransaction(transaction);
     }

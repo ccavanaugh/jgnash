@@ -11,8 +11,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import jgnash.uifx.control.TableViewEx?>
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.views.register.TransactionTagPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jgnash.uifx.views.register.InvestmentRegisterTableController">
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="jgnash.uifx.views.register.InvestmentRegisterTableController">
    <top>
        <TitledPane focusTraversable="false" expanded="false">
            <graphic>
@@ -51,6 +53,8 @@
                        <Tooltip text="%ToolTip.FilterTransactionAge"/>
                    </tooltip>
                </ComboBox>
+
+               <TransactionTagPane fx:id="tagPane"/>
 
                <Button text="%Button.ResetAll" onAction="#handleResetFilters"/>
            </ToolBar>

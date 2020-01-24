@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import jgnash.uifx.control.AccountComboBox?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.control.DoughnutChart?>
+<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+
+<BorderPane fx:controller="jgnash.uifx.report.TransactionTagPieChartDialogController" minWidth="800" minHeight="600"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <top>
+      <ToolBar>
+          <Button text="%Button.SaveImage" onAction="#handleSaveAction">
+              <graphic>
+                  <FontAwesomeLabel glyphName="FILE_IMAGE_O"/>
+              </graphic>
+          </Button>
+          <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">
+              <graphic>
+                  <FontAwesomeLabel glyphName="CLIPBOARD"/>
+              </graphic>
+          </Button>
+          <Button text="%Button.Print" onAction="#handlePrintAction">
+              <graphic>
+                  <FontAwesomeLabel glyphName="PRINT"/>
+              </graphic>
+          </Button>
+      </ToolBar>
+    </top>
+    <center>
+        <GridPane styleClass="form, dialog">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="ALWAYS"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <GridPane maxWidth="Infinity" styleClass="form">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                    <ColumnConstraints hgrow="NEVER"/>
+                    <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
+                    <ColumnConstraints hgrow="NEVER"/>
+                    <ColumnConstraints hgrow="NEVER" maxWidth="110" minWidth="90"/>
+                </columnConstraints>
+
+                <AccountComboBox fx:id="accountComboBox" maxWidth="Infinity"/>
+
+                <Label text="%Label.StartDate" GridPane.columnIndex="1"/>
+                <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="2"/>
+
+                <Label text="%Label.EndDate" GridPane.columnIndex="3"/>
+                <DatePickerEx fx:id="endDatePicker"  GridPane.columnIndex="4"/>
+            </GridPane>
+
+            <StackPane GridPane.rowIndex="1" fx:id="chartPane">
+                <DoughnutChart fx:id="pieChart" />
+            </StackPane>
+
+            <ButtonBar GridPane.rowIndex="2">
+                <buttons>
+                    <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
+                            ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </center>
+</BorderPane>
+
+

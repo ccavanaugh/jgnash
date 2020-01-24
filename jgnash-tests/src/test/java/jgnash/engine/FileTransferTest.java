@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,8 @@ class FileTransferTest {
     @Test
     void encryptedNetworkedTest() {
 
+        final int port = JpaNetworkServer.DEFAULT_PORT + 120;
+
         final char[] password = new char[]{'p','a','s','s','w','o','r','d'};
 
         //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
@@ -97,7 +99,7 @@ class FileTransferTest {
         Logger.getLogger(FileTransferTest.class.getName()).info("Starting Server");
 
         StartServerThread startServerThread = new StartServerThread(networkServer, serverFile,
-                JpaNetworkServer.DEFAULT_PORT, password);
+                port, password);
 
         startServerThread.start();
 
@@ -105,7 +107,7 @@ class FileTransferTest {
         await().atMost(20, TimeUnit.SECONDS).untilTrue(startServerThread.running);
 
         try {
-            Engine e = EngineFactory.bootClientEngine(EngineFactory.LOCALHOST, JpaNetworkServer.DEFAULT_PORT,
+            Engine e = EngineFactory.bootClientEngine(EngineFactory.LOCALHOST, port,
                     password, EngineFactory.DEFAULT);
 
             Account account = new Account(AccountType.CASH, e.getDefaultCurrency());
@@ -158,7 +160,7 @@ class FileTransferTest {
 
     @Test
     void networkedTest() {
-        final int port = JpaNetworkServer.DEFAULT_PORT + 100;
+        final int port = JpaNetworkServer.DEFAULT_PORT + 110;
 
         //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
         //System.setProperty("ssl", "false");

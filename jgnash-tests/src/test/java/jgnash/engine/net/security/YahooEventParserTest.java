@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.net.YahooCrumbManager;
 import jgnash.net.security.SecurityParser;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
@@ -67,6 +68,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
+    @Disabled
     void testParser() throws IOException {
 
         if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions
@@ -107,6 +109,7 @@ public class YahooEventParserTest extends AbstractEngineTest {
 
     @Test
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")  // disable on Travis-CI
+    @Disabled
     void testHistoricalDownload() throws IOException {
 
         if (System.getenv(GITHUB_ACTION) != null) {   // don't test with Github actions

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -465,6 +465,11 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleDisplayPortfolioReport() {
         ReportActions.displayPortfolioReport();
+    }
+
+    @FXML
+    private void handleDisplayTransactionTagPieChart() {
+        ReportActions.displayTransactionTagPieChart();
     }
 
     @FXML

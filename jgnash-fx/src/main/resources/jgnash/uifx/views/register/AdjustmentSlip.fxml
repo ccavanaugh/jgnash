@@ -14,7 +14,7 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
-<?import jgnash.uifx.views.register.TagPaneController?>
+<?import jgnash.uifx.views.register.TransactionTagPane?>
 
 <GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
           fx:controller="jgnash.uifx.views.register.AdjustmentSlipController" styleClass="form, dialog">
@@ -56,7 +56,7 @@
 
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
         <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2"/>
-        <TagPaneController fx:id="tagPane" GridPane.columnIndex="4"/>
+        <TransactionTagPane fx:id="tagPane" GridPane.columnIndex="4"/>
     </GridPane>
     <Label text="%Label.Amount" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
     <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>

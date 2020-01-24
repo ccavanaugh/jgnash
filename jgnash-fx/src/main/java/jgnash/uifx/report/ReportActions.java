@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,8 +98,8 @@ public class ReportActions {
     }
 
     public static void displayIncomeExpensePayeePieChart() {
-        final FXMLUtils.Pair<IncomeExpensePieChartDialogController> pair =
-                FXMLUtils.load(IncomeExpensePieChartDialogController.class.getResource("IncomeExpensePayeePieChartDialog.fxml"),
+        final FXMLUtils.Pair<IncomeExpensePayeePieChartDialogController> pair =
+                FXMLUtils.load(IncomeExpensePayeePieChartDialogController.class.getResource("IncomeExpensePayeePieChartDialog.fxml"),
                         ResourceUtils.getString("Title.IncomeExpenseChart"));
 
         pair.getStage().show();
@@ -109,6 +109,14 @@ public class ReportActions {
         final FXMLUtils.Pair<IncomeExpenseBarChartDialogController> pair =
                 FXMLUtils.load(IncomeExpenseBarChartDialogController.class.getResource("IncomeExpenseBarChartDialog.fxml"),
                         ResourceUtils.getString("Title.IncomeExpenseBarChart"));
+
+        pair.getStage().show();
+    }
+
+    public static void displayTransactionTagPieChart() {
+        final FXMLUtils.Pair<TransactionTagPieChartDialogController> pair =
+                FXMLUtils.load(TransactionTagPieChartDialogController.class.getResource("TransactionTagPieChartDialog.fxml"),
+                        ResourceUtils.getString("Title.TransactionTagPieChart"));
 
         pair.getStage().show();
     }

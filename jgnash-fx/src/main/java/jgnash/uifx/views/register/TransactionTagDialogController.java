@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ public class TransactionTagDialogController {
             final CheckBox checkBox = new CheckBox(tag.getName());
 
             checkBox.setGraphic(FontAwesomeLabel.fromInteger(tag.getShape(),
-                    FontAwesomeLabel.DEFAULT_SIZE * TagPaneController.ICON_SCALE, tag.getColor()));
+                    FontAwesomeLabel.DEFAULT_SIZE * TransactionTagPane.ICON_SCALE, tag.getColor()));
 
             checkBox.setUserData(tag);
             TilePane.setAlignment(checkBox, Pos.BASELINE_LEFT);

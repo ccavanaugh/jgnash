@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2019 Craig Cavanaugh
+ * Copyright (C) 2001-2020 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@ package jgnash.uifx.views.register;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -47,11 +47,11 @@ import jgnash.uifx.util.JavaFXUtils;
  *
  * @author Craig Cavanaugh
  */
-public class TagPaneController extends GridPane implements MessageListener {
+public class TransactionTagPane extends GridPane implements MessageListener {
 
     public static final double ICON_SCALE = 1.2;
 
-    private final Set<Tag> selectedTags = new HashSet<>();
+    private final ObservableSet<Tag> selectedTags = FXCollections.observableSet();
 
     @FXML
     private Button selectTagsButton;
@@ -59,7 +59,7 @@ public class TagPaneController extends GridPane implements MessageListener {
     @FXML
     private HBox tagBox;
 
-    public TagPaneController() {
+    public TransactionTagPane() {
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionTagPane.fxml"),
                 ResourceUtils.getBundle());
 
@@ -100,7 +100,7 @@ public class TagPaneController extends GridPane implements MessageListener {
         JavaFXUtils.runLater(this::refreshTagView);
     }
 
-    Set<Tag> getSelectedTags() {
+    ObservableSet<Tag> getSelectedTags() {
         return selectedTags;
     }
 
