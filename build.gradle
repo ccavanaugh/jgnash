@@ -12,11 +12,11 @@ allprojects {
     version = "3.5.0"
 
     project.ext {
-        junitVersion = "5.5.2"              // https://junit.org/junit5/
+        junitVersion = "5.6.0"              // https://junit.org/junit5/
         junitExtensionsVersion = "2.3.0"    // https://github.com/glytching/junit-extensions
-        awaitilityVersion = "4.0.1"         // https://github.com/awaitility/awaitility
+        awaitilityVersion = "4.0.2"         // https://github.com/awaitility/awaitility
 
-        picocliVersion = "4.1.2"            // https://github.com/remkop/picocli
+        picocliVersion = "4.1.4"            // https://github.com/remkop/picocli
 
         apachePoiVersion = "4.1.1"          // https://poi.apache.org/
         commonsCsvVersion = "1.7"           // https://commons.apache.org/proper/commons-csv/
@@ -30,12 +30,12 @@ allprojects {
 
         xstreamVersion = "1.4.11.1"         // https://github.com/x-stream/xstream
 
-        hibernateVersion = "5.4.10.Final"    // http://hibernate.org/orm/
-        hikariVersion = "3.4.1"             // https://github.com/brettwooldridge/HikariCP
+        hibernateVersion = "5.4.10.Final"   // http://hibernate.org/orm/
+        hikariVersion = "3.4.2"             // https://github.com/brettwooldridge/HikariCP
 
-        pdfBoxVersion = "2.0.17"            // https://pdfbox.apache.org/
+        pdfBoxVersion = "2.0.18"            // https://pdfbox.apache.org/
 
-        nettyVersion = "4.1.43.Final"       // https://netty.io/index.html
+        nettyVersion = "4.1.45.Final"       // https://netty.io/index.html
 
         slf4jVersion = "1.8.0-beta4"        // https://www.slf4j.org/news.html
 
