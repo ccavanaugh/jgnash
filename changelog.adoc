@@ -23,6 +23,7 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.5.0 __(File format change)__
+* 02/05/2020 The location for JavaFX dependency downloads has changed.  HTTPS is now used.
 * 02/03/2020 Updated to the latest Picocli, Hikari, PDFBox and Netty dependencies.
 * 01/21/2020 Updated to JavaFx 14-ea+7.
 * 01/19/2020 Correctly handle a change to the Yahoo finance cookie expiration date.

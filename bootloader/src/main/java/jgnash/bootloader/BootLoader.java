@@ -55,7 +55,9 @@ public class BootLoader {
 
     private static final String JFX_VERSION = "14-ea+7";
 
-    private static final String MAVEN_REPO = "http://central.maven.org/maven2/org/openjfx/";
+    // private static final String MAVEN_REPO = "http://central.maven.org/maven2/org/openjfx/";
+
+    private static final String MAVEN_REPO = "https://repo1.maven.org/maven2/org/openjfx/";
 
     private static final String FILE_PATTERN = "javafx-{0}-{1}-{2}.jar";
 
