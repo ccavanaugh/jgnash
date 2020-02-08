@@ -39,7 +39,7 @@ allprojects {
 
         slf4jVersion = "1.8.0-beta4"        // https://www.slf4j.org/news.html
 
-        javaFXVersion = "14-ea+7"
+        javaFXVersion = "14-ea+8"
     }
 }
 
