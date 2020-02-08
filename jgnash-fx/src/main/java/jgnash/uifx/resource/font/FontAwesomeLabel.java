@@ -101,8 +101,6 @@ public class FontAwesomeLabel extends Label {
         }
 
         setUserData(glyphValue);    // enum is saved as user data to make lookup easier
-
-        setCache(true); // enable caching
     }
 
     /**

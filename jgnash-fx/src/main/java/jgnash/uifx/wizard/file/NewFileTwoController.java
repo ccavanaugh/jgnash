@@ -76,7 +76,7 @@ public class NewFileTwoController extends AbstractWizardPaneController<NewFileWi
 
         defaultCurrencyComboBox.setValue(matchingCurrency.orElse(
             currencyNodes.stream().findFirst().orElseThrow(() ->
-                new RuntimeException("Could not find any currency"))));
+                new RuntimeException("Could not find any currencies"))));
 
         updateDescriptor();
     }

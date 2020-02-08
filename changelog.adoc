@@ -23,10 +23,12 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.5.0 __(File format change)__
-* 01/21/2020 Updated to JavaFx 14-ea+7.
+* 02/08/2020 Fix RuntimeException when the currency of a locale is unknown. (GitHub Pull Request #92) _[t-pa]_
+* 02/08/2020 Updated to JavaFx 14-ea+8.
+* 02/05/2020 The location for JavaFX dependency downloads has changed.  HTTPS is now used.
+* 02/03/2020 Updated to the latest Picocli, Hikari, PDFBox and Netty dependencies.
 * 01/19/2020 Correctly handle a change to the Yahoo finance cookie expiration date.
-* 01/01/2020 Transactions may now be filtered by user managed Tags.
-* 01/01/2020 Transactions may now be tagged with user managed Tags.
+* 01/01/2020 Transactions may now be tagged and filtered with user managed Tags.
 * 12/28/2019 Fixed poor transaction form behavior caused by opening a splits dialog and closing before adding entries.
 * 12/27/2019 Reduced overhead for icon management.
 * 12/26/2019 FontAwesome icons were updated resulting in some icon changes.
@@ -129,7 +131,7 @@
 * 04/24/2019 A JavaFX exception was being thrown during underlying changes to a budget.
 
 == Release 3.0.4
-* 04/15/2019 The jGnash launch script now works correctly when double clicked in MacOS. GitHub Pull Request #80) _[Pranay Kumar]_
+* 04/15/2019 The jGnash launch script now works correctly when double clicked in MacOS. (GitHub Pull Request #80) _[Pranay Kumar]_
 * 04/14/2019 Disable the Portfolio report if there are not any investment accounts.
 * 04/14/2019 A NPE could occur if the last investment account was deleted after showing the Portfolio report.
 * 04/13/2019 Eliminated zero width spaces from the export of a register to a xls/xlsx file.

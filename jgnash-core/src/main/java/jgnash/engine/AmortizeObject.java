@@ -17,9 +17,9 @@
  */
 package jgnash.engine;
 
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,9 +27,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
+import jgnash.resource.util.ResourceUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * This class is used to calculate loan payments.
@@ -58,6 +59,12 @@ public class AmortizeObject implements Serializable {
     // (normally the liability account)
     @ManyToOne
     private Account feesAccount; // account to place non interest fees
+
+    /**
+     * Controls the type of transaction automatically generated
+     */
+    @SuppressWarnings("unused")
+    private Integer transactionType;
 
     /**
      * the number of payments per year.

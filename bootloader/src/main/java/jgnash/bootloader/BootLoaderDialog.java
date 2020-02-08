@@ -17,7 +17,12 @@
  */
 package jgnash.bootloader;
 
-import jgnash.resource.util.ResourceUtils;
+import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,13 +32,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
+import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI for displaying the boot loader download status.
@@ -99,7 +98,6 @@ public class BootLoaderDialog extends JFrame {
         cancelButton.addActionListener(evt -> cancelButtonActionPerformed());
 
         activeDownloadLabel = new JLabel();
-        activeDownloadLabel.setText("http://central.maven.org/maven2/org/openjfx/javafx-graphics/11.0.2/javafx-graphics-11.0.2-linux.jar");
         activeDownloadLabel.setFocusable(false);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
