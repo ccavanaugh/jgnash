@@ -10,10 +10,10 @@ edition = "2018"
 winres = "0.1.11"
 
 [target.'cfg(windows)'.dependencies]
-winreg = "0.6"
+winreg = "0.6.2"
 
 [dependencies]
-java-locator = "0.1.1"
+java-locator = "0.1.2"
 lazy_static = "1.4.0"
 msgbox = "0.4.0"
 
