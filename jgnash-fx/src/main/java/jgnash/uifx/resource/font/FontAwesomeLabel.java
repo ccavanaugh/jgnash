@@ -25,10 +25,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.EncodeDecode;
@@ -40,7 +40,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class FontAwesomeLabel extends Text {
+public class FontAwesomeLabel extends Label {
 
     private static final String TTF_PATH = "/jgnash/fonts/fa-solid-900.ttf";
 
@@ -61,7 +61,7 @@ public class FontAwesomeLabel extends Text {
     }
 
     public static FontAwesomeLabel fromInteger(final int value, final double size, final long color) {
-        final char unicode = (char) value;
+        final char unicode = (char)value;
 
         final Color c = Color.web(EncodeDecode.longToColorString(color));
 
@@ -95,9 +95,9 @@ public class FontAwesomeLabel extends Text {
         styleProperty().bind(iconStyleProperty);
 
         if (paint != null) {
-            setFill(paint);
+            setTextFill(paint);
         } else {
-            fillProperty().bind(ThemeManager.controlTextFillProperty());
+            textFillProperty().bind(ThemeManager.controlTextFillProperty());
         }
 
         setUserData(glyphValue);    // enum is saved as user data to make lookup easier
@@ -109,10 +109,11 @@ public class FontAwesomeLabel extends Text {
      * @param value new color
      */
     public void setColor(final Paint value) {
-        if (fillProperty().isBound()) { //unbind if needed
-            fillProperty().unbind();
+        if (textFillProperty().isBound()) { //unbind if needed
+            textFillProperty().unbind();
         }
-        setFill(value);
+
+        setTextFill(value);
     }
 
     @SuppressWarnings("unused")
