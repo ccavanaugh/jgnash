@@ -23,6 +23,7 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.5.0 __(File format change)__
+* 02/08/2020 Build system cleanup and consolidated the bootloader.
 * 02/08/2020 Fix RuntimeException when the currency of a locale is unknown. (GitHub Pull Request #92) _[t-pa]_
 * 02/08/2020 Updated to JavaFx 14-ea+8.
 * 02/05/2020 The location for JavaFX dependency downloads has changed.  HTTPS is now used.

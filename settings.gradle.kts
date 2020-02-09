@@ -14,5 +14,5 @@ pluginManagement {
 
 rootProject.name = "jgnash"
 
-include ("bootloader", "jgnash-bayes", "jgnash-resources", "jgnash-core", "jgnash-convert",
+include ("jgnash-bayes", "jgnash-resources", "jgnash-core", "jgnash-convert",
         "jgnash-plugin", "jgnash-fx", "jgnash-report-core", "jgnash-fx-test-plugin", "mt940", "jgnash-tests")

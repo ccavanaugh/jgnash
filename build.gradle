@@ -63,7 +63,7 @@ subprojects {
     test {
         useJUnitPlatform()
 
-        //we want display the following test events
+        // we want display the following test events
         testLogging {
             events("PASSED", "STARTED", "FAILED", "SKIPPED")
             showStandardStreams = true
@@ -71,18 +71,16 @@ subprojects {
     }
 }
 
-wrapper {
-    gradleVersion = "6.0.1"
+// copies hte dist file to a filename consistent with the old build system
+task renameDist(dependsOn: ":jgnash-fx:distZip", type: Copy) {
+    from "${rootDir}"
+    include "jGnash-" + version + ".zip"
+    destinationDir file("${rootDir}")
+    rename "jGnash-" + version + ".zip", "jgnash-" + version + "-bin.zip"
 }
 
-task distZip {
+task distZip (dependsOn: renameDist) {
     doLast {
-        ant.zip(destfile: "jgnash-" + version + "-bin.zip", duplicate: "preserve", update: "false") {
-            zipgroupfileset(dir: ".", includes: "jgnash-fx/build/distributions/jGnash-" + version + ".zip")
-            zipgroupfileset(dir: ".", includes: "bootloader/build/distributions/jGnash-" + version + ".zip")
-        }
+        delete "${rootDir}/jGnash-" + version + ".zip"  // delete the original dist file
     }
 }
-
-distZip.dependsOn(":jgnash-fx:distZip")
-distZip.dependsOn(":bootloader:distZip")

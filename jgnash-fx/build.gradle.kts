@@ -1,4 +1,4 @@
-description = "jGnash JavaFx"
+description = "jGnash"
 
 val javaFXVersion: String by project    // extract JavaFX version from gradle.properties
 val picocliVersion: String by project
@@ -14,7 +14,7 @@ plugins {
 }
 
 application {
-    mainClassName = "jGnashFx"
+    mainClassName = "jGnash"
 }
 
 dependencies {
@@ -75,11 +75,16 @@ javafx {
             "javafx.graphics", "javafx.media")
 }
 
-tasks.withType<CreateStartScripts> {
-    enabled = false // disable creation of the start scripts
+tasks.startScripts {
+    applicationName = "bootloader"
 }
 
 tasks.distZip {
+
+    destinationDirectory.set(file(rootDir))
+
+    // this "should" work according to Gradle Doc but mangles the content of the zip file
+    //archiveFileName.set("jgnash-${archiveVersion.get()}-bin.${archiveExtension.get()}")
 
     // build the mt940 plugin prior to creating the zip file without creating a circular loop
     dependsOn(":mt940:jar")
@@ -102,6 +107,12 @@ distributions {
         distributionBaseName.set("jGnash")
 
         contents {
+            from ( "../jgnash-manual/src/Manual.pdf" )
+            from ( "../changelog.adoc" )
+            from ( "../rust-launcher/target/release/jGnash.exe" )
+            from ( "../README.html" )
+            from ( "../README.adoc" )
+            from ( "../jGnash" )
             exclude("**/*-linux*")  // excludes linux specific JavaFx modules from cross platform zip
             exclude("**/*-win*")    // excludes windows specific JavaFx modules from cross platform zip
             exclude("**/*-mac*")    // excludes mac specific JavaFx modules from cross platform zip
@@ -130,6 +141,6 @@ tasks.jar {
     exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.MF")
 
     manifest {
-        attributes(mapOf("Main-Class" to "jGnashFx", "Class-Path" to generateManifestClassPath()))
+        attributes(mapOf("Main-Class" to "jGnash", "Class-Path" to generateManifestClassPath()))
     }
 }
