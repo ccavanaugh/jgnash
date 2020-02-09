@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-cwd=$(dirname $0)
-$cwd/bin/bootloader "$@"
+cwd=$(dirname "$0")
+"$cwd"/bin/bootloader "$@"
