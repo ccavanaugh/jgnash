@@ -100,6 +100,13 @@ tasks.distZip {
         from(".")
         include("scripts/*")
     }
+
+    doLast {
+        // delete the old renamed build
+        file("${destinationDirectory.get()}/jgnash-${archiveVersion.get()}-bin.${archiveExtension.get()}").delete()
+
+        file("${destinationDirectory.get()}/${archiveFileName.get()}").renameTo(file("${destinationDirectory.get()}/jgnash-${archiveVersion.get()}-bin.${archiveExtension.get()}"))
+    }
 }
 
 distributions {
