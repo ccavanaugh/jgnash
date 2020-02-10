@@ -18,7 +18,7 @@ plugins {
 }
 
 application {
-    mainClassName = "jGnash"
+    mainClassName = "jgnash.app.jGnash"
 }
 
 dependencies {
