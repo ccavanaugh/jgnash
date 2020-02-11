@@ -4,7 +4,7 @@ import java.util.*
 
 description = "jGnash Resources"
 
-val moduleName = "jgnash.report"
+val moduleName = "jgnash.resources"
 val osName = current()!!
 val javaVersion = Jvm.current()!!
 val timeStamp = Date()
