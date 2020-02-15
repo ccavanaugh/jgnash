@@ -12,9 +12,10 @@ val junitExtensionsVersion: String by project
 val awaitilityVersion: String by project
 
 plugins {
-    id("org.openjfx.javafxplugin")
     application // creates a task to run the full application
     `java-library`
+    id("org.openjfx.javafxplugin")
+    id("edu.sc.seis.macAppBundle")
 }
 
 application {
@@ -133,17 +134,25 @@ distributions {
         distributionBaseName.set("jGnash")
 
         contents {
-            from ( "../jgnash-manual/src/Manual.pdf" )
-            from ( "../changelog.adoc" )
-            from ( "../rust-launcher/target/release/jGnash.exe" )
-            from ( "../README.html" )
-            from ( "../README.adoc" )
-            from ( "../jGnash" )
+            from("../jgnash-manual/src/Manual.pdf")
+            from("../changelog.adoc")
+            from("../rust-launcher/target/release/jGnash.exe")
+            from("../README.html")
+            from("../README.adoc")
+            from("../jGnash")
             exclude("**/*-linux*")  // excludes linux specific JavaFx modules from cross platform zip
             exclude("**/*-win*")    // excludes windows specific JavaFx modules from cross platform zip
             exclude("**/*-mac*")    // excludes mac specific JavaFx modules from cross platform zip
         }
     }
+}
+
+macAppBundle {
+    appStyle = "universalJavaApplicationStub"
+    appName = "jGnash"
+    mainClassName = "jgnash.app.jGnash"
+    icon = "../deployfx/gnome-money.icns"
+    javaProperties["apple.laf.useScreenMenuBar"] = "true"
 }
 
 /**
@@ -169,4 +178,28 @@ tasks.jar {
     manifest {
         attributes(mapOf("Main-Class" to "jGnash", "Class-Path" to generateManifestClassPath()))
     }
+}
+
+tasks.register("macDist") {
+    description = "Creates a Mac compatible .app distribution directory"
+    dependsOn("createApp", "distZip")
+
+    doLast {
+        configurations.runtimeClasspath.get().files.forEach {
+            // copy all files in the class path, but ignore windows and linux specific files
+            if (!it.name.contains("linux.jar") && !it.name.contains("win.jar")) {
+                it.copyTo(file("$buildDir/macApp/jGnash.app/Contents/Java/" + it.name), true)
+            }
+        }
+    }
+}
+
+tasks.register<Zip>("macDistZip") {
+    description = "Creates a Mac compatible archive of the .app distribution directory"
+
+    dependsOn("macDist")
+    archiveFileName.set("jGnash.App.zip")
+    destinationDirectory.set(file("$buildDir"))
+
+    from("$buildDir/macApp")
 }
