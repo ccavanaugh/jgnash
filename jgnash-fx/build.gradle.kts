@@ -18,6 +18,8 @@ plugins {
     id("edu.sc.seis.macAppBundle")
 }
 
+val jGnashVersion : String = version.toString()
+
 application {
     mainClassName = "jgnash.app.jGnash"
 }
@@ -149,7 +151,7 @@ distributions {
 
 macAppBundle {
     appStyle = "universalJavaApplicationStub"
-    appName = "jGnash"
+    appName = "jGnash-$jGnashVersion"
     mainClassName = "jgnash.app.jGnash"
     icon = "../deployfx/gnome-money.icns"
     javaProperties["apple.laf.useScreenMenuBar"] = "true"
@@ -188,7 +190,7 @@ tasks.register("macDist") {
         configurations.runtimeClasspath.get().files.forEach {
             // copy all files in the class path, but ignore windows and linux specific files
             if (!it.name.contains("linux.jar") && !it.name.contains("win.jar")) {
-                it.copyTo(file("$buildDir/macApp/jGnash.app/Contents/Java/" + it.name), true)
+                it.copyTo(file("$buildDir/macApp/jGnash-$jGnashVersion.app/Contents/Java/" + it.name), true)
             }
         }
     }
@@ -198,8 +200,8 @@ tasks.register<Zip>("macDistZip") {
     description = "Creates a Mac compatible archive of the .app distribution directory"
 
     dependsOn("macDist")
-    archiveFileName.set("jGnash.App.zip")
-    destinationDirectory.set(file("$buildDir"))
+    archiveFileName.set("jGnash-$jGnashVersion.App.zip")
+    destinationDirectory.set(rootDir)
 
     from("$buildDir/macApp")
 }
