@@ -23,6 +23,7 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.5.0 __(File format change)__
+* 02/03/2020 Updated to the latest Hibernate, Poi, and Commons CSV dependencies.
 * 02/11/2020 jGnash will now restart automatically for Linux and OSX users after downloading the JavaFX dependencies.
 * 02/10/2020 Restructured main classes to a package to make future development with jpackage cleaner (GitHub Pull Request #88) _[msgilligan]_
 * 02/08/2020 Build system cleanup and consolidated the bootloader.
