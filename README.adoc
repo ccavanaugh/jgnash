@@ -135,9 +135,18 @@ You can download jGnash from the https://sourceforge.net/projects/jgnash/files/A
 == To Install jGnash
 
 . Install the latest version of *Java 11*  if you don't already have it installed.
+_jGnash has been tested and is know to work on Java 12 and 13 also._
 
 ** Developers will want the complete Java Development Kit (see build instructions below.)
 . Unzip all files into a directory of your choice leaving the directory structure unchanged.
+
+[[Install-Windows]]
+=== Windows Installation:
+
+Some Windows users with restricted rights may experience write access issues *(Access is denied exception)* with jGnash
+downloading the JavaFX dependencies.
+
+Unzipping and placing jGnash into `%AppData%\jGnash` will ensure the users has write access.
 
 [[Install-MacOSX]]
 === Mac OS X Installation:
