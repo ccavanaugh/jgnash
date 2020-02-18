@@ -22,6 +22,8 @@
 * Add manual warning about placing jGnash in Program Files. (%AppData%\jGnash)
 * Yahoo finance historical event download is not working due to upstream changes.
 
+== Release 3.6.0
+
 == Release 3.5.0 __(File format change)__
 * 02/03/2020 Updated to the latest Hibernate, Poi, and Commons CSV dependencies.
 * 02/11/2020 jGnash will now restart automatically for Linux and OSX users after downloading the JavaFX dependencies.
