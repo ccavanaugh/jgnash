@@ -23,7 +23,7 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.5.1
-* 02/20/2020 Corrected a bug with jGnash.exe for Windows Platforms not working.
+* 02/20/2020 Corrected a bug with jGnash.exe causing a failure to launch on Windows Platforms.
 * 02/20/2020 Fixed a bug that was causing icons to no longer work on Windows Platforms.
 
 == Release 3.5.0 __(File format change)__
