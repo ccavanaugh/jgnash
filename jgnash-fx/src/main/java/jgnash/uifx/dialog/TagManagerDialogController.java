@@ -129,9 +129,7 @@ public class TagManagerDialogController implements MessageListener {
         iconCombo.setCellFactory(new ListViewListCellCallback());
         iconCombo.setButtonCell(new FAIconListCell());
 
-        JavaFXUtils.runLater(() -> {
-            iconCombo.getItems().addAll(FAIcon.values());
-        });
+        JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(FAIcon.values()));
 
         tagListView.setCellFactory(new TagListViewListCellCallback());
 
