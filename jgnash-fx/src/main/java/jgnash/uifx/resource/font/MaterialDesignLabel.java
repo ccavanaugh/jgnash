@@ -54,7 +54,7 @@ public class MaterialDesignLabel extends Label {
         if (OS.isSystemWindows()) {
             BASELINE_OFFSET = -2;
             DEFAULT_SIZE = 16.0;
-        } else {
+        } else {    // Linux and OSX
             BASELINE_OFFSET = -5;
             DEFAULT_SIZE = 18.0;
         }
