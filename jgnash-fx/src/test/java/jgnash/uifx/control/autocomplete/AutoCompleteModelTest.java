@@ -125,7 +125,13 @@ class AutoCompleteModelTest {
         final AtomicBoolean payeeModelLoaded = payeeModel.isLoadComplete();
         final AtomicBoolean memoModelLoaded = memoModel.isLoadComplete();
 
-        // Block until the atomics have been set or the test will fail
+
+        // stabilises the test for osx
+        for (int i = 1; i <= TRANSACTION_COUNT; i++) {
+            Thread.yield();
+        }
+
+        // Block until the atomics have been set, or the test will fail
         Awaitility.await().untilTrue(payeeModelLoaded);
         Awaitility.await().untilTrue(memoModelLoaded);
 
