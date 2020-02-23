@@ -199,9 +199,25 @@ tasks.register("macDist") {
 tasks.register<Zip>("macDistZip") {
     description = "Creates a Mac compatible archive of the .app distribution directory"
 
-    dependsOn("macDist")
+    dependsOn("clean", "macDist")
     archiveFileName.set("jGnash-$jGnashVersion.App.zip")
     destinationDirectory.set(rootDir)
 
     from("$buildDir/macApp")
+
+    from("../jgnash-manual/src/Manual.pdf") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
+    }
+
+    from("../changelog.adoc") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
+    }
+
+    from("../README.adoc") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
+    }
+
+    from("../README.html") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
+    }
 }
