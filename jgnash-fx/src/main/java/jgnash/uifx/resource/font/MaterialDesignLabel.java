@@ -27,6 +27,8 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+
+import jgnash.resource.util.OS;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.EncodeDecode;
 import jgnash.util.NotNull;
@@ -44,11 +46,19 @@ public class MaterialDesignLabel extends Label {
 
     private static final String TTF_PATH = "/jgnash/fonts/materialdesignicons-webfont.ttf";
 
-    public static final double DEFAULT_SIZE = 16.0;
+    public static final double DEFAULT_SIZE;
 
-    private static final double BASELINE_OFFSET = -2;
+    private static final double BASELINE_OFFSET;
 
     static {
+        if (OS.isSystemWindows()) {
+            BASELINE_OFFSET = -2;
+            DEFAULT_SIZE = 16.0;
+        } else {
+            BASELINE_OFFSET = -5;
+            DEFAULT_SIZE = 18.0;
+        }
+
         Font.loadFont(MaterialDesignLabel.class.getResource(TTF_PATH).toExternalForm(),
                 ThemeManager.fontScaleProperty().get() * DEFAULT_SIZE);
     }
