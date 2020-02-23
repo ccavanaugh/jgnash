@@ -250,6 +250,7 @@ public class FontAwesomeLabel extends Label {
         PLUS('\uf067'),
         PLUS_CIRCLE('\uf055'),
         PLUS_SQUARE('\uf0fe'),
+        PRINT('\uf02f'),
         QUESTION_CIRCLE('\uf059'),
         REFRESH('\uf021'),
         SAVE('\uf0c7'),
