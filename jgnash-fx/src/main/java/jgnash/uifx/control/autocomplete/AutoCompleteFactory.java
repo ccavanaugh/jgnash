@@ -63,7 +63,7 @@ public class AutoCompleteFactory {
      */
     private static final ExecutorService pool
             = Executors.newSingleThreadExecutor(
-                    new DefaultDaemonThreadFactory("Auto Complete Factory Executor"));
+            new DefaultDaemonThreadFactory("Auto Complete Factory Executor"));
 
     private AutoCompleteFactory() {
         // Factory class
@@ -77,7 +77,7 @@ public class AutoCompleteFactory {
      */
     public static void setMemoModel(final AutoCompleteTextField<Transaction> autoCompleteTextField) {
         if (Options.useAutoCompleteProperty().get()) {
-            synchronized(synchronizationObject) {
+            synchronized (synchronizationObject) {
                 if (memoModel == null) {
                     memoModel = new MemoModel();
                 }
@@ -90,8 +90,8 @@ public class AutoCompleteFactory {
      * Sets the {@code AutoCompleteModel} for {@code Transaction} payees to
      * an {@code AutoCompleteTextField<Transaction>}.
      *
-     * @param account base Account for payee model
-     * @param autoCompleteTextField text field to bind to
+     * @param account               base Account for payee model
+     * @param autoCompleteTextField text Field to bind to
      */
     public static void setPayeeModel(final AutoCompleteTextField<Transaction> autoCompleteTextField, final Account account) {
         if (Options.useAutoCompleteProperty().get()) {
@@ -181,7 +181,7 @@ public class AutoCompleteFactory {
 
     /**
      * This model stores the transaction with the payee field value. A new
-     * instance is created for each account and is account specific
+     * instance is created for each account and is account specific.
      */
     private static final class PayeeAccountModel extends PayeeModel {
 
@@ -201,7 +201,8 @@ public class AutoCompleteFactory {
                     account.getSortedTransactionList().forEach(this::load);
                 }
 
-                loadComplete.set(true);
+                // Signal complete at the very end of the application thread
+                JavaFXUtils.runLater(() -> pool.execute(() -> loadComplete.set(true)));
             }));
         }
 
@@ -230,9 +231,10 @@ public class AutoCompleteFactory {
     }
 
     /**
-     * This model stores the transaction with the payee field value. Split
-     * entries are filtered for now because duplicating one in a form would
-     * produce would only impact the parent split transaction.
+     * This model stores the transaction with the payee field value.
+     * <p>
+     * Split entries are excluded because duplicating one in a form would
+     * only impact the parent split transaction.
      */
     private static class PayeeModel extends TransactionModel {
 
