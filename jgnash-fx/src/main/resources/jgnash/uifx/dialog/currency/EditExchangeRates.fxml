@@ -12,7 +12,7 @@
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.TableViewEx?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="jgnash.uifx.dialog.currency.EditExchangeRatesController" styleClass="dialog, form">
@@ -42,7 +42,7 @@
                           GridPane.columnIndex="1"/>
         <Label GridPane.columnIndex="2">
             <graphic>
-                <FontAwesomeLabel glyphName="LONG_ARROW_RIGHT"/>
+                <MaterialDesignLabel glyphName="ARROW_RIGHT_BOLD"/>
             </graphic>
         </Label>
         <CurrencyComboBox fx:id="targetCurrencyComboBox" maxWidth="Infinity" prefWidth="150.0"
@@ -90,13 +90,13 @@
         </rowConstraints>
         <Button fx:id="updateOnlineButton" onAction="#handleUpdateAction" text="%Button.UpdateOnline">
             <graphic>
-                <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+                <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
             </graphic>
         </Button>
         <ProgressBar fx:id="progressBar" maxWidth="Infinity" progress="0.0" GridPane.columnIndex="1"/>
         <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop" GridPane.columnIndex="2">
             <graphic>
-                <FontAwesomeLabel glyphName="STOP_CIRCLE"/>
+                <MaterialDesignLabel glyphName="STOP_CIRCLE"/>
             </graphic>
         </Button>
     </GridPane>

@@ -30,13 +30,13 @@ import javafx.scene.paint.Color;
 
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.util.FileUtils;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.resource.util.TextResource;
 
 /**
  * New file wizard panel.
@@ -46,7 +46,7 @@ import jgnash.resource.util.TextResource;
 public class NewFileOneController extends AbstractWizardPaneController<NewFileWizard.Settings> {
 
     @FXML
-    private FontAwesomeLabel warningLabel;
+    private MaterialDesignLabel warningLabel;
 
     @FXML
     private TextArea textArea;

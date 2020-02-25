@@ -4,14 +4,14 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.PopOverButton?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity"
          minWidth="-Infinity"
-         xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form">
+         xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="form">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES"/>
         <ColumnConstraints hgrow="NEVER"/>
@@ -27,7 +27,7 @@
     <DecimalTextField fx:id="exchangeAmountField" GridPane.columnIndex="2" minWidth="80" maxWidth="80"/>
     <PopOverButton fx:id="expandButton" GridPane.columnIndex="3">
         <graphic>
-            <FontAwesomeLabel glyphName="EXCHANGE"/>
+            <MaterialDesignLabel glyphName="SWAP_HORIZONTAL"/>
         </graphic>
         <contentNode>
             <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"

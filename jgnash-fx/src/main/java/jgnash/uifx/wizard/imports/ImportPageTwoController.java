@@ -60,16 +60,16 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.resource.util.TextResource;
 
 /**
  * Import Wizard, imported transaction wizard.
@@ -427,11 +427,11 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                 switch (item) {
                     case IGNORE:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.MINUS_CIRCLE)));
+                        setGraphic(new StackPane(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.MINUS_CIRCLE)));
                         break;
                     case NEW:
                     case NOT_EQUAL:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PLUS_CIRCLE)));
+                        setGraphic(new StackPane(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.PLUS_CIRCLE)));
                         break;
                     case EQUAL:
                         setGraphic(new StackPane(new Label("=")));

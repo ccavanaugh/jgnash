@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <StackPane fx:id="stackPane" fx:controller="jgnash.uifx.report.pdf.ReportViewerDialogController"
            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
@@ -29,15 +29,14 @@
                         <Button fx:id="saveButton" onAction="#handleSaveAction" text="%Button.Save"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="SAVE"/>
+                                <MaterialDesignLabel glyphName="SAVE"/>
                             </graphic>
                         </Button>
-
                         <Separator/>
                         <Button fx:id="reportFormatButton" onAction="#handleFormatAction" text="%Button.PageSetup"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="PRINT"/>
+                                <MaterialDesignLabel glyphName="PRINT"/>
                             </graphic>
                         </Button>
                         <Spinner fx:id="fontSizeSpinner" prefWidth="80"/>
@@ -45,32 +44,32 @@
                         <Button fx:id="firstButton" onAction="#handleFirstAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="FAST_BACKWARD"/>
+                                <MaterialDesignLabel glyphName="SKIP_BACKWARD"/>
                             </graphic>
                         </Button>
                         <Button fx:id="previousButton" onAction="#handlePreviousAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="STEP_BACKWARD"/>
+                                <MaterialDesignLabel glyphName="STEP_BACKWARD"/>
                             </graphic>
                         </Button>
                         <Button fx:id="nextButton" onAction="#handleNextAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="STEP_FORWARD"/>
+                                <MaterialDesignLabel glyphName="STEP_FORWARD"/>
                             </graphic>
                         </Button>
                         <Button fx:id="lastButton" onAction="#handleLastAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="FAST_FORWARD"/>
+                                <MaterialDesignLabel glyphName="SKIP_FORWARD"/>
                             </graphic>
                         </Button>
                         <Separator/>
                         <Button fx:id="zoomOutButton" onAction="#handleZoomOutAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="MINUS_CIRCLE"/>
+                                <MaterialDesignLabel glyphName="MINUS_CIRCLE"/>
                             </graphic>
                         </Button>
                         <ComboBox fx:id="zoomComboBox" editable="true" focusTraversable="false"
@@ -79,24 +78,24 @@
                         <Button fx:id="zoomInButton" onAction="#handleZoomInAction"
                                 disable="true">
                             <graphic>
-                                <FontAwesomeLabel glyphName="PLUS_CIRCLE"/>
+                                <MaterialDesignLabel glyphName="PLUS_CIRCLE"/>
                             </graphic>
                         </Button>
                         <Separator/>
 
                         <ToggleButton fx:id="fitPageButton" onAction="#handleActualSizeAction" toggleGroup="$toggleGroup">
                             <graphic>
-                                <FontAwesomeLabel glyphName="ARROWS"/>
+                                <MaterialDesignLabel glyphName="ARROWS"/>
                             </graphic>
                         </ToggleButton>
                         <ToggleButton fx:id="fitHeightButton" onAction="#handleFitHeightAction" toggleGroup="$toggleGroup">
                             <graphic>
-                                <FontAwesomeLabel glyphName="ARROWS_V"/>
+                                <MaterialDesignLabel glyphName="ARROWS_V"/>
                             </graphic>
                         </ToggleButton>
                         <ToggleButton fx:id="fitWidthButton" onAction="#handleFitPageWidthAction" toggleGroup="$toggleGroup">
                             <graphic>
-                                <FontAwesomeLabel glyphName="ARROWS_H"/>
+                                <MaterialDesignLabel glyphName="ARROWS_H"/>
                             </graphic>
                         </ToggleButton>
 

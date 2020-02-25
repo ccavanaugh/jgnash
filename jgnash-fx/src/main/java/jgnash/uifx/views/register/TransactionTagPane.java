@@ -38,7 +38,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.resource.util.ResourceUtils;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
 
@@ -126,8 +126,8 @@ public class TransactionTagPane extends GridPane implements MessageListener {
 
         // the the icons / labels
         for (final Tag tag : selectedTags) {
-            final Label label  = new Label("", FontAwesomeLabel.fromInteger(tag.getShape(),
-                    FontAwesomeLabel.DEFAULT_SIZE * ICON_SCALE, tag.getColor()));
+            final Label label  = new Label("", MaterialDesignLabel.fromInteger(tag.getShape(),
+                    MaterialDesignLabel.DEFAULT_SIZE * ICON_SCALE, tag.getColor()));
             label.setTooltip(new Tooltip(tag.getName()));
             tagBox.getChildren().add(label);
         }

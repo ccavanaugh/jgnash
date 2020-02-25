@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <fx:root type="GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
          xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="form">
@@ -19,7 +19,7 @@
     </rowConstraints>
     <Button fx:id="selectTagsButton" visible="false" mnemonicParsing="false">
         <graphic>
-            <FontAwesomeLabel glyphName="TAGS"/>
+            <MaterialDesignLabel glyphName="TAGS"/>
         </graphic>
         <tooltip>
             <Tooltip text="%ToolTip.SelectTags"/>

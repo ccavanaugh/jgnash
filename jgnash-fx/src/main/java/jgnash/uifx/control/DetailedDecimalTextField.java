@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.control;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -29,11 +32,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
-import jgnash.util.NotNull;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
+import jgnash.util.NotNull;
 
 /**
  * A {@code DecimalTextField} composite that supports use of a popup or dialog by overriding {@code show()}.
@@ -75,7 +76,7 @@ public class DetailedDecimalTextField extends GridPane {
         // apply the choice box and  date picker styles to the pane
         getStyleClass().setAll("choice-box", "date-picker");
 
-        final Button arrowButton = new Button("", new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PENCIL));
+        final Button arrowButton = new Button("", new MaterialDesignLabel(MaterialDesignLabel.MDIcon.PENCIL));
         arrowButton.getStyleClass().setAll("button", "arrow-button");
         arrowButton.setFocusTraversable(false);
         arrowButton.setOnAction(event -> show());

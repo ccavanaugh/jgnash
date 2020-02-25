@@ -7,10 +7,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <GridPane fx:controller="jgnash.uifx.dialog.options.TransactionNumberDialogController" minHeight="-Infinity"
-          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
+          xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
         <ColumnConstraints hgrow="ALWAYS"/>
@@ -25,12 +25,12 @@
     <VBox GridPane.columnIndex="1" styleClass="form">
         <Button fx:id="upButton" onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" minWidth="50">
             <graphic>
-                <FontAwesomeLabel glyphName="LEVEL_UP"/>
+                <MaterialDesignLabel glyphName="LEVEL_UP"/>
             </graphic>
         </Button>
         <Button fx:id="downButton" onAction="#handleDownAction" contentDisplay="GRAPHIC_ONLY" minWidth="50">
             <graphic>
-                <FontAwesomeLabel glyphName="LEVEL_DOWN"/>
+                <MaterialDesignLabel glyphName="LEVEL_DOWN"/>
             </graphic>
         </Button>
     </VBox>

@@ -17,14 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import jgnash.resource.util.ResourceUtils;
-import jgnash.uifx.Options;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
-import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.JavaFXUtils;
-
 import java.util.Collection;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -39,6 +31,14 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+
+import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.Options;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
+import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * A ChoiceDialog with a consistent application appearance
@@ -89,7 +89,7 @@ public class ChoiceDialog<T> {
 
         dialog = FXMLUtils.loadFXML(this, "ChoiceDialog.fxml", resources);
 
-        setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.QUESTION_CIRCLE,
+        setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.QUESTION_CIRCLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER));
 
         JavaFXUtils.runLater(() -> {

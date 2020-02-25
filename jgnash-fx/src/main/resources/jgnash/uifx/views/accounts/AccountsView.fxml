@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="jgnash.uifx.views.accounts.AccountsViewController">
@@ -13,7 +13,7 @@
         <ToolBar>
             <Button fx:id="newButton" text="%Button.New" onAction="#handleNewAccountAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="PLUS"/>
+                    <MaterialDesignLabel glyphName="PLUS"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.NewAccount"/>
@@ -21,7 +21,7 @@
             </Button>
             <Button fx:id="modifyButton" text="%Button.Modify" onAction="#handleModifyAccountAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="EDIT"/>
+                    <MaterialDesignLabel glyphName="EDIT"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ModifyAccount"/>
@@ -29,7 +29,7 @@
             </Button>
             <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAccountAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="TRASH_O"/>
+                    <MaterialDesignLabel glyphName="TRASH_O"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.DeleteAccount"/>
@@ -37,7 +37,7 @@
             </Button>
             <Button fx:id="reconcileButton" text="%Button.Reconcile" onAction="#handleReconcileAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="ADJUST"/>
+                    <MaterialDesignLabel glyphName="HANDSHAKE"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ReconcileAccount"/>
@@ -45,7 +45,7 @@
             </Button>
             <Button fx:id="filterButton" text="%Button.Filter" onAction="#handleFilterAccountAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILTER"/>
+                    <MaterialDesignLabel glyphName="FILTER"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.FilterAccount"/>
@@ -53,7 +53,7 @@
             </Button>
             <Button fx:id="zoomButton" text="%Button.Zoom" onAction="#handleZoomAccountAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="EXTERNAL_LINK_SQUARE"/>
+                    <MaterialDesignLabel glyphName="FILE_DOCUMENT_BOX_PLUS"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ZoomRegister"/>
@@ -61,7 +61,7 @@
             </Button>
             <Button text="%Button.Export" onAction="#handleExport">
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILE_EXCEL_O"/>
+                    <MaterialDesignLabel glyphName="FILE_EXCEL_O"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ExportAccountTree"/>

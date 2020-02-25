@@ -4,8 +4,8 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import javafx.scene.input.KeyCodeCombination?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <MenuBar fx:id="menuBar" id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" fx:controller="jgnash.uifx.views.main.MenuBarController">
@@ -16,7 +16,7 @@
                 <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
             <graphic>
-                <FontAwesomeLabel glyphName="FILE"/>
+                <MaterialDesignLabel glyphName="FILE"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>
@@ -25,12 +25,12 @@
                 <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
             <graphic>
-                <FontAwesomeLabel glyphName="FOLDER_OPEN"/>
+                <MaterialDesignLabel glyphName="FOLDER_OPEN"/>
             </graphic>
         </MenuItem>
         <MenuItem fx:id="saveAsMenuItem" onAction="#handleSaveAsAction" text="%Menu.SaveAs.Name">
             <graphic>
-                <FontAwesomeLabel glyphName="SAVE"/>
+                <MaterialDesignLabel glyphName="SAVE"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>
@@ -46,19 +46,19 @@
         <SeparatorMenuItem/>
         <MenuItem fx:id="changePasswordMenuItem" onAction="#handleChangeDatabasePasswordAction" text="%Menu.ChangeCredentials.Name">
             <graphic>
-                <FontAwesomeLabel glyphName="KEY"/>
+                <MaterialDesignLabel glyphName="KEY"/>
             </graphic>
         </MenuItem>
         <MenuItem fx:id="packDatabaseMenuItem" onAction="#handlePackDatabaseAction" text="%Menu.PackDatabase.Name">
             <graphic>
-                <FontAwesomeLabel glyphName="COMPRESS"/>
+                <MaterialDesignLabel glyphName="ARROW_COLLAPSE_VERTICAL"/>
             </graphic>
         </MenuItem>
         <MenuItem fx:id="shutdownServerMenuItem" onAction="#handleShutDownServerAction" text="%Menu.ShutdownServer.Name"/>
         <SeparatorMenuItem/>
         <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">
             <graphic>
-                <FontAwesomeLabel glyphName="TIMES_CIRCLE"/>
+                <MaterialDesignLabel glyphName="CLOSE_CIRCLE"/>
             </graphic>
         </MenuItem>
         <MenuItem fx:id="exitMenuItem" onAction="#handleExitAction" text="%Menu.Exit.Name">
@@ -66,7 +66,7 @@
                 <KeyCodeCombination alt="UP" code="Q" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
             <graphic>
-                <FontAwesomeLabel glyphName="SIGN_OUT"/>
+                <MaterialDesignLabel glyphName="SIGN_OUT"/>
             </graphic>
         </MenuItem>
     </Menu>
@@ -79,29 +79,29 @@
         <Menu text="%Menu.Charts.Name">
             <MenuItem text="%Menu.IEBarChart.Name" onAction="#handleIncomeExpenseBarChart">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CHART_BAR"/>
+                    <MaterialDesignLabel glyphName="CHART_BAR"/>
                 </graphic>
             </MenuItem>
             <MenuItem text="%Menu.IEPieChart.Name" onAction="#handleIncomeExpensePieChart">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CHART_PIE"/>
+                    <MaterialDesignLabel glyphName="CHART_PIE"/>
                 </graphic>
             </MenuItem>
             <MenuItem text="%Menu.PayeePieChart.Name" onAction="#handleIncomeExpensePayeePieChart">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CHART_PIE"/>
+                    <MaterialDesignLabel glyphName="CHART_PIE"/>
                 </graphic>
             </MenuItem>
             <SeparatorMenuItem/>
             <MenuItem text="%Menu.PeriodicAccountBalance.Name" onAction="#handleDisplayAccountBalanceChart">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CHART_BAR"/>
+                    <MaterialDesignLabel glyphName="CHART_BAR"/>
                 </graphic>
             </MenuItem>
             <SeparatorMenuItem/>
             <MenuItem text="%Menu.TransactionTagPieChart.Name" onAction="#handleDisplayTransactionTagPieChart">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CHART_PIE"/>
+                    <MaterialDesignLabel glyphName="CHART_PIE"/>
                 </graphic>
             </MenuItem>
         </Menu>
@@ -122,7 +122,7 @@
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.FontSize.Name" onAction="#handleFontSizeAction">
             <graphic>
-                <FontAwesomeLabel glyphName="TEXT_HEIGHT"/>
+                <MaterialDesignLabel glyphName="TEXT_HEIGHT"/>
             </graphic>
         </MenuItem>
         <MenuItem text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
@@ -140,7 +140,7 @@
             <MenuItem text="%Menu.BackgroundSecurityUpdate.Name"
                       onAction="#updateSecurities">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+                    <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
                 </graphic>
             </MenuItem>
         </Menu>
@@ -152,7 +152,7 @@
             <SeparatorMenuItem/>
             <MenuItem text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+                    <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
                 </graphic>
             </MenuItem>
         </Menu>
@@ -165,25 +165,25 @@
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog">
             <graphic>
-                <FontAwesomeLabel glyphName="COGS"/>
+                <MaterialDesignLabel glyphName="COGS"/>
             </graphic>
         </MenuItem>
         <MenuItem text="%Menu.EditTranNumList.Name" fx:id="transNumberListMenuItem"
                   onAction="#handleShowTranNumberListDialog">
             <graphic>
-                <FontAwesomeLabel glyphName="LIST"/>
+                <MaterialDesignLabel glyphName="LIST"/>
             </graphic>
         </MenuItem>
         <MenuItem text="%Menu.ConfigImportFilters.Name" fx:id="configureTranImportFiltersMenuItem"
                   onAction="#handleShowTranImportFilterDialog">
             <graphic>
-                <FontAwesomeLabel glyphName="COGS"/>
+                <MaterialDesignLabel glyphName="COGS"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale">
             <graphic>
-                <FontAwesomeLabel glyphName="LANGUAGE"/>
+                <MaterialDesignLabel glyphName="LANGUAGE"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>
@@ -192,7 +192,7 @@
                 <KeyCodeCombination alt="UP" code="J" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
             <graphic>
-                <FontAwesomeLabel glyphName="CODE"/>
+                <MaterialDesignLabel glyphName="LANGUAGE_JAVASCRIPT"/>
             </graphic>
         </MenuItem>
     </Menu>
@@ -208,13 +208,13 @@
                 <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
             <graphic>
-                <FontAwesomeLabel glyphName="INFO"/>
+                <MaterialDesignLabel glyphName="INFO"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.Console.Name" onAction="#handleShowConsoleDialog">
             <graphic>
-                <FontAwesomeLabel glyphName="TERMINAL"/>
+                <MaterialDesignLabel glyphName="CONSOLE"/>
             </graphic>
         </MenuItem>
     </Menu>

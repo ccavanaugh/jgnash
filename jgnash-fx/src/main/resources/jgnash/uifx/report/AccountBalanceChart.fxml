@@ -11,19 +11,19 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.Tooltip?>
 <BorderPane fx:controller="jgnash.uifx.report.AccountBalanceChartController" minWidth="850" minHeight="600"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <fx:define>
         <ToggleGroup fx:id="toggleGroup"/>
     </fx:define>
@@ -31,17 +31,17 @@
         <ToolBar>
             <Button text="%Button.SaveImage" onAction="#handleSaveAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILE_IMAGE_O"/>
+                    <MaterialDesignLabel glyphName="FILE_IMAGE_O"/>
                 </graphic>
             </Button>
             <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CLIPBOARD"/>
+                    <MaterialDesignLabel glyphName="CLIPBOARD"/>
                 </graphic>
             </Button>
             <Button text="%Button.Print" onAction="#handlePrintAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="PRINT"/>
+                    <MaterialDesignLabel glyphName="PRINT"/>
                 </graphic>
             </Button>
         </ToolBar>

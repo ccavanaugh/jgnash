@@ -4,14 +4,14 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
-<?import jgnash.uifx.control.CheckListView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.control.CheckListView?>
 <?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="jgnash.uifx.dialog.security.HistoricalImportController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER"/>
@@ -63,13 +63,13 @@
                 <Button fx:id="startButton" onAction="#handleStartAction" text="%Button.Start"
                         ButtonBar.buttonData="LEFT">
                     <graphic>
-                        <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+                        <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
                     </graphic>
                 </Button>
                 <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop"
                         ButtonBar.buttonData="RIGHT">
                     <graphic>
-                        <FontAwesomeLabel glyphName="STOP_CIRCLE"/>
+                        <MaterialDesignLabel glyphName="STOP_CIRCLE"/>
                     </graphic>
                 </Button>
             </buttons>

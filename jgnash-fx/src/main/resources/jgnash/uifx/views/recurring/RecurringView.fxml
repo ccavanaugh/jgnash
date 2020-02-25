@@ -5,35 +5,35 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import jgnash.uifx.control.TableViewEx?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
-
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jgnash.uifx.views.recurring.RecurringViewController">
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="jgnash.uifx.views.recurring.RecurringViewController">
     <top>
         <ToolBar>
             <Button mnemonicParsing="false" text="%Button.New" onAction="#handleNewAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CALENDAR"/>
+                    <MaterialDesignLabel glyphName="CALENDAR_PLUS"/>
                 </graphic>
             </Button>
             <Button fx:id="modifyButton" mnemonicParsing="false" text="%Button.Modify" onAction="#handleModifyAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="EDIT"/>
+                    <MaterialDesignLabel glyphName="EDIT"/>
                 </graphic>
             </Button>
             <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="TRASH_O"/>
+                    <MaterialDesignLabel glyphName="TRASH_O"/>
                 </graphic>
             </Button>
             <Separator orientation="VERTICAL"/>
             <Button mnemonicParsing="false" text="%Button.CheckReminders" onAction="#handleRefreshAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="REFRESH"/>
+                    <MaterialDesignLabel glyphName="REFRESH"/>
                 </graphic>
             </Button>
             <Button fx:id="nowButton" text="%Button.ExecuteNow" onAction="#handleNowAction" mnemonicParsing="false">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CALENDAR_CHECK"/>
+                    <MaterialDesignLabel glyphName="CALENDAR_CHECK"/>
                 </graphic>
             </Button>
         </ToolBar>

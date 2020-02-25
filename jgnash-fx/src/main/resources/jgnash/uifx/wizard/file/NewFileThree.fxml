@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxWidth="Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" maxWidth="Infinity"
           fx:controller="jgnash.uifx.wizard.file.NewFileThreeController" styleClass="form">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
@@ -36,12 +36,12 @@
         <VBox GridPane.columnIndex="1" styleClass="form" GridPane.fillHeight="true">
             <Button text="%Button.Add" onAction="#handleAddAction" contentDisplay="RIGHT" maxWidth="Infinity">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CHEVRON_RIGHT"/>
+                    <MaterialDesignLabel glyphName="CHEVRON_RIGHT"/>
                 </graphic>
             </Button>
             <Button text="%Button.Remove" onAction="#handleRemoveAction" maxWidth="Infinity">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CHEVRON_LEFT"/>
+                    <MaterialDesignLabel glyphName="CHEVRON_LEFT"/>
                 </graphic>
             </Button>
         </VBox>

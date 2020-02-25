@@ -58,13 +58,13 @@ import jgnash.engine.message.MessageListener;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.TextFieldEx;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.EncodeDecode;
 
-import static jgnash.uifx.resource.font.FontAwesomeLabel.FAIcon;
+import static jgnash.uifx.resource.font.MaterialDesignLabel.MDIcon;
 import static jgnash.uifx.views.register.TransactionTagPane.ICON_SCALE;
 
 /**
@@ -90,7 +90,7 @@ public class TagManagerDialogController implements MessageListener {
     private TextFieldEx nameField;
 
     @FXML
-    private ComboBox<FAIcon> iconCombo;
+    private ComboBox<MDIcon> iconCombo;
 
     @FXML
     private Button duplicateButton;
@@ -129,7 +129,7 @@ public class TagManagerDialogController implements MessageListener {
         iconCombo.setCellFactory(new ListViewListCellCallback());
         iconCombo.setButtonCell(new FAIconListCell());
 
-        JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(FAIcon.values()));
+        JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(MDIcon.values()));
 
         tagListView.setCellFactory(new TagListViewListCellCallback());
 
@@ -146,8 +146,8 @@ public class TagManagerDialogController implements MessageListener {
         tagLocked.setValue(lockedMap.getOrDefault(tag, Boolean.FALSE));
 
         new Thread(() -> {
-            final char unicode = tag.getShape();
-            for (final FAIcon faIcon : FAIcon.values()) {
+            final int unicode = tag.getShape();
+            for (final MDIcon faIcon : MDIcon.values()) {
                 if (unicode == faIcon.getUnicode()) {
                     JavaFXUtils.runLater(() -> iconCombo.setValue(faIcon));
                 }
@@ -252,18 +252,18 @@ public class TagManagerDialogController implements MessageListener {
             nameField.setText("");
             descriptionTextArea.setText("");
             colorPicker.setValue(Color.BLACK);
-            iconCombo.setValue(FAIcon.CIRCLE);
+            iconCombo.setValue(MDIcon.CIRCLE);
         });
     }
 
-    private static class ListViewListCellCallback implements Callback<ListView<FAIcon>, ListCell<FAIcon>> {
+    private static class ListViewListCellCallback implements Callback<ListView<MDIcon>, ListCell<MDIcon>> {
         @Override
-        public ListCell<FontAwesomeLabel.FAIcon> call(ListView<FAIcon> param) {
+        public ListCell<MaterialDesignLabel.MDIcon> call(ListView<MDIcon> param) {
             return new FAIconListCell();
         }
     }
 
-    private static class FAIconListCell extends ListCell<FAIcon> {
+    private static class FAIconListCell extends ListCell<MDIcon> {
         private final Label label = new Label();
 
         {
@@ -271,13 +271,13 @@ public class TagManagerDialogController implements MessageListener {
         }
 
         @Override
-        protected void updateItem(final FAIcon item, final boolean empty) {
+        protected void updateItem(final MDIcon item, final boolean empty) {
             super.updateItem(item, empty);
 
             if (item == null || empty) {
                 setGraphic(null);
             } else {
-                label.setGraphic(new FontAwesomeLabel(item, FontAwesomeLabel.DEFAULT_SIZE));
+                label.setGraphic(new MaterialDesignLabel(item, MaterialDesignLabel.DEFAULT_SIZE));
                 setGraphic(label);
             }
         }
@@ -300,8 +300,8 @@ public class TagManagerDialogController implements MessageListener {
                     setGraphic(null);
                     setText("");
                 } else {
-                    label.setGraphic(FontAwesomeLabel.fromInteger(item.getShape(),
-                            FontAwesomeLabel.DEFAULT_SIZE * ICON_SCALE, item.getColor()));
+                    label.setGraphic(MaterialDesignLabel.fromInteger(item.getShape(),
+                            MaterialDesignLabel.DEFAULT_SIZE * ICON_SCALE, item.getColor()));
                     label.setText(item.toString());
                     setGraphic(label);
                 }

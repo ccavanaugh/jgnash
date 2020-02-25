@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import jgnash.uifx.control.TableViewEx?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 <?import jgnash.uifx.views.register.TransactionTagPane?>
 
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
@@ -37,7 +37,7 @@
                 </GridPane>
             </graphic>
             <ToolBar>
-                <FontAwesomeLabel glyphName="FILTER"/>
+                <MaterialDesignLabel glyphName="FILTER"/>
 
                 <ComboBox fx:id="reconciledStateFilterComboBox">
                     <tooltip>

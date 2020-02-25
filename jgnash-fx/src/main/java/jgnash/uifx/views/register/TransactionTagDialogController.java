@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Tag;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 
@@ -96,8 +96,8 @@ public class TransactionTagDialogController {
         for (final Tag tag : tagList) {
             final CheckBox checkBox = new CheckBox(tag.getName());
 
-            checkBox.setGraphic(FontAwesomeLabel.fromInteger(tag.getShape(),
-                    FontAwesomeLabel.DEFAULT_SIZE * TransactionTagPane.ICON_SCALE, tag.getColor()));
+            checkBox.setGraphic(MaterialDesignLabel.fromInteger(tag.getShape(),
+                    MaterialDesignLabel.DEFAULT_SIZE * TransactionTagPane.ICON_SCALE, tag.getColor()));
 
             checkBox.setUserData(tag);
             TilePane.setAlignment(checkBox, Pos.BASELINE_LEFT);

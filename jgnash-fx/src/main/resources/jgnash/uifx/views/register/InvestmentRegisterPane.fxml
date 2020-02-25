@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="jgnash.uifx.views.register.InvestmentRegisterPaneController">
     <center>
         <StackPane fx:id="registerTablePane" VBox.vgrow="ALWAYS"/>
@@ -28,25 +28,25 @@
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"
                                 ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeLabel glyphName="MONEY_BILL"/>
+                                <MaterialDesignLabel glyphName="CASH"/>
                             </graphic>
                         </Button>
                         <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction"
                                 text="%Button.Duplicate" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeLabel glyphName="COPY"/>
+                                <MaterialDesignLabel glyphName="CASH_MULTIPLE"/>
                             </graphic>
                         </Button>
                         <Button mnemonicParsing="false" onAction="#handleSecuritiesAction"
                                 text="%Button.AvailSecurities" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeLabel glyphName="LIST"/>
+                                <MaterialDesignLabel glyphName="LIST"/>
                             </graphic>
                         </Button>
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction"
                                 text="%Button.Delete" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeLabel glyphName="TRASH_O"/>
+                                <MaterialDesignLabel glyphName="TRASH_O"/>
                             </graphic>
                         </Button>
                     </buttons>
