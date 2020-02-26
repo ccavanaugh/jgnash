@@ -47,21 +47,23 @@ public class Tag extends StoredObject implements Comparable<Tag> {
     private long color = 255;
 
     /**
-     * The Tag shape
-     * <p>
-     * Store a unicode integer here and use a font to generate shapes
-     *//*
-    @SuppressWarnings({"unused", "DeprecatedIsStillUsed"})
-    @Deprecated
-    private char shape = 0;*/
-
+     * Icon unicode value
+     */
     private Integer unicode = 0xf764;   // circle
 
     /**
-     * Holder to support multiple icon sets
+     * Won't be used.  Left to support old Hibernate files
+     * TODO: Drop column on future file update
      */
     @SuppressWarnings("unused")
     private byte iconSet = 0;
+
+    /**
+     * Won't be used.  Left to support old Hibernate files
+     * TODO: Drop column on future file update
+     */
+    @SuppressWarnings("unused")
+    private char shape = 0;
 
     public Tag() {
         // zero arg constructor required for persistence

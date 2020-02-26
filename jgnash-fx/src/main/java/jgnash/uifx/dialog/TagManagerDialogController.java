@@ -18,6 +18,7 @@
 package jgnash.uifx.dialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -129,7 +131,9 @@ public class TagManagerDialogController implements MessageListener {
         iconCombo.setCellFactory(new ListViewListCellCallback());
         iconCombo.setButtonCell(new FAIconListCell());
 
-        JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(MDIcon.values()));
+        // load the icons while filtering for only icons intended for use as Tags
+        JavaFXUtils.runLater(() -> iconCombo.getItems().addAll(Arrays.stream(MDIcon.values())
+                .filter(MDIcon::isTag).collect(Collectors.toList())));
 
         tagListView.setCellFactory(new TagListViewListCellCallback());
 

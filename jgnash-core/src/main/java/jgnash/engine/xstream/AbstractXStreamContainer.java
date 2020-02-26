@@ -209,7 +209,9 @@ abstract class AbstractXStreamContainer {
 
         xstream.useAttributeFor(Tag.class, "name");
         xstream.useAttributeFor(Tag.class, "color");
-        xstream.useAttributeFor(Tag.class, "shape");
+        xstream.useAttributeFor(Tag.class, "unicode");
+        xstream.omitField(Tag.class, "shape");
+        xstream.omitField(Tag.class, "iconSet");
 
         xstream.omitField(StoredObject.class, "markedForRemoval");
 

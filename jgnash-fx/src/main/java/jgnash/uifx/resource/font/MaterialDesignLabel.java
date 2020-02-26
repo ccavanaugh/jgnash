@@ -164,139 +164,149 @@ public class MaterialDesignLabel extends Label {
     @SuppressWarnings("unused")
     public enum MDIcon {
         ADJUST(0xf01a),
-        AIRPLANE(0xf01d),
-        AMBULANCE(0xf02f),
-        ANCHOR(0xf031),
+        AIRPLANE(0xf01d, true),
+        AMBULANCE(0xf02f, true),
+        ANCHOR(0xf031, true),
         ARROW_COLLAPSE_VERTICAL(0xf84c),
         ARROW_RIGHT_BOLD(0xf733),
         ARROWS(0xf04c),
         ARROWS_H(0xf84d),
         ARROWS_V(0xf84e),
-        BANK(0xf070),
+        BANK(0xf070, true),
         BANK_PLUS(0xfd8d),
-        BED_EMPTY(0xf89f),
-        BEER(0xf098),
-        BELL(0xf09A),
-        BIKE(0xf0a3),
+        BED_EMPTY(0xf89f,true),
+        BEER(0xf098, true),
+        BELL(0xf09A, true),
+        BIKE(0xf0a3, true),
         BOOKMARK(0xf0c0),
         BUG(0xf0e4),
-        OFFICE_BUILDING(0xf990),
-        BULLS_EYE(0xf5dd),
-        BUS(0xf0e7),
-        BUS_SCHOOL(0xf79e),
-        CAKE(0xf0eb),
-        CALENDAR(0xf0ed),
+        OFFICE_BUILDING(0xf990, true),
+        BULLS_EYE(0xf5dd, true),
+        BUS(0xf0e7, true),
+        BUS_SCHOOL(0xf79e, true),
+        CAKE(0xf0eb, true),
+        CALENDAR(0xf0ed, true),
         CALENDAR_CHECK(0xf0ef),
         CALENDAR_PLUS(0xf0f3),
-        CASH(0xf114),
+        CASH(0xf114, true),
         CASH_MULTIPLE(0xf116),
-        CAMERA(0xf100),
-        CAR(0xf10b),
+        CAMERA(0xf100, true),
+        CAMPFIRE(0xfefa, true),
+        CAR(0xf10b, true),
         CHART_AREA(0xfeae),
         CHART_BAR(0xf128),
         CHART_LINE(0xf12a),
         CHART_PIE(0xf12b),
         CHEVRON_LEFT(0xf141),
         CHEVRON_RIGHT(0xf142),
-        CHILD(0xf2e7),
-        CIRCLE(0xf764),
-        CIRCLE_OPEN(0xf130),
+        CHILD(0xf2e7, true),
+        CIRCLE(0xf764, true),
+        CIRCLE_OPEN(0xf130, true),
         CLIPBOARD(0xf147),
-        CLOCK_OUTLINE(0xf150),
+        CLOCK_OUTLINE(0xf150, true),
         CLOSE_CIRCLE(0xf159),
         CLOUD_DOWNLOAD(0xf162),
-        COFFEE(0xf176),
-        COGS(0xf8d5),
+        COFFEE(0xf176, true),
+        COGS(0xf8d5, true),
         CONSOLE(0xf18d),
-        CROSS_HAIRS(0xf1a3),
+        CROSS_HAIRS(0xf1a3, true),
         EDIT(0xfda4),
         ELLIPSIS_H(0xf1d8),
+        EMOTICON_FROWN(0xff6a, true),
+        EMOTICON_HAPPY(0xf1f5, true),
         ENVELOPE(0xf1ee), // email
         EXCLAMATION(0xf0263), // exclamation-thick
         EXCLAMATION_CIRCLE(0xf028), // alert-circle
         EXCLAMATION_TRIANGLE(0xf026), // alert
         EXTERNAL_LINK(0xffe5),  //location-exit
-        EYE(0xf208),
-        SKIP_BACKWARD(0xf4ab),
-        SKIP_FORWARD(0xf4ac),
-        FEMALE(0xf649),
+        EYE(0xf208, true),
+        FEMALE(0xf649, true),
         FILE(0xf214),
         FILE_CODE_O(0xf22e),
         FILE_DOCUMENT_BOX_PLUS(0xfec7),
         FILE_EXCEL_O(0xf004f),
         FILE_IMAGE_O(0xf21f),
         FILTER(0xf232),
-        FLAG(0xf23b),
-        FIRE(0xf238),
-        FIRE_EXTINGUISHER(0xff0f),
-        FLASK(0xf093),
+        FLAG(0xf23b, true),
+        FIRE(0xf238, true),
+        FIRE_EXTINGUISHER(0xff0f, true),
+        FLASK(0xf093, true),
         FOLDER_OPEN(0xf76f),
-        /*
-        FROWN('\uf119'),
-        FUT_BOL('\uf1e3'),
-        GAMEPAD('\uf11b'),
-        GIFT('\uf06b'),*/
+        GAMEPAD_V(0xfed4, true),
+        GIFT_V(0xf2a1, true),
         HANDSHAKE(0xf0243),
-        /*HASH_TAG('\uf292'),
-        HEARTBEAT('\uf21e'),
-        HOSPITAL('\uf0f8'),*/
+        HEART_PULSE(0xf5f6, true),
+        HOSPITAL_BOX_OUTLINE(0xf0018, true),
+        HOTEL(0xf2e3, true),
         INFO(0xf64e),
         INFO_CIRCLE(0xf2fc),
         KEY(0xf306),
         LANGUAGE(0xf0368),
         LANGUAGE_JAVASCRIPT(0xf31e),
-        LAPTOP(0xf322),
+        LAPTOP(0xf322, true),
         LEVEL_DOWN(0xf046),   // arrow_down_thick
         LEVEL_UP(0xf05e), // arrow_up_thick
         LINK(0xf337),
         LINK_OFF(0xf338),
         LIST(0xf279),
-        MALE(0xf64d),
-        MAP(0xf34d),
+        MALE(0xf64d, true),
+        MAP(0xf34d, true),
         MINUS_CIRCLE(0xf376),
-        MOTORCYCLE(0xf37c),
-        PAW(0xf3e9),
-        PENCIL(0xf3eb),
-        PHONE(0xf3f2),
-        PLUG(0xf64a), // power-plug
+        MOTORCYCLE(0xf37c, true),
+        PAW(0xf3e9, true),
+        PENCIL(0xf3eb, true),
+        PHONE(0xf3f2, true),
         PLUS(0xf0217),
         PLUS_CIRCLE(0xf417),
         PLUS_SQUARE(0xf416),
-        PRINT(0xf42a),  //printer
+        POUND_BOX_OUTLINE(0xf01aa),
+        POWER_PLUG(0xf64a, true),
+        PRINT(0xf42a, true),  //printer
         QUESTION_CIRCLE(0xf2d7),
         REFRESH(0xf4e6), // SYNC
         SAVE(0xf193),
-        SCREW(0xfe56),
-        /*SEARCH_MINUS('\uf010'),
-        SEARCH_PLUS('\uf00e'),
-        SHIP('\uf21A')*/
+        SCREW(0xfe56, true),
+        SCHOOL_O(0xf01ab, true),
+        SHIP_WHEEL(0xf832, true),
         SIGN_OUT(0xf343),
+        SKIP_BACKWARD(0xf4ab),
+        SKIP_FORWARD(0xf4ac),
+        SOCCER(0xf4b8, true),
         STEP_BACKWARD(0xf4ae),
         STEP_FORWARD(0xf4ad),
         STOP_CIRCLE(0xf666),
         SWAP_HORIZONTAL(0xf4e1),
-        /*SUITCASE('\uf0f2'),
-        TABLE('\uf0ce'),*/
+        TABLE_TENNIS(0xfe4b, true),
         TABLE_COLUMN_WIDTH(0xf4ef),
         TAG(0xf4f9),
         TAGS(0xf4fb),
         TEXT_HEIGHT(0xf27f),
-        /* TIMES('\uf00d'),
-        TIMES_CIRCLE('\uf057'),*/
-        TRASH_O(0xfa79),
-        /*
-        UNLINK('\uf127'),
-        WINDOW_RESTORE('\uf2d2'),
-        WRENCH('\uf0ad')*/;
+        TRASH_O(0xfa79, true),
+        WRENCH_O(0xfbbc, true);
 
         private final int unicode;
 
+        private final boolean tag;
+
         MDIcon(@NotNull final int unicode) {
+            this(unicode, false);
+        }
+
+        MDIcon(@NotNull final int unicode, final boolean tag) {
             this.unicode = unicode;
+            this.tag = tag;
         }
 
         public int getUnicode() {
             return unicode;
+        }
+
+        /**
+         * Used to filter out Icons not intended to be used as transaction tags
+         * @return true is intended to be used as a tag
+         */
+        public boolean isTag() {
+            return tag;
         }
     }
 }

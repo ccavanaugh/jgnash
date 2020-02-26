@@ -22,9 +22,10 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.6.0 __(File format change)__
-* 02/25/2020 Expanded Tag to support a larger icon set
-* 02/25/2020 Switched icon set from FontAwesome to Material Design
-* 02/23/2020 Corrected broken Print Icon
+* 02/26/2020 The Tag Manger now filters out application specific tags to make selection easier.
+* 02/25/2020 Expanded Tags to support a much larger icon set.
+* 02/25/2020 Switched icon set from FontAwesome to Material Design.
+* 02/23/2020 Corrected broken Print Icon.
 
 == Release 3.5.1
 * 02/20/2020 Corrected a bug with jGnash.exe causing a failure to launch on Windows Platforms.
