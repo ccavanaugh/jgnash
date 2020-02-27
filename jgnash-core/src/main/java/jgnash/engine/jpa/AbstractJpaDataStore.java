@@ -48,6 +48,7 @@ import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.FileUtils;
 
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.math3.util.Precision;
 
 /**
  * Abstract JPA DataStore.
@@ -169,6 +170,12 @@ abstract class AbstractJpaDataStore implements DataStore {
         try {
             if (!FileUtils.isFileLocked(fileName)) {
                 try {
+                    float fileVersion = SqlUtils.getFileVersion(fileName, password);
+
+                    if (Precision.equals(fileVersion, 3.5f)) {
+                        SqlUtils.dropColumn(fileName, password, "TAG", "SHAPE", "ICONSET");
+                        logger.info("Dropped old TAG columns");
+                    }
 
                     /* specifies the unit name and properties.  Unit name can be used to specify a different persistence
                        unit defined in persistence.xml */

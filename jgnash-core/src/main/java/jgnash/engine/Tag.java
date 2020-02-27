@@ -51,20 +51,6 @@ public class Tag extends StoredObject implements Comparable<Tag> {
      */
     private Integer unicode = 0xf764;   // circle
 
-    /**
-     * Won't be used.  Left to support old Hibernate files
-     * TODO: Drop column on future file update
-     */
-    @SuppressWarnings("unused")
-    private byte iconSet = 0;
-
-    /**
-     * Won't be used.  Left to support old Hibernate files
-     * TODO: Drop column on future file update
-     */
-    @SuppressWarnings("unused")
-    private char shape = 0;
-
     public Tag() {
         // zero arg constructor required for persistence
     }

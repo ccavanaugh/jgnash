@@ -102,7 +102,7 @@ public class SqlUtils {
      *
      * @param fileName name of file to open
      * @param password connection password
-     * @return file version
+     * @return file version. Zero is returned if not found
      */
     public static float getFileVersion(final String fileName, final char[] password) {
         float fileVersion = 0f;
@@ -111,19 +111,37 @@ public class SqlUtils {
             if (!FileUtils.isFileLocked(fileName)) {
                 final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
                 final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
-                        true);
+                        false);
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
                     try (final Statement statement = connection.createStatement()) {
-                        try (final ResultSet resultSet = statement.executeQuery("SELECT FILEFORMAT FROM CONFIG")) {
-                            resultSet.next();
-                            fileVersion = Float.parseFloat(resultSet.getString("fileformat"));
+
+                        boolean configTableExists = false;
+
+                        // check for the existence of the table first
+                        final DatabaseMetaData metaData = connection.getMetaData();
+
+                        try (final ResultSet resultSet = metaData.getTables(null, null, "CONFIG", null)) {
+                            while (resultSet.next()) {
+                                if (resultSet.getString(TABLE_NAME).toUpperCase(Locale.ROOT).equals("CONFIG")) {
+                                    configTableExists = true;
+                                }
+                            }
+                        }
+
+                        // check for the value if the table exists
+                        if (configTableExists) {
+                            try (final ResultSet resultSet = statement.executeQuery("SELECT FILEFORMAT FROM CONFIG")) {
+                                resultSet.next();
+                                fileVersion = Float.parseFloat(resultSet.getString("fileformat"));
+                            }
                         }
                     }
+
                     // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
-                        statement.execute();
+                    try (final Statement statement = connection.createStatement()) {
+                        statement.execute(SHUTDOWN);
                     }
                 } catch (final SQLException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
@@ -167,8 +185,8 @@ public class SqlUtils {
                     }
 
                     // must issue a shutdown for correct file closure
-                    try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
-                        statement.execute();
+                    try (final Statement statement = connection.createStatement()) {
+                        statement.execute(SHUTDOWN);
                     }
                 } catch (final SQLException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
@@ -181,6 +199,37 @@ public class SqlUtils {
         }
 
         return tableNames;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    static void dropColumn(final String fileName, final char[] password, final String table, final String... columns) {
+        try {
+            if (!FileUtils.isFileLocked(fileName)) {
+                final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password,
+                        false);
+                final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+
+                try (final Connection connection = DriverManager.getConnection(url)) {
+                    for (final String column : columns) {
+                        try (final Statement statement = connection.createStatement()) {
+                            statement.execute("ALTER TABLE IF EXISTS " + table + " DROP COLUMN IF EXISTS " + column);
+                        }
+                    }
+
+                    // must issue a shutdown for correct file closure
+                    try (final Statement statement = connection.createStatement()) {
+                        statement.execute(SHUTDOWN);
+                    }
+                } catch (final SQLException e) {
+                    logger.log(Level.SEVERE, e.getMessage(), e);
+                }
+            } else {
+                logger.severe("File was locked");
+            }
+        } catch (final IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
     }
 
     /**
@@ -229,8 +278,8 @@ public class SqlUtils {
             try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER,
                     new String(password))) {
                 // must issue a shutdown for correct file closure
-                try (final PreparedStatement statement = connection.prepareStatement(SHUTDOWN)) {
-                    statement.execute();
+                try (final Statement statement = connection.createStatement()) {
+                    statement.execute(SHUTDOWN);
                 }
             } catch (final SQLException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
