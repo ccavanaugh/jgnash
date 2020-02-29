@@ -92,7 +92,8 @@ public class ChoiceDialog<T> {
         setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.QUESTION_CIRCLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER));
 
-        JavaFXUtils.runLater(() -> {
+        // block until the combo box is completed loaded to prevent a race condition
+        JavaFXUtils.runAndWait(() -> {
             comboBox.getItems().setAll(choices);
             setSelectedItem(defaultChoice);
         });
