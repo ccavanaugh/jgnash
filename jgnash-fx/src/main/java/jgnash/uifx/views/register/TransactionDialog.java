@@ -155,14 +155,15 @@ public class TransactionDialog extends Stage {
         transactionDialog.accountProperty().set(account);
         transactionDialog.setTransactionConsumer(consumer);
 
-        if (transaction != null) {
-            transactionDialog.setTransaction(transaction);
-        }
-
         JavaFXUtils.runLater(() -> {
             transactionDialog.show();
 
-            // Size and lock the height of the dialog after it has been shown
+            // dialog must be shown with forms loaded prior to setting the transaction
+            if (transaction != null) {
+                transactionDialog.setTransaction(transaction);
+            }
+
+            // Size and lock the height of the dialog after it has been shown and transaction set
             JavaFXUtils.runLater(() -> {
                 transactionDialog.sizeToScene();
 
