@@ -40,7 +40,6 @@ import jgnash.engine.AccountType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
-import jgnash.uifx.Options;
 import jgnash.uifx.control.AbstractAccountTreeController;
 import jgnash.uifx.report.ReportActions;
 import jgnash.uifx.skin.StyleClass;
@@ -140,10 +139,6 @@ public class RegisterViewController {
 
         // Restore divider location
         splitPane.setDividerPosition(0, preferences.getDouble(DIVIDER_POSITION, DEFAULT_DIVIDER_POSITION));
-
-        // Enable / disable the pack columns button
-        packColumnsButton.visibleProperty().bind(Options.autoPackTablesProperty().not());
-        packColumnsButton.disableProperty().bind(Options.autoPackTablesProperty());
 
         restoreLastSelectedAccount();
     }
