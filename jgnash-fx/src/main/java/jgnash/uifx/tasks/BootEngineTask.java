@@ -1,16 +1,17 @@
 package jgnash.uifx.tasks;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
-import jgnash.engine.EngineFactory;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.util.FileUtils;
-import jgnash.resource.util.ResourceUtils;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+
+import javafx.concurrent.Task;
+
+import jgnash.engine.EngineFactory;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.JavaFXUtils;
+import jgnash.util.FileUtils;
 
 /**
  * Boots the engine with a local file or connection to a remote server.
@@ -84,7 +85,7 @@ public class BootEngineTask extends Task<String> {
             try {
                 EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
             } catch (final Exception exception) {
-                Platform.runLater(() -> StaticUIMethods.displayException(exception));
+                JavaFXUtils.runLater(() -> StaticUIMethods.displayException(exception));
             }
         } else {
             if (!Files.exists(Paths.get(localFile))) {
@@ -100,12 +101,12 @@ public class BootEngineTask extends Task<String> {
                     if (FileUtils.deleteLockFile(localFile)) {
                         return call();  // recursive call to rerun the task and load the file to keep code simple
                     }
-                    
-					Platform.runLater(UIRunnable);
+
+                    JavaFXUtils.runLater(UIRunnable);
                 } else {
                     message = lockedMessage;
                     updateMessage(message);
-                    Platform.runLater(UIRunnable);
+                    JavaFXUtils.runLater(UIRunnable);
                 }
             } else  {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);

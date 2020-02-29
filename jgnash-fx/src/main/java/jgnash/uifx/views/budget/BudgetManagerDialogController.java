@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -45,11 +44,12 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.TextInputDialog;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Controller for budget management.
@@ -84,7 +84,7 @@ public class BudgetManagerDialogController implements MessageListener {
 
         budgetListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        Platform.runLater(this::loadBudgetListView);
+        JavaFXUtils.runLater(this::loadBudgetListView);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.BUDGET);
     }
@@ -213,7 +213,7 @@ public class BudgetManagerDialogController implements MessageListener {
     public void messagePosted(final Message message) {
         if (message.getEvent() == ChannelEvent.BUDGET_ADD || message.getEvent() == ChannelEvent.BUDGET_REMOVE
                     || message.getEvent() == ChannelEvent.BUDGET_UPDATE) {
-            Platform.runLater(this::loadBudgetListView);
+            JavaFXUtils.runLater(this::loadBudgetListView);
         }
     }
 

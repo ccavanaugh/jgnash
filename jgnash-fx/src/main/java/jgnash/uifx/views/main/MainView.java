@@ -28,7 +28,6 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.concurrent.Task;
@@ -277,24 +276,24 @@ public class MainView implements MessageListener {
     }
 
     private void addViews() {
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"), resources),
                 resources.getString("Tab.Accounts"))));
 
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(RegisterViewController.class.getResource("RegisterView.fxml"), resources),
                 resources.getString("Tab.Register"))));
 
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"), resources),
                 resources.getString("Tab.Reminders"))));
 
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"), resources),
                 resources.getString("Tab.Budgeting"))));
 
         backgroundExecutor.execute(() ->
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     tabViewPane.getSelectionModel().select(preferences.getInt(LAST_TAB, 0));
 
                     tabListener = (observable, oldValue, newValue) -> {

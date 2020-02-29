@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -59,6 +58,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.net.currency.CurrencyUpdateFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.DatePickerEx;
@@ -66,7 +66,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Controller for editing currency exchange rates.
@@ -182,10 +182,10 @@ public class EditExchangeRatesController implements MessageListener {
                         targetCurrencyComboBox.getSelectionModel().selectedItemProperty())));
 
         selectedExchangeRate.addListener((observable, oldValue, newValue)
-                -> Platform.runLater(EditExchangeRatesController.this::loadExchangeRateHistory));
+                -> JavaFXUtils.runLater(EditExchangeRatesController.this::loadExchangeRateHistory));
 
         selectedHistoryNode.addListener((observable, oldValue, newValue)
-                -> Platform.runLater(EditExchangeRatesController.this::updateForm));
+                -> JavaFXUtils.runLater(EditExchangeRatesController.this::updateForm));
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
 
@@ -351,7 +351,7 @@ public class EditExchangeRatesController implements MessageListener {
             case EXCHANGE_RATE_REMOVE:
                 final ExchangeRate rate = message.getObject(MessageProperty.EXCHANGE_RATE);
                 if (rate.equals(selectedExchangeRate.get())) {
-                    Platform.runLater(this::loadExchangeRateHistory);
+                    JavaFXUtils.runLater(this::loadExchangeRateHistory);
                 }
                 break;
             default:

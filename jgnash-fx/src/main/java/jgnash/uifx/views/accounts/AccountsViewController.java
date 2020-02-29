@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -195,10 +194,12 @@ public class AccountsViewController implements MessageListener {
 
     private TreeTableRow<Account> getTreeTableRow() {
         final TreeTableRow<Account> treeTableRow = new TreeTableRow<>();
+
+        // double click handler
         treeTableRow.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 if (selectedAccount.get() != null && !selectedAccount.get().isPlaceHolder()) {
-                    Platform.runLater(AccountsViewController.this::handleZoomAccountAction);
+                    JavaFXUtils.runLater(AccountsViewController.this::handleZoomAccountAction);
                 }
             }
         });

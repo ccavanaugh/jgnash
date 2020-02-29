@@ -32,7 +32,6 @@ import java.util.function.Predicate;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -62,6 +61,7 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DoughnutChart;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.CollectionUtils;
 import jgnash.util.EncodeDecode;
 import jgnash.util.NotNull;
@@ -126,14 +126,14 @@ public class IncomeExpensePayeePieChartDialogController {
     private final ChangeListener<String> payeeChangeListener = (observable, oldValue, newValue) -> {
         if (newValue != null) {
             if (newValue.isEmpty()) {
-                Platform.runLater(this::trimAuxPayeeTextFields);
+                JavaFXUtils.runLater(this::trimAuxPayeeTextFields);
             } else {
                 if (!isEmptyPayeeFieldAvailable()) {
-                    Platform.runLater(this::insertAuxPayeeTextField);
+                    JavaFXUtils.runLater(this::insertAuxPayeeTextField);
                 }
             }
         }
-        Platform.runLater(this::updateCharts);
+        JavaFXUtils.runLater(this::updateCharts);
 
         final List<String> filters = getPayeeTextFields().stream()
                 .filter(textField -> !textField.getText().isEmpty())
@@ -196,14 +196,14 @@ public class IncomeExpensePayeePieChartDialogController {
         restoreFilters();
 
         // Expand the titled pane if filters are being used
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             if (getPayeeTextFields().size() > 1) {
                titledPane.setExpanded(true);
             }
         });
 
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
-        Platform.runLater(this::updateCharts);
+        JavaFXUtils.runLater(this::updateCharts);
     }
 
     private void restoreFilters() {

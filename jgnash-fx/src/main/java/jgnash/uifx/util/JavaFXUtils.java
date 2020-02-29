@@ -55,7 +55,7 @@ import jgnash.util.Nullable;
 import static jgnash.util.LogUtil.logSevere;
 
 /**
- * Utility methods for {@code Scene}.
+ * Utility methods for  managing the Application thread and {@code Scene}.
  *
  * @author Craig Cavanaugh
  */
@@ -67,6 +67,9 @@ public class JavaFXUtils {
 
     private static final Queue<Runnable> platformRunnables = new ConcurrentLinkedQueue<>();
 
+    /**
+     * The maximum batch period is 500 millis before a respawn
+     */
     private static final int MAX_BATCH_TIME_MILLIS = 500;
 
     private static final Semaphore batchSemaphore = new Semaphore(1);
@@ -95,11 +98,21 @@ public class JavaFXUtils {
         }
     }
 
+    /**
+     * Run the specified Runnable on the JavaFX Application Thread prior to other queued runnables and without yielding.
+     *
+     * @param runnable runnable the Runnable whose run method will be executed on the JavaFX Application Thread
+     */
+    public static void runNow(@NotNull final Runnable runnable) {
+       Platform.runLater(runnable);    // bypass the queue
+    }
+
     private static synchronized void _runLater() {
 
-        // don't flood the JavaFX Application with too many Runnables at once.  Allow other processes to run by yielding
+        // don't flood the JavaFX Application with too many Runnables at once.
+        // Allow other internal JavaFX processes to run by yielding
         if (!platformRunnables.isEmpty()) {
-            Thread.onSpinWait();
+            Thread.yield();
         }
 
         Platform.runLater(() -> {
@@ -244,7 +257,7 @@ public class JavaFXUtils {
                 // Invoke the task on the platform thread and wait until complete
                 final FutureTask<Double> futureTask =
                         new FutureTask<>(() -> _getDisplayedTextWidth(displayString, style));
-                Platform.runLater(futureTask);
+                JavaFXUtils.runNow(futureTask);
 
                 try {
                     width = futureTask.get();

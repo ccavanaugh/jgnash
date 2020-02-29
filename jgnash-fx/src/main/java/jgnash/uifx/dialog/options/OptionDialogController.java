@@ -19,7 +19,6 @@ package jgnash.uifx.dialog.options;
 
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.WeakChangeListener;
@@ -54,7 +53,7 @@ public class OptionDialogController {
     void initialize() {
 
         // Load the plugin tabs into the dialog
-        Platform.runLater(() -> PluginFactory.getPlugins().stream().filter(plugin -> plugin instanceof FxPlugin)
+        JavaFXUtils.runLater(() -> PluginFactory.getPlugins().stream().filter(plugin -> plugin instanceof FxPlugin)
                 .forEachOrdered(plugin -> {
                     final Node tab = ((FxPlugin) plugin).getOptionsNode();
                     if (tab != null) {

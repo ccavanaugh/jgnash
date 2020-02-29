@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -36,6 +35,7 @@ import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.resource.font.MaterialDesignLabel;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.FileUtils;
 
 /**
@@ -132,7 +132,7 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
     private void handleDataStoreTypeAction() {
         if (!fileNameField.getText().isEmpty()) {
 
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 String fileName = FileUtils.stripFileExtension(fileNameField.getText());
                 fileNameField.setText(fileName + storageTypeComboBox.getValue().getDataStore().getFileExt());
             });

@@ -24,7 +24,6 @@ import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.DoubleProperty;
@@ -48,6 +47,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import jgnash.resource.util.OS;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -257,7 +257,7 @@ public class ThemeManager {
             themesMenu.getItems().add(radioMenuItem);
         }
 
-        Platform.runLater(ThemeManager::syncRadioMenuItem);
+        JavaFXUtils.runLater(ThemeManager::syncRadioMenuItem);
     }
 
     private static void syncRadioMenuItem() {

@@ -29,7 +29,6 @@ import java.util.UUID;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -58,6 +57,7 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.EncodeDecode;
 import jgnash.util.Nullable;
 
@@ -138,15 +138,15 @@ public class AccountBalanceChartController {
     private final ChangeListener<Account> auxListener = (observable, oldValue, newValue) -> {
         if (newValue != null) {
             if (newValue == NOP_ACCOUNT) {
-                Platform.runLater(AccountBalanceChartController.this::trimAuxAccountCombos);
+                JavaFXUtils.runLater(AccountBalanceChartController.this::trimAuxAccountCombos);
             } else {
                 if (!isEmptyAccountComboPresent()) {
-                    Platform.runLater(() -> addAuxAccountCombo(null));
+                    JavaFXUtils.runLater(() -> addAuxAccountCombo(null));
                 }
             }
 
-            Platform.runLater(AccountBalanceChartController.this::updateChart);
-            Platform.runLater(AccountBalanceChartController.this::saveSelectedAccounts);
+            JavaFXUtils.runLater(AccountBalanceChartController.this::updateChart);
+            JavaFXUtils.runLater(AccountBalanceChartController.this::saveSelectedAccounts);
         }
     };
 
@@ -189,15 +189,15 @@ public class AccountBalanceChartController {
                 defaultCurrency = newValue.getCurrencyNode();
                 numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
-                Platform.runLater(AccountBalanceChartController.this::updateChart);
-                Platform.runLater(AccountBalanceChartController.this::saveSelectedAccounts);
+                JavaFXUtils.runLater(AccountBalanceChartController.this::updateChart);
+                JavaFXUtils.runLater(AccountBalanceChartController.this::saveSelectedAccounts);
             }
         });
 
         // Generic listener.  No super efficient but reduces listener count
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
-                Platform.runLater(AccountBalanceChartController.this::updateChart);
+                JavaFXUtils.runLater(AccountBalanceChartController.this::updateChart);
 
                 preferences.putBoolean(ENDING_BALANCE, endingBalanceRadioButton.isSelected());
                 preferences.putBoolean(RUNNING_BALANCE, runningBalanceRadioButton.isSelected());
@@ -218,7 +218,7 @@ public class AccountBalanceChartController {
         invertBalanceCheckBox.selectedProperty().addListener(listener);
 
         // Push the initial load to the end of the platform thread for better startup and a nicer visual effect
-        Platform.runLater(this::updateChart);
+        JavaFXUtils.runLater(this::updateChart);
     }
 
     /**

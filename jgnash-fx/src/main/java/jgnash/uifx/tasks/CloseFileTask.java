@@ -25,6 +25,7 @@ import javafx.concurrent.Task;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Task to close a file while updating progress.
@@ -70,7 +71,7 @@ public class CloseFileTask extends Task<String> {
                 try {
                     Thread.sleep(FORCED_DELAY); // lets the UI catch up
                 } catch (final InterruptedException exception) {
-                    Platform.runLater(() -> StaticUIMethods.displayException(exception));
+                    JavaFXUtils.runLater(() -> StaticUIMethods.displayException(exception));
                 }
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
             });
@@ -81,7 +82,7 @@ public class CloseFileTask extends Task<String> {
             updateMessage(resources.getString("Message.FileSaveComplete"));
             Thread.sleep(FORCED_DELAY);
         } catch (final Exception exception) {
-            Platform.runLater(() -> StaticUIMethods.displayException(exception));
+            JavaFXUtils.runLater(() -> StaticUIMethods.displayException(exception));
         }
 
         return resources.getString("Message.FileSaveComplete");

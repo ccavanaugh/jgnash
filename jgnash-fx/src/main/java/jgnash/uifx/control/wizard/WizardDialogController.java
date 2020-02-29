@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -45,6 +44,7 @@ import javafx.stage.Stage;
 
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Controller for the wizard dialog.
@@ -228,7 +228,7 @@ public class WizardDialogController<K extends Enum<?>> {
             // select the next page
             taskList.getSelectionModel().select(selectedIndex.get() + 1);
 
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 // tell the active page to update
                 getController(taskList.getSelectionModel().getSelectedItem()).getSettings(settings);
             });

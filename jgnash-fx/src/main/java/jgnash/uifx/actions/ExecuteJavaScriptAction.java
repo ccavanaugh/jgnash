@@ -27,14 +27,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.stage.FileChooser;
+
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import javafx.application.Platform;
-import javafx.stage.FileChooser;
-
-import jgnash.uifx.views.main.MainView;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.views.main.MainView;
 
 /**
  * Utility class to run a javascript file.
@@ -61,7 +61,7 @@ public class ExecuteJavaScriptAction {
             Preferences pref = Preferences.userNodeForPackage(ExecuteJavaScriptAction.class);
             pref.put(LAST_DIR, file.getParentFile().getAbsolutePath());
 
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 try (final Reader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
                     new ScriptEngineManager().getEngineByName("nashorn").eval(reader);
                 } catch (IOException | ScriptException ex) {

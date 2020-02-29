@@ -22,7 +22,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Objects;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -38,6 +37,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.MathConstants;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.MathEval;
 import jgnash.util.NotNull;
 
@@ -149,7 +149,7 @@ public class DecimalTextField extends TextFieldEx {
 
             // For evaluation if the enter key is pressed
             if (event.getCode() == KeyCode.ENTER) {
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     evaluateAndSet();
                     positionCaret(getText().length());
                 });

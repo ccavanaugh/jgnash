@@ -24,7 +24,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -40,12 +39,13 @@ import jgnash.engine.AccountType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * A Dialog for creating and editing new transactions.
@@ -159,18 +159,18 @@ public class TransactionDialog extends Stage {
             transactionDialog.setTransaction(transaction);
         }
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             transactionDialog.show();
 
             // Size and lock the height of the dialog after it has been shown
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 transactionDialog.sizeToScene();
 
                 transactionDialog.setMinHeight(transactionDialog.getHeight());
                 transactionDialog.setMaxHeight(transactionDialog.getHeight());
             });
 
-            Platform.runLater(() -> StageUtils.addBoundsListener(transactionDialog, TransactionDialog.class,
+            JavaFXUtils.runLater(() -> StageUtils.addBoundsListener(transactionDialog, TransactionDialog.class,
                     MainView.getPrimaryStage()));
         });
     }

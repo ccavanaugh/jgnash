@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -68,6 +67,7 @@ import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.resource.font.MaterialDesignLabel;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.Nullable;
 
@@ -173,7 +173,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                             break;
                     }
 
-                    Platform.runLater(tableView::refresh);
+                    JavaFXUtils.runLater(tableView::refresh);
                 }
             });
             return cell;
@@ -217,7 +217,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         accountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setAccount(event.getNewValue());
             lastAccount = event.getNewValue();
-            Platform.runLater(tableViewManager::packTable);
+            JavaFXUtils.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(accountColumn);
 
@@ -234,7 +234,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         incomeAccountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setGainsAccount(event.getNewValue());
             lastGainsAccount = event.getNewValue();
-            Platform.runLater(tableViewManager::packTable);
+            JavaFXUtils.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(incomeAccountColumn);
 
@@ -253,7 +253,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         expenseAccountColumn.setEditable(true);
         expenseAccountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setFeesAccount(event.getNewValue());
-            Platform.runLater(tableViewManager::packTable);
+            JavaFXUtils.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(expenseAccountColumn);
 
@@ -393,7 +393,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             tableViewManager.restoreLayout();
         }
 
-        Platform.runLater(tableViewManager::packTable);
+        JavaFXUtils.runLater(tableViewManager::packTable);
 
         updateDescriptor();
     }

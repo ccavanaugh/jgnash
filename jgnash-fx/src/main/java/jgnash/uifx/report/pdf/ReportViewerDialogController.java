@@ -33,7 +33,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -434,7 +433,7 @@ public class ReportViewerDialogController {
                     }
                 };
 
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     busyPane.setTask(task);
                     new Thread(task).start();
                 });
@@ -444,7 +443,7 @@ public class ReportViewerDialogController {
     }
 
     private void updateStatus(final String status) {
-        Platform.runLater(() -> statusLabel.setText(status));
+        JavaFXUtils.runLater(() -> statusLabel.setText(status));
     }
 
     @FXML

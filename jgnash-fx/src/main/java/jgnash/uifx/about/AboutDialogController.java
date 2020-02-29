@@ -44,6 +44,7 @@ import jgnash.resource.util.HTMLResource;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.FXMLUtils.Pair;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -147,7 +148,7 @@ public class AboutDialogController {
     }
 
     public static void showAndWait() {
-        Platform.runLater(() -> {   // push to EDT to avoid race when loading the html files
+        JavaFXUtils.runLater(() -> {   // push to EDT to avoid race when loading the html files
             final Pair<AboutDialogController> pair = FXMLUtils.load(AboutDialogController.class.getResource("AboutDialog.fxml"),
                     ResourceUtils.getString("Title.About"));
 

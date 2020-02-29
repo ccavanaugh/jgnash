@@ -23,7 +23,6 @@ import java.time.format.DateTimeParseException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -126,24 +125,24 @@ public class DatePickerEx extends DatePicker {
             final LocalDate date = _getValue();
 
             if (event.getDeltaY() > 0) {
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     setValue(date.plusDays(1));
                     getEditor().positionCaret(caretPosition);
                 });
             } else if (event.getDeltaY() < 0) {
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     setValue(date.minusDays(1));
                     getEditor().positionCaret(caretPosition);
                 });
             }
 
             if (event.getDeltaX() > 0) {
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     setValue(date.plusMonths(1));
                     getEditor().positionCaret(caretPosition);
                 });
             } else if (event.getDeltaX() < 0) {
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     setValue(date.minusMonths(1));
                     getEditor().positionCaret(caretPosition);
                 });
@@ -158,7 +157,7 @@ public class DatePickerEx extends DatePicker {
             }
         });
 
-        focusChangeListener = (observable, oldValue, newValue) -> Platform.runLater(() -> {
+        focusChangeListener = (observable, oldValue, newValue) -> JavaFXUtils.runLater(() -> {
             final int caretPosition = getEditor().getCaretPosition();
             getEditor().setText(dateFormatter.format(_getValue()));
             getEditor().positionCaret(caretPosition);
@@ -177,7 +176,7 @@ public class DatePickerEx extends DatePicker {
                 case SLASH:     // while preventing entry of consecutive separators
                 case COMMA:
                 case BACK_SLASH:
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         final StringBuilder text = new StringBuilder(getEditor().getText());
 
                         if (text.length() > caretPosition) {
@@ -195,7 +194,7 @@ public class DatePickerEx extends DatePicker {
                 case ADD:
                 case UP:
                 case KP_UP:
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         setValue(date.plusDays(1));
                         getEditor().positionCaret(caretPosition);
                     });
@@ -203,25 +202,25 @@ public class DatePickerEx extends DatePicker {
                 case SUBTRACT:
                 case DOWN:
                 case KP_DOWN:
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         setValue(date.minusDays(1));
                         getEditor().positionCaret(caretPosition);
                     });
                     break;
                 case T:
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         setValue(LocalDate.now());
                         getEditor().positionCaret(caretPosition);
                     });
                     break;
                 case PAGE_UP:
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         setValue(date.plusMonths(1));
                         getEditor().positionCaret(caretPosition);
                     });
                     break;
                 case PAGE_DOWN:
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         setValue(date.minusMonths(1));
                         getEditor().positionCaret(caretPosition);
                     });

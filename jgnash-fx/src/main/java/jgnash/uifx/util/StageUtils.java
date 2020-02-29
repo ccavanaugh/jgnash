@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Rectangle2D;
@@ -105,7 +104,7 @@ public class StageUtils {
                         final double width = rectangle.getWidth();
 
                         if (stage.isShowing()) {
-                            Platform.runLater(() -> stage.setWidth(width));
+                            JavaFXUtils.runNow(() -> stage.setWidth(width));
                         } else {
                             stage.setWidth(width);
                         }
@@ -116,7 +115,7 @@ public class StageUtils {
                         final double height = rectangle.getHeight();
 
                         if (stage.isShowing()) {
-                            Platform.runLater(() -> stage.setHeight(height));
+                            JavaFXUtils.runNow(() -> stage.setHeight(height));
                         } else {
                             stage.setHeight(height);
                         }

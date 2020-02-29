@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -45,14 +44,15 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.report.ReportPeriod;
 import jgnash.report.ReportPeriodUtils;
-import jgnash.uifx.resource.cursor.CustomCursor;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
+import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.DatePickerEx;
-import jgnash.uifx.util.InjectFXML;
-import jgnash.time.DateUtils;
+import jgnash.uifx.resource.cursor.CustomCursor;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Income and Expense Bar Chart.
@@ -119,7 +119,7 @@ public class IncomeExpenseBarChartDialogController {
 
         final ChangeListener<Object> listener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
-                Platform.runLater(this::updateChart);
+                JavaFXUtils.runLater(this::updateChart);
             }
         };
 
@@ -128,11 +128,11 @@ public class IncomeExpenseBarChartDialogController {
 
         periodComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             preferences.putInt(REPORT_PERIOD, newValue.ordinal());
-            Platform.runLater(this::updateChart);
+            JavaFXUtils.runLater(this::updateChart);
         });
 
         // Push the initial load to the end of the platform thread for better startup and a nicer visual effect
-        Platform.runLater(this::updateChart);
+        JavaFXUtils.runLater(this::updateChart);
     }
 
     private void updateChart() {

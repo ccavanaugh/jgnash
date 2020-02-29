@@ -17,21 +17,6 @@
  */
 package jgnash.uifx.util;
 
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.skin.ThemeManager;
-import jgnash.uifx.views.main.MainView;
-import jgnash.util.NotNull;
-import jgnash.resource.util.ResourceUtils;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
@@ -43,6 +28,20 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.views.main.MainView;
+import jgnash.util.NotNull;
 
 /**
  * FXML Utility methods.
@@ -266,7 +265,7 @@ public class FXMLUtils {
             // Inject the scene into the controller
             injectParent(controller, scene);
 
-            stage.setOnShown(event -> Platform.runLater(() -> {
+            stage.setOnShown(event -> JavaFXUtils.runNow(() -> {
                 stage.sizeToScene();    // force the stage to resize to the scene before setting the minimums
 
                 stage.setMinHeight(stage.getHeight());

@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -36,6 +35,7 @@ import javafx.util.Pair;
 import jgnash.net.AbstractAuthenticator;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * An Authenticator that will pop up a dialog and ask for http authentication
@@ -105,7 +105,7 @@ public class NetworkAuthenticator extends AbstractAuthenticator {
             dialog.getDialogPane().setContent(grid);
 
             // Request focus on the username field by default.
-            Platform.runLater(userNameField::requestFocus);
+            JavaFXUtils.runLater(userNameField::requestFocus);
 
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == loginButtonType) {

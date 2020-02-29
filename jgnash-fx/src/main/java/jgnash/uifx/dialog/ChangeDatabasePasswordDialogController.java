@@ -20,7 +20,6 @@ package jgnash.uifx.dialog;
 import java.io.File;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,6 +36,7 @@ import jgnash.engine.jpa.SqlUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FileChooserFactory;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 
 /**
@@ -80,7 +80,7 @@ public class ChangeDatabasePasswordDialogController {
         final boolean result = SqlUtils.changePassword(databaseTextField.getText(),
                 passwordField.getText().toCharArray(), newPasswordField.getText().toCharArray());
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             if (result) {
                 StaticUIMethods.displayMessage(resources.getString("Message.CredentialChange"));
             } else {

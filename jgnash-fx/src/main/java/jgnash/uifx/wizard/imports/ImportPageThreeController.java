@@ -22,15 +22,15 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 import jgnash.convert.importat.ImportState;
 import jgnash.convert.importat.ImportTransaction;
 import jgnash.engine.Account;
-import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Import Wizard, base account selection.
@@ -64,7 +64,7 @@ public class ImportPageThreeController extends AbstractWizardPaneController<Impo
         final Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
         final List<ImportTransaction> transactions = (List<ImportTransaction>) map.get(ImportWizard.Settings.TRANSACTIONS);
 
-        Platform.runLater(() -> destLabel.setText(account.getName()));
+        JavaFXUtils.runLater(() -> destLabel.setText(account.getName()));
 
         final AtomicInteger count = new AtomicInteger();
 
@@ -72,7 +72,7 @@ public class ImportPageThreeController extends AbstractWizardPaneController<Impo
                 || tran.getState() == ImportState.NOT_EQUAL)
                 .forEach(tran -> count.incrementAndGet());
 
-        Platform.runLater(() -> transCountLabel.setText(Integer.toString(count.get())));
+        JavaFXUtils.runLater(() -> transCountLabel.setText(Integer.toString(count.get())));
 
         updateDescriptor();
     }

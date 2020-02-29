@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -39,6 +38,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * ComboBox that allows selection of a SecurityNode and manages it's own model.
@@ -66,7 +66,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
         // warp in a sorted list
         setItems(new SortedList<>(items, null));
 
-        Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
+        JavaFXUtils.runLater(this::loadModel); // lazy load to let the ui build happen faster
 
         account.addListener((observable, oldValue, newValue) -> loadModel());
 
@@ -74,9 +74,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
     }
 
     public void setSecurityNode(final SecurityNode securityNode) {
-
-        // Selection is not always consistent unless pushed to the EDT
-        Platform.runLater(() -> setValue(securityNode));
+        JavaFXUtils.runLater(() -> setValue(securityNode));
     }
 
     private void loadModel() {
@@ -107,7 +105,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
             final SecurityNode node = event.getObject(MessageProperty.COMMODITY);
             final Account account = event.getObject(MessageProperty.ACCOUNT);
 
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 switch (event.getEvent()) {
                     case ACCOUNT_SECURITY_ADD:
                         if (account != null && account.equals(this.account.get())) {

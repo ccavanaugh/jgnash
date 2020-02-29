@@ -17,12 +17,12 @@
  */
 package jgnash.uifx.control;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ComboBox;
 
 import jgnash.engine.QuoteSource;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * ComboBox that allows selection of a {@code QuoteSource}.
@@ -34,7 +34,7 @@ public class QuoteSourceComboBox extends ComboBox<QuoteSource> {
     public QuoteSourceComboBox() {
         setEditable(false);
 
-        Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
+        JavaFXUtils.runLater(this::loadModel); // lazy load to let the ui build happen faster
     }
 
     private void loadModel() {

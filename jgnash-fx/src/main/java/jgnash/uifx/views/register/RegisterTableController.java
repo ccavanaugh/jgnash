@@ -33,7 +33,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -338,11 +337,11 @@ abstract class RegisterTableController {
         buildTable();
 
         /*
-         * push to the end of the application thread to ensure table build is complete
+         * push to the front of the application thread to ensure table build is complete
          * before data is loaded this prevents inconsistent and random behavior for
          * column sizing
          */
-        Platform.runLater(this::loadTable);
+        JavaFXUtils.runNow(this::loadTable);
     }
 
     abstract Callback<Integer, Double> getColumnWeightFactory();
