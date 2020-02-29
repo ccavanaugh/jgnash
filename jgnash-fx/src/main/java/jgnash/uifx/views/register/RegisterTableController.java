@@ -452,21 +452,28 @@ abstract class RegisterTableController {
             if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
                 final Set<Account> set = t.getAccounts();
                 set.stream().filter(a -> !account.get().equals(a))
-                        .forEach(a -> RegisterStage.getRegisterStage(a).show(t));
+                        .forEach(account -> jump(account, t));
             } else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
                 final Account common = t.getCommonAccount();
 
                 if (!account.get().equals(common)) {
-                    RegisterStage.getRegisterStage(common).show(t);
+                    jump(common, t);
                 }
             } else if (t instanceof InvestmentTransaction) {
                 final Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
 
                 if (!account.get().equals(invest)) {
-                    RegisterStage.getRegisterStage(invest).show(t);
+                    jump(invest, t);
                 }
             }
         }
+    }
+
+    private void jump(final Account account, final Transaction transaction) {
+        JavaFXUtils.runAndWait(() -> {  // ensure the stage is shown before showing the transaction
+            RegisterStage registerStage = RegisterStage.getRegisterStage(account);
+            JavaFXUtils.runLater(() -> registerStage.show(transaction));
+        });
     }
 
     private void handleCopyToClipboard() {

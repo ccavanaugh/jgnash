@@ -1,6 +1,22 @@
+/*
+ * jGnash, a personal finance application
+ * Copyright (C) 2001-2020 Craig Cavanaugh
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package jgnash.uifx.views.register;
 
-import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -18,6 +34,7 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Transaction;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.resource.util.Version;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
@@ -25,7 +42,7 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.util.NotNull;
 
 /**
- * A Stage that displays a single account register. Size and position is preserved
+ * A Stage that displays a single account register. Size and position is preserved.
  *
  * @author Craig Cavanaugh
  */
@@ -69,6 +86,8 @@ public class RegisterStage extends Stage {
 
         ThemeManager.applyStyleSheets(getScene());
 
+        getIcons().add(StaticUIMethods.getApplicationIcon());
+
         // handle CTRL-F4
         getScene().setOnKeyPressed(event -> {
             if (event.isControlDown() && event.getCode() == KeyCode.F4) {
@@ -88,7 +107,8 @@ public class RegisterStage extends Stage {
         setHeight(minHeight * SCALE_FACTOR);
 
         // Push the account to the controller at the end of the application thread
-        Platform.runLater(() -> controller.accountProperty().set(account));
+        // Must use JavaFXUtils instead of Platform to prevent a race condition
+        JavaFXUtils.runLater(() -> controller.accountProperty().set(account));
 
         updateTitle(account);
 
