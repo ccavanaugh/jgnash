@@ -25,7 +25,7 @@
 }
 
 .text {
-    -fx-font-smoothing-type: lcd;
+    -fx-font-smoothing-type: gray;
 }
 
 .default-color0.chart-bar { -fx-bar-fill: CHART_COLOR_3; }
