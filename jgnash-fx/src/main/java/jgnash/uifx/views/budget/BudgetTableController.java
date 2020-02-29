@@ -502,8 +502,9 @@ public class BudgetTableController implements MessageListener {
         final Optional<ScrollBar> vDataScrollBar = JavaFXUtils.findVerticalScrollBar(periodTable);
         final Optional<ScrollBar> accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
 
+        // re-spawn / wait for the scroll bars at the front of the application thread
         if (vDataScrollBar.isEmpty() || accountScrollBar.isEmpty() || accountSumScrollBar.isEmpty()) {
-            Platform.runLater(BudgetTableController.this::bindScrollBars);  //re-spawn on the application thread
+            JavaFXUtils.runNow(BudgetTableController.this::bindScrollBars);
         } else {    // all here, lets bind then now
             verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.get().minProperty());
             verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.get().maxProperty());
@@ -551,7 +552,7 @@ public class BudgetTableController implements MessageListener {
                 // load the model
                 loadModel();
             } else {
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     accountTreeView.setRoot(null);
                     expandedAccountList.clear();
                     accountGroupList.clear();
@@ -594,9 +595,9 @@ public class BudgetTableController implements MessageListener {
 
             updateSparkLines();
 
-            Platform.runLater(this::bindScrollBars);
+            JavaFXUtils.runLater(this::bindScrollBars);
 
-            Platform.runLater(this::focusCurrentPeriod);
+            JavaFXUtils.runLater(this::focusCurrentPeriod);
         } finally {
             lock.readLock().unlock();
         }
@@ -648,7 +649,7 @@ public class BudgetTableController implements MessageListener {
             if (budgetPeriodDescriptor.isBetween(now)) {
                 final int index = Math.max(Math.min(i, periodCount.subtract(visibleColumnCount).intValue()), 0);
 
-                Platform.runLater(() -> horizontalScrollBar.setValue(index));
+                JavaFXUtils.runLater(() -> horizontalScrollBar.setValue(index));
                 break;
             }
         }
@@ -706,7 +707,7 @@ public class BudgetTableController implements MessageListener {
                 if (Platform.isFxApplicationThread()) {
                     handleEditAccountGoals(account);
                 } else {
-                    Platform.runLater(() -> handleEditAccountGoals(account));
+                    JavaFXUtils.runLater(() -> handleEditAccountGoals(account));
                 }
             }
         });

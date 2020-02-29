@@ -25,7 +25,6 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -36,11 +35,11 @@ import javafx.stage.FileChooser;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
-import jgnash.report.poi.BudgetResultsExport;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.report.poi.BudgetResultsExport;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
@@ -82,7 +81,7 @@ public class BudgetViewController implements MessageListener {
         propertiesButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
 
         // push to end of application thread to avoid a race
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             budgetTableController
                     = FXMLUtils.loadFXML(o -> borderPane.setCenter(o), "BudgetTable.fxml", resources);
 
@@ -91,7 +90,7 @@ public class BudgetViewController implements MessageListener {
                     preferences.put(LAST_BUDGET, newValue.getUuid().toString());
                 }
 
-                Platform.runLater(() -> budgetTableController.budgetProperty().set(newValue));
+                JavaFXUtils.runLater(() -> budgetTableController.budgetProperty().set(newValue));
             });
 
             loadComboBox();
