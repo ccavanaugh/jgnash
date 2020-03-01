@@ -320,3 +320,5 @@ winreg
 Runnables
 respawn
 Chrono
+Picocli
+Hikari
