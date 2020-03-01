@@ -117,7 +117,9 @@ public class BudgetTableController implements MessageListener {
     //TODO: Magic number that needs to be fixed or controlled with css
     private static final double BORDER_MARGIN = 2;
 
-    // allow a selection span of +/- the specified number of years
+    /**
+     * Limits the selection span of +/- the specified number of years
+     */
     private static final int YEAR_MARGIN = 15;
 
     // Initial column width
@@ -238,7 +240,10 @@ public class BudgetTableController implements MessageListener {
      */
     private ScheduledThreadPoolExecutor rateLimitExecutor;
 
-    private static final int UPDATE_PERIOD = 350; // update period in milliseconds
+    /**
+     * Maximum update period in milliseconds
+     */
+    private static final int UPDATE_PERIOD = 350;
 
     /**
      * Used to alter timing for rate limiting the first boot for a better visual effect
@@ -429,7 +434,7 @@ public class BudgetTableController implements MessageListener {
     private void rateLimitUpdate(final Runnable runnable) {
         rateLimitExecutor.schedule(() -> {
             if (rateLimitExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
-                JavaFXUtils.runLater(runnable);    // update is assumed to be on the platform thread
+                JavaFXUtils.runNow(runnable);                // update at the front of the queue with rate limiting
             }
 
             booted = true;
@@ -502,16 +507,18 @@ public class BudgetTableController implements MessageListener {
         final Optional<ScrollBar> vDataScrollBar = JavaFXUtils.findVerticalScrollBar(periodTable);
         final Optional<ScrollBar> accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
 
-        // re-spawn / wait for the scroll bars at the front of the application thread
         if (vDataScrollBar.isEmpty() || accountScrollBar.isEmpty() || accountSumScrollBar.isEmpty()) {
-            JavaFXUtils.runNow(BudgetTableController.this::bindScrollBars);
+            // re-spawn off the off the application thread
+            new Thread(this::bindScrollBars).start();
         } else {    // all here, lets bind then now
-            verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.get().minProperty());
-            verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.get().maxProperty());
-            verticalScrollBar.valueProperty().bindBidirectional(accountScrollBar.get().valueProperty());
+            JavaFXUtils.runLater(() -> {
+                verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.get().minProperty());
+                verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.get().maxProperty());
+                verticalScrollBar.valueProperty().bindBidirectional(accountScrollBar.get().valueProperty());
 
-            accountScrollBar.get().valueProperty().bindBidirectional(vDataScrollBar.get().valueProperty());
-            accountSumScrollBar.get().valueProperty().bindBidirectional(vDataScrollBar.get().valueProperty());
+                accountScrollBar.get().valueProperty().bindBidirectional(vDataScrollBar.get().valueProperty());
+                accountSumScrollBar.get().valueProperty().bindBidirectional(vDataScrollBar.get().valueProperty());
+            });
         }
     }
 
