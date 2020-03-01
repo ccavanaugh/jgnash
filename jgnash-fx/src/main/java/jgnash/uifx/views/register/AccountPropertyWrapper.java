@@ -26,6 +26,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.concurrent.Task;
 
 import jgnash.engine.Account;
@@ -36,12 +38,13 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.NumericFormats;
+import jgnash.uifx.Options;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
- * Account properties wrapper to making binding of long running processes easier.
+ * Account properties wrapper to making binding of long-running processes easier.
  *
  * @author Craig Cavanaugh
  */
@@ -66,6 +69,9 @@ class AccountPropertyWrapper implements MessageListener {
 
     private NumberFormat numberFormat;  // not thread safe
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ChangeListener<String> formatListener;
+
     AccountPropertyWrapper() {
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
 
@@ -81,6 +87,18 @@ class AccountPropertyWrapper implements MessageListener {
                 updateProperties();
             }
         });
+
+        // Listen for changes to formatting preferences and force an update
+        formatListener = (observable, oldValue, newValue) -> {
+            synchronized (numberFormatLock) {
+                numberFormat = NumericFormats.getFullCommodityFormat(account.get().getCurrencyNode());
+                updateProperties();
+            }
+        };
+
+        Options.fullNumericFormatProperty().addListener(new WeakChangeListener<>(formatListener));
+        Options.shortNumericFormatProperty().addListener(new WeakChangeListener<>(formatListener));
+        Options.shortDateFormatProperty().addListener(new WeakChangeListener<>(formatListener));
     }
 
     @Override

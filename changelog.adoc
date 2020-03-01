@@ -22,10 +22,12 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.6.0 __(File format change)__
+* 03/01/2020 The numeric format for register balance summaries was not updating with format changes automatically.
+* 03/01/2020 Internal cleanup and optimization of application thread management.
 * 02/29/2020 Don't hide the resize columns button even if automatic sizing is enabled.
 * 02/29/2020 A race condition would cause Jump actions to fail.
 * 02/29/2020 Zoomed and Jumped register windows were not using the jGnash icon.
-* 02/26/2020 The Tag Manger now filters out application specific tags to make selection easier.
+* 02/26/2020 The Tag Manger now filters out application specific tags to make selection less cluttered.
 * 02/25/2020 Expanded Tags to support a much larger icon set.
 * 02/25/2020 Switched icon set from FontAwesome to Material Design.
 * 02/23/2020 Corrected broken Print Icon.
