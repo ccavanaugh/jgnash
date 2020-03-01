@@ -22,7 +22,9 @@
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.6.0 __(File format change)__
+* 03/01/2020 Updated to the latest PDFBox and Netty dependencies.
 * 03/01/2020 The numeric format for register balance summaries was not updating with format changes automatically.
+* 03/01/2020 Protect against a divide by zero error for the Tag report.
 * 03/01/2020 Internal cleanup and optimization of application thread management.
 * 02/29/2020 Don't hide the resize columns button even if automatic sizing is enabled.
 * 02/29/2020 A race condition would cause Jump actions to fail.
