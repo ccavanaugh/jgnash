@@ -79,7 +79,6 @@ public class TextResource {
      * @param string unicode formatted string
      * @return string without unicode characters
      */
-    @SuppressWarnings("ConstantConditions")
     private static String loadConvert(final String string) {
 
         if (string == null) {

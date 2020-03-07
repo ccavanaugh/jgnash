@@ -123,7 +123,6 @@ public class QifTransaction extends ImportTransaction {
      * @param format String identifier of format to parse
      * @return Returns parsed date and current date if an error occurs
      */
-    @SuppressWarnings("MagicConstant")
     static LocalDate parseDate(final String sDate, final DateFormat format) throws java.time.DateTimeException {
 
         int month = 0;
