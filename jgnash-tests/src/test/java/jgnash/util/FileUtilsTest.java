@@ -17,6 +17,7 @@
  */
 package jgnash.util;
 
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,6 +79,60 @@ class FileUtilsTest {
         assertFalse(FileUtils.isFileLocked(tempFile.toString()));
 
         assertTrue(Files.deleteIfExists(tempFile));
+    }
+
+    @Test
+    void testWaitForFileRemoval() throws IOException {
+        final Path tempFile = Files.createTempFile("temp", null);
+
+        try (final Writer writer = Files.newBufferedWriter(tempFile)) {
+            writer.write("test");
+        } catch (Exception e) {
+            fail();
+        }
+
+        assertTrue(Files.isWritable(tempFile));
+        assertTrue(Files.isReadable(tempFile));
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+                Files.delete(tempFile);
+            } catch (final InterruptedException | IOException e) {
+                e.printStackTrace();
+                fail();
+            }
+        }).start();
+
+        assertTrue(FileUtils.waitForFileRemoval(tempFile.toString(), 1000));
+
+        Path tempFile2 = Files.createTempFile("temp", null);
+
+        try (final Writer writer = Files.newBufferedWriter(tempFile)) {
+            writer.write("test");
+        } catch (Exception e) {
+            fail();
+        }
+
+        assertTrue(Files.isWritable(tempFile2));
+        assertTrue(Files.isReadable(tempFile2));
+
+        AtomicBoolean lock = new AtomicBoolean(false);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(1500);
+                Files.delete(tempFile2);
+                lock.set(true);
+            } catch (final InterruptedException | IOException e) {
+                e.printStackTrace();
+                fail();
+            }
+        }).start();
+
+        assertFalse(FileUtils.waitForFileRemoval(tempFile2.toString(), 750));
+
+        Awaitility.waitAtMost(2000, TimeUnit.MILLISECONDS).untilTrue(lock);
     }
 
     @Test

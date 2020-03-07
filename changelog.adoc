@@ -17,11 +17,12 @@
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 * Reinstate archive capability
 * Open zipped backups instead of manually unzipping.
-* HSQLDB 2.5.1 when released
+* HSQLDB 2.5.1 when released.
 
 * Yahoo finance historical event download is not working due to upstream changes.
 
 == Release 3.6.0 __(File format change)__
+* 03/07/2020 Waiting for lock files to be removed is now more efficient.
 * 03/01/2020 Updated to the latest PDFBox and Netty dependencies.
 * 03/01/2020 The numeric format for register balance summaries was not updating with format changes automatically.
 * 03/01/2020 Protect against a divide by zero error for the Tag report.
