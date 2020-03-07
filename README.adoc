@@ -201,6 +201,8 @@ An example for UN*X users is shown below assuming you have changed to the instal
 
 Travis-CI Build Status image:https://travis-ci.org/ccavanaugh/jgnash.svg?branch=master["Build Status", link="https://travis-ci.org/ccavanaugh/jgnash"]
 
+![CI Test Linux](https://github.com/ccavanaugh/jgnash/workflows/CI%20Test%20Linux/badge.svg)
+
 === Development List
 
 The https://groups.google.com/forum/#!forum/jgnash-devel[Google Groups jGnash Developer list] is the best
