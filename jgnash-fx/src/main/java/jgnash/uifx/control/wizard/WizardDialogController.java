@@ -186,11 +186,7 @@ public class WizardDialogController<K extends Enum<?>> {
     }
 
     private void updateButtonState() {
-        if (selectedIndex.get() >= 0 && selectedIndex.get() < taskList.getItems().size() - 1) {
-            nextButton.setDisable(false);
-        } else {
-            nextButton.setDisable(true);
-        }
+        nextButton.setDisable(selectedIndex.get() < 0 || selectedIndex.get() >= taskList.getItems().size() - 1);
 
         if (selectedIndex.get() == taskList.getItems().size() - 1) {
             boolean isValid = true;
@@ -206,11 +202,7 @@ public class WizardDialogController<K extends Enum<?>> {
             finishButton.setDisable(true);
         }
 
-        if (selectedIndex.get() == 0) {
-            backButton.setDisable(true);
-        } else {
-            backButton.setDisable(false);
-        }
+        backButton.setDisable(selectedIndex.get() == 0);
     }
 
     @FXML

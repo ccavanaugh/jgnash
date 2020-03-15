@@ -115,7 +115,7 @@ public class NewFileWizard {
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "InstantiationOfUtilityClass"})
 	public static void showAndWait() {
         new NewFileWizard();
     }

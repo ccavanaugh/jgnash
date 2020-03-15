@@ -20,6 +20,7 @@ package jgnash.engine;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -227,11 +228,7 @@ public class AmortizeObject implements Serializable {
     }
 
     public void setFees(final BigDecimal fees) {
-        if (fees != null) {
-            this.fees = fees;
-        } else {
-            this.fees = BigDecimal.ZERO;
-        }
+        this.fees = Objects.requireNonNullElse(fees, BigDecimal.ZERO);
     }
 
     public BigDecimal getFees() {
