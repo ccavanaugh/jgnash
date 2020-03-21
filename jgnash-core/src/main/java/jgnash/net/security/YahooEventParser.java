@@ -188,7 +188,11 @@ public class YahooEventParser implements SecurityParser {
 
                     if (fields.length == 2) {   // if fields are != 2, then it's not valid data
                         try {
-                            final String[] fraction = fields[1].split("/");
+
+                            // Yahoo uses : or /
+                            final String delimiter = fields[1].contains(":") ? ":" : "/";
+
+                            final String[] fraction = fields[1].split(delimiter);
 
                             final BigDecimal value = new BigDecimal(fraction[0])
                                                              .divide(new BigDecimal(fraction[1]), MathConstants.mathContext);
