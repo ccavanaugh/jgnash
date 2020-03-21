@@ -226,7 +226,7 @@ public class jGnashFx extends Application {
         Engine.getLogger().setLevel(Level.ALL);
     }
 
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
     @Command(mixinStandardHelpOptions = true, versionProvider = CommandLineOptions.VersionProvider.class, name = "jGnash", separator = " ", sortOptions = false)
     public static class CommandLineOptions {
 

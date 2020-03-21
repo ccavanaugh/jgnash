@@ -160,7 +160,7 @@ public class Engine {
     /**
      * All engine instances will share the same message bus.
      */
-    private MessageBus messageBus;
+    private final MessageBus messageBus;
 
     /**
      * Cached for performance.
