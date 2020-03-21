@@ -41,6 +41,8 @@ import jgnash.uifx.control.AutoCompleteTextField;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -91,6 +93,7 @@ class AutoCompleteModelTest {
     }
 
     @Test
+    @DisabledOnOs(OS.MAC)
     void testPayeeMemoModels() {
         Options.useFuzzyMatchForAutoCompleteProperty().set(true);
 
@@ -128,11 +131,6 @@ class AutoCompleteModelTest {
         // Block until the atomics have been set, or the test will fail
         Awaitility.await().untilTrue(payeeModelLoaded);
         Awaitility.await().untilTrue(memoModelLoaded);
-
-        // stabilises the test for osx
-        for (int i = 1; i <= TRANSACTION_COUNT; i++) {
-            Thread.yield();
-        }
 
         //noinspection SpellCheckingInspection
         final String payeeResult = payeeModel.doLookAhead("Paye");
