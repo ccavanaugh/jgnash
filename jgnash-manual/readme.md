@@ -3,7 +3,7 @@
 The jGnash Manual is written using Latex.
 
 ## Build Requirements
-* A LaTeX installation with the the necessary packages
+* A LaTeX installation with the necessary packages
     * A Tex Live installation works well.
 * pdfTex _(pdflatex)_
 
