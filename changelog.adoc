@@ -20,6 +20,8 @@
 * HSQLDB 2.5.1 when released.
 
 == Release 3.6.0 __(File format change)__
+* 04/06/2020 Corrected a minor jdbc and Hibernate warning.
+* 04/06/2020 Updated to the latest Hibernate dependency.
 * 03/24/2020 Updated to the latest Netty dependency.
 * 03/21/2020 Yahoo financial historical event download format changed.
 * 03/15/2020 Updated to the JavaFX 14 release.
