@@ -129,26 +129,29 @@ public final class FileUtils {
 
         boolean result = false;
 
-        for (final String extension : FILE_LOCK_EXTENSIONS) {
-            if (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + extension))) {
-                result = true;
+        if (Files.exists(Paths.get(fileName))) {    // false if the base file is not found
+            for (final String extension : FILE_LOCK_EXTENSIONS) {
+                if (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + extension))) {
+                    result = true;
+                    break;
+                }
             }
-        }
 
-        if (!result) {
-            try (final FileChannel channel = FileChannel.open(Paths.get(fileName), StandardOpenOption.READ,
-                    StandardOpenOption.WRITE)) {
+            if (!result) {
+                try (final FileChannel channel = FileChannel.open(Paths.get(fileName), StandardOpenOption.READ,
+                        StandardOpenOption.WRITE)) {
 
-                try (final FileLock lock = channel.tryLock()) {
-                    if (lock == null) {
+                    try (final FileLock lock = channel.tryLock()) {
+                        if (lock == null) {
+                            result = true;
+                        }
+                    } catch (final OverlappingFileLockException ex) {   // indicates file is already locked
                         result = true;
                     }
-                } catch (final OverlappingFileLockException ex) {   // indicates file is already locked
-                    result = true;
+                } catch (final IOException e) {
+                    logSevere(FileUtils.class, e);
+                    throw e;
                 }
-            } catch (final IOException e) {
-                logSevere(FileUtils.class, e);
-                throw e;
             }
         }
 
@@ -406,6 +409,7 @@ public final class FileUtils {
                         for (final WatchEvent<?> ignored : watchKey.pollEvents()) {
                             if (!Files.exists(filePath)) {
                                 Logger.getLogger(FileUtils.class.getName()).info(fileName + " was removed");
+                                result = true;
                                 break;
                             }
                         }
@@ -417,13 +421,13 @@ public final class FileUtils {
                 logSevere(FileUtils.class, e);
                 Thread.currentThread().interrupt();
             }
+        } else {
+            result = true;  // lock file was already gone
+        }
 
-            // Last check for file existence.  File removal could have occurred before watch service started
-            if (!Files.exists(filePath)) {
-                result = true;
-            } else {
-                Logger.getLogger(FileUtils.class.getName()).info("Timed out waiting for removal of: " + fileName);
-            }
+        // Last check for file existence.  File removal could have occurred before watch service started
+        if (!result && Files.exists(Paths.get(fileName))) {
+            Logger.getLogger(FileUtils.class.getName()).info("Timed out waiting for removal of: " + fileName);
         }
 
         return result;
