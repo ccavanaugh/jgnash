@@ -207,9 +207,21 @@ public class SqlUtils {
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
-                    for (final String column : columns) {
-                        try (final Statement statement = connection.createStatement()) {
-                            statement.execute("ALTER TABLE IF EXISTS " + table + " DROP COLUMN IF EXISTS " + column);
+
+                    final DatabaseMetaData metaData = connection.getMetaData();
+
+                    final ResultSet resultSet = metaData.getTables(null, null, table,
+                            new String[] {"TABLE"});
+
+                    while (resultSet.next()) {
+                        final String tableName = resultSet.getString("TABLE_NAME");
+
+                        if (tableName !=null && tableName.equalsIgnoreCase(table)) {
+                            for (final String column : columns) {
+                                try (final Statement statement = connection.createStatement()) {
+                                    statement.execute("ALTER TABLE " + table + " DROP " + column);
+                                }
+                            }
                         }
                     }
 
