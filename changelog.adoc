@@ -17,16 +17,13 @@
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 * Reinstate archive capability
 * Open zipped backups instead of manually unzipping.
-* HSQLDB 2.5.1 when released.
 
 == Release 3.6.0 __(File format change)__
+* 06/05/2020 Updated to the latest dependencies.
 * 04/06/2020 Corrected a minor jdbc and Hibernate warning.
-* 04/06/2020 Updated to the latest Hibernate dependency.
-* 03/24/2020 Updated to the latest Netty dependency.
 * 03/21/2020 Yahoo financial historical event download format changed.
 * 03/15/2020 Updated to the JavaFX 14 release.
 * 03/07/2020 Waiting for lock files to be removed is now more efficient.
-* 03/01/2020 Updated to the latest PDFBox dependency.
 * 03/01/2020 The numeric format for register balance summaries was not updating with format changes automatically.
 * 03/01/2020 Protect against a divide by zero error for the Tag report.
 * 03/01/2020 Internal cleanup and optimization of application thread management.
@@ -129,7 +126,7 @@
 * 07/05/2019 Fixed a bug that was causing backup files and database conversions to save in the wrong location or
              fail completely if a period existed within the file name's path other than the file extension.
 * 07/05/2019 The style of selected odd rows of TreeTables were not consistent with even rows.
-* 06/30/2019 Updated to latest Netty and PDFBox dependencies.
+* 06/30/2019 Updated to the latest Netty and PDFBox dependencies.
 * 06/30/2019 The manual was missing from the distribution.
 * 06/30/2019 Converted the manual to Latex and moved to manual process to improve build performance.
 * 06/15/2019 Improved the speed of detecting a non converging IRR calculation.

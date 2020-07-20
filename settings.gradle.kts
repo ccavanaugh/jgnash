@@ -14,6 +14,8 @@ pluginManagement {
     }
 }
 
+enableFeaturePreview("VERSION_ORDERING_V2")
+
 rootProject.name = "jgnash"
 
 include ("jgnash-bayes", "jgnash-resources", "jgnash-core", "jgnash-convert",
