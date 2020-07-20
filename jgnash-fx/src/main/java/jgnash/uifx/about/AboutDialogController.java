@@ -44,6 +44,7 @@ import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.FXMLUtils.Pair;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.TableViewManager;
 import jgnash.util.NotNull;
 
 /**
@@ -57,11 +58,20 @@ public class AboutDialogController {
 
     private static final int MAX_HEIGHT = 490;
 
+    private static final String PREF_NODE = "/jgnash/uifx/about/AboutDialogController";
+
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 100};
+
+    private static final String DEFAULT = "default";
+
     @FXML
     private ResourceBundle resources;
 
     @FXML
     private TabPane tabbedPane;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private TableViewManager<SystemProperty> tableViewManager;
 
     @FXML
     void initialize() {
@@ -101,6 +111,8 @@ public class AboutDialogController {
 
         FXCollections.sort(propertiesList);
 
+
+
         final TableColumn<SystemProperty, String> keyCol = new TableColumn<>(resources.getString("Column.PropName"));
         keyCol.setCellValueFactory(param -> param.getValue().keyProperty());
 
@@ -123,6 +135,12 @@ public class AboutDialogController {
 
         menu.getItems().add(copyMenuItem);
         tableView.setContextMenu(menu);
+
+        tableViewManager = new TableViewManager<>(tableView, PREF_NODE);
+        tableViewManager.setColumnWeightFactory(column -> PREF_COLUMN_WEIGHTS[column]);
+        tableViewManager.setPreferenceKeyFactory(() -> DEFAULT);
+
+        JavaFXUtils.runLater(tableViewManager::packTable);
 
         return new Tab(ResourceUtils.getString("Tab.SysInfo"), tableView);
     }
