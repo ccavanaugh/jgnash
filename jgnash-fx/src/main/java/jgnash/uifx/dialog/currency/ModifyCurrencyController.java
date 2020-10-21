@@ -93,11 +93,10 @@ public class ModifyCurrencyController implements MessageListener {
 
         // unregister when the window closes
         parent.addListener((observable, oldValue, newValue)
-                -> newValue.windowProperty().addListener((observable1, oldValue1, newValue1) -> {
-            newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
-                    event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
-                            MessageChannel.COMMODITY));
-        }));
+                -> newValue.windowProperty().addListener((observable1, oldValue1, newValue1) ->
+                newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
+                        event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
+                                MessageChannel.COMMODITY))));
 
         applyButton.disableProperty().bind(Bindings.or(selectedCurrency.isNull(),
                 scaleTextField.textProperty().isEmpty()));
