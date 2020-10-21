@@ -19,7 +19,7 @@
 * Open zipped backups instead of manually unzipping.
 
 == Release 3.6.0 __(File format change)__
-* 06/05/2020 Updated to the latest dependencies.
+* 10/21/2020 Updated to the latest dependencies.
 * 04/06/2020 Corrected a minor jdbc and Hibernate warning.
 * 03/21/2020 Yahoo financial historical event download format changed.
 * 03/15/2020 Updated to the JavaFX 14 release.
