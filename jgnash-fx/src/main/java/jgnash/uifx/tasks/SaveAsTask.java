@@ -21,16 +21,16 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
 import jgnash.engine.EngineFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FileChooserFactory;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Save File As Task.
@@ -83,7 +83,7 @@ public class SaveAsTask extends Task<Void> {
             updateMessage(resources.getString("Message.FileSaveComplete"));
             Thread.sleep(FORCED_DELAY * 2);
         } catch (final Exception exception) {
-            Platform.runLater(() -> StaticUIMethods.displayException(exception));
+            JavaFXUtils.runLater(() -> StaticUIMethods.displayException(exception));
         }
 
         return null;

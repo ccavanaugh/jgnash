@@ -49,7 +49,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.control.LockedCommodityListCell;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.StageUtils;
@@ -176,10 +176,10 @@ public class SelectAccountSecuritiesDialog {
         vBox.setFillWidth(true);
         vBox.getStyleClass().add("form");
 
-        moveToTarget = new Button("", new FontAwesomeLabel(FontAwesomeLabel.FAIcon.CHEVRON_RIGHT));
+        moveToTarget = new Button("", new MaterialDesignLabel(MaterialDesignLabel.MDIcon.CHEVRON_RIGHT));
         moveToTarget.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
-        moveToSource = new Button("", new FontAwesomeLabel(FontAwesomeLabel.FAIcon.CHEVRON_LEFT));
+        moveToSource = new Button("", new MaterialDesignLabel(MaterialDesignLabel.MDIcon.CHEVRON_LEFT));
         moveToSource.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
         moveToTarget.setMaxWidth(Double.MAX_VALUE);

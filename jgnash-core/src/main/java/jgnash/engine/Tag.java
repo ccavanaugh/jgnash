@@ -47,17 +47,9 @@ public class Tag extends StoredObject implements Comparable<Tag> {
     private long color = 255;
 
     /**
-     * The Tag shape
-     * <p>
-     * Store a unicode integer here and use a font to generate shapes
+     * Icon unicode value
      */
-    private char shape = '\uf111';  // fontawesome circle
-
-    /**
-     * Holder to support multiple icon sets
-     */
-    @SuppressWarnings("unused")
-    private byte iconSet = 0;
+    private Integer unicode = 0xf764;   // circle
 
     public Tag() {
         // zero arg constructor required for persistence
@@ -108,17 +100,20 @@ public class Tag extends StoredObject implements Comparable<Tag> {
      *
      * @return char value of the font character
      */
-    public char getShape() {
-        return shape;
+    public int getShape() {
+        if (unicode == null) {
+            unicode = 0xf0e4; // bug symbol.. from conversion of an older file
+        }
+        return unicode;
     }
 
     /**
      * Sets the Tag shape
      *
-     * @param shape char value of the font character
+     * @param unicode value of the font character
      */
-    public void setShape(final char shape) {
-        this.shape = shape;
+    public void setShape(final int unicode) {
+        this.unicode = unicode;
     }
 
     @Override
@@ -154,7 +149,7 @@ public class Tag extends StoredObject implements Comparable<Tag> {
             return result;
         }
 
-        result = Character.compare(shape, o.shape);
+        result = Integer.compare(getShape(), o.getShape());
         if (result != 0) {
             return result;
         }

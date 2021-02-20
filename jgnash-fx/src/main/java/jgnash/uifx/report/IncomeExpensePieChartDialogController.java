@@ -24,7 +24,6 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -44,13 +43,14 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.uifx.resource.cursor.CustomCursor;
 import jgnash.text.NumericFormats;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DoughnutChart;
+import jgnash.uifx.resource.cursor.CustomCursor;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.function.ParentAccountPredicate;
 
 /**
@@ -142,7 +142,7 @@ public class IncomeExpensePieChartDialogController {
         });
 
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
-        Platform.runLater(this::updateChart);
+        JavaFXUtils.runLater(this::updateChart);
     }
 
     private void updateChart() {

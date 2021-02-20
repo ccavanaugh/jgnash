@@ -7,16 +7,16 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="jgnash.uifx.views.register.RegisterViewController">
     <top>
         <ToolBar>
             <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"
                     onAction="#handleReconcileAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="ADJUST"/>
+                    <MaterialDesignLabel glyphName="HANDSHAKE"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ReconcileAccount"/>
@@ -25,7 +25,7 @@
             <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction"
                     text="%Button.Filter">
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILTER"/>
+                    <MaterialDesignLabel glyphName="FILTER"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.FilterAccounts"/>
@@ -33,7 +33,7 @@
             </Button>
             <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom" onAction="#handleZoomAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="EXTERNAL_LINK_SQUARE"/>
+                    <MaterialDesignLabel glyphName="FILE_DOCUMENT_BOX_PLUS"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ZoomRegister"/>
@@ -41,7 +41,7 @@
             </Button>
             <Button text="%Button.Export" onAction="#handleAccountExport">
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILE_EXCEL_O"/>
+                    <MaterialDesignLabel glyphName="FILE_EXCEL_O"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ExportTransactions"/>
@@ -49,7 +49,7 @@
             </Button>
             <Button text="%Button.Print" onAction="#handleAccountReport">
                 <graphic>
-                    <FontAwesomeLabel glyphName="PRINT"/>
+                    <MaterialDesignLabel glyphName="PRINT"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.PrintRegRep"/>
@@ -57,7 +57,7 @@
             </Button>
             <Button text="%Button.Resize" fx:id="packColumnsButton" onAction="#handleTableColumnPack">
                 <graphic>
-                    <FontAwesomeLabel glyphName="TABLE"/>
+                    <MaterialDesignLabel glyphName="TABLE_COLUMN_WIDTH"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ResizeColumns"/>

@@ -8,9 +8,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
+
 <GridPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="480.0" prefWidth="750.0"
-          xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="jgnash.uifx.control.wizard.WizardDialogController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER"/>
@@ -31,12 +32,12 @@
       <buttons>
           <Button fx:id="backButton" onAction="#handleBackAction" mnemonicParsing="false" text="%Button.Back">
               <graphic>
-                  <FontAwesomeLabel glyphName="CHEVRON_LEFT"/>
+                  <MaterialDesignLabel glyphName="CHEVRON_LEFT"/>
               </graphic>
           </Button>
           <Button fx:id="nextButton" onAction="#handleNextAction" mnemonicParsing="false" text="%Button.Next">
               <graphic>
-                  <FontAwesomeLabel glyphName="CHEVRON_RIGHT"/>
+                  <MaterialDesignLabel glyphName="CHEVRON_RIGHT"/>
               </graphic>
           </Button>
           <Button ButtonBar.buttonData="SMALL_GAP" visible="false"/>

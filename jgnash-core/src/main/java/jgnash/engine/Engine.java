@@ -98,7 +98,7 @@ public class Engine {
      */
     public static final int CURRENT_MAJOR_VERSION = 3;
 
-    public static final int CURRENT_MINOR_VERSION = 5;
+    public static final int CURRENT_MINOR_VERSION = 6;
 
     // Lock name
     private static final String BIG_LOCK = "bigLock";
@@ -160,7 +160,7 @@ public class Engine {
     /**
      * All engine instances will share the same message bus.
      */
-    private MessageBus messageBus;
+    private final MessageBus messageBus;
 
     /**
      * Cached for performance.

@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
+import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,11 +33,18 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,26 +129,29 @@ public final class FileUtils {
 
         boolean result = false;
 
-        for (final String extension : FILE_LOCK_EXTENSIONS) {
-            if (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + extension))) {
-                result = true;
+        if (Files.exists(Paths.get(fileName))) {    // false if the base file is not found
+            for (final String extension : FILE_LOCK_EXTENSIONS) {
+                if (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + extension))) {
+                    result = true;
+                    break;
+                }
             }
-        }
 
-        if (!result) {
-            try (final FileChannel channel = FileChannel.open(Paths.get(fileName), StandardOpenOption.READ,
-                    StandardOpenOption.WRITE)) {
+            if (!result) {
+                try (final FileChannel channel = FileChannel.open(Paths.get(fileName), StandardOpenOption.READ,
+                        StandardOpenOption.WRITE)) {
 
-                try (final FileLock lock = channel.tryLock()) {
-                    if (lock == null) {
+                    try (final FileLock lock = channel.tryLock()) {
+                        if (lock == null) {
+                            result = true;
+                        }
+                    } catch (final OverlappingFileLockException ex) {   // indicates file is already locked
                         result = true;
                     }
-                } catch (final OverlappingFileLockException ex) {   // indicates file is already locked
-                    result = true;
+                } catch (final IOException e) {
+                    logSevere(FileUtils.class, e);
+                    throw e;
                 }
-            } catch (final IOException e) {
-                logSevere(FileUtils.class, e);
-                throw e;
             }
         }
 
@@ -362,7 +373,7 @@ public final class FileUtils {
 
             try (final Stream<Path> stream = Files.list(directory)) {
                 fileList.addAll(stream.filter(path -> p.matcher(path.toString()).matches())
-                                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList()));
             } catch (IOException e) {
                 logSevere(FileUtils.class, e);
             }
@@ -373,4 +384,52 @@ public final class FileUtils {
         return fileList;
     }
 
+    /**
+     * Blocks for a specified period of time for removal of a file
+     *
+     * @param fileName file to monitor
+     * @param timeout  timeout in milliseconds
+     * @return true if the file existed and was removed
+     */
+    public static boolean waitForFileRemoval(final String fileName, final long timeout) {
+        boolean result = false;
+
+        final LocalDateTime start = LocalDateTime.now();
+
+        if (fileName != null && Files.exists(Paths.get(fileName))) {
+            final Path filePath = Paths.get(fileName);
+
+            try (final WatchService watchService = FileSystems.getDefault().newWatchService()) {
+                filePath.getParent().register(watchService, StandardWatchEventKinds.ENTRY_DELETE);
+
+                while (Duration.between(start, LocalDateTime.now()).toMillis() < timeout) {
+                    final WatchKey watchKey = watchService.poll(timeout, TimeUnit.MILLISECONDS);
+
+                    if (watchKey != null) {
+                        for (final WatchEvent<?> ignored : watchKey.pollEvents()) {
+                            if (!Files.exists(filePath)) {
+                                Logger.getLogger(FileUtils.class.getName()).info(fileName + " was removed");
+                                result = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (final IOException e) {
+                logSevere(FileUtils.class, e);
+            } catch (final InterruptedException e) {
+                logSevere(FileUtils.class, e);
+                Thread.currentThread().interrupt();
+            }
+        } else {
+            result = true;  // lock file was already gone
+        }
+
+        // Last check for file existence.  File removal could have occurred before watch service started
+        if (!result && Files.exists(Paths.get(fileName))) {
+            Logger.getLogger(FileUtils.class.getName()).info("Timed out waiting for removal of: " + fileName);
+        }
+
+        return result;
+    }
 }

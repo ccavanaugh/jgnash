@@ -1,4 +1,10 @@
 #!/usr/bin/env sh
 
-cwd=$(dirname $0)
-$cwd/bin/bootloader "$@"
+cwd=$(dirname "$0")
+"$cwd"/bin/bootloader "$@"
+
+if [ $? -eq 100 ]; then #relaunch automatically if return value is 100
+  "$cwd"/bin/bootloader "$@"
+fi
+
+exit 0

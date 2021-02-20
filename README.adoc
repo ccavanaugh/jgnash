@@ -5,11 +5,9 @@ image:https://jgnash.github.io/img/jgnash-logo.png[jGnash Logo]
 https://sourceforge.net/projects/jgnash/[jGnash] is a free (no strings attached!) personal finance manager with many
 of the same features as commercially-available software. It was created in order to make tracking personal finances
 easy, but also provides the functionality needed by advanced users. jGnash is cross-platform and will run on
-any operating system that has a current Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
+any operating system that has a current Java Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows).
 
-* jGnash requires *Java 11* or newer.
-
-* jGnash is compatible with the Oracle JVM as well as the open source OpenJDK Platform.
+* jGnash requires *Java 11* or newer and is compatible with the open source OpenJDK Platform, and the Oracle JVM as well.
 
 See the <<Requirements>> section below for more details.
 
@@ -50,7 +48,7 @@ It also covers some of the more subtle features, command line options, and short
 
 The latest version of jGnash uses *OpenJFX* for the user interface. This replaces the old version that used Java Swing
 for the user interface.  Experienced jGnash users will notice interface improvements.  For example, try using the
-vertical and horizontal scroll wheels in a date picker and the collapsible transaction forms.
+vertical and horizontal scroll wheels in a date picker, and the collapsible transaction forms.
 
 [[Donations]]
 == Donations
@@ -87,7 +85,7 @@ Use of a prebuilt installer is recommended.
 
 [NOTE]
 When performing a manual installation of Java, The *JAVA_HOME* Environment
-Variable must be set and the Java bin directory must be in the execution path.
+Variable must be set. Also, the Java bin directory must be added to the execution path.
 
 [NOTE]
 If you have multiple versions of Java installed on your system, The *JAVA_HOME* Environment
@@ -104,7 +102,7 @@ different operating systems.
 
 
 [[Reqs-OS]]
-=== 3. Supported Operating Systems: Windows, Linux, or Mac OS X
+=== 3. Supported Operating Systems: Windows, Linux, or Mac OS X.
 
 ==== Microsoft Windows
 
@@ -135,14 +133,23 @@ You can download jGnash from the https://sourceforge.net/projects/jgnash/files/A
 == To Install jGnash
 
 . Install the latest version of *Java 11*  if you don't already have it installed.
+_jGnash has been tested and is know to work on Java 12 through 14._
 
 ** Developers will want the complete Java Development Kit (see build instructions below.)
 . Unzip all files into a directory of your choice leaving the directory structure unchanged.
 
+[[Install-Windows]]
+=== Windows Installation:
+
+Some Windows users with restricted rights may experience write access issues *(Access is denied exception)* with jGnash
+downloading the JavaFX dependencies.
+
+Unzipping and placing jGnash into `%AppData%\jGnash` will ensure the users has proper write access.
+
 [[Install-MacOSX]]
 === Mac OS X Installation:
 
-. Copy the jGnash folder to `/Applications` and remove the version so the final path looks like `/Applications/jGnash`.
+. Copy the jGnash folder to `/Applications` and remove the version extension so that the final path looks like `/Applications/jGnash`.
 . Create an AppleScript that will run the application:
 .. Open the AppleScript Editor.
 
@@ -164,7 +171,7 @@ You can download jGnash from the https://sourceforge.net/projects/jgnash/files/A
 == To Run:
 
 Executable files are provided for Windows and UN*X users at the root of the installation directory. (These are `.exe`
-and `bash shell` files, respectively.) Mac OS X users will have created application launch files per
+and `bash shell` files, respectively). Mac OS X users will have created application launch files per
 the <<Install-MacOSX, Mac installation instructions.>>
 
 [NOTE]
@@ -172,10 +179,10 @@ jGnash will need to be restarted after the first launch of a new version.
 Operating System specific files are download and a restart is required for
 correct operation.
 
-* Windows: Simply double click on the jGnash.exe file.
+* Windows: Simply double-click on the jGnash.exe file.
 
 * UN*X / MacOS:  Start jGnash with the provided *jGnash* Bash script.  If jGnash fails to launch, check your file
-permissions and make sure they are set to be executable or use a unzip tool that preserves file permissions.
+permissions and make sure they are set to be executable or use an unzip tool that preserves file permissions.
 
 An example for UN*X users is shown below assuming you have changed to the installation directory:
 
@@ -219,7 +226,7 @@ To build jGnash you'll need the following software installed and correctly confi
 
 OpenJDK 11 or later.
 
-_If you are building with a recent 64 bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
+_If you are building with a recent 64bit Linux system, you may need to enable Multilib/32 Bit support capabilities.
 Otherwise, the Gradle build may fail when building the windows executables._
 
 To create the distribution zip file, start at the main directory and run the gradle task to clean and create the distribution:

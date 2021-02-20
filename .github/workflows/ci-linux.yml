@@ -10,6 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - uses: actions/cache@master
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - uses: actions/setup-java@master
         with:
           java-version: '11'

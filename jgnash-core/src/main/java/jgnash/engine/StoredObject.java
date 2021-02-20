@@ -65,9 +65,11 @@ public abstract class StoredObject implements Cloneable, Serializable {
     /**
      * Getter for the uuid.
      *
+     * Note: method should not be final (HHH000305)
+     *
      * @return uuid of the object
      */
-    public final UUID getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 

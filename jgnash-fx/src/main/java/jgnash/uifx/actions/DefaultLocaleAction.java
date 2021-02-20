@@ -23,13 +23,13 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ChoiceDialog;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.LocaleObject;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * UI Action to change the default locale.
@@ -55,7 +55,7 @@ public class DefaultLocaleAction {
             protected void succeeded() {
                 super.succeeded();
 
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     final ChoiceDialog<LocaleObject> dialog = new ChoiceDialog<>(new LocaleObject(Locale.getDefault()), localeObjects);
                     dialog.setTitle(resources.getString("Title.SelDefLocale"));
                     dialog.setContentText(resources.getString("Title.SelDefLocale"));
@@ -64,7 +64,10 @@ public class DefaultLocaleAction {
 
                     optional.ifPresent(localeObject -> {
                         ResourceUtils.setLocale(localeObject.getLocale());
-                        StaticUIMethods.displayMessage(localeObject + "\n" + resources.getString("Message.RestartLocale"));
+
+                        JavaFXUtils.runLater(() -> StaticUIMethods.displayMessage(localeObject + "\n" +
+                                resources.getString("Message.RestartLocale")));
+
                     });
                 });
             }

@@ -363,7 +363,7 @@ public class DistributedLockServer {
 
             while (!canGrantReadAccess(remoteThread)) {
                 // wait for a maximum of 2X the network timout
-                wait(ConnectionFactory.getConnectionTimeout() * MILLIS_PER_SECOND * 2);
+                wait((long) ConnectionFactory.getConnectionTimeout() * MILLIS_PER_SECOND * 2);
             }
 
             readingThreads.put(remoteThread, (getReadHoldCount(remoteThread) + 1));
@@ -374,7 +374,7 @@ public class DistributedLockServer {
 
             while (!canGrantWriteAccess(remoteThread)) {
                 // wait for a maximum of 2X the network timout
-                wait(ConnectionFactory.getConnectionTimeout() * MILLIS_PER_SECOND * 2);
+                wait((long) ConnectionFactory.getConnectionTimeout() * MILLIS_PER_SECOND * 2);
             }
 
             writeRequests--;

@@ -60,7 +60,7 @@ class JpaConfiguration {
                 properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.H2Dialect");
                 break;
             case HSQL_DATABASE:
-                properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.hsqldb.jdbcDriver");
+                properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.hsqldb.jdbc.JDBCDriver");
                 properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.HSQLDialect");
                 break;
             default:

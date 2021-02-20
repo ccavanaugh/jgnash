@@ -1,4 +1,4 @@
-description = "jGnash JavaFx"
+description = "jGnash"
 
 val javaFXVersion: String by project    // extract JavaFX version from gradle.properties
 val picocliVersion: String by project
@@ -7,17 +7,30 @@ val monocleVersion: String by project
 val commonsLangVersion: String by project
 val commonsMathVersion: String by project
 
+val junitVersion: String by project
+val junitExtensionsVersion: String by project
+val awaitilityVersion: String by project
+
 plugins {
-    id("org.openjfx.javafxplugin")
     application // creates a task to run the full application
     `java-library`
+    id("org.openjfx.javafxplugin")
+    id("edu.sc.seis.macAppBundle")
 }
 
+val jGnashVersion : String = version.toString()
+
 application {
-    mainClassName = "jGnashFx"
+    mainClassName = "jgnash.app.jGnash"
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation("io.github.glytching:junit-extensions:$junitExtensionsVersion")
+    testImplementation("org.awaitility:awaitility:$awaitilityVersion")
+
     implementation(project(":jgnash-resources"))
     implementation(project(":jgnash-core"))
     implementation(project(":jgnash-convert"))
@@ -75,11 +88,25 @@ javafx {
             "javafx.graphics", "javafx.media")
 }
 
-tasks.withType<CreateStartScripts> {
-    enabled = false // disable creation of the start scripts
+tasks.test {
+    useJUnitPlatform()
+
+    // we want display the following test events
+    testLogging {
+        events("PASSED", "STARTED", "FAILED", "SKIPPED")
+        showStandardStreams = true
+    }
+}
+
+tasks.startScripts {
+    applicationName = "bootloader"
 }
 
 tasks.distZip {
+    destinationDirectory.set(file(rootDir))
+
+    // this "should" work according to Gradle Doc but mangles the content of the zip file
+    //archiveFileName.set("jgnash-${archiveVersion.get()}-bin.${archiveExtension.get()}")
 
     // build the mt940 plugin prior to creating the zip file without creating a circular loop
     dependsOn(":mt940:jar")
@@ -95,6 +122,13 @@ tasks.distZip {
         from(".")
         include("scripts/*")
     }
+
+    doLast {
+        // delete the old renamed build
+        file("${destinationDirectory.get()}/jgnash-${archiveVersion.get()}-bin.${archiveExtension.get()}").delete()
+
+        file("${destinationDirectory.get()}/${archiveFileName.get()}").renameTo(file("${destinationDirectory.get()}/jgnash-${archiveVersion.get()}-bin.${archiveExtension.get()}"))
+    }
 }
 
 distributions {
@@ -102,11 +136,25 @@ distributions {
         distributionBaseName.set("jGnash")
 
         contents {
+            from("../jgnash-manual/src/Manual.pdf")
+            from("../changelog.adoc")
+            from("../rust-launcher/target/release/jGnash.exe")
+            from("../README.html")
+            from("../README.adoc")
+            from("../jGnash")
             exclude("**/*-linux*")  // excludes linux specific JavaFx modules from cross platform zip
             exclude("**/*-win*")    // excludes windows specific JavaFx modules from cross platform zip
             exclude("**/*-mac*")    // excludes mac specific JavaFx modules from cross platform zip
         }
     }
+}
+
+macAppBundle {
+    appStyle = "universalJavaApplicationStub"
+    appName = "jGnash-$jGnashVersion"
+    mainClassName = "jgnash.app.jGnash"
+    icon = "../deployfx/gnome-money.icns"
+    javaProperties["apple.laf.useScreenMenuBar"] = "true"
 }
 
 /**
@@ -130,6 +178,46 @@ tasks.jar {
     exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.MF")
 
     manifest {
-        attributes(mapOf("Main-Class" to "jGnashFx", "Class-Path" to generateManifestClassPath()))
+        attributes(mapOf("Main-Class" to "jGnash", "Class-Path" to generateManifestClassPath()))
+    }
+}
+
+tasks.register("macDist") {
+    description = "Creates a Mac compatible .app distribution directory"
+    dependsOn("createApp", "distZip")
+
+    doLast {
+        configurations.runtimeClasspath.get().files.forEach {
+            // copy all files in the class path, but ignore windows and linux specific files
+            if (!it.name.contains("linux.jar") && !it.name.contains("win.jar")) {
+                it.copyTo(file("$buildDir/macApp/jGnash-$jGnashVersion.app/Contents/Java/" + it.name), true)
+            }
+        }
+    }
+}
+
+tasks.register<Zip>("macDistZip") {
+    description = "Creates a Mac compatible archive of the .app distribution directory"
+
+    dependsOn("clean", "macDist")
+    archiveFileName.set("jGnash-$jGnashVersion.App.zip")
+    destinationDirectory.set(rootDir)
+
+    from("$buildDir/macApp")
+
+    from("../jgnash-manual/src/Manual.pdf") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
+    }
+
+    from("../changelog.adoc") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
+    }
+
+    from("../README.adoc") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
+    }
+
+    from("../README.html") {
+        into("jGnash-$jGnashVersion.app/Contents/SharedSupport")
     }
 }

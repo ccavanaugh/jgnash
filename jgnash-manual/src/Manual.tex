@@ -103,7 +103,7 @@ morestring=[b]"
 
 \pagenumbering{roman}
 
-\title{\textbf{jGnash 3.4.x Manual} }
+\title{\textbf{jGnash 3.5.x Manual} }
 \author{Craig Cavanaugh}
 \date{\today}
 
@@ -275,6 +275,15 @@ morestring=[b]"
         \caption{Adopt OpenJDK Install Options}
         \includegraphics[width=0.8\linewidth]{images/adopt-open-jdk-install}
     \end{figure}
+   
+   \notebox{
+   	If you are a Windows user with restricted write access to the file system, you may encounter a FileNotFound exception with an underlying "Access is denied" error.  
+   	This is caused by jGnash not being able to download and save the necessary JavaFX files for proper operation.
+   	\newpage
+   	\bigskip
+   	The solution is to place jGnash into your \textbf{AppData} folder which should ensure write access.  The AppData folder is typically located within the \textbf{C:\textbackslash Users\textbackslash user} folder which is hidden by default.  You can see the folder if you change the setting to show hidden files within Windows File Explorer.
+   }
+   
    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \section{Starting jGnash}\label{sec:starting-jgnash}

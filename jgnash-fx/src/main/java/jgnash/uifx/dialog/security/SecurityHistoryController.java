@@ -30,7 +30,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -63,6 +62,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.net.security.UpdateFactory;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
@@ -74,7 +74,7 @@ import jgnash.uifx.control.SecurityHistoryEventTypeComboBox;
 import jgnash.uifx.control.SecurityNodeAreaChart;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Security history controller.
@@ -274,7 +274,7 @@ public class SecurityHistoryController implements MessageListener {
 
                 quoteSource.set(newValue.getQuoteSource());
 
-                Platform.runLater(this::loadTables);
+                JavaFXUtils.runLater(this::loadTables);
             }
         });
 
@@ -304,7 +304,7 @@ public class SecurityHistoryController implements MessageListener {
             }
         });
 
-        Platform.runLater(()
+        JavaFXUtils.runLater(()
                 -> MessageBus.getInstance().registerListener(SecurityHistoryController.this, MessageChannel.COMMODITY));
     }
 
@@ -317,7 +317,7 @@ public class SecurityHistoryController implements MessageListener {
     }
 
     private void loadEventForm() {
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             eventDatePicker.setValue(selectedSecurityHistoryEvent.get().getDate());
             eventValueTextField.setDecimal(selectedSecurityHistoryEvent.get().getValue());
             securityEventTypeComboBox.setValue(selectedSecurityHistoryEvent.get().getType());
@@ -334,7 +334,7 @@ public class SecurityHistoryController implements MessageListener {
     }
 
     private void clearEventForm() {
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             eventDatePicker.setValue(LocalDate.now());
             eventValueTextField.setDecimal(BigDecimal.ZERO);
         });
@@ -448,8 +448,8 @@ public class SecurityHistoryController implements MessageListener {
                 case SECURITY_HISTORY_REMOVE:
                 case SECURITY_HISTORY_EVENT_ADD:
                 case SECURITY_HISTORY_EVENT_REMOVE:
-                    Platform.runLater(this::loadTables);
-                    Platform.runLater(chart::update);
+                    JavaFXUtils.runLater(this::loadTables);
+                    JavaFXUtils.runLater(chart::update);
                     break;
                 default:
             }

@@ -16,8 +16,8 @@
 <?import jgnash.uifx.control.SecurityComboBox?>
 <?import jgnash.uifx.control.SecurityHistoryEventTypeComboBox?>
 <?import jgnash.uifx.control.TableViewEx?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <GridPane prefHeight="400.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="jgnash.uifx.dialog.security.SecurityHistoryController" styleClass="form, dialog">
     <columnConstraints>
@@ -91,7 +91,7 @@
                     <Button fx:id="deletePriceButton" onAction="#handleDeletePriceAction" text="%Button.Delete"
                             ButtonBar.buttonData="LEFT">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_O"/>
+                            <MaterialDesignLabel glyphName="TRASH_O"/>
                         </graphic>
                     </Button>
                     <Button onAction="#handleClearPriceAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
@@ -99,7 +99,7 @@
                     <Button fx:id="updatePriceButton" onAction="#handleOnlineUpdate" text="%Button.UpdateOnline"
                             ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+                            <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
                         </graphic>
                     </Button>
                 </buttons>
@@ -112,7 +112,7 @@
                     <Button text="%Button.DeleteWeekends" onAction="#handleRemoveWeekendsAction" ButtonBar.buttonData="LEFT"
                             ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_O"/>
+                            <MaterialDesignLabel glyphName="TRASH_O"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="%ToolTip.DeleteWeekendSecurityHistory"/>
@@ -121,7 +121,7 @@
                     <Button text="%Button.KeepMondays" onAction="#handleKeepMondaysOnlyAction" ButtonBar.buttonData="LEFT"
                             ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_O"/>
+                            <MaterialDesignLabel glyphName="TRASH_O"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="%ToolTip.DeleteAllExceptMondaySecurityHistory"/>
@@ -130,7 +130,7 @@
                     <Button text="%Button.KeepFridays" onAction="#handleKeepFridaysOnlyAction" ButtonBar.buttonData="LEFT"
                             ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_O"/>
+                            <MaterialDesignLabel glyphName="TRASH_O"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="%ToolTip.DeleteAllExceptFridaySecurityHistory"/>
@@ -175,7 +175,7 @@
                     <Button fx:id="deleteEventButton" onAction="#handleDeleteEventAction" text="%Button.Delete"
                             ButtonBar.buttonData="LEFT">
                         <graphic>
-                            <FontAwesomeLabel glyphName="TRASH_O"/>
+                            <MaterialDesignLabel glyphName="TRASH_O"/>
                         </graphic>
                     </Button>
                     <Button onAction="#handleClearEventAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
@@ -183,7 +183,7 @@
                     <Button fx:id="updateEventButton" onAction="#handleOnlineEventUpdate" text="%Button.UpdateOnline"
                             ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+                            <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
                         </graphic>
                     </Button>
                 </buttons>

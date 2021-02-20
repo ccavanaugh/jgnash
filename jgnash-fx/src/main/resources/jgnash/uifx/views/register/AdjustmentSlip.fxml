@@ -12,7 +12,7 @@
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
 <?import jgnash.uifx.views.register.TransactionTagPane?>
 
@@ -64,7 +64,7 @@
         <buttons>
             <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction">
                 <graphic>
-                    <FontAwesomeLabel glyphName="ADJUST"/>
+                    <MaterialDesignLabel glyphName="ADJUST"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ConvertSEntry"/>

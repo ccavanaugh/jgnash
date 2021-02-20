@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package jgnash.app;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -225,7 +226,7 @@ public class jGnashFx extends Application {
         Engine.getLogger().setLevel(Level.ALL);
     }
 
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
     @Command(mixinStandardHelpOptions = true, versionProvider = CommandLineOptions.VersionProvider.class, name = "jGnash", separator = " ", sortOptions = false)
     public static class CommandLineOptions {
 

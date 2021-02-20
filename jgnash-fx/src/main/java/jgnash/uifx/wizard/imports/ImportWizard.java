@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,9 +30,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import jgnash.convert.importat.GenericImport;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Import Wizard Dialog.
@@ -90,7 +90,7 @@ public class ImportWizard {
             Logger.getLogger(ImportWizard.class.getName()).log(Level.SEVERE, ioe.getLocalizedMessage(), ioe);
         }
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
 
             stage.sizeToScene();
 

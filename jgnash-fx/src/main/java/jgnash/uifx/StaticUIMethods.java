@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -29,6 +28,7 @@ import javafx.scene.image.Image;
 import jgnash.uifx.control.Alert;
 import jgnash.uifx.control.ExceptionDialog;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainView;
 import jgnash.uifx.views.main.OpenDatabaseController;
@@ -69,7 +69,7 @@ public class StaticUIMethods {
         alert.setTitle(ResourceUtils.getString("Title.Error"));
         alert.initOwner(MainView.getPrimaryStage());
 
-        Platform.runLater(alert::showAndWait);
+        JavaFXUtils.runLater(alert::showAndWait);
     }
 
     public static void displayMessage(final String message) {
@@ -78,7 +78,7 @@ public class StaticUIMethods {
         alert.setTitle(ResourceUtils.getString("Title.Information"));
         alert.initOwner(MainView.getPrimaryStage());
 
-        Platform.runLater(alert::showAndWait);
+        JavaFXUtils.runLater(alert::showAndWait);
     }
 
     public static void displayWarning(final String message) {
@@ -87,7 +87,7 @@ public class StaticUIMethods {
         alert.setTitle(ResourceUtils.getString("Title.Warning"));
         alert.initOwner(MainView.getPrimaryStage());
 
-        Platform.runLater(alert::showAndWait);
+        JavaFXUtils.runLater(alert::showAndWait);
     }
 
     /**
@@ -109,7 +109,7 @@ public class StaticUIMethods {
     }
 
     public static void displayException(final Throwable exception) {
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             ExceptionDialog exceptionDialog = new ExceptionDialog(exception);
             exceptionDialog.showAndWait();
         });

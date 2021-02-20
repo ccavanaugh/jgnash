@@ -4,15 +4,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.DataStoreTypeComboBox?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<?import javafx.scene.control.Tooltip?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxHeight="Infinity"
-          maxWidth="Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" maxHeight="Infinity" maxWidth="Infinity"
           fx:controller="jgnash.uifx.wizard.file.NewFileOneController" styleClass="form">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
@@ -37,13 +36,13 @@
     <TextField fx:id="fileNameField" GridPane.columnIndex="1" GridPane.rowIndex="2" minWidth="75"/>
     <Button onAction="#handleFileButtonAction" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
         <graphic>
-            <FontAwesomeLabel glyphName="ELLIPSIS_H"/>
+            <MaterialDesignLabel glyphName="ELLIPSIS_H"/>
         </graphic>
     </Button>
-    <FontAwesomeLabel fx:id="warningLabel" glyphName="EXCLAMATION_TRIANGLE" size="24"
+    <MaterialDesignLabel fx:id="warningLabel" glyphName="EXCLAMATION_TRIANGLE" size="24"
                       GridPane.columnIndex="3" GridPane.rowIndex="2">
         <tooltip>
             <Tooltip text="%Message.OverwriteDB"/>
         </tooltip>
-    </FontAwesomeLabel>
+    </MaterialDesignLabel>
 </GridPane>

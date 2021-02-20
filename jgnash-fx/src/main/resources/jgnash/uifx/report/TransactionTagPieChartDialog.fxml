@@ -12,7 +12,7 @@
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DoughnutChart?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <BorderPane fx:controller="jgnash.uifx.report.TransactionTagPieChartDialogController" minWidth="800" minHeight="600"
             xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
@@ -20,17 +20,17 @@
       <ToolBar>
           <Button text="%Button.SaveImage" onAction="#handleSaveAction">
               <graphic>
-                  <FontAwesomeLabel glyphName="FILE_IMAGE_O"/>
+                  <MaterialDesignLabel glyphName="FILE_IMAGE_O"/>
               </graphic>
           </Button>
           <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">
               <graphic>
-                  <FontAwesomeLabel glyphName="CLIPBOARD"/>
+                  <MaterialDesignLabel glyphName="CLIPBOARD"/>
               </graphic>
           </Button>
           <Button text="%Button.Print" onAction="#handlePrintAction">
               <graphic>
-                  <FontAwesomeLabel glyphName="PRINT"/>
+                  <MaterialDesignLabel glyphName="PRINT"/>
               </graphic>
           </Button>
       </ToolBar>

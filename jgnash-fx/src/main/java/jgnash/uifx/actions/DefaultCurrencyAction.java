@@ -17,20 +17,20 @@
  */
 package jgnash.uifx.actions;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+import javafx.concurrent.Task;
+
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ChoiceDialog;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import javafx.application.Platform;
-import javafx.concurrent.Task;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * UI Action to change the default currency.
@@ -61,7 +61,7 @@ public class DefaultCurrencyAction {
             protected void succeeded() {
                 super.succeeded();
 
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
 
                     final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                     Objects.requireNonNull(engine);
@@ -75,7 +75,7 @@ public class DefaultCurrencyAction {
                     optional.ifPresent(currencyNode -> {
                         engine.setDefaultCurrency(currencyNode);
 
-                        Platform.runLater(() -> StaticUIMethods.displayMessage(resources.getString("Message.CurrChange")
+                        JavaFXUtils.runLater(() -> StaticUIMethods.displayMessage(resources.getString("Message.CurrChange")
                                 + " " + engine.getDefaultCurrency().getSymbol()));
 
                     });

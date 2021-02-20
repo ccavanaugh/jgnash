@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyEvent;
@@ -39,7 +38,7 @@ public class AutoCompleteTextField<E> extends TextFieldEx {
         // simulate a tab key press to focus the next field
         addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (JavaFXUtils.ENTER_KEY.match(event)) {
-                Platform.runLater(() -> JavaFXUtils.focusNext(AutoCompleteTextField.this));
+                JavaFXUtils.runLater(() -> JavaFXUtils.focusNext(AutoCompleteTextField.this));
             }
         });
     }

@@ -42,7 +42,6 @@ import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
@@ -52,6 +51,7 @@ import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TextFieldEx;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.LogUtil;
 
@@ -129,7 +129,7 @@ public class ControlsTest extends Application {
 
         TextFieldEx textFieldEx = new TextFieldEx();
 
-        PopOverButton popOverButton = new PopOverButton(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCHANGE));
+        PopOverButton popOverButton = new PopOverButton(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.SWAP_HORIZONTAL));
         popOverButton.setContentNode(new DecimalTextField());
 
         DetailedDecimalTextField detailedDecimalTextField2 = new DetailedDecimalTextField();

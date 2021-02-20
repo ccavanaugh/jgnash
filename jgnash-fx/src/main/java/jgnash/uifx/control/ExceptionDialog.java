@@ -35,11 +35,11 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.resource.util.ResourceUtils;
 
 /**
  * Exception dialog.
@@ -80,7 +80,7 @@ public class ExceptionDialog {
 
     @FXML
     private void initialize() {
-        message.setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_TRIANGLE,
+        message.setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.EXCLAMATION_TRIANGLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER, Color.DARKRED));
 
         closeButton.setOnAction(event -> ((Stage) parent.get().getWindow()).close());

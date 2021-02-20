@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
@@ -167,11 +166,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     private void selectDefaultAccount() {
         // Set a default account, must use the filtered list because that is what is visible
         if (filteredList.size() > 0) {
-            if (Platform.isFxApplicationThread()) {
-                setValue(filteredList.get(0));
-            } else {    // push to the end of the application thread only if needed
-                Platform.runLater(() -> setValue(filteredList.get(0)));
-            }
+            JavaFXUtils.runLater(() -> setValue(filteredList.get(0)));
         }
     }
 

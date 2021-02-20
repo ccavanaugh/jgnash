@@ -17,18 +17,18 @@
  */
 package jgnash.uifx.tasks;
 
+import java.text.NumberFormat;
+import java.util.ResourceBundle;
+
+import javafx.concurrent.Task;
+
 import jgnash.engine.DataStore;
 import jgnash.engine.EngineFactory;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.text.NumericFormats;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.FileUtils;
-
-import java.text.NumberFormat;
-import java.util.ResourceBundle;
-
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 
 /**
  * PackDatabase Task.
@@ -112,7 +112,7 @@ public class PackDatabaseTask extends Task<Void> {
             updateMessage(resources.getString("Message.PackingFileComplete"));
             Thread.sleep(FORCED_DELAY * 2L);
         } catch (final Exception exception) {
-            Platform.runLater(() -> StaticUIMethods.displayException(exception));
+            JavaFXUtils.runLater(() -> StaticUIMethods.displayException(exception));
         }
 
         return null;

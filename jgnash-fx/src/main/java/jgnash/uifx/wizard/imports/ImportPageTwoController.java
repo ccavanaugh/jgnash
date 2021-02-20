@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -60,16 +59,17 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.TextResource;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.resource.util.TextResource;
 
 /**
  * Import Wizard, imported transaction wizard.
@@ -173,7 +173,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                             break;
                     }
 
-                    Platform.runLater(tableView::refresh);
+                    JavaFXUtils.runLater(tableView::refresh);
                 }
             });
             return cell;
@@ -217,7 +217,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         accountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setAccount(event.getNewValue());
             lastAccount = event.getNewValue();
-            Platform.runLater(tableViewManager::packTable);
+            JavaFXUtils.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(accountColumn);
 
@@ -234,7 +234,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         incomeAccountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setGainsAccount(event.getNewValue());
             lastGainsAccount = event.getNewValue();
-            Platform.runLater(tableViewManager::packTable);
+            JavaFXUtils.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(incomeAccountColumn);
 
@@ -253,7 +253,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         expenseAccountColumn.setEditable(true);
         expenseAccountColumn.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setFeesAccount(event.getNewValue());
-            Platform.runLater(tableViewManager::packTable);
+            JavaFXUtils.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(expenseAccountColumn);
 
@@ -393,7 +393,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             tableViewManager.restoreLayout();
         }
 
-        Platform.runLater(tableViewManager::packTable);
+        JavaFXUtils.runLater(tableViewManager::packTable);
 
         updateDescriptor();
     }
@@ -427,11 +427,11 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                 switch (item) {
                     case IGNORE:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.MINUS_CIRCLE)));
+                        setGraphic(new StackPane(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.MINUS_CIRCLE)));
                         break;
                     case NEW:
                     case NOT_EQUAL:
-                        setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.PLUS_CIRCLE)));
+                        setGraphic(new StackPane(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.PLUS_CIRCLE)));
                         break;
                     case EQUAL:
                         setGraphic(new StackPane(new Label("=")));

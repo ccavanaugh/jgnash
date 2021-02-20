@@ -17,12 +17,33 @@
 ** annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 * Reinstate archive capability
 * Open zipped backups instead of manually unzipping.
-* HSQLDB 2.5.1 when released
 
-* Add manual warning about placing jGnash in Program Files. (%AppData%\jGnash)
-* Yahoo finance historical event download is not working due to upstream changes.
+== Release 3.6.0 __(File format change)__
+* 10/21/2020 Updated to the latest dependencies.
+* 04/06/2020 Corrected a minor jdbc and Hibernate warning.
+* 03/21/2020 Yahoo financial historical event download format changed.
+* 03/15/2020 Updated to the JavaFX 14 release.
+* 03/07/2020 Waiting for lock files to be removed is now more efficient.
+* 03/01/2020 The numeric format for register balance summaries was not updating with format changes automatically.
+* 03/01/2020 Protect against a divide by zero error for the Tag report.
+* 03/01/2020 Internal cleanup and optimization of application thread management.
+* 02/29/2020 Don't hide the resize columns button when automatic sizing is enabled.
+* 02/29/2020 A race condition would cause Jump actions to fail.
+* 02/29/2020 Zoomed and Jumped register windows were not using the jGnash icon.
+* 02/26/2020 The Tag Manger now filters out application specific tags to make selection less cluttered.
+* 02/25/2020 Expanded Tags to support a much larger icon set.
+* 02/25/2020 Switched icon set from FontAwesome to Material Design.
+* 02/23/2020 Corrected broken Print Icon.
+
+== Release 3.5.1
+* 02/20/2020 Corrected a bug with jGnash.exe causing a failure to launch on Windows Platforms.
+* 02/20/2020 Fixed a bug that was causing icons to no longer work on Windows Platforms.
 
 == Release 3.5.0 __(File format change)__
+* 02/03/2020 Updated to the latest Hibernate, Poi, and Commons CSV dependencies.
+* 02/11/2020 jGnash will now restart automatically for Linux and OSX users after downloading the JavaFX dependencies.
+* 02/10/2020 Restructured main classes to a package to make future development with jpackage cleaner (GitHub Pull Request #88) _[msgilligan]_
+* 02/08/2020 Build system cleanup and consolidated the bootloader.
 * 02/08/2020 Fix RuntimeException when the currency of a locale is unknown. (GitHub Pull Request #92) _[t-pa]_
 * 02/08/2020 Updated to JavaFx 14-ea+8.
 * 02/05/2020 The location for JavaFX dependency downloads has changed.  HTTPS is now used.
@@ -105,7 +126,7 @@
 * 07/05/2019 Fixed a bug that was causing backup files and database conversions to save in the wrong location or
              fail completely if a period existed within the file name's path other than the file extension.
 * 07/05/2019 The style of selected odd rows of TreeTables were not consistent with even rows.
-* 06/30/2019 Updated to latest Netty and PDFBox dependencies.
+* 06/30/2019 Updated to the latest Netty and PDFBox dependencies.
 * 06/30/2019 The manual was missing from the distribution.
 * 06/30/2019 Converted the manual to Latex and moved to manual process to improve build performance.
 * 06/15/2019 Improved the speed of detecting a non converging IRR calculation.

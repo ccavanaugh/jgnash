@@ -17,7 +17,17 @@
  */
 package jgnash.uifx.views.main;
 
-import javafx.application.Platform;
+import java.io.File;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.concurrent.Task;
@@ -32,6 +42,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -42,12 +53,14 @@ import jgnash.net.security.UpdateFactory;
 import jgnash.plugin.FxPlugin;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.resource.util.Version;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.StatusBar;
 import jgnash.uifx.control.TabViewPane;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.BootEngineTask;
 import jgnash.uifx.tasks.CloseFileTask;
@@ -61,19 +74,6 @@ import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.resource.util.ResourceUtils;
-import jgnash.resource.util.Version;
-
-import java.io.File;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * JavaFX version of jGnash.
@@ -276,24 +276,24 @@ public class MainView implements MessageListener {
     }
 
     private void addViews() {
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"), resources),
                 resources.getString("Tab.Accounts"))));
 
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(RegisterViewController.class.getResource("RegisterView.fxml"), resources),
                 resources.getString("Tab.Register"))));
 
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"), resources),
                 resources.getString("Tab.Reminders"))));
 
-        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> JavaFXUtils.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"), resources),
                 resources.getString("Tab.Budgeting"))));
 
         backgroundExecutor.execute(() ->
-                Platform.runLater(() -> {
+                JavaFXUtils.runLater(() -> {
                     tabViewPane.getSelectionModel().select(preferences.getInt(LAST_TAB, 0));
 
                     tabListener = (observable, oldValue, newValue) -> {
@@ -443,9 +443,9 @@ public class MainView implements MessageListener {
         final Node severe;
 
         StatusBarLogHandler() {
-            info = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO, GRAPHIC_SIZE);
-            warning = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_TRIANGLE, GRAPHIC_SIZE);
-            severe = new FontAwesomeLabel(FontAwesomeLabel.FAIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
+            info = new MaterialDesignLabel(MaterialDesignLabel.MDIcon.INFO, GRAPHIC_SIZE);
+            warning = new MaterialDesignLabel(MaterialDesignLabel.MDIcon.EXCLAMATION_TRIANGLE, GRAPHIC_SIZE);
+            severe = new MaterialDesignLabel(MaterialDesignLabel.MDIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
         }
 
         @Override

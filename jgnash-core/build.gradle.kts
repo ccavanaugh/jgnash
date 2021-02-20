@@ -5,6 +5,7 @@ var moduleName = "jgnash.core"
 val commonsCollectionsVersion: String by project
 val commonsCsvVersion: String by project
 val commonsLangVersion: String by project
+val commonsMathVersion: String by project
 
 val slf4jVersion: String by project
 val hibernateVersion: String by project
@@ -47,6 +48,7 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:$commonsCollectionsVersion")
     implementation("org.apache.commons:commons-csv:$commonsCsvVersion")
     implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
+    implementation("org.apache.commons:commons-math3:$commonsMathVersion")
 }
 
 tasks.jar {

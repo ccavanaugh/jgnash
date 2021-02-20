@@ -1,6 +1,5 @@
 package jgnash.uifx.plugin;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -8,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import jgnash.plugin.FxPlugin;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 
 /**
@@ -36,7 +36,7 @@ public class TestFxPlugin implements FxPlugin {
             throw new RuntimeException("Invalid platform");
         }
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
 
             //for API test.  Lookup allows plugins to find nodes within the application scene
             final Node node = MainView.getInstance().lookup("#fileMenu");

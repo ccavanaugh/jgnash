@@ -38,7 +38,7 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class InvestmentPerformanceSummary {
 
-    private Account account;
+    private final Account account;
 
     private LocalDate startDate;
 
@@ -46,9 +46,9 @@ public class InvestmentPerformanceSummary {
 
     private final Map<SecurityNode, SecurityPerformanceData> performanceData = new TreeMap<>();
     
-    private List<Transaction> transactions;
+    private final List<Transaction> transactions;
 
-    private CurrencyNode baseCurrency;
+    private final CurrencyNode baseCurrency;
 
     /**
      * If true, recurse into sub accounts

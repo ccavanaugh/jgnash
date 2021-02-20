@@ -113,7 +113,7 @@ fn launch_jgnash() -> ExitStatus {
     Command::new(&*JAVA_EXE)
         .arg("-classpath")
         .arg(&class_path)
-        .arg("jGnash")
+        .arg("jgnash.app.jGnash")
         .arg(args.join(" "))
         .status()
         .expect("command failed to start")
@@ -203,7 +203,7 @@ fn get_java_home() -> Option<String> {
                 Ok(f) => f,
                 Err(_e) => {
                     eprintln!(
-                        "failed to parse version string for registry: {}",
+                        "failed to parse version string for the registry: {}",
                         version_string
                     );
                     return Some(String::new());

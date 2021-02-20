@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.control;
 
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -29,15 +32,13 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
 import jgnash.resource.util.ResourceUtils;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
-
-import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  * A Better behaved Alert class.
@@ -77,22 +78,22 @@ public class Alert {
 
         switch (alertType) {
             case ERROR:
-                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_TRIANGLE,
+                setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.EXCLAMATION_TRIANGLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKRED));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case WARNING:
-                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.EXCLAMATION_CIRCLE,
+                setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.EXCLAMATION_CIRCLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case INFORMATION:
-                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.INFO_CIRCLE,
+                setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.INFO_CIRCLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case YES_NO:
-                setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.QUESTION_CIRCLE,
+                setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.QUESTION_CIRCLE,
                         ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER));
                 ButtonType buttonTypeYes = new ButtonType(resources.getString("Button.Yes"), ButtonBar.ButtonData.YES);
                 ButtonType buttonTypeNo = new ButtonType(resources.getString("Button.No"), ButtonBar.ButtonData.NO);

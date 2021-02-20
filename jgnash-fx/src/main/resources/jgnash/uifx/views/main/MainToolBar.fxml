@@ -4,13 +4,13 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
-<ToolBar
-        xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-        fx:controller="jgnash.uifx.views.main.MainToolBarController">
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
+
+<ToolBar xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+         fx:controller="jgnash.uifx.views.main.MainToolBarController">
     <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Button.Open">
         <graphic>
-            <FontAwesomeLabel glyphName="FOLDER_OPEN"/>
+            <MaterialDesignLabel glyphName="FOLDER_OPEN"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.Open.Tooltip"/>
@@ -20,7 +20,7 @@
     <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
             disable="true">
         <graphic>
-            <FontAwesomeLabel glyphName="TIMES_CIRCLE"/>
+            <MaterialDesignLabel glyphName="CLOSE_CIRCLE"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.Close.Tooltip"/>
@@ -32,7 +32,7 @@
     <Button fx:id="updateSecurities" mnemonicParsing="false" onAction="#handleSecuritiesUpdateAction"
             text="%Menu.BackgroundSecurityUpdate.Name" disable="true">
         <graphic>
-            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+            <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.BackgroundSecurityUpdate.Tooltip"/>
@@ -42,7 +42,7 @@
     <Button fx:id="updateCurrencies" mnemonicParsing="false" onAction="#handleCurrenciesUpdateAction"
             text="%Menu.BackgroundCurrencyUpdate.Name" disable="true">
         <graphic>
-            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
+            <MaterialDesignLabel glyphName="CLOUD_DOWNLOAD"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.BackgroundCurrencyUpdate.Tooltip"/>

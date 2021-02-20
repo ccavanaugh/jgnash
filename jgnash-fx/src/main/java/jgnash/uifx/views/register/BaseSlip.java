@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -88,9 +87,9 @@ interface BaseSlip {
                 clearForm();
             } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
                 if (validFormProperty().get()) {
-                    Platform.runLater(BaseSlip.this::handleEnterAction);
+                    JavaFXUtils.runLater(BaseSlip.this::handleEnterAction);
                 } else {
-                    Platform.runLater(() -> {
+                    JavaFXUtils.runLater(() -> {
                         if (event.getSource() instanceof Node) {
                             JavaFXUtils.focusNext((Node) event.getSource());
                         }

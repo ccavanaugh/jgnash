@@ -486,7 +486,7 @@ public class DateUtils {
         dates.add(date);
 
         for (int i = 1; i < weeks; i++) {
-            date = date.plusDays(DAYS_PER_WEEK * step);
+            date = date.plusDays((long) DAYS_PER_WEEK * step);
             dates.add(date);
         }
 

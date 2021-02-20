@@ -10,28 +10,28 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DoughnutChart?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <BorderPane fx:controller="jgnash.uifx.report.IncomeExpensePayeePieChartDialogController" minWidth="850" minHeight="600"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <top>
       <ToolBar>
           <Button text="%Button.SaveImage" onAction="#handleSaveAction">
               <graphic>
-                  <FontAwesomeLabel glyphName="FILE_IMAGE_O"/>
+                  <MaterialDesignLabel glyphName="FILE_IMAGE_O"/>
               </graphic>
           </Button>
           <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard">
               <graphic>
-                  <FontAwesomeLabel glyphName="CLIPBOARD"/>
+                  <MaterialDesignLabel glyphName="CLIPBOARD"/>
               </graphic>
           </Button>
           <Button text="%Button.Print" onAction="#handlePrintAction">
               <graphic>
-                  <FontAwesomeLabel glyphName="PRINT"/>
+                  <MaterialDesignLabel glyphName="PRINT"/>
               </graphic>
           </Button>
       </ToolBar>
@@ -68,7 +68,7 @@
 
             <TitledPane text="%Title.Filters" fx:id="titledPane" expanded="false" GridPane.rowIndex="1" >
                 <graphic>
-                    <FontAwesomeLabel glyphName="FILTER"/>
+                    <MaterialDesignLabel glyphName="FILTER"/>
                 </graphic>
                 <VBox styleClass="form" fx:id="filtersPane"/>
             </TitledPane>

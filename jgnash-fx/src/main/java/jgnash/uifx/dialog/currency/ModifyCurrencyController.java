@@ -20,7 +20,6 @@ package jgnash.uifx.dialog.currency;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -42,10 +41,11 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Controller of modifying currencies.
@@ -89,15 +89,14 @@ public class ModifyCurrencyController implements MessageListener {
 
         selectedCurrency.bind(listView.getSelectionModel().selectedItemProperty());
 
-        selectedCurrency.addListener((observable, oldValue, newValue) -> Platform.runLater(this::loadForm));
+        selectedCurrency.addListener((observable, oldValue, newValue) -> JavaFXUtils.runLater(this::loadForm));
 
         // unregister when the window closes
         parent.addListener((observable, oldValue, newValue)
-                -> newValue.windowProperty().addListener((observable1, oldValue1, newValue1) -> {
-            newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
-                    event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
-                            MessageChannel.COMMODITY));
-        }));
+                -> newValue.windowProperty().addListener((observable1, oldValue1, newValue1) ->
+                newValue1.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,
+                        event -> MessageBus.getInstance().unregisterListener(ModifyCurrencyController.this,
+                                MessageChannel.COMMODITY))));
 
         applyButton.disableProperty().bind(Bindings.or(selectedCurrency.isNull(),
                 scaleTextField.textProperty().isEmpty()));

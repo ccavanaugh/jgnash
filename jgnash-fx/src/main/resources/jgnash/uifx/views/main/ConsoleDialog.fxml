@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Text?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" minHeight="-Infinity"
           fx:controller="jgnash.uifx.views.main.ConsoleDialogController"
           minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="dialog, form">
 
@@ -38,7 +38,7 @@
             <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard" ButtonBar.buttonUniformSize="false"
                     ButtonBar.buttonData="LEFT">
                 <graphic>
-                    <FontAwesomeLabel glyphName="CLIPBOARD"/>
+                    <MaterialDesignLabel glyphName="CLIPBOARD"/>
                 </graphic>
             </Button>
 

@@ -77,9 +77,10 @@ public abstract class EngineTest {
         Locale.setDefault(Locale.US);
 
         e = createEngine();
-        e.setCreateBackups(false);
 
-        assertNotNull(e);
+        assertNotNull(e);   // fail if null
+
+        e.setCreateBackups(false);
 
         CurrencyNode node = e.getDefaultCurrency();
 

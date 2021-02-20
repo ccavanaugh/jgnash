@@ -20,7 +20,6 @@ package jgnash.uifx.views.budget;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
@@ -40,6 +39,7 @@ import jgnash.resource.util.MonthName;
 import jgnash.resource.util.ResourceUtils;
 import jgnash.time.Period;
 import jgnash.uifx.Options;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -182,7 +182,7 @@ public class BudgetPropertiesDialogController {
 
         this.budget = budget;
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             descriptionTextField.setText(budget.getDescription());
             periodComboBox.setValue(budget.getBudgetPeriod());
 

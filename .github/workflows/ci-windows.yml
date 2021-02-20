@@ -1,11 +1,11 @@
-name: 'CI Test macOS'
+name: 'CI Test Windows'
 
 on: [push]
 
 jobs:
   test:
 
-    runs-on: macOS-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@master
@@ -15,4 +15,4 @@ jobs:
           java-version: '11'
           architecture: 'x64'
 
-      - run: ./gradlew test
+      - run: ./gradlew.bat test

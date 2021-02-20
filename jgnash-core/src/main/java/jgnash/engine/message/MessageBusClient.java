@@ -67,9 +67,9 @@ import jgnash.util.LogUtil;
  * @author Craig Cavanaugh
  */
 class MessageBusClient {
-    private String host;
+    private final String host;
 
-    private int port;
+    private final int port;
 
     private static final Logger logger = Logger.getLogger(MessageBusClient.class.getName());
 

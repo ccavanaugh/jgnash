@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.prefs.Preferences;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -36,7 +35,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tooltip;
@@ -44,7 +42,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
-import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -55,16 +52,14 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DoughnutChart;
-import jgnash.uifx.resource.cursor.CustomCursor;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.function.ParentAccountPredicate;
 
 /**
  * Transaction Tag Pie Chart.
  *
  * @author Craig Cavanaugh
- *
- * TODO: Option for transasctions not tagged as a percentage
  */
 public class TransactionTagPieChartDialogController {
 
@@ -89,8 +84,6 @@ public class TransactionTagPieChartDialogController {
     @FXML
     private ResourceBundle resources;
 
-    private boolean nodeFocused = false;
-
     private static final String LAST_ACCOUNT = "lastAccount";
 
     private final BigDecimal ONE_HUNDRED = new BigDecimal("100");
@@ -98,19 +91,11 @@ public class TransactionTagPieChartDialogController {
     @FXML
     public void initialize() {
 
-        // Respect animation preference
-        pieChart.animatedProperty().set(Options.animationsEnabledProperty().get());
-
-        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && newValue.getParent().getAccountType() != AccountType.ROOT) {
-                pieChart.setCursor(CustomCursor.getZoomOutCursor());
-            } else {
-                pieChart.setCursor(Cursor.DEFAULT);
-            }
-        });
-
         final Preferences preferences = Preferences.userNodeForPackage(TransactionTagPieChartDialogController.class)
                 .node("TransactionTagPieChart");
+
+        // Respect animation preference
+        pieChart.animatedProperty().set(Options.animationsEnabledProperty().get());
 
         accountComboBox.setPredicate(new ParentAccountPredicate());
 
@@ -144,15 +129,8 @@ public class TransactionTagPieChartDialogController {
 
         pieChart.setLegendSide(Side.BOTTOM);
 
-        // zoom out
-        pieChart.setOnMouseClicked(event -> {
-            if (!nodeFocused && accountComboBox.getValue().getParent().getAccountType() != AccountType.ROOT) {
-                accountComboBox.setValue(accountComboBox.getValue().getParent());
-            }
-        });
-
         // Push the initial load to the end of the platform thread for better startup and nicer visual effect
-        Platform.runLater(this::updateChart);
+        JavaFXUtils.runLater(this::updateChart);
     }
 
     private void updateChart() {
@@ -167,9 +145,6 @@ public class TransactionTagPieChartDialogController {
             final NumberFormat numberFormat = NumericFormats.getFullCommodityFormat(defaultCurrency);
 
             final ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-
-           /* final BigDecimal total = a.getTreeBalance(startDatePicker.getValue(), endDatePicker.getValue(),
-                    defaultCurrency);*/
 
             final Map<Tag, BigDecimal> balanceMap = new HashMap<>();
 
@@ -196,7 +171,12 @@ public class TransactionTagPieChartDialogController {
                 final BigDecimal balance = entry.getValue();
 
                 final String label = tag.getName() + " - " + numberFormat.format(balance.doubleValue());
-                final PieChart.Data data = new PieChart.Data(label, balance.divide(total, MathContext.DECIMAL64).multiply(ONE_HUNDRED).doubleValue());
+
+                // protect against a div by zero caused by net zero of income and expense
+                double value = total.compareTo(BigDecimal.ZERO) == 0 ? 0 :
+                        balance.divide(total, MathContext.DECIMAL64).multiply(ONE_HUNDRED).doubleValue();
+
+                final PieChart.Data data = new PieChart.Data(label, value);
 
                 // nodes are created lazily.  Set the user data (Tag) after the node is created
                 data.nodeProperty().addListener((observable, oldValue, newValue) -> newValue.setUserData(tag));
@@ -219,10 +199,6 @@ public class TransactionTagPieChartDialogController {
 
             pieChart.centerTitleProperty().set(accountComboBox.getValue().getName());
             pieChart.centerSubTitleProperty().set(numberFormat.format(total));
-
-            // abs() on all values won't work if children aren't of uniform sign,
-            // then again, this chart is not right to display those trees
-            //boolean negate = total != null && total.signum() < 0;
         } else {
             pieChart.setData(FXCollections.emptyObservableList());
             pieChart.setTitle("No Data");

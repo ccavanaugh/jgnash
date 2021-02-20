@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.resource.font.FontAwesomeLabel?>
+<?import jgnash.uifx.resource.font.MaterialDesignLabel?>
 
 <fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity"
          minWidth="-Infinity"
-         xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form">
+         xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" styleClass="form">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER"/>
         <ColumnConstraints hgrow="NEVER"/>
@@ -20,7 +20,7 @@
     </rowConstraints>
     <Button fx:id="attachmentButton" mnemonicParsing="false">
         <graphic>
-            <FontAwesomeLabel glyphName="LINK"/>
+            <MaterialDesignLabel glyphName="LINK"/>
         </graphic>
         <tooltip>
             <Tooltip text="%ToolTip.AddAttachment"/>
@@ -28,7 +28,7 @@
     </Button>
     <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="1">
         <graphic>
-            <FontAwesomeLabel glyphName="EYE"/>
+            <MaterialDesignLabel glyphName="EYE"/>
         </graphic>
         <tooltip>
             <Tooltip text="%ToolTip.ViewAttachment"/>
@@ -36,7 +36,7 @@
     </Button>
     <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2">
         <graphic>
-            <FontAwesomeLabel glyphName="UNLINK"/>
+            <MaterialDesignLabel glyphName="LINK_OFF"/>
         </graphic>
         <tooltip>
             <Tooltip text="%ToolTip.DeleteAttachment"/>

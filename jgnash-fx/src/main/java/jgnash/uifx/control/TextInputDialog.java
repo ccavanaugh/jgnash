@@ -33,7 +33,7 @@ import javafx.stage.Stage;
 
 import jgnash.resource.util.ResourceUtils;
 import jgnash.uifx.Options;
-import jgnash.uifx.resource.font.FontAwesomeLabel;
+import jgnash.uifx.resource.font.MaterialDesignLabel;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
@@ -73,7 +73,7 @@ public class TextInputDialog {
 
         JavaFXUtils.runLater(() -> textField.setText(defaultValue));
 
-        setGraphic(new FontAwesomeLabel(FontAwesomeLabel.FAIcon.QUESTION_CIRCLE,
+        setGraphic(new MaterialDesignLabel(MaterialDesignLabel.MDIcon.QUESTION_CIRCLE,
                 ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER));
     }
 

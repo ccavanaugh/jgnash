@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -42,11 +41,12 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.PendingReminder;
+import jgnash.resource.util.ResourceUtils;
+import jgnash.time.DateUtils;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.time.DateUtils;
-import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * A dialog for displaying recurring event / transactions when they occur.
@@ -120,7 +120,7 @@ class NotificationDialog extends Stage implements MessageListener {
             if (newValue != null) {
                 newValue.setApproved(!newValue.isApproved());
                 tableView.refresh();
-                Platform.runLater(() -> tableView.getSelectionModel().clearSelection());
+                JavaFXUtils.runLater(() -> tableView.getSelectionModel().clearSelection());
             }
         });
 

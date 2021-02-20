@@ -17,7 +17,6 @@
 
 package net.bzzt.swift.mt940;
 
-import javafx.application.Platform;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -28,6 +27,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.plugin.FxPlugin;
 import jgnash.resource.util.ResourceUtils;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainView;
 
 public class Mt940Plugin implements FxPlugin {
@@ -71,7 +71,7 @@ public class Mt940Plugin implements FxPlugin {
 
         @Override
         public void messagePosted(final Message message) {
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 switch (message.getEvent()) {
                     case FILE_LOAD_SUCCESS:
                         disableProperty().setValue(false);

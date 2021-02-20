@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -46,6 +45,7 @@ import jgnash.uifx.Options;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
@@ -153,7 +153,7 @@ public class AccountPropertiesController {
     void setParentAccount(final Account parentAccount) {
         this.parentAccount = parentAccount;
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             if (parentAccount != null) {
                 parentAccountButton.setText(parentAccount.getName());
 
@@ -192,7 +192,7 @@ public class AccountPropertiesController {
         baseAccount = account;
         securityNodeSet.clear();
 
-        Platform.runLater(() -> {
+        JavaFXUtils.runLater(() -> {
             setParentAccount(account.getParent());
             nameTextField.setText(account.getName());
             descriptionTextField.setText(account.getDescription());
@@ -248,12 +248,12 @@ public class AccountPropertiesController {
                 buf.append(node.getSymbol());
             }
 
-            Platform.runLater(() -> {
+            JavaFXUtils.runLater(() -> {
                 securitiesButton.setText(buf.toString());
                 securitiesButton.setTooltip(new Tooltip(buf.toString()));
             });
         } else {
-            Platform.runLater(() -> securitiesButton.setText(resources.getString("Word.None")));
+            JavaFXUtils.runLater(() -> securitiesButton.setText(resources.getString("Word.None")));
         }
     }
     @FXML

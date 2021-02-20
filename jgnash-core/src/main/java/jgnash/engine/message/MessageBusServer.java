@@ -65,7 +65,7 @@ public class MessageBusServer {
 
     static final String EOL_DELIMITER = "\r\n";
 
-    private int port;
+    private final int port;
 
     private String dataBasePath = "";
 
