@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,11 +63,11 @@ public class PortablePreferences {
             try (final InputStream is = Files.newInputStream(importFile)) {
                 Preferences.importPreferences(is);
             } catch (final InvalidPreferencesFormatException | IOException e) {
-                System.err.println("Preferences file " + importFile.toString() + " could not be read");
+                System.err.println("Preferences file " + importFile + " could not be read");
                 LogUtil.logSevere(PortablePreferences.class, e);
             }
         } else {
-            System.err.println("Preferences file " + importFile.toString() + " was not found");
+            System.err.println("Preferences file " + importFile + " was not found");
         }
     }
 

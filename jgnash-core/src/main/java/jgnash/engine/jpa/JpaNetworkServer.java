@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ public class JpaNetworkServer {
                 try {
                     Files.createDirectories(parent);
                 } catch (IOException e) {
-                    throw new EngineException("Could not create directory for file: " + parent.toString());
+                    throw new EngineException("Could not create directory for file: " + parent);
                 }
             }
         }

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -105,7 +105,7 @@ abstract class AbstractXStreamContainer {
     static void createBackup(final Path origFile) {
         if (Files.exists(origFile)) {
 
-            final Path backup = Paths.get(origFile.toString() + ".backup");
+            final Path backup = Paths.get(origFile + ".backup");
 
             if (Files.exists(backup)) {
                 try {
