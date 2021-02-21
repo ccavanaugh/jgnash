@@ -111,7 +111,9 @@ public class DefaultCurrencies {
         CurrencyNode node = new CurrencyNode();
         node.setSymbol(c.getCurrencyCode());
         node.setPrefix(symbols.getCurrencySymbol());
-        node.setScale((byte) c.getDefaultFractionDigits());
+        byte scale = (byte) c.getDefaultFractionDigits();
+        if (scale == -1) scale = 0;  // scale may be -1, but this is not allowed for CurrencyNodes
+        node.setScale(scale);
 
         return node;
     }
