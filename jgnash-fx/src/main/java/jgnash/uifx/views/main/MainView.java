@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package jgnash.uifx.views.main;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -170,7 +171,8 @@ public class MainView implements MessageListener {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
-        final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), resources);
+        final ToolBar mainToolBar = FXMLLoader.load(
+                Objects.requireNonNull(MainToolBarController.class.getResource("MainToolBar.fxml")), resources);
 
         tabViewPane = new TabViewPane();
 
