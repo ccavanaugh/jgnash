@@ -292,10 +292,12 @@ public class SlipController extends AbstractSlipController {
                 for (final TransactionEntry entry : t.getTransactionEntries()) {
                     if (entry.getCreditAccount() == accountProperty().get()) {
                         accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
+                        accountExchangePane.setSelectedAccount(entry.getDebitAccount());
                         tagPane.setSelectedTags(entry.getTags());
                         break;
                     } else if (entry.getDebitAccount() == accountProperty().get()) {
                         accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+                        accountExchangePane.setSelectedAccount(entry.getCreditAccount());
                         tagPane.setSelectedTags(entry.getTags());
                         break;
                     }
