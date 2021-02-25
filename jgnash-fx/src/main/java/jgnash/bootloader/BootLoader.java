@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  */
 public class BootLoader {
 
-    private static final String JFX_VERSION = "15";
+    private static final String JFX_VERSION = "15.0.1";
 
     private static final String MAVEN_REPO = "https://repo1.maven.org/maven2/org/openjfx/";
 
@@ -129,7 +129,7 @@ public class BootLoader {
             Files.createDirectories(lib);   // create the directory if needed
 
             final String spec = MAVEN_REPO + "javafx-{0}/{1}/" + FILE_PATTERN;
-            final String pathSpec = lib.toString() + SEPARATOR + FILE_PATTERN;
+            final String pathSpec = lib + SEPARATOR + FILE_PATTERN;
 
             final LongConsumer countConsumer = new LongConsumer() {
                 long totalCounts;
@@ -253,7 +253,7 @@ public class BootLoader {
 
             if (hash.compareTo(md5) != 0) {
                 Files.delete(dest);
-                logger.severe("Download of " + dest.toString() + " was corrupt; removing the file");
+                logger.severe("Download of " + dest + " was corrupt; removing the file");
                 result = false;
             }
 

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,10 @@
  */
 package jgnash.uifx.resource.font;
 
+import java.net.URL;
+import java.util.Locale;
+import java.util.logging.Logger;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.DoubleProperty;
@@ -32,8 +36,6 @@ import jgnash.resource.util.OS;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.EncodeDecode;
 import jgnash.util.NotNull;
-
-import java.util.Locale;
 
 /**
  * Implementation of a Material Design Icons.
@@ -57,8 +59,11 @@ public class MaterialDesignLabel extends Label {
             BASELINE_OFFSET = -5;
         }
 
-        Font.loadFont(MaterialDesignLabel.class.getResource(TTF_PATH).toExternalForm(),
-                ThemeManager.fontScaleProperty().get() * DEFAULT_SIZE);
+        final URL url = MaterialDesignLabel.class.getResource(TTF_PATH);
+
+        if (url != null) {
+            Font.loadFont(url.toExternalForm(), ThemeManager.fontScaleProperty().get() * DEFAULT_SIZE);
+        }
     }
 
     private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
@@ -147,7 +152,7 @@ public class MaterialDesignLabel extends Label {
                 }
             }
         } catch (final IllegalArgumentException e) {
-            System.err.println(e.toString());
+            Logger.getLogger(MaterialDesignLabel.class.getName()).warning(e.getLocalizedMessage());
             setText(Integer.toString(MDIcon.BUG.getUnicode()));
         }
     }
