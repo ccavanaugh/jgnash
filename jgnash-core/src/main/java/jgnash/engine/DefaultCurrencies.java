@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  * <p>
  * These are known to not show up because Java 1.4.2 and older does not have
  * a default NumberFormat defined for the currency:
- *
+ * <p>
  * {@code
  * "SGD"
  * "MYR"
@@ -111,8 +111,13 @@ public class DefaultCurrencies {
         CurrencyNode node = new CurrencyNode();
         node.setSymbol(c.getCurrencyCode());
         node.setPrefix(symbols.getCurrencySymbol());
+
         byte scale = (byte) c.getDefaultFractionDigits();
-        if (scale == -1) scale = 0;  // scale may be -1, but this is not allowed for CurrencyNodes
+
+        if (scale == -1) {  // The JVM may return a negative value for some Locales
+            scale = 0;      // scale may be -1, but this is not allowed for CurrencyNodes
+        }
+
         node.setScale(scale);
 
         return node;

@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -140,13 +140,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
      * @return true if between or inclusive
      */
     public boolean isBetween(final LocalDate date) {
-        boolean result = false;
-
-        if (DateUtils.after(date, startDate) && DateUtils.before(date, endDate)) {
-            result = true;
-        }
-
-        return result;
+        return DateUtils.after(date, startDate) && DateUtils.before(date, endDate);
     }
 
     @Override

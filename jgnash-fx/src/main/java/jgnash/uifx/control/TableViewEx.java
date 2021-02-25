@@ -106,7 +106,7 @@ public class TableViewEx<S> extends TableView<S> {
                             } else if (value instanceof LocalDate) {
                                 builder.append(DateUtils.getExcelDateFormatter().format((LocalDate) value));
                             } else {
-                                builder.append(value.toString());
+                                builder.append(value);
                             }
                         }
                     }

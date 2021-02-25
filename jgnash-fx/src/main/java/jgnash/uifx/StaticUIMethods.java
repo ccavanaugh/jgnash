@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package jgnash.uifx;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -129,7 +130,8 @@ public class StaticUIMethods {
     public static synchronized Image getApplicationIcon() {
         if (applicationImage == null) {
             try {
-                applicationImage = new Image(StaticUIMethods.class.getResourceAsStream(APP_ICON));
+                applicationImage = new Image(
+                        Objects.requireNonNull(StaticUIMethods.class.getResourceAsStream(APP_ICON)));
             } catch (final Exception ex) {
                 Logger.getLogger(StaticUIMethods.class.getName()).log(Level.WARNING, ex.getLocalizedMessage(), ex);
                 applicationImage = null;

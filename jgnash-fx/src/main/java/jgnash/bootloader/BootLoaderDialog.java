@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
@@ -50,7 +51,9 @@ public class BootLoaderDialog extends JFrame {
 
     public BootLoaderDialog() {
 
-        ImageIcon icon = new ImageIcon(BootLoaderDialog.class.getResource("/jgnash/resource/gnome-money.png"));
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(
+                BootLoaderDialog.class.getResource("/jgnash/resource/gnome-money.png")));
+
         setIconImage(icon.getImage());
 
         this.activeFileConsumer = s -> EventQueue.invokeLater(() -> activeDownloadLabel.setText(s));

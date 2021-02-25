@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2020 Craig Cavanaugh
+ * Copyright (C) 2001-2021 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -221,6 +221,8 @@ public class ImportFilter {
         if (Files.exists(Paths.get(script))) {
             return Files.newBufferedReader(Paths.get(script));
         }
-        return new InputStreamReader(ImportFilter.class.getResourceAsStream(script), StandardCharsets.UTF_8);
+
+        return new InputStreamReader(
+                Objects.requireNonNull(ImportFilter.class.getResourceAsStream(script)), StandardCharsets.UTF_8);
     }
 }
