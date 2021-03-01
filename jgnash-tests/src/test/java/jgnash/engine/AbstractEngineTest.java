@@ -59,7 +59,7 @@ public abstract class AbstractEngineTest {
 
     protected Account investAccount;
 
-    SecurityNode securityNode1;
+    SecurityNode gggSecurityNode;
 
     protected abstract Engine createEngine() throws IOException;
 
@@ -122,13 +122,13 @@ public abstract class AbstractEngineTest {
         e.addAccount(e.getRootAccount(), investAccount);
 
         // Creating securities
-        securityNode1 = new SecurityNode(defaultCurrency);
-        securityNode1.setSymbol("GOOGLE");
-        assertTrue(e.addSecurity(securityNode1));
+        gggSecurityNode = new SecurityNode(defaultCurrency);
+        gggSecurityNode.setSymbol("GOOGLE");
+        assertTrue(e.addSecurity(gggSecurityNode));
 
         // Adding security to the invest account
         List<SecurityNode> securityNodeList = new ArrayList<>();
-        securityNodeList.add(securityNode1);
+        securityNodeList.add(gggSecurityNode);
         assertTrue(e.updateAccountSecurities(investAccount, securityNodeList));
     }
 

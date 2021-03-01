@@ -74,7 +74,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", fees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", fees);
 
         assertTrue(e.addTransaction(it));
         assertFalse(e.addTransaction(it));
@@ -112,7 +112,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        assertTrue(e.addSecurityHistory(securityNode1, history));
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
 
         // Creating the list of fees
         List<TransactionEntry> fees = new ArrayList<>();
@@ -123,7 +123,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", fees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", fees);
         assertTrue(e.addTransaction(it));
 
         // Evaluating the result
@@ -166,7 +166,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        assertTrue(e.addSecurityHistory(securityNode1, history));
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -177,7 +177,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
@@ -187,7 +187,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         history.setDate(transactionDate2);
         history.setPrice(securityPrice2);
 
-        assertTrue(e.addSecurityHistory(securityNode1, history));
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
 
         // Creating the list of selling fees
         List<TransactionEntry> sellingFees = new ArrayList<>();
@@ -203,7 +203,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         TransactionEntry sGain2 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("10.00"), "Selling Gain2", TransactionTag.GAIN_LOSS);
         sellingGains.add(sGain2);
 
-        it = generateSellXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice2, new BigDecimal("30"), BigDecimal.ONE, transactionDate2, "Selling shares", sellingFees, sellingGains);
+        it = generateSellXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice2, new BigDecimal("30"), BigDecimal.ONE, transactionDate2, "Selling shares", sellingFees, sellingGains);
         e.addTransaction(it);
 
         // Checking the result
@@ -336,7 +336,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        assertTrue(e.addSecurityHistory(securityNode1, history));
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -347,12 +347,12 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
-        it = generateDividendXTransaction(incomeAccount, investAccount, usdBankAccount, securityNode1, new BigDecimal("50.00"), new BigDecimal("-50.00"), new BigDecimal("50.00"), transactionDate2, "Dividend");
+        it = generateDividendXTransaction(incomeAccount, investAccount, usdBankAccount, gggSecurityNode, new BigDecimal("50.00"), new BigDecimal("-50.00"), new BigDecimal("50.00"), transactionDate2, "Dividend");
         e.addTransaction(it);
 
         // Checking the result
@@ -394,7 +394,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        assertTrue(e.addSecurityHistory(securityNode1, history));
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -405,7 +405,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
@@ -424,7 +424,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         TransactionEntry rdGain2 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("30.00"), "Reinvest Dividend Gain2", TransactionTag.GAIN_LOSS);
         reinvestDividendGains.add(rdGain2);
 
-        it = generateReinvestDividendXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("15"), transactionDate2, "Reinvest Dividend", reinvestDividendFees, reinvestDividendGains);
+        it = generateReinvestDividendXTransaction(investAccount, gggSecurityNode, securityPrice1, new BigDecimal("15"), transactionDate2, "Reinvest Dividend", reinvestDividendFees, reinvestDividendGains);
         e.addTransaction(it);
 
         // Checking the result
@@ -465,7 +465,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        assertTrue(e.addSecurityHistory(securityNode1, history));
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -476,12 +476,12 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
-        it = generateSplitXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("125"), transactionDate2, "Selling shares");
+        it = generateSplitXTransaction(investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), transactionDate2, "Selling shares");
         e.addTransaction(it);
 
         // Checking the result
@@ -522,7 +522,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        assertTrue(e.addSecurityHistory(securityNode1, history));
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -533,12 +533,12 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
-        it = generateMergeXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("25"), transactionDate2, "Stock merge");
+        it = generateMergeXTransaction(investAccount, gggSecurityNode, securityPrice1, new BigDecimal("25"), transactionDate2, "Stock merge");
         e.addTransaction(it);
 
         // Checking the result
