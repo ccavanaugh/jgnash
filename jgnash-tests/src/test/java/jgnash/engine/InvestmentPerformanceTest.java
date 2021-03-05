@@ -21,12 +21,17 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 
+import static jgnash.engine.TransactionFactory.createTransactionEntry;
+import static jgnash.engine.TransactionFactory.generateBuyXTransaction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for Investment Performance.
@@ -61,8 +66,7 @@ public class InvestmentPerformanceTest extends AbstractEngineTest {
         e.addTransaction(TransactionFactory.generateDoubleEntryTransaction(investAccount, usdBankAccount,
                 new BigDecimal("500.00"), startDate, "Move cash into investment account", "", "" ));
 
-        final InvestmentPerformanceSummary ips = new InvestmentPerformanceSummary(investAccount, startDate,
-                endDate, true);
+        InvestmentPerformanceSummary ips = new InvestmentPerformanceSummary(investAccount, startDate, endDate, true);
 
         assertNotNull(ips);
 
@@ -76,5 +80,38 @@ public class InvestmentPerformanceTest extends AbstractEngineTest {
 
         assertEquals(0f, spd.getSharesHeld().floatValue(), delta);
         assertEquals(0f, spd.getPrice().floatValue(), delta);
+
+        SecurityHistoryNode history = new SecurityHistoryNode();
+        history.setDate(LocalDate.of(2020, Month.FEBRUARY, 1));
+        history.setPrice(new BigDecimal("10.0"));
+
+        assertTrue(e.addSecurityHistory(gggSecurityNode, history));
+
+        final List<TransactionEntry> fees = new ArrayList<>();
+        TransactionEntry fee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("30"), "Fee1", TransactionTag.INVESTMENT_FEE);
+        fees.add(fee1);
+
+        // Buying shares
+        InvestmentTransaction it = generateBuyXTransaction(usdBankAccount, investAccount, gggSecurityNode,
+                new BigDecimal("10.0"), new BigDecimal("125"), BigDecimal.ONE,
+                LocalDate.of(2020, Month.FEBRUARY, 2), "Buy shares", fees);
+
+        assertTrue(e.addTransaction(it));
+
+        ips = new InvestmentPerformanceSummary(investAccount, startDate, endDate, false);
+        ips.runCalculations();
+        logger.info(ips.toString());
+
+        spd = ips.getPerformanceData(gggSecurityNode);
+
+        assertEquals(125f, spd.getSharesHeld().floatValue(), delta);
+        assertEquals((1250f + 30f) / 125f, spd.getCostBasisPerShare().floatValue(), delta);
+        assertEquals(-30f, spd.getTotalGains().floatValue(), delta);
+        assertEquals(-30f, spd.getUnrealizedGains().floatValue(), delta);
+        assertEquals(1280f, spd.getTotalCostBasis().floatValue(), delta);
+        assertEquals(-30f / 1280f, spd.getTotalGainsPercentage().floatValue(), delta);
+
+
+
     }
 }
