@@ -528,7 +528,7 @@ abstract class RegisterTableController {
         builder.append('\t');
         builder.append(transaction.getReconciled(transaction.getCommonAccount()).toString());
         builder.append('\t');
-        builder.append(transaction.getAmount(transaction.getCommonAccount()).toPlainString());
+        builder.append(transaction.getAmount(this.account.get()).toPlainString());
 
         return builder.toString();
     }
