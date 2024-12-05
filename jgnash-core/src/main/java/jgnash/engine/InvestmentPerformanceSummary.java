@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -61,10 +62,6 @@ public class InvestmentPerformanceSummary {
 
         this.recursive = recursive;
 
-        if (!account.memberOf(AccountGroup.INVEST)) {
-            throw new IllegalArgumentException("The account is not a valid type");
-        }
-
         this.baseCurrency = account.getCurrencyNode();
         this.account = account;
 
@@ -79,54 +76,65 @@ public class InvestmentPerformanceSummary {
             setEndDate(endDate);
         }
 
-        transactions = account.getTransactions(getStartDate(), getEndDate());
-
-        if (recursive && account.getChildCount() > 0) {
-            collectSubAccountTransactions(account, transactions);
-        }
+        transactions = new ArrayList<>();
+        collectAccountTransactions(account, transactions);
 
         Collections.sort(transactions);
     }
 
     public static Pair<LocalDate, LocalDate> getTransactionDateRange(final Account account, final boolean recursive) {
-        List<Transaction> transactions = new ArrayList<>(account.getSortedTransactionList());
-
-        if (recursive && account.getChildCount() > 0) {
-            _collectSubAccountTransactions(account, transactions);
-        }
+        List<Transaction> transactions = new ArrayList<>();
+        _collectAccountTransactions(account, recursive, transactions);
 
         transactions.sort(null);
 
-        return new ImmutablePair<>(transactions.get(0).getLocalDate(),
-                transactions.get(transactions.size() - 1).getLocalDate());
+        if (transactions.size() > 0) {
+            return new ImmutablePair<>(transactions.get(0).getLocalDate(),
+                    transactions.get(transactions.size() - 1).getLocalDate());
+        } else {
+            LocalDate now = LocalDate.now();
+            return new ImmutablePair<>(now, now);
+        }
     }
 
-    private static void _collectSubAccountTransactions(final Account account, final List<Transaction> transactions) {
-        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
-            transactions.addAll(child.getSortedTransactionList());
+    private static void _collectAccountTransactions(final Account account, final boolean recursive, final List<Transaction> transactions) {
+        if (account.memberOf(AccountGroup.INVEST)) {
+            transactions.addAll(account.getSortedTransactionList());
+        }
 
-            if (child.getChildCount() > 0) {
-                _collectSubAccountTransactions(child, transactions);
+        if (recursive) {
+            for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
+                if (child.getChildCount() > 0) {
+                    _collectAccountTransactions(child, recursive, transactions);
+                }
             }
         }
     }
 
-    private void collectSubAccountTransactions(final Account account, final List<Transaction> transactions) {
-        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
-            transactions.addAll(child.getTransactions(getStartDate(), getEndDate()));
-
-            if (child.getChildCount() > 0) {
-                collectSubAccountTransactions(child, transactions);
+    private void collectAccountTransactions(final Account account, final List<Transaction> transactions) {
+        if (account.memberOf(AccountGroup.INVEST)) {
+            transactions.addAll(account.getTransactions(getStartDate(), getEndDate()));
+        }
+        
+        if (recursive) {
+            for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
+                if (child.getChildCount() > 0) {
+                    collectAccountTransactions(child, transactions);
+                }
             }
         }
     }
 
-    private void collectSubAccountSecurities(final Account account, final Set<SecurityNode> securities) {
-        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
-            securities.addAll(child.getSecurities());
-
-            if (child.getChildCount() > 0) {
-                collectSubAccountSecurities(child, securities);
+    private void collectAccountSecurities(final Account account, final Set<SecurityNode> securities) {
+        if (account.memberOf(AccountGroup.INVEST)) {
+            securities.addAll(account.getSecurities());
+        }
+        
+        if (recursive) {
+            for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
+                if (child.getChildCount() > 0) {
+                    collectAccountSecurities(child, securities);
+                }
             }
         }
     }
@@ -375,11 +383,8 @@ public class InvestmentPerformanceSummary {
 
     public void runCalculations() {
 
-        Set<SecurityNode> nodes = account.getSecurities();
-
-        if (recursive) {
-            collectSubAccountSecurities(account, nodes);
-        }
+        Set<SecurityNode> nodes = new TreeSet<>();
+        collectAccountSecurities(account, nodes);
 
         for (final SecurityNode node : nodes) {
             SecurityPerformanceData data = new SecurityPerformanceData(node);

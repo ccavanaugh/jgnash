@@ -166,7 +166,8 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     private void selectDefaultAccount() {
         // Set a default account, must use the filtered list because that is what is visible
         if (filteredList.size() > 0) {
-            JavaFXUtils.runLater(() -> setValue(filteredList.get(0)));
+            final Account account = filteredList.get(0);
+            JavaFXUtils.runLater(() -> setValue(account));
         }
     }
 
